@@ -115,7 +115,7 @@ class pos_box_entries(osv.osv_memory):
             curr_company = res_obj.browse(cr, uid, uid, context=context).company_id.id
             statement_id = statement_obj.search(cr, uid, [('journal_id', '=', int(data['journal_id'])), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')], context=context)
             if not statement_id:
-                raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
+                raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox.'))
 
             product = product_obj.browse(cr, uid, int(data['product_id']))
             acc_id = product.property_account_income or product.categ_id.property_account_income_categ

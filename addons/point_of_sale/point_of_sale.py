@@ -301,8 +301,8 @@ class pos_session(osv.osv):
         return True
 
     _constraints = [
-        (_check_unicity, "You can not create two active sessions with the same responsible!", ['user_id', 'state']),
-        (_check_pos_config, "You can not create two active sessions related to the same point of sale!", ['config_id']),
+        (_check_unicity, "You cannot create two active sessions with the same responsible!", ['user_id', 'state']),
+        (_check_pos_config, "You cannot create two active sessions related to the same point of sale!", ['config_id']),
     ]
 
     def create(self, cr, uid, values, context=None):
@@ -404,7 +404,7 @@ class pos_session(osv.osv):
                 if order.state != 'paid':
                     raise osv.except_osv(
                         _('Error !'),
-                        _("You can not confirm all orders of this session, because they have not the 'paid' status"))
+                        _("You cannot confirm all orders of this session, because they have not the 'paid' status"))
                 else:
                     wf_service.trg_validate(uid, 'pos.order', order.id, 'done', cr)
 
@@ -513,7 +513,7 @@ class pos_order(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
         'shop_id': fields.related('session_id', 'config_id', 'shop_id', relation='sale.shop', type='many2one', string='Shop', store=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
-        'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It could be a reliever, a student or an interim employee."),
+        'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_all, string='Total', multi='all'),
         'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
@@ -677,7 +677,7 @@ class pos_order(osv.osv):
                 msg = _('There is no receivable account defined to make payment.')
             else:
                 msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d).') % (order.partner_id.name, order.partner_id.id,)
-            raise osv.except_osv(_('Configuration Error !'), msg)
+            raise osv.except_osv(_('Configuration Error!'), msg)
 
         context.pop('pos_session_id', False)
 
@@ -693,7 +693,7 @@ class pos_order(osv.osv):
                 break
 
         if not statement_id:
-            raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
+            raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox.'))
 
         args.update({
             'statement_id' : statement_id,
@@ -839,7 +839,7 @@ class pos_order(osv.osv):
         #session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
 
         if session and not all(session.id == order.session_id.id for order in self.browse(cr, uid, ids, context=context)):
-            raise osv.except_osv(_('Error!'), _('The selected orders do not have the same session !'))
+            raise osv.except_osv(_('Error!'), _('Selected orders do not have the same session!'))
 
         current_company = user_proxy.browse(cr, uid, uid, context=context).company_id
 
@@ -944,8 +944,8 @@ class pos_order(osv.osv):
                 elif line.product_id.categ_id.property_account_income_categ.id:
                     income_account = line.product_id.categ_id.property_account_income_categ.id
                 else:
-                    raise osv.except_osv(_('Error !'), _('There is no income '\
-                        'account defined for this product: "%s" (id:%d).') \
+                    raise osv.except_osv(_('Error!'), _('Please define income '\
+                        'account for this product: "%s" (id:%d).') \
                         % (line.product_id.name, line.product_id.id, ))
 
                 # Empty the tax list as long as there is no tax code:
