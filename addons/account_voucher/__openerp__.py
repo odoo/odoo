@@ -38,7 +38,9 @@ eInvoicing & Payments module manage all Voucher Entries such as "Reconciliation 
     "website" : "http://tinyerp.com",
     "images" : ["images/customer_payment.jpeg","images/journal_voucher.jpeg","images/sales_receipt.jpeg","images/supplier_voucher.jpeg"],
     "depends" : ["account"],
-    "init_xml" : [],
+    "init_xml" : [
+        'account_voucher_data.xml',
+    ],
 
     "demo_xml" : [],
 

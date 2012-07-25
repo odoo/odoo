@@ -106,16 +106,17 @@
             <field name="model">res.partner</field>
             <field name="type">kanban</field>
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <field name="mobile" position="after">
                     <field name="opportunity_count"/>
                     <field name="meeting_count"/>
                 </field>
-                <xpath expr="//h4[@class='oe_partner_heading']" position="after">
-                    <a name="%(relate_partner_opportunities)d" type="action" t-if="record.opportunity_count.value>0" class="oe_tag">
+                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                    <a name="%(relate_partner_opportunities)d" type="action" t-if="record.opportunity_count.value>0">
                         <t t-esc="record.opportunity_count.value"/> Opportunities
                     </a>
-                    <a name="%(crm_meeting_partner)d" type="action" t-if="record.meeting_count.value>0" class="oe_tag">
+                    <a name="%(crm_meeting_partner)d" type="action" t-if="record.meeting_count.value>0">
                         <t t-esc="record.meeting_count.value"/> Meetings
                     </a>
                 </xpath>
