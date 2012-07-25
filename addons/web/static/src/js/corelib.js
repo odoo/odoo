@@ -768,7 +768,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
             var event = match[1];
             var selector = match[3];
 
-            event += '.delegated-events';
+            event += '.widget_events';
             if (!selector) {
                 this.$el.on(event, method);
             } else {
@@ -777,7 +777,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         }
     },
     undelegateEvents: function () {
-        this.$el.off('.delegated-events');
+        this.$el.off('.widget_events');
     },
     /**
      * Shortcut for ``this.$el.find(selector)``
