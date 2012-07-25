@@ -24,7 +24,7 @@
     'name': 'Google Users',
     'version': '1.0',
     'category': 'Tools',
-    'description': """The module adds google user in res user""",
+    'description': """The module adds google user in res user.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],

@@ -446,7 +446,7 @@ class account_analytic_account(osv.osv):
             help="Computed using the formula: Invoiced Amount - Total Costs.",
             digits_compute=dp.get_precision('Account')),
         'theorical_margin': fields.function(_theorical_margin_calc, type='float', string='Theoretical Margin',
-            help="Computed using the formula: Theorial Revenue - Total Costs",
+            help="Computed using the formula: Theoretical Revenue - Total Costs",
             digits_compute=dp.get_precision('Account')),
         'real_margin_rate': fields.function(_real_margin_rate_calc, type='float', string='Real Margin Rate (%)',
             help="Computes using the formula: (Real Margin / Total Costs) * 100.",

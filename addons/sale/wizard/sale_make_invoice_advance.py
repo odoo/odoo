@@ -38,7 +38,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         'product_id': fields.many2one('product.product', 'Advance Product', help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
         'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Sale Price'), required=True, help="The amount to be invoiced in advance."),
         'qtty': fields.float('Quantity', digits=(16, 2), required=True),
-        'advance_payment_method':fields.selection([('percentage','Percentage'), ('fixed','Fixed Price')], 'Type', required=True, help="Use Fixed Price if you want to give specific amound in Advance, Use Percentage if you want to give percentage of Total Invoice Amount."),
+        'advance_payment_method':fields.selection([('percentage','Percentage'), ('fixed','Fixed Price')], 'Type', required=True, help="Use Fixed Price if you want to give specific amount in Advance. Use Percentage if you want to give percentage of Total Invoice Amount."),
     }
 
     _defaults = {
