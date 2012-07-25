@@ -364,12 +364,12 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
                        the `Reply-To` header if `reply_to` is not provided
     :param email_to: a sequence of addresses to send the mail to.
     """
-
     # If not cr, get cr from current thread database
+    local_cr = None
     if not cr:
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            cr = pooler.get_db_only(db_name).cursor()
+            local_cr = cr = pooler.get_db_only(db_name).cursor()
         else:
             raise Exception("No database cursor found, please pass one explicitly")
 
@@ -388,7 +388,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         _logger.exception("tools.email_send failed to deliver email")
         return False
     finally:
-        cr.close()
+        if local_cr: local_cr.close()
     return res
 
 #----------------------------------------------------------
