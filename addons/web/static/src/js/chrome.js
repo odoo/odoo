@@ -135,8 +135,12 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.$element.dialog('close');
     },
     on_close: function() {
+	if (this.__tmp_dialog_destroying)
+	    return;
         if (this.dialog_options.destroy_on_close) {
+	    this.__tmp_dialog_closing = true;
             this.destroy();
+	    this.__tmp_dialog_closing = undefined;
         }
     },
     on_resized: function() {
@@ -145,6 +149,11 @@ instance.web.Dialog = instance.web.Widget.extend({
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
+        if (! this.__tmp_dialog_closing) {
+	    this.__tmp_dialog_destroying = true;
+	    this.close();
+	    this.__tmp_dialog_destroying = undefined;
+	}
         if (! this.isDestroyed()) {
             this.$element.dialog('destroy');
         }
@@ -248,13 +257,17 @@ instance.web.Loading = instance.web.Widget.extend({
             // Block UI after 3s
             this.long_running_timer = setTimeout(function () {
                 self.blocked_ui = true;
-                $.blockUI();
+                instance.web.blockUI();
             }, 3000);
         }
 
         this.count += increment;
         if (this.count > 0) {
-            this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+	    if (instance.connection.debug) {
+		this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+	    } else {
+		this.$element.text(_t("Loading"));
+	    }
             this.$element.show();
             this.getParent().$element.addClass('oe_wait');
         } else {
@@ -263,7 +276,7 @@ instance.web.Loading = instance.web.Widget.extend({
             // Don't unblock if blocked by somebody else
             if (self.blocked_ui) {
                 this.blocked_ui = false;
-                $.unblockUI();
+                instance.web.unblockUI();
             }
             this.$element.fadeOut();
             this.getParent().$element.removeClass('oe_wait');
@@ -274,7 +287,7 @@ instance.web.Loading = instance.web.Widget.extend({
 instance.web.DatabaseManager = instance.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
-        this.unblockUIFunction = $.unblockUI;
+        this.unblockUIFunction = instance.web.unblockUI;
         $.validator.addMethod('matches', function (s, _, re) {
             return new RegExp(re).test(s);
         }, _t("Invalid database name"));
@@ -341,16 +354,16 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
      * from unblocking the UI
      */
     blockUI: function () {
-        $.blockUI();
-        $.unblockUI = function () {};
+        instance.web.blockUI();
+        instance.web.unblockUI = function () {};
     },
     /**
      * Reinstates $.unblockUI so third parties can play with blockUI, and
      * unblocks the UI
      */
     unblockUI: function () {
-        $.unblockUI = this.unblockUIFunction;
-        $.unblockUI();
+        instance.web.unblockUI = this.unblockUIFunction;
+        instance.web.unblockUI();
     },
     /**
      * Displays an error dialog resulting from the various RPC communications
@@ -851,7 +864,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                         window.location.href, 'debug');
             });
             instance.web.dialog($help, {autoOpen: true,
-                modal: true, width: 960, title: _t("About")});
+                modal: true, width: 580, height: 290, resizable: false, title: _t("About")});
         });
     },
 });
@@ -890,7 +903,7 @@ instance.web.Client = instance.web.Widget.extend({
                     var doc_width = $(document).width();
                     var offset = $menu.offset();
                     var menu_width = $menu.width();
-                    var x = doc_width - offset.left - menu_width - 15;
+                    var x = doc_width - offset.left - menu_width - 2;
                     if (x < 0) {
                         $menu.offset({ left: offset.left + x }).width(menu_width);
                     }
@@ -957,10 +970,12 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     show_login: function() {
         var self = this;
+        self.$('.oe_topbar').hide();
         self.login.appendTo(self.$element);
     },
     show_application: function() {
         var self = this;
+        self.$('.oe_topbar').show();
         self.login.$element.hide();
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));

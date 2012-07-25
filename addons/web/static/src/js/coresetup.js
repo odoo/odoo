@@ -550,7 +550,15 @@ $.async_when = function() {
 /** Setup blockui */
 if ($.blockUI) {
     $.blockUI.defaults.baseZ = 1100;
-    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
+    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber.gif">';
+    $.blockUI.defaults.css.border = '0';
+    $.blockUI.defaults.css["background-color"] = '';
+}
+instance.web.blockUI = function() {
+    $.blockUI.apply($, arguments);
+}
+instance.web.unblockUI = function() {
+    return $.unblockUI.apply($, arguments);
 }
 
 /** Setup default session */

@@ -92,9 +92,8 @@ $sheet-max-width: 860px
     letter-spacing: -1px
     color: transparent
     &:before
-        font-family: "mnmliconsRegular"
+        font: 21px "mnmliconsRegular"
         content: $icon-name
-        font-size: 20px
         color: $color
 
 // }}}
@@ -256,6 +255,29 @@ $sheet-max-width: 860px
                 &:hover
                     color: black
                     text-decoration: none
+        .oe_about
+            background-color: white
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+            @include radius(0 0 2px 2px)
+            a
+                color: #8A89BA
+                &:hover
+                    text-decoration: underline
+            .oe_logo
+                margin-left: -6px
+            .oe_bottom
+                position: absolute
+                top: 50%
+                left: 0
+                right: 0
+                bottom: 0
+                text-shadow: 0 1px 1px #999999
+                @include vertical-gradient(#b41616, #600606)
+                color: #eee
+                padding: 0 16px
+                @include radius(0 0 2px 2px)
+                a
+                    color: #eee
 
     &.ui-dialog.oe_act_window
         .ui-dialog-content
@@ -470,7 +492,7 @@ $sheet-max-width: 860px
         z-index: 1
         border: 1px solid #afafb6
         background: white
-        padding: 6px 0
+        padding: 4px 0
         min-width: 140px
         text-align: left
         @include radius(3px)
@@ -483,10 +505,10 @@ $sheet-max-width: 860px
             float: none
             display: block
             position: relative
+            padding: 2px 8px
             > a
                 white-space: nowrap
                 display: block
-                padding: 4px 15px
                 color: #4c4c4c
                 text-decoration: none
                 &:hover
@@ -567,7 +589,7 @@ $sheet-max-width: 860px
     // }}}
     // Login {{{
     .oe_login
-        background: url("/web/static/src/img/pattern.png") repeat
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
         text-align: center
         font-size: 14px
         height: 100%
@@ -735,11 +757,12 @@ $sheet-max-width: 860px
             @include background-clip()
             li
                 float: none
+                padding: 3px 12px
                 a
                     color: #eee
-                    &:hover
-                        @include vertical-gradient(#292929, #191919)
-                        @include box-shadow(none)
+                &:hover
+                    @include vertical-gradient(#292929, #191919)
+                    @include box-shadow(none)
 
     // }}}
     // Webclient.leftbar {{{
@@ -1102,19 +1125,20 @@ $sheet-max-width: 860px
                 border-right: 5px solid transparent
                 @include opacity()
 
+        .oe_searchview_search
+            @include text-to-icon("r", #a3a3a3)
+            @include box-shadow(none)
+            @include radius(0)
+            position: absolute
+            left: 3px
+            top: 1px
+            padding: 0
+            border: none
+            background: transparent
+
         .oe_searchview_facets
             min-height: 22px
-            &:before
-                color: #ccc
-                font-family: "mnmliconsRegular"
-                content: "r"
-                font-size: 130%
-                display: inline
-                position: relative
-                left: 6px
-                top: 2px
-                color: #a3a3a3
-                padding-right: 4px
+            margin-left: 15px
             *
                 vertical-align: top
                 display: inline-block
@@ -1126,7 +1150,7 @@ $sheet-max-width: 860px
                 &:focus
                     outline: none
             .oe_searchview_input
-                padding: 0 3px
+                padding: 0 0 0 6px
             .oe_searchview_facet
                 position: relative
                 cursor: pointer
@@ -1248,13 +1272,13 @@ $sheet-max-width: 860px
                     // after oe_selected so background color is not overridden
                     &:hover
                         background-color: $hover-background
-                form
-                    margin-left: 12px
-                    p
-                        margin: 4px 0
-                        line-height: 18px
-                    button
-                        margin: 0 0 8px 0
+            form
+                margin-left: 12px
+                p
+                    margin: 4px 0
+                    line-height: 18px
+                button
+                    margin: 0 0 8px 0
             .oe_searchview_custom
                 padding: 0 8px 8px 8px
                 form
@@ -1721,6 +1745,9 @@ $sheet-max-width: 860px
                         li
                             height: auto
                             line-height: 16px
+        .oe_list_buttons.oe_editing .oe_list_save
+            // keep "save row" button hidden in o2m
+            visibility: hidden
     // }}}
     // FormView.many2many {{{
     .oe_form .oe_form_field_many2many > .oe_list
@@ -1728,6 +1755,25 @@ $sheet-max-width: 860px
             display: none
     // }}}
     // ListView {{{
+    .oe_list_buttons
+        .oe_list_save, .oe_list_discard
+            display: none
+        &.oe_editing
+            .oe_list_add, .oe_list_button_import
+                display: none
+            .oe_list_save
+                display: inline-block
+            .oe_list_discard
+                display: inline
+
+    .oe_list
+        position: relative
+        .oe_form .oe_form_field
+            width: auto
+            position: absolute
+            margin: 0 !important // dammit
+            padding: 0
+
     .oe_list_content
         width: 100%
         td:first-child, th:first-child
@@ -1771,8 +1817,7 @@ $sheet-max-width: 860px
                 border-top: 1px solid #ddd
                 > td.oe_list_field_cell
                     padding: 3px 6px
-                    progress
-                        width: 100%
+                    white-space: pre-line
                 > td, > th
                     > button
                         border: none
@@ -1800,8 +1845,6 @@ $sheet-max-width: 860px
             width: 82px
             input
                 text-align: right
-        .oe_list_edit_row_save:before
-            content: "S"
     // }}}
     // Translation {{{
     .oe_trad_field.touched
@@ -1910,6 +1953,7 @@ $sheet-max-width: 860px
     background-attachment: fixed
     >*
         opacity: 0.70
+
 // }}}
 
 div.ui-widget-overlay

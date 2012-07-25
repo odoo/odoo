@@ -13,7 +13,7 @@
     <script src="/web/static/lib/backbone/backbone.js" type="text/javascript"></script>
 
     <!-- jquery -->
-    <script src="/web/static/lib/jquery/jquery-1.7.2b1.js"></script>
+    <script src="/web/static/lib/jquery/jquery-1.7.2.js"></script>
     <script src="/web/static/lib/jquery.ui/js/jquery-ui-1.8.17.custom.min.js"></script>
     <script src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
     
@@ -38,6 +38,12 @@
     <script src="/web/static/src/js/search.js"></script>
     <script src="/web/static/src/js/view_form.js"></script>
     <script src="/web/static/src/js/view_list.js"></script>
+    <script src="/web/static/src/js/view_list_editable.js"></script>
+
+    <script src="/web/static/test/testing.js"></script>
+    <script type="text/javascript">
+        QUnit.config.testTimeout = 500;
+    </script>
 </head>
     <body id="oe" class="openerp">
         <h1 id="qunit-header">OpenERP web Test Suite</h1>
@@ -56,4 +62,5 @@
     <script type="text/javascript" src="/web/static/test/evals.js"></script>
     <script type="text/javascript" src="/web/static/test/search.js"></script>
     <script type="text/javascript" src="/web/static/test/Widget.js"></script>
+    <script type="text/javascript" src="/web/static/test/list-editable.js"></script>
 </html>
