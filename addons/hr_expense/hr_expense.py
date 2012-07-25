@@ -135,12 +135,16 @@ class hr_expense_expense(osv.osv):
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         account_journal = self.pool.get('account.journal')
         voucher_obj = self.pool.get('account.voucher')
+        currency_obj = self.pool.get('res.currency')
         wkf_service = netsvc.LocalService("workflow")
-        
+        if context is None:
+            context = {}
         for exp in self.browse(cr, uid, ids, context=context):
             company_id = exp.company_id.id
             lines = []
             total = 0.0
+            ctx = context.copy()
+            ctx.update({'date': exp.date})
             for line in exp.line_ids:
                 if line.product_id:
                     acc = line.product_id.product_tmpl_id.property_account_expense
@@ -150,15 +154,19 @@ class hr_expense_expense(osv.osv):
                     acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company_id})
                     if not acc:
                         raise osv.except_osv(_('Error !'), _('Please configure Default Expense account for Product purchase, `property_account_expense_categ`'))
-                
+                total_amount = 0.0
+                if exp.company_id.currency_id != exp.currency_id:
+                    total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, exp.company_id.currency_id.id, line.total_amount, context=ctx)
+                else:
+                    total_amount = line.total_amount
                 lines.append((0, False, {
                     'name': line.name,
                     'account_id': acc.id,
                     'account_analytic_id': line.analytic_account.id,
-                    'amount': line.total_amount,
+                    'amount': total_amount,
                     'type': 'dr'
                 }))
-                total += line.total_amount
+                total += total_amount
             if not exp.employee_id.address_home_id:
                 raise osv.except_osv(_('Error !'), _('The employee must have a Home address.'))
             acc = exp.employee_id.address_home_id.property_account_payable.id
@@ -169,6 +177,7 @@ class hr_expense_expense(osv.osv):
                 'type': 'purchase',
                 'partner_id': exp.employee_id.address_home_id.id,
                 'company_id': company_id,
+                'currency_id': exp.currency_id.id,
                 'line_ids': lines,
                 'amount': total
             }
