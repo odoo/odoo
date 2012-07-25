@@ -8,10 +8,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="System Configuration Done" version="7.0">
-                    <header>
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <label string="All pending configuration wizards have been executed. You may restart individual wizards via the list of configuration wizards."/>
+                    <footer>
+                        <button string="Close" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
