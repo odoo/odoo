@@ -415,10 +415,10 @@
             <field eval="'info@opensides.be'" name="email_from"/>
             <field eval="'Convert to quote'" name="title_action"/>
             <field name="partner_name">Global Solutions</field>
-            <field name="street">Avenue de la Liberté 56</field>
-            <field name="city">Brussels</field>
-            <field eval="1000" name="zip"/>
-            <field name="country_id" ref="base.be"/>
+             <field name="street">Union Road</field>
+            <field name="city">Liverpool</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
+            <field name="zip">L25 4RL</field>
         </record>
         <record id="crm_case_dirtminingltdunits25" model="crm.lead">
             <field eval="30" name="probability"/>
