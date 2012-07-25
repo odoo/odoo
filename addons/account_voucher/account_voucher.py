@@ -952,11 +952,11 @@ class account_voucher(osv.osv):
         if amount_residual > 0:
             account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning'),_("First configure the 'Income Currency Rate' on the company,after that create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Warning!'),_("First configure the 'Income Currency Rate' on the company,after that create accounting entry for currency rate difference."))
         else:
             account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning'),_("First configure the 'Expense Currency Rate' on the company,after that create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Warning!'),_("First configure the 'Expense Currency Rate' on the company,after that create accounting entry for currency rate difference."))
         # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
         # the receivable/payable account may have a secondary currency, which render this field mandatory
         account_currency_id = company_currency <> current_currency and current_currency or False
@@ -1516,7 +1516,7 @@ class account_bank_statement_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_amount, 'The amount of the voucher must be the same amount as the one on the statement line', ['amount']),
+        (_check_amount, 'The amount of the voucher must be the same amount as the one on the statement line.', ['amount']),
     ]
 
     _columns = {

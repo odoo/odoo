@@ -35,10 +35,10 @@ class analytic_plan_create_model(osv.osv_memory):
         if 'active_id' in context and context['active_id']:
             plan = plan_obj.browse(cr, uid, context['active_id'], context=context)
             if (not plan.name) or (not plan.code):
-                raise osv.except_osv(_('Error'), _('Please put a name and a code before saving the model.'))
+                raise osv.except_osv(_('Error!'), _('Please put a name and a code before saving the model.'))
             pids = anlytic_plan_obj.search(cr, uid, [], context=context)
             if not pids:
-                raise osv.except_osv(_('Error'), _('No analytic plan defined.'))
+                raise osv.except_osv(_('Error!'), _('Please define analytic plan.'))
             plan_obj.write(cr, uid, [context['active_id']], {'plan_id':pids[0]}, context=context)
 
             model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'),('name', '=', 'view_analytic_plan_create_model')], context=context)

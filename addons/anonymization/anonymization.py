@@ -453,9 +453,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         # add a result message in the wizard:
         msgs = ["Anonymization successful.",
                "",
-               "Don't forget to save the resulting file to a safe place because you will not be able to revert the anonymization without this file.",
+               "Donot forget to save the resulting file to a safe place because you will not be able to revert the anonymization without this file.",
                "",
-               "This file is also stored in the %s directory. The absolute file path is: %s",
+               "This file is also stored in the %s directory. The absolute file path is: %s.",
               ]
         msg = '\n'.join(msgs) % (dirpath, abs_filepath)
 

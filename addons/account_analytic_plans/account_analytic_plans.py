@@ -218,7 +218,7 @@ class account_analytic_plan_instance(osv.osv):
 
             pids = ana_plan_instance_obj.search(cr, uid, [('name','=',vals['name']), ('code','=',vals['code']), ('plan_id','<>',False)], context=context)
             if pids:
-                raise osv.except_osv(_('Error'), _('A model having same name and code.'))
+                raise osv.except_osv(_('Error!'), _('A model having same name and code.'))
 
             res = acct_anal_plan_line_obj.search(cr, uid, [('plan_id','=',journal.plan_id.id)], context=context)
             for i in res:
@@ -231,7 +231,7 @@ class account_analytic_plan_instance(osv.osv):
                             if acct_anal_acct.search(cr, uid, [('parent_id', 'child_of', [item.root_analytic_id.id]), ('id', '=', tempo[2]['analytic_account_id'])], context=context):
                                 total_per_plan += tempo[2]['rate']
                 if total_per_plan < item.min_required or total_per_plan > item.max_required:
-                    raise osv.except_osv(_('Value Error'),_('The total should be between %s and %s.') % (str(item.min_required), str(item.max_required)))
+                    raise osv.except_osv(_('Value Error!'),_('The total should be between %s and %s.') % (str(item.min_required), str(item.max_required)))
 
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context=context)
 
