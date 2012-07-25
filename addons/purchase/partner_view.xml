@@ -47,6 +47,22 @@
                 </xpath>
             </field>
         </record>
+        
+    <record id="act_res_partner_2_supplier_invoices" model="ir.actions.act_window">
+            <field name="name">Supplier Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="domain">[('type','=','in_invoice')]</field>
+            <field name="context">{'search_default_partner_id': active_id, 'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
+            <field name="help">
+                Click here to create Supplier invoice.
+                &lt;p&gt;
+                You can control the invoice from your supplier according to what you purchased or received.
+                &lt;p&gt;
+                OpenERP can also generate draft invoices automatically from purchase orders or receipts.
+            </field>
+        </record>
 
         <record id="res_partner_view_purchase_buttons" model="ir.ui.view">
             <field name="name">res.partner.view.purchase.buttons</field>
@@ -59,6 +75,8 @@
                     <button name="%(purchase.act_res_partner_2_purchase_order)d" type="action"
                         string="RFQs and Purchases"
                         groups="purchase.group_purchase_user"/>
+                    <button name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
+                        string="Supplier Invoices"/>
                 </xpath>
             </field>
         </record>
