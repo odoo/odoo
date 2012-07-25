@@ -1,22 +1,21 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem name="Recruitment"
-            id="menu_hr_recruitment_recruitment"
-            parent="hr.menu_hr_configuration"
-            sequence="40"/>
 
-        <act_window
-            id="act_hr_applicant_to_meeting"
-            name="Meetings"
-            res_model="crm.meeting"
-            src_model="hr.applicant"
-            view_mode="tree,form,calendar,graph"
-            view_type="form"/>
+    <menuitem name="Recruitment"
+        id="menu_hr_recruitment_recruitment"
+        parent="hr.menu_hr_configuration"
+        sequence="40"/>
 
-    # ------------------------------------------------------
-    # Stage
-    # ------------------------------------------------------
+    <act_window
+        id="act_hr_applicant_to_meeting"
+        name="Meetings"
+        res_model="crm.meeting"
+        src_model="hr.applicant"
+        view_mode="tree,form,calendar,graph"
+        view_type="form"/>
+
+    <!-- Stage -->
     <record id="hr_job_stage_act" model="ir.actions.act_window">
         <field name="name">Recruitment / Applicants Stages</field>
         <field name="res_model">hr.recruitment.stage</field>
@@ -27,10 +26,7 @@
     </record>
 
 
-    # ------------------------------------------------------
-    # Jobs
-    # ------------------------------------------------------
-
+    <!-- Jobs -->
     <!-- Applicant Read/Unread actions -->
     <record id="actions_server_applicant_unread" model="ir.actions.server">
         <field name="name">Mark unread</field>
@@ -343,10 +339,7 @@
         </field>
     </record>
 
-    # ------------------------------------------------------
-    # HR Job
-    # ------------------------------------------------------
-
+    <!-- HR Job -->
     <record id="hr_job_survey" model="ir.ui.view">
         <field name="name">hr.job.form1</field>
         <field name="model">hr.job</field>

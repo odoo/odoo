@@ -2,12 +2,9 @@
 <openerp>
     <data>
 
-    <menuitem id="base.menu_project_long_term" name="Long Term Planning" parent="base.menu_main_pm" sequence="3"/>
+        <menuitem id="base.menu_project_long_term" name="Long Term Planning" parent="base.menu_main_pm" sequence="3"/>
 
-    # ------------------------------------------------------
-    # Project User Allocation
-    # ------------------------------------------------------
-
+        <!-- Project User Allocation -->
         <record id="view_project_user_allocation_gantt" model="ir.ui.view">
             <field name="name">project.user.allocation.gantt</field>
             <field name="model">project.user.allocation</field>
@@ -94,9 +91,7 @@
         </record>
 
 
-    # ------------------------------------------------------
-    # Project Phase
-    # ------------------------------------------------------
+        <!-- Project Phase -->
         <act_window id="act_project_phases"
             name="Phases"
             src_model="project.project"
@@ -182,7 +177,7 @@
                                   <form string="Project Users" version="7.0">
                                       <group col="4">
                                           <field name="user_id"/>
-                                          <field name="date_start" />
+                                          <field name="date_start"/>
                                           <field name="date_end"/>
                                       </group>
                                   </form>
@@ -195,7 +190,7 @@
                                     <field name="name"/>
                                     <field name="user_id"/>
                                     <field name="date_start"/>
-                                    <field name="date_end" />
+                                    <field name="date_end"/>
                                     <field name="planned_hours" widget="float_time"/>
                                     <field name="project_id" invisible="1"/>
                                     <field name="total_hours" sum='Total Hours'/>
@@ -285,7 +280,7 @@
                         <separator orientation="vertical"/>
                         <field name="project_id"/>
                     </group>
-                    <newline/> 
+                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" name="project"/>
                         <separator orientation="vertical"/>
@@ -317,10 +312,7 @@
         </record>
 
 
-    # ------------------------------------------------------
-    # Project Task
-    # ------------------------------------------------------
-
+        <!-- Project Task -->
         <record id="view_phase_task_form2" model="ir.ui.view">
             <field name="name">phase.task.form2</field>
             <field name="model">project.task</field>
@@ -368,16 +360,15 @@
             </field>
         </record>
 
-    <act_window
-        context="{'search_default_phase_id': [active_id], 'default_phase_id' : active_id}"
-        id="project_phase_task_list"
-        name="Related Tasks"
-        res_model="project.task"
-        src_model="project.phase"
-        view_mode="tree,form"
-        />
+        <act_window
+            context="{'search_default_phase_id': [active_id], 'default_phase_id' : active_id}"
+            id="project_phase_task_list"
+            name="Related Tasks"
+            res_model="project.task"
+            src_model="project.phase"
+            view_mode="tree,form"/>
 
-    <record id="analytic_account_inherited_phase_form" model="ir.ui.view">
+        <record id="analytic_account_inherited_phase_form" model="ir.ui.view">
             <field name="name">account.analytic.account.phase.form.inherit</field>
             <field name="model">account.analytic.account</field>
             <field name="type">form</field>
@@ -393,10 +384,7 @@
             </field>
         </record>
 
-    # ------------------------------------------------------
-    # Menu Items
-    # ------------------------------------------------------
-
+        <!-- Menu Items -->
         <menuitem action="act_project_phase_list"
             id="menu_project_phase_list" parent="project.menu_project_management" sequence="2"/>
 

@@ -337,10 +337,7 @@
         </record>
 
 
-        # ------------------------------------------------------
-        # Feature Requests
-        # ------------------------------------------------------
-
+        <!-- Feature Requests -->
         <record model="ir.ui.view" id="project_feature_tree_view">
             <field name="name">Project Issue- Feature Tracker Tree</field>
             <field name="model">project.issue</field>
@@ -390,10 +387,7 @@
             view_mode="kanban,tree,form,calendar,graph"
             context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
 
-        # ------------------------------------------------------
-        # Project
-        # ------------------------------------------------------
-
+        <!-- Project -->
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>
             <field name="model">project.project</field>
@@ -446,5 +440,6 @@
                 </xpath>
             </field>
         </record>
+
     </data>
 </openerp>

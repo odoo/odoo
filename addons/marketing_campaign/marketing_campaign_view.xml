@@ -4,19 +4,14 @@
 
     <menuitem name="Configuration" id="menu_marketing_configuration" parent="base.marketing_menu" sequence="1"/>
 
-    <!--
-    ======================
-    Marketing Campaign
-    ======================
-    -->
+    <!-- Marketing Campaign -->
     <act_window name="All Segments"
         res_model="marketing.campaign.segment"
         src_model="marketing.campaign"
         view_type="form"
         view_mode="tree,form"
         id="act_marketing_campaing_segment_opened"
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
-    />
+        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"/>
 
     <!-- Campaign Followups -->
     <act_window
@@ -24,7 +19,7 @@
         id="act_marketing_campaing_followup"
         name="Campaign Follow-up" res_model="marketing.campaign.workitem"
         src_model="marketing.campaign" view_mode="tree,form"
-        view_type="form" />
+        view_type="form"/>
 
     <record model="ir.ui.view" id="view_marketing_campaign_form">
         <field name="name">marketing.campaign.form</field>
@@ -43,10 +38,10 @@
                 <div class="oe_right oe_button_box" name="button_box">
                         <button type="action"
                         name="%(act_marketing_campaing_followup)d"
-                        string="Follow-Up" />
+                        string="Follow-Up"/>
                         <button type="action"
                         name="%(act_marketing_campaing_segment_opened)d"
-                        string="Segments" />
+                        string="Segments"/>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -61,10 +56,10 @@
                         <field name="object_id"/>
                         <field name="partner_field_id"/>
                         <field name="unique_field_id"/>
-                    </group>     
+                    </group>
                 </group>
                 <separator string="Activities"/>
-                <field name="activity_ids" context="{'default_object_id': object_id, 'default_campaign_id': active_id}" />
+                <field name="activity_ids" context="{'default_object_id': object_id, 'default_campaign_id': active_id}"/>
             </sheet>
             </form>
         </field>
@@ -146,14 +141,9 @@
     </record>
 
     <menuitem name="Campaigns" id="menu_marketing_campaign" parent="base.marketing_menu"/>
-    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="30" />
+    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="30"/>
 
-    <!--
-    ======================
-    Marketing Segments
-    ======================
-    -->
-
+    <!-- Marketing Segments -->
     <record model="ir.ui.view" id="view_marketing_campaign_segment_form">
         <field name="name">marketing.campaign.segment.form</field>
         <field name="model">marketing.campaign.segment</field>
@@ -202,7 +192,7 @@
                 <field name="campaign_id"/>
                 <field name="date_run"/>
                 <field name="sync_last_date"/>
-                <field name="state" />
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -248,16 +238,12 @@
         <field name="context">{'group_by': []}</field>
     </record>
 
-    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign" action="action_marketing_campaign_segment_form" sequence="20" />
+    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign" action="action_marketing_campaign_segment_form" sequence="20"/>
 
     <!--
-    ======================
-    Marketing Activities
-    ======================
-
-    these views are not intended to be used outside the campaign context.
+        Marketing Activities
+        These views are not intended to be used outside the campaign context.
     -->
-
     <record model="ir.ui.view" id="view_marketing_campaign_activity_form">
         <field name="name">marketing.campaign.activity.form</field>
         <field name="model">marketing.campaign.activity</field>
@@ -285,7 +271,7 @@
                     <group>
                         <field name="type"/>
                         <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
-                           context="{'default_model_id':object_id}" />
+                           context="{'default_model_id':object_id}"/>
                         <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]"/>
                         <field name="report_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}" context="{'object_id':object_id}"/>
                         <field name="report_directory_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}"/>
@@ -344,12 +330,7 @@
     </record>
 
 
-    <!--
-    ======================
-    Marketing Workitems
-    ======================
-    -->
-
+    <!-- Marketing Workitems -->
     <record model="ir.ui.view" id="view_marketing_campaign_workitem_tree">
         <field name="name">marketing.campaign.workitem.tree</field>
         <field name="model">marketing.campaign.workitem</field>
@@ -358,10 +339,10 @@
             <tree colors="red:state == 'exception';black:state == 'todo';gray:state == 'cancelled'" string="Marketing Campaign Activities">
                 <field name="campaign_id"/>
                 <field name="segment_id"/>
-                <field name="activity_id" />
+                <field name="activity_id"/>
                 <field name="object_id" invisible="1"/>
                 <field name="res_id" invisible="1"/>
-                <field name="res_name" />
+                <field name="res_name"/>
                 <field name="partner_id"/>
                 <field name="date"/>
                 <field name="state"/>
@@ -464,8 +445,7 @@
         view_type="form"
         view_mode="tree,form"
         id="act_marketing_campaing_segment_opened"
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
-    />
+        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"/>
 
     <!-- Campaign Follow-ups -->
     <act_window
@@ -473,7 +453,7 @@
         id="act_marketing_campaing_followup"
         name="Campaign Follow-up" res_model="marketing.campaign.workitem"
         src_model="marketing.campaign" view_mode="tree,form"
-        view_type="form" />
+        view_type="form"/>
 
     <!-- Campaign Statistics -->
     <act_window
@@ -481,7 +461,7 @@
         id="act_marketing_campaing_stat"
         name="Campaign Statistics" res_model="campaign.analysis"
         src_model="marketing.campaign" view_mode="tree,form"
-        view_type="form" />
+        view_type="form"/>
 
     </data>
 </openerp>
