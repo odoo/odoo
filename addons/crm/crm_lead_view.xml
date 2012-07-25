@@ -67,7 +67,7 @@
             <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
         </record>
 
-        <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages" sequence="0" parent="base.menu_crm_config_lead" />
+        <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages" sequence="0" parent="base.menu_crm_config_lead" groups="base.group_no_one"/>
 
         <!--
             LEADS/OPPORTUNITIES CATEGORIES
@@ -145,7 +145,7 @@
                     <group>
                         <group>
                             <field name="user_id" />
-                            <field name="section_id" widget="selection" />
+                            <field name="section_id"/>
                             <field name="type" invisible="1"/>
                         </group>
                         <group>
@@ -234,6 +234,7 @@
                     <field name="phone"/>
                     <field name="stage_id"/>
                     <field name="categ_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)" />
                     <field name="state" groups="base.group_no_one"/>
                     <field name="type_id" invisible="1"/>
@@ -431,9 +432,9 @@
             <form string="Opportunities" version="7.0">
                 <header>
                     <button name="stage_previous" string="Previous" type="object"
-                            states="open" icon="gtk-go-back" context="{'stage_type': 'opportunity'}"/>
+                            states="open" context="{'stage_type': 'opportunity'}"/>
                     <button name="stage_next" string="Next" type="object"  
-                            states="open" icon="gtk-go-forward" context="{'stage_type': 'opportunity'}"/>
+                            states="open" context="{'stage_type': 'opportunity'}"/>
                     <button name="case_mark_won" string="Mark Won" type="object"
                             states="open" class="oe_highlight"/>
                     <button name="case_mark_won" string="Mark Won" type="object"
@@ -483,7 +484,7 @@
                         <group>
                             <label for="title_action"/>
                             <div>
-                                <field name="date_action" nolabel="1"/> -
+                                <field name="date_action" nolabel="1"/> <label string="-" attrs="{'invisible': ['|', ('date_action', '=', False), ('title_action', '=', False)]}"/>
                                 <field name="title_action" class="oe_inline" nolabel="1" placeholder="Call for proposal"/>
                             </div>
                             <field name="date_deadline"/>

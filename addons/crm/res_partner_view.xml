@@ -11,7 +11,7 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="user_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1"/>
                     </field>
                 </field>
         </record>
@@ -24,7 +24,7 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="phone" position="after">
-                        <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1" invisible="context.get('invisible_section', True)"/>
                     </field>
                 </field>
         </record>
@@ -37,10 +37,15 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="category_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1" widget="selection" context="{'invisible_section': False}"/>
                     </field>
                     <xpath expr="//field[@name='user_id']" position="after">
                         <field name="country_id"/>
+                    </xpath>
+                    <xpath expr="//group[@string='Group By...']" position="after">
+                        <group string="Display">
+                            <filter string="Show Sales Team" context="{'invisible_section': False}"/>
+                        </group>
                     </xpath>
                 </field>
         </record>
