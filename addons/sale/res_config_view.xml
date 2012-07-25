@@ -31,7 +31,7 @@
                     <field name="task_work" on_change="onchange_task_work(task_work)"/>
                     <field name="timesheet" on_change="onchange_timesheet(timesheet)"/>
                     <field name="default_order_policy" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)],'required': ['|',('group_invoice_so_lines','=',True),('group_invoice_deli_orders','=',True)]}"/>
-                    <field name="module_delivery" attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}"/>
+                    <field name="module_delivery"/>
                     <field name="time_unit" domain="[('category_id.name','=','Working Time')]"
                         attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}"/>
                     <separator string="Contracts" colspan="2"/>

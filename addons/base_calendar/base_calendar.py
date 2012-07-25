@@ -941,16 +941,19 @@ class calendar_event(osv.osv):
             duration = 1.00
             value['duration'] = duration
 
-        if allday: # For all day event
-            value = {'duration': 24.0}
-            duration = 24.0
-            if start_date:
-                start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
-                start_date = datetime.strftime(datetime(start.year, start.month, start.day, 0,0,0), "%Y-%m-%d %H:%M:%S")
-                value['date'] = start_date
-
-
         start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
+        if allday: # For all day event
+            duration = 24.0
+            value['duration'] = duration
+            # change start_date's time to 00:00:00 in the user's timezone
+            user = self.pool.get('res.users').browse(cr, uid, uid)
+            tz = pytz.timezone(user.context_tz) if user.context_tz else pytz.utc
+            start = pytz.utc.localize(start).astimezone(tz)     # convert start in user's timezone
+            start = start.replace(hour=0, minute=0, second=0)   # change start's time to 00:00:00
+            start = start.astimezone(pytz.utc)                  # convert start back to utc
+            start_date = start.strftime("%Y-%m-%d %H:%M:%S")
+            value['date'] = start_date
+
         if end_date and not duration:
             end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
             diff = end - start
