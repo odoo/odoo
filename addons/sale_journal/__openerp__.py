@@ -27,8 +27,7 @@
 The sales journal modules allows you to categorise your sales and deliveries (picking lists) between different journals.
 ========================================================================================================================
 
-This module is very helpful for bigger companies that
-works by departments.
+This module is very helpful for bigger companies that works by departments.
 
 You can use journal for different purposes, some examples:
     * isolate sales of different departments
@@ -37,12 +36,13 @@ You can use journal for different purposes, some examples:
 Journals have a responsible and evolves between different status:
     * draft, open, cancel, done.
 
-Batch operations can be processed on the different journals to
-confirm all sales at once, to validate or invoice packing, ...
+Batch operations can be processed on the different journals to confirm all sales
+at once, to validate or invoice packing.
 
-It also supports batch invoicing methods that can be configured by partners and sales orders, examples:
-    * daily invoicing,
-    * monthly invoicing, ...
+It also supports batch invoicing methods that can be configured by partners and
+sales orders, examples:
+    * daily invoicing
+    * monthly invoicing
 
 Some statistics by journals are provided.
     """,

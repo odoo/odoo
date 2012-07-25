@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Accounting & Finance',
     'description': """
-This module allows to use several analytic plans, according to the general journal.
+This module allows to use several analytic plans according to the general journal.
 ===================================================================================
 
 Here multiple analytic lines are created when the invoice or the entries
@@ -55,6 +55,7 @@ Plan2:
 
 So when this line of invoice will be confirmed, it will generate 3 analytic lines,
 for one account entry.
+
 The analytic plan validates the minimum and maximum percentage at the time of creation
 of distribution models.
         """,
