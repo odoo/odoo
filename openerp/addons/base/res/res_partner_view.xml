@@ -216,7 +216,7 @@
                                 </group>
                                 <group>
                                     <field name="customer"/>
-                                    <field name="supplier"/>
+                                    <field name="supplier" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="ref"/>
@@ -309,7 +309,6 @@
                                           <li t-if="record.city.raw_value and !record.country.raw_value"><field name="city"/></li>
                                           <li t-if="!record.city.raw_value and record.country.raw_value"><field name="country"/></li>
                                           <li t-if="record.city.raw_value and record.country.raw_value"><field name="city"/>, <field name="country"/></li>
-                                          <li t-if="record.mobile.raw_value"><field name="mobile"/></li>
                                           <li t-if="record.phone.raw_value">Tel: <field name="phone"/></li>
                                           <li t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></li>
                                           <li t-if="record.email.raw_value"><a t-attf-href="mailto:#{record.email.raw_value}"><field name="email"/></a></li>
