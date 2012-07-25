@@ -184,15 +184,14 @@ class account_bank_statement(osv.osv):
            :param char st_line_number: will be used as the name of the generated account move
            :return: dict of value to create() the account.move
         """
-        move_vals = {
+        return {
             'journal_id': st_line.statement_id.journal_id.id,
             'period_id': st_line.statement_id.period_id.id,
             'date': st_line.date,
             'name': st_line_number,
             'ref': st_line.ref,
         }
-        return move_vals
-        
+
     def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, 
         context=None):
         """Compute the args to build the dict of values to create the bank move line from a
@@ -213,17 +212,15 @@ class account_bank_statement(osv.osv):
         cur_id = False
         amt_cur = False
         if st_line.statement_id.currency.id <> company_currency_id:
-            amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                        st.currency.id, amount, context=context)
-            amt_cur = -amount_cur
+            cur_id = st_line.statement_id.currency.id
         if st_line.account_id and st_line.account_id.currency_id and st_line.account_id.currency_id.id <> company_currency_id:
             cur_id = st_line.account_id.currency_id.id
-            amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                    st_line.account_id.currency_id.id, amount, context=context)
-            amt_cur = -amount_cur
-            
+        if cur_id:
+            res_currency_obj = self.pool.get('res.currency')
+            amt_cur = -res_currency_obj.compute(cr, uid, company_currency_id, cur_id, amount, context=context)
+
         res = self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit, 
-            amount_currency=amt_cur, currency_id=cur_id, analytic_id = anl_id, context=context)
+            amount_currency=amt_cur, currency_id=cur_id, analytic_id=anl_id, context=context)
         return res
 
     def _get_counter_part_account(sefl, cr, uid, st_line, context=None):
@@ -235,12 +232,9 @@ class account_bank_statement(osv.osv):
                   create the move from.
            :return: int/long of the account.account to use as counterpart
         """
-        account_id = False
         if st_line.amount >= 0:
-            account_id = st_line.statement_id.journal_id.default_credit_account_id.id
-        else:
-            account_id = st_line.statement_id.journal_id.default_debit_account_id.id
-        return account_id
+            return st_line.statement_id.journal_id.default_credit_account_id.id
+        return st_line.statement_id.journal_id.default_debit_account_id.id
 
     def _get_counter_part_partner(sefl, cr, uid, st_line, context=None):
         """Retrieve the partner to use in the counterpart move. 
@@ -251,9 +245,7 @@ class account_bank_statement(osv.osv):
                   create the move from.
            :return: int/long of the res.partner to use as counterpart
         """
-        partner_id = ((st_line.partner_id) and st_line.partner_id.id) or False
-        return partner_id
-        
+        return st_line.partner_id and st_line.partner_id.id or False
 
     def _prepare_counterpart_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, 
         context=None):
@@ -279,11 +271,10 @@ class account_bank_statement(osv.osv):
         if st_line.statement_id.currency.id <> company_currency_id:
             amt_cur = st_line.amount
             cur_id = st_line.statement_id.currency.id
-        res = self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit, 
+        return self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit, 
             amount_currency = amt_cur, currency_id = cur_id, account_id = account_id,
             partner_id = partner_id, context=context)
-        return res
-        
+
     def _prepare_move_line_vals(self, cr, uid, st_line, move_id, debit, credit, currency_id = False,
                 amount_currency= False, account_id = False, analytic_id = False, 
                 partner_id = False, context=None):
@@ -305,23 +296,10 @@ class account_bank_statement(osv.osv):
            :param int/long partner_id: ID of the partner to put on the move line
            :return: dict of value to create() the account.move.line
         """
-        acc_id = (st_line.account_id) and st_line.account_id.id
-        cur_id = st_line.statement_id.currency.id
-        par_id = ((st_line.partner_id) and st_line.partner_id.id) or False
-        anl_acc_id = False
-        am_curr = False
-        amount_currency = False
-        if account_id:
-            acc_id = account_id
-        if currency_id:
-            cur_id = currency_id
-        if amount_currency:
-            am_curr = amount_currency
-        if analytic_id:
-            anl_acc_id = analytic_id
-        if partner_id:
-            par_id = partner_id
-        ml_val = {
+        acc_id = account_id or st_line.account_id.id
+        cur_id = currency_id or st_line.statement_id.currency.id
+        par_id = partner_id or (((st_line.partner_id) and st_line.partner_id.id) or False)
+        return {
             'name': st_line.name,
             'date': st_line.date,
             'ref': st_line.ref,
@@ -334,15 +312,14 @@ class account_bank_statement(osv.osv):
             'journal_id': st_line.statement_id.journal_id.id,
             'period_id': st_line.statement_id.period_id.id,
             'currency_id': cur_id,
-            'amount_currency': am_curr,
-            'analytic_account_id': anl_acc_id,
+            'amount_currency': amount_currency,
+            'analytic_account_id': analytic_id,
         }
-        return ml_val
 
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
-        """Create the account move from the statement line using the _prepare_bank_move_line and
-            _prepare_counterpart_move_line hook methods.
-           :param int/long st_line: ID of the account.bank.statement.line to create the move from.
+        """Create the account move from the statement line.
+
+           :param int/long st_line_id: ID of the account.bank.statement.line to create the move from.
            :param int/long company_currency_id: ID of the res.currency of the company
            :param char st_line_number: will be used as the name of the generated account move
            :return: ID of the account.move created
@@ -373,14 +350,14 @@ class account_bank_statement(osv.osv):
         amount = res_currency_obj.compute(cr, uid, st.currency.id,
                 company_currency_id, st_line.amount, context=context)
 
-        bank_move_val = self._prepare_bank_move_line(cr, uid, st_line, move_id, amount, 
+        bank_move_vals = self._prepare_bank_move_line(cr, uid, st_line, move_id, amount, 
             company_currency_id, context=context)
-        move_line_id = account_move_line_obj.create(cr, uid, bank_move_val, context=context)
+        move_line_id = account_move_line_obj.create(cr, uid, bank_move_vals, context=context)
         torec.append(move_line_id)
 
-        counterpart_move_val = self._prepare_counterpart_move_line(cr, uid, st_line, move_id, 
+        counterpart_move_vals = self._prepare_counterpart_move_line(cr, uid, st_line, move_id, 
             amount, company_currency_id, context=context)
-        account_move_line_obj.create(cr, uid, counterpart_move_val, context=context)
+        account_move_line_obj.create(cr, uid, counterpart_move_vals, context=context)
 
         for line in account_move_line_obj.browse(cr, uid, [x.id for x in
                 account_move_obj.browse(cr, uid, move_id,
