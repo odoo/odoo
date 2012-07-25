@@ -2,10 +2,10 @@
 <openerp>
     <data noupdate="1">
 
-        <!-- Don't use any implied_ids here; this group behavior is particular -->
+        <!-- Don't use any implied_ids here; this group's behavior is particular -->
         <record id="group_portal_member" model="res.groups">
             <field name="name">Portal Member</field>
-            <field name="comment">Portal members can access information provided by the portal menu and the others module it's linked with.  Also, portal members are chrooted in a specific menu.</field>
+            <field name="comment">Portal members can access information through the portal menu.  Also, they are chrooted in this specific menu.</field>
         </record>
 
         <record id="module_category_portal" model="ir.module.category">
