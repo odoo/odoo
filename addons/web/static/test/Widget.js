@@ -197,17 +197,6 @@ $(document).ready(function () {
             ok(a[i], "should pass test " + i);
         }
     });
-    test('delegate(Function)', function () {
-        var clicked = false, fn = function () {
-            return { 'click li': function () { clicked = true; } }; };
-        var w = new (instance.web.Widget.extend({
-            template: 'test.widget.template',
-            events: fn
-        }));
-        w.renderElement();
-        w.$('li:first').click();
-        ok(clicked, "should accept #events to be a function");
-    });
     test('undelegate', function () {
         var clicked = false, newclicked = false;
         var w = new (instance.web.Widget.extend({
