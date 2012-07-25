@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Social Network has been installed</value>
+            <value>Manage all communications on your documents (emails,
+                notifications, comments and discussions) and keep track of
+                news on documents you follow.
+            </value>
+        </function>
+
         <record forcecreate="True" id="ir_cron_mail_scheduler_action" model="ir.cron">
             <field name="name">Email Queue Manager</field>
             <field name="user_id" ref="base.user_root"/>
