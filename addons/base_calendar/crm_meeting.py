@@ -65,6 +65,11 @@ class crm_meeting(base_state, osv.Model):
     _defaults = {
         'state': 'draft',
     }
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default.update({'attendee_ids' : []})
+        return super(crm_meeting, self).copy(cr, uid, id, default, context)
 
     # ----------------------------------------
     # OpenChatter
