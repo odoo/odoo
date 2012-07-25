@@ -25,6 +25,7 @@
     'version': '1.0',
     'category': 'Human Resources',
     "sequence": 30,
+    "summary": "Expenses Validation, Invoicing",
     'description': """
 This module aims to manage employee's expenses.
 ===============================================

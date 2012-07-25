@@ -54,10 +54,8 @@
 -
   After communicated  with customer, I put some notes with contract details.
 -
-  !python {model: crm.add.note}: |
-    context.update({'active_model': 'crm.lead', 'active_id': ref('crm_case_qrecorp0')})
-    note_id = self.create(cr, uid, {'body': "ces détails envoyés par le client sur ​​le FAX pour la qualité"})
-    self.action_add(cr, uid, [note_id], context=context)
+  !python {model: crm.lead}: |
+    self.message_append_note(cr, uid, [ref('crm_case_qrecorp0')], subject='Test note', body='ces détails envoyés par le client sur ​​le FAX pour la qualité')
 -
   I win this opportunity
 -
@@ -113,7 +111,7 @@
 -
   !python {model: crm.meeting}: |
     context.update({'active_model': 'crm.meeting'}) 
-    self.case_open(cr, uid, [ref('crm.crm_case_reviewneeds0')])
+    self.case_open(cr, uid, [ref('base_calendar.crm_case_reviewneeds0')])
 -
   I invite a user for meeting.
 -
