@@ -520,7 +520,7 @@ class mrp_production(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for production in self.browse(cr, uid, ids, context=context):
             if production.state not in ('draft', 'cancel'):
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in state \'%s\'') % production.state)
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in state \'%s\'.') % production.state)
         return super(mrp_production, self).unlink(cr, uid, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -620,7 +620,7 @@ class mrp_production(osv.osv):
                     self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
 
             if not bom_id:
-                raise osv.except_osv(_('Error'), _("Cannot find a bill of material for this product."))
+                raise osv.except_osv(_('Error!'), _("Cannot find a bill of material for this product."))
             factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
             res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id)
             results = res[0]
@@ -643,7 +643,7 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids, context=context):
             if production.state == 'confirmed' and production.picking_id.state not in ('draft', 'cancel'):
                 raise osv.except_osv(
-                    _('Cannot cancel manufacturing order.'),
+                    _('Cannot cancel manufacturing order!'),
                     _('You must first cancel related internal picking attached to this manufacturing order.'))
             if production.move_created_ids:
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
