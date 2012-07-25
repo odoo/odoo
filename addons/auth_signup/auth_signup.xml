@@ -2,8 +2,8 @@
 <openerp>
     <data>
         <record id="signup_form_view" model="ir.ui.view">
-            <field name="name">signup.signup.form</field>
-            <field name="model">signup.signup</field>
+            <field name="name">auth.signup.form</field>
+            <field name="model">auth.signup</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Signup" version="7.0">
@@ -29,9 +29,9 @@
         </record>
 
         <record id="signup_action" model="ir.actions.act_window">
-            <field name="name">signup.signup</field>
+            <field name="name">auth.signup</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">signup.signup</field>
+            <field name="res_model">auth.signup</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>

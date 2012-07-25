@@ -12,9 +12,9 @@
     'signup.xml',
  ],
  'js': [
-    'static/src/js/signup.js',
+    'static/src/js/auth_signup.js',
  ],
  'qweb': [
-     'static/src/xml/signup.xml',
+     'static/src/xml/auth_signup.xml',
  ],
 }

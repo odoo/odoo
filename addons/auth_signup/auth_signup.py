@@ -8,7 +8,7 @@ class res_users(osv.Model):
     ]
 
 class signup_signup(osv.TransientModel):
-    _name = 'signup.signup'
+    _name = 'auth.signup'
     _columns = {
         'name': fields.char('Name', size=64),
         'email': fields.char('Email', size=64),
@@ -34,7 +34,7 @@ class signup_signup(osv.TransientModel):
             'active': True,
         }
 
-        user_template_id = self.pool.get('ir.config_parameter').get_param(cr, uid, 'signup.user_template_id', 0)
+        user_template_id = self.pool.get('ir.config_parameter').get_param(cr, uid, 'auth.signup_user_template_id', 0)
         if user_template_id:
             self.pool.get('res.users').copy(cr, 1, user_template_id, new_user, context=context)
         else:

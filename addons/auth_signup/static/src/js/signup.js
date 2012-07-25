@@ -1,4 +1,4 @@
-openerp.signup = function(instance) {
+openerp.auth_signup = function(instance) {
 
     instance.web.UserMenu.include({
         start: function() {
