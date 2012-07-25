@@ -2818,10 +2818,11 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 if (follow)
                     link += "<br />";
             }
-            this.$element.find('a')
+            var $link = this.$element.find('.oe_form_uri')
                  .unbind('click')
-                 .html(link)
-                 .click(function () {
+                 .html(link);
+            if (! this.get_definition_options().no_open)
+                $link.click(function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
                         res_model: self.field.relation,
