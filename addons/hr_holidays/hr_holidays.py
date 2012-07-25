@@ -112,7 +112,7 @@ class hr_holidays(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Description', required=True, size=64),
+        'name': fields.text('Description', required=True,states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
             'State', readonly=True, help='The state is set to \'To Submit\', when a holiday request is created.\
             \nThe state is \'To Approve\', when holiday request is confirmed by user.\
@@ -126,7 +126,6 @@ class hr_holidays(osv.osv):
         #'manager_id': fields.many2one('hr.employee', 'Leave Manager', invisible=False, readonly=True, help='This area is automatically filled by the user who validate the leave'),
         #'notes': fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
         'manager_id': fields.many2one('hr.employee', 'First Approval', invisible=False, readonly=True, help='This area is automatically filled by the user who validate the leave'),
-        'notes': fields.text('Reasons',readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'number_of_days_temp': fields.float('Number of Days', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'number_of_days': fields.function(_compute_number_of_days, string='Number of Days', store=True),
         'meeting_id': fields.many2one('crm.meeting', 'Meeting'),
@@ -147,14 +146,13 @@ class hr_holidays(osv.osv):
         'holiday_type': 'employee'
     }
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "You have to select an employee or a category"),
+        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "My user has no employee."),
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be before the end date !"),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
     ]
     
     def create(self, cr, uid, vals, context=None):
         obj_id = super(hr_holidays, self).create(cr, uid, vals, context=context)
-        self.create_notificate(cr, uid, [obj_id], context=context)
         return obj_id
     
     def _create_resource_leave(self, cr, uid, leaves, context=None):
@@ -269,7 +267,7 @@ class hr_holidays(osv.osv):
                     'name': record.name,
                     'categ_ids': record.holiday_status_id.categ_id and [(6,0,[record.holiday_status_id.categ_id.id])] or [],
                     'duration': record.number_of_days_temp * 8,
-                    'description': record.notes,
+                    'description': record.name,
                     'user_id': record.user_id.id,
                     'date': record.date_from,
                     'end_date': record.date_to,
@@ -375,18 +373,11 @@ class hr_holidays(osv.osv):
             if obj.employee_id.parent_id and not obj.employee_id.parent_id.user_id.id in user_ids:
                 user_ids.append(obj.employee_id.parent_id.user_id.id)
         return user_ids
-        
-    def create_notificate(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("The %s request has been <b>created</b> and is waiting confirmation")
-                        % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
-        return True
     
     def holidays_confirm_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_append_note(cr, uid, [obj.id], _('System notification'), 
-                    _("The %s request has been <b>confirmed</b> and is waiting for validation by the manager.")
+                    _("The %s request has been <b>submitted</b> and is waiting for validation by the manager.")
                     % ('leave' if obj.type == 'remove' else 'allocation',), type='notification')
     
     def holidays_validate_notificate(self, cr, uid, ids, context=None):
