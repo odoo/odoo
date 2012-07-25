@@ -28,7 +28,7 @@
     "website": "http://www.openerp.com",
     "summary": "Hierarchy, Jobs, Departments",
     "description": """
-Module for human resource management.
+Module for Human Resource Management.
 =====================================
 
 You can manage:

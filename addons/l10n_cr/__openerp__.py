@@ -44,14 +44,14 @@ Chart of accounts for Costa Rica.
 =================================
 
 Includes:
-* account.type
-* account.account.template
-* account.tax.template
-* account.tax.code.template
-* account.chart.template
+    * account.type
+    * account.account.template
+    * account.tax.template
+    * account.tax.code.template
+    * account.chart.template
 
-Everything is in English with Spanish translation. Further translations are welcome, please go to
-http://translations.launchpad.net/openerp-costa-rica
+Everything is in English with Spanish translation. Further translations are welcome,
+please go to http://translations.launchpad.net/openerp-costa-rica.
     """,
     'depends': ['account', 'account_chart', 'base'],
     'init_xml': [],
