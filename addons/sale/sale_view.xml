@@ -204,6 +204,7 @@
                                     </header>
                                     <group>
                                         <group>
+                                            <field name="state" invisible="1" />
                                             <field name="product_id"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 groups="base.group_user"
@@ -256,7 +257,7 @@
                                     </div>
                                 </form>
                                 <tree string="Sales Order Lines">
-                                    <field name="state" invisible="1"/>
+                                    <field name="state" invisible="1" />
                                     <field name="sequence"/>
                                     <field name="name"/>
                                     <field name="product_uom_qty" string="Quantity"/>
