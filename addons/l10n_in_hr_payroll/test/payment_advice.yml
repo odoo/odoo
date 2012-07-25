@@ -1,0 +1,56 @@
+-
+  import time
+-
+  I create a new Payment Advice For Month june and july 
+-
+  !record {model: hr.payroll.advice, id: payment_advice_1}: 
+    name: 'June'
+    date: !eval time.strftime( "%Y-%m-%d" )
+    bank_id: 'base.res_bank_1'
+    chaque_nos: '007667'
+    line_ids:
+      - employee_id: 'hr.employee_fp'
+        name: '90125452'
+        ifsc_code: 'abn45215145'
+        bysal: '25000'
+        debit_credit: 'C'
+      - employee_id: 'hr.employee_al'
+        name: '00014521111232'
+        ifsc_code: 'sbi45452145'
+        bysal: '20000'
+        debit_credit: 'C'            
+-
+  !record {model: hr.payroll.advice, id: payment_advice_2}: 
+    name: 'July'
+    date: !eval time.strftime( "%Y-%m-%d" )
+    chaque_nos: '007568'
+    line_ids:
+      - employee_id: 'hr.employee_fp'
+        name: '90125452'
+        bysal: '25000'
+        debit_credit: 'C'
+      - employee_id: 'hr.employee_al'
+        name: '00014521111232'
+        bysal: '20000'
+        debit_credit: 'C'            
+-
+  I check my payment order state is Confirmed
+-
+  !assert {model: hr.payroll.advice, id: payment_advice_1, string: state is confirmed}:
+    - state == 'draft'
+-
+  In order to test the PDF reports defined on a Payment Advice,we will print a Payment Advice Detail Summary Report when NEFT is checked
+-
+  !python {model: hr.payroll.advice}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.payroll.advice').create(cr, uid, [ref('l10n_in_hr_payroll.payment_advice_1')], {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'l10n_in_hr_payroll_summary report'+format), 'wb+').write(data)
+-
+  In order to test the PDF reports defined on a Payment Advice,we will print a Payment Advice Detail Summary Report when NEFT is Not checked
+-
+  !python {model: hr.payroll.advice}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.payroll.advice').create(cr, uid, [ref('l10n_in_hr_payroll.payment_advice_2')], {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'l10n_in_hr_payroll_summary report'+format), 'wb+').write(data)
