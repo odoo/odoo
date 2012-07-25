@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:49+0000\n"
-"PO-Revision-Date: 2012-07-21 12:33+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-07-24 03:49+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-22 04:57+0000\n"
-"X-Generator: Launchpad (build 15654)\n"
+"X-Launchpad-Export-Date: 2012-07-25 05:04+0000\n"
+"X-Generator: Launchpad (build 15679)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Work Centers"
-msgstr ""
+msgstr "Дамжлагуудын маршрут"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -31,16 +31,22 @@ msgid ""
 "raw materials (stock decrease) and the production of the finished products "
 "(stock increase) when the order is processed."
 msgstr ""
+"OpenERP нь ихэвчлэн татан авалтын дүрэм болон жор дээр үндэслэн "
+"Үйлдвэрлэлийн захиалгыг автоматаар санал болгодог, гэхдээ гараараа "
+"үйлдвэрлэлийн захиалгыг мөн үүсгэх боломжтой.  Систем үйлдвэрлэхэд "
+"шаардагдах түүхий эд материалын зарлага (нөөц хорогдох) бүртгэж "
+"үйлдвэрлэлийн захиалга дуусах үед бэлэн болсон бүтээгдэхүүний орлого (нөөц "
+"нэмэгдэх) бүртгэдэг."
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
-msgstr ""
+msgstr "Систем бүрдэл хэсгүүдийг хайх байрлал"
 
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr ""
+msgstr "Дамжлагуудын Ашиглалт"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_sugar_product_template
@@ -50,17 +56,17 @@ msgstr ""
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "No. Of Cycles"
-msgstr ""
+msgstr "Циклийн тоо"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of Cycles"
-msgstr ""
+msgstr "Циклийн тоо"
 
 #. module: mrp
 #: model:product.uom.categ,name:mrp.product_uom_categ_fluid
 msgid "Fluid"
-msgstr ""
+msgstr "Шингэн"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
@@ -68,54 +74,56 @@ msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
 msgstr ""
+"'Хамгийн бага нөөцийн дүрэм' нь нөөц хамгийн бага түвшиндээ хүрмэгц "
+"үйлдвэрлэлийн захиалга автомат үүсэх бололцоогоор системийг хангадаг."
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
 msgid "Picking list"
-msgstr ""
+msgstr "Бэлтгэх Жагсаалт"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Hourly Cost"
-msgstr ""
+msgstr "Цагийн өртөг"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Uom"
-msgstr ""
+msgstr "Хэмжих нэгжээрх өртөг үнэ"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Scrap Products"
-msgstr ""
+msgstr "Гологдол Бараанууд"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr ""
+msgstr "Маршрут"
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr ""
+msgstr "Дамжлагын Бүтээгдэхүүн"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Search Bill Of Material"
-msgstr ""
+msgstr "Жор Хайх"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct1
 msgid "For stockable products and consumables"
-msgstr ""
+msgstr "Хангамжийн бараа болон хадгалах бараануудын хувьд"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "To Produce"
-msgstr ""
+msgstr "Үйлдвэрлэх"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -123,6 +131,8 @@ msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
 msgstr ""
+"Үйлдвэрлэлийн нэг маршрутын хувьд уг дамжлага өөрийн үйлдлийг давтан "
+"гүйцэтгэх давтамжын тоо."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -130,44 +140,46 @@ msgstr ""
 #: view:mrp.production:0
 #: field:mrp.production,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Код"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finished Products"
-msgstr ""
+msgstr "Бэлэн Бүтээгдэхүүн"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are currently in production."
-msgstr ""
+msgstr "Идэвхтэй үйлдвэрлэгдэж байгаа үйлдвэрлэлийн захиалгууд."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
 #: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "To Buy"
-msgstr ""
+msgstr "Худалдаж авах"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "The system launches automatically a RFQ to the preferred supplier."
 msgstr ""
+"Систем харгалзах нийлүүлэгч рүү автоматаар үнийн саналын хүсэлт (ҮСХ-RFQ)-"
+"ийг үүсгэнэ."
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Products to Finish"
-msgstr ""
+msgstr "Дуусгах Бүтээгдэхүүнүүд"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "Set / Pack"
-msgstr ""
+msgstr "Олонлог / Багц"
 
 #. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,state:0
 msgid "State"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
@@ -177,7 +189,7 @@ msgstr ""
 #. module: mrp
 #: model:product.template,name:mrp.product_orange_product_template
 msgid "Orange"
-msgstr ""
+msgstr "Жүрж"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -185,11 +197,13 @@ msgid ""
 "This is used in case of a service without any impact in the system, a "
 "training session for instance."
 msgstr ""
+"Энэ нь системд ямар нэг нөлөө байхгүй үйлчилгээ, тухайлбал сургалт зэрэг "
+"үйлчилгээний тохиолдолд энэ нь хэрэглэгддэг."
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "UOM"
-msgstr ""
+msgstr "Х.нэгж"
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -197,7 +211,7 @@ msgstr ""
 #: field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
-msgstr ""
+msgstr "Бүтээгдэхүүний тоо"
 
 #. module: mrp
 #: help:mrp.workcenter,product_id:0
@@ -205,16 +219,18 @@ msgid ""
 "Fill this product to track easily your production costs in the analytic "
 "accounting."
 msgstr ""
+"Энэ барааг бөглөснөөр үйлдвэрлэлийн өртөгийг шинжилгээний санхүүд "
+"хялбархнаар хөтлөж болно."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
 msgid "For purchased material"
-msgstr ""
+msgstr "Худалдан авсан материалын хувьд"
 
 #. module: mrp
 #: field:mrp.bom.revision,indice:0
 msgid "Revision"
-msgstr ""
+msgstr "Хувилбар"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.product_form_config_action
@@ -222,27 +238,29 @@ msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Худалдаж авдаг, зардаг бүх л төрлийн бараа үүсгэх форм. Хэрэв бараа нь "
+"худалдаж авч болдог бол нийлүүлэгчийг зааж өгнө үү."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.next_id_77
 msgid "Reporting"
-msgstr ""
+msgstr "Тайлагнах"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
 msgid "Cycle Account"
-msgstr ""
+msgstr "Циклийн Данс"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Work Cost"
-msgstr ""
+msgstr "Ажлын Өртөг"
 
 #. module: mrp
 #: report:bom.structure:0
 msgid "["
-msgstr ""
+msgstr "["
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0

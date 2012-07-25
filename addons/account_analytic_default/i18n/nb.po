@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-07-23 12:20+0000\n"
+"Last-Translator: Kaare Pettersen <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 05:25+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-07-24 06:06+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -24,6 +24,9 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"velg en partner som vil bruke den analytiske kontoen spesifisert i analytisk "
+"standard (f.eks. opprett ny kundefaktura eller Salgsordre hvis vi velger "
+"denne partneren, det vil automatisk ta denne som en analytisk konto)"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -60,7 +63,7 @@ msgstr "Plukkliste"
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Conditions"
-msgstr "Vilkår"
+msgstr "Betingelser"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,company_id:0
@@ -69,6 +72,9 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
+"velg et firma som vil bruke den analytiske kontoen spesifisert i analytisk "
+"standard (f.eks. opprett ny kundefaktura eller Salgsordre hvis vi velger "
+"dette firmaet, det vil automatisk ta denne som en analytisk konto)"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
@@ -84,7 +90,7 @@ msgstr "Produkt"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Analytisk Distribusjon"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -125,12 +131,13 @@ msgstr "Analytiske Standarder"
 #. module: account_analytic_default
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Referanse må være unik pr firma!"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Analytical defaults whose end date is greater than today or None"
 msgstr ""
+"Analytiske defaultverdier hvor sluttdato er større en dagens dato eller ingen"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -139,6 +146,9 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"velg et produkt som vil bruke den analytiske kontoen spesifisert i analytisk "
+"standard (f.eks. opprett ny kundefaktura eller Salgsordre hvis vi velger "
+"dette produktet, det vil automatisk ta denne som en analytisk konto)"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -176,7 +186,7 @@ msgstr "Startdato"
 #: help:account.analytic.default,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr ""
+msgstr "Gir sekvensordenen når det vises en liste av analytisk distribusjon"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
