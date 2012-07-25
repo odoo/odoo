@@ -24,7 +24,7 @@ class crm_contact_us(osv.TransientModel):
         read datas generated through this module.  That's why we'll write those
         information in the crm.lead table and leave blank entries in the
         portal_crm.crm_contact_us table.  This is why the create() method is
-        overridden.
+        overwritten.
         """
         crm_lead = self.pool.get('crm.lead')
 
@@ -37,6 +37,16 @@ class crm_contact_us(osv.TransientModel):
         is figured out.
         """
         values['contact_name'] = values['name']
+
+        """
+        The email_from field only makes sense if the form is submitted by an
+        anonymous user; otherwise it should be the current user's email.
+        """
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+
+        if (user.login != 'anonymous'):
+            values['email_from'] = user.user_email
+
         crm_lead.create(cr, 1, dict(values,user_id=False), context)
 
         """

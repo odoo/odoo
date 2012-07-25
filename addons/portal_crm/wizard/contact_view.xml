@@ -17,7 +17,11 @@
                                 <div class="oe_portal_crm_contact_form">
                                     <field name="name" placeholder="Name"/>
                                     <field name="partner_name" placeholder="Company"/>
-                                    <field name="email_from" placeholder="Email"/>
+                                    <!--
+                                        The email field only makes sense for the anonymous user.
+                                        In other cases, it's auto-filled in the python code.
+                                    -->
+                                    <field name="email_from" placeholder="Email" groups="anonymous.group_anonymous"/>
                                     <field name="phone" placeholder="Phone"/>
                                     <field name="description" placeholder="Your question"/>
                                     <button string="Submit" name="submit" type="object"/>
