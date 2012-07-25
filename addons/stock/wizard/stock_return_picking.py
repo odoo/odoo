@@ -96,7 +96,7 @@ class stock_return_picking(osv.osv_memory):
             pick_obj = self.pool.get('stock.picking')
             pick = pick_obj.browse(cr, uid, record_id, context=context)
             if pick.state not in ['done','confirmed','assigned']:
-                raise osv.except_osv(_('Warning !'), _("You may only return pickings that are Confirmed, Available or Done!"))
+                raise osv.except_osv(_('Warning!'), _("You may only return pickings that are Confirmed, Available or Done!"))
             valid_lines = 0
             return_history = self.get_return_history(cr, uid, record_id, context)
             for m  in pick.move_lines:

@@ -1154,7 +1154,7 @@ class stock_picking(osv.osv):
                 return True
             for move in pick.move_lines:
                 if move.state == 'done':
-                    raise osv.except_osv(_('Error'), _('You cannot cancel picking because stock move is in done state !'))
+                    raise osv.except_osv(_('Error'), _('You cannot cancel picking because stock move is in done state!'))
         return True
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
@@ -1162,7 +1162,7 @@ class stock_picking(osv.osv):
             context = {}
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
-                raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
+                raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state!')%(pick.state,))
             else:
                 ids2 = [move.id for move in pick.move_lines]
                 ctx = context.copy()
@@ -1661,12 +1661,12 @@ class stock_move(osv.osv):
 
     _constraints = [
         (_check_tracking,
-            'You must assign a serial number for this product',
+            'You must assign a serial number for this product.',
             ['prodlot_id']),
-        (_check_location, 'You can not move products from or to a location of the type view.',
+        (_check_location, 'You cannot move products from or to a location of the type view.',
             ['location_id','location_dest_id']),
         (_check_product_lot,
-            'You try to assign a lot which is not from the same product',
+            'You try to assign a lot which is not from the same product.',
             ['prodlot_id'])]
 
     def _default_location_destination(self, cr, uid, context=None):
@@ -1747,8 +1747,8 @@ class stock_move(osv.osv):
             for move in self.browse(cr, uid, ids, context=context):
                 if move.state == 'done':
                     if frozen_fields.intersection(vals):
-                        raise osv.except_osv(_('Operation forbidden'),
-                                             _('Quantities, Unit of Measures, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator)'))
+                        raise osv.except_osv(_('Operation forbidden !'),
+                                             _('Quantities, Unit of Measures, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -2361,7 +2361,7 @@ class stock_move(osv.osv):
         ctx = context.copy()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state != 'draft' and not ctx.get('call_unlink',False):
-                raise osv.except_osv(_('UserError'),
+                raise osv.except_osv(_('UserError!'),
                         _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(
             cr, uid, ids, context=ctx)
@@ -2565,7 +2565,7 @@ class stock_move(osv.osv):
             if move.state in ('done', 'cancel'):
                 continue
             partial_data = partial_datas.get('move%s'%(move.id), False)
-            assert partial_data, _('Missing partial picking data for move #%s') % (move.id)
+            assert partial_data, _('Missing partial picking data for move #%s.') % (move.id)
             product_qty = partial_data.get('product_qty',0.0)
             move_product_qty[move.id] = product_qty
             product_uom = partial_data.get('product_uom',False)
@@ -2773,7 +2773,7 @@ class stock_inventory(osv.osv):
                      account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'], context=context)
                      for account_move in account_move_data_l:
                          if account_move['state'] == 'posted':
-                             raise osv.except_osv(_('UserError'),
+                             raise osv.except_osv(_('UserError!'),
                                                   _('In order to cancel this inventory, you must first unpost related journal entries.'))
                          account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
