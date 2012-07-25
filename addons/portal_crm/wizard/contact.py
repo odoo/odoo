@@ -36,8 +36,7 @@ class crm_contact_us(osv.TransientModel):
         Therefore, user #1 will perform the creation until a better workaround
         is figured out.
         """
-        values['name'] = values['contact_name']
-        print values
+        values['contact_name'] = values['name']
         crm_lead.create(cr, 1, dict(values,user_id=False), context)
 
         """
