@@ -729,9 +729,9 @@ class Calendar(CalDAV, osv.osv):
             elif child.name.upper() in ('PRODID', 'VERSION'):
                 pass
             elif child.name.upper().startswith('X-'):
-                _logger.debug("skipping custom node %s", child.name)
+                _logger.debug("Skipping custom node %s.", child.name)
             else:
-                _logger.debug("skipping node %s", child.name)
+                _logger.debug("Skipping node %s.", child.name)
         
         res = []
         for obj_name in list(set(objs)):
@@ -856,7 +856,7 @@ class basic_calendar_fields(osv.osv):
     }
 
     _sql_constraints = [
-        ( 'name_type_uniq', 'UNIQUE(name, type_id)', 'Can not map a field more than once'),
+        ( 'name_type_uniq', 'UNIQUE(name, type_id)', 'Cannot map a field more than once.'),
     ]
 
     def check_line(self, cr, uid, vals, name, context=None):
