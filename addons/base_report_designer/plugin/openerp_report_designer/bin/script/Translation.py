@@ -154,7 +154,7 @@ class AddLang(unohelper.Base, XJobExecutor ):
 
             self.win.doModalDialog("lstFields",self.sValue)
         else:
-            ErrorDialog("Please insert user define field Field-1 or Field-4","Just go to File->Properties->User Define \nField-1 Eg. http://localhost:8069 \nOR \nField-4 Eg. account.invoice")
+            ErrorDialog("Please insert user define field Field-1 or Field-4","Just go to File->Properties->User Define \nField-1 E.g. http://localhost:8069 \nOR \nField-4 E.g. account.invoice")
             self.win.endExecute()
 
     def lstbox_selected(self,oItemEvent):

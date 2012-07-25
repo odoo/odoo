@@ -32,7 +32,7 @@ This is the module for computing Procurements.
 ==============================================
 
 In the MRP process, procurements orders are created to launch manufacturing
-orders, purchase orders, stock allocations, etc. Procurement orders are
+orders, purchase orders, stock allocations. Procurement orders are
 generated automatically by the system and unless there is a problem, the
 user will not be notified. In case of problems, the system will raise some
 procurement exceptions to inform the user about blocking problems that need

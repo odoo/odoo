@@ -27,12 +27,15 @@
 This module supports the Anglo-Saxon accounting methodology by changing the accounting logic with stock transactions.
 =====================================================================================================================
 
-The difference between the Anglo-Saxon accounting countries
-and the Rhine or also called Continental accounting countries is the moment of taking the Cost of Goods Sold versus Cost of Sales.
-Anglo-Saxons accounting does take the cost when sales invoice is created, Continental accounting will take the cost at the moment the goods are shipped.
-This module will add this functionality by using a interim account, to store the value of shipped goods and will contra book this interim account
-when the invoice is created to transfer this amount to the debtor or creditor account.
-Secondly, price differences between actual purchase price and fixed product standard price are booked on a separate account""",
+The difference between the Anglo-Saxon accounting countries and the Rhine (or also called 
+Continental accounting) countries is the moment of taking the Cost of Goods Sold versus 
+Cost of Sales. Anglo-Saxons accounting does take the cost when sales invoice is created, 
+Continental accounting will take the cost at the moment the goods are shipped.
+
+This module will add this functionality by using a interim account, to store the value of 
+shipped goods and will contra book this interim account when the invoice is created to 
+transfer this amount to the debtor or creditor account. Secondly, price differences between 
+actual purchase price and fixed product standard price are booked on a separate account.""",
     "images": ["images/account_anglo_saxon.jpeg"],
     "depends": ["product", "purchase"],
     "category": "Hidden/Dependency",

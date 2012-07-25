@@ -60,7 +60,7 @@ class partner_vat_intra(osv.osv_memory):
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
         'mand_id' : fields.char('Reference', size=14, help="Reference given by the Representative of the sending company."),
         'msg': fields.text('File created', size=14, readonly=True),
-        'no_vat': fields.text('Partner With No VAT', size=14, readonly=True, help="The Partner whose VAT number is not defined they doesn't include in XML File."),
+        'no_vat': fields.text('Partner With No VAT', size=14, readonly=True, help="The Partner whose VAT number is not defined  and they are not included in XML File."),
         'file_save' : fields.binary('Save File', readonly=True),
         'country_ids': fields.many2many('res.country', 'vat_country_rel', 'vat_id', 'country_id', 'European Countries'),
         'comments': fields.text('Comments'),
