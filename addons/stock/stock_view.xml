@@ -1266,21 +1266,23 @@
                         </group>
                         <group name="destination_grp" string="Destination">
                             <field name="location_dest_id" groups="stock.group_locations"/>
-                            <field name="partner_id" context="{'contact_display':'partner'}"/>
+                            <field name="partner_id" context="{'contact_display':'partner'}"
+                                groups="stock.group_locations"/>
                             <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                             <field name="date" groups="base.group_no_one"/>
                         </group>
-                        <group string="Tracability" groups="stock.group_tracking_lot">
-                            <label for="tracking_id"/>
-                            <div>
+                        <group string="Tracability"
+                            groups="stock.group_tracking_lot,stock.group_production_lot">
+                            <label for="tracking_id" groups="stock.group_tracking_lot"/>
+                            <div groups="stock.group_tracking_lot">
                                 <field name="tracking_id" class="oe_inline"/>
                                 <button name="%(split_into)d" string="New Pack" type="action"
                                       groups="product.group_stock_packaging"
                                       icon="terp-stock_effects-object-colorize"
                                       states="draft,assigned,confirmed"/>
                             </div>
-                            <label for="prodlot_id"/>
-                            <div>
+                            <label for="prodlot_id" groups="stock.group_production_lot"/>
+                            <div groups="stock.group_production_lot">
                                 <field name="prodlot_id"
                                     context="{'location_id':location_id, 'product_id':product_id}"
                                     domain="[('product_id','=?',product_id)]" class="oe_inline"
