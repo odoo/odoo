@@ -514,7 +514,6 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
      */
     init: function(parent) {
         instance.web.CallbackEnabledMixin.init.call(this);
-        this.setElement(this._make_descriptive());
         this.setParent(parent);
     },
     /**
@@ -689,6 +688,8 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      */
     init: function(parent) {
         instance.web.WidgetMixin.init.call(this,parent);
+        // FIXME: this should not be
+        this.setElement(this._make_descriptive());
         this.session = instance.connection;
     },
     /**
