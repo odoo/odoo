@@ -3016,7 +3016,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.views = views;
 
         this.viewmanager = new instance.web.form.One2ManyViewManager(this, this.dataset, views, {});
-        this.viewmanager.$element.addClass("oe_view_manager_one2many");
         this.viewmanager.o2m = self;
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
