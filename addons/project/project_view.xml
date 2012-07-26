@@ -10,7 +10,7 @@
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
-
+        
         <act_window
             context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
             id="act_project_project_2_project_task_all"
@@ -19,7 +19,7 @@
             src_model="project.project"
             view_mode="kanban,tree,form,calendar,graph"
             view_type="form"/>
-
+       
         <!-- Project Read/Unread actions -->
         <record id="actions_server_project_unread" model="ir.actions.server">
             <field name="name">Mark unread</field>
@@ -84,7 +84,7 @@
                     <group>
                         <group>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                            <field name="partner_id" string = "Contact" on_change="onchange_partner_id(partner_id)"/>
                             <field name="privacy_visibility"/>
                             <field name="analytic_account_id" invisible="1" required="0"/>
                         </group>
@@ -195,7 +195,7 @@
                     <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
-                    <field name="partner_id" string="Partner"/>
+                    <field name="partner_id" string="Contact"/>
                     <field name="parent_id" string="Parent" invisible="1"/>
                     <field name="planned_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>

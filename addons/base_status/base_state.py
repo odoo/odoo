@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields
+from osv import fields, osv
 from tools.translate import _
 
 class base_state(object):
@@ -104,7 +104,23 @@ class base_state(object):
             self.case_set(cr, uid, [case.id], 'open', values, context=context)
             self.case_open_send_note(cr, uid, [case.id], context=context)
         return True
-
+    def case_escalate(self, cr, uid, ids, context=None):
+        """ Escalates case to parent level """
+        cases = self.browse(cr, uid, ids, context=context)
+        cases[0].state # fill browse record cache, for _action having old and new values
+        data = {'active': True}
+        for case in cases:
+            parent_id = case.section_id.parent_id
+            if parent_id:
+                data['section_id'] = parent_id.id
+                if parent_id.change_responsible and parent_id.user_id:
+                    data['user_id'] = parent_id.user_id.id
+            else:
+                raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
+            self.write(cr, uid, [case.id], data, context=context)
+            case.case_escalate_send_note(parent_id.user_id, context=context)
+        self._action(cr, uid, cases, 'escalate', context=context)
+        return True
     def case_close(self, cr, uid, ids, context=None):
         """ Closes case """
         self.case_set(cr, uid, ids, 'done', {'date_closed': fields.datetime.now()}, context=context)
@@ -169,7 +185,15 @@ class base_state(object):
             msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
-
+    def case_escalate_send_note(self, cr, uid, ids, new_section=None, context=None):
+        for id in ids:
+            if new_section:
+                msg = '%s has been <b>escalated</b> to <b>%s</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context), new_section.name)
+            else:
+                msg = '%s has been <b>escalated</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        return True
+    
     def case_close_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
