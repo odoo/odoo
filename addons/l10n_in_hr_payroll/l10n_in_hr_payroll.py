@@ -214,7 +214,7 @@ class hr_payslip_run(osv.osv):
     _inherit = 'hr.payslip.run'
     _description = 'Payslip Batches'
     _columns = {
-        'available_advice': fields.boolean('Made Payment Advice?', help="If this box is checked which means that Payment Advice exists", readonly=False),
+        'available_advice': fields.boolean('Made Payment Advice?', help="If this box is checked which means that Payment Advice exists for current batch", readonly=False),
     }
 
     def draft_payslip_run(self, cr, uid, ids, context=None):
