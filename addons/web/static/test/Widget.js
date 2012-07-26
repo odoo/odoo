@@ -86,15 +86,15 @@ $(document).ready(function () {
     test('no template, default', function () {
         var w = new (instance.web.Widget.extend({ }));
 
-        ok(!w.$el, "should not initially have a root element");
+        ok(!w.$element, "should not initially have a root element");
         w.renderElement();
-        ok(w.$el, "should have generated a root element");
-        strictEqual(w.$element, w.$el, "should provide $element alias");
-        ok(w.$el.is(w.el), "should provide raw DOM alias");
+        ok(w.$element, "should have generated a root element");
+        strictEqual(w.$element, w.$element, "should provide $element alias");
+        ok(w.$element.is(w.el), "should provide raw DOM alias");
 
         equal(w.el.nodeName, 'DIV', "should have generated the default element");
         equal(w.el.attributes.length, 0, "should not have generated any attribute");
-        ok(_.isEmpty(w.$el.html(), "should not have generated any content"));
+        ok(_.isEmpty(w.$element.html(), "should not have generated any content"));
     });
     test('no template, custom tag', function () {
         var w = new (instance.web.Widget.extend({
@@ -111,7 +111,7 @@ $(document).ready(function () {
         w.renderElement();
 
         equal(w.el.attributes.length, 1, "should have one attribute");
-        equal(w.$el.attr('id'), 'foo', "should have generated the id attribute");
+        equal(w.$element.attr('id'), 'foo', "should have generated the id attribute");
         equal(w.el.id, 'foo', "should also be available via property");
     });
     test('no template, @className', function () {
@@ -121,7 +121,7 @@ $(document).ready(function () {
         w.renderElement();
 
         equal(w.el.className, 'oe_some_class', "should have the right property");
-        equal(w.$el.attr('class'), 'oe_some_class', "should have the right attribute");
+        equal(w.$element.attr('class'), 'oe_some_class', "should have the right attribute");
     });
     test('no template, bunch of attributes', function () {
         var w = new (instance.web.Widget.extend({
@@ -138,16 +138,16 @@ $(document).ready(function () {
         equal(w.el.attributes.length, 5, "should have all the specified attributes");
 
         equal(w.el.id, 'some_id');
-        equal(w.$el.attr('id'), 'some_id');
+        equal(w.$element.attr('id'), 'some_id');
 
         equal(w.el.className, 'some_class');
-        equal(w.$el.attr('class'), 'some_class');
+        equal(w.$element.attr('class'), 'some_class');
 
-        equal(w.$el.attr('data-foo'), 'data attribute');
-        equal(w.$el.data('foo'), 'data attribute');
+        equal(w.$element.attr('data-foo'), 'data attribute');
+        equal(w.$element.data('foo'), 'data attribute');
 
-        equal(w.$el.attr('clark'), 'gable');
-        equal(w.$el.attr('spoiler'), 'snape kills dumbledore');
+        equal(w.$element.attr('clark'), 'gable');
+        equal(w.$element.attr('spoiler'), 'snape kills dumbledore');
     });
 
     test('template', function () {
@@ -157,7 +157,7 @@ $(document).ready(function () {
         w.renderElement();
 
         equal(w.el.nodeName, 'OL');
-        equal(w.$el.children().length, 5);
+        equal(w.$element.children().length, 5);
         equal(w.el.textContent, '01234');
     });
 
@@ -168,7 +168,7 @@ $(document).ready(function () {
         }));
         w.renderElement();
 
-        ok(w.$('li:eq(3)').is(w.$el.find('li:eq(3)')),
+        ok(w.$('li:eq(3)').is(w.$element.find('li:eq(3)')),
            "should do the same thing as calling find on the widget root");
     });
 
@@ -189,7 +189,7 @@ $(document).ready(function () {
         }));
         w.renderElement();
 
-        w.$el.click();
+        w.$element.click();
         w.$('li:eq(3)').click();
         w.$('input:last').val('foo').change();
 
@@ -204,7 +204,7 @@ $(document).ready(function () {
             events: { 'click li': function () { clicked = true; } }
         }));
         w.renderElement();
-        w.$el.on('click', 'li', function () { newclicked = true });
+        w.$element.on('click', 'li', function () { newclicked = true });
 
         w.$('li').click();
         ok(clicked, "should trigger bound events");
@@ -227,11 +227,11 @@ $(document).ready(function () {
             .always(start)
             .done(function () {
                 equal($fix.find('p').text(), '42', "DOM fixture should contain initial value");
-                equal(w.$el.text(), '42', "should set initial value");
+                equal(w.$element.text(), '42', "should set initial value");
                 w.value = 36;
                 w.renderElement();
                 equal($fix.find('p').text(), '36', "DOM fixture should use new value");
-                equal(w.$el.text(), '36', "should set new value");
+                equal(w.$element.text(), '36', "should set new value");
             });
     });
 });

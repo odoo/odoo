@@ -523,8 +523,8 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
-        if(this.$el) {
-            this.$el.remove();
+        if(this.$element) {
+            this.$element.remove();
         }
         instance.web.PropertiesMixin.destroy.call(this);
     },
@@ -536,7 +536,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     appendTo: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$el.appendTo(t);
+            self.$element.appendTo(t);
         }, target);
     },
     /**
@@ -547,7 +547,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     prependTo: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$el.prependTo(t);
+            self.$element.prependTo(t);
         }, target);
     },
     /**
@@ -558,7 +558,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     insertAfter: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$el.insertAfter(t);
+            self.$element.insertAfter(t);
         }, target);
     },
     /**
@@ -569,7 +569,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     insertBefore: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$el.insertBefore(t);
+            self.$element.insertBefore(t);
         }, target);
     },
     /**
@@ -579,7 +579,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
      */
     replace: function(target) {
         return this.__widgetRenderAndInsert(_.bind(function(t) {
-            this.$el.replaceAll(t);
+            this.$element.replaceAll(t);
         }, this), target);
     },
     __widgetRenderAndInsert: function(insertion, target) {
@@ -717,10 +717,10 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * @returns {*} this
      */
     replaceElement: function ($el) {
-        var $oldel = this.$el;
+        var $oldel = this.$element;
         this.setElement($el);
-        if ($oldel && !$oldel.is(this.$el)) {
-            $oldel.replaceWith(this.$el);
+        if ($oldel && !$oldel.is(this.$element)) {
+            $oldel.replaceWith(this.$element);
         }
         return this;
     },
@@ -737,12 +737,12 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * @return {*} this
      */
     setElement: function (element) {
-        if (this.$el) {
+        if (this.$element) {
             this.undelegateEvents();
         }
 
-        this.$element = this.$el = (element instanceof $) ? element : $(element);
-        this.el = this.$el[0];
+        this.$element = (element instanceof $) ? element : $(element);
+        this.el = this.$element[0];
 
         this.delegateEvents();
 
@@ -781,23 +781,23 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
 
             event += '.widget_events';
             if (!selector) {
-                this.$el.on(event, method);
+                this.$element.on(event, method);
             } else {
-                this.$el.on(event, selector, method);
+                this.$element.on(event, selector, method);
             }
         }
     },
     undelegateEvents: function () {
-        this.$el.off('.widget_events');
+        this.$element.off('.widget_events');
     },
     /**
-     * Shortcut for ``this.$el.find(selector)``
+     * Shortcut for ``this.$element.find(selector)``
      *
      * @param {String} selector CSS selector, rooted in $el
      * @returns {jQuery} selector match
      */
     $: function(selector) {
-        return this.$el.find(selector);
+        return this.$element.find(selector);
     },
     /**
      * Informs the action manager to do an action. This supposes that
