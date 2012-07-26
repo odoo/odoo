@@ -584,7 +584,7 @@ instance.web.Login =  instance.web.Widget.extend({
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
-            self.do_action("login_sucessful");
+            self.trigger('login_successful');
         },function () {
             self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
@@ -592,16 +592,6 @@ instance.web.Login =  instance.web.Widget.extend({
     }
 });
 instance.web.client_actions.add("login", "instance.web.Login");
-
-instance.web.LoginSuccessful =  instance.web.Widget.extend({
-    init: function(parent) {
-        this._super(parent);
-    },
-    start: function() {
-        this.getParent().getParent().show_application();
-    },
-});
-instance.web.client_actions.add("login_sucessful", "instance.web.LoginSuccessful");
 
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
@@ -979,10 +969,9 @@ instance.web.WebClient = instance.web.Client.extend({
         };
     },
     show_login: function() {
-        var self = this;
-        self.$('.oe_topbar').hide();
-        self.action_manager.do_action("login");
-        //self.login.appendTo(self.$element);
+        this.$('.oe_topbar').hide();
+        this.action_manager.do_action("login");
+        this.action_manager.inner_widget.on('login_successful', this, this.show_application);
     },
     show_application: function() {
         var self = this;
