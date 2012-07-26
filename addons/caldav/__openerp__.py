@@ -21,7 +21,7 @@
 
 
 {
-    "name": "Share Calendar using CalDAV",
+    "name": "Share Calendar Using CalDAV",
     "version": "1.1",
     "depends": [
                     "base",

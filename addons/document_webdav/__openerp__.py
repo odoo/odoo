@@ -40,7 +40,8 @@ With this module, the WebDAV server for documents is activated.
 
 You can then use any compatible browser to remotely see the attachments of OpenObject.
 
-After installation, the WebDAV server can be controlled by a [webdav] section in the server's config.
+After installation, the WebDAV server can be controlled by a [webdav] section in 
+the server's config.
 Server Configuration Parameter:
 
     [webdav]
@@ -55,7 +56,7 @@ Server Configuration Parameter:
     ; these options on
 
 Also implements IETF RFC 5785 for services discovery on a http server,
-which needs explicit configuration in openerp-server.conf, too.
+which needs explicit configuration in openerp-server.conf too.
 """,
         "depends" : ["base", "document"],
         "init_xml" : [],

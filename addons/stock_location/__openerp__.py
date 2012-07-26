@@ -38,51 +38,57 @@ Typically this could be used to:
 
     * Help rental management, by generating automated return moves for rented products
 
-Once this module is installed, an additional tab appear on the product form, where you can add
-Push and Pull flow specifications. The demo data of CPU1 product for that push/pull :
+Once this module is installed, an additional tab appear on the product form,
+where you can add Push and Pull flow specifications. The demo data of CPU1
+product for that push/pull :
 
-Push flows
-----------
-Push flows are useful when the arrival of certain products in a given location should always
-be followed by a corresponding move to another location, optionally after a certain delay.
-The original Warehouse application already supports such Push flow specifications on the
-Locations themselves, but these cannot be refined per-product.
+Push flows:
+-----------
+Push flows are useful when the arrival of certain products in a given location
+should always be followed by a corresponding move to another location, optionally
+after a certain delay. The original Warehouse application already supports such
+Push flow specifications on the Locations themselves, but these cannot be
+refined per-product.
 
-A push flow specification indicates which location is chained with which location, and with
-what parameters. As soon as a given quantity of products is moved in the source location,
-a chained move is automatically foreseen according to the parameters set on the flow specification
-(destination location, delay, type of move, journal, etc.) The new move can be automatically
-processed, or require a manual confirmation, depending on the parameters.
+A push flow specification indicates which location is chained with which location,
+and with what parameters. As soon as a given quantity of products is moved in the
+source location, a chained move is automatically foreseen according to the
+parameters set on the flow specification (destination location, delay, type of
+move, journal). The new move can be automatically processed, or require a manual
+confirmation, depending on the parameters.
 
-Pull flows
-----------
-Pull flows are a bit different from Push flows, in the sense that they are not related to
-the processing of product moves, but rather to the processing of procurement orders.
-What is being pulled is a need, not directly products.
-A classical example of Pull flow is when you have an Outlet company, with a parent Company
-that is responsible for the supplies of the Outlet.
+Pull flows:
+-----------
+Pull flows are a bit different from Push flows, in the sense that they are not
+related to the processing of product moves, but rather to the processing of
+procurement orders. What is being pulled is a need, not directly products. A
+classical example of Pull flow is when you have an Outlet company, with a parent
+Company that is responsible for the supplies of the Outlet.
 
   [ Customer ] <- A - [ Outlet ]  <- B -  [ Holding ] <~ C ~ [ Supplier ]
 
-When a new procurement order (A, coming from the confirmation of a Sale Order for example) arrives
-in the Outlet, it is converted into another procurement (B, via a Pull flow of type 'move')
-requested from the Holding. When procurement order B is processed by the Holding company, and
-if the product is out of stock, it can be converted into a Purchase Order (C) from the Supplier
-(Pull flow of type Purchase). The result is that the procurement order, the need, is pushed
+When a new procurement order (A, coming from the confirmation of a Sale Order
+for example) arrives in the Outlet, it is converted into another procurement
+(B, via a Pull flow of type 'move') requested from the Holding. When procurement
+order B is processed by the Holding company, and if the product is out of stock,
+it can be converted into a Purchase Order (C) from the Supplier (Pull flow of
+type Purchase). The result is that the procurement order, the need, is pushed
 all the way between the Customer and Supplier.
 
-Technically, Pull flows allow to process procurement orders differently, not only depending on
-the product being considered, but also depending on which location holds the "need" for that
-product (i.e. the destination location of that procurement order).
+Technically, Pull flows allow to process procurement orders differently, not
+only depending on the product being considered, but also depending on which
+location holds the "need" for that product (i.e. the destination location of
+that procurement order).
 
-Use-Case
---------
+Use-Case:
+---------
 
 You can use the demo data as follow:
   CPU1: Sell some CPU1 from Computech and run the scheduler
      - Warehouse: delivery order, Computech: reception
   CPU3:
-     - When receiving the product, it goes to Quality Control location then stored to shelf 2.
+     - When receiving the product, it goes to Quality Control location then
+       stored to shelf 2.
      - When delivering the customer: Pick List -> Packing -> Delivery Order from Gate A
     """,
     'author': 'OpenERP SA',

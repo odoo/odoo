@@ -19,12 +19,12 @@
 #
 ##############################################################################
 {
-    "name" : "Check writing",
+    "name" : "Check Writing",
     "version" : "1.1",
     "author" : "OpenERP SA, NovaPoint Group",
     "category": "Generic Modules/Accounting",
     "description": """
-    Module for the Check writing and check printing  
+Module for the Check Writing and Check Printing.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
