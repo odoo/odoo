@@ -14,5 +14,16 @@
             <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Social Network has been installed</value>
+            <value>Manage all communications on your documents (emails,
+                notifications, comments and discussions) and keep track of
+                news on documents you follow.
+            </value>
+        </function>
+
     </data>
 </openerp>

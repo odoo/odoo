@@ -12,17 +12,11 @@
         <field name="context">{'default_type':'lead', 'stage_type':'lead'}</field>
         <field name="help">
             &lt;img src="http://www.thaicrmsoftware.com/wp-content/uploads/2011/11/lead-conversion.jpg" align="right" style="padding: 6px" width="306" height="223"&gt;
-            &lt;h2&gt;Create your first OpenERP Lead &lt;/h2&gt;
-            &lt;p&gt;
-            Leads allow you to manage and keep track of all initial contacts with a prospect or partner showing interest in your products or services.
+            &lt;h2&gt;Click here to create a Lead. &lt;/h2&gt;
             &lt;p&gt;
             A lead is usually the first step in your sales cycle.
             &lt;p&gt;
             Once qualified, a lead may be converted into a business opportunity, while creating the related partner for further detailed tracking of any linked activities.
-            &lt;p&gt;
-            You can import a database of prospects, keep track of your business cards or integrate your website's contact form with the OpenERP Leads.
-            &lt;p&gt;
-            Leads can be connected to the email gateway: new emails may create leads, each of them automatically gets the history of the conversation with the prospect.
         </field>
     </record>
 
@@ -43,7 +37,7 @@
      <record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
           <field name="name">Opportunities</field>
           <field name="res_model">crm.lead</field>
-          <field name="view_mode">kanban,tree,form,graph,calendar</field>
+          <field name="view_mode">kanban,tree,form,calendar</field>
           <field name="domain">[('type','=','opportunity')]</field>
           <field name="context">{'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
           <field name="view_id" eval="False"/>
@@ -71,13 +65,6 @@ You and your team(s) will be able to plan meetings and phone calls from opportun
           <field name="sequence" eval="2"/>
           <field name="view_mode">form</field>
           <field name="view_id" ref="crm_case_form_view_oppor"/>
-          <field name="act_window_id" ref="crm_case_category_act_oppor11"/>
-     </record>
-
-     <record model="ir.actions.act_window.view" id="action_crm_tag_graph_view_oppor11">
-          <field name="sequence" eval="4"/>
-          <field name="view_mode">graph</field>
-          <field name="view_id" ref="crm_case_graph_view_opportunity"/>
           <field name="act_window_id" ref="crm_case_category_act_oppor11"/>
      </record>
 
