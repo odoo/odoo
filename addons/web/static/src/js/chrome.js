@@ -57,9 +57,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
-        if (content) {
-            this.setElement(content);
-        }
+        this.setElement(content || this.make(this.tagName));
         this.dialog_options = {
             modal: true,
             destroy_on_close: true,
@@ -587,6 +585,12 @@ instance.web.Login =  instance.web.Widget.extend({
             self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
         });
+    },
+    show: function () {
+        this.$element.show();
+    },
+    hide: function () {
+        this.$element.hide();
     }
 });
 
@@ -877,11 +881,11 @@ instance.web.Client = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        return instance.connection.session_bind(this.origin).then(function() {
+        return instance.connection.session_bind(this.origin).pipe(function() {
             var $e = $(QWeb.render(self._template, {}));
             self.replaceElement($e);
             self.bind_events();
-            self.show_common();
+            return self.show_common();
         });
     },
     bind_events: function() {
@@ -966,16 +970,19 @@ instance.web.WebClient = instance.web.Client.extend({
         // TODO: deprecate and use login client action
         self.login = new instance.web.Login(self);
         self.login.on("login",self,self.show_application);
+        return self.login.appendTo(self.$element).then(function () {
+            self.login.hide();
+        });
     },
     show_login: function() {
         var self = this;
         self.$('.oe_topbar').hide();
-        self.login.appendTo(self.$element);
+        self.login.show();
     },
     show_application: function() {
         var self = this;
         self.$('.oe_topbar').show();
-        self.login.$element.hide();
+        self.login.hide();
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
         self.menu.on('menu_click', this, this.on_menu_action);
