@@ -226,7 +226,7 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
                     <field name="weight"/>
-                    <field name="weight_net" groups="base.group_extended"/>
+                    <field name="weight_net" groups="base.group_no_one"/>
                 </field>
             </field>
         </record>
@@ -251,7 +251,7 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
                     <field name="weight"/>
-                    <field name="weight_net" groups="base.group_extended"/>
+                    <field name="weight_net" groups="base.group_no_one"/>
                 </xpath>
             </field>
         </record>
@@ -264,7 +264,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='main_grp']" position="inside">
                     <field name="weight"/>
-                    <field name="weight_net" groups="base.group_extended"/>
+                    <field name="weight_net" groups="base.group_no_one"/>
                 </xpath>
             </field>
         </record>
