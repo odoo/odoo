@@ -29,9 +29,9 @@ This module allows an intermediate picking process to provide raw materials to p
 =================================================================================================
 
 One example of usage of this module is to manage production made by your
-suppliers (sub-contracting). To achieve this, set the assembled product
-which is sub-contracted to "No Auto-Picking" and put the location of the
-supplier in the routing of the assembly operation.
+suppliers (sub-contracting). To achieve this, set the assembled product which is
+sub-contracted to "No Auto-Picking" and put the location of the supplier in the
+routing of the assembly operation.
     """,
     'author': 'OpenERP SA',
     'depends': ['mrp'],

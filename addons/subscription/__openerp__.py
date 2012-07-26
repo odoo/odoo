@@ -32,7 +32,8 @@ This module allows to create new documents and add subscriptions on that documen
 
 e.g. To have an invoice generated automatically periodically:
     * Define a document type based on Invoice object
-    * Define a subscription whose source document is the document defined as above. Specify the interval information and partner to be invoice.
+    * Define a subscription whose source document is the document defined as
+      above. Specify the interval information and partner to be invoice.
     """,
     'author': 'OpenERP SA',
     'depends': ['base_tools'],

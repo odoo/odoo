@@ -37,7 +37,7 @@ product()
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     _columns = {
-        'event_id': fields.many2one('event.event', 'Event', help="Choose an event and it will authomaticaly create a registration for this event"),
+        'event_id': fields.many2one('event.event', 'Event', help="Choose an event and it will automatically create a registration for this event."),
         #those 2 fields are used for dynamic domains and filled by onchange
         'event_type_id': fields.related('event_type_id', type='many2one', relation="event.type", string="Event Type"),
         'event_ok': fields.related('event_ok', string='event_ok', type='boolean'),
