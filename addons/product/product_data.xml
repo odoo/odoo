@@ -4,7 +4,7 @@
         <!--
     Resource: product.uom.categ
     -->
-        <record id="product_category_0" model="product.category">
+        <record id="product_category_all" model="product.category">
             <field name="name">All products</field>
         </record>
 
@@ -191,7 +191,7 @@ parameter) will see those record just disappear.
             <field name="uom_id" ref="product.product_uom_hour"/>
             <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="name">Service on Demand</field>
-            <field name="categ_id" ref="product.product_category_0"/>
+            <field name="categ_id" ref="product.product_category_all"/>
             <field name="type">service</field>
             <field eval="False" name="purchase_ok"/>
         </record>
