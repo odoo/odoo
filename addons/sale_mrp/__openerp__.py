@@ -34,7 +34,7 @@ from sales order. It adds sales name and sales Reference on production order.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/SO_to_MO.jpeg'],
-    'depends': ['mrp', 'sale'],
+    'depends': ['mrp', 'sale_stock'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',

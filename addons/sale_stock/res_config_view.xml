@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+         <record id="view_sales_config_sale_stock" model="ir.ui.view">
+             <field name="name">sale settings</field>
+             <field name="model">sale.config.settings</field>
+             <field name="type">form</field>
+             <field name="inherit_id" ref="sale.view_sales_config"/>
+             <field name="arch" type="xml">
+                <data>    
+                    <group name="config_sale" position="inside">
+                        <field name="module_project_timesheet" invisible="1"/>
+                        <field name="module_project_mrp" invisible="1"/>
+                    </group>
+                    <field name="group_sale_pricelist" position="after">
+                        <field name="group_multiple_shops"/>
+                        </field>
+                    <field name="decimal_precision" position="after">
+                        <field name="default_picking_policy" attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"/>
+                    </field>  
+                    <field name="group_discount_per_so_line" position="after">
+                        <field name="group_mrp_properties"/>
+                    </field>
+                    <field name="group_invoice_so_lines" position="replace">
+                        <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
+                    </field>
+                    <field name="group_invoice_so_lines" position="after">
+                        <field name="group_invoice_deli_orders" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
+                    </field>
+                    <field name="group_invoice_deli_orders" position="after">
+                        <field name="task_work" on_change="onchange_task_work(task_work)"/>
+                    </field>
+                    <field name="default_order_policy"  position="replace">
+                        <field name="default_order_policy" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)],'required': ['|',('group_invoice_so_lines','=',True),('group_invoice_deli_orders','=',True)]}"/>
+                    </field>
+                    <field name="default_order_policy"  position="after">
+                        <field name="module_delivery" attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}"/>
+                    </field>
+                </data>
+             </field>
+         </record>
+
+    </data>
+</openerp>

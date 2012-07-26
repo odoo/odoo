@@ -22,9 +22,7 @@
                 <form string="Sales Shop" version="7.0">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="warehouse_id" class="oe_edit_only"/>
-                    <h2><field name="warehouse_id" required="1"/></h2>
-                    <group>
+                    <group name="shop">
                         <group>
                             <field name="payment_default_id"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist"/>
@@ -37,6 +35,7 @@
                 </form>
             </field>
         </record>
+        
         <record id="view_shop_tree" model="ir.ui.view">
             <field name="name">sale.shop</field>
             <field name="model">sale.shop</field>
@@ -44,7 +43,6 @@
             <field name="arch" type="xml">
                 <tree string="Sales Shop">
                     <field name="name"/>
-                    <field name="warehouse_id"/>
                     <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                     <field name="project_id" groups="analytic.group_analytic_accounting"/>
                 </tree>
@@ -61,8 +59,7 @@
             <field name="help">If you have more than one shop reselling your company products, you can create and manage that from here. Whenever you will record a new quotation or sales order, it has to be linked to a shop. The shop also defines the warehouse from which the products will be delivered for each particular sales.</field>
         </record>
 
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35"
-            groups="stock.group_locations"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35"/>
 
         <!-- Sale order Read/Unread actions -->
         <record id="actions_server_sale_order_unread" model="ir.actions.server">
@@ -136,7 +133,6 @@
                     <field name="date_order"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="picked_rate" widget="progressbar"/>
                     <field name="invoiced_rate" widget="progressbar"/>
                     <field name="amount_total" sum="Total Tax Included"/>
                     <field name="state"/>
@@ -154,24 +150,17 @@
                         <span groups="base.group_user">
                             <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
                             <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
-                            <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
-                            <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
                             <button name="action_quotation_send" string="Send by Mail" type="object" states="draft,sent"/>
                             <button name="print_quotation" string="Send by Post" type="object" states="draft,sent"/>
                             <button name="action_button_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
                             <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
-                              attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
-                            <button name="action_view_delivery" string="Open Delivery Order" type="object" class="oe_highlight"
-                              attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
-                            <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                                type="action" states="manual" class="oe_highlight"/>
+                              attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True)]}"/>
                             <button name="cancel" states="draft,sent" string="Cancel"/>
                             <button name="action_cancel" states="manual,progress" string="Cancel" type="object"/>
-                            <button name="ship_cancel" states="shipping_except" string="Cancel"/>
                             <button name="invoice_cancel" states="invoice_except" string="Cancel"/>
                         </span>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
                     <h1>
@@ -188,7 +177,7 @@
                         </group>
                         <group>
                             <field name="date_order"/>
-                            <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
+                            <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection"/>
                             <field name="client_order_ref"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                         </group>
@@ -207,13 +196,13 @@
                                             <field name="product_id"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 groups="base.group_user"
-                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"/>
+                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order,  False, parent.fiscal_position, False, context)"/>
                                             <label for="product_uom_qty"/>
                                             <div>
                                                 <field
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                     name="product_uom_qty" class="oe_inline"
-                                                    on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
+                                                    on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
                                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
                                                     on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
                                             </div>
@@ -229,22 +218,11 @@
                                             </div>
                                         </group>
                                         <group>
-                                            <field name="product_packaging"
-                                                context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}" on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
-                                                domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging"
-                                                colspan="3"/>
                                             <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                            <label for="delay"/>
-                                            <div>
-                                                <field name="delay" class="oe_inline"/> days
-                                            </div>
-                                            <field name="type"/>
                                             <field name="th_weight"/>
 
                                             <!-- we should put a config wizard for these two fields -->
                                             <field name="address_allotment_id"/>
-                                            <field name="property_ids" widget="many2many_tags"
-                                                groups="sale.group_mrp_properties"/>
                                         </group>
                                     </group>
                                     <label for="name"/>
@@ -252,18 +230,13 @@
                                     <div groups="base.group_no_one">
                                         <label for="invoice_lines"/>
                                         <field name="invoice_lines"/>
-                                        <label for="move_ids"/>
-                                        <field name="move_ids" widget="many2many"/>
                                     </div>
                                 </form>
                                 <tree string="Sales Order Lines" editable="bottom">
                                     <field name="state" invisible="1"/>
                                     <field name="sequence" invisible="1"/>
-                                    <field name="delay" invisible="1"/>
                                     <field name="tax_id" invisible="1"/>
-                                    <field name="type" invisible="1"/>
                                     <field name="th_weight" invisible="1"/>
-                                    <field name="product_packaging" invisible="1"/>
                                     <field name="product_id"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                         groups="base.group_user" 
@@ -297,9 +270,7 @@
                         <page string="Other Information" groups="base.group_user">
                             <group>
                                 <group name="logistics">
-                                    <field name="incoterm" widget="selection" groups="base.group_user"/>
-                                    <field name="picking_policy" required="True"/>
-                                    <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
+                                    <field name="order_policy"/>
                                     <field name="invoice_quantity" invisible="True"/>
                                 </group>
                                 <group groups="base.group_user">
@@ -313,7 +284,6 @@
                                 </group>
                                 <group>
                                     <field name="invoiced"/>
-                                    <field name="shipped"/>
                                 </group>
                             </group>
                         </page>
@@ -328,16 +298,6 @@
                                     <field name="date_due"/>
                                     <field name="amount_total"/>
                                     <field name="state"/>
-                                </tree>
-                            </field>
-                            <separator string="Delivery Orders"/>
-                            <field name="picking_ids" context="{'default_type': 'out'}">
-                                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
-                                    <field name="name"/>
-                                    <field name="partner_id" string="Customer"/>
-                                    <field name="min_date"/>
-                                    <field name="state"/>
-                                    <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward" context="{'default_type': 'out'}"/>
                                 </tree>
                             </field>
                         </page>

@@ -9,13 +9,6 @@ access_account_invoice_manager,account_invoice manager,account.model_account_inv
 access_account_invoice_line_salesman,account_invoice.line salesman,account.model_account_invoice_line,base.group_sale_salesman,1,1,1,0
 access_account_payment_term_salesman,account_payment_term salesman,account.model_account_payment_term,base.group_sale_salesman,1,0,0,0
 access_account_analytic_account_salesman,account_analytic_account salesman,analytic.model_account_analytic_account,base.group_sale_salesman,1,1,1,0
-access_stock_picking_salesman,stock_picking salesman,stock.model_stock_picking,base.group_sale_salesman,1,1,1,0
-access_stock_move_salesman,stock_move salesman,stock.model_stock_move,base.group_sale_salesman,1,1,1,0
-access_stock_move_manager,stock_move manager,stock.model_stock_move,base.group_sale_manager,1,1,1,1
-access_procurement_salesman,procurement.order salesman,procurement.model_procurement_order,base.group_sale_salesman,1,1,1,0
-access_procurement_manager,procurement.order manager,procurement.model_procurement_order,base.group_sale_manager,1,1,1,1
-access_sale_order_stock_worker,sale.order stock worker,model_sale_order,stock.group_stock_user,1,1,0,0
-access_sale_order_line_stock_worker,sale.order.line stock worker,model_sale_order_line,stock.group_stock_user,1,1,0,0
 access_sale_order_manager,sale.order.manager,model_sale_order,base.group_sale_manager,1,1,1,1
 access_sale_order_accountant,sale.order.accountant,model_sale_order,account.group_account_user,1,1,0,0
 access_sale_report_salesman,sale.report,model_sale_report,base.group_sale_salesman,1,1,1,0
@@ -24,23 +17,19 @@ access_ir_property_sales,ir.property.sales,base.model_ir_property,base.group_sal
 access_sale_account_journal,account.journal sale order.user,account.model_account_journal,base.group_sale_salesman,1,0,0,0
 access_res_partner_sale_user,res.partner.sale.user,base.model_res_partner,base.group_sale_salesman,1,0,0,0
 access_res_partner_sale_manager,res.partner.sale.manager,base.model_res_partner,base.group_sale_manager,1,1,1,0
-access_report_stock_move_sales,report.stock.move.sale,stock.model_report_stock_move,base.group_sale_manager,1,1,1,1
-access_stock_picking_sales,stock.picking.sales,stock.model_stock_picking,base.group_sale_manager,1,1,1,1
+
 access_product_template_sale_user,product.template sale use,product.model_product_template,base.group_sale_salesman,1,0,0,0
 access_product_product_sale_user,product.product sale use,product.model_product_product,base.group_sale_salesman,1,0,0,0
 access_sale_shop_manager,account.journal sale order.user,model_sale_shop,base.group_sale_manager,1,1,1,1
 access_account_fiscalyear_user,account.fiscalyear.user,account.model_account_fiscalyear,base.group_sale_salesman,1,0,0,0
 access_account_tax_user,account.tax.user,account.model_account_tax,base.group_sale_salesman,1,0,0,0
-access_product_packaging_user,product.packaging.user,product.model_product_packaging,base.group_sale_salesman,1,1,1,0
+
 access_ir_attachment_sales,ir.attachment.sales,base.model_ir_attachment,base.group_sale_salesman,1,1,1,0
 access_ir_attachment_manager,ir.attachment.manager,base.model_ir_attachment,base.group_sale_manager,1,1,1,1
-access_product_packaging_manager,product.packaging.manager,product.model_product_packaging,base.group_sale_manager,1,0,0,0
-access_stock_warehouse_user,stock.warehouse.user,stock.model_stock_warehouse,base.group_sale_salesman,1,0,0,0
+
 access_res_partner_bank_type_user,res.partner.bank.type.user,base.model_res_partner_bank_type,base.group_sale_salesman,1,0,0,0
-access_stock_location_user,stock.location.user,stock.model_stock_location,base.group_sale_salesman,1,0,0,0
 access_res_partner_bank_type_field_user,res.partner.bank.type.field.user,base.model_res_partner_bank_type_field,base.group_sale_salesman,1,0,0,0
 access_product_uom_user,product.uom.user,product.model_product_uom,base.group_sale_salesman,1,0,0,0
-access_product_supplierinfo_user,product.supplierinfo.user,product.model_product_supplierinfo,base.group_sale_salesman,1,0,0,0
 access_product_pricelist_sale_user,product.pricelist.sale.user,product.model_product_pricelist,base.group_sale_salesman,1,0,0,0
 access_account_account_salesman,account_account salesman,account.model_account_account,base.group_sale_salesman,1,0,0,0
 access_sale_shop_sale_user,sale.shop.sale.user,model_sale_shop,base.group_sale_salesman,1,0,0,0
@@ -49,7 +38,7 @@ access_product_uom_categ_sale_manager,product.uom.categ salemanager,product.mode
 access_product_uom_sale_manager,product.uom salemanager,product.model_product_uom,base.group_sale_manager,1,1,1,1
 access_product_ul_sale_manager,product.ul salemanager,product.model_product_ul,base.group_sale_manager,1,1,1,1
 access_product_category_sale_manager,product.category salemanager,product.model_product_category,base.group_sale_manager,1,1,1,1
-access_product_packaging_sale_manager,product.packaging salemanager,product.model_product_packaging,base.group_sale_manager,1,1,1,1
+access_product_supplierinfo_user,product.supplierinfo.user,product.model_product_supplierinfo,base.group_sale_salesman,1,0,0,0
 access_product_supplierinfo_sale_manager,product.supplierinfo salemanager,product.model_product_supplierinfo,base.group_sale_manager,1,1,1,1
 access_pricelist_partnerinfo_sale_manager,pricelist.partnerinfo salemanager,product.model_pricelist_partnerinfo,base.group_sale_manager,1,1,1,1
 access_product_price_type_sale_manager,product.price.type salemanager,product.model_product_price_type,base.group_sale_manager,1,1,1,1
@@ -58,5 +47,3 @@ access_product_pricelist_sale_manager,product.pricelist salemanager,product.mode
 access_product_group_res_partner_sale_manager,res_partner group_sale_manager,base.model_res_partner,base.group_sale_manager,1,1,1,0
 access_product_pricelist_version_sale_manager,product.pricelist.version sale_manager,product.model_product_pricelist_version,base.group_sale_manager,1,1,1,1
 access_account_invoice_report_salesman,account.invoice.report salesman,account.model_account_invoice_report,base.group_sale_salesman,1,0,0,0
-access_stock_warehouse_orderpoint_sale_salesman,stock.warehouse.orderpoint,procurement.model_stock_warehouse_orderpoint,base.group_sale_salesman,1,0,0,0
-access_account_move_line_salesman,account.move.line invoice,account.model_account_move_line,base.group_sale_salesman,1,0,0,0

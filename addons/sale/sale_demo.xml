@@ -11,9 +11,6 @@
             <field ref="base.res_partner_agrolait" name="partner_id"/>
             <field ref="base.res_partner_address_8" name="partner_invoice_id"/>
             <field ref="base.res_partner_address_8" name="partner_shipping_id"/>
-            <field name="order_policy">picking</field>
-            <field name="invoice_quantity">procurement</field> 
-            <field name="note">Invoice after delivery</field>          
         </record>
 
         <!--Resource: sale.order.line-->
@@ -24,7 +21,6 @@
             <field name="product_id" ref="product.product_product_mb1"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">123.20</field>
-            <field name="type">make_to_stock</field>
         </record>
 
         <record id="line1" model="sale.order.line">
@@ -35,7 +31,6 @@
             <field name="price_unit">450.50</field>
             <field name="product_uom_qty">3</field>
             <field name="product_uos_qty">3</field>
-            <field name="type">make_to_stock</field>
         </record>
         <record id="line13" model="sale.order.line">
             <field name="order_id" ref="order"/>
@@ -44,8 +39,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">900</field>
             <field name="product_uom_qty">5</field>
-            <field name="type">make_to_stock</field>
-            <field name="delay">1</field>
         </record>
         <record id="line12" model="sale.order.line">
             <field name="order_id" ref="order"/>
@@ -55,7 +48,6 @@
             <field name="price_unit">88</field>
             <field name="product_uom_qty">5</field>
             <field name="product_uos_qty">5</field>
-            <field name="type">make_to_stock</field>
         </record>
 
         <!--Resource: sale.order-->
@@ -80,7 +72,6 @@
             <field name="product_id" ref="product.product_product_pc2"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">540</field>
-            <field name="type">make_to_order</field>
         </record>
         <record id="line4" model="sale.order.line">
             <field name="order_id" ref="order2"/>
@@ -90,7 +81,6 @@
             <field name="price_unit">88</field>
             <field name="product_uom_qty">8</field>
             <field name="product_uos_qty">8</field>
-            <field name="type">make_to_order</field>
         </record>
 
         <!--Resource: sale.order-->
@@ -111,8 +101,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_uom_qty">3</field>
             <field name="price_unit">450</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">2</field>
         </record>
         <record id="line6" model="sale.order.line">
             <field name="order_id" ref="order3"/>
@@ -121,8 +109,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">750</field>
             <field name="product_uom_qty">3</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">7</field>
         </record>
 
         <!--Resource: sale.order-->
@@ -142,8 +128,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_uom_qty">2</field>
             <field name="price_unit">450</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">8</field>
         </record>
         <record id="line8" model="sale.order.line">
             <field name="order_id" ref="order4"/>
@@ -152,10 +136,7 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">900</field>
             <field name="product_uom_qty">5</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">1</field>
         </record>
-        <workflow action="order_confirm" model="sale.order" ref="order4"/>
 
         <!--Resource: sale.order-->
         
@@ -174,8 +155,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_uom_qty">4</field>
             <field name="price_unit">750</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">15</field>
         </record>
         <record id="line52" model="sale.order.line">
             <field name="order_id" ref="order5"/>
@@ -185,9 +164,7 @@
             <field name="price_unit">75</field>
             <field name="product_uom_qty">3</field>
             <field name="product_uos_qty">3</field>
-            <field name="type">make_to_stock</field>
         </record>
-        <workflow action="order_confirm" model="sale.order" ref="order5"/>
 
         <!--Resource: sale.order-->
 
@@ -206,8 +183,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_uom_qty">4</field>
             <field name="price_unit">250</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">15</field>
         </record>
         <record id="order6_line1" model="sale.order.line">
             <field name="order_id" ref="order6"/>
@@ -216,11 +191,7 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_uom_qty">4</field>
             <field name="price_unit">500</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">15</field>
         </record>
-        <workflow action="order_confirm" model="sale.order" ref="order6"/>
-        <workflow action="manual_invoice" model="sale.order" ref="order6"/>
 
         <!--Resource: sale.order-->
 
@@ -239,8 +210,6 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_uom_qty">15</field>
             <field name="price_unit">250</field>
-            <field name="type">make_to_stock</field>
-            <field name="delay">15</field>
         </record>
         <record id="order7_line1" model="sale.order.line">
             <field name="order_id" ref="order7"/>
@@ -249,12 +218,8 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_uom_qty">5</field>
             <field name="price_unit">500</field>
-            <field name="type">make_to_stock</field>
-            <field name="delay">15</field>
         </record>
         
-        <!-- Run all schedulers -->
-        <function model="procurement.order" name="run_scheduler"/>
 
         <!-- sale advance demo.. -->
         <!-- Demo Data for Product -->

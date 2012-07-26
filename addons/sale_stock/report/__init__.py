@@ -18,35 +18,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
-{
-    'name': 'Multi-Company',
-    'version': '1.0',
-    'category': 'Tools',
-    'description': """
-This module is for managing a multicompany environment.
-=======================================================
-
-This module is the base module for other multi-company modules.
-    """,
-    'author': 'OpenERP SA,SYLEAM',
-    'website': 'http://www.openerp.com/',
-    'depends': [
-        'base',
-        'sale_stock',
-        'project',
-    ],
-    'init_xml': [],
-    'update_xml': [
-        'res_company_view.xml'
-    ],
-    'demo_xml': [
-        'multi_company_demo.xml'
-    ],
-    'installable': True,
-    'auto_install': False,
-    'certificate' : '001115526094673097933',
-    'images': ['images/companies.jpeg','images/default_company_per_object_form.jpeg', 'images/default_company_per_object_list.jpeg'],
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import sale_report

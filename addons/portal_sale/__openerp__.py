@@ -30,7 +30,7 @@ This module adds sale menu and features to your portal if sale and portal are
 installed.
     """,
     'author': 'OpenERP SA',
-    'depends': ['sale','portal'],
+    'depends': ['sale_stock','portal'],
     'data': [
         'security/portal_security.xml',
         'portal_sale_view.xml',

@@ -37,7 +37,7 @@ modules.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/crm_statistics_dashboard.jpeg', 'images/opportunity_to_quote.jpeg'],
-    'depends': ['sale', 'crm'],
+    'depends': ['sale_stock', 'crm'],
     'init_xml': [],
     'update_xml': ['wizard/crm_make_sale_view.xml',
                    'sale_crm_view.xml',

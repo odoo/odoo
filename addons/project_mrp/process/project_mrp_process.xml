@@ -51,7 +51,7 @@
             <field eval="&quot;&quot;&quot;Procurement Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;if product type is 'service' then it creates the task.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_procuretasktask0"/>
-            <field model="process.node" name="source_node_id" ref="sale.process_node_saleprocurement0"/>
+            <field model="process.node" name="source_node_id" ref="sale_stock.process_node_saleprocurement0"/>
         </record>
 
         <record id="process_transition_createtask0" model="process.transition">

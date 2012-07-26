@@ -30,14 +30,6 @@ class sale_configuration(osv.osv_memory):
         'group_invoice_so_lines': fields.boolean('Based on Sale Orders',
             implied_group='sale.group_invoice_so_lines',
             help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
-        'group_invoice_deli_orders': fields.boolean('Based on Delivery Orders',
-            implied_group='sale.group_invoice_deli_orders',
-            help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
-        'task_work': fields.boolean('Based on Task Activities',
-            help="""Lets you transfer the entries under tasks defined for Project Management to
-                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
-                and to automatically creates project tasks from procurement lines.
-                This installs the modules project_timesheet and project_mrp."""),
         'timesheet': fields.boolean('Based on Timesheet',
             help = """For modifying account analytic view to show important data to project manager of services companies.
                 You can also view the report of account analytic summary user-wise as well as month wise.
@@ -49,16 +41,10 @@ class sale_configuration(osv.osv_memory):
             You will be able to follow the progress of the contract and invoice automatically.
             It installs the account_analytic_analysis module."""),
         'default_order_policy': fields.selection(
-            [('manual', 'Invoice Based on Sales Orders'), ('picking', 'Invoice Based on Deliveries')],
+            [('manual', 'Invoice Based on Sales Orders')],
             'Default Method', default_model='sale.order',
-            help="You can generate invoices based on sales orders or based on shippings."),
-        'module_delivery': fields.boolean('Allow Charging Shipping Costs',
-            help ="""Allows you to add delivery methods in sale orders and delivery orders.
-                You can define your own carrier and delivery grids for prices.
-                This installs the module delivery."""),
+            help="You can generate invoices based on sales orders."),
         'time_unit': fields.many2one('product.uom', 'Working Time Unit'),
-        'default_picking_policy' : fields.boolean("Configurable Shipping Policy",
-            help = "You will be able to configure, per sale order, if you deliver all  products at once or if you deliver each product when it is available.  This may have an impact on the shipping price."),
         'group_sale_pricelist':fields.boolean("Pricelist per Customer",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
@@ -69,15 +55,9 @@ class sale_configuration(osv.osv_memory):
         'group_sale_delivery_address': fields.boolean("Allow Different Addresses for Delivery and Invoice",
             implied_group='sale.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a sale order."),
-        'group_mrp_properties': fields.boolean('Properties on Lines',
-            implied_group='sale.group_mrp_properties',
-            help="Allows you to tag sale order lines with properties."),
         'group_discount_per_so_line': fields.boolean("Discount per Line",
             implied_group='sale.group_discount_per_so_line',
             help="Allows you to apply some discount per sale order line."),
-        'group_multiple_shops': fields.boolean("Manage Multiple Shops",
-            implied_group='stock.group_locations',
-            help="This allows to configure and use multiple shops."),
         'module_warning': fields.boolean("Alerts by Products or Customers",
             help="""Allow to configure warnings on products and trigger them when a user wants to sale a given product or a given customer.
             Example: Product: this product is deprecated, do not purchase more than 5.
@@ -95,8 +75,6 @@ class sale_configuration(osv.osv_memory):
                 This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
                 But the possibility to change these values is still available.
                 This installs the module analytic_user_function."""),
-        'module_project_timesheet': fields.boolean("Project Timesheet"),
-        'module_project_mrp': fields.boolean("Project MRP"),
         'module_project': fields.boolean("Project"),
         'decimal_precision': fields.integer('Decimal Precision on Price',help="As an example, a decimal precision of 2 will allow prices  like: 9.99 EUR, whereas a decimal precision of 4 will allow prices like:  0.0231 EUR per unit."),
     }
@@ -113,8 +91,6 @@ class sale_configuration(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)
-        # task_work, time_unit depend on other fields
-        res['task_work'] = res.get('module_project_mrp') and res.get('module_project_timesheet')
         if res.get('module_project'):
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
@@ -122,13 +98,6 @@ class sale_configuration(osv.osv_memory):
             product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
             res['time_unit'] = product.uom_id.id
         return res
-
-    def get_default_sale_config(self, cr, uid, ids, context=None):
-        ir_values = self.pool.get('ir.values')
-        default_picking_policy = ir_values.get_default(cr, uid, 'sale.order', 'picking_policy')
-        return {
-            'default_picking_policy': default_picking_policy == 'one',
-        }
 
     def _get_default_time_unit(self, cr, uid, context=None):
         ids = self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=context)
@@ -149,12 +118,8 @@ class sale_configuration(osv.osv_memory):
         dp.write({'digits': config.decimal_precision})
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
-        ir_values = self.pool.get('ir.values')
         ir_model_data = self.pool.get('ir.model.data')
         wizard = self.browse(cr, uid, ids)[0]
-
-        default_picking_policy = 'one' if wizard.default_picking_policy else 'direct'
-        ir_values.set_default(cr, uid, 'sale.order', 'picking_policy', default_picking_policy)
 
         if wizard.time_unit:
             product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
@@ -166,11 +131,9 @@ class sale_configuration(osv.osv_memory):
 
         return {}
 
-    def onchange_invoice_methods(self, cr, uid, ids, group_invoice_so_lines, group_invoice_deli_orders, context=None):
-        if not group_invoice_deli_orders:
+    def onchange_invoice_methods(self, cr, uid, ids, group_invoice_so_lines, context=None):
+        if  group_invoice_so_lines:
             return {'value': {'default_order_policy': 'manual'}}
-        if not group_invoice_so_lines:
-            return {'value': {'default_order_policy': 'picking'}}
         return {}
 
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):

@@ -20,14 +20,12 @@
 ##############################################################################
 
 {
-    'name': 'Sales Management',
+    'name': 'Sale To Stock',
     'version': '1.0',
-    'category': 'Sales Management',
-    "sequence": 14,
-    "summary": "Quotations, Sales, Invoicing",
+    'category': 'Hidden',
     'description': """
-The base module to manage quotations and sales orders.
-======================================================
+This Module manage quotations and sales orders. 
+===========================================================================
 
 Workflow with validation steps:
 -------------------------------
@@ -35,6 +33,8 @@ Workflow with validation steps:
 
 Create Invoice:
 ---------------
+    * Invoice on Demand
+    * Invoice on Delivery Order
     * Invoice Before Delivery
 
 Partners preferences:
@@ -43,6 +43,16 @@ Partners preferences:
     * Shipping
     * Invoicing
 
+Products stocks and prices:
+--------------------------
+
+Delivery method:
+-----------------
+    * The Poste
+    * Free Delivery Charges
+    * Normal Delivery Charges
+    * Based on the Delivery Order(if not Add to sale order) 
+
 Dashboard for Sales Manager that includes:
 ------------------------------------------
     * My Quotations
@@ -50,35 +60,28 @@ Dashboard for Sales Manager that includes:
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/deliveries_to_invoice.jpeg','images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
-    'depends': ['board', 'account_voucher'],
+    'images': [],
+    'depends': ['sale', 'procurement'],
     'init_xml': [],
-    'update_xml': ['wizard/sale_line_invoice.xml',
-        'security/sale_security.xml',
-        'security/ir.model.access.csv',
-        'sale_workflow.xml',
-        'sale_sequence.xml',
-        'sale_report.xml',
-        'sale_data.xml',
-        'sale_view.xml',
-        'res_partner_view.xml',
-        'report/sale_report_view.xml',
-        'process/sale_process.xml',
-        'board_sale_view.xml',
-        'edi/sale_order_action_data.xml',
-        'res_config_view.xml',
-    ],
-    'demo_xml': ['sale_demo.xml'],
-    'test': [
-        'test/sale_order_demo.yml',
-        'test/prepaid_order_policy.yml',
-        'test/cancel_order.yml',
-        'test/delete_order.yml',
-        'test/edi_sale_order.yml',
-    ],
+    'update_xml': ['wizard/sale_make_invoice_advance.xml',
+                   'wizard/sale_make_invoice.xml',
+                   'security/sale_stock_security.xml',
+                   'security/ir.model.access.csv',
+                   'company_view.xml',
+                   'sale_stock_view.xml',
+                   'sale_stock_workflow.xml',
+                    'res_config_view.xml',
+                    'report/sale_report_view.xml',
+                    'process/sale_stock_process.xml',
+                   ],
+   'data': ['sale_stock_data.xml'],
+   'demo_xml': ['sale_stock_demo.xml'],
+    'test': ['test/cancel_order_sale_stock.yml',
+             'test/picking_order_policy.yml',
+             'test/manual_order_policy.yml'
+             ],
     'installable': True,
-    'auto_install': False,
-    'application': True,
-    'certificate': '0058103601429',
+    'auto_install': True,
+    
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
