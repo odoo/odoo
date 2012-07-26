@@ -524,7 +524,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                             " details relied on");
         }
         delete complete.term;
-        this.$element.removeClass('oe_focused');
+        this.$element.removeClass('oe_focused')
+                     .trigger('blur');
     },
     /**
      *
