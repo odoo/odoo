@@ -51,7 +51,6 @@
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_pause', cr)
-    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_resume', cr)
 -
   I resume first work operation.
 -
@@ -102,7 +101,6 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    print order.state
     assert order.state == 'done', "Production should be closed after finished all operations."
 -
   I print a Barcode Report of Operation line.
