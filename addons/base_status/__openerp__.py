@@ -26,6 +26,7 @@
     'description': """
 This module handles state and stage. It is derived from the crm_base and
 crm_case classes from crm.
+========================================================================
 
  * ``base_state``: state management
  * ``base_stage``: stage management

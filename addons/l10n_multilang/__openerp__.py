@@ -25,10 +25,11 @@
     "author" : "OpenERP SA",
     "category": 'Hidden/Dependency',
     "description": """
-    * Multi language support for Chart of Accounts, Taxes, Tax Codes , Journals, Accounting Templates,
-        Analytic Chart of Accounts and Analytic Journals.
+    * Multi language support for Chart of Accounts, Taxes, Tax Codes, Journals,
+      Accounting Templates, Analytic Chart of Accounts and Analytic Journals.
     * Setup wizard changes
-        - Copy translations for COA, Tax, Tax Code and Fiscal Position from templates to target objects.
+        - Copy translations for COA, Tax, Tax Code and Fiscal Position from
+          templates to target objects.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

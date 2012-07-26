@@ -62,6 +62,9 @@ class stock_change_product_qty(osv.osv_memory):
             res.update({'new_quantity': 1})
         if 'product_id' in fields:
             res.update({'product_id': product_id})
+        if 'location_id' in fields:
+            location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
+            res.update({'location_id': location_id and location_id.id or False})
         return res
 
     def change_product_qty(self, cr, uid, ids, context=None):

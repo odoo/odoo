@@ -24,8 +24,7 @@
     'version': '1.0',
     "category": "Project Management",
     'description': """
-This module adds a PAD in all project kanban views
-==================================================
+This module adds a PAD in all project kanban views.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
