@@ -933,7 +933,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     '[data-id=' + record.get('id') + ']');
                 var index = $row.data('index');
                 $row.remove();
-                self.refresh_zebra(index);
             },
             'reset': function () { return self.on_records_reset(); },
             'change': function (event, record, attribute, value, old_value) {
@@ -968,8 +967,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                                 '[data-id=' + previous_record.get('id') + ']');
                     $new_row.insertAfter($previous_sibling);
                 }
-
-                self.refresh_zebra(index, 1);
             }
         };
         _(this.record_callbacks).each(function (callback, event) {
@@ -1109,7 +1106,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         this.$current
             .children('tr:not([data-id])').remove().end()
             .append(new Array(count - this.records.length + 1).join(row));
-        this.refresh_zebra(this.records.length);
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -1182,25 +1178,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             view: this.view,
             render_cell: function () {
                 return self.render_cell.apply(self, arguments); }
-        });
-    },
-    /**
-     * Fixes fixes the even/odd classes
-     *
-     * @param {Number} [from_index] index from which to resequence
-     * @param {Number} [offset = 0] selection offset for DOM, in case there are rows to ignore in the table
-     */
-    refresh_zebra: function (from_index, offset) {
-        offset = offset || 0;
-        from_index = from_index || 0;
-        var dom_offset = offset + from_index;
-        var sel = dom_offset ? ':gt(' + (dom_offset - 1) + ')' : null;
-        this.$current.children(sel).each(function (i, e) {
-            var index = from_index + i;
-            // reset record-index accelerators on rows and even/odd
-            var even = index%2 === 0;
-            $(e).toggleClass('even', even)
-                .toggleClass('odd', !even);
         });
     }
 });
@@ -1534,8 +1511,6 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     }(dataset, record.get('id'), seq));
                     record.set('sequence', seq);
                 }
-
-                list.refresh_zebra();
             }
         });
     },

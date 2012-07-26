@@ -645,10 +645,9 @@
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
         <t t-set="record" t-value="records.at(index)"/>
-        <t t-set="row_parity" t-value="index_parity"/>
     </t>
 </t>
-<tr t-name="ListView.row" t-att-class="row_parity"
+<tr t-name="ListView.row"
         t-att-data-id="record.get('id')"
         t-att-style="view.style_for(record)">
     <t t-set="asData" t-value="record.toForm().data"/>
