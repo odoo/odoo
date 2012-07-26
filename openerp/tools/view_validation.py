@@ -6,11 +6,11 @@ def valid_page_in_book(arch):
 
 def valid_field_in_graph(arch):
     """A `field` node must be below a `graph` node."""
-    return not arch.xpath('//graph[not(field)]')
+    return not arch.xpath('//graph[not ((field) and (@string))]')
 
 def valid_field_in_tree(arch):
     """A `field` and `button` node must be below a `tree` node."""
-    return not arch.xpath('//tree[not((field) and (button))]')
+    return not arch.xpath('//tree[not((field) and (button) and (@string))]')
 
 def valid_att_in_field(arch):
     """A `name` attribute must be in a `field` node."""
@@ -19,18 +19,10 @@ def valid_att_in_field(arch):
 def valid_att_in_label(arch):
     """A `for` and `string` attribute must be in a `label` node."""
     return not arch.xpath('//label[not ((@for) or (@string))]')
-    
-def valid_att_in_tree(arch):
-    """A `string` attribute must be in a `tree` node."""
-    return not arch.xpath('//tree[not (@string)]')
 
 def valid_att_in_form(arch):
     """A `string` attribute must be in a `form` node."""
     return not arch.xpath('//form[not (@string)]')
-
-def valid_att_in_graph(arch):
-    """A `string` attribute must be in a `graph` node."""
-    return not arch.xpath('//graph[not (@string)]')
 
 def valid_type_in_colspan(arch):
     """A `colspan` attribute must be an `integer` type."""
@@ -73,32 +65,10 @@ def valid_label_view(arch):
             if not pred(arch):
                 return False
         return True
-
-def valid_tree_view(arch):
-    if arch.tag == 'tree':
-        for pred in [valid_att_in_tree]:
-            if not pred(arch):
-                return False
-    return True
-
-def valid_form_view(arch):
-    if arch.tag == 'form':
-        for pred in [valid_att_in_form]:
-            if not pred(arch):
-                return False
-    return True
-
-def valid_graph_view(arch):
-    if arch.tag == 'graph':
-        for pred in [valid_att_in_graph]:
-            if not pred(arch):
-                return False
-    return True
-
     
 def valid_view(arch):
     if arch.tag == 'form':
-        for pred in [valid_page_in_book]:
+        for pred in [valid_page_in_book,valid_att_in_form]:
             if not pred(arch):
                 return False
     elif arch.tag == 'graph':
