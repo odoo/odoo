@@ -1057,6 +1057,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     do_push_state: function(state) {
         this.set_title(state.title);
+        delete state.title;
         var url = '#' + $.param(state);
         this._current_state = _.clone(state);
         $.bbq.pushState(url);

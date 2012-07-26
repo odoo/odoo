@@ -120,7 +120,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
                 state['title'] = this.inner_action.name;
-                state['model'] = this.inner_action.res_model;
+                if(this.inner_action.type == 'ir.actions.act_window') {
+                    state['model'] = this.inner_action.res_model;
+                }
                 if (this.inner_action.id) {
                     state['action_id'] = this.inner_action.id;
                 }
@@ -223,7 +225,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 // These buttons will be overwrited by <footer> if any
                 this.dialog = new instance.web.Dialog(this, {
                     buttons: { "Close": function() { $(this).dialog("close"); }},
-		    dialogClass: 'oe_act_window'
+                    dialogClass: 'oe_act_window'
                 });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
@@ -270,6 +272,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
             widget: this.inner_widget,
             title: action.name
         });
+        this.inner_action = action;
+        this.do_push_state({});
         this.inner_widget.appendTo(this.$element);
     },
     ir_actions_report_xml: function(action, on_closed) {
