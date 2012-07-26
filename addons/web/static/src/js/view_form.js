@@ -149,6 +149,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } },
             ]);
         }
+
+        // Add bounce effect on button 'Edit' when click on readonly page view.
+        this.$element.find(".oe_form_field, .oe_form_group_cell").on('click', function (e) {
+            if(self.get("mode") == "view") {
+                var $button = self.options.$buttons.find(".oe_form_button_edit");
+                $button.wrap('<div>').css('margin-right','4px').addClass('oe_left oe_bounce');
+            }
+        });
+
         this.on("change:mode", this, this.switch_mode);
         this.set({mode: this.options.initial_mode});
         this.has_been_loaded.resolve();
@@ -1645,6 +1654,9 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
             // TODO fme: provide enter key binding to widgets
             this.view.default_focus_button = this;
         }
+        if (this.node.attrs.icon && (! /\//.test(this.node.attrs.icon))) {
+            this.node.attrs.icon = '/web/static/src/img/icons/' + this.node.attrs.icon + '.png';
+        }
         this.view.on('view_content_has_changed', this, this.check_disable);
     },
     start: function() {
@@ -2818,10 +2830,11 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 if (follow)
                     link += "<br />";
             }
-            this.$element.find('a')
+            var $link = this.$element.find('.oe_form_uri')
                  .unbind('click')
-                 .html(link)
-                 .click(function () {
+                 .html(link);
+            if (! this.get_definition_options().no_open)
+                $link.click(function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
                         res_model: self.field.relation,

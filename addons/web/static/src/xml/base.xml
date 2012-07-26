@@ -653,9 +653,7 @@
         t-att-style="view.style_for(record)">
     <t t-set="asData" t-value="record.toForm().data"/>
     <t t-foreach="columns" t-as="column">
-        <td t-if="column.meta">
-
-        </td>
+        <td t-if="column.meta"> </td>
     </t>
     <th t-if="options.selectable" class="oe_list_record_selector" width="1">
         <t t-set="checked" t-value="options.select_view_id == record.get('id') ? 'checked' : null"/>
@@ -674,7 +672,6 @@
         <button type="button" name="delete" class="oe_i">d</button>
     </td>
 </tr>
-
 <t t-extend="ListView.buttons">
     <t t-jquery="button.oe_list_add" t-operation="after">
         <button class="oe_button oe_list_save oe_highlight"
@@ -682,6 +679,15 @@
     </t>
     <t t-jquery="a.oe_list_button_import" t-operation="after">
         <a href="#" class="oe_bold oe_list_discard">discard</a>
+    </t>
+</t>
+<t t-extend="ListView.row">
+    <!-- adds back padding to row being rendered after edition, if necessary
+         (if not deletable add back padding), otherwise the row being added is
+         missing columns
+     -->
+    <t t-jquery="&gt; :last" t-operation="after">
+        <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
     </t>
 </t>
 
@@ -955,11 +961,13 @@
 <t t-name="FieldMany2One">
     <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button" t-att-style="widget.node.attrs.style">
         <t t-if="widget.get('effective_readonly')">
-            <a href="#" class="oe_form_uri"/>
+            <a t-if="! widget.get_definition_options().no_open" href="#" class="oe_form_uri"/>
+            <span t-if="widget.get_definition_options().no_open" href="#" class="oe_form_uri"/>
             <span class="oe_form_m2o_follow"/>
         </t>
         <t t-if="!widget.get('effective_readonly')">
-            <a href="#" tabindex="-1" class="oe_m2o_cm_button oe_e oe_right">/</a>
+            <a t-if="! widget.get_definition_options().no_open" href="#" tabindex="-1"
+                class="oe_m2o_cm_button oe_e oe_right">/</a>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
@@ -974,7 +982,6 @@
         </t>
     </span>
 </t>
-<!-- Collection of m2m tags -->
 <t t-name="FieldMany2ManyTags">
     <div class="oe_form_field oe_tags" t-att-style="widget.node.attrs.style">
         <t t-if="! widget.get('effective_readonly')">
@@ -983,7 +990,6 @@
         </t>
     </div>
 </t>
-<!-- Individual m2m tag element -->
 <t t-name="FieldMany2ManyTag">
     <t t-set="i" t-value="0"/>
     <t t-foreach="elements" t-as="el">
@@ -1131,7 +1137,7 @@
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus">
-        <img t-if="widget.node.attrs.icon" t-att-src="_s + '/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
+        <img t-if="widget.node.attrs.icon" t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
 </t>
@@ -1189,6 +1195,41 @@
     </table>
 </t>
 
+<t t-name="AbstractFormPopup.render">
+    <div>
+        <table style="width:100%">
+            <tr style="width:100%">
+                <td style="width:100%">
+                    <div class="oe_popup_search" style="width:100%"></div>
+                </td>
+            </tr>
+            <tr style="width:100%">
+                <td style="width:100%">
+                    <div class="oe_popup_list" style="width:100%"></div>
+                </td>
+            </tr>
+        </table>
+        <div class="oe_popup_form" style="width:100%"></div>
+    </div>
+</t>
+<t t-name="SelectCreatePopup.search.buttons">
+    <t t-if="! widget.options.disable_multiple_selection">
+        <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
+        or
+    </t>
+    <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
+</t>
+<t t-name="AbstractFormPopup.buttons">
+    <t t-if="! multi_select">
+        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save</button>
+    </t>
+    <t t-if="multi_select">
+        <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
+        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
+    </t>
+    or <a class="oe_button oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Discard</a>
+</t>
+
 <t t-name="One2Many.viewmanager" t-extend="ViewManager">
     <t t-jquery=".oe-view-manager-header">
         this.attr('t-if', 'views.length != 1');
@@ -1241,7 +1282,6 @@
 <span t-name="SearchView.FacetView.Value" class="oe_facet_value">
     <t t-esc="widget.model.get('label')"/>
 </span>
-
 <t t-name="SearchView.managed-filters">
     <option class="oe_search_filters_title" value="">Filters</option>
     <optgroup label="-- Filters --">
@@ -1266,7 +1306,6 @@
         <p>(Any existing filter with the same name will be replaced)</p>
     </div>
 </t>
-
 <t t-name="SearchView.render_lines">
     <table class="oe_search_render_line" border="0" cellspacing="0" cellpadding="0"
            t-foreach="lines" t-as="line">
@@ -1463,49 +1502,6 @@
         </t>
     </select>
 </t>
-<t t-name="AbstractFormPopup.render">
-    <div>
-        <table style="width:100%">
-            <tr style="width:100%">
-                <td style="width:100%">
-                    <div class="oe_popup_search" style="width:100%"></div>
-                </td>
-            </tr>
-            <tr style="width:100%">
-                <td style="width:100%">
-                    <div class="oe_popup_list" style="width:100%"></div>
-                </td>
-            </tr>
-        </table>
-        <div class="oe_popup_form" style="width:100%"></div>
-    </div>
-</t>
-<t t-name="SelectCreatePopup.search.buttons">
-    <t t-if="! widget.options.disable_multiple_selection">
-        <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
-        or
-    </t>
-    <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
-</t>
-<t t-name="AbstractFormPopup.buttons">
-    <t t-if="! multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save</button>
-    </t>
-    <t t-if="multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
-        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
-    </t>
-    or <a class="oe_button oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
-</t>
-<t t-extend="ListView.row">
-    <!-- adds back padding to row being rendered after edition, if necessary
-         (if not deletable add back padding), otherwise the row being added is
-         missing columns
-     -->
-    <t t-jquery="&gt; :last" t-operation="after">
-        <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
-    </t>
-</t>
 
 <t t-name="view_editor">
     <table class="oe_view_editor">
@@ -1570,6 +1566,7 @@
 <t t-name="vieweditor_boolean">
     <input type="checkbox" t-att-id="widget.name"/>
 </t>
+
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>

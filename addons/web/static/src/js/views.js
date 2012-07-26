@@ -120,7 +120,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
                 state['title'] = this.inner_action.name;
-                state['model'] = this.inner_action.res_model;
+                if(this.inner_action.type == 'ir.actions.act_window') {
+                    state['model'] = this.inner_action.res_model;
+                }
                 if (this.inner_action.id) {
                     state['action_id'] = this.inner_action.id;
                 }
@@ -178,7 +180,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     do_action: function(action, on_close) {
-        if (_.isNumber(action) || _.isString(action)) {
+        if (_.isString(action) && instance.web.client_actions.contains(action)) {
+            var action_client = { type: "ir.actions.client", tag: action };
+            return this.do_action(action_client);
+        } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
             return self.rpc("/web/action/load", { action_id: action }, function(result) {
                 self.do_action(result.result, on_close);
@@ -223,7 +228,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 // These buttons will be overwrited by <footer> if any
                 this.dialog = new instance.web.Dialog(this, {
                     buttons: { "Close": function() { $(this).dialog("close"); }},
-		    dialogClass: 'oe_act_window'
+                    dialogClass: 'oe_act_window'
                 });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
@@ -270,6 +275,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
             widget: this.inner_widget,
             title: action.name
         });
+        this.inner_action = action;
+        this.do_push_state({});
         this.inner_widget.appendTo(this.$element);
     },
     ir_actions_report_xml: function(action, on_closed) {
