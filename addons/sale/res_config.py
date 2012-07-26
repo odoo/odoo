@@ -119,7 +119,7 @@ class sale_configuration(osv.osv_memory):
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_0')
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
             res['time_unit'] = product.uom_id.id
         return res
 
@@ -157,7 +157,7 @@ class sale_configuration(osv.osv_memory):
         ir_values.set_default(cr, uid, 'sale.order', 'picking_policy', default_picking_policy)
 
         if wizard.time_unit:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_0')
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
             product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
         if wizard.module_project and wizard.time_unit:
