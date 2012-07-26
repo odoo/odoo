@@ -88,7 +88,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             w.off('focused blurred');
             w.destroy();
         });
-        this.$element.off('.formBlur');
+        if (this.$element) {
+            this.$element.off('.formBlur');
+        }
         this._super();
     },
     on_loaded: function(data) {
