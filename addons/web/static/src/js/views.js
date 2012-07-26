@@ -180,7 +180,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     do_action: function(action, on_close) {
-        if (_.isNumber(action) || _.isString(action)) {
+        if (_.isString(action) && instance.web.client_actions.contains(action)) {
+            var action_client = { type: "ir.actions.client", tag: action };
+            return this.do_action(action_client);
+        } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
             return self.rpc("/web/action/load", { action_id: action }, function(result) {
                 self.do_action(result.result, on_close);

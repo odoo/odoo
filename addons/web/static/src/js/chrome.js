@@ -473,8 +473,10 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         });
     },
     do_exit: function () {
+        this.do_action("login");
     }
 });
+instance.web.client_actions.add("database_manager", "instance.web.DatabaseManager");
 
 instance.web.Login =  instance.web.Widget.extend({
     template: "Login",
@@ -496,17 +498,7 @@ instance.web.Login =  instance.web.Widget.extend({
         }
     },
     open_db_manager: function(){
-        var self = this;
-        self.$element.find('.oe_login_bottom').hide();
-        self.$element.find('.oe_login_pane').hide();
-        self.databasemanager = new instance.web.DatabaseManager(self);
-        self.databasemanager.appendTo(self.$element);
-        self.databasemanager.do_exit.add_last(function() {
-            self.databasemanager.destroy();
-            self.$element.find('.oe_login_bottom').show();
-            self.$element.find('.oe_login_pane').show();
-            self.load_db_list(true).then(self.on_db_list_loaded);
-        });
+        this.do_action("database_manager");
     },
     start: function() {
         var self = this;
@@ -582,13 +574,24 @@ instance.web.Login =  instance.web.Widget.extend({
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
-            self.trigger("login");
+            self.do_action("login_sucessful");
         },function () {
             self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
         });
     }
 });
+instance.web.client_actions.add("login", "instance.web.Login");
+
+instance.web.LoginSuccessful =  instance.web.Widget.extend({
+    init: function(parent) {
+        this._super(parent);
+    },
+    start: function() {
+        this.getParent().getParent().show_application();
+    },
+});
+instance.web.client_actions.add("login_sucessful", "instance.web.LoginSuccessful");
 
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
@@ -964,19 +967,16 @@ instance.web.WebClient = instance.web.Client.extend({
                 data: {debug: file + ':' + line}
             });
         };
-        // TODO: deprecate and use login client action
-        self.login = new instance.web.Login(self);
-        self.login.on("login",self,self.show_application);
     },
     show_login: function() {
         var self = this;
         self.$('.oe_topbar').hide();
-        self.login.appendTo(self.$element);
+        self.action_manager.do_action("login");
+        //self.login.appendTo(self.$element);
     },
     show_application: function() {
         var self = this;
         self.$('.oe_topbar').show();
-        self.login.$element.hide();
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
         self.menu.on('menu_click', this, this.on_menu_action);
