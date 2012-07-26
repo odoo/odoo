@@ -39,15 +39,9 @@ DOM Root
 A :js:class:`~openerp.web.Widget` is responsible for a section of the
 page materialized by the DOM root of the widget. The DOM root is
 available via the :js:attr:`~openerp.web.Widget.el` and
-:js:attr:`~openerp.web.Widget.$element` attributes, which are respectively
-the raw DOM Element and the jQuery wrapper around the DOM element.
-
-.. note::
-
-    both attributes are compatible with Backbone's equivalent, there
-    is also the :js:attr:`~openerp.web.Widget.$element` attribute
-    which aliases to :js:attr:`~openerp.web.Widget.$element` and remains
-    for backwards compatiblity reasons.
+:js:attr:`~openerp.web.Widget.$element` attributes, which are
+respectively the raw DOM Element and the jQuery wrapper around the DOM
+element.
 
 There are two main ways to define and generate this DOM root:
 
