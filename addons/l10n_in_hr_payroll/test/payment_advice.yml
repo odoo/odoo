@@ -1,12 +1,14 @@
 -
+  In order to test Advice Line I create a new Advice Line Record  
+-
   import datetime
 -
-  I create a new Payment Advice For Month june and july 
+  I create a new Payment Advice with IFSC Code
 -
   !record {model: hr.payroll.advice, id: payment_advice_1}: 
     name: 'June'
     date: !eval "'%s-06-01' %(datetime.now().year)"
-    bank_id: 'base.res_bank_1'
+    bank_id: base.res_bank_1
     chaque_nos: '007667'
     line_ids:
       - employee_id: hr.employee_fp
@@ -18,11 +20,13 @@
         ifsc_code: 'sbi45452145'
         bysal: '20000.00'                
 -
+  I create a new Payment Advice without IFSC Code
+-
   !record {model: hr.payroll.advice, id: payment_advice_2}: 
     name: 'July'
     date: !eval "'%s-07-01' %(datetime.now().year)"
     chaque_nos: '007568'
-    bank_id: 'base.res_bank_1'
+    bank_id: base.res_bank_1
     line_ids:
       - employee_id: hr.employee_fp
         name: '90125452'
@@ -35,6 +39,15 @@
 -
   !assert {model: hr.payroll.advice, id: payment_advice_1, string: Payment Advice is in draft state}:
     - state == 'draft'
+-
+  I check that payment advice is confirmed
+-    
+  !python {model: hr.payroll.advice}: |
+    advice_line = self.confirm_sheet(cr, uid, [ref('payment_advice_1')])
+-
+  !python {model: hr.payroll.advice}: |
+    advice_line = self.browse(cr, uid, ref("payment_advice_1"))
+    assert (advice_line.state == 'confirm')
 -
   In order to test the PDF reports defined on a Payment Advice,we will print a Payment Advice Detail Summary Report when NEFT is checked
 -
