@@ -455,7 +455,6 @@ class account_analytic_account(osv.osv):
         'invoice_on_timesheets' : fields.boolean("Invoice On Timesheets"),
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
-        'template_id': fields.many2one('account.analytic.account', 'Template of Contract'),
         'hours_qtt_est': fields.float('Estimation of Hours to Invoice'),
         'est_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Estimation"),
         'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
@@ -483,18 +482,15 @@ class account_analytic_account(osv.osv):
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         if not template_id:
             return {}
-        res = {'value':{}}
-        template = self.browse(cr, uid, template_id, context=context)
-        res['value']['date_start'] = template.date_start
-        res['value']['date'] = template.date
-        res['value']['fix_price_invoices'] = template.fix_price_invoices
-        res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
-        res['value']['quantity_max'] = template.quantity_max
-        res['value']['hours_qtt_est'] = template.hours_qtt_est
-        res['value']['amount_max'] = template.amount_max
-        res['value']['to_invoice'] = template.to_invoice.id
-        res['value']['pricelist_id'] = template.pricelist_id.id
-        res['value']['description'] = template.description
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['fix_price_invoices'] = template.fix_price_invoices
+            res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
+            res['value']['hours_qtt_est'] = template.hours_qtt_est
+            res['value']['amount_max'] = template.amount_max
+            res['value']['to_invoice'] = template.to_invoice.id
+            res['value']['pricelist_id'] = template.pricelist_id.id
         return res
 account_analytic_account()
 
