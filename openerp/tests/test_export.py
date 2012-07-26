@@ -1,77 +1,10 @@
 # -*- coding: utf-8 -*-
-import psycopg2
-
+import itertools
 import openerp.modules.registry
 import openerp
-from openerp.osv import orm, fields
 
-from . import common
+from . import common, export_models
 
-models = [
-    ('boolean', fields.boolean()),
-    ('integer', fields.integer()),
-    ('float', fields.float()),
-    ('decimal', fields.float(digits=(16, 3))),
-    ('string.bounded', fields.char('unknown', size=16)),
-    ('string', fields.char('unknown', size=None)),
-    ('date', fields.date()),
-    ('datetime', fields.datetime()),
-    ('text', fields.text()),
-    ('selection', fields.selection([(1, "Foo"), (2, "Bar"), (3, "Qux")])),
-    # just relate to an integer
-    ('many2one', fields.many2one('export.integer')),
-    ('one2many', fields.one2many('export.one2many.child', 'parent_id')),
-    ('many2many', fields.many2many('export.many2many.other'))
-    # TODO: function?
-    # TODO: related?
-    # TODO: reference?
-]
-for name, field in models:
-    attrs = {
-        '_name': 'export.%s' % name,
-        '_module': 'base',
-        '_columns': {
-            'const': fields.integer(),
-            'value': field
-        },
-        '_defaults': {'const': 4},
-        'name_get': (lambda self, cr, uid, ids, context=None:
-            [(record.id, "%s:%s" % (self._name, record.value))
-             for record in self.browse(cr, uid, ids, context=context)])
-    }
-    NewModel = type(
-        'Export%s' % ''.join(section.capitalize() for section in name.split('.')),
-        (orm.Model,),
-        attrs)
-
-class One2ManyChild(orm.Model):
-    _name = 'export.one2many.child'
-    _module = 'base'
-    # FIXME: orm.py:1161, fix to name_get on m2o field
-    _rec_name = 'value'
-
-    _columns = {
-        'parent_id': fields.many2one('export.one2many'),
-        'str': fields.char('unknown', size=None),
-        'value': fields.integer()
-    }
-    def name_get(self, cr, uid, ids, context=None):
-        return [(record.id, "%s:%s" % (self._name, record.value))
-            for record in self.browse(cr, uid, ids, context=context)]
-
-class Many2ManyChild(orm.Model):
-    _name = 'export.many2many.other'
-    _module = 'base'
-    # FIXME: orm.py:1161, fix to name_get on m2o field
-    _rec_name = 'value'
-
-    _columns = {
-        'str': fields.char('unknown', size=None),
-        'value': fields.integer()
-    }
-    def name_get(self, cr, uid, ids, context=None):
-        return [(record.id, "%s:%s" % (self._name, record.value))
-            for record in self.browse(cr, uid, ids, context=context)]
 
 def setUpModule():
     openerp.tools.config['update'] = dict(base=1)
@@ -431,6 +364,102 @@ class test_o2m(CreatorCase):
                 [u'record3', '', u'36'],
                 [u'record4', '', u'4'],
                 [u'record5', '', u'13'],
+            ])
+
+# todo: test with multiple o2m fields and exporting all
+class test_o2m_multiple(CreatorCase):
+    model_name = 'export.one2many.multiple'
+
+    def make(self, value=None, **values):
+        if value is not None: values['value'] = value
+        id = self.model.create(self.cr, openerp.SUPERUSER_ID, values)
+        return self.model.browse(self.cr, openerp.SUPERUSER_ID, [id])[0]
+    def export(self, value=None, fields=('child1', 'child2',), context=None, **values):
+        record = self.make(value, **values)
+        return self.model._BaseModel__export_row(
+            self.cr, openerp.SUPERUSER_ID, record,
+            [f.split('/') for f in fields],
+            context=context)
+
+    def test_empty(self):
+        self.assertEqual(
+            self.export(child1=False, child2=False),
+            [[False, False]])
+
+    def test_single_per_side(self):
+        self.assertEqual(
+            self.export(child1=False, child2=[(0, False, {'value': 42})]),
+            [[False, u'export.one2many.child.2:42']])
+
+        self.assertEqual(
+            self.export(child1=[(0, False, {'value': 43})], child2=False),
+            [[u'export.one2many.child.1:43', False]])
+
+        self.assertEqual(
+            self.export(child1=[(0, False, {'value': 43})],
+                        child2=[(0, False, {'value': 42})]),
+            [[u'export.one2many.child.1:43', u'export.one2many.child.2:42']])
+
+    def test_single_integrate_subfield(self):
+        fields = ['const', 'child1/value', 'child2/value']
+        self.assertEqual(
+            self.export(child1=False, child2=[(0, False, {'value': 42})],
+                        fields=fields),
+            [[u'36', False, u'42']])
+
+        self.assertEqual(
+            self.export(child1=[(0, False, {'value': 43})], child2=False,
+                        fields=fields),
+            [[u'36', u'43', False]])
+
+        self.assertEqual(
+            self.export(child1=[(0, False, {'value': 43})],
+                        child2=[(0, False, {'value': 42})],
+                        fields=fields),
+            [[u'36', u'43', u'42']])
+
+    def test_multiple(self):
+        """ With two "concurrent" o2ms, exports the first line combined, then
+        exports the rows for the first o2m, then the rows for the second o2m.
+        """
+        fields = ['const', 'child1/value', 'child2/value']
+        child1 = [(0, False, {'value': v, 'str': 'record%.02d' % index})
+                  for index, v in zip(itertools.count(), [4, 42, 36, 4, 13])]
+        child2 = [(0, False, {'value': v, 'str': 'record%.02d' % index})
+                  for index, v in zip(itertools.count(10), [8, 12, 8, 55, 33, 13])]
+
+        self.assertEqual(
+            self.export(child1=child1, child2=False, fields=fields),
+            [
+                [u'36', u'4', False],
+                ['', u'42', ''],
+                ['', u'36', ''],
+                ['', u'4', ''],
+                ['', u'13', ''],
+            ])
+        self.assertEqual(
+            self.export(child1=False, child2=child2, fields=fields),
+            [
+                [u'36', False, u'8'],
+                ['', '', u'12'],
+                ['', '', u'8'],
+                ['', '', u'55'],
+                ['', '', u'33'],
+                ['', '', u'13'],
+            ])
+        self.assertEqual(
+            self.export(child1=child1, child2=child2, fields=fields),
+            [
+                [u'36', u'4', u'8'],
+                ['', u'42', ''],
+                ['', u'36', ''],
+                ['', u'4', ''],
+                ['', u'13', ''],
+                ['', '', u'12'],
+                ['', '', u'8'],
+                ['', '', u'55'],
+                ['', '', u'33'],
+                ['', '', u'13'],
             ])
 
 class test_m2m(CreatorCase):
