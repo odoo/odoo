@@ -16,7 +16,6 @@
                 <field name="deadline_month" invisible="1"/>
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
-                <field name="categ_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
                 <field name="type" invisible="1"/>
@@ -114,7 +113,6 @@
                         <field name="partner_id"/>
                         <separator orientation="vertical"/>
                         <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]" />
-                        <field name="categ_id" widget="selection"/>
                         <field name="type_id" widget="selection"/>
                         <field name="channel_id" widget="selection"/>
                         <separator orientation="vertical"/>
@@ -140,8 +138,6 @@
                         <separator orientation="vertical" />
                         <filter string="Stage" name="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Category" name="Category" icon="terp-stock_symbol-selection"
-                            domain="[]" context="{'group_by':'categ_id'}" />
                         <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
                             domain="[]" context="{'group_by':'type_id'}" />
                         <filter string="Channel" icon="terp-call-start"
@@ -183,7 +179,6 @@
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="priority"  invisible="1"/>
-                <field name="categ_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
                 <field name="type" invisible="1"/>

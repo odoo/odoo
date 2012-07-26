@@ -1726,10 +1726,15 @@ class stock_move(osv.osv):
             if location_xml_id:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
         return location_id
+    
+    def _default_destination_address(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.company_id.partner_id.id
 
     _defaults = {
         'location_id': _default_location_source,
         'location_dest_id': _default_location_destination,
+        'partner_id': _default_destination_address,
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,
