@@ -3035,6 +3035,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             }
             if(view.view_type === "list") {
                 _.extend(view.options, {
+                    addable: null,
                     selectable: self.multi_selection,
                     sortable: false,
                     import_enabled: false,
@@ -3042,7 +3043,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 });
                 if (self.get("effective_readonly")) {
                     _.extend(view.options, {
-                        addable: null,
                         deletable: null,
                         reorderable: false,
                     });
@@ -3465,6 +3465,34 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         // the current row *anyway*, then create a new one/edit the next one)
         this.__ignore_blur = true;
         this._super.apply(this, arguments);
+    }
+});
+instance.web.form.One2ManyList = instance.web.ListView.List.extend({
+    pad_table_to: function (count) {
+        this._super(count > 0 ? count - 1 : 0);
+
+        // magical invocation of wtf does that do
+        if (this.view.o2m.get('effective_readonly')) {
+            return;
+        }
+
+        var self = this;
+        var columns = _(this.columns).filter(function (column) {
+            return column.invisible !== '1';
+        }).length;
+        if (this.options.selectable) { columns++; }
+        if (this.options.deletable) { columns++; }
+        var $cell = $('<td>', {
+            colspan: columns,
+            'class': 'oe_form_field_one2many_list_row_add'
+        }).text(_t("Add a row"))
+            .click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                self.view.do_add_record();
+            });
+        this.$current.append(
+            $('<tr>').append($cell))
     }
 });
 
