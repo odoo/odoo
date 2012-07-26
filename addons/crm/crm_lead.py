@@ -772,6 +772,7 @@ class crm_lead(base_stage, osv.osv):
         res['context'] = {
             'default_opportunity_id': opportunity.id,
             'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
+            'default_partner_ids' : opportunity.partner_id and [opportunity.partner_id.id] or False,
             'default_user_id': uid,
             'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
             'default_email_from': opportunity.email_from,
