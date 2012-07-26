@@ -310,7 +310,7 @@
         t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
         <t t-esc="menu.name"/>
         <t t-if="menu.needaction_enabled and menu.needaction_counter">
-            <div class="oe_menu_counter">
+            <div class="oe_tag oe_tag_dark oe_menu_counter">
                 <t t-esc="menu.needaction_counter"/>
             </div>
         </t>
@@ -1269,7 +1269,7 @@
      contenteditable="true"/>
 <!-- tabindex: makes div focusable -->
 <div t-name="SearchView.FacetView"
-     class="oe_searchview_facet"
+     class="oe_tag oe_tag_dark oe_searchview_facet"
      tabindex="0"
     ><span class="oe_facet_remove">x</span
     ><span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">

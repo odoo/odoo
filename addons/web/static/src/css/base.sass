@@ -2,8 +2,10 @@
 
 // Variables {{{
 $section-title-color: #8786b7
-$facets-border: #afafb6
-$facets-border-selected: #a6a6fe
+$tag-bg-light: #f0f0fa
+$tag-bg-dark: #8786b7
+$tag-border: #afafb6
+$tag-border-selected: #a6a6fe
 $hover-background: #f0f0fa
 $colour4: #8a89ba
 $sheet-max-width: 860px
@@ -427,15 +429,17 @@ $sheet-max-width: 860px
     // }}}
     // Tags (for many2many tags, among others) {{{
     .oe_tag
-        border-radius: 2px
-        @include box-sizing(border)
-        border: 1px solid #9DACCC
-        background: #E2E6F0
-        color: black !important
-        padding: 0px 3px 0px 3px
+        border: 1px solid $tag-border
+        font-size: 11px
+        padding: 2px 4px
         margin: 0 2px 2px 0
-        height: 16px
-        // font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
+        @include radius(3px)
+        background: $tag-bg-light
+        color: #4C4C4C
+    .oe_tag_dark
+        background: $tag-bg-dark
+        color: #eee
+
     .oe_tags
         .text-wrap
             width: 100% !important
@@ -906,14 +910,9 @@ $sheet-max-width: 860px
                 @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
         .oe_menu_counter
             float: right
-            background: #8a89ba
-            color: #eee
-            font-size: 10px
-            border: 1px solid lightgray
-            padding: 2px 4px
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
             margin: 0px
-            @include radius(4px)
+            padding: 1px 4px
         .oe_active
             background: $colour4
             border-top: 1px solid lightGray
@@ -1125,8 +1124,8 @@ $sheet-max-width: 860px
             font-size: 12px
             line-height: 18px
         &.oe_focused
-            border-color: $facets-border-selected
-            @include box-shadow(0 1px 2px $facets-border-selected inset)
+            border-color: $tag-border-selected
+            @include box-shadow(0 1px 2px $tag-border-selected inset)
         .oe_searchview_clear
             cursor: pointer
             position: absolute
@@ -1177,7 +1176,7 @@ $sheet-max-width: 860px
                 vertical-align: top
                 display: inline-block
                 line-height: 17px
-            .oe_searchview_input, .oe_searchview_facet
+            .oe_searchview_facet
                 height: 18px
                 margin: 1px 0
                 font-size: 11px
@@ -1185,17 +1184,20 @@ $sheet-max-width: 860px
                     outline: none
             .oe_searchview_input
                 padding: 0 0 0 6px
+                font-size: 12px
+                height: 16px
+                margin-top: 3px
+                &:focus
+                    outline: none
             .oe_searchview_facet
                 position: relative
                 cursor: pointer
-                border: 1px solid $facets-border
-                @include radius(3px)
-                background: #8786b7
+                padding: 0
                 -webkit-font-smoothing: auto
                 // spacing for opera, FF
                 &:focus
-                    border-color: $facets-border-selected
-                    @include box-shadow(0 0 3px 1px $facets-border-selected)
+                    border-color: $tag-border-selected
+                    @include box-shadow(0 0 3px 1px $tag-border-selected)
                 .oe_facet_values
                     background: #f0f0fa
                     @include radius(0 3px 3px 0)
@@ -1208,8 +1210,9 @@ $sheet-max-width: 860px
                 .oe_facet_category.oe_i
                     font-size: 16px
                 .oe_facet_value
-                    border-left: 1px solid $facets-border
+                    border-left: 1px solid $tag-border
                     text-shadow: 0 1px 1px white
+                    color: #4C4C4C
                     &:last-child
                         padding-right: 16px
                 .oe_facet_remove

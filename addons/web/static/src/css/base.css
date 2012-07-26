@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -551,17 +551,19 @@
   -webkit-animation: bounce 0.4s linear;
 }
 .openerp .oe_tag {
-  border-radius: 2px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  box-sizing: border-box;
-  border: 1px solid #9daccc;
-  background: #e2e6f0;
-  color: black !important;
-  padding: 0px 3px 0px 3px;
+  border: 1px solid #afafb6;
+  font-size: 11px;
+  padding: 2px 4px;
   margin: 0 2px 2px 0;
-  height: 16px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  background: #f0f0fa;
+  color: #4c4c4c;
+}
+.openerp .oe_tag_dark {
+  background: #8786b7;
+  color: #eeeeee;
 }
 .openerp .oe_tags .text-wrap {
   width: 100% !important;
@@ -1183,16 +1185,9 @@
 }
 .openerp .oe_secondary_submenu .oe_menu_counter {
   float: right;
-  background: #8a89ba;
-  color: #eeeeee;
-  font-size: 10px;
-  border: 1px solid lightgray;
-  padding: 2px 4px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   margin: 0px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
+  padding: 1px 4px;
 }
 .openerp .oe_secondary_submenu .oe_active {
   background: #8a89ba;
@@ -1532,25 +1527,27 @@
   display: inline-block;
   line-height: 17px;
 }
-.openerp .oe_searchview .oe_searchview_facets .oe_searchview_input, .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet {
+.openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet {
   height: 18px;
   margin: 1px 0;
   font-size: 11px;
 }
-.openerp .oe_searchview .oe_searchview_facets .oe_searchview_input:focus, .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet:focus {
+.openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet:focus {
   outline: none;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_input {
   padding: 0 0 0 6px;
+  font-size: 12px;
+  height: 16px;
+  margin-top: 3px;
+}
+.openerp .oe_searchview .oe_searchview_facets .oe_searchview_input:focus {
+  outline: none;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet {
   position: relative;
   cursor: pointer;
-  border: 1px solid #afafb6;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  background: #8786b7;
+  padding: 0;
   -webkit-font-smoothing: auto;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet:focus {
@@ -1579,6 +1576,7 @@
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value {
   border-left: 1px solid #afafb6;
   text-shadow: 0 1px 1px white;
+  color: #4c4c4c;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value:last-child {
   padding-right: 16px;
