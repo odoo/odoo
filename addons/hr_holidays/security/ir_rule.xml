@@ -7,5 +7,13 @@
         <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
+    
+    <record id="property_rule_holidays_officer" model="ir.rule">
+        <field name="name">Holidays Officer</field>
+        <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
+        <field name="domain_force">[('employee_id.parent_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_hr_user'))]"/>
+    </record>
+    
   </data>
 </openerp>
