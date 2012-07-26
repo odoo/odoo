@@ -27,9 +27,6 @@ from _common import rounding
 import re
 from tools.translate import _
 
-def is_pair(x):
-    return not x%2
-
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
     if len(eancode) <> 13:
@@ -42,7 +39,7 @@ def ean_checksum(eancode):
     finalean=reversevalue[1:]
 
     for i in range(len(finalean)):
-        if is_pair(i):
+        if i % 2 == 0:
             oddsum += int(finalean[i])
         else:
             evensum += int(finalean[i])
