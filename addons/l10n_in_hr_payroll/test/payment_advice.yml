@@ -1,11 +1,11 @@
 -
-  import time
+  import datetime
 -
   I create a new Payment Advice For Month june and july 
 -
   !record {model: hr.payroll.advice, id: payment_advice_1}: 
     name: 'June'
-    date: !eval time.strftime( "%Y-%m-%d" )
+    date: !eval "'%s-06-01' %(datetime.now().year)"
     bank_id: 'base.res_bank_1'
     chaque_nos: '007667'
     line_ids:
@@ -22,7 +22,7 @@
 -
   !record {model: hr.payroll.advice, id: payment_advice_2}: 
     name: 'July'
-    date: !eval time.strftime( "%Y-%m-%d" )
+    date: !eval "'%s-07-01' %(datetime.now().year)"
     chaque_nos: '007568'
     line_ids:
       - employee_id: 'hr.employee_fp'
@@ -34,9 +34,9 @@
         bysal: '20000'
         debit_credit: 'C'            
 -
-  I check my payment order state is Confirmed
+  I check that the Payment Advice is in draft
 -
-  !assert {model: hr.payroll.advice, id: payment_advice_1, string: state is confirmed}:
+  !assert {model: hr.payroll.advice, id: payment_advice_1, string: Payment Advice is in draft state}:
     - state == 'draft'
 -
   In order to test the PDF reports defined on a Payment Advice,we will print a Payment Advice Detail Summary Report when NEFT is checked
@@ -53,4 +53,4 @@
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.payroll.advice').create(cr, uid, [ref('l10n_in_hr_payroll.payment_advice_2')], {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'l10n_in_hr_payroll_summary report'+format), 'wb+').write(data)
+        file(os.path.join(tools.config['test_report_directory'], 'l10n_in_hr_payroll_summary report'+format), 'wb+').write(data)    
