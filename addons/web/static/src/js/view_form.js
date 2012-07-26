@@ -91,11 +91,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.__blur_timeout = null;
         this.rendering_engine = new instance.web.form.FormRenderingEngine(this);
         this.qweb = null; // A QWeb instance will be created if the view is a QWeb template
-        this.set({actual_mode: "view"});
+        self.set({actual_mode: self.options.initial_mode});
         this.has_been_loaded.then(function() {
-            self.check_actual_mode();
             self.on("change:actual_mode", self, self.check_actual_mode);
-            self.set({actual_mode: self.options.initial_mode});
+            self.check_actual_mode();
         });
     },
     destroy: function() {
