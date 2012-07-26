@@ -15,7 +15,7 @@
                 <group>
                     <field name="start_date"/>
                     <field name="end_date"/>
-                    <separator string="Employee" />
+                    <separator string="Employees" />
                     <field name="employee_ids"  nolabel="1" colspan="4"/>
                 </group>
             </form>
@@ -32,14 +32,9 @@
         </record>
 
         <menuitem
-            name="Reporting"
-            parent="hr.menu_hr_root"
-            id="menu_salary_employee_month_report" sequence="50"
-           />
-
-        <menuitem
             name="Salary Register"
-            parent="menu_salary_employee_month_report"
+            parent="hr.menu_hr_reporting_timesheet"
+            sequence="200" icon="STOCK_PRINT"
             action="action_salary_employee_month"
             id="menu_salary_employee_month"
            />

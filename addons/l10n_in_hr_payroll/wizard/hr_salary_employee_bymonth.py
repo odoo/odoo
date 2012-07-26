@@ -26,10 +26,10 @@ from osv import osv, fields
 class hr_salary_employee_bymonth(osv.osv_memory):
 
     _name = 'hr.salary.employee.month'
-    _description = 'Print Hr Salary Employee By Month Report'
+    _description = 'Hr Salary Employee By Month Report'
     _columns = {
-        'start_date': fields.date('Starting Date', required=True),
-        'end_date': fields.date('Ending Date', required=True),
+        'start_date': fields.date('Start Date', required=True),
+        'end_date': fields.date('End Date', required=True),
         'employee_ids': fields.many2many('hr.employee', 'payroll_year_rel', 'payroll_year_id', 'emp_id', 'Employees', required=True),
     }
 
@@ -53,8 +53,7 @@ class hr_salary_employee_bymonth(osv.osv_memory):
 
         res = self.read(cr, uid, ids, ['employee_ids',  'start_date', 'end_date'], context=context)
         res = res and res[0] or {}
-        datas['form'] = res
-        res['employee_ids'] = res.get('employee_ids', [])
+        datas.update({'form': res})
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'salary.employee.bymonth',
