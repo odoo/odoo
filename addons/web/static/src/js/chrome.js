@@ -387,8 +387,16 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         var fields = $(form).serializeArray();
         self.rpc("/web/database/create", {'fields': fields}, function(result) {
             var form_obj = self.to_object(fields);
-            self.getParent().do_login( form_obj['db_name'], 'admin', form_obj['create_admin_pwd']);
-            self.destroy();
+            var client_action = {
+                type: 'ir.actions.client',
+                tag: 'login',
+                params: {
+                    'db': form_obj['db_name'],
+                    'login': 'admin',
+                    'password': form_obj['create_admin_pwd'],
+                },
+            };
+            self.do_action(client_action);
         });
 
     },
@@ -483,11 +491,12 @@ instance.web.Login =  instance.web.Widget.extend({
     remember_credentials: true,
     _db_list: null,
 
-    init: function(parent) {
+    init: function(parent, params) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
+        this.params = params;
 
         if (this.has_local_storage && this.remember_credentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
@@ -497,16 +506,17 @@ instance.web.Login =  instance.web.Widget.extend({
             }
         }
     },
-    open_db_manager: function(){
-        this.do_action("database_manager");
-    },
     start: function() {
         var self = this;
         self.$element.find("form").submit(self.on_submit);
         self.$element.find('.oe_login_manage_db').click(function() {
-            self.open_db_manager();
+            self.do_action("database_manager");
         });
-        return self.load_db_list().then(self.on_db_list_loaded);
+        return self.load_db_list().then(self.on_db_list_loaded).then(function() {
+            if(self.params) {
+                self.do_login(self.params.db, self.params.login, self.params.password);
+            }
+        });
     },
     load_db_list: function (force) {
         var d = $.when(), self = this;
@@ -527,7 +537,7 @@ instance.web.Login =  instance.web.Widget.extend({
         var dbdiv = this.$element.find('div.oe_login_dbpane');
         this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}));
         if(list.length === 0) {
-            self.open_db_manager();
+            this.do_action("database_manager");
         } else if(list && list.length === 1) {
             dbdiv.hide();
         } else {
