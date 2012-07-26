@@ -7,11 +7,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Print Hr monthly Employee Salary" version="7.0">
-                <header>
+                <footer>
                     <button name="print_report" string="Print" type="object" class="oe_highlight"/>
                         or
                     <button string="Cancel" class="oe_link" special="cancel" />
-                </header>
+                </footer>
                 <group>
                     <field name="start_date"/>
                     <field name="end_date"/>
