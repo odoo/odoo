@@ -163,6 +163,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } },
             ]);
         }
+
+        // Add bounce effect on button 'Edit' when click on readonly page view.
+        this.$element.find(".oe_form_field, .oe_form_group_cell").on('click', function (e) {
+            if(self.get("actual_mode") == "view") {
+                var $button = self.options.$buttons.find(".oe_form_button_edit");
+                $button.wrap('<div>').css('margin-right','4px').addClass('oe_left oe_bounce');
+            }
+        });
+
         this.has_been_loaded.resolve();
         return $.when();
     },
@@ -1672,6 +1681,9 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         if (this.node.attrs.default_focus == '1') {
             // TODO fme: provide enter key binding to widgets
             this.view.default_focus_button = this;
+        }
+        if (this.node.attrs.icon && (! /\//.test(this.node.attrs.icon))) {
+            this.node.attrs.icon = '/web/static/src/img/icons/' + this.node.attrs.icon + '.png';
         }
         this.view.on('view_content_has_changed', this, this.check_disable);
     },

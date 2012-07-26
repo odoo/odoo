@@ -194,8 +194,8 @@ class WebClient(openerpweb.Controller):
             if mods is not None:
                 path += '?mods=' + mods
             return [path]
-        # old code to force cache reloading
-        #return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
+        # old code to force cache reloading, this really works, sorry niv but we stop wasting time
+        return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
         return [el[1] for el in self.manifest_glob(req, mods, extension)]
 
     @openerpweb.jsonrequest
