@@ -35,11 +35,8 @@ instance.web.form.FieldManagerMixin = {
 instance.web.views.add('form', 'instance.web.FormView');
 /**
  * Properties:
- *      - mode: always "view" or "edit". Used to switch the view between page (view) and
- *      form (edit) mode. Depending what is indicated in the dataset, the view can still
- *      switch to create mode if needed.
  *      - actual_mode: always "view", "edit" or "create". Read-only property. Determines
- *      the real mode used by the view.
+ *      the mode used by the view.
  */
 instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerMixin, {
     /**
@@ -598,9 +595,17 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
     },
+    /**
+     * Ask the view to switch to view mode if possible. The view may not do it
+     * if the current record is not yet saved. It will then stay in create mode.
+     */
     to_view_mode: function() {
         this._actualize_mode("view");
     },
+    /**
+     * Ask the view to switch to edit mode if possible. The view may not do it
+     * if the current record is not yet saved. It will then stay in create mode.
+     */
     to_edit_mode: function() {
         this._actualize_mode("edit");
     },
