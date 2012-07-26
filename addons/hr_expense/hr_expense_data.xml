@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <!--
-    Resource: product.uom.categ
-    -->
-        <record id="cat_expense" model="product.category">
-            <field name="parent_id" ref="product.product_category_0"/>
-            <field name="name">Expenses</field>
-        </record>
-
         <!-- notify all employees of module installation -->
         <function model="mail.group" name="message_append_note">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
@@ -23,6 +15,12 @@
                 by project.
             </value>
         </function>
+
+        <!-- Resource: product.uom.categ -->
+        <record id="cat_expense" model="product.category">
+            <field name="parent_id" ref="product.product_category_0"/>
+            <field name="name">Expenses</field>
+        </record>
 
     </data>
 </openerp>
