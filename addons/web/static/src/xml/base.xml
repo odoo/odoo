@@ -1133,7 +1133,7 @@
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus">
-        <img t-if="widget.node.attrs.icon" t-att-src="_s + '/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
+        <img t-if="widget.node.attrs.icon" t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
 </t>

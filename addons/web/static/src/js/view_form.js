@@ -1654,6 +1654,9 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
             // TODO fme: provide enter key binding to widgets
             this.view.default_focus_button = this;
         }
+        if (this.node.attrs.icon && (! /\//.test(this.node.attrs.icon))) {
+            this.node.attrs.icon = '/web/static/src/img/icons/' + this.node.attrs.icon + '.png';
+        }
         this.view.on('view_content_has_changed', this, this.check_disable);
     },
     start: function() {
