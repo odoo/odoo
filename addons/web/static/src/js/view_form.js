@@ -647,11 +647,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             });
             var fields_order = self.fields_order.slice(0);
             if (self.default_focus_field) {
-                fields_order.unshift(self.default_focus_field);
+                fields_order.unshift(self.default_focus_field.name);
             }
             for (var i = 0; i < fields_order.length; i += 1) {
                 var field = self.fields[fields_order[i]];
-                if (!field.get('effective_invisible') && !field.get('effective_readonly') && field.focus() !== false) {
+                if (!field.get('effective_invisible') && !field.get('effective_readonly')) {
+                    field.focus();
                     break;
                 }
             }
@@ -986,7 +987,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     register_field: function(field, name) {
         this.fields[name] = field;
         this.fields_order.push(name);
-        if (field.node.attrs.default_focus == '1') {
+        if (JSON.parse(field.node.attrs.default_focus || "0")) {
             this.default_focus_field = field;
         }
 
@@ -1692,7 +1693,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         this._super(view, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
-        if (this.node.attrs.default_focus == '1') {
+        if (JSON.parse(this.node.attrs.default_focus || "0")) {
             // TODO fme: provide enter key binding to widgets
             this.view.default_focus_button = this;
         }
