@@ -516,6 +516,14 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.$element.addClass('oe_focused');
     },
     childBlurred: function () {
+        var val = this.$element.val();
+        this.$element.val('');
+        var complete = this.$element.data('autocomplete');
+        if ((val && complete.term === undefined) || complete.previous !== undefined) {
+            throw new Error("new jquery.ui version altering implementation" +
+                            " details relied on");
+        }
+        delete complete.term;
         this.$element.removeClass('oe_focused');
     },
     /**
