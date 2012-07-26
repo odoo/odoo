@@ -33,6 +33,14 @@ instance.web.form.FieldManagerMixin = {
 };
 
 instance.web.views.add('form', 'instance.web.FormView');
+/**
+ * Properties:
+ *      - mode: always "view" or "edit". Used to switch the view between page (view) and
+ *      form (edit) mode. Depending what is indicated in the dataset, the view can still
+ *      switch to create mode if needed.
+ *      - actual_mode: always "view", "edit" or "create". Read-only property. Determines
+ *      the real mode used by the view.
+ */
 instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerMixin, {
     /**
      * Indicates that this view is not searchable, and thus that no search
@@ -55,6 +63,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @property {instance.web.Registry} registry=instance.web.form.widgets widgets registry for this form view instance
      */
     init: function(parent, dataset, view_id, options) {
+        var self = this;
         this._super(parent);
         this.set_default_options(options);
         this.dataset = dataset;
@@ -82,6 +91,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.__blur_timeout = null;
         this.rendering_engine = new instance.web.form.FormRenderingEngine(this);
         this.qweb = null; // A QWeb instance will be created if the view is a QWeb template
+        self.set({actual_mode: self.options.initial_mode});
+        this.has_been_loaded.then(function() {
+            self.on("change:actual_mode", self, self.check_actual_mode);
+            self.check_actual_mode();
+        });
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -152,14 +166,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         // Add bounce effect on button 'Edit' when click on readonly page view.
         this.$element.find(".oe_form_field, .oe_form_group_cell").on('click', function (e) {
-            if(self.get("mode") == "view") {
+            if(self.get("actual_mode") == "view") {
                 var $button = self.options.$buttons.find(".oe_form_button_edit");
                 $button.wrap('<div>').css('margin-right','4px').addClass('oe_left oe_bounce');
             }
         });
 
-        this.on("change:mode", this, this.switch_mode);
-        this.set({mode: this.options.initial_mode});
         this.has_been_loaded.resolve();
         return $.when();
     },
@@ -284,7 +296,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         return shown.pipe(function() {
             if (options.editable) {
-                self.set({mode: "edit"});
+                self.to_edit_mode();
             }
             self.$element.css('visibility', 'visible');
         });
@@ -309,6 +321,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
         this.datarecord = record;
+        this._actualize_mode();
         this.set({ 'title' : record.id ? record.name : "New record" });
 
         if (this.qweb) {
@@ -585,9 +598,24 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
     },
-    switch_mode: function() {
+    to_view_mode: function() {
+        this._actualize_mode("view");
+    },
+    to_edit_mode: function() {
+        this._actualize_mode("edit");
+    },
+    /**
+     * Reactualize actual_mode.
+     */
+    _actualize_mode: function(switch_to) {
+        var mode = switch_to || this.get("actual_mode");
+        if (! this.datarecord.id)
+            mode = "create";
+        this.set({actual_mode: mode});
+    },
+    check_actual_mode: function(source, options) {
         var self = this;
-        if(this.get("mode") == "view") {
+        if(this.get("actual_mode") === "view") {
             self.$element.removeClass('oe_form_editable').addClass('oe_form_readonly');
             self.$buttons.find('.oe_form_buttons_edit').hide();
             self.$buttons.find('.oe_form_buttons_view').show();
@@ -618,19 +646,19 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function(result) {
-            self.set({mode: "view"});
+            self.to_view_mode();
         });
     },
     on_button_cancel: function(event) {
         if (this.can_be_discarded()) {
-            this.set({mode: "view"});
+            this.to_view_mode();
             this.on_record_loaded(this.datarecord);
         }
         return false;
     },
     on_button_new: function() {
         var self = this;
-        this.set({mode: "edit"});
+        this.to_edit_mode();
         return $.when(this.has_been_loaded).pipe(function() {
             if (self.can_be_discarded()) {
                 return self.load_defaults();
@@ -638,7 +666,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
     },
     on_button_edit: function() {
-        return this.set({mode: "edit"});
+        return this.to_edit_mode();
     },
     on_button_create: function() {
         this.dataset.index = null;
@@ -651,7 +679,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
                 return self.on_created({ result : new_id });
             }).then(function() {
-                return self.set({mode: "edit"});
+                return self.to_edit_mode();
             }).then(function() {
                 def.resolve();
             });
@@ -966,7 +994,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return this.fields_view.fields[field_name];
     },
     is_create_mode: function() {
-        return !this.datarecord.id;
+        return this.get("actual_mode") === "create";
     },
     open_translate_dialog: function(field) {
         return this._super(field);
@@ -3551,12 +3579,13 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     render_value: function() {
         var self = this;
         var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
+        var values = self.get("value")
         var handle_names = function(data) {
             var indexed = {};
             _.each(data, function(el) {
                 indexed[el[0]] = el;
             });
-            data = _.map(self.get("value"), function(el) { return indexed[el]; });
+            data = _.map(values, function(el) { return indexed[el]; });
             if (! self.get("effective_readonly")) {
                 self.tags.containerElement().children().remove();
                 $("textarea", self.$element).css("padding-left", "3px");
@@ -3565,8 +3594,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                 self.$element.html(QWeb.render("FieldMany2ManyTag", {elements: data}));
             }
         };
-        if (! self.get('values') || self.get('values').length > 0) {
-            this._display_orderer.add(dataset.name_get(self.get("value"))).then(handle_names);
+        if (! values || values.length > 0) {
+            this._display_orderer.add(dataset.name_get(values)).then(handle_names);
         } else {
             handle_names([]);
         }
