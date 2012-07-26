@@ -357,6 +357,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 { label: _t('Delete'), callback: this.do_delete_selected },
             ]);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
+            this.sidebar.$element.hide();
         }
     },
     /**
@@ -493,9 +494,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     do_show: function () {
         this._super();
-        if (this.sidebar) {
-            this.sidebar.$element.show();
-        }
         if (this.$buttons) {
             this.$buttons.show();
         }
