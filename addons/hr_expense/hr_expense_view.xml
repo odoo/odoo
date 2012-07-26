@@ -167,7 +167,11 @@
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="view_id" ref="view_expenses_tree"/>
-            <field name="help">The OpenERP expenses management module allows you to track the full flow. Every month, the employees record their expenses. At the end of the month, their managers validates the expenses sheets which creates costs on projects/analytic accounts. The accountant validates the proposed entries and the employee can be reimbursed. You can also reinvoice the customer at the end of the flow.</field>
+            <field name="help">
+                Click here to create a new expense.
+                &lt;p&gt;
+                After validation of your expense, you will be able to re-invoice costs to your customers.
+            </field>
         </record>
 
         <menuitem id="next_id_49" name="Expenses" sequence="15" parent="hr.menu_hr_root"/>
