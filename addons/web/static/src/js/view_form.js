@@ -91,12 +91,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.__blur_timeout = null;
         this.rendering_engine = new instance.web.form.FormRenderingEngine(this);
         this.qweb = null; // A QWeb instance will be created if the view is a QWeb template
-        this.on("change:mode", this, this._check_mode);
-        this.set({mode: "view"});
+        this.set({actual_mode: "view"});
         this.has_been_loaded.then(function() {
             self.check_actual_mode();
             self.on("change:actual_mode", self, self.check_actual_mode);
-            self.set({mode: self.options.initial_mode});
+            self.set({actual_mode: self.options.initial_mode});
         });
     },
     destroy: function() {
@@ -106,15 +105,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
         this.$element.off('.formBlur');
         this._super();
-    },
-    /**
-     * Reactualize actual_mode.
-     */
-    _check_mode: function() {
-        var mode = this.get("mode");
-        if (! this.datarecord.id)
-            mode = "create";
-        this.set({actual_mode: mode});
     },
     on_loaded: function(data) {
         var self = this;
@@ -298,7 +288,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         return shown.pipe(function() {
             if (options.editable) {
-                self.set({mode: "edit"});
+                self.to_edit_mode();
             }
             self.$element.css('visibility', 'visible');
         });
@@ -600,6 +590,21 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
     },
+    to_view_mode: function() {
+        this._check_mode("view");
+    },
+    to_edit_mode: function() {
+        this._check_mode("edit");
+    },
+    /**
+     * Reactualize actual_mode.
+     */
+    _check_mode: function(switch_to) {
+        var mode = switch_to || this.get("actual_mode");
+        if (! this.datarecord.id)
+            mode = "create";
+        this.set({actual_mode: mode});
+    },
     check_actual_mode: function(source, options) {
         var self = this;
         if(this.get("actual_mode") === "view") {
@@ -633,19 +638,19 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function(result) {
-            self.set({mode: "view"});
+            self.to_view_mode();
         });
     },
     on_button_cancel: function(event) {
         if (this.can_be_discarded()) {
-            this.set({mode: "view"});
+            this.to_view_mode();
             this.on_record_loaded(this.datarecord);
         }
         return false;
     },
     on_button_new: function() {
         var self = this;
-        this.set({mode: "edit"});
+        this.to_edit_mode();
         return $.when(this.has_been_loaded).pipe(function() {
             if (self.can_be_discarded()) {
                 return self.load_defaults();
@@ -653,7 +658,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
     },
     on_button_edit: function() {
-        return this.set({mode: "edit"});
+        return this.to_edit_mode();
     },
     on_button_create: function() {
         this.dataset.index = null;
@@ -666,7 +671,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
                 return self.on_created({ result : new_id });
             }).then(function() {
-                return self.set({mode: "edit"});
+                return self.to_edit_mode();
             }).then(function() {
                 def.resolve();
             });
