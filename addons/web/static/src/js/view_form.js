@@ -149,6 +149,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } },
             ]);
         }
+
+        // Add bounce effect on button 'Edit' when click on readonly page view.
+        this.$element.find(".oe_form_field, .oe_form_group_cell").on('click', function (e) {
+            if(self.get("mode") == "view") {
+                var $button = self.options.$buttons.find(".oe_form_button_edit");
+                $button.wrap('<div>').css('margin-right','4px').addClass('oe_left oe_bounce');
+            }
+        });
+
         this.on("change:mode", this, this.switch_mode);
         this.set({mode: this.options.initial_mode});
         this.has_been_loaded.resolve();
