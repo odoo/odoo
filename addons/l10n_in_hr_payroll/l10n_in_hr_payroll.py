@@ -42,7 +42,7 @@ class hr_contract(osv.osv):
 
     _columns = {
         'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll'), help="Amount for Tax Deduction at Source"),
-        'driver_salay': fields.boolean('Driver Salary', help=" Allowance for company provided driver"),
+        'driver_salay': fields.boolean('Driver Salary', help="Check this box if you provide allowance for driver"),
         'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance"),
         'voluntary_provident_fund': fields.float('Voluntary Provident Fund', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage(%)"),
         'city_type': fields.selection([
@@ -218,9 +218,10 @@ class hr_payslip_run(osv.osv):
     }
 
     def draft_payslip_run(self, cr, uid, ids, context=None):
+        res = super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'available_advice': False}, context=context)
-        return super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
-
+        return res
+    
     def create_advice(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
         payslip_pool = self.pool.get('hr.payslip')
@@ -284,7 +285,6 @@ class payroll_advice_line(osv.osv):
         'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
         'debit_credit': fields.char('C/D', size=3, required=False),
         'company_id': fields.related('advice_id', 'company_id', type='many2one', required=False, relation='res.company', string='Company', store=True),
-        # used to set attrs on ifsc_code
         'ifsc': fields.related('advice_id', 'neft', type='boolean', string='IFSC'),
     }
     _defaults = {
