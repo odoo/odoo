@@ -96,9 +96,6 @@ openerp.web.list_editable = function (instance) {
         },
         on_loaded: function (data, grouped) {
             var self = this;
-            if (this.editor) {
-                this.editor.destroy();
-            }
             // tree/@editable takes priority on everything else if present.
             var result = this._super(data, grouped);
             if (this.editable()) {
@@ -118,6 +115,7 @@ openerp.web.list_editable = function (instance) {
                             self.start_edition();
                         }
                     });
+                this.editor.destroy();
                 // Editor is not restartable due to formview not being
                 // restartable
                 this.editor = this.make_editor();
