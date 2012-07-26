@@ -9,30 +9,27 @@
     bank_id: 'base.res_bank_1'
     chaque_nos: '007667'
     line_ids:
-      - employee_id: 'hr.employee_fp'
+      - employee_id: hr.employee_fp
         name: '90125452'
         ifsc_code: 'abn45215145'
-        bysal: '25000'
-        debit_credit: 'C'
-      - employee_id: 'hr.employee_al'
+        bysal: '25000.00'
+      - employee_id: hr.employee_al
         name: '00014521111232'
         ifsc_code: 'sbi45452145'
-        bysal: '20000'
-        debit_credit: 'C'            
+        bysal: '20000.00'                
 -
   !record {model: hr.payroll.advice, id: payment_advice_2}: 
     name: 'July'
     date: !eval "'%s-07-01' %(datetime.now().year)"
     chaque_nos: '007568'
+    bank_id: 'base.res_bank_1'
     line_ids:
-      - employee_id: 'hr.employee_fp'
+      - employee_id: hr.employee_fp
         name: '90125452'
-        bysal: '25000'
-        debit_credit: 'C'
-      - employee_id: 'hr.employee_al'
+        bysal: '25000.00'
+      - employee_id: hr.employee_al
         name: '00014521111232'
-        bysal: '20000'
-        debit_credit: 'C'            
+        bysal: '20000.00'            
 -
   I check that the Payment Advice is in draft
 -
