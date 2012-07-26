@@ -1,4 +1,7 @@
 -
+  In order to test mrp_operations with OpenERP, I refer created production order of PC Assemble SC349
+  with routing - Manual Component's Assembly to test complete production process with respect of workcenter.
+-
   I compute the production order.
 -
   !python {model: mrp.production}: |
@@ -67,7 +70,7 @@
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_cancel', cr)
 -
-  I reset first work operation and start after resolve techninal fault of work center.
+  I reset first work operation and start after resolving techninal fault of work center.
 -
   !python {model: mrp.production}: |
     import netsvc
@@ -76,7 +79,7 @@
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_draft', cr)
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_start_working', cr)
 -
-  Now Finished work of first work operation so I close that operation.
+  I close first work operation as this work center completed its process.
 -
   !python {model: mrp.production}: |
     import netsvc
@@ -84,7 +87,7 @@
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_done', cr)
 -
-  Now I close other operations after start one by one.
+  Now I close other operations one by one which are in start state.
 -
   !python {model: mrp.production}: |
     import netsvc
