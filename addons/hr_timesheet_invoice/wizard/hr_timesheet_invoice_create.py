@@ -94,7 +94,7 @@ class account_analytic_line(osv.osv):
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
                         "AND id IN %s AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id,to_invoice,product_uom_id", (account.id, tuple(ids),))
+                    "GROUP BY product_id, to_invoice, product_uom_id, name", (account.id, tuple(ids),))
 
             for product_id, factor_id, qty, uom, line_name in cr.fetchall():
                 if data.get('product'):
