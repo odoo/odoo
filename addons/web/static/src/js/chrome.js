@@ -1094,10 +1094,13 @@ instance.web.WebClient = instance.web.Client.extend({
         }
     },
     set_content_full_screen: function(fullscreen) {
-        if (fullscreen)
+        if (fullscreen) {
             $(".oe_webclient", this.$element).addClass("oe_content_full_screen");
-        else
+            $("body").css({'overflow-y':'hidden'});
+        } else {
             $(".oe_webclient", this.$element).removeClass("oe_content_full_screen");
+            $("body").css({'overflow-y':'scroll'});
+        }
     }
 });
 
