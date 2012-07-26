@@ -312,7 +312,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
         this.datarecord = record;
-        this._check_mode();
+        this._actualize_mode();
         this.set({ 'title' : record.id ? record.name : "New record" });
 
         if (this.qweb) {
@@ -590,15 +590,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
     },
     to_view_mode: function() {
-        this._check_mode("view");
+        this._actualize_mode("view");
     },
     to_edit_mode: function() {
-        this._check_mode("edit");
+        this._actualize_mode("edit");
     },
     /**
      * Reactualize actual_mode.
      */
-    _check_mode: function(switch_to) {
+    _actualize_mode: function(switch_to) {
         var mode = switch_to || this.get("actual_mode");
         if (! this.datarecord.id)
             mode = "create";
