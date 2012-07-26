@@ -514,6 +514,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
      */
     init: function(parent) {
         instance.web.CallbackEnabledMixin.init.call(this);
+        this.setElement(this._make_descriptive());
         this.setParent(parent);
     },
     /**
@@ -701,10 +702,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
             $el = $(_.str.trim(instance.web.qweb.render(
                 this.template, {widget: this})));
         } else {
-            var attrs = _.extend({}, this.attributes || {});
-            if (this.id) { attrs.id = this.id; }
-            if (this.className) { attrs['class'] = this.className; }
-            $el = $(this.make(this.tagName, attrs));
+            $el = this._make_descriptive();
         }
         this.replaceElement($el);
     },
@@ -737,6 +735,8 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * @return {*} this
      */
     setElement: function (element) {
+        // NB: completely useless, as WidgetMixin#init creates a $element
+        // always
         if (this.$element) {
             this.undelegateEvents();
         }
@@ -765,6 +765,19 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
             $(el).html(content);
         }
         return el;
+    },
+    /**
+     * Makes a potential root element from the declarative builder of the
+     * widget
+     *
+     * @return {jQuery}
+     * @private
+     */
+    _make_descriptive: function () {
+        var attrs = _.extend({}, this.attributes || {});
+        if (this.id) { attrs.id = this.id; }
+        if (this.className) { attrs['class'] = this.className; }
+        return $(this.make(this.tagName, attrs));
     },
     delegateEvents: function () {
         var events = this.events;

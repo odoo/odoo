@@ -21,7 +21,7 @@ instance.web.OldWidget = instance.web.Widget.extend({
         this.element_id = this.element_id || _.uniqueId('widget-');
 
         var tmp = document.getElementById(this.element_id);
-        this.setElement(tmp || this.make(this.tagName));
+        this.setElement(tmp || this._make_descriptive());
     },
     renderElement: function() {
         var rendered = this.render();
