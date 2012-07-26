@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <!--
-    Requests Links
-    -->
+        <!-- Requests Links -->
         <record id="req_link_sale_order" model="res.request.link">
             <field name="name">Sales Order</field>
             <field name="object">sale.order</field>
         </record>
 
-        <!--
-    Resource: sale.shop
-    -->
+        <!-- Resource: sale.shop -->
         <record id="shop" model="sale.shop">
             <field name="company_id" ref="base.main_company"/>
             <field name="warehouse_id" ref="stock.warehouse0"/>
@@ -26,5 +22,19 @@
 
         <function eval="('default',False,'shop_id', [('sale.order', False)], shop, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
 
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Sales Management has been installed</value>
+            <value>From the top menu Sales, manage your customers, quotations and
+                sales orders.  With sale orders, you can manage product
+                deliveries and customer invoices.
+
+                If you need to manage your sales pipeline (leads, opportunities,
+                phonecalls), you can install the module CRM from the top menu
+                Settings.
+            </value>
+        </function>
     </data>
 </openerp>

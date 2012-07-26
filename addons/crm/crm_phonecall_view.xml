@@ -101,23 +101,25 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="case_open" string="Confirm" type="object" class="oe_highlight"
-                        states="draft,pending"/>
                 <button name="case_close" string="Held" type="object" class="oe_highlight"
                         states="open,pending"/>
                 <button name="case_reset" string="Reset to Todo" type="object"
                         states="cancel"/>
-                <button name="case_cancel" string="Cancel" type="object"
-                        states="draft,open,pending"/>
-                <button string="Convert to Opportunity"  class="oe_highlight"
+                <button string="Convert to Opportunity"
                         name="%(phonecall2opportunity_act)d"
                         type="action"
-                        attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                        attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state','!=', 'open')]}" />
+                <button string="Convert to Opportunity" class="oe_highlight"
+                        name="%(phonecall2opportunity_act)d"
+                        type="action"
+                        attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state','!=', 'done')]}" />
                 <button string="Schedule Other Call"
                         name="%(phonecall_to_phonecall_act)d"
                         type="action"  />
                 <button string="Schedule a Meeting" name="action_make_meeting" type="object"/>
-                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done"/>
+                <button name="case_cancel" string="Cancel" type="object"
+                        states="draft,open,pending"/>
+                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="open,done"/>
             </header>
             <sheet string="Phone Call">
                   <div class="oe_title">
@@ -135,7 +137,7 @@
                     <field name="user_id" />
                     <field name="duration" widget="float_time" />
                     <field name="section_id" colspan="1" widget="selection" />
-                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" />
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                     <field name="categ_id" widget="selection"
                         domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                     <field name="partner_mobile" />
@@ -163,8 +165,7 @@
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"
-                    on_change="onchange_partner_id(partner_id)"
-                    string="Partner" />
+                    on_change="onchange_partner_id(partner_id)"/>
                 <field name="partner_phone"
                     invisible="1"/>
                 <field name="user_id"/>

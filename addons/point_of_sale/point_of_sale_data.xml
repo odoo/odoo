@@ -1,18 +1,26 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
+        <record model="pos.config" id="pos_config_main">
+            <field name="name">Main PoS</field>
+        </record>
+    </data>
 
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Point of Sale has been installed</value>
+            <value>Encode sale orders, register payments, compute money to return,
+                create invoices, and manage refunds of former sales through a
+                specific, web-based, user interface.
 
-        <menuitem
-            id="stock.next_id_61"
-            name="Reporting"
-            parent="stock.menu_stock_root" groups="base.group_user"/>
-
-        <menuitem action="stock.action_picking_tree" id="stock.menu_action_picking_tree"
-            parent="stock.menu_stock_root" sequence="19" groups="res_groups_posuser0"/>
-        <menuitem parent="stock.next_id_61" action="stock.action_stock_line_date"
-            id="stock.menu_report_stock_line_date" groups="base.group_user"/>
-
+                Simply click on the top menu "Point of Sale" to launch its
+                interface.  You can configure your point of sale and perform
+                backend operations in the menu "PoS Backend".
+            </value>
+        </function>
     </data>
 </openerp>
 

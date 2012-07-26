@@ -28,8 +28,8 @@
 Invoice Wizard for Delivery.
 ============================
 
-When you send or deliver goods, this module automatically launch
-the invoicing wizard if the delivery is to be invoiced.
+When you send or deliver goods, this module automatically launch the invoicing
+wizard if the delivery is to be invoiced.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

@@ -30,17 +30,26 @@
                         <group>
                             <group>
                                 <field name="subject"/>
+                                <field name="user_id"/>
                                 <field name="date"/>
                                 <field name="type"/>
-                                <field name="body_text"/>
+                                <field name="content_subtype"/>
                             </group>
                             <group>
-                                <field name="user_id" string="User"/>
                                 <field name="model"/>
                                 <field name="res_id"/>
                                 <field name="parent_id"/>
+                                <field name="partner_ids" widget="many2many_tags"/>
                             </group>
                         </group>
+                        <notebook>
+                            <page string="Body (Rich)">
+                                <field name="body_html" widget="text_html"/>
+                            </page>
+                            <page string="Body (Plain)">
+                                <field name="body_text" widget="text"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -73,6 +82,30 @@
                 <search string="Messages Search">
                     <field name="user_id"/>
                     <field name="body"/>
+                    <field name="subject" filter_domain="['|', ('subject', 'ilike', self), ('record_name', 'ilike', self)]" />
+                    <field name="type"/>
+                    <filter icon="terp-personal+" string="My Feeds"
+                            name="my_feeds" help="My Feeds"
+                            domain="[('user_id','=',uid)]"/>
+                    <filter icon="terp-personal+" string="Comments"
+                            name="comments" help="Comments"
+                            domain="[('type', '=', 'comment')]"/>
+                    <filter icon="terp-personal+" string="Notifications"
+                            name="notifications" help="Notifications"
+                            domain="[('type', '=', 'notification')]"/>
+                    <filter icon="terp-personal+" string="Emails"
+                            name="emails" help="Emails"
+                            domain="[('type', '=', 'email')]"/>
+                    <filter icon="terp-go-today" string="Today"
+                            name="today" help="Today"
+                            domain="[   ('date', '&lt;=', datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59')),
+                                        ('date', '&gt;=', datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00'))
+                                    ]"/>
+                    <filter icon="terp-go-week" string="This week"
+                            name="7_days" help="This week"
+                            domain="[   ('date', '&lt;=', datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59')),
+                                        ('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))
+                                    ]"/>
                 </search>
             </field>
         </record>
@@ -85,54 +118,59 @@
                 <form string="Email message" version="7.0">
                     <sheet>
                         <label for="subject" class="oe_edit_only"/>
-                        <h1><field name="subject"/></h1>
-                        <label for="user_id"/>
-                        <h2><field name="user_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/></h2>
-                        <group col="4">
-                            <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
-                            <field name="type"/>
-                        </group>
+                        <h2><field name="subject"/></h2>
+						<div>
+                            by <field name="user_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/>
+                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
+                        </div>
                         <notebook colspan="4">
-                            <page string="Details">
-                                <group string="Recipients">
-                                    <field name="email_from"/>
-                                    <field name="email_to"/>
-                                    <field name="email_cc" attrs="{'invisible':[('email_cc', '=', False)]}"/>
-                                    <field name="email_bcc" attrs="{'invisible':[('email_bcc', '=', False)]}"/>
-                                    <field name="reply_to" attrs="{'invisible':[('reply_to', '=', False)]}"/>
-                                </group>
-                                <group col="4" string="Message Details">
-                                    <field name="model"/>
-                                    <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"/>
-                                    <field name="res_id"/>
-                                    <field name="message_id" colspan="4" attrs="{'invisible':[('message_id', '=', False)]}"/>
-                                    <field name="references" colspan="4" widget="char" size="512" attrs="{'invisible':[('references', '=', False)]}"/>
+                            <page string="Message Details">
+                                <group>
+                                    <group>
+                                        <field name="email_from"/>
+                                        <field name="email_to"/>
+                                        <field name="email_cc"/>
+                                        <field name="email_bcc"/>
+                                        <field name="reply_to"/>
+                                    </group>
+                                    <group>
+                                        <field name="partner_id" readonly="1"/>
+                                        <field name="partner_ids" widget="many2many_tags"/>
+                                    </group>
                                 </group>
                                 <notebook>
-                                    <page string="Body (Rich)" attrs="{'invisible':[('subtype','=','plain')]}">
+                                    <page string="Body (Rich)">
                                         <field name="body_html" widget="text_html"/>
                                     </page>
                                     <page string="Body (Plain)">
                                         <field name="body_text" widget="text"/>
                                     </page>
                                 </notebook>
-                                <group col="5">
-                                    <field name="state" colspan="2"/>
-                                    <field name="subtype" attrs="{'invisible':[('subtype', '=', False)]}"/>
-                                    <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
-                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
+                            </page>
+                            <page string="Advanced" groups="base.group_no_one">
+                                <group>
+                                    <group>
+                                        <field name="auto_delete"/>
+                                        <field name="type"/>
+                                        <field name="content_subtype"/>
+                                        <field name="state" colspan="2"/>
+                                        <field name="mail_server_id"/>
+                                        <field name="original"/>
+                                        <field name="model"/>
+                                        <field name="res_id"/>
+                                        <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"
+                                            attrs="{'invisible':['|', ('model', '=', ''), ('res_id', '=', False)]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="message_id"/>
+                                        <field name="references"/>
+                                        <field name="headers"/>
+                                    </group>
                                 </group>
                             </page>
                             <page string="Attachments">
                                 <field name="attachment_ids"/>
-                            </page>
-                            <page string="Advanced" groups="base.group_no_one">
-                                <group col="2" colspan="4">
-                                    <field name="mail_server_id" attrs="{'invisible':[('mail_server_id', '=', False)]}"/>
-                                    <field name="auto_delete"/>
-                                    <field name="headers" colspan="4" attrs="{'invisible':[('headers', '=', False)]}"/>
-                                    <field name="original" colspan="4" attrs="{'invisible':[('original', '=', False)]}"/>
-                                </group>
                             </page>
                         </notebook>
                     </sheet>
@@ -235,13 +273,13 @@
 
         <record id="action_mail_all_feeds" model="ir.actions.client">
             <field name="name">News Feed</field>
-            <field name="tag">mail.all_feeds</field>
+            <field name="tag">mail.wall</field>
             <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
         </record>
 
         <record id="action_mail_my_feeds" model="ir.actions.client">
             <field name="name">My Feeds</field>
-            <field name="tag">mail.all_feeds</field>
+            <field name="tag">mail.wall</field>
             <field name="params" eval="{'search_view_id': ref('view_message_search_wall'), 'my_feeds': True}"/>
         </record>
     </data>

@@ -22,9 +22,10 @@
     "name": "Peru Localization Chart Account",
     "version": "1.0",
     "description": """
-Peruvian accounting chart and tax localization. Acording the PCGE 2010
+Peruvian accounting chart and tax localization. Acording the PCGE 2010.
 
-Plan contable peruano e impuestos de acuerdo a disposiciones vigentes de la SUNAT 2011 (PCGE 2010)
+Plan contable peruano e impuestos de acuerdo a disposiciones vigentes de la
+SUNAT 2011 (PCGE 2010).
 
     """,
     "author": ["Cubic ERP"],

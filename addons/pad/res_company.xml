@@ -6,9 +6,10 @@
       <field name="type">form</field>
       <field name="inherit_id" ref="base.view_company_form"/>
       <field name="arch" type="xml">
-        <xpath expr="//page[@string='Configuration']" position="inside">
-          <separator string="Pad" colspan="4"/>
-          <field name="pad_url_template"/>
+        <xpath expr="//group[@name='account_grp']" position="after">
+            <group string="Pads">
+                <field name="pad_url_template" placeholder="e.g. http://beta.etherpad.org/p/%%(db)s-%%(model)s-%%(salt)s"/>
+            </group>
         </xpath>
       </field>
     </record>

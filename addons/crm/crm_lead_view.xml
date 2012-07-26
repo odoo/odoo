@@ -67,7 +67,7 @@
             <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
         </record>
 
-        <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages" sequence="0" parent="base.menu_crm_config_lead" />
+        <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages" sequence="0" parent="base.menu_crm_config_lead" groups="base.group_no_one"/>
 
         <!--
             LEADS/OPPORTUNITIES CATEGORIES
@@ -97,8 +97,7 @@
                 groups="base.group_sale_salesman"
                 res_model="crm.phonecall"
                 view_mode="tree,calendar,form"
-                context="{'default_duration': 1.0 ,'default_opportunity_id': active_id,'default_partner_phone':phone}"
-                domain="[('opportunity_id', '=', active_id)]"
+                context="{'default_duration': 1.0 ,'default_opportunity_id': active_id}"
                 view_type="form"/>
 
         <act_window
@@ -107,7 +106,6 @@
                 res_model="crm.meeting"
                 view_mode="tree,form,calendar"
                 context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
-                domain="[('opportunity_id', '=', active_id)]"
                 view_type="form"/>
 
 
@@ -140,19 +138,20 @@
                             name="%(act_crm_opportunity_crm_phonecall_new)d"
                             string="Phone Calls" />
                     </div>
-
-                    <label for="name" class="oe_edit_only" string="Lead Description"/>
-                    <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Lead Description"/>
+                        <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                    </div>
                     <group>
                         <group>
                             <field name="user_id" />
-                            <field name="section_id" widget="selection" />
+                            <field name="section_id"/>
                             <field name="type" invisible="1"/>
                         </group>
                         <group>
                             <field name="priority"/>
-                            <field name="categ_id"
-                                widget="selection"
+                            <field name="categ_ids"
+                                widget="many2many_tags"
                                 domain="[('object_id.model','=','crm.lead')]"/>
                         </group>
                         <group>
@@ -234,7 +233,7 @@
                     <field name="email_from"/>
                     <field name="phone"/>
                     <field name="stage_id"/>
-                    <field name="categ_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)" />
                     <field name="state" groups="base.group_no_one"/>
                     <field name="type_id" invisible="1"/>
@@ -392,7 +391,6 @@
                     <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
                     <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
                         domain="[]" context="{'group_by':'type_id'}" />
                     <filter string="Channel" icon="terp-call-start"
@@ -432,9 +430,9 @@
             <form string="Opportunities" version="7.0">
                 <header>
                     <button name="stage_previous" string="Previous" type="object"
-                            states="open" icon="gtk-go-back" context="{'stage_type': 'opportunity'}"/>
+                            states="open" context="{'stage_type': 'opportunity'}"/>
                     <button name="stage_next" string="Next" type="object"  
-                            states="open" icon="gtk-go-forward" context="{'stage_type': 'opportunity'}"/>
+                            states="open" context="{'stage_type': 'opportunity'}"/>
                     <button name="case_mark_won" string="Mark Won" type="object"
                             states="open" class="oe_highlight"/>
                     <button name="case_mark_won" string="Mark Won" type="object"
@@ -484,7 +482,7 @@
                         <group>
                             <label for="title_action"/>
                             <div>
-                                <field name="date_action" nolabel="1"/> -
+                                <field name="date_action" nolabel="1"/> <label string="-" attrs="{'invisible': ['|', ('date_action', '=', False), ('title_action', '=', False)]}"/>
                                 <field name="title_action" class="oe_inline" nolabel="1" placeholder="Call for proposal"/>
                             </div>
                             <field name="date_deadline"/>
@@ -496,9 +494,9 @@
                             <field name="section_id" colspan="1" widget="selection"/>
                         </group>
                         <group>
-                            <field name="categ_id"
-                                string="Category" widget="selection"
-                                domain="[('object_id.model', '=', 'crm.lead')]" />
+                            <field name="categ_ids"
+                                string="Categories" widget="many2many_tags"
+                                domain="[('object_id.model', '=', 'crm.lead')]"/>
 
                         </group>
                     </group>
@@ -594,7 +592,6 @@
                     <field name="section_id" invisible="context.get('invisible_section', True)" />
                     <field name="user_id"/>
                     <field name="priority" invisible="1"/>
-                    <field name="categ_id" invisible="1"/>
                     <field name="state" groups="base.group_no_one"/>
                     <field name="needaction_pending" invisible="1"/>
                 </tree>
@@ -646,7 +643,6 @@
                     <separator orientation="vertical" />
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}" />
                     <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                    <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
                     <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}"/>
                     <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
                     <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -664,20 +660,6 @@
             </search>
         </field>
     </record>
-
-        <!-- crm.lead Opportunities Graph View -->
-        <record model="ir.ui.view" id="crm_case_graph_view_opportunity">
-            <field name="name">CRM - Opportunity Graph</field>
-            <field name="model">crm.lead</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Opportunity by Categories" type="bar" orientation="horizontal">
-                    <field name="categ_id"/>
-                    <field name="planned_revenue" operator="+"/>
-                    <field name="state" group="True"/>
-                </graph>
-            </field>
-        </record>
 
     </data>
 </openerp>
