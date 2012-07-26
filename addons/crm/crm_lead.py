@@ -208,7 +208,6 @@ class crm_lead(base_stage, osv.osv):
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
-        'opt_in': fields.boolean('Opt-In', oldname='optin', help="If opt-in is checked, this contact has accepted to receive emails."),
         'opt_out': fields.boolean('Opt-Out', oldname='optout', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
@@ -279,12 +278,6 @@ class crm_lead(base_stage, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
     
-    def on_change_opt_in(self, cr, uid, ids, opt_in):
-        return {'value':{'opt_in':opt_in,'opt_out':False}}
-
-    def on_change_opt_out(self, cr, uid, ids, opt_out):
-        return {'value':{'opt_out':opt_out,'opt_in':False}}
-
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
         if not stage_id:
             return {'value':{}}
