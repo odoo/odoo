@@ -315,8 +315,8 @@ class account_account(osv.osv):
             cr.execute(request, params)
             _logger.debug('Status: %s',(cr.statusmessage))
 
-            for res in cr.dictfetchall():
-                accounts[res['id']] = res
+            for row in cr.dictfetchall():
+                accounts[row['id']] = row
 
             # consolidate accounts with direct children
             children_and_consolidated.reverse()

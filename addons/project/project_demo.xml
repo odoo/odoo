@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
 
-         <!-- Users -->
+        <!-- Users -->
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(4, ref('base.group_sale_salesman')),(4, ref('group_project_user'))]"/>
         </record>
@@ -281,10 +281,8 @@
             <field name="stage_id" ref="project_tt_specification"/>
         </record>
 
+        <!-- Resource: project.project-->
         <!-- Projects -->
-        <record id="base.main_company" model="res.company">
-            <field name="project_time_mode_id" ref="product.uom_hour"></field>
-        </record>
 
         <record id="project_project_9" model="project.project">
             <field name="name">OpenERP Integration</field>
