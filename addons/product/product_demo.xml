@@ -44,19 +44,11 @@
         </record>
         <record id="product_category_9" model="product.category">
             <field name="parent_id" ref="product_category_1"/>
-            <field name="name">Software</field>
+            <field name="name">Softwares</field>
         </record>
         <record id="product_category_10" model="product.category">
             <field name="parent_id" ref="product_category_3"/>
             <field name="name">Raw Materials</field>
-        </record>
-        <record id="product_category_11" model="product.category">
-            <field name="name">Assembly Service</field>
-            <field name="parent_id" ref="product_category_5"/>
-        </record>
-        <record id="product_category_12" model="product.category">
-            <field name="parent_id" ref="product_category_5"/>
-            <field name="name">On site Intervention</field>
         </record>
 
         <record id="product_ul_box" model="product.ul">
@@ -73,12 +65,12 @@
     -->
 
         <record id="product_product_consultant" model="product.product">
-            <field name="categ_id" ref="product.product_category_12"/>
+            <field name="categ_id" ref="product.product_category_5"/>
         </record>
 
         <record id="product_product_1" model="product.product">
             <field name="name">On Site Monitoring</field>
-            <field name="categ_id" ref="product_category_12"/>
+            <field name="categ_id" ref="product_category_5"/>
             <field name="standard_price">20.5</field>
             <field name="list_price">30.75</field>
             <field name="type">service</field>
@@ -92,7 +84,7 @@
 
         <record id="product_product_2" model="product.product">
             <field name="name">On Site Assistance</field>
-            <field name="categ_id" ref="product_category_11"/>
+            <field name="categ_id" ref="product_category_5"/>
             <field name="standard_price">25.5</field>
             <field name="list_price">38.25</field>
             <field name="type">service</field>
