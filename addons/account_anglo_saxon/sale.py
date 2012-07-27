@@ -31,7 +31,7 @@ from osv import fields, osv
 #        invoice_line_obj = self.pool.get('account.invoice.line')
 #        for line in invoice_line_obj.browse(cr, uid, line_ids):
 #            if line.product_id:
-#                    a =  line.product_id.product_tmpl_id.property_stock_account_output and line.product_id.product_tmpl_id.property_stock_account_output.id
+#                    a =  line.product_id.property_stock_account_output and line.product_id.property_stock_account_output.id
 #                    if not a:
 #                        a = line.product_id.categ_id.property_stock_account_output_categ and line.product_id.categ_id.property_stock_account_output_categ.id
 #                    if a:

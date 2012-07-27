@@ -85,10 +85,10 @@ class hr_analytic_timesheet(osv.osv):
             res.setdefault('value',{})
             res['value']= super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids, account_id)['value']
             res['value']['product_id'] = r.product_id.id
-            res['value']['product_uom_id'] = r.product_id.product_tmpl_id.uom_id.id
+            res['value']['product_uom_id'] = r.product_id.uom_id.id
 
             #the change of product has to impact the amount, uom and general_account_id
-            a = r.product_id.product_tmpl_id.property_account_expense.id
+            a = r.product_id.property_account_expense.id
             if not a:
                 a = r.product_id.categ_id.property_account_expense_categ.id
             if not a:
@@ -123,7 +123,7 @@ class hr_analytic_timesheet(osv.osv):
                 res['value']['product_id'] = r.product_id.id
 
                 #the change of product has to impact the amount, uom and general_account_id
-                a = r.product_id.product_tmpl_id.property_account_expense.id
+                a = r.product_id.property_account_expense.id
                 if not a:
                     a = r.product_id.categ_id.property_account_expense_categ.id
                 if not a:

@@ -161,13 +161,13 @@ class stock_picking(osv.osv):
                     else:
                         name = sale_line.name
                     if type in ('out_invoice', 'out_refund'):
-                        account_id = sale_line.product_id.product_tmpl_id.\
+                        account_id = sale_line.product_id.\
                                 property_account_income.id
                         if not account_id:
                             account_id = sale_line.product_id.categ_id.\
                                     property_account_income_categ.id
                     else:
-                        account_id = sale_line.product_id.product_tmpl_id.\
+                        account_id = sale_line.product_id.\
                                 property_account_expense.id
                         if not account_id:
                             account_id = sale_line.product_id.categ_id.\

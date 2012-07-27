@@ -285,7 +285,7 @@ class procurement_order(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid)
         partner_obj = self.pool.get('res.partner')
         for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
+            if procurement.product_id.supply_method <> 'buy':
                 return False
             if not procurement.product_id.seller_ids:
                 message = _('No supplier defined for this product !')
@@ -333,7 +333,7 @@ class procurement_order(osv.osv):
                 if not procurement.move_id:
                     source = procurement.location_id.id
                     if procurement.procure_method == 'make_to_order':
-                        source = procurement.product_id.product_tmpl_id.property_stock_procurement.id
+                        source = procurement.product_id.property_stock_procurement.id
                     id = move_obj.create(cr, uid, {
                         'name': procurement.name,
                         'location_id': source,

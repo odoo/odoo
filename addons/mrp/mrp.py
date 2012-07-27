@@ -957,7 +957,7 @@ class mrp_production(osv.osv):
 
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
-        source_location_id = production.product_id.product_tmpl_id.property_stock_production.id
+        source_location_id = production.product_id.property_stock_production.id
         destination_location_id = production.location_dest_id.id
         move_name = _('PROD: %s') + production.name
         data = {
@@ -985,7 +985,7 @@ class mrp_production(osv.osv):
         if production_line.product_id.type not in ('product', 'consu'):
             return False
         move_name = _('PROD: %s') % production.name
-        destination_location_id = production.product_id.product_tmpl_id.property_stock_production.id
+        destination_location_id = production.product_id.property_stock_production.id
         if not source_location_id:
             source_location_id = production.location_src_id.id
         move_id = stock_move.create(cr, uid, {

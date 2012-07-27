@@ -79,7 +79,7 @@ class procurement_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         for procurement in procurement_obj.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
-            newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
+            newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.produce_delay or 0.0)
             newdate = newdate - relativedelta(days=company.manufacturing_lead)
             produce_id = production_obj.create(cr, uid, {
                 'origin': procurement.origin,

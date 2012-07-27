@@ -66,7 +66,7 @@
     for move_line in inventory.move_ids:
         for line in inventory.inventory_line_id:
             if move_line.product_id.id == line.product_id.id and move_line.prodlot_id.id == line.prod_lot_id.id:
-                location_id = line.product_id.product_tmpl_id.property_stock_inventory.id
+                location_id = line.product_id.property_stock_inventory.id
                 assert move_line.product_qty == line.product_qty, "Qty is not correspond."
                 assert move_line.product_uom.id == line.product_uom.id, "UOM is not correspond."
                 assert move_line.date == inventory.date, "Date is not correspond."

@@ -132,7 +132,7 @@ class product_product(osv.osv):
 
                     if diff > 0:
                         if not stock_input_acc:
-                            stock_input_acc = product.product_tmpl_id.\
+                            stock_input_acc = product.\
                                 property_stock_account_input.id
                         if not stock_input_acc:
                             stock_input_acc = product.categ_id.\
@@ -158,7 +158,7 @@ class product_product(osv.osv):
                                     })
                     elif diff < 0:
                         if not stock_output_acc:
-                            stock_output_acc = product.product_tmpl_id.\
+                            stock_output_acc = product.\
                                 property_stock_account_output.id
                         if not stock_output_acc:
                             stock_output_acc = product.categ_id.\

@@ -1029,14 +1029,12 @@ class stock_picking(osv.osv):
             origin += ':' + move_line.picking_id.origin
 
         if invoice_vals['type'] in ('out_invoice', 'out_refund'):
-            account_id = move_line.product_id.product_tmpl_id.\
-                    property_account_income.id
+            account_id = move_line.product_id.property_account_income.id
             if not account_id:
                 account_id = move_line.product_id.categ_id.\
                         property_account_income_categ.id
         else:
-            account_id = move_line.product_id.product_tmpl_id.\
-                    property_account_expense.id
+            account_id = move_line.product_id.property_account_expense.id
             if not account_id:
                 account_id = move_line.product_id.categ_id.\
                         property_account_expense_categ.id
@@ -2729,7 +2727,7 @@ class stock_inventory(osv.osv):
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
                 if change:
-                    location_id = line.product_id.product_tmpl_id.property_stock_inventory.id
+                    location_id = line.product_id.property_stock_inventory.id
                     value = {
                         'name': 'INV:' + str(line.inventory_id.id) + ':' + line.inventory_id.name,
                         'product_id': line.product_id.id,

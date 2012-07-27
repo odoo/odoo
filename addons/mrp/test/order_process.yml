@@ -94,7 +94,7 @@
     assert order.state == 'confirmed', "Production order should be confirmed."
     assert order.move_created_ids, "Trace Record is not created for Final Product."
     move = order.move_created_ids[0]
-    source_location_id = order.product_id.product_tmpl_id.property_stock_production.id
+    source_location_id = order.product_id.property_stock_production.id
     assert move.date == order.date_planned, "Planned date is not correspond."
     assert move.product_id.id == order.product_id.id, "Product is not correspond."
     assert move.product_uom.id == order.product_uom.id, "UOM is not correspond."

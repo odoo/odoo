@@ -950,7 +950,7 @@ class sale_order(osv.osv):
             date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, context=context)
 
             if line.product_id:
-                if line.product_id.product_tmpl_id.type in ('product', 'consu'):
+                if line.product_id.type in ('product', 'consu'):
                     if not picking_id:
                         picking_id = picking_obj.create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
                     move_id = move_obj.create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, context=context))
@@ -1014,7 +1014,7 @@ class sale_order(osv.osv):
     def has_stockable_products(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
-                if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
+                if order_line.product_id and order_line.product_id.type in ('product', 'consu'):
                     return True
         return False
 
@@ -1188,7 +1188,7 @@ class sale_order_line(osv.osv):
         if not line.invoiced:
             if not account_id:
                 if line.product_id:
-                    account_id = line.product_id.product_tmpl_id.property_account_income.id
+                    account_id = line.product_id.property_account_income.id
                     if not account_id:
                         account_id = line.product_id.categ_id.property_account_income_categ.id
                     if not account_id:

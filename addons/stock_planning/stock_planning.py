@@ -191,7 +191,7 @@ class stock_sale_forecast(osv.osv):
             coeff_def2uom = 1
             if (product_uom != product.uom_id.id):
                 coeff_def2uom, round_value = self._from_default_uom_factor(cr, uid, product_id, product_uom, {})
-            qty = rounding(coeff_def2uom * product_amt/(product.product_tmpl_id.list_price), round_value)
+            qty = rounding(coeff_def2uom * product_amt/(product.list_price), round_value)
         res = {'value': {'product_qty': qty}}
         return res
 
