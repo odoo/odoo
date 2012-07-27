@@ -25,7 +25,7 @@
 -
   !python {model: product.product}: |
     context.update({'quantity':5})
-    product = self.browse(cr, uid, ref("product_product_7"), context=context)
+    product = self.browse(cr, uid, ref("product_product_26"), context=context)
     assert product.price == product.lst_price-product.lst_price*(0.05), "Sell price is not correspond."
 -
   I check sale price of PC4.

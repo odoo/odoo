@@ -32,41 +32,29 @@
         </record>
         <record id="product_category_6" model="product.category">
             <field name="parent_id" ref="product_category_1"/>
-            <field name="name">Network Components</field>
+            <field name="name">External Devices</field>
         </record>
         <record id="product_category_7" model="product.category">
-            <field name="parent_id" ref="product_category_4"/>
-            <field name="name">Desktops</field>
-        </record>
-        <record id="product_category_8" model="product.category">
-            <field name="parent_id" ref="product_category_4"/>
-            <field name="name">Laptops</field>
-        </record>
-        <record id="product_category_9" model="product.category">
-            <field name="parent_id" ref="product_category_4"/>
+            <field name="parent_id" ref="product_category_1"/>
             <field name="name">Accessories</field>
         </record>
-        <record id="product_category_10" model="product.category">
-            <field name="parent_id" ref="product_category_4"/>
+        <record id="product_category_8" model="product.category">
+            <field name="parent_id" ref="product_category_1"/>
             <field name="name">Components</field>
         </record>
-        <record id="product_category_11" model="product.category">
-            <field name="parent_id" ref="product_category_4"/>
-            <field name="name">Printer &amp; Scanners</field>
-        </record>
-        <record id="product_category_12" model="product.category">
-            <field name="parent_id" ref="product_category_4"/>
+        <record id="product_category_9" model="product.category">
+            <field name="parent_id" ref="product_category_1"/>
             <field name="name">Software</field>
         </record>
-        <record id="product_category_13" model="product.category">
+        <record id="product_category_10" model="product.category">
             <field name="parent_id" ref="product_category_3"/>
             <field name="name">Raw Materials</field>
         </record>
-        <record id="product_category_14" model="product.category">
+        <record id="product_category_11" model="product.category">
             <field name="name">Assembly Service</field>
             <field name="parent_id" ref="product_category_5"/>
         </record>
-        <record id="product_category_15" model="product.category">
+        <record id="product_category_12" model="product.category">
             <field name="parent_id" ref="product_category_5"/>
             <field name="name">On site Intervention</field>
         </record>
@@ -85,12 +73,12 @@
     -->
 
         <record id="product_product_consultant" model="product.product">
-            <field name="categ_id" ref="product.product_category_15"/>
+            <field name="categ_id" ref="product.product_category_12"/>
         </record>
 
         <record id="product_product_1" model="product.product">
             <field name="name">On Site Monitoring</field>
-            <field name="categ_id" ref="product_category_15"/>
+            <field name="categ_id" ref="product_category_12"/>
             <field name="standard_price">20.5</field>
             <field name="list_price">30.75</field>
             <field name="type">service</field>
@@ -104,7 +92,7 @@
 
         <record id="product_product_2" model="product.product">
             <field name="name">On Site Assistance</field>
-            <field name="categ_id" ref="product_category_14"/>
+            <field name="categ_id" ref="product_category_11"/>
             <field name="standard_price">25.5</field>
             <field name="list_price">38.25</field>
             <field name="type">service</field>
@@ -118,7 +106,7 @@
         <record id="product_product_3" model="product.product">
             <field name="name">PC Assemble SC234</field>
             <field name="default_code">PCSC234</field>
-            <field name="categ_id" ref="product_category_7"/>
+            <field name="categ_id" ref="product_category_4"/>
             <field name="list_price">450.0</field>
             <field name="standard_price">300.0</field>
             <field name="type">product</field>
@@ -136,7 +124,7 @@ HDD SH-1</field>
         <record id="product_product_4" model="product.product">
             <field name="name">PC Assemble SC349</field>
             <field name="default_code">PCSC349</field>
-            <field name="categ_id" ref="product_category_7"/>
+            <field name="categ_id" ref="product_category_4"/>
             <field name="standard_price">500.0</field>
             <field name="list_price">750.0</field>
             <field name="type">product</field>
@@ -154,7 +142,7 @@ HDD SH-1</field>
         <record id="product_product_5" model="product.product">
             <field name="name">PC Assemble + Custom (PC on Demand)</field>
             <field name="default_code">PC-DEM</field>
-            <field name="categ_id" ref="product_category_7"/>
+            <field name="categ_id" ref="product_category_4"/>
             <field name="standard_price">600.0</field>
             <field name="list_price">900.0</field>
             <field name="type">product</field>
@@ -169,7 +157,7 @@ HDD SH-1</field>
         <record id="product_product_6" model="product.product">
             <field name="name">15” LCD Monitor</field>
             <field name="default_code">LCD15</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">800.0</field>
             <field name="list_price">1200.0</field>
             <field name="type">product</field>
@@ -179,7 +167,7 @@ HDD SH-1</field>
         <record id="product_product_7" model="product.product">
             <field name="name">17” LCD Monitor</field>
             <field name="default_code">LCD17</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">880.0</field>
             <field name="list_price">1350.0</field>
             <field name="type">product</field>
@@ -189,7 +177,7 @@ HDD SH-1</field>
         <record id="product_product_8" model="product.product">
             <field name="name">USB Keyboard, QWERTY</field>
             <field name="default_code">KeyQ</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">10.0</field>
             <field name="list_price">13.0</field>
             <field name="type">product</field>
@@ -199,7 +187,7 @@ HDD SH-1</field>
         <record id="product_product_9" model="product.product">
             <field name="name">USB Keyboard, AZERTY</field>
             <field name="default_code">KeyA</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">10.0</field>
             <field name="list_price">13.0</field>
             <field name="type">product</field>
@@ -210,7 +198,7 @@ HDD SH-1</field>
         <record id="product_product_10" model="product.product">
             <field name="name">Mouse, Optical</field>
             <field name="default_code">M-Opt</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">12.50</field>
             <field name="list_price">14</field>
             <field name="type">product</field>
@@ -220,7 +208,7 @@ HDD SH-1</field>
         <record id="product_product_11" model="product.product">
             <field name="name">Mouse, Laser</field>
             <field name="default_code">M-Las</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">14</field>
             <field name="list_price">16.50</field>
             <field name="type">product</field>
@@ -230,7 +218,7 @@ HDD SH-1</field>
         <record id="product_product_12" model="product.product">
             <field name="name">Mouse, Wireless</field>
             <field name="default_code">M-Wir</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">18</field>
             <field name="list_price">12.50</field>
             <field name="type">product</field>
@@ -241,7 +229,7 @@ HDD SH-1</field>
         <record id="product_product_13" model="product.product">
             <field name="name">RAM SR5</field>
             <field name="default_code">RAM-SR5</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">78.0</field>
             <field name="list_price">85.0</field>
             <field name="type">product</field>
@@ -251,7 +239,7 @@ HDD SH-1</field>
         <record id="product_product_14" model="product.product">
             <field name="name">RAM SR2</field>
             <field name="default_code">RAM-SR2</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">87.0</field>
             <field name="list_price">95.0</field>
             <field name="type">product</field>
@@ -261,7 +249,7 @@ HDD SH-1</field>
         <record id="product_product_15" model="product.product">
             <field name="name">RAM SR3</field>
             <field name="default_code">RAM-SR3</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">80.0</field>
             <field name="list_price">85.0</field>
             <field name="type">product</field>
@@ -271,7 +259,7 @@ HDD SH-1</field>
         <record id="product_product_16" model="product.product">
             <field name="name">Computer Case</field>
             <field name="default_code">C-Case</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">20.0</field>
             <field name="list_price">25.0</field>
             <field name="type">product</field>
@@ -283,7 +271,7 @@ HDD SH-1</field>
         <record id="product_product_17" model="product.product">
             <field name="name">HDD SH-1</field>
             <field name="default_code">HDD-SH1</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">860.0</field>
             <field name="list_price">975.0</field>
             <field name="type">product</field>
@@ -293,7 +281,7 @@ HDD SH-1</field>
         <record id="product_product_18" model="product.product">
             <field name="name">HDD SH-2</field>
             <field name="default_code">HDD-SH2</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">1020.0</field>
             <field name="list_price">1150.0</field>
             <field name="type">product</field>
@@ -305,7 +293,7 @@ HDD SH-1</field>
         <record id="product_product_19" model="product.product">
             <field name="name">HDD on Demand</field>
             <field name="default_code">HDD-DEM</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">1100.0</field>
             <field name="list_price">1250.0</field>
             <field name="type">product</field>
@@ -318,7 +306,7 @@ HDD SH-1</field>
         <record id="product_product_20" model="product.product">
             <field name="name">Motherboard I9P57</field>
             <field name="default_code">MBi9</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">1700.0</field>
             <field name="list_price">1950.0</field>
             <field name="type">product</field>
@@ -328,7 +316,7 @@ HDD SH-1</field>
         <record id="product_product_21" model="product.product">
             <field name="name">Motherboard A20Z7</field>
             <field name="default_code">MBa20</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">1790.0</field>
             <field name="list_price">2000.0</field>
             <field name="type">product</field>
@@ -338,7 +326,7 @@ HDD SH-1</field>
         <record id="product_product_22" model="product.product">
             <field name="name">Processor Core i5 2.70 Ghz</field>
             <field name="default_code">CPUi5</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">2010.0</field>
             <field name="list_price">2100.0</field>
             <field name="type">product</field>
@@ -348,7 +336,7 @@ HDD SH-1</field>
         <record id="product_product_23" model="product.product">
             <field name="name">Processor AMD 8-Core</field>
             <field name="default_code">CPUa8</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">1910.0</field>
             <field name="list_price">1980.0</field>
             <field name="type">product</field>
@@ -358,7 +346,7 @@ HDD SH-1</field>
         <record id="product_product_24" model="product.product">
             <field name="name">Graphics Card</field>
             <field name="default_code">CARD</field>
-            <field name="categ_id" ref="product_category_10"/>
+            <field name="categ_id" ref="product_category_8"/>
             <field name="standard_price">876.0</field>
             <field name="list_price">885.0</field>
             <field name="type">product</field>
@@ -368,7 +356,7 @@ HDD SH-1</field>
         <record id="product_product_25" model="product.product">
             <field name="name">Laptop E5023</field>
             <field name="default_code">LAP-E5</field>
-            <field name="categ_id" ref="product_category_8"/>
+            <field name="categ_id" ref="product_category_4"/>
             <field name="standard_price">2870.0</field>
             <field name="list_price">2950.0</field>
             <field name="type">product</field>
@@ -382,7 +370,7 @@ QWERTY keyboard</field>
         <record id="product_product_26" model="product.product">
             <field name="name">Laptop S3450</field>
             <field name="default_code">LAP-S3</field>
-            <field name="categ_id" ref="product_category_8"/>
+            <field name="categ_id" ref="product_category_4"/>
             <field name="standard_price">3000.0</field>
             <field name="list_price">3245.0</field>
             <field name="type">product</field>
@@ -396,7 +384,7 @@ QWERTY keyboard</field>
         <record id="product_product_27" model="product.product">
             <field name="name">Laptop Customized</field>
             <field name="default_code">LAP-CUS</field>
-            <field name="categ_id" ref="product_category_8"/>
+            <field name="categ_id" ref="product_category_4"/>
             <field name="standard_price">3300.0</field>
             <field name="list_price">3645.0</field>
             <field name="type">product</field>
@@ -409,7 +397,7 @@ QWERTY keyboard</field>
         <record id="product_product_28" model="product.product">
             <field name="name">External Hard disk</field>
             <field name="default_code">EXT-HDD</field>
-            <field name="categ_id" ref="product_category_9"/>
+            <field name="categ_id" ref="product_category_6"/>
             <field name="standard_price">390.0</field>
             <field name="list_price">405.0</field>
             <field name="type">product</field>
@@ -420,7 +408,7 @@ QWERTY keyboard</field>
         <record id="product_product_29" model="product.product">
             <field name="name">Pen drive, SP-2</field>
             <field name="default_code">PD-SP2</field>
-            <field name="categ_id" ref="product_category_9"/>
+            <field name="categ_id" ref="product_category_7"/>
             <field name="standard_price">90.0</field>
             <field name="list_price">100.0</field>
             <field name="type">product</field>
@@ -431,7 +419,7 @@ QWERTY keyboard</field>
         <record id="product_product_30" model="product.product">
             <field name="name">Pen drive, SP-4</field>
             <field name="default_code">PD-SP4</field>
-            <field name="categ_id" ref="product_category_9"/>
+            <field name="categ_id" ref="product_category_7"/>
             <field name="standard_price">126.0</field>
             <field name="list_price">145.0</field>
             <field name="type">product</field>
@@ -441,7 +429,7 @@ QWERTY keyboard</field>
         <record id="product_product_31" model="product.product">
             <field name="name">Multimedia Speakers</field>
             <field name="default_code">MM-SPK</field>
-            <field name="categ_id" ref="product_category_9"/>
+            <field name="categ_id" ref="product_category_7"/>
             <field name="standard_price">134.0</field>
             <field name="list_price">150.0</field>
             <field name="type">product</field>
@@ -452,7 +440,7 @@ QWERTY keyboard</field>
         <record id="product_product_32" model="product.product">
             <field name="name">Headset standard</field>
             <field name="default_code">HEAD</field>
-            <field name="categ_id" ref="product_category_9"/>
+            <field name="categ_id" ref="product_category_7"/>
             <field name="standard_price">57.0</field>
             <field name="list_price">62.0</field>
             <field name="type">product</field>
@@ -463,7 +451,7 @@ QWERTY keyboard</field>
         <record id="product_product_33" model="product.product">
             <field name="name">Headset USB</field>
             <field name="default_code">HEAD-USB</field>
-            <field name="categ_id" ref="product_category_9"/>
+            <field name="categ_id" ref="product_category_7"/>
             <field name="standard_price">60.0</field>
             <field name="list_price">65.0</field>
             <field name="type">product</field>
@@ -476,7 +464,7 @@ QWERTY keyboard</field>
         <record id="product_product_34" model="product.product">
             <field name="name">Webcam</field>
             <field name="default_code">WCAM</field>
-            <field name="categ_id" ref="product_category_9"/>
+            <field name="categ_id" ref="product_category_7"/>
             <field name="standard_price">38.0</field>
             <field name="list_price">45.0</field>
             <field name="type">product</field>
@@ -487,7 +475,7 @@ QWERTY keyboard</field>
         <record id="product_product_35" model="product.product">
             <field name="name">Blank CD</field>
             <field name="default_code">CD</field>
-            <field name="categ_id" ref="product_category_9"/>
+            <field name="categ_id" ref="product_category_7"/>
             <field name="standard_price">18.40</field>
             <field name="list_price">20.0</field>
             <field name="type">product</field>
@@ -498,7 +486,7 @@ QWERTY keyboard</field>
         <record id="product_product_36" model="product.product">
             <field name="name">Blank DVD-RW</field>
             <field name="default_code">DVD</field>
-            <field name="categ_id" ref="product_category_9"/>
+            <field name="categ_id" ref="product_category_7"/>
             <field name="standard_price">21.60</field>
             <field name="list_price">24.0</field>
             <field name="type">product</field>
@@ -509,7 +497,7 @@ QWERTY keyboard</field>
         <record id="product_product_37" model="product.product">
             <field name="name">Printer, All-in-one</field>
             <field name="default_code">PRINT</field>
-            <field name="categ_id" ref="product_category_11"/>
+            <field name="categ_id" ref="product_category_6"/>
             <field name="standard_price">4258.0</field>
             <field name="list_price">4410.0</field>
             <field name="type">product</field>
@@ -522,7 +510,7 @@ QWERTY keyboard</field>
         <record id="product_product_38" model="product.product">
             <field name="name">Ink Cartridge</field>
             <field name="default_code">INK</field>
-            <field name="categ_id" ref="product_category_11"/>
+            <field name="categ_id" ref="product_category_6"/>
             <field name="standard_price">60.0</field>
             <field name="list_price">65.0</field>
             <field name="type">product</field>
@@ -533,7 +521,7 @@ QWERTY keyboard</field>
         <record id="product_product_39" model="product.product">
             <field name="name">Toner Cartridge</field>
             <field name="default_code">TONER</field>
-            <field name="categ_id" ref="product_category_11"/>
+            <field name="categ_id" ref="product_category_6"/>
             <field name="standard_price">66.0</field>
             <field name="list_price">70.0</field>
             <field name="type">product</field>
@@ -544,7 +532,7 @@ QWERTY keyboard</field>
         <record id="product_product_40" model="product.product">
             <field name="name">Windows 7 Professional</field>
             <field name="default_code">Win7</field>
-            <field name="categ_id" ref="product_category_12"/>
+            <field name="categ_id" ref="product_category_9"/>
             <field name="standard_price">330.0</field>
             <field name="list_price">470.0</field>
             <field name="type">consu</field>
@@ -555,7 +543,7 @@ QWERTY keyboard</field>
         <record id="product_product_41" model="product.product">
             <field name="name">Windows Home Server 2011</field>
             <field name="default_code">WServer</field>
-            <field name="categ_id" ref="product_category_12"/>
+            <field name="categ_id" ref="product_category_9"/>
             <field name="standard_price">540.0</field>
             <field name="list_price">620.0</field>
             <field name="type">consu</field>
@@ -566,7 +554,7 @@ QWERTY keyboard</field>
         <record id="product_product_42" model="product.product">
             <field name="name">Office Suite</field>
             <field name="default_code">OSuite</field>
-            <field name="categ_id" ref="product_category_12"/>
+            <field name="categ_id" ref="product_category_9"/>
             <field name="standard_price">110.0</field>
             <field name="list_price">170.0</field>
             <field name="type">consu</field>
@@ -578,7 +566,7 @@ QWERTY keyboard</field>
         <record id="product_product_43" model="product.product">
             <field name="name">Zed+ Antivirus</field>
             <field name="default_code">Zplus</field>
-            <field name="categ_id" ref="product_category_12"/>
+            <field name="categ_id" ref="product_category_9"/>
             <field name="standard_price">235.0</field>
             <field name="list_price">280.0</field>
             <field name="type">consu</field>
@@ -589,7 +577,7 @@ QWERTY keyboard</field>
         <record id="product_product_44" model="product.product">
             <field name="name">GrapWorks Software</field>
             <field name="default_code">GRAPs/w</field>
-            <field name="categ_id" ref="product_category_12"/>
+            <field name="categ_id" ref="product_category_9"/>
             <field name="standard_price">155.0</field>
             <field name="list_price">173.0</field>
             <field name="type">consu</field>
