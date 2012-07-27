@@ -43,8 +43,8 @@
                 <field name="mobile" position="after">
                     <field name="purchase_order_count"/>
                 </field>
-                <xpath expr="//h4[@class='oe_partner_heading']" position="after">
-                    <a name="%(purchase.act_res_partner_2_purchase_order)d" type="action" t-if="record.purchase_order_count.value>0" class="oe_tag">
+                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                    <a name="%(purchase.act_res_partner_2_purchase_order)d" type="action" t-if="record.purchase_order_count.value>0">
                         <t t-esc="record.purchase_order_count.value"/> Purchases
                     </a>
                 </xpath>
