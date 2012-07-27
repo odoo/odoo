@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,10 +19,21 @@
 #
 ##############################################################################
 
-import portal
-import wizard
-import res_user
-import event
+from osv import osv, fields
 
+class event_event(osv.osv):
+    _description = "Portal event"
+    _inherit = 'event.event'
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    """
+    ``visibility``: defines if the employee appears on the portal's contact page
+                    - 'public' means the event will appear for everyone (anonymous)
+                    - 'private' means the event won't appear
+    """
+    _columns = {
+        'visibility': fields.selection([('public', 'Public'),('private', 'Private')],
+            string='Visibility', help='Event\'s visibility in the portal\'s contact page'),
+    }
+    _defaults = {
+        'visibility': 'private',
+    }
