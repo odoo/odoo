@@ -53,10 +53,6 @@
             <field name="act_to" ref="act_wait_ship"/>
         </record>
         
-        <record id="trans_router_wait_invoice" model="workflow.transition">
-            <field name="act_from" ref="sale.act_router"/>
-            <field name="act_to" ref="sale.act_wait_invoice"/>
-        </record>
         
         <record id="trans_router_wait_invoice_shipping" model="workflow.transition">
             <field name="act_from" ref="sale.act_wait_invoice"/>

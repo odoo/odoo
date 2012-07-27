@@ -378,36 +378,6 @@ class sale_order(osv.osv):
         }
         return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
     
-    def manual_invoice(self, cr, uid, ids, context=None):
-        """ create invoices for the given sale orders (ids), and open the form
-            view of one of the newly created invoices
-        """
-        mod_obj = self.pool.get('ir.model.data')
-        wf_service = netsvc.LocalService("workflow")
-
-        # create invoices through the sale orders' workflow
-        inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
-        for id in ids:
-            wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
-        inv_ids1 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
-        # determine newly created invoices
-        new_inv_ids = list(inv_ids1 - inv_ids0)
-
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-        res_id = res and res[1] or False,
-
-        return {
-            'name': _('Customer Invoices'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': [res_id],
-            'res_model': 'account.invoice',
-            'context': "{'type':'out_invoice'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'res_id': new_inv_ids and new_inv_ids[0] or False,
-        }
 
     def action_view_invoice(self, cr, uid, ids, context=None):
         '''
