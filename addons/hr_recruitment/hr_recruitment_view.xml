@@ -132,7 +132,7 @@
                     </h2>
                 </div>
                 <group>
-                    <group string="Contact Details">
+                    <group>
                         <field name="partner_id"
                                 on_change="onchange_partner_id(partner_id, email_from)"/>
                         <field name="email_from" widget="email"/>
@@ -140,7 +140,7 @@
                         <field name="partner_mobile"/>
                         <field name="type_id" placeholder="Degree"/>
                     </group>
-                    <group string="Application Followup">
+                    <group>
                         <field name="user_id"/>
                         <label for="title_action"/>
                         <div>
@@ -149,6 +149,8 @@
                         </div>
                         <field name="priority"/>
                         <field name="state" invisible="1"/>
+                        <field name="source_id"/>
+                        <field name="reference"/>
                     </group>
                     <group string="Job">
                         <field name="survey" invisible="1"/>
@@ -171,10 +173,6 @@
                             <field name="salary_proposed" class="oe_inline"/>, 
                             <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
-                    </group>
-                    <group string="Reference">
-                        <field name="source_id"/>
-                        <field name="reference"/>
                     </group>
                 </group>
                 <separator string="Application Summary"/>

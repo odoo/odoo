@@ -612,6 +612,13 @@ class account_analytic_account(osv.osv):
         'use_issues' : fields.boolean('Issues Tracking', help="Check this field if this project manages issues"),
     }
     
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['use_issues'] = template.use_issues
+        return res
+    
     def _trigger_project_creation(self, cr, uid, vals, context=None):
         res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
         return res or vals.get('use_issues')
