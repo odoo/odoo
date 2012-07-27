@@ -121,17 +121,19 @@ def get_encodings(hint_encoding='utf-8'):
         if prefenc:
             yield prefenc
 
-def ustr(value, hint_encoding='utf-8'):
+def ustr(value, hint_encoding='utf-8', errors='strict'):
     """This method is similar to the builtin `str` method, except
        it will return unicode() string.
 
-    @param value: the value to convert
-    @param hint_encoding: an optional encoding that was detected
+    :param value: the value to convert
+    :param hint_encoding: an optional encoding that was detected
                           upstream and should be tried first to
                           decode ``value``.
+    :param errors: specifies the treatment of characters which are
+        invalid in the input encoding (see ``unicode()`` constructor)
 
-    @rtype: unicode
-    @return: unicode string
+    :rtype: unicode
+    :return: unicode string
     """
     if isinstance(value, Exception):
         return exception_to_unicode(value)
@@ -147,7 +149,7 @@ def ustr(value, hint_encoding='utf-8'):
 
     for ln in get_encodings(hint_encoding):
         try:
-            return unicode(value, ln)
+            return unicode(value, ln, errors=errors)
         except Exception:
             pass
     raise UnicodeError('unable to convert %r' % (value,))
