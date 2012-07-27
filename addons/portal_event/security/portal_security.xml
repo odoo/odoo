@@ -2,11 +2,10 @@
 <openerp>
     <data noupdate="1">
 
-        <!-- Add a 'public' flag to the events and only show these ones to portal users -->
         <record id="portal_event_rule" model="ir.rule">
-            <field name="name">Personal Events</field>
+            <field name="name">Visible Events</field>
             <field ref="event.model_event_event" name="model_id"/>
-            <field name="domain_force">[]</field>
+            <field name="domain_force">[('visibility', '=', 'public')]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
         </record>
 
