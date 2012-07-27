@@ -22,11 +22,11 @@
 from osv import osv, fields
 
 class event_event(osv.osv):
-    _description = "Portal event"
+    _description = 'Portal event'
     _inherit = 'event.event'
 
     """
-    ``visibility``: defines if the employee appears on the portal's contact page
+    ``visibility``: defines if the event appears on the portal's event page
                     - 'public' means the event will appear for everyone (anonymous)
                     - 'private' means the event won't appear
     """
