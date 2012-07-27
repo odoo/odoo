@@ -27,7 +27,7 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
     _columns = {
         'group_invoice_deli_orders': fields.boolean('Based on Delivery Orders',
-            implied_group='group_invoice_deli_orders',
+            implied_group='sale.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
         'task_work': fields.boolean('Based on Task Activities',
             help="""Lets you transfer the entries under tasks defined for Project Management to

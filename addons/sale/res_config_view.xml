@@ -21,7 +21,7 @@
                 </group>
                 <group name="config_other" position="inside">
                     <separator string="Invoicing Policy" colspan="2" />
-                    <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
+                    <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines)"/>
                     <field name="timesheet" on_change="onchange_timesheet(timesheet)"/>
                     <field name="default_order_policy" attrs="{'invisible':[('group_invoice_so_lines','=',False)],'required': [('group_invoice_so_lines','=',True)]}"/>
                     <field name="time_unit" domain="[('category_id.name','=','Working Time')]"

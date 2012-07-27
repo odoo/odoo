@@ -528,40 +528,25 @@ class account_analytic_account_summary_user(osv.osv):
 
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_user')
-        cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (' \
-                'SELECT ' \
-                    '(u.account_id * u.max_user) + u."user" AS id, ' \
-                    'u.account_id AS account_id, ' \
-                    'u."user" AS "user", ' \
-                    'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
-                'FROM ' \
-                    '(SELECT ' \
-                        'a.id AS account_id, ' \
-                        'u1.id AS "user", ' \
-                        'MAX(u2.id) AS max_user ' \
-                    'FROM ' \
-                        'res_users AS u1, ' \
-                        'res_users AS u2, ' \
-                        'account_analytic_account AS a ' \
-                    'GROUP BY u1.id, a.id ' \
-                    ') AS u ' \
-                'LEFT JOIN ' \
-                    '(SELECT ' \
-                        'l.account_id AS account_id, ' \
-                        'l.user_id AS "user", ' \
-                        'SUM(l.unit_amount) AS unit_amount ' \
-                    'FROM account_analytic_line AS l, ' \
-                        'account_analytic_journal AS j ' \
-                    'WHERE (j.type = \'general\') and (j.id=l.journal_id) ' \
-                    'GROUP BY l.account_id, l.user_id ' \
-                    ') AS l '
-                    'ON (' \
-                        'u.account_id = l.account_id ' \
-                        'AND u."user" = l."user"' \
-                    ') ' \
-                'GROUP BY u."user", u.account_id, u.max_user' \
-                ')')
-
+        cr.execute('''CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (
+            with mu as
+                (select max(id) as max_user from res_users)
+            , lu AS
+                (SELECT   
+                 l.account_id AS account_id,   
+                 coalesce(l.user_id, 0) AS user_id,   
+                 SUM(l.unit_amount) AS unit_amount   
+             FROM account_analytic_line AS l,   
+                 account_analytic_journal AS j   
+             WHERE (j.type = 'general' ) and (j.id=l.journal_id)   
+             GROUP BY l.account_id, l.user_id   
+            )
+            select (lu.account_id * mu.max_user) + lu.user_id as id,
+                    lu.account_id as account_id,
+                    lu.user_id as "user",
+                    unit_amount
+            from lu, mu)''')
+                   
 account_analytic_account_summary_user()
 
 class account_analytic_account_summary_month(osv.osv):

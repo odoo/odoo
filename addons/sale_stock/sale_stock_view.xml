@@ -90,9 +90,9 @@
                    <field name="incoterm" position="after">
                        <field name="picking_policy" required="True"/>
                    </field>
-                   <!-- <xpath expr="//page[@string='Other Information']/group/group/field[@name='invoiced']" position="after">
+                   <xpath expr="//page[@string='Other Information']/group/group/field[@name='invoiced']" position="after">
                        <field name="shipped"/>
-                   </xpath> -->
+                   </xpath>
                    <field name="invoice_ids" position="after">
                        <separator string="Delivery Orders"/>
                        <field name="picking_ids" context="{'default_type': 'out'}">
@@ -133,13 +133,13 @@
                    <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='th_weight']" position="after">
                        <field name="product_packaging" invisible="1"/>
                    </xpath>
-                   <!-- <xpath expr="//page[@string='Other Information']/field[@name='order_line']/group/group[@name='logistics']/field[@name='order_policy']" position="before">
+                   <xpath expr="//page[@string='Other Information']/field[@name='order_line']/group/group[@name='logistics']/field[@name='order_policy']" position="before">
                        <field name="incoterm" widget="selection" groups="base.group_user"/>
                        <field name="picking_policy" required="True"/>
-                   </xpath>-->
-                 <!--   <xpath expr="//page[@string='Other Information']/field[@name='order_line']/group/group/field[@name='invoiced']" position="after">
+                   </xpath>
+                   <xpath expr="//page[@string='Other Information']/field[@name='order_line']/group/group/field[@name='invoiced']" position="after">
                        <field name="shipped"/>
-                   </xpath> -->
+                   </xpath>
                 </data>
            </field>
         </record>
