@@ -9,10 +9,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='active_group']" position="after">
-                    <group string="Employee's visibility">
-                        <field name="visibility"/>
-                    </group>
+                <xpath expr="//page[last()]" position="after">
+                    <page string="Portal Settings">
+                        <group>
+                            <field name="visibility"/>
+                        </group>
+                    </page>
                 </xpath>
             </field>
         </record>
