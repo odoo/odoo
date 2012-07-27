@@ -198,7 +198,7 @@
    procurement_ids=self.search(cr, uid, [('name','=','E001')])
    assert len(procurement_ids), "Procurement order hasn't Created."
 -
-  I check the Outgoing Picking is created for source location Softsys and destination Computech.
+  I check the Outgoing Picking is created for source location Birmingham Shop and destination Chicago shop.
 -
   !python {model: stock.picking }: |
     from tools.translate import _

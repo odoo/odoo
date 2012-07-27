@@ -182,7 +182,7 @@
 
         <!--        Child Company 1-->
         <record id="res_partner_company_1" model="res.partner">
-            <field name="name">Computech Systems</field>
+            <field name="name">Your company, Chicago shop</field>
             <field eval="1" name="customer"/>
             <field eval="1" name="supplier"/>
             <field name="is_company">1</field>
@@ -192,9 +192,9 @@
             <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
             <field name="zip">60610</field>
             <field name="city">Chicago</field>
-            <field name="email">info@computech.com</field>
+            <field name="email">chicago@yourcompany.com</field>
             <field name="phone">+1 312 349 3030</field>
-            <field name="website">www.computech.com</field>
+            <field name="website">www.yourcompany.com</field>
         </record>
 
         <record id="res_partner_address_41" model="res.partner">
@@ -204,15 +204,15 @@
         </record>
 
         <record id="res_company_1" model="res.company">
-            <field name="currency_id" ref="base.EUR"/>
+            <field name="currency_id" ref="base.USD"/>
             <field name="partner_id" ref="res_partner_company_1"/>
             <field name="parent_id" ref="base.main_company"/>
-            <field name="name">Computech Systems</field>
+            <field name="name">Your company, Chicago shop</field>
         </record>
 
         <!--        Child Company 2-->
         <record id="res_partner_company_2" model="res.partner">
-            <field name="name">SoftSys Technologies</field>
+            <field name="name">Your company, Birmingham shop</field>
             <field eval="1" name="customer"/>
             <field eval="1" name="supplier"/>
             <field eval="1" name="active"/>
@@ -222,8 +222,8 @@
             <field name="zip">B46 3AG</field>
             <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
             <field name="phone">+44 121 690 4596</field>
-            <field name="email">info@softsys.com</field>
-            <field name="website">www.softsys.com</field>
+            <field name="email">birmingham@yourcompany.com</field>
+            <field name="website">www.yourcompany.com</field>
         </record>
 
         <record id="res_partner_address_40" model="res.partner">
@@ -233,10 +233,10 @@
         </record>
 
         <record id="res_company_2" model="res.company">
-            <field name="currency_id" ref="base.EUR"/>
+            <field name="currency_id" ref="base.BBP"/>
             <field name="partner_id" ref="res_partner_company_2"/>
             <field name="parent_id" ref="base.main_company"/>
-            <field name="name">SoftSys Technologies</field>
+            <field name="name">Your company, Birmingham shop</field>
         </record>
 
         <record id="stock_location_shop0" model="stock.location">
@@ -246,7 +246,7 @@
             <field eval="&quot;&quot;&quot;internal&quot;&quot;&quot;" name="usage"/>
             <field eval="&quot;&quot;&quot;none&quot;&quot;&quot;" name="chained_location_type"/>
             <field eval="1" name="active"/>
-            <field name="name">Computech Systems</field>
+            <field name="name">Your company, Chicago shop</field>
             <field eval="&quot;&quot;&quot;manual&quot;&quot;&quot;" name="chained_auto_packing"/>
         </record>
         <record id="stock_location_shop1" model="stock.location">
@@ -255,7 +255,7 @@
             <field name="location_id" ref="stock.stock_location_locations"/>
             <field eval="&quot;&quot;&quot;internal&quot;&quot;&quot;" name="usage"/>
             <field eval="1" name="active"/>
-            <field name="name">SoftSys Technologies</field>
+            <field name="name">Your company, Birmingham shop</field>
         </record>
         <record id="stock_location_intermediatelocation0" model="stock.location">
             <field name="partner_id" ref="base.main_partner"/>
@@ -266,7 +266,7 @@
 
         <record id="stock_warehouse_shop0" model="stock.warehouse">
             <field name="lot_output_id" ref="stock.stock_location_output"/>
-            <field eval="&quot;&quot;&quot;Computech&quot;&quot;&quot;" name="name"/>
+            <field name="name">Chicago Warehouse</field>
             <field name="lot_stock_id" ref="stock_location_shop0"/>
             <field name="partner_id" ref="res_partner_address_41"/>
             <field name="company_id" ref="res_company_1"/>
@@ -274,7 +274,7 @@
         </record>
         <record id="stock_warehouse_shop1" model="stock.warehouse">
             <field name="lot_output_id" ref="stock.stock_location_output"/>
-            <field name="name">Softsys</field>
+            <field name="name">Birmingham Warehouse</field>
             <field name="lot_stock_id" ref="stock_location_shop1"/>
             <field name="partner_id" ref="res_partner_address_40"/>
             <field name="company_id" ref="res_company_1"/>
