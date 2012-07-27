@@ -896,7 +896,8 @@ instance.web.Client = instance.web.Widget.extend({
         this.$element.on('click', '.oe_dropdown_toggle', function(ev) {
             ev.preventDefault();
             var $toggle = $(this);
-            var $menu = $toggle.parent().find('.oe_dropdown_menu');
+            var $menu = $toggle.siblings('.oe_dropdown_menu');
+            $menu = $menu.size() >= 1 ? $menu : $toggle.find('.oe_dropdown_menu');
             var state = $menu.is('.oe_opened');
             setTimeout(function() {
                 // Do not alter propagation
