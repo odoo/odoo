@@ -29,7 +29,7 @@
 Caldav features in Meeting.
 ===========================
 
-    *  Share meeting with other calendar clients like sunbird
+    * Share meeting with other calendar clients like sunbird
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

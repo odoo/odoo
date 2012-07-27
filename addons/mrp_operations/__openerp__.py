@@ -25,30 +25,30 @@
     'version': '1.0',
     'category': 'Manufacturing',
     'description': """
-This module adds state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
-=============================================================================================================
+This module adds state, date_start, date_stop in manufacturing order operation lines (in the "Work Orders" tab).
+================================================================================================================
 
 Status: draft, confirm, done, cancel
-When finishing/confirming,cancelling production orders set all state lines to the according state
+When finishing/confirming, cancelling manufacturing orders set all state lines
+to the according state.
 
 Create menus:
     Manufacturing > Manufacturing > Work Orders
 
-Which is a view on "Work Centers" lines in production order.
+Which is a view on "Work Orders" lines in manufacturing order.
 
-Add buttons in the form view of production order under workcenter tab:
+Add buttons in the form view of manufacturing order under workorders tab:
     * start (set state to confirm), set date_start
     * done (set state to done), set date_stop
     * set to draft (set state to draft)
     * cancel set state to cancel
 
-When the production order becomes "ready to produce", operations must
-become 'confirmed'. When the production order is done, all operations
+When the manufacturing order becomes "ready to produce", operations must
+become 'confirmed'. When the manufacturing order is done, all operations
 must become done.
 
-The field delay is the delay(stop date - start date).
-So that we can compare the theoretic delay and real delay.
-
+The field 'Working Hours' is the delay(stop date - start date).
+So, that we can compare the theoretic delay and real delay. 
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

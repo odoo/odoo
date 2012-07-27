@@ -375,7 +375,7 @@ class node_class(object):
         could do various things.
         Should also consider node<->content, dir<->dir moves etc.
 
-        Move operations, as instructed from APIs (eg. request from DAV) could
+        Move operations, as instructed from APIs (e.g. request from DAV) could
         use this function.
         """
         raise NotImplementedError(repr(self))
