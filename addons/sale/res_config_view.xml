@@ -25,7 +25,7 @@
                     <field name="timesheet" on_change="onchange_timesheet(timesheet)"/>
                     <field name="default_order_policy" attrs="{'invisible':[('group_invoice_so_lines','=',False)],'required': [('group_invoice_so_lines','=',True)]}"/>
                     <field name="time_unit" domain="[('category_id.name','=','Working Time')]"
-                        attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}"/>
+                        attrs="{'invisible': [('module_account_analytic_analysis','=',False)],'required': [('module_account_analytic_analysis','=',True)]}"/>
                     <separator string="Contracts" colspan="2"/>
                     <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)"/>
                     <field name="module_analytic_user_function" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}"/>

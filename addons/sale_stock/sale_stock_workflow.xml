@@ -53,7 +53,6 @@
             <field name="act_to" ref="act_wait_ship"/>
         </record>
         
-        
         <record id="trans_router_wait_invoice" model="workflow.transition">
             <field name="act_from" ref="sale.act_router"/>
             <field name="act_to" ref="sale.act_wait_invoice"/>
@@ -63,6 +62,12 @@
             <field name="act_from" ref="sale.act_wait_invoice"/>
             <field name="act_to" ref="sale.act_invoice_end"/>
             <field name="condition">(order_policy=='picking')</field>
+        </record>        
+
+        <record id="trans_wait_invoice_invoice_manual" model="workflow.transition">
+            <field name="act_from" ref="sale.act_wait_invoice"/>
+            <field name="act_to" ref="sale.act_invoice"/>
+            <field name="signal">manual_invoice</field>
         </record>        
         
         <record id="trans_wait_ship_cancel3" model="workflow.transition">
@@ -75,12 +80,6 @@
             <field name="act_from" ref="act_wait_ship"/>
             <field name="act_to" ref="act_ship"/>
             <field name="condition">(order_policy!='prepaid') or invoiced</field>
-        </record>
-        
-        <record id="trans_wait_invoice_invoice_manual" model="workflow.transition">
-            <field name="act_from" ref="sale.act_wait_invoice"/>
-            <field name="act_to" ref="sale.act_invoice"/>
-            <field name="signal">manual_invoice</field>
         </record>
         
         <record id="trans_ship_end_done" model="workflow.transition">

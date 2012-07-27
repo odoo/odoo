@@ -15,7 +15,7 @@
                     </group>
                     <field name="group_sale_pricelist" position="after">
                         <field name="group_multiple_shops"/>
-                        </field>
+                    </field>
                     <field name="decimal_precision" position="after">
                         <field name="default_picking_policy" attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}"/>
                     </field>  
@@ -36,6 +36,10 @@
                     </field>
                     <field name="default_order_policy"  position="after">
                         <field name="module_delivery" attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}"/>
+                    </field>
+                    <field name="time_unit" position="replace">
+                        <field name="time_unit" domain="[('category_id.name','=','Working Time')]"
+                          attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}"/>
                     </field>
                 </data>
              </field>

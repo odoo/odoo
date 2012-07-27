@@ -83,13 +83,6 @@
                    <field name="shop_id" position="replace">
                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
                    </field>
-
-                   <field name="order_policy" position="before">
-                       <field name="incoterm" widget="selection" groups="base.group_user"/>
-                   </field>
-                   <field name="incoterm" position="after">
-                       <field name="picking_policy" required="True"/>
-                   </field>
                    <xpath expr="//page[@string='Other Information']/group/group/field[@name='invoiced']" position="after">
                        <field name="shipped"/>
                    </xpath>
@@ -105,27 +98,26 @@
                            </tree>
                        </field>
                    </field>
-                   <field name="th_weight" position="before">
+                   <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='th_weight']" position="before">                   
                        <label for="delay"/>
                        <div>
                            <field name="delay" class="oe_inline"/> days
                        </div>
                        <field name="type"/>
-                   </field>
-                   <field name="address_allotment_id" position="after">
+                   </xpath>
+                   <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='address_allotment_id']" position="after">
                        <field name="property_ids" widget="many2many_tags"
                             groups="sale.group_mrp_properties"/>
-                   </field>
-                   <field name="tax_id" position="before">
+                   </xpath>
+                   <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='tax_id']" position="before">
                        <field name="product_packaging" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}" on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" colspan="3"/>
-                   </field>
-                   <field name="invoice_lines" position="after">
+                   </xpath>
+                   <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/div/field[@name='invoice_lines']" position="after">
                        <label for="move_ids"/>
                        <field name="move_ids" widget="many2many"/>
-                   </field>
+                   </xpath>
                    <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='sequence']" position="after">
                        <field name="delay" invisible="1"/>
-                       
                    </xpath>
                    <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='tax_id']" position="after">
                        <field name="type" invisible="1"/>
