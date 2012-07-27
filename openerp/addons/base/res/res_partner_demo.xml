@@ -168,10 +168,11 @@
             <field eval="0" name="supplier"/>
             <field eval="1" name="customer"/>
             <field name="is_company">1</field>
-            <field name="city">Paris</field>
-            <field name="zip">75016</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="street">45, Rue du Palais</field>
+            <field name="street">81 Academy Avenue</field>
+            <field name="city">Birmingham</field>
+            <field name="zip">B46 3AG</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
+            <field name="phone">+44 121 690 4596</field>
             <field name="email">email@wealthyandsons.com</field>
             <field name="website">www.wealthyandsons.com/</field>
         </record>
@@ -187,7 +188,6 @@
             <field name="zip">80352</field>
             <field model="res.country" name="country_id" search="[('name','=','Germany')]"/>
             <field name="phone">+49 8932 450203 </field>
-            
         </record>
         <record id="res_partner_9" model="res.partner">
             <field name="name">Best Designers</field>
