@@ -54,6 +54,10 @@ Indian Payroll Salary Rules.
          'report/payment_advice_report_view.xml',
 
      ],
+    'test': [
+        'test/payment_advice.yml',
+    ],
+
     'demo_xml': ['l10n_in_hr_payroll_demo.xml'],
     'installable': True
 }
