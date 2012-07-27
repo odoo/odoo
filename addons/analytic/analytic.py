@@ -220,7 +220,7 @@ class account_analytic_account(osv.osv):
 
     _order = 'name asc'
     _constraints = [
-        (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id']),
+        (check_recursion, 'Error! You cannot create recursive analytic accounts.', ['parent_id']),
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -321,7 +321,7 @@ class account_analytic_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_no_view, 'You can not create analytic line on view account.', ['account_id']),
+        (_check_no_view, 'You cannot create analytic line on view account.', ['account_id']),
     ]
 
 account_analytic_line()

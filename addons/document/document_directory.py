@@ -153,7 +153,7 @@ class document_directory(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error! You can not create recursive Directories.', ['parent_id'])
+        (_check_recursion, 'Error! You cannot create recursive Directories.', ['parent_id'])
     ]
 
     def __init__(self, *args, **kwargs):
