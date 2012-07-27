@@ -104,12 +104,15 @@ class res_partner_category(osv.osv):
 
 class res_partner_title(osv.osv):
     _name = 'res.partner.title'
+    _order = 'name'
     _columns = {
         'name': fields.char('Title', required=True, size=46, translate=True),
-        'shortcut': fields.char('Abbreviation', required=True, size=16, translate=True),
+        'shortcut': fields.char('Abbreviation', size=16, translate=True),
         'domain': fields.selection([('partner','Partner'),('contact','Contact')], 'Domain', required=True, size=24)
     }
-    _order = 'name'
+    _defaults = {
+        'domain': 'contact',
+    }
 
 def _lang_get(self, cr, uid, context=None):
     lang_pool = self.pool.get('res.lang')

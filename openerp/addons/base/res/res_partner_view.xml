@@ -33,7 +33,6 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="shortcut"/>
-                        <field name="domain"/>
                     </group>
                 </form>
             </field>
@@ -107,7 +106,7 @@
                             (<field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)
                         </div>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" default_focus="1"/>
                         </h1>
                         <field name="category_id" widget="many2many_tags" placeholder="Select Tags"/>
                     </div>
@@ -149,12 +148,12 @@
                             <field name="fax"/>
                             <field name="email" widget="email"/>
                             <field name="title" domain="[('domain', '=', 'contact')]"
-                                class="oe_no_button" attrs="{'invisible': [('is_company','=', True)]}"/>
+                                options='{"no_open": true}' attrs="{'invisible': [('is_company','=', True)]}" />
                         </group>
                     </group>
 
                     <notebook colspan="4">
-                        <page string="Contacts">
+                        <page string="Contacts" attrs="{'invisible': [('is_company','=',False)]}">
                             <field name="child_ids" context="{'default_parent_id': active_id}" mode="kanban">
                                 <kanban>
                                     <field name="color"/>
@@ -216,7 +215,7 @@
                                 </group>
                                 <group>
                                     <field name="customer"/>
-                                    <field name="supplier"/>
+                                    <field name="supplier" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="ref"/>
@@ -293,6 +292,7 @@
                     <field name="country_id"/>
                     <field name="mobile"/>
                     <field name="state_id"/>
+                    <field name="category_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette">
@@ -300,20 +300,20 @@
                                     <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_kanban_image"/>
                                 </a>
                                 <div class="oe_kanban_details">
-                                      <h4 class="oe_partner_heading"><a type="edit"><field name="name"/></a>
-                                      </h4>
-                                      <ul>
-                                          <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
-                                          <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
-                                          <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
-                                          <li t-if="record.city.raw_value and !record.country.raw_value"><field name="city"/></li>
-                                          <li t-if="!record.city.raw_value and record.country.raw_value"><field name="country"/></li>
-                                          <li t-if="record.city.raw_value and record.country.raw_value"><field name="city"/>, <field name="country"/></li>
-                                          <li t-if="record.mobile.raw_value"><field name="mobile"/></li>
-                                          <li t-if="record.phone.raw_value">Tel: <field name="phone"/></li>
-                                          <li t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></li>
-                                          <li t-if="record.email.raw_value"><a t-attf-href="mailto:#{record.email.raw_value}"><field name="email"/></a></li>
-                                      </ul>
+                                    <h4 class="oe_partner_heading"><a type="edit"><field name="name"/></a></h4>
+                                    <div class="oe_kanban_partner_categories"/>
+                                    <div class="oe_kanban_partner_links"/>
+                                    <ul>
+                                        <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
+                                        <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
+                                        <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
+                                        <li t-if="record.city.raw_value and !record.country.raw_value"><field name="city"/></li>
+                                        <li t-if="!record.city.raw_value and record.country.raw_value"><field name="country"/></li>
+                                        <li t-if="record.city.raw_value and record.country.raw_value"><field name="city"/>, <field name="country"/></li>
+                                        <li t-if="record.phone.raw_value">Tel: <field name="phone"/></li>
+                                        <li t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></li>
+                                        <li t-if="record.email.raw_value"><a t-attf-href="mailto:#{record.email.raw_value}"><field name="email"/></a></li>
+                                    </ul>
                                 </div>
                             </div>
 
