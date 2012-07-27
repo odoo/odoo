@@ -216,6 +216,12 @@ class hr_payslip_run(osv.osv):
     _columns = {
         'available_advice': fields.boolean('Made Payment Advice?', help="If this box is checked which means that Payment Advice exists for current batch", readonly=False),
     }
+    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
+        if not default:
+            default = {}
+        default = default.copy()
+        default['available_advice'] = False
+        return super(hr_payslip_run, self).copy(cr, uid, id, default, context=context)    
 
     def draft_payslip_run(self, cr, uid, ids, context=None):
         res = super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
@@ -302,6 +308,13 @@ class hr_payslip(osv.osv):
     _columns = {
         'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice')
     }
+    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
+        if not default:
+            default = {}
+        default = default.copy()
+        default['advice_id'] = False
+        return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
+    
 
 hr_payslip()
 
