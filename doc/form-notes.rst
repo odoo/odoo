@@ -47,3 +47,9 @@ Undocumented stuff
 
   * What is the difference between ``readonly`` and
     ``effective_readonly``?
+
+* No facilities for DOM events handling/delegations e.g. handling
+  keyup/keydown/keypress from a form fields into the form's user.
+
+  * Also no way to reverse from a DOM node (e.g. DOMEvent#target) back to a
+    form view field easily

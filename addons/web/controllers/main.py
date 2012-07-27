@@ -194,9 +194,12 @@ class WebClient(openerpweb.Controller):
             if mods is not None:
                 path += '?mods=' + mods
             return [path]
-        # old code to force cache reloading
-        #return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
-        return [el[1] for el in self.manifest_glob(req, mods, extension)]
+        no_sugar = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1
+        no_sugar = no_sugar or req.httprequest.environ.get('HTTP_REFERER', '').count("no_sugar") >= 1
+        if not no_sugar:
+            return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
+        else:
+            return [el[1] for el in self.manifest_glob(req, mods, extension)]
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods=None):

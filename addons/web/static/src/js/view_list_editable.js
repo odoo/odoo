@@ -12,6 +12,8 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             this._super.apply(this, arguments);
 
+            this._force_editability = null;
+            this._context_editable = false;
             this.editor = this.make_editor();
             // Stores records of {field, cell}, allows for re-rendering fields
             // depending on cell state during and after resize events
@@ -37,6 +39,11 @@ openerp.web.list_editable = function (instance) {
                 }
             });
 
+            this.on('edit:before', this, function (event) {
+                if (!self.editable() || self.editor.is_editing()) {
+                    event.cancel = true;
+                }
+            });
             this.on('edit:after', this, function () {
                 self.$element.add(self.$buttons).addClass('oe_editing');
             });
@@ -62,26 +69,16 @@ openerp.web.list_editable = function (instance) {
         do_edit: function (index, id, dataset) {
             _.extend(this.dataset, dataset);
         },
-        /**
-         * Sets editability status for the list, based on defaults, view
-         * architecture and the provided flag, if any.
-         *
-         * @param {Boolean} [force] forces the list to editability. Sets new row edition status to "bottom".
-         */
-        set_editable: function (force) {
-            // TODO: fix handling of editability status to be simpler & clearer & more coherent
-            // If ``force``, set editability to bottom
-            // otherwise rely on view default
-            // view' @editable is handled separately as we have not yet
-            // fetched and processed the view at this point.
-            this.options.editable = (
-                    ! this.options.read_only && ((force && "bottom") || this.defaults.editable));
+        editable: function () {
+            return this.fields_view.arch.attrs.editable
+                || this._context_editable
+                || this.options.editable;
         },
         /**
          * Replace do_search to handle editability process
          */
         do_search: function(domain, context, group_by) {
-            this.set_editable(context['set_editable']);
+            this._context_editable = !!context.set_editable;
             this._super.apply(this, arguments);
         },
         /**
@@ -89,7 +86,7 @@ openerp.web.list_editable = function (instance) {
          * as an editable row at the top or bottom of the list)
          */
         do_add_record: function () {
-            if (this.options.editable) {
+            if (this.editable()) {
                 this.$element.find('table:first').show();
                 this.$element.find('.oe_view_nocontent').remove();
                 this.start_edition();
@@ -103,9 +100,8 @@ openerp.web.list_editable = function (instance) {
                 this.editor.destroy();
             }
             // tree/@editable takes priority on everything else if present.
-            this.options.editable = ! this.options.read_only && (data.arch.attrs.editable || this.options.editable);
             var result = this._super(data, grouped);
-            if (this.options.editable) {
+            if (this.editable()) {
                 // FIXME: any hook available to ensure this is only done once?
                 this.$buttons
                     .off('click', '.oe_list_save')
@@ -202,12 +198,20 @@ openerp.web.list_editable = function (instance) {
                             return;
                         }
 
+                        // FIXME: need better way to get the field back from bubbling (delegated) DOM events somehow
+                        field.$element.attr('data-fieldname', field_name);
                         self.fields_for_resize.push({field: field, cell: cell});
                     }, options).pipe(function () {
                         $recordRow.addClass('oe_edition');
                         self.resize_fields();
                         return record.attributes;
                     });
+                }).fail(function () {
+                    // if the start_edition event is cancelled and it was a
+                    // creation, remove the newly-created empty record
+                    if (!record.get('id')) {
+                        self.records.remove(record);
+                    }
                 });
             });
         },
@@ -377,7 +381,7 @@ openerp.web.list_editable = function (instance) {
             return this.reload_record(record);
         },
         prepends_on_create: function () {
-            return this.options.editable === 'top';
+            return this.editable() === 'top';
         },
         setup_events: function () {
             var self = this;
@@ -399,18 +403,20 @@ openerp.web.list_editable = function (instance) {
          *
          * @private
          * @param {String} [next_record='succ'] method to call on the records collection to get the next record to edit
+         * @param {Object} [options]
+         * @param {String} [options.focus_field]
          * @return {*}
          */
-        _next: function (next_record) {
+        _next: function (next_record, options) {
             next_record = next_record || 'succ';
             var self = this;
             return this.save_edition().pipe(function (saveInfo) {
                 if (saveInfo.created) {
                     return self.start_edition();
                 }
-                return self.start_edition(
-                    self.records[next_record](
-                        saveInfo.record, {wraparound: true}));
+                var record = self.records[next_record](
+                        saveInfo.record, {wraparound: true});
+                return self.start_edition(record, options);
             });
         },
         keyup_ENTER: function () {
@@ -419,46 +425,142 @@ openerp.web.list_editable = function (instance) {
         keyup_ESCAPE: function () {
             return this.cancel_edition();
         },
+        /**
+         * Gets the selection range (start, end) for the provided element,
+         * returns ``null`` if it can't get a range.
+         *
+         * @private
+         */
         _text_selection_range: function (el) {
-            if (el.selectionStart !== undefined) {
+            var selectionStart;
+            try {
+                selectionStart = el.selectionStart;
+            } catch (e) {
+                // radio or checkbox throw on selectionStart access
+                return null;
+            }
+            if (selectionStart !== undefined) {
                 return {
-                    start: el.selectionStart,
+                    start: selectionStart,
                     end: el.selectionEnd
                 };
-            } else if(document.body.createTextRange) {
+            } else if (document.body.createTextRange) {
                 throw new Error("Implement text range handling for MSIE");
                 var sel = document.body.createTextRange();
                 if (sel.parentElement() === el) {
 
                 }
             }
+            // Element without selection ranges (select, div/@contenteditable)
+            return null;
         },
         _text_cursor: function (el) {
             var selection = this._text_selection_range(el);
-            if (selection.start !== selection.end) {
+            if (!selection) {
                 return null;
             }
-            return selection.start;
+            if (selection.start !== selection.end) {
+                return {position: null, collapsed: false};
+            }
+            return {position: selection.start, collapsed: true};
+        },
+        /**
+         * Checks if the cursor is at the start of the provided el
+         *
+         * @param {HTMLInputElement | HTMLTextAreaElement}
+         * @returns {Boolean}
+         * @private
+         */
+        _at_start: function (cursor, el) {
+            return cursor.collapsed && (cursor.position === 0);
+        },
+        /**
+         * Checks if the cursor is at the end of the provided el
+         *
+         * @param {HTMLInputElement | HTMLTextAreaElement}
+         * @returns {Boolean}
+         * @private
+         */
+        _at_end: function (cursor, el) {
+            return cursor.collapsed && (cursor.position === el.value.length);
+        },
+        /**
+         * @param DOMEvent event
+         * @param {String} record_direction direction to move into to get the next record (pred | succ)
+         * @param {Function} is_valid_move whether the edition should be moved to the next record
+         * @private
+         */
+        _key_move_record: function (event, record_direction, is_valid_move) {
+            if (!this.editor.is_editing('edit')) { return $.when(); }
+            var cursor = this._text_cursor(event.target);
+            // if text-based input (has a cursor)
+            //    and selecting (not collapsed) or not at a field boundary
+            //        don't move to the next record
+            if (cursor && !is_valid_move(event.target, cursor)) { return $.when(); }
+
+            event.preventDefault();
+            var source_field = $(event.target).closest('[data-fieldname]')
+                    .attr('data-fieldname');
+            return this._next(record_direction, {focus_field: source_field});
+
         },
         keydown_UP: function (e) {
-            if (!this.editor.is_editing('edit')) { return $.when(); }
-            // FIXME: assumes editable widgets are input-type elements
-            var index = this._text_cursor(e.target);
-            // If selecting or not at the start of the input
-            if (index === null || index !== 0) { return $.when(); }
-
-            e.preventDefault();
-            return this._next('pred');
+            var self = this;
+            return this._key_move_record(e, 'pred', function (el, cursor) {
+                return self._at_start(cursor, el);
+            });
         },
         keydown_DOWN: function (e) {
-            if (!this.editor.is_editing('edit')) { return $.when(); }
-            // FIXME: assumes editable widgets are input-type elements
-            var index = this._text_cursor(e.target);
-            // If selecting or not at the end of the input
-            if (index === null || index !== e.target.value.length) { return $.when(); }
+            var self = this;
+            return this._key_move_record(e, 'succ', function (el, cursor) {
+                return self._at_end(cursor, el);
+            });
+        },
 
-            e.preventDefault();
-            return this._next();
+        keydown_LEFT: function (e) {
+            // If the cursor is at the beginning of the field
+            var source_field = $(e.target).closest('[data-fieldname]')
+                    .attr('data-fieldname');
+            var cursor = this._text_cursor(e.target);
+            if (cursor && !this._at_start(cursor, e.target)) { return $.when(); }
+
+            var fields_order = this.editor.form.fields_order;
+            var field_index = _(fields_order).indexOf(source_field);
+
+            // Look for the closest visible form field to the left
+            var fields = this.editor.form.fields;
+            var field;
+            do {
+                if (--field_index < 0) { return $.when(); }
+
+                field = fields[fields_order[field_index]];
+            } while (!field.$element.is(':visible'));
+
+            // and focus it
+            field.focus();
+            return $.when();
+        },
+        keydown_RIGHT: function (e) {
+            // same as above, but with cursor at the end of the field and
+            // looking for new fields at the right
+            var source_field = $(e.target).closest('[data-fieldname]')
+                    .attr('data-fieldname');
+            var cursor = this._text_cursor(e.target);
+            if (cursor && !this._at_end(cursor, e.target)) { return $.when(); }
+
+            var fields_order = this.editor.form.fields_order;
+            var field_index = _(fields_order).indexOf(source_field);
+
+            var fields = this.editor.form.fields;
+            var field;
+            do {
+                if (++field_index >= fields_order.length) { return $.when(); }
+
+                field = fields[fields_order[field_index]];
+            } while (!field.$element.is(':visible'));
+
+            field.focus();
+            return $.when();
         },
         keydown_TAB: function (e) {
             var form = this.editor.form;
@@ -642,7 +744,7 @@ openerp.web.list_editable = function (instance) {
 
     instance.web.ListView.List.include(/** @lends instance.web.ListView.List# */{
         row_clicked: function (event) {
-            if (!this.options.editable) {
+            if (!this.view.editable()) {
                 return this._super.apply(this, arguments);
             }
             var record_id = $(event.currentTarget).data('id');

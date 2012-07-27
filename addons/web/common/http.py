@@ -425,8 +425,8 @@ class DisableCacheMiddleware(object):
         def start_wrapped(status, headers):
             referer = environ.get('HTTP_REFERER', '')
             parsed = urlparse.urlparse(referer)
-            debug = not urlparse.parse_qs(parsed.query).has_key('debug')
-            filtered_headers = [(k,v) for k,v in headers if not (k=='Last-Modified' or (debug and k=='Cache-Control'))] 
+            debug = parsed.query.count('debug') >= 1
+            filtered_headers = [(k,v) for k,v in headers if not (k=='Last-Modified' or (debug and (k=='Cache-Control' or k=='Expires')))]
             if debug:
                 filtered_headers.append(('Cache-Control', 'no-cache'))
             start_response(status, filtered_headers)
