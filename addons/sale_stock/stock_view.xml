@@ -77,7 +77,7 @@
             <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_to_invoice': 1, 'search_default_done': 1, 'default_invoice_state': '2binvoiced'}</field>
             <field name="search_view_id" ref="stock.view_picking_out_search"/>
         </record>
-        <menuitem action="outgoing_picking_list_to_invoice" id="menu_action_picking_list_to_invoice" parent="base.menu_invoiced" groups="group_invoice_deli_orders" sequence="20"/>
+        <menuitem action="outgoing_picking_list_to_invoice" id="menu_action_picking_list_to_invoice" parent="base.menu_invoiced" groups="sale_stock.group_invoice_deli_orders" sequence="20"/>
 
     </data>
 </openerp>
