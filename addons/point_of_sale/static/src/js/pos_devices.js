@@ -222,11 +222,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
             this.action_callback_stack = [];
 
-            this.price_prefix_set = attributes.price_prefix_set     ||  {'02':'', '22':'', '24':'', '26':'', '28':''};
-            this.weight_prefix_set = attributes.weight_prefix_set   ||  {'21':'','23':'','27':'','29':'','25':''};
-            this.client_prefix_set = attributes.weight_prefix_set   ||  {'42':''};
-            this.cashier_prefix_set = attributes.weight_prefix_set  ||  {'40':''};
-            this.discount_prefix_set = attributes.weight_prefix_set ||  {'44':''};
+            this.weight_prefix_set   = attributes.weight_prefix_set   ||  {'21':''};
+            this.discount_prefix_set = attributes.discount_prefix_set ||  {'22':''};
+            this.price_prefix_set    = attributes.price_prefix_set    ||  {'23':''};
+            this.cashier_prefix_set  = attributes.cashier_prefix_set  ||  {'041':''};
+            this.client_prefix_set   = attributes.client_prefix_set   ||  {'042':''};
         },
         save_callbacks: function(){
             var callbacks = {};
@@ -331,37 +331,37 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 value: 0,
                 unit: 'none',
             };
-            var prefix2 = ean.substring(0,2);
 
-            if(!this.check_ean(ean)){
+            function match_prefix(prefix_set, type){
+                for(prefix in prefix_set){
+                    if(ean.substring(0,prefix.length) === prefix){
+                        parse_result.prefix = prefix;
+                        parse_result.type = type;
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            if (!this.check_ean(ean)){
                 parse_result.type = 'error';
-            }else if (prefix2 in this.price_prefix_set){
-                parse_result.type = 'price';
-                parse_result.prefix = prefix2;
+            } else if( match_prefix(this.price_prefix_set,'price')){
                 parse_result.id = ean.substring(0,7);
                 parse_result.value = Number(ean.substring(7,12))/100.0;
                 parse_result.unit  = 'euro';
-            } else if (prefix2 in this.weight_prefix_set){
-                parse_result.type = 'weight';
-                parse_result.prefix = prefix2;
+            } else if( match_prefix(this.weight_prefix_set,'weight')){
                 parse_result.id = ean.substring(0,7);
                 parse_result.value = Number(ean.substring(7,12))/1000.0;
                 parse_result.unit = 'Kg';
-            }else if (prefix2 in this.client_prefix_set){
-                parse_result.type = 'client';
-                parse_result.prefix = prefix2;
+            } else if( match_prefix(this.client_prefix_set,'client')){
                 parse_result.id = ean.substring(0,7);
-            }else if (prefix2 in this.cashier_prefix_set){
-                parse_result.type = 'cashier';
-                parse_result.prefix = prefix2;
+            } else if( match_prefix(this.cashier_prefix_set,'cashier')){
                 parse_result.id = ean.substring(0,7);
-            }else if (prefix2 in this.discount_prefix_set){
-                parse_result.type  = 'discount';
-                parse_result.prefix = prefix2;
+            } else if( match_prefix(this.discount_prefix_set,'discount')){
                 parse_result.id    = ean.substring(0,7);
                 parse_result.value = Number(ean.substring(7,12))/100.0;
                 parse_result.unit  = '%';
-            }else{
+            } else {
                 parse_result.type = 'unit';
                 parse_result.prefix = '';
                 parse_result.id = ean;
