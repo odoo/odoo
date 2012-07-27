@@ -433,12 +433,12 @@ class mail_message(osv.osv):
                 msg['headers'].update({item[0]: item[1]})
         if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', ''):
             encoding = msg_txt.get_content_charset()
-            body = msg_txt.get_payload(decode=True)
+            body = tools.ustr(msg_txt.get_payload(decode=True), encoding, errors='replace')
             if 'text/html' in msg.get('content-type', ''):
                 msg['body_html'] =  body
                 msg['subtype'] = 'html'
                 body = tools.html2plaintext(body)
-            msg['body_text'] = tools.ustr(body, encoding)
+            msg['body_text'] = tools.ustr(body, encoding, errors='replace')
 
         attachments = []
         if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
@@ -457,7 +457,7 @@ class mail_message(osv.osv):
                     content = part.get_payload(decode=True)
                     if filename:
                         attachments.append((filename, content))
-                    content = tools.ustr(content, encoding)
+                    content = tools.ustr(content, encoding, errors='replace')
                     if part.get_content_subtype() == 'html':
                         msg['body_html'] = content
                         msg['subtype'] = 'html' # html version prevails
@@ -470,7 +470,7 @@ class mail_message(osv.osv):
                         attachments.append((filename,part.get_payload(decode=True)))
                     else:
                         res = part.get_payload(decode=True)
-                        body += tools.ustr(res, encoding)
+                        body += tools.ustr(res, encoding, errors='replace')
 
             msg['body_text'] = body
         msg['attachments'] = attachments
