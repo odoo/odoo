@@ -1,4 +1,26 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 from openerp.osv import osv, fields
+from openerp import SUPERUSER_ID
 
 class crm_contact_us(osv.TransientModel):
     """ Create new leads through the "contact us" form """
@@ -9,13 +31,32 @@ class crm_contact_us(osv.TransientModel):
         'company_ids' : fields.many2many('res.company', string='Companies', readonly=True),
     }
 
-    """ Little trick to display companies in our wizard view """
     def _get_companies(self, cr, uid, context=None):
+        """
+        Fetch companies in order to display them in the wizard view
+
+        @return a list of ids of the companies
+        """
         r = self.pool.get('res.company').search(cr, uid, [], context=context)
         return r
 
+    def _get_current_user_email(self, cr, uid, context=None):
+        """
+        If the user is logged in (i.e. not anonymous), get the user's email to
+        pre-fill the email_from field.
+
+        @return current user's email if the user isn't "anonymous", None otherwise
+        """
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+
+        if (user.login != 'anonymous'):
+            return user.user_email
+        else:
+            return None
+
     _defaults = {
-        'company_ids' : _get_companies
+        'email_from' : _get_current_user_email,
+        'company_ids' : _get_companies,
     }
 
     def create(self, cr, uid, values, context=None):
@@ -33,21 +74,11 @@ class crm_contact_us(osv.TransientModel):
         models implied (like mail.thread, among others, that performs a read
         when its create() method is called (in method message_get_subscribers()),
         it is quite complicated to set proper rights for this object.
-        Therefore, user #1 will perform the creation until a better workaround
-        is figured out.
+        Therefore, user SUPERUSER_ID will perform the creation until a better
+        workaround is figured out.
         """
         values['contact_name'] = values['name']
-
-        """
-        The email_from field only makes sense if the form is submitted by an
-        anonymous user; otherwise it should be the current user's email.
-        """
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-
-        if (user.login != 'anonymous'):
-            values['email_from'] = user.user_email
-
-        crm_lead.create(cr, 1, dict(values,user_id=False), context)
+        crm_lead.create(cr, SUPERUSER_ID, dict(values,user_id=False), context)
 
         """
         Create an empty record in the portal_crm.crm_contact_us table.
