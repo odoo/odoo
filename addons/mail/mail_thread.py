@@ -461,7 +461,8 @@ class mail_thread(osv.osv):
             'partner_id': False
         }
         if email:
-            email = to_email(email)[0]
+            email = to_email(email) and to_email(email)[0]
+        if email:
             address_ids = address_pool.search(cr, uid, [('email', '=', email)])
             if address_ids:
                 address = address_pool.browse(cr, uid, address_ids[0])
