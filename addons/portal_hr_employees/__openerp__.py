@@ -32,7 +32,7 @@ portal_crm (which creates the contact page) are installed.
     'author': 'OpenERP SA',
     'depends': ['hr','portal_crm'],
     'data': [
-        'portal_hr_employee_view.xml',
+        'hr_employee_view.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,

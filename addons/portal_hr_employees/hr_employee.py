@@ -40,7 +40,7 @@ class crm_contact_us(osv.TransientModel):
     }
 
 class hr_employee(osv.osv):
-    _description = "Portal CRM employee"
+    _description = "Portal employee"
     _inherit = 'hr.employee'
 
     """
