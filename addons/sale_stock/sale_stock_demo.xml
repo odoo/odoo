@@ -12,15 +12,18 @@
             <field name="order_policy">manual</field>
         </record>
       
+      <workflow action="order_confirm" model="sale.order" ref="sale.order5"/>
+      
         <record id="sale.order6" model="sale.order">
             <field name="order_policy">manual</field>
         </record>   
+        <workflow action="order_confirm" model="sale.order" ref="sale.order6"/>
+        <workflow action="manual_invoice" model="sale.order" ref="sale.order6"/>
                 
         <record id="sale.order7" model="sale.order">
             <field name="order_policy">manual</field>
         </record>
         
-        <workflow action="order_confirm" model="sale.order" ref="sale.order5"/>
         
         <record id="sale.order" model="sale.order">
             <field name="order_policy">picking</field>

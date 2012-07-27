@@ -27,7 +27,7 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
     _columns = {
         'group_invoice_deli_orders': fields.boolean('Based on Delivery Orders',
-            implied_group='sale.group_invoice_deli_orders',
+            implied_group='group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
         'task_work': fields.boolean('Based on Task Activities',
             help="""Lets you transfer the entries under tasks defined for Project Management to
@@ -45,7 +45,7 @@ class sale_configuration(osv.osv_memory):
         'default_picking_policy' : fields.boolean("Configurable Shipping Policy",
             help = "You will be able to configure, per sale order, if you deliver all  products at once or if you deliver each product when it is available.  This may have an impact on the shipping price."),
         'group_mrp_properties': fields.boolean('Properties on Lines',
-            implied_group='sale.group_mrp_properties',
+            implied_group='group_mrp_properties',
             help="Allows you to tag sale order lines with properties."),
         'group_multiple_shops': fields.boolean("Manage Multiple Shops",
             implied_group='stock.group_locations',

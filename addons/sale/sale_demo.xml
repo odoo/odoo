@@ -111,8 +111,6 @@
             <field name="product_uom_qty">3</field>
         </record>
 
-        <workflow action="order_confirm" model="sale.order" ref="order6"/>
-
 
         <!--Resource: sale.order-->
         
@@ -195,7 +193,7 @@
             <field name="product_uom_qty">4</field>
             <field name="price_unit">500</field>
         </record>
-
+        <workflow action="order_confirm" model="sale.order" ref="order6"/>
         <!--Resource: sale.order-->
 
         <record id="order7" model="sale.order">
