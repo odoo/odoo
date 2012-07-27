@@ -1051,12 +1051,12 @@
 
         <menuitem action="action_pos_session_opening" parent="menu_point_of_sale" id="menu_pos_session_opening" sequence="0" />
 
-        <record model="ir.ui.view" id="view_pos_session_form">
+        <record model="ir.ui.view" id="pos_ean13_generator">
             <field name="name">pos.ean_wizard</field>
             <field name="model">pos.ean_wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="ASDFDASF of Sale Session" version="7.0">  
+                <form string="Ean13 Generator" version="7.0">  
                     <field name="ean13_pattern"/>
                     <footer>
                         <button name="sanitize_ean13" type="object" string="Apply"/>
