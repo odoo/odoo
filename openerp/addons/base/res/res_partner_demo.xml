@@ -18,15 +18,15 @@
             <field name="name">Employee</field>
         </record>
         <record id="res_partner_category_4" model="res.partner.category">
-            <field name="name">Gold Partner</field>
+            <field name="name">Gold</field>
             <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_5" model="res.partner.category">
-            <field name="name">Silver Partner</field>
+            <field name="name">Silver</field>
             <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_6" model="res.partner.category">
-            <field name="name">Ready Partner</field>
+            <field name="name">Ready</field>
             <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_7" model="res.partner.category">
@@ -39,10 +39,6 @@
         </record>
         <record id="res_partner_category_9" model="res.partner.category">
             <field name="name">Components Buyer</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_10" model="res.partner.category">
-            <field name="name">Important Customer</field>
             <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_11" model="res.partner.category">
@@ -125,7 +121,7 @@
         <record id="res_partner_3" model="res.partner">
             <field name="name">China Export</field>
             <field name="supplier">1</field>
-            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_13'), ref('res_partner_category_15')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_14')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="city">Shanghai</field>
             <field name="zip">200000</field>
@@ -138,7 +134,7 @@
         
         <record id="res_partner_4" model="res.partner">
             <field name="name">Delta PC</field>
-            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_12')])]" name="category_id"/>
             <field eval="0" name="customer"/>
             <field eval="1" name="supplier"/>
             <field name="is_company">1</field>
@@ -156,6 +152,7 @@
             <field name="name">Epic Technologies</field>
             <field eval="[(6, 0, [ref('res_partner_category_2')])]" name="category_id"/>
             <field name="is_company">1</field>
+            <field eval="0" name="customer"/>
             <field model="res.country" name="country_id" search="[('code','=','us')]"/>
             <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
             <field name="zip">60610</field>
@@ -182,7 +179,7 @@
 
         <record id="res_partner_7" model="res.partner">
             <field name="name">Bank Wealthy and sons</field>
-            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_10')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_4')])]" name="category_id"/>
             <field eval="0" name="supplier"/>
             <field eval="1" name="customer"/>
             <field name="is_company">1</field>
@@ -250,7 +247,7 @@
 
         <record id="res_partner_12" model="res.partner">
             <field name="name">Camptocamp</field>
-            <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_11'), ref('res_partner_category_4')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_11'), ref('res_partner_category_4')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field name="customer">1</field>
             <field name="is_company">1</field>
@@ -336,7 +333,7 @@
         <record id="res_partner_18" model="res.partner">
             <field name="name">Think Big Systems</field>
             <field name="is_company">1</field>
-            <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_10')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
             <field name="city">Boston</field>
             <field name="zip">MA 02203</field>
             <field name="email">info@thinkbig.com</field>
