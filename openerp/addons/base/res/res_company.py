@@ -230,7 +230,9 @@ class res_company(osv.osv):
 
     def _get_euro(self, cr, uid, context=None):
         try:
-            return self.pool.get('res.currency').search(cr, uid, [])[0]
+            data_obj = self.pool.get('ir.model.data')
+            data_id = data_obj._get_id(cr, uid, 'base', 'EUR')
+            return data_obj.browse(cr, uid, data_id, context=context).res_id
         except:
             return False
 
