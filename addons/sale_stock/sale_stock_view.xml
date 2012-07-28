@@ -125,6 +125,9 @@
                    <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='th_weight']" position="after">
                        <field name="product_packaging" invisible="1"/>
                    </xpath>
+                   <xpath expr="//page[@string='Other Information']/group/group[@name='logistics']/field[@name='order_policy']" position="replace">
+                       <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
+                   </xpath>
                    <xpath expr="//page[@string='Other Information']/group/group[@name='logistics']/field[@name='order_policy']" position="before">
                        <field name="incoterm" widget="selection" groups="base.group_user"/>
                        <field name="picking_policy" required="True"/>
