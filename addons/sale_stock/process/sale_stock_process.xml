@@ -51,6 +51,32 @@
             <field eval="0" name="flow_start"/>
         </record>
 
+        <record id="process_node_invoiceafterdelivery0" model="process.node">
+            <field name="menu_id" ref="account.menu_action_invoice_tree1"/>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Based on the shipped or on the ordered quantities.&quot;&quot;&quot;" name="note"/>
+            <field name="process_id" ref="sale.process_process_salesprocess0"/>
+            <field name="subflow_id" ref="account.process_process_invoiceprocess0"/>
+            <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
+
+
+
+        <!--
+            Process Condition
+        -->
+
+        <record id="process_condition_conditionafterdelivery0" model="process.condition">
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="node_id" ref="process_node_invoiceafterdelivery0"/>
+            <field eval="&quot;&quot;&quot;object.order_policy=='postpaid'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="&quot;&quot;&quot;condition_after_delivery&quot;&quot;&quot;" name="name"/>
+        </record>
+
+
         <!--
             Process Transition
         -->
