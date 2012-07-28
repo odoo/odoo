@@ -64,7 +64,7 @@
                         <button name="ship_cancel" states="shipping_except" string="Cancel"/>
                     </xpath>
                     <xpath expr="/form/header/span/button[@name='action_view_delivery']" position="after">
-                        <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice" type="action" states="manual"/>
+                        <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice" class="oe_highlight" type="action" states="manual"/>
                     </xpath>
                     <field name="state" position="replace">
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
