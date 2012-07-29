@@ -244,62 +244,15 @@ class sale_order(osv.osv):
         
     
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
-        res = False
-        invoices = {}
-        invoice_ids = []
+        res = super(sale_order,self).action_invoice_create( cr, uid, ids, grouped=grouped, states=states, date_inv = date_inv, context=context)
         picking_obj = self.pool.get('stock.picking')
-        invoice = self.pool.get('account.invoice')
-        obj_sale_order_line = self.pool.get('sale.order.line')
-        partner_currency = {}
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
         # last day of the last month as invoice date
-        if date_inv:
-            context['date_inv'] = date_inv
-        for o in self.browse(cr, uid, ids, context=context):
-            currency_id = o.pricelist_id.currency_id.id
-            if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
-                raise osv.except_osv(
-                    _('Error !'),
-                    _('You cannot group sales having different currencies for the same partner.'))
-
-            partner_currency[o.partner_id.id] = currency_id
-            lines = []
-            for line in o.order_line:
-                if line.invoiced:
-                    continue
-                elif (line.state in states):
-                    lines.append(line.id)
-            created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
-            if created_lines:
-                invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
-        if not invoices:
-            for o in self.browse(cr, uid, ids, context=context):
-                for i in o.invoice_ids:
-                    if i.state == 'draft':
-                        return i.id
-        for val in invoices.values():
-            if grouped:
-                res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x, y: x + y, [l for o, l in val], []), context=context)
-                invoice_ref = ''
-                for o, l in val:
-                    invoice_ref += o.name + '|'
-                    self.write(cr, uid, [o.id], {'state': 'progress'})
-                    if o.order_policy == 'picking':
-                        picking_obj.write(cr, uid, map(lambda x: x.id, o.picking_ids), {'invoice_state': 'invoiced'})
-                    cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
-                invoice.write(cr, uid, [res], {'origin': invoice_ref, 'name': invoice_ref})
-            else:
-                for order, il in val:
-                    res = self._make_invoice(cr, uid, order, il, context=context)
-                    invoice_ids.append(res)
-                    self.write(cr, uid, [order.id], {'state': 'progress'})
-                    if order.order_policy == 'picking':
-                        picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
-                    cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
-        if res:
-            self.invoice_send_note(cr, uid, ids, res, context)
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.order_policy == 'picking':
+                picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
         return res
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -613,15 +566,24 @@ class sale_order_line(osv.osv):
          }
     
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
+        res = super(sale_order_line, self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)
+        
         def _get_line_qty(line):
             if not (line.order_id.invoice_quantity=='order') or line.procurement_id:
-                return self.pool.get('procurement.order').quantity_get(cr, uid, line.procurement_id.id, context=context)
+                return self.pool.get('procurement.order').quantity_get(cr, uid,
+                        line.procurement_id.id, context=context)
        
         def _get_line_uom(line):
-            if not (line.order_id.invoice_quantity=='order') or  line.procurement_id:
-                return self.pool.get('procurement.order').uom_get(cr, uid, line.procurement_id.id, context=context)
-            
-        return super(sale_order_line, self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)   
+            if not (line.order_id.invoice_quantity=='order') or line.procurement_id:
+                return self.pool.get('procurement.order').uom_get(cr, uid,
+                        line.procurement_id.id, context=context)
+        uosqty = _get_line_qty(line)
+        uos_id = _get_line_uom(line)
+        if uosqty:
+                pu = round(line.price_unit * line.product_uom_qty / uosqty,
+                        self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price'))
+        res.update({'price_unit': pu, 'quantity': uosqty,'uos_id': uos_id})
+        return res
     
     def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
                                    partner_id=False, packaging=False, flag=False, context=None):
