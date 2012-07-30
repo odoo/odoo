@@ -350,7 +350,7 @@ instance.web_view_editor.ViewEditor =   instance.web.OldWidget.extend({
         this.edit_xml_dialog.$element.find("tr[id=viewedit-" + row_id + "]").addClass('ui-selected');
     },
     do_parent_img_hide_show: function(img) {
-        if ($(img).attr('src') == '/web/static/src/img/collapse.gif') {
+        if (_.str.include($(img).attr('src'), '/web/static/src/img/collapse.gif')) {
             $(img).attr('src', '/web/static/src/img/expand.gif');
             this.on_expand(img);
         } else {
