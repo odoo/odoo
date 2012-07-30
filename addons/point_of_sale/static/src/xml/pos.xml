@@ -83,7 +83,7 @@
     <t t-name="CategoryButton">
         <li class='category-button'>
             <div class="category-img">
-                <img t-att-src="'data:image/gif;base64,'+ category.category_image_small" />
+                <img t-att-src="'data:image/gif;base64,'+ category.image_medium" />
             </div>
             <div class="category-name">
                 <t t-esc="category.name"/>
@@ -342,7 +342,7 @@
         <li class='product'>
             <a href="#">
                 <div class="product-img">
-                    <img t-att-src="'data:image/gif;base64,'+ widget.model.get('image_small')" />
+                    <img t-att-src="'data:image/gif;base64,'+ widget.model.get('image_medium')" />
                     <t t-if="!widget.model.get('to_weight')">
                         <span class="price-tag">
                             <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>

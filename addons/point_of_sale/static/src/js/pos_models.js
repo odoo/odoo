@@ -139,7 +139,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.set('currency',currencies[0]);
                 });
 
-            var cat_def = fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'category_image_small'])
+            var cat_def = fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'image_medium'])
                 .pipe(function(result){
                     return self.set({'categories': result});
                 });
@@ -219,7 +219,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 return fetch( 
                                     'product.product', 
                                     //context {pricelist: shop.pricelist_id[0]} 
-                                    ['name', 'list_price','price','pos_categ_id', 'taxes_id','image_small', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
+                                    ['name', 'list_price','price','pos_categ_id', 'taxes_id','image_medium', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
                                     [['pos_categ_id','!=', false]],
                                     {pricelist: shops[0].pricelist_id[0]} // context for price
                                     );
