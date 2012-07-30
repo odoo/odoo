@@ -62,6 +62,7 @@ The main features of the module are:
     'depends': ['base', 'base_tools'],
     'data': [
         'wizard/mail_compose_message_view.xml',
+        'mail_message_subtype.xml',
         'mail_message_view.xml',
         'mail_subscription_view.xml',
         'mail_thread_view.xml',

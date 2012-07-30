@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import mail_message_subtype
 import mail_message
 import mail_thread
 import mail_group
