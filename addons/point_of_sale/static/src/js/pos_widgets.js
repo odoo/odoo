@@ -112,7 +112,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template:'OrderWidget',
         init: function(parent, options) {
             this._super(parent,options);
-            this.compact = options.compact !== undefined ? options.compact : true;   
+            this.display_mode = options.display_mode || 'numpad';   // 'maximized' | 'actionbar' | 'numpad'
             this.set_numpad_state(options.numpadState);
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
             this.bind_orderline_events();
@@ -165,9 +165,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
 
-            if(!this.compact){
-                console.log('not compact');
+            if(this.display_mode === 'maximized'){
                 $('.point-of-sale .order-container').css({'bottom':'0px'});
+            }else if(this.display_mode === 'actionbar'){
+                $('.point-of-sale .order-container').css({'bottom':'105px'});
+            }else if(this.display_mode !== 'numpad'){
+                console.error('ERROR: OrderWidget renderElement(): wrong display_mode:',this.display_mode);
             }
 
             var $content = this.$('.orderlines');
@@ -212,10 +215,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var total = order ? order.getTotal() : 0;
             this.$('.summary .value.total').html(this.format_currency(total));
         },
-        set_compact: function(compact){
-            console.log('set_compact',compact);
-            if(this.compact !== compact){
-                this.compact = compact;
+        set_display_mode: function(mode){
+            if(this.display_mode !== mode){
+                this.display_mode = mode;
                 this.renderElement();
             }
         },
@@ -368,7 +370,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         add_new_button: function(button_options){
             var button = new module.ActionButtonWidget(this,button_options);
             this.button_list.push(button);
-            button.appendTo($('.pos-actionbar-button-list'));
+            button.appendTo(this.$('.pos-actionbar-button-list'));
             return button;
         },
         show:function(){
@@ -671,14 +673,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
 
             this.numpad_visible = true;
+            this.left_action_bar_visible = true;
             this.leftpane_visible = true;
             this.leftpane_width   = '440px';
             this.cashier_controls_visible = true;
-            var degree = 0;
+
             /*
              //Epileptic mode
             setInterval(function(){ 
-                $('body').css({'-webkit-filter':'sepia('+Math.round(Math.random())+') hue-rotate('+Math.random()*360+'deg) blur('+Math.random()*5+'px)' });
+                $('body').css({'-webkit-filter':'hue-rotate('+Math.random()*360+'deg)' });
             },100);
             */
             
@@ -718,8 +721,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
                 }
             
-                self.$('.loader').animate({opacity:0},3000,'swing',function(){$('.loader').hide();});
+                self.$('.loader').animate({opacity:0},3000,'swing',function(){self.$('.loader').hide();});
                 self.$('.loader img').hide();
+
+                if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
+                    window.pos = self.pos;
+                    window.pos_widget = self.pos_widget;
+                }
 
             },function(){   // error when loading models data from the backend
                 self.$('.loader img').hide();
@@ -733,7 +741,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     }, self));
             });
         },
-
         
         // This method instantiates all the screens, widgets, etc. If you want to add new screens change the
         // startup screen, etc, override this method.
@@ -787,6 +794,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.action_bar = new module.ActionBarWidget(this);
             this.action_bar.appendTo($(".point-of-sale #rightpane"));
+
+            this.left_action_bar = new module.ActionBarWidget(this);
+            this.left_action_bar.appendTo($(".point-of-sale #leftpane"));
 
             this.paypad = new module.PaypadWidget(this, {});
             this.paypad.replace($('#placeholder-PaypadWidget'));
@@ -895,16 +905,35 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(visible !== this.numpad_visible){
                 this.numpad_visible = visible;
                 if(visible){
+                    this.set_left_action_bar_visible(false);
                     this.numpad.show();
                     this.paypad.show();
-                    this.order_widget.set_compact(true);
+                    this.order_widget.set_display_mode('numpad');
                 }else{
                     this.numpad.hide();
                     this.paypad.hide();
-                    this.order_widget.set_compact(false);
+                    if(this.order_widget.display_mode === 'numpad'){
+                        this.order_widget.set_display_mode('maximized');
+                    }
                 }
             }
         },
+        set_left_action_bar_visible: function(visible){
+            if(visible !== this.left_action_bar_visible){
+                this.left_action_bar_visible = visible;
+                if(visible){
+                    this.set_numpad_visible(false);
+                    this.left_action_bar.show();
+                    this.order_widget.set_display_mode('actionbar');
+                }else{
+                    this.left_action_bar.hide();
+                    if(this.order_widget.display_mode === 'actionbar'){
+                        this.order_widget.set_display_mode('maximized');
+                    }
+                }
+            }
+        },
+
         //shows or hide the leftpane (contains the list of orderlines, the numpad, the paypad, etc.)
         set_leftpane_visible: function(visible){
             if(visible !== this.leftpane_visible){

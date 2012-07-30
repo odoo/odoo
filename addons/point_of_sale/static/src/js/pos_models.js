@@ -608,15 +608,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return false;
             }else if(this.get_discount() > 0){             // we don't merge discounted orderlines
                 return false;
-            }else if(this.get_product_type() === 'unit'){ 
-                return true;
-            }else if(this.get_product_type() === 'weight'){
-                return true;
-            }else if(this.get_product_type() === 'price'){
-                return this.get_product().get('list_price') === orderline.get_product().get('list_price');
-            }else{
-                console.error('point_of_sale/pos_models.js/Orderline.can_be_merged_with() : unknown product type:',this.get('product_type'));
+            }else if(this.price !== orderline.price){
                 return false;
+            }else{ 
+                return true;
             }
         },
         merge: function(orderline){

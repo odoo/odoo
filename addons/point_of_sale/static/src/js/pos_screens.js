@@ -160,12 +160,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // there's an error.
         barcode_product_action: function(ean){
             if(this.pos_widget.scan_product(ean)){
-                this.pos.proxy.scan_item_success();
+                this.pos.proxy.scan_item_success(ean);
                 if(this.barcode_product_screen){ 
                     this.pos_widget.screen_selector.set_current_screen(this.barcode_product_screen);
                 }
             }else{
-                if(this.barcode_product_error_popup){
+                this.pos.proxy.scan_item_error_unrecognized(ean);
+                if(this.barcode_product_error_popup && this.pos_widget.screen_selector.get_user_mode() !== 'cashier'){
                     this.pos_widget.screen_selector.show_popup(this.barcode_product_error_popup);
                 }
             }
@@ -186,6 +187,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     return true;
                 }
             }
+            this.pos.proxy.scan_item_unrecognized(ean);
             return false;
         },
         
@@ -199,9 +201,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 if(users[i].ean13 === ean.ean){
                     this.pos.get('selectedOrder').set_client(users[i]);
                     this.pos_widget.username.refresh();
+                    this.pos.proxy.scan_item_success(ean);
                     return true;
                 }
             }
+            this.pos.proxy.scan_item_unrecognized(ean);
             return false;
             //TODO start the transaction
         },
@@ -209,6 +213,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // what happens when a discount barcode is scanned : the default behavior
         // is to set the discount on the last order.
         barcode_discount_action: function(ean){
+            this.pos.proxy.scan_item_success(ean);
             var last_orderline = this.pos.get('selectedOrder').getLastOrderline();
             if(last_orderline){
                 last_orderline.set_discount(ean.value)
@@ -241,6 +246,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // this method shows the screen and sets up all the widget related to this screen. Extend this method
         // if you want to alter the behavior of the screen.
         show: function(){
+            var self = this;
+
             this.hidden = false;
             if(this.$element){
                 this.$element.show();
@@ -251,14 +258,22 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }else{
                 this.hide_action_bar();
             }
+            
+            // we add the help button by default. we do this because the buttons are cleared on each refresh so that
+            // the button stay local to each screen
+            this.pos_widget.left_action_bar.add_new_button({
+                    label: 'help',
+                    icon: '/point_of_sale/static/src/img/icons/png48/help.png',
+                    click: function(){ self.help_button_action(); },
+                });
 
             var self = this;
             var cashier_mode = this.pos_widget.screen_selector.get_user_mode() === 'cashier';
 
             this.pos_widget.set_numpad_visible(this.show_numpad && cashier_mode);
             this.pos_widget.set_leftpane_visible(this.show_leftpane);
+            this.pos_widget.set_left_action_bar_visible(this.show_leftpane && !cashier_mode);
             this.pos_widget.set_cashier_controls_visible(cashier_mode);
-            /*this.pos_widget.action_bar.set_element_visible('help-button',  !cashier_mode, function(){ self.help_button_action(); });*/
 
             if(cashier_mode && this.pos.use_selfcheckout){
                 this.pos_widget.client_button.show();
@@ -287,9 +302,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(this.pos.barcode_reader){
                 this.pos.barcode_reader.reset_action_callbacks();
             }
-            if(this.pos_widget.action_bar){
-                this.pos_widget.action_bar.destroy_buttons();
-            }
+            this.pos_widget.action_bar.destroy_buttons();
+            this.pos_widget.left_action_bar.destroy_buttons();
         },
 
         // this methods hides the screen. It's not a good place to put your cleanup stuff as it is called on the
@@ -559,12 +573,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         barcode_client_action: function(ean){
             this._super(ean);
-            this.pos_widget.screen_selector.set_current_screen(self.next_screen);
+            this.pos_widget.screen_selector.set_current_screen(this.next_screen);
         },
         
         show: function(){
             this._super();
             var self = this;
+            $('.goodbye-message').css({opacity:1}).show();
+            setTimeout(function(){
+                console.log('kill');
+                $('.goodbye-message').animate({opacity:0},500,'swing',function(){$('.goodbye-message').hide();});
+            },3000);
         },
     });
     
@@ -731,18 +750,23 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         validateCurrentOrder: function() {
             var self = this;
             var currentOrder = this.pos.get('selectedOrder');
-
-            this.validate_button.$element.attr('disabled','disabled');  //FIXME is the css actually using this attr ? 
+            if(this.busy){
+                return;
+            }else{
+                this.busy = true;
+            }
+            this.validate_button.$element.addClass('disabled');
 
             this.pos.push_order(currentOrder.exportAsJSON()) 
                 .then(function() {
-                    self.validate_button.$element.removeAttr('disabled');
                     if(self.pos.use_proxy_printer){
                         self.pos.proxy.print_receipt(currentOrder.export_for_printing());
                         self.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
                     }else{
                         self.pos_widget.screen_selector.set_current_screen(self.next_screen);
                     }
+                    self.validate_button.$element.removeClass('disabled');
+                    self.busy = false;
                 });
         },
         bindPaymentLineEvents: function() {

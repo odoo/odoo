@@ -658,8 +658,16 @@
     display: inline-block;
     font-size: 1.5em;
 }
+.point-of-sale .greyed-out{
+    color: #AAA;
+}
+.point-of-sale .pos-step-container input{
+    font-size: 1em;
+}
+
 .point-of-sale .pos-payment-container {
     text-align: left;
+    min-width: 500px;
 }
 .point-of-sale .pos-payment-container .left-block{
     display: inline-block;
@@ -819,6 +827,28 @@
     height:100%;
     margin:0;
     font-family: "Inconsolata";
+}
+
+/* e) The Welcome Screen */
+.point-of-sale .goodbye-message{
+    position: absolute;
+    left:50%;
+    top:30%;
+    width:500px;
+    height:400px;
+    margin-left: -250px;
+    margin-top: -200px;
+    padding:10px;
+    padding-top:20px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    background-color: #F0EEEE;
+    border: 1px solid #E0DDDD;
+    -webkit-box-shadow: 0px 10px 20px rgba(0,0,0, 0.3);
+       -moz-box-shadow: 0px 10px 20px rgba(0,0,0, 0.3);
+        -ms-box-shadow: 0px 10px 20px rgba(0,0,0, 0.3);
+    z-index:1150;
 }
 
 /*  ********* The OrderWidget  ********* */
@@ -1015,6 +1045,23 @@
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: ease-out;
+}
+
+.point-of-sale .pos-actionbar .button.disabled{
+    color:#AAA;
+}
+.point-of-sale .pos-actionbar .button.disabled:hover{
+    border: 1px solid #cacaca;
+    border-radius: 4px;
+
+    background: #e2e2e2;
+    background: -webkit-linear-gradient(#f0f0f0, #e2e2e2);
+    background:    -moz-linear-gradient(#f0f0f0, #e2e2e2);
+    background:     -ms-linear-gradient(#f0f0f0, #e2e2e2);
+    background:         linear-gradient(#f0f0f0, #e2e2e2);
+    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
+       -moz-box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
+            box-shadow: 0px 2px 2px rgba(0,0,0, 0.1);
 }
 
 .point-of-sale .pos-actionbar .button.rightalign{

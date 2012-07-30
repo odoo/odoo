@@ -17,7 +17,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         delay_payment:  function(){ this.activate(); this.payment_status = 'waiting_for_payment'; },
     }))();
 
-    //window.debug_devices = debug_devices;
+    if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
+        window.debug_devices = debug_devices;
+    }
 
     // this object interfaces with the local proxy to communicate to the various hardware devices
     // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
@@ -42,21 +44,26 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             success_callback = success_callback || function(){}; 
             error_callback   =  error_callback  || function(){};    
 
-            if(debug_devices && debug_devices.active){
+            
+            if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
                 console.log('PROXY:',name,params);
-            }else{
+            }
+
+            if(!(debug_devices && debug_devices.active)){
                 this.connection.rpc('/pos/'+name, params || {}, success_callback, error_callback);
             }
         },
         
         //a product has been scanned and recognized with success
-        scan_item_success: function(){
-            this.message('scan_item_success');
+        // ean is a parsed ean object
+        scan_item_success: function(ean){
+            this.message('scan_item_success',ean);
         },
 
-        //a product has been scanned but not recognized
-        scan_item_error_unrecognized: function(){
-            this.message('scan_item_error_unrecognized');
+        // a product has been scanned but not recognized
+        // ean is a parsed ean object
+        scan_item_error_unrecognized: function(ean){
+            this.message('scan_item_error_unrecognized',ean);
         },
 
         //the client is asking for help
@@ -331,6 +338,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 value: 0,
                 unit: 'none',
             };
+            console.log('ean',ean);
 
             function match_prefix(prefix_set, type){
                 for(prefix in prefix_set){
@@ -402,7 +410,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                         var parse_result = self.parse_ean(codeNumbers.join(''));
 
                         if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
-                            console.error('ERROR: barcode checksum error:',parse_result);
+                            console.warn('WARNING: barcode checksum error:',parse_result);
                         }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
                             if(self.action_callback['product']){
                                 self.action_callback['product'](parse_result);
