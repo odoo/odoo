@@ -237,6 +237,8 @@ class test_selection(CreatorCase):
             self.export(2),
             [[u"Bar"]])
 
+    # TODO: localized export!
+
 class test_selection_function(CreatorCase):
     model_name = 'export.selection.function'
 

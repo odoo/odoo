@@ -20,7 +20,7 @@ def error(row, message, record=None, **kwargs):
     """
     return (
         -1, dict(record or {}, **kwargs),
-        "Line %d : %s\n" % (row, message),
+        "Line %d : %s" % (row, message),
         '')
 
 def values(seq):
@@ -165,14 +165,14 @@ class test_integer_field(ImporterCase):
     def test_out_of_range(self):
         self.assertEqual(
             self.import_(['value'], [[str(2**31)]]),
-            error(1, "integer out of range", value=2**31))
+            error(1, "integer out of range\n", value=2**31))
         # auto-rollbacks if error is in process_liness, but not during
         # ir.model.data write. Can differentiate because former ends lines
         # error lines with "!"
         self.cr.rollback()
         self.assertEqual(
             self.import_(['value'], [[str(-2**32)]]),
-            error(1, "integer out of range", value=-2**32))
+            error(1, "integer out of range\n", value=-2**32))
 
 
     def test_nonsense(self):
@@ -305,3 +305,46 @@ class test_text(ImporterCase):
             self.import_(['value'], [[s]]),
             ok(1))
         self.assertEqual([s], values(self.read()))
+
+class test_selection(ImporterCase):
+    model_name = 'export.selection'
+
+    def test_imported(self):
+        self.assertEqual(
+            self.import_(['value'], [
+                ['Qux'],
+                ['Bar'],
+                ['Foo'],
+                [2],
+            ]),
+            ok(4))
+        self.assertEqual([3, 2, 1, 2], values(self.read()))
+
+    def test_invalid(self):
+        self.assertEqual(
+            self.import_(['value'], [['Baz']]),
+            error(1, "Key/value 'Baz' not found in selection field 'value'",
+                  # what the fuck?
+                  value=False))
+
+class test_selection_function(ImporterCase):
+    model_name = 'export.selection.function'
+
+    def test_imported(self):
+        """ By what bloody magic does that thing work?
+
+        => import uses fields_get, so translates import label (may or may not
+           be good news) *and* serializes the selection function to reverse
+           it: import does not actually know that the selection field uses a
+           function
+        """
+        # TODO: localized import
+        self.assertEqual(
+            self.import_(['value'], [
+                [3],
+                ["Grault"],
+            ]),
+            ok(2))
+        self.assertEqual(
+            ['3', '1'],
+            values(self.read()))
