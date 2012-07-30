@@ -321,6 +321,7 @@ class hr_payslip(osv.osv):
             'basic_amount': 0.0,
             'number': '',
             'payslip_run_id': False,
+            'paid': False,
         })
         return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
 
