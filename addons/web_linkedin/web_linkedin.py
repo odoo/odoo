@@ -54,27 +54,11 @@ class res_partner(osv.osv):
      _inherit = 'res.partner'
 
      _columns = {
-        'linkedin_id': fields.char('Linkedin Id', size=64),
-        'twitter_id': fields.char('Twitter', size=128),
-        'profile_id': fields.char('Profile URL', size=240),
      }
-
-     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-         company_obj = self.pool.get('res.company')
-         res = super(res_partner, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-         company_id = company_obj._company_default_get(cr, user, 'res.users', context=context)
-         linkedin_api_key = company_obj.browse(cr, user, company_id, context=context).linkedin_api_key
-         fields = res['fields']
-         if fields.get('name'):
-             ctx = fields.get('name').get('context')
-             if ctx is None:
-                 ctx = {}
-             ctx.update({'api_key': linkedin_api_key})
-             fields.get('name')['context'] = ctx
-         return res
 
 res_partner()
 
+# don't know yet if I will remove it
 class Binary(openerpweb.Controller):
     _cp_path = "/web_linkedin/binary"
 
@@ -83,4 +67,3 @@ class Binary(openerpweb.Controller):
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
