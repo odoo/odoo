@@ -11,6 +11,18 @@ def ok(n):
     """
     return n, 0, 0, 0
 
+def error(row, message, record=None, **kwargs):
+    """ Failed import of the record ``record`` at line ``row``, with the error
+    message ``message``
+
+    :param str message:
+    :param dict record:
+    """
+    return (
+        -1, dict(record or {}, **kwargs),
+        "Line %d : %s\n" % (row, message),
+        '')
+
 def values(seq):
     return [item['value'] for item in seq]
 
@@ -90,9 +102,81 @@ class test_boolean_field(ImporterCase):
                 ['()'],
                 ['f'],
                 ['#f'],
+                # Problem: OpenOffice (and probably excel) output localized booleans
+                ['VRAI'],
             ]),
-            ok(6))
+            ok(7))
         self.assertEqual(
-            [True] * 6,
+            [True] * 7,
             values(self.read()))
 
+class test_integer_field(ImporterCase):
+    model_name = 'export.integer'
+
+    def test_none(self):
+        self.assertEqual(
+            self.import_(['value'], []),
+            ok(0))
+
+    def test_empty(self):
+        self.assertEqual(
+            self.import_(['value'], [['']]),
+            ok(1))
+        self.assertEqual(
+            [False],
+            values(self.read()))
+
+    def test_zero(self):
+        self.assertEqual(
+            self.import_(['value'], [['0']]),
+            ok(1))
+        self.assertEqual(
+            self.import_(['value'], [['-0']]),
+            ok(1))
+        self.assertEqual([False, False], values(self.read()))
+
+    def test_positives(self):
+        self.assertEqual(
+            self.import_(['value'], [
+                ['1'],
+                ['42'],
+                [str(2**31-1)],
+                ['12345678']
+            ]),
+            ok(4))
+        self.assertEqual([
+            1, 42, 2**31-1, 12345678
+        ], values(self.read()))
+
+    def test_negatives(self):
+        self.assertEqual(
+            self.import_(['value'], [
+                ['-1'],
+                ['-42'],
+                [str(-(2**31 - 1))],
+                [str(-(2**31))],
+                ['-12345678']
+            ]),
+            ok(5))
+        self.assertEqual([
+            -1, -42, -(2**31 - 1), -(2**31), -12345678
+        ], values(self.read()))
+
+    def test_out_of_range(self):
+        self.assertEqual(
+            self.import_(['value'], [[str(2**31)]]),
+            error(1, "integer out of range", value=2**31))
+        # auto-rollbacks if error is in process_liness, but not during
+        # ir.model.data write. Can differentiate because former ends lines
+        # error lines with "!"
+        self.cr.rollback()
+        self.assertEqual(
+            self.import_(['value'], [[str(-2**32)]]),
+            error(1, "integer out of range", value=-2**32))
+
+
+    def test_nonsense(self):
+        # dafuq? why does that one raise an error?
+        self.assertRaises(
+            ValueError,
+            self.import_, ['value'], [['zorglub']])
