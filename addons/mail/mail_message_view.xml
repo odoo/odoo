@@ -81,8 +81,7 @@
             <field name="arch" type="xml">
                 <search string="Messages Search">
                     <field name="user_id"/>
-                    <field name="body"/>
-                    <field name="subject" filter_domain="['|', ('subject', 'ilike', self), ('record_name', 'ilike', self)]" />
+                    <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
                     <field name="type"/>
                     <filter icon="terp-personal+" string="My Feeds"
                             name="my_feeds" help="My Feeds"
