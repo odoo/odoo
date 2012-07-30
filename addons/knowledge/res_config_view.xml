@@ -13,23 +13,9 @@
                         or 
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Wiki"/>
+                    <separator string="Knowledge and Documents Management"/>
                     <group>
-                        <label for="id" string="Wiki Settings"/>
-                        <div>
-                            <div>
-                                <field name="module_wiki_faq" class="oe_inline"/>
-                                <label for="module_wiki_faq"/>
-                            </div>
-                            <div>
-                                <field name="module_wiki_quality_manual" class="oe_inline"/>
-                                <label for="module_wiki_quality_manual"/>
-                            </div>        
-                        </div>                           
-                    </group>
-                    <separator string="Documents"/>
-                    <group>
-                        <label for="id" string="Document Settings"/>
+                        <label for="id" string="Documents"/>
                         <div>
                             <div>
                                 <field name="module_document" class="oe_inline"/>
@@ -44,6 +30,19 @@
                                 <label for="module_document_webdav"/>    
                             </div>
                         </div>        
+                    </group>
+                    <group>
+                        <label for="id" string="Wiki"/>
+                        <div>
+                            <div>
+                                <field name="module_wiki_faq" class="oe_inline"/>
+                                <label for="module_wiki_faq"/>
+                            </div>
+                            <div>
+                                <field name="module_wiki_quality_manual" class="oe_inline"/>
+                                <label for="module_wiki_quality_manual"/>
+                            </div>        
+                        </div>                           
                     </group>
                 </form>
             </field>
