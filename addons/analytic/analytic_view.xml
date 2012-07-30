@@ -18,6 +18,7 @@
                                 <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required':[('type','=','contract')]}"/>
                                 <field name="parent_id" on_change="on_change_parent(parent_id)" attrs="{'invisible': [('type','in',['contract','template'])]}"/>
                                 <field name="type"/>
+                                <field name="template_id" on_change="on_change_template(template_id,context)" domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
                             </group>
                             <group>
                                 <field name="code"/>
@@ -43,9 +44,9 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <footer>
-                        <field name="message_ids" widget="ThreadView"/>
-                    </footer>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>

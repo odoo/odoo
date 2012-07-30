@@ -22,12 +22,12 @@
         <field name="name">Task's Work on Tasks</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
-	
+    
     <record id="group_time_work_estimation_tasks" model="res.groups">
         <field name="name">Time Estimation on Tasks</field>
         <field name="implied_ids" eval="[(4, ref('group_tasks_work_on_tasks'))]"/>
         <field name="category_id" ref="base.module_category_hidden"/>
-    </record>		
+    </record>
 
     <record id="group_delegate_task" model="res.groups">
         <field name="name">Task Delegation</field>

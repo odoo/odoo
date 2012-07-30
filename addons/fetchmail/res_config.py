@@ -85,6 +85,7 @@ class fetchmail_config_settings(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'res_model': 'fetchmail.server',
             'view_mode': 'form',
+            'target': 'current',
         }
         model_name = self._columns[field].fetchmail_model
         model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model_name)])[0]

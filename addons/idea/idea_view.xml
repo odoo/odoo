@@ -67,19 +67,22 @@
         <field name="arch" type="xml">
             <form string="Idea" version="7.0">
                 <header>
-                    <button name="idea_open" string="Open" states="draft"/>
-                    <button name="idea_close" string="Accept" states="open"/>
-                    <button name="idea_cancel" string="Refuse" states="open" />
+                    <button name="idea_open" string="Open" states="draft" class="oe_highlight"/>
+                    <button name="idea_close" string="Accept" states="open" class="oe_highlight"/>
+                    <button name="idea_cancel" string="Refuse" states="open"  class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
                 </header>
+                <sheet>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="category_ids"/>
-                    <h2><field name="category_ids"/></h2>
+                    <label for="category_ids" class="oe_edit_only"/>
+                    <field name="category_ids" widget="many2many_tags"/>
+                    <label for="description"/><newline/>
                     <field name="description"/>
-                <footer>
-                    <field name="message_ids" widget="ThreadView"/>
-                </footer>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>

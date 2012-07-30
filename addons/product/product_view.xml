@@ -13,8 +13,8 @@
                    <separator orientation="vertical"/>
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
-                   <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
+                   <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
                    <separator orientation="vertical"/>
                    <field name="categ_id" widget="selection" operator="child_of"/>
                    <group expand="0" string="Context...">
@@ -67,7 +67,7 @@
             <field name="type">form</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Product" layout="auto" version="7.0">
+                <form string="Product" version="7.0">
                     <sheet>
                         <field name="image_small" widget="image" class="oe_avatar oe_right" on_change="onchange_image(image_small"/>
 
@@ -183,9 +183,9 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <footer>
-                        <field name="message_ids" widget="ThreadView"/>
-                    </footer>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -311,12 +311,26 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Categories" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="parent_id"/>
-                        <field name="sequence" invisible="1"/>
-                        <field name="type"/>
-                    </group>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="parent_id"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
+                        </group>
+                        <group name="basic">
+                            <group name="account_property" string="Account Properties"/>
+                            <group name="account_stock_property" string="Account Stock Properties"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -408,12 +422,12 @@
             <field name="arch" type="xml">
                 <form string="Units of Measure" version="7.0">
                     <group>
-                        <group string="Unit of Measure Properties">
+                        <group>
                             <field name="name"/>
                             <field name="category_id"/>
                             <field name="active"/>
                         </group>
-                        <group string="Ratio &amp; Precision">
+                        <group>
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
                             <field name="rounding"/>
                             <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
@@ -544,7 +558,7 @@
             <field name="arch" type="xml">
                 <form string="Supplier Information" version="7.0">
                     <group col="4">
-                        <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" options='{"quick_create": false}'/>
+                        <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                         <field name="sequence"/>
                         <field name="product_name"/>
                         <field name="product_code"/>

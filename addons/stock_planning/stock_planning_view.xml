@@ -39,7 +39,7 @@
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <field name="state" select="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -84,13 +84,13 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                 <header>
-                    <button name="action_validate" string="Approve" states="draft" type="object" />
+                    <button name="action_validate" string="Approve" states="draft" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar"/>
                 </header>
-                <sheet string="Stock and Sales Forecast" layout="auto">
+                <sheet string="Stock and Sales Forecast">
                     <group colspan = "4" col = "4" class="oe_header">
                         <group colspan = "2" col="2" >
-                            <field name="company_id" select="1"
+                            <field name="company_id"
                                         groups="base.group_multi_company"
                                         widget="selection"
                                         on_change="onchange_company(company_id)"/>
@@ -242,11 +242,10 @@
             <field name="type">form</field>
             <field name="priority">50</field>
             <field name="arch" type="xml">
-                <form string="Stock Planning">
-                    <group colspan="4" col="7">
-                        <group colspan ="3" col="2">
-                            <separator colspan ="2" string = "General Info"/>
-                            <field name="company_id" select = "1" widget= "selection"
+                <form string="Stock Planning" version="7.0">
+                    <group>
+                        <group string="General Info">
+                            <field name="company_id" widget="selection"
                                          on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                             <field name="period_id" />
@@ -256,45 +255,48 @@
                             <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
                                          on_change = "onchange_uom(product_uom, product_id, active_uom, planned_outgoing, to_procure)"/>
-                            <field name="active_uom" invisible = "True" />
-                            <separator colspan ="2" string = "Forecasts"/>
+                            <field name="active_uom" invisible = "True"/>
+                            <separator string="Current Period Situation" colspan="2"/>
+                            <field name="stock_start"/>
+                            <field name="already_out"/>
+                            <field name="already_in"/>
+                            <separator string="Minimum Stock Rule Indicators" colspan="2"/>
+                            <field name="minimum_op"/>
+                            <field name="maximum_op"/>
+                            <separator string="Forecasts" colspan="2"/>
                             <field name="warehouse_forecast"/>
                             <field name="company_forecast"/>
                             <field name="confirmed_forecasts_only"/>
                         </group>
-                        <group colspan ="2" col="2">
-                            <separator colspan ="2" string = "Current Period Situation"/>
-                            <field name="stock_start"/>
-                            <field name="already_out"/>
-                            <field name="already_in"/>
-                            <separator colspan ="2" string = "Planning and Situation for Calculated Period"/>
+ 
+                        <group>
+                            <button name="calculate_planning" string="Compute Planning" type="object" icon="gtk-execute"/>
+                            <separator string="Planning and Situation for Calculated Period" colspan="2"/>
                             <field name="planned_outgoing"/>
                             <field name="outgoing"/>
                             <field name="outgoing_left"/>
                             <field name="to_procure"/>
                             <field name="incoming"/>
-                            <field name="incoming_left"/>
-                            <button name="calculate_planning" string="Calculate Planning" type="object" icon="gtk-execute" colspan="2"/>
+                            <label for="incoming_left"/>
+                            <div>
+                                <field name="incoming_left" class="oe_inline"/>
+                                <button name="procure_incomming_left" icon="gtk-convert" string="Make Procurement" type="object" class="oe_inline"/>
+                                <button name="internal_supply" string="Make Picking" help="Supply from Another Warehouse" icon="gtk-convert" type="object" class="oe_inline"/>
+                            </div>
                             <field name="stock_only"/>
-                        </group>
-                        <group colspan ="2" col="2">
-                            <separator colspan ="2" string = "Minimum Stock Rule Indicators"/>
-                            <field name="minimum_op"/>
-                            <field name="maximum_op"/>
-                            <separator colspan ="2" string = "Calculated Period Simulation"/>
+                            <separator string="Calculated Period Simulation" colspan="2"/>
                             <field name="outgoing_before"/>
                             <field name="incoming_before"/>
                             <field name="stock_simulation"/>
-                            <button name="procure_incomming_left" icon="gtk-convert" string="Procure Incoming Left" type="object" colspan="2"/>
                             <field name="procure_to_stock"/>
-                            <separator colspan ="2" string = "Internal Supply"/>
-                            <button name="internal_supply" string="Supply from Another Warehouse" icon="gtk-convert"  type="object" colspan="2"/>
+                            <separator string="Internal Supply" colspan="2"/>
                             <field name="supply_warehouse_id" domain = "[('company_id','=',company_id)] "/>
                             <field name="stock_supply_location"/>
                         </group>
                     </group>
-                    <separator colspan ="4" string = "Procurement History"/>
-                    <field name = "history" colspan = "2" nolabel = "1"/>
+                    <group string="Procurement History" colspan="4">
+                        <field name="history" nolabel="1" colspan="4"/>
+                    </group>
                 </form>
             </field>
         </record>

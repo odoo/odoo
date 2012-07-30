@@ -2,10 +2,16 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="1"
+        <!-- Top menu item -->
+        <!--
+            This menu item's purpose is to overwrite another one defined in
+            the base module in order to set new groups.
+        -->
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
             groups="base.group_sale_manager,base.group_sale_salesman"/>
 
-        <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities" 
+        <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
             parent="base.menu_base_config" sequence="80" groups="base.group_sale_manager"/>
 
         <menuitem id="base.menu_crm_config_opportunity" name="Opportunities"
@@ -20,7 +26,7 @@
         <menuitem id="base.next_id_64" name="Sales"
             parent="base.menu_reporting" sequence="1" />
 
-		<menuitem id="base.menu_sales_configuration_misc" name="Miscellaneous" parent="base.menu_base_config" sequence="75"/>			
+        <menuitem id="base.menu_sales_configuration_misc" name="Miscellaneous" parent="base.menu_base_config" sequence="75"/>
 
 
         <!-- crm.case.channel -->
@@ -81,11 +87,16 @@
                     <notebook colspan="4">
                         <page string="Sales Team">
                             <group col="4">
-                                <field name="reply_to"/>
-                                <field name="allow_unlink"/>
-                                <field name="change_responsible"/>
-                                <field name="member_ids"/>
+                                <group>
+                                    <field name="reply_to"/>
+                                </group>
+                                <group>
+                                    <field name="change_responsible"/>
+                                    <field name="allow_unlink"/>
+                                </group>
                             </group>
+                            <separator string="Team Members"/>
+                            <field name="member_ids"/>
                         </page>
                         <page string="Stages">
                             <separator string="Select Stages for this Sales Team"/>

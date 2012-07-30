@@ -9,14 +9,14 @@
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="priority" eval="20"/>       <!-- to put fetchmail_lead before fetchmail_claim -->
             <field name="arch" type="xml">
-                <group name="config_fetchmail" version="7.0" position="inside">
+                <separator string="Emails" version="7.0" position="after">
                     <label for="fetchmail_claim"/>
                     <div>
                         <field name="fetchmail_claim"/>
-                        <button colspan="2" type="object" name="configure_fetchmail_claim" string="Configure" icon="gtk-go-forward"
+                        <button type="object" name="configure_fetchmail_claim" string="Configure" icon="gtk-go-forward"
                             attrs="{'invisible': [('fetchmail_claim','=',False)]}"/>
                     </div>
-                </group>
+                </separator>
             </field>
         </record>
 

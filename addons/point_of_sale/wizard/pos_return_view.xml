@@ -7,8 +7,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Return lines" version="7.0">
-                    <button icon='gtk-ok' name= "create_returns" string="Return Products" type="object"/>
-                    <button icon='gtk-cancel' special="cancel" string="Cancel" />
+                    <footer>
+                        <button name= "create_returns" string="Return Products" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                  </form>
             </field>
         </record>

@@ -2,41 +2,6 @@
 <openerp>
     <data>
 
-        <record id="view_project_vs_remaining_hours_tree" model="ir.ui.view">
-            <field name="name">project.vs.remaining.hour.tree</field>
-            <field name="model">project.vs.hours</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Remaining Hours Per Project" colors="pink:state=='draft';blue:state=='pending';black:state=='open';red:state=='cancelled';grey:state=='close';yellow:state=='template'">
-                    <field name="project"/>
-                    <field name="remaining_hours"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_project_vs_remaining_hours_graph" model="ir.ui.view">
-             <field name="name">project.vs.remaining.hour.graph</field>
-             <field name="model">project.vs.hours</field>
-             <field name="type">graph</field>
-             <field name="arch" type="xml">
-                 <graph string="Project vs remaining hours" type="bar">
-                     <field name="project"/>
-                     <field name="state" group="True"/>
-                     <field name="remaining_hours" operator="+"/>
-                 </graph>
-             </field>
-        </record>
-
-        <record id="action_project_vs_remaining_hours_graph" model="ir.actions.act_window">
-            <field name="name">Remaining Hours Per Project</field>
-            <field name="res_model">project.vs.hours</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('user_id','=',uid),('state','not in',('cancel','done'))]</field>
-            <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
-        </record>
-
         <record id="view_task_tree" model="ir.ui.view">
             <field name="name">project.task.tree</field>
             <field name="model">project.task</field>
@@ -74,10 +39,10 @@
                 <form string="My Board" version="7.0">
                     <board style="2-1">
                         <column>
-                            <action name="%(my_open_tasks_action)d" string="My Tasks" creatable="true"/>
+                            <action name="%(my_open_tasks_action)d" string="My Tasks"/>
                         </column>
                         <column>
-                            <action name="%(action_project_vs_remaining_hours_graph)d" string="My Remaining Hours by Project"/>
+                            <action name="%(action_view_task_history_cumulative)d" string="Open Tasks"/>
                         </column>
                     </board>
                 </form>

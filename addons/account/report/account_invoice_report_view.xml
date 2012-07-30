@@ -56,6 +56,11 @@
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
                 <group>
+                    <filter icon="terp-go-year" string="Year" 
+                            name="year"
+                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
+                            help="year"/>
+                    <separator orientation="vertical"/>
                     <field name="date"/>
                     <separator orientation="vertical"/>
                     <filter string="Draft"
@@ -98,6 +103,9 @@
                     <filter string="Partner" name="partner" icon="terp-partner" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Salesperson" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Due Date" icon="terp-go-today" context="{'group_by':'date_due'}"/>
+                    <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}" name="period"/>
+                    <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True,'residual_invisible':True}"/>
                     <filter string="Category of Product" name="category_product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id','residual_invisible':True}"/>
                     <separator orientation="vertical"/>
@@ -106,15 +114,12 @@
                     <separator orientation="vertical"/>
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_line_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Due Date" icon="terp-go-today" context="{'group_by':'date_due'}"/>
-                    <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}" name="period"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" name="day" icon="terp-go-today" context="{'group_by':'day'}" help="Group by Invoice Date"/>
                     <filter string="Month" name="month" icon="terp-go-month" context="{'group_by':'month'}" help="Group by month of Invoice Date"/>
-                    <filter string="Year" name="year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of Invoice Date"/>
+                    <filter string="Year" name="group_year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of Invoice Date"/>
                 </group>
             </search>
         </field>
@@ -131,7 +136,7 @@
 
     </record>
 
-    <menuitem action="action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.menu_finance_statistic_report_statement" sequence="0"/>
+    <menuitem action="action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.menu_finance_reporting" sequence="0"/>
 
     <act_window
         id="act_account_invoice_partner_relation"

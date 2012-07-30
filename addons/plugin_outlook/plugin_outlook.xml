@@ -11,14 +11,7 @@
                     <form position="attributes">
                         <attribute name="string">Install Outlook Plug-In</attribute>
                     </form>
-                    <separator string="title" position="before">
-                        <label string="This plug-in allows you to create and link outlook emails with openerp objects."/>
-                    </separator>
-                    <xpath expr="//button[@string='Install Modules']" position="replace">
-                        <button colspan="1" icon="gtk-close" special="cancel" string="_Close"/>
-                    </xpath>
-                    <xpath expr="//button[@string='Cancel']" position="replace">
-                    </xpath>
+                    <xpath expr="//footer" position="replace"/>
                     <xpath expr="//separator[@string='title']" position="after" version="7.0">
                         <group>
                             <field name="plugin32" widget="url"/>
@@ -33,7 +26,7 @@
                         </ul>
                     </xpath>
                     <separator string="title" position="attributes">
-                        <attribute name="string">Install Outlook Plug-In</attribute>
+                        <attribute name="string"></attribute>
                     </separator>
                 </data>
             </field>

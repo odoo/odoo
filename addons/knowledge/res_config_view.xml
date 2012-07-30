@@ -8,22 +8,21 @@
             <field name="arch" type="xml">
                 <form string="Configure Knowledge" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight_on_dirty"/>
-                        <button string="Cancel" type="object" name="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or 
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                        <group>
-                            <group string="Wiki">
-                                <field name="module_wiki_faq"/>
-                                <field name="module_wiki_quality_manual"/>
-                            </group>
-                            <group string="Documents">
-                                <field name="module_document"/>
-                                <field name="module_document_ftp"/>
-                                <field name="module_document_webdav"/>
-                            </group>
+                    <group>
+                        <group string="Wiki">
+                            <field name="module_wiki_faq"/>
+                            <field name="module_wiki_quality_manual"/>
                         </group>
-                    </sheet>
+                        <group string="Documents">
+                            <field name="module_document"/>
+                            <field name="module_document_ftp"/>
+                            <field name="module_document_webdav"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>

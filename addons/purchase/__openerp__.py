@@ -25,17 +25,17 @@
     'version': '1.1',
     'category': 'Purchase Management',
     "sequence": 19,
+    "summary": "Requests for Quotation, Invoicing Control",
     'description': """
-Purchase module is for generating a purchase order for purchase of goods from a supplier.
-=========================================================================================
+Purchase Management module is for generating a purchase order for purchase of goods from a supplier.
+====================================================================================================
 
 A supplier invoice is created for the particular purchase order.
 
 Dashboard for purchase management that includes:
-    * Current Purchase Orders
-    * Draft Purchase Orders
-    * Graph for quantity and amount per month
-
+------------------------------------------------
+    * Request for Quotations
+    * Monthly Purchases by Category
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

@@ -51,12 +51,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
-                <form position="inside">
-                    <group string="Accounting Properties">
+                <data>
+                    <xpath expr="/form/sheet//group[@name='account_property']" position="inside">
                         <field name="property_account_income_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_account_expense_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                    </group>
-                </form>
+                    </xpath>
+                </data>
             </field>
         </record>
 

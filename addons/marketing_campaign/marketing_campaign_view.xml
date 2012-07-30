@@ -9,6 +9,22 @@
     Marketing Campaign
     ======================
     -->
+    <act_window name="All Segments"
+        res_model="marketing.campaign.segment"
+        src_model="marketing.campaign"
+        view_type="form"
+        view_mode="tree,form"
+        id="act_marketing_campaing_segment_opened"
+        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
+    />
+
+    <!-- Campaign Followups -->
+    <act_window
+        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
+        id="act_marketing_campaing_followup"
+        name="Campaign Follow-up" res_model="marketing.campaign.workitem"
+        src_model="marketing.campaign" view_mode="tree,form"
+        view_type="form" />
 
     <record model="ir.ui.view" id="view_marketing_campaign_form">
         <field name="name">marketing.campaign.form</field>
@@ -17,27 +33,37 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="state_running_set" string="Run" states="draft"/>
-                <button name="state_done_set" string="Done" states="running"/>
+                <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
+                <button name="state_done_set" string="Done" states="running" class="oe_highlight"/>
                 <button name="state_draft_set" string="Set to Draft" states="done,cancelled"/>
                 <button name="state_cancel_set" string="Cancel" states="running"/>
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
             <sheet string="Campaign">
+                <div class="oe_right oe_button_box" name="button_box">
+                        <button type="action"
+                        name="%(act_marketing_campaing_followup)d"
+                        string="Follow-Up" />
+                        <button type="action"
+                        name="%(act_marketing_campaing_segment_opened)d"
+                        string="Segments" />
+                </div>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name" class="oe_inline"/></h1>
+                </div>
                 <group>
-                    <group string="Campaign">
-                        <field name="name"/>
+                    <group>
                         <field name="mode"/>
+                        <field name="fixed_cost"/>
                     </group>
-                    <group string="Resource">
+                    <group>
                         <field name="object_id"/>
                         <field name="partner_field_id"/>
                         <field name="unique_field_id"/>
-                    </group>
-                    <group string="Cost">
-                        <field name="fixed_cost"/>
-                    </group>
+                    </group>     
                 </group>
+                <separator string="Activities"/>
                 <field name="activity_ids" context="{'default_object_id': object_id, 'default_campaign_id': active_id}" />
             </sheet>
             </form>
@@ -135,24 +161,19 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="state_running_set" string="Run" states="draft"/>
-                <button name="state_done_set" string="Close" states="running"/>
+                <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
+                <button name="state_done_set" string="Close" states="running" class="oe_highlight"/>
                 <button name="state_draft_set" string="Set to Draft" states="done,cancelled"/>
                 <button name="state_cancel_set" string="Cancel" states="running"/>
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
-            <sheet string="Segments" layout="auto">
+            <sheet string="Segments" >
                 <group>
-                    <group string="Segment">
+                    <group>
                         <field name="name"/>
                         <field name="campaign_id" on_change="onchange_campaign_id(campaign_id)"/>
                         <field name="object_id" invisible="1"/>
-                    </group>
-                    <group string="Filter">
-                        <field name="ir_filter_id"/>
-                    </group>
-                    <group string="Synchronization">
-                       <field name="sync_mode" required="True"/>
+                        <field name="sync_mode" required="True"/>
                        <label for="sync_last_date"/>
                        <div>
                            <field name="sync_last_date" class="oe_inline"/>
@@ -160,7 +181,8 @@
                        </div>
                        <field name="date_next_sync"/>
                     </group>
-                    <group string="History">
+                    <group>
+                        <field name="ir_filter_id"/>
                         <field name="date_run" readonly="1"/>
                         <field name="date_done" readonly="1"/>
                     </group>
@@ -243,33 +265,34 @@
         <field name="arch" type="xml">
             <form string="Activities" version="7.0">
                 <group>
-                    <group string="Activity">
+                    <group>
                         <field name="name"/>
                         <field name="signal" groups="base.group_no_one"/>
                         <field name="start"/>
                         <field name="object_id" invisible="1"/>
                         <field name="campaign_id" invisible="1"/>
                     </group>
-                    <group string="Cost / Revenue">
+                    <group>
                         <field name="variable_cost"/>
                         <field name="revenue"/>
                     </group>
                 </group>
-                <group string="Condition" col="4">
-                    <field name="condition" widget="char" colspan="4"/>
-                    <field name="keep_if_condition_not_met"/>
-                </group>
-                <group col="4">
-                    <separator string="Action" colspan="4"/>
-                    <field name="type"/>
-                    <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
+                <group >
+                    <group>
+                        <field name="condition" widget="char"/>
+                        <field name="keep_if_condition_not_met"/>
+                    </group>
+                    <group>
+                        <field name="type"/>
+                        <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
                            context="{'default_model_id':object_id}" />
-                    <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]"/>
-                    <field name="report_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}" context="{'object_id':object_id}"/>
-                    <field name="report_directory_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}"/>
+                        <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]"/>
+                        <field name="report_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}" context="{'object_id':object_id}"/>
+                        <field name="report_directory_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}"/>
+                    </group>
                 </group>
-                <separator string="Transitions"/>
-                <field name="from_ids" mode="tree,form" context="{'default_activity_to_id': active_id}">
+                <separator string="Previous Activities"/>
+                <field name="from_ids" mode="tree" context="{'default_activity_to_id': active_id}">
                     <tree string="Incoming Transitions" editable="bottom">
                         <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
                         <field name='trigger'/>
@@ -285,7 +308,8 @@
                         </group>
                     </form>
                 </field>
-                <field name="to_ids" nolabel="1" mode="tree,form" context="{'default_activity_from_id': active_id}" colspan="2">
+                <separator string="Next Activities"/>
+                <field name="to_ids" mode="tree" context="{'default_activity_from_id': active_id}">
                     <tree string="Outgoing Transitions" editable="bottom">
                         <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
                         <field name='trigger'/>
@@ -363,12 +387,13 @@
             </header>
             <sheet>
                 <group>
-                    <group string="Campaign Step">
+                    <group>
                         <field name="campaign_id"/>
                         <field name="segment_id"/>
                         <field name="activity_id" context="{'segment_id':segment_id}"/>
                         <field name="date"/>
-                    </group><group string="Related Resource">
+                    </group>
+                    <group>
                         <field name="object_id" readonly="True"/>
                         <field name="res_name"/>
                         <field name="res_id"/>

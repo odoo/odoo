@@ -10,10 +10,9 @@
             <field name="arch" type="xml">
                 <form string="POS Details" version="7.0">
                     <header>
-                            <button icon='gtk-cancel' special="cancel"
-                                    string="Close" />
-                            <button name="print_report" string="Print Report"
-                                    colspan="1" type="object" icon="gtk-print" />
+                        <button name="print_report" type="object" string="Print Report" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <group col="4" string="Dates">
                         <field name="date_start"/>

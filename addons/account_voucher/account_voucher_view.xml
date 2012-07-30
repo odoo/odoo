@@ -15,7 +15,7 @@
                     <field name="period_id" invisible="context.get('visible', True)"/>
                     <field name="type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
-                    <field name="audit"/>
+                    <field name="audit" invisible="1"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -43,7 +43,7 @@
             <field name="arch" type="xml">
                 <form version="7.0">
                   <header>
-                      <button name="proforma_voucher" string="Post" states="draft"/>
+                      <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
                       <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>
                       <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
                       <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
@@ -52,6 +52,7 @@
                   <sheet string="Accounting Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+                        <field name="payment_rate_currency_id" invisible="1"/>
                         <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
                         <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
@@ -111,9 +112,9 @@
                         </page>
                     </notebook>
                   </sheet>
-                    <footer>
-                        <field name="message_ids" widget="ThreadView"/>
-                    </footer>
+                  <div class="oe_chatter">
+                      <field name="message_ids" widget="mail_thread"/>
+                  </div>
                 </form>
             </field>
         </record>
@@ -209,11 +210,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-              <field name="currency" invisible="1" position="after">
-                <button name="%(action_view_account_statement_from_invoice_lines)d"
+                <xpath expr="//div[@name='import_buttons']" position="inside">
+                    <button name="%(action_view_account_statement_from_invoice_lines)d"
                             string="Import Invoices" type="action" icon="gtk-execute"
                             attrs="{'invisible':[('state','=','confirm')]}"/>
-              </field>
+                </xpath>
             </field>
         </record>
 
@@ -272,8 +273,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="currency_id" position="after">
-                      <field name="income_currency_exchange_account_id" colspan="2"/>
-                      <field name="expense_currency_exchange_account_id" colspan="2"/>
+                      <field name="income_currency_exchange_account_id"/>
+                      <field name="expense_currency_exchange_account_id"/>
                 </field>
             </field>
         </record>

@@ -21,14 +21,14 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
-                <form position="inside" version="7.0">
-                    <group string="Accounting Stock Properties">
+                <data>
+                    <xpath expr="/form/sheet//group[@name='account_stock_property']" position="inside">
                         <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_valuation_account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_journal"/>
-                    </group>
-                </form>
+                    </xpath>
+                </data>
             </field>
         </record>
 

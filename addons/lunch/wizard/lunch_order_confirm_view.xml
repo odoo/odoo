@@ -10,14 +10,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Confirm" version="7.0">
-                    <header>
-                        <button  icon="gtk-ok" name="confirm" string="Confirm Order" type="object"/>
-                        <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    </header>
                     <group col="4">
                          <separator string="Orders Confirmation" colspan="4"/>
                          <field name="confirm_cashbox"/>
                    </group>
+                    <footer>
+                        <button name="confirm" string="Confirm Order" type="object" class="oe_highlight"  />
+                        or 
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                </form>
             </field>
         </record>

@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
 
-		<record id="l10n_br_account_chart_template" model="account.chart.template">
-			<field name="name">Planilha de Contas Brasileira</field>
-			<field name="account_root_id" ref="account_template_1" />
-			<field name="tax_code_root_id" ref="tax_code_chart_root"/>
-			<field name="bank_account_view_id" ref="account_template_9"/>
-			<field name="property_account_receivable" ref="account_template_16"/>
-			<field name="property_account_payable" ref="account_template_204" />
-			<field name="property_account_expense_categ" ref="account_template_330" />
-			<field name="property_account_income_categ" ref="account_template_552" />
-		</record>
-	
-		<record id="config_call_account_template_brazilian_localization" model="ir.actions.todo">
+        <record id="l10n_br_account_chart_template" model="account.chart.template">
+            <field name="name">Planilha de Contas Brasileira</field>
+            <field name="account_root_id" ref="account_template_1" />
+            <field name="tax_code_root_id" ref="tax_code_chart_root"/>
+            <field name="bank_account_view_id" ref="account_template_9"/>
+            <field name="property_account_receivable" ref="account_template_16"/>
+            <field name="property_account_payable" ref="account_template_204" />
+            <field name="property_account_expense_categ" ref="account_template_330" />
+            <field name="property_account_income_categ" ref="account_template_552" />
+        </record>
+    
+        <record id="config_call_account_template_brazilian_localization" model="ir.actions.todo">
             <field name="name">Generate Chart of Accounts from a Chart Template</field>
             <field name="note">Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.
     This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.</field>
@@ -21,7 +21,7 @@
             <field name="state">open</field>
             <field name="type">once</field>
         </record>
-	
-	</data>
-	
+    
+    </data>
+    
 </openerp>

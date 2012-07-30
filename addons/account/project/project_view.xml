@@ -118,6 +118,7 @@
             <field name="name">account.analytic.line.form</field>
             <field name="model">account.analytic.line</field>
             <field name="type">form</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry" version="7.0">
                     <group>
@@ -241,19 +242,33 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project line" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="account_id"/>
-                        <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                        <field name="journal_id"/>
-                        <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                        <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
-                        <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                        <field invisible="True" name="general_account_id"/>
-                        <field name="amount"/>
-                        <field name="currency_id" />
-                        <field name="amount_currency" />
-                        <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <group>
+                       <group>
+                          <field name="name"/>
+                          <field name="account_id"/>
+                          <field name="journal_id"/>
+                       </group>
+                       <group>
+                          <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                          <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                        </group>
+                        <group string="Amount">
+                            <field name="amount"/>
+                            <label for="amount_currency"/>
+                            <div>
+                                <field name="amount_currency" class="oe_inline"/>
+                                <field name="currency_id" class="oe_inline"/>
+                            </div>
+                            <field invisible="1" name="general_account_id"/>
+                        </group>
+                        <group string="Product Information">
+                            <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
+                            <label for="unit_amount"/>
+                            <div>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" class="oe_inline"/>
+                                <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" class="oe_inline"/>
+                            </div>
+                        </group>
                     </group>
                 </form>
             </field>
@@ -371,7 +386,7 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="currency" position="after">
+                <field name="type" position="after">
                     <field name="analytic_journal_id"/>
                 </field>
             </field>

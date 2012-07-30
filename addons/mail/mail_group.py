@@ -33,7 +33,7 @@ class mail_group(osv.osv):
     A mail_group is a collection of users sharing messages in a discussion
     group. Group users are users that follow the mail group, using the
     subscription/follow mechanism of OpenSocial. A mail group has nothing
-    in common wih res.users.group.
+    in common with res.users.group.
     Additional information on fields:
         - ``member_ids``: user member of the groups are calculated with
           ``message_get_subscribers`` method from mail.thread
@@ -74,7 +74,7 @@ class mail_group(osv.osv):
         result = dict.fromkeys(ids)
         for id in ids:
             result[id] = {}
-            result[id]['member_ids'] = self.message_get_subscribers_ids(cr, uid, [id], context=context)
+            result[id]['member_ids'] = self.message_get_subscribers(cr, uid, [id], context=context)
             result[id]['member_count'] = len(result[id]['member_ids'])
             result[id]['is_subscriber'] = uid in result[id]['member_ids']
         return result
@@ -92,7 +92,7 @@ class mail_group(osv.osv):
         message_obj = self.pool.get('mail.message')
         for id in ids:
             lower_date = (DT.datetime.now() - DT.timedelta(days=30)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            result[id] = message_obj.search(cr, uid, ['&', '&', ('model', '=', self._name), ('res_id', 'in', ids), ('date', '>=', lower_date)], count=True, context=context)
+            result[id] = self.message_search(cr, uid, [id], limit=None, domain=[('date', '>=', lower_date)], count=True, context=context)
         return result
     
     def _get_photo(self, cr, uid, context=None):
@@ -103,9 +103,15 @@ class mail_group(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
         'responsible_id': fields.many2one('res.users', string='Responsible',
-                            ondelete='set null', required=True, select=1,
-                            help="Responsible of the group that has all rights on the record."),
-        'public': fields.boolean('Public', help='This group is visible by non members. Invisible groups can add members through the invite button.'),
+            ondelete='set null', required=True, select=1,
+            help="Responsible of the group that has all rights on the record."),
+        'public': fields.boolean('Visible by non members', help='This group is visible by non members. \
+            Invisible groups can add members through the invite button.'),
+        'group_ids': fields.many2many('res.groups', rel='mail_group_res_group_rel',
+            id1='mail_group_id', id2='groups_id', string='Linked groups',
+            help="Members of those groups will automatically added as followers. "\
+                    "Note that they will be able to manage their subscription manually "\
+                    "if necessary."),
         'image': fields.binary("Photo",
             help="This field holds the image used as photo for the "\
                  "user. The image is base64 encoded, and PIL-supported. "\
@@ -126,11 +132,14 @@ class mail_group(osv.osv):
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 50x50px image, with aspect ratio keps. "\
                  "Use this field anywhere a small image is required."),
-        'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids, type='many2many',
-                        relation='res.users', string='Group members', multi='get_member_ids'),
-        'member_count': fields.function(get_member_ids, type='integer', string='Member count', multi='get_member_ids'),
-        'is_subscriber': fields.function(get_member_ids, type='boolean', string='Joined', multi='get_member_ids'),
-        'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer', string='Messages count for last month'),
+        'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids,
+            type='many2many', relation='res.users', string='Group members', multi='get_member_ids'),
+        'member_count': fields.function(get_member_ids, type='integer',
+            string='Member count', multi='get_member_ids'),
+        'is_subscriber': fields.function(get_member_ids, type='boolean',
+            string='Joined', multi='get_member_ids'),
+        'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer',
+            string='Messages count for last month'),
     }
 
     _defaults = {
@@ -138,3 +147,32 @@ class mail_group(osv.osv):
         'responsible_id': (lambda s, cr, uid, ctx: uid),
         'image': _get_photo,
     }
+
+    def _subscribe_user_with_group_m2m_command(self, cr, uid, ids, group_ids_command, context=None):
+        # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+        user_group_ids = [command[1] for command in group_ids_command if command[0] == 4]
+        user_group_ids += [id for command in group_ids_command if command[0] == 6 for id in command[2]]
+        # retrieve the user member of those groups
+        user_ids = []
+        res_groups_obj = self.pool.get('res.groups')
+        for group in res_groups_obj.browse(cr, uid, user_group_ids, context=context):
+            user_ids += [user.id for user in group.users]
+        # subscribe the users
+        return self.message_subscribe(cr, uid, ids, user_ids, context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        mail_group_id = super(mail_group, self).create(cr, uid, vals, context=context)
+        if vals.get('group_ids'):
+            self._subscribe_user_with_group_m2m_command(cr, uid, [mail_group_id], vals.get('group_ids'), context=context)
+        return mail_group_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('group_ids'):
+            self._subscribe_user_with_group_m2m_command(cr, uid, ids, vals.get('group_ids'), context=context)
+        return super(mail_group, self).write(cr, uid, ids, vals, context=context)
+
+    def action_group_join(self, cr, uid, ids, context=None):
+        return self.message_subscribe(cr, uid, ids, context=context)
+    
+    def action_group_leave(self, cr, uid, ids, context=None):
+        return self.message_unsubscribe(cr, uid, ids, context=context)

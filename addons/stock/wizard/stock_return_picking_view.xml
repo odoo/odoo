@@ -59,15 +59,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Return lines" version="7.0">
-                    <header>
-                        <button name="create_returns" string="Return" type="object" icon="gtk-apply" />
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                    </header>
                     <label string="Provide the quantities of the returned products."/>
                     <group>
                         <field name="product_return_moves"/>
                         <field name="invoice_state" />
                     </group>
+                    <footer>
+                        <button name="create_returns" string="Return" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

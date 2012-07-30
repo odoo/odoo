@@ -108,9 +108,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by user">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="user_id"/>
                 </form>
             </field>
         </record>
@@ -188,9 +188,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by invoice">
-                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
-                    <field name="manager_id" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="manager_id"/>
+                    <field name="user_id"/>
                 </form>
             </field>
         </record>
@@ -242,7 +242,7 @@
             <field name="arch" type="xml">
                 <tree string="Daily timesheet per account">
                     <field name="name"/>
-                    <field name="month" select="1"/>
+                    <field name="month"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="user_id"/>
                     <field name="quantity"/>
@@ -267,10 +267,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Daily timesheet by account">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
                     <field name="quantity"/>
                 </form>
             </field>
@@ -336,10 +336,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by account">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
                     <field name="quantity"/>
                 </form>
             </field>

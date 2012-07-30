@@ -2,8 +2,44 @@
 <openerp>
     <data>
 
-<!--  Phonecall Categories Form View  -->
+    <!-- Read/Unread actions -->
+    <record id="actions_server_crm_phonecall_unread" model="ir.actions.server">
+        <field name="name">Mark unread</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_crm_phonecall"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_crm_phonecall_unread" model="ir.values">
+        <field name="name">action_crm_phonecall_unread</field>
+        <field name="action_id" ref="actions_server_crm_phonecall_unread"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_phonecall_unread'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_crm_phonecall" />
+        <field name="model">crm.phonecall</field>
+        <field name="key2">client_action_multi</field>
+    </record>
 
+    <record id="actions_server_crm_phonecall_read" model="ir.actions.server">
+        <field name="name">Mark read</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_crm_phonecall"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_crm_phonecall_read" model="ir.values">
+        <field name="name">action_crm_phonecall_read</field>
+        <field name="action_id" ref="actions_server_crm_phonecall_read"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_phonecall_read'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_crm_phonecall" />
+        <field name="model">crm.phonecall</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
+<!--  Phonecall Categories Form View  -->
     <record id="crm_phonecall_categ_action" model="ir.actions.act_window">
         <field name="name">Phonecall Categories</field>
         <field name="res_model">crm.case.categ</field>
@@ -34,6 +70,7 @@
                 <field name="categ_id" invisible="1"/>
                 <field name="create_date" invisible="1"/>
                 <field name="opportunity_id" invisible="1"/>
+                <field name="needaction_pending" invisible="1"/>
                 <button string="Convert to Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="open,pending"
@@ -64,23 +101,25 @@
         <field name="arch" type="xml">
             <form version="7.0">
             <header>
-                <button name="case_open" string="Confirm" type="object"
-                        states="draft,pending"/>
-                <button name="case_close" string="Held" type="object"
+                <button name="case_close" string="Held" type="object" class="oe_highlight"
                         states="open,pending"/>
                 <button name="case_reset" string="Reset to Todo" type="object"
                         states="cancel"/>
+                <button string="Convert to Opportunity"
+                        name="%(phonecall2opportunity_act)d"
+                        type="action"
+                        attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state','!=', 'open')]}" />
+                <button string="Convert to Opportunity" class="oe_highlight"
+                        name="%(phonecall2opportunity_act)d"
+                        type="action"
+                        attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state','!=', 'done')]}" />
+                <button string="Schedule Other Call"
+                        name="%(phonecall_to_phonecall_act)d"
+                        type="action"  />
+                <button string="Schedule a Meeting" name="action_make_meeting" type="object"/>
                 <button name="case_cancel" string="Cancel" type="object"
                         states="draft,open,pending"/>
-                <button string="Convert to Opportunity"
-                    name="%(phonecall2opportunity_act)d"
-                    type="action"
-                    attrs="{'invisible':[('opportunity_id','!=',False)]}" />
-                <button string="Schedule Other Call"
-                    name="%(phonecall_to_phonecall_act)d"
-                    type="action"  />
-                <button string="Schedule a Meeting" name="action_make_meeting" type="object"/>
-                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,done"/>
+                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="open,done"/>
             </header>
             <sheet string="Phone Call">
                   <div class="oe_title">
@@ -98,7 +137,7 @@
                     <field name="user_id" />
                     <field name="duration" widget="float_time" />
                     <field name="section_id" colspan="1" widget="selection" />
-                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" />
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                     <field name="categ_id" widget="selection"
                         domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                     <field name="partner_mobile" />
@@ -108,9 +147,9 @@
 
                 <field name="description" placeholder="Description..." />
             </sheet>
-            <footer>
-                <field name="message_ids" widget="ThreadView"/>
-            </footer>
+            <div class="oe_chatter">
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
             </form>
         </field>
     </record>
@@ -123,12 +162,10 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Phone Calls" fonts="bold:needaction_pending==True" editable="top">
-                <field name="needaction_pending" invisible="1"/>
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"
-                    on_change="onchange_partner_id(partner_id)"
-                    string="Partner" />
+                    on_change="onchange_partner_id(partner_id)"/>
                 <field name="partner_phone"
                     invisible="1"/>
                 <field name="user_id"/>
@@ -138,6 +175,7 @@
                 <field name="state" invisible="1"/>
                 <field name="create_date" invisible="1"/>
                 <field name="opportunity_id" invisible="1"/>
+                <field name="needaction_pending" invisible="1"/>
                 <button string="Schedule Other Call"
                     icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
@@ -154,7 +192,7 @@
         </field>
     </record>
 
-<!-- Phonecalls Calendar View -->
+    <!-- Phonecalls Calendar View -->
 
     <record model="ir.ui.view" id="crm_case_phone_calendar_view">
         <field name="name">CRM - Phone Calls Calendar</field>
@@ -169,14 +207,18 @@
         </field>
     </record>
 
-<!-- Phonecalls Search View  -->
-
+    <!-- Phonecalls Search View  -->
     <record id="view_crm_case_phonecalls_filter" model="ir.ui.view">
         <field name="name">CRM - Phone Calls Search</field>
         <field name="model">crm.phonecall</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
+               <filter icon="terp-mail-message-new"
+                   string="Inbox" help="Unread messages"
+                   name="needaction_pending"
+                   domain="[('needaction_pending','=',True)]"/>
+               <separator orientation="vertical"/>
                <field name="name" string="Phonecalls"/>
                <separator orientation="vertical"/>
                <field name="date"/>

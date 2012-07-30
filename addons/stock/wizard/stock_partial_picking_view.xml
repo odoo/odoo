@@ -16,11 +16,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form version="7.0">
-                    <header>
-                        <button name="do_partial" string="_Transfer" type="object" icon="gtk-go-forward" />
-                        <button icon='gtk-cancel' special="cancel" string="_Cancel" />
-                        <field name="hide_tracking" invisible="1"/>
-                    </header>
+                    <field name="hide_tracking" invisible="1"/>
                     <separator string="Transfer Products" name="product_separator"/>
                     <field name="move_ids" context="{'hide_tracking': hide_tracking}">
                         <tree editable="bottom" string="Product Moves">
@@ -35,6 +31,11 @@
                             <field name="currency"  invisible="1"/>
                         </tree>
                     </field>
+                    <footer>
+                        <button name="do_partial" string="_Transfer" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

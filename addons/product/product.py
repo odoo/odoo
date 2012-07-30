@@ -259,35 +259,9 @@ class product_template(osv.osv):
     _name = "product.template"
     _description = "Product Template"
 
-    def _get_main_product_supplier(self, cr, uid, product, context=None):
-        """Determines the main (best) product supplier for ``product``,
-        returning the corresponding ``supplierinfo`` record, or False
-        if none were found. The default strategy is to select the
-        supplier with the highest priority (i.e. smallest sequence).
-
-        :param browse_record product: product to supply
-        :rtype: product.supplierinfo browse_record or False
-        """
-        sellers = [(seller_info.sequence, seller_info)
-                       for seller_info in product.seller_ids or []
-                       if seller_info and isinstance(seller_info.sequence, (int, long))]
-        return sellers and sellers[0][1] or False
-
-    def _calc_seller(self, cr, uid, ids, fields, arg, context=None):
-        result = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            main_supplier = self._get_main_product_supplier(cr, uid, product, context=context)
-            result[product.id] = {
-                'seller_info_id': main_supplier and main_supplier.id or False,
-                'seller_delay': main_supplier and main_supplier.delay or 1,
-                'seller_qty': main_supplier and main_supplier.qty or 0.0,
-                'seller_id': main_supplier and main_supplier.name.id or False
-            }
-        return result
-
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True, select=True),
-        'product_manager': fields.many2one('res.users','Product Manager',help="This is use as task responsible"),
+        'product_manager': fields.many2one('res.users','Product Manager',help="Responsible for product."),
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
@@ -321,10 +295,6 @@ class product_template(osv.osv):
             help='Coefficient to convert Unit of Measure to UOS\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
-        'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", multi="seller_info"),
-        'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
-        'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
-        'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
@@ -492,6 +462,34 @@ class product_product(osv.osv):
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + \
                     (data['name'] or '') + (data['variants'] and (' - '+data['variants']) or '')
         return res
+        
+        
+    def _get_main_product_supplier(self, cr, uid, product, context=None):
+        """Determines the main (best) product supplier for ``product``,
+        returning the corresponding ``supplierinfo`` record, or False
+        if none were found. The default strategy is to select the
+        supplier with the highest priority (i.e. smallest sequence).
+
+        :param browse_record product: product to supply
+        :rtype: product.supplierinfo browse_record or False
+        """
+        sellers = [(seller_info.sequence, seller_info)
+                       for seller_info in product.seller_ids or []
+                       if seller_info and isinstance(seller_info.sequence, (int, long))]
+        return sellers and sellers[0][1] or False
+
+    def _calc_seller(self, cr, uid, ids, fields, arg, context=None):
+        result = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            main_supplier = self._get_main_product_supplier(cr, uid, product, context=context)
+            result[product.id] = {
+                'seller_info_id': main_supplier and main_supplier.id or False,
+                'seller_delay': main_supplier and main_supplier.delay or 1,
+                'seller_qty': main_supplier and main_supplier.qty or 0.0,
+                'seller_id': main_supplier and main_supplier.name.id or False
+            }
+        return result
+
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -562,6 +560,10 @@ class product_product(osv.osv):
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 50x50px image, with aspect ratio keps. "\
                  "Use this field anywhere a small image is required."),
+        'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", multi="seller_info"),
+        'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
+        'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
+        'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
     }
 
     def create(self, cr, uid, vals, context=None):
@@ -595,8 +597,8 @@ class product_product(osv.osv):
         return False
 
     def _check_ean_key(self, cr, uid, ids, context=None):
-        for product in self.browse(cr, uid, ids, context=context):
-            res = check_ean(product.ean13)
+        for product in self.read(cr, uid, ids, ['ean13'], context=context):
+            res = check_ean(product['ean13'])
         return res
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]

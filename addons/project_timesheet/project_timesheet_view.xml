@@ -36,7 +36,7 @@
             <field name="inherit_id" ref="analytic_contract_project.project_invoice_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="replace">
-                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
                 </field>
             </field>
         </record>
@@ -70,7 +70,7 @@
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
-                   <field name="account_id" string="Analytic account/project" on_change="on_change_account_id(account_id)"/>
+                   <field name="account_id" string="Analytic Account/Project" on_change="on_change_account_id(account_id)"/>
                 </field>
             </field>
         </record>
@@ -88,7 +88,7 @@
 
         <!-- Menus -->
         <record id="action_project_timesheet_bill_task" model="ir.actions.act_window">
-            <field name="name">Bill Tasks Works</field>
+            <field name="name">Invoice Tasks Work</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

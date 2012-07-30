@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-05-10 17:58+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-07-16 15:25+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:05+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-07-17 04:49+0000\n"
+"X-Generator: Launchpad (build 15627)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -58,7 +58,7 @@ msgstr "Anledning"
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 msgid "Print Attendance Report Error"
-msgstr ""
+msgstr "Skrivut delatagarrapportfel"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
@@ -78,6 +78,9 @@ msgid ""
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using OpenERP's web service features."
 msgstr ""
+"Komma-gå-funktionen syftar till att hantera anställdas närvaro från komma/gå-"
+"rapportering. Du kan också knyta denna funktion till olika former av "
+"passagesystem/stämpeklocka genom ett webservice-gränssnitt."
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -104,7 +107,7 @@ msgstr "Be om tillåtelse att gå hem"
 #: field:hr.attendance,action_desc:0
 #: model:ir.model,name:hr_attendance.model_hr_action_reason
 msgid "Action Reason"
-msgstr ""
+msgstr "Åtgärdsorsak"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
@@ -121,13 +124,13 @@ msgstr "Define attendance reason"
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
 #, python-format
 msgid "Attendances By Month"
-msgstr ""
+msgstr "Närvaro per månad"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,name:0
 #: field:hr.sign.in.out.ask,name:0
 msgid "Employees name"
-msgstr ""
+msgstr "Anställds namn"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
@@ -189,12 +192,12 @@ msgstr "Utskrift"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Hr Attendance Search"
-msgstr ""
+msgstr "Närvarosökning"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
 msgid "Attendances By Week"
-msgstr ""
+msgstr "Närvaro per vecka"
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
@@ -222,7 +225,7 @@ msgstr "Startdatum"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Min Delay"
-msgstr "Min Delay"
+msgstr "Minsta fördröjning"
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
@@ -266,6 +269,8 @@ msgstr "Åtgärdstyp"
 msgid ""
 "(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
+"(*) en negativ försening betyder att den anställde arbetade mer än "
+"registrerat."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -276,7 +281,7 @@ msgstr "Min närvaro"
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr ""
+msgstr "Information om orsak till komma/gå vid övertid"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -286,7 +291,7 @@ msgstr "Skriv månatlig närvarorapport"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out
 msgid "Sign In Sign Out"
-msgstr ""
+msgstr "Komma/gå"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:105
@@ -302,7 +307,7 @@ msgstr "Logga in / Logga ut"
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 msgid "hr.sign.out.ask"
-msgstr ""
+msgstr "hr.sign.out.ask"
 
 #. module: hr_attendance
 #: view:hr.attendance.week:0
@@ -391,11 +396,14 @@ msgid ""
 "tool. If each employee has been linked to a system user, then they can "
 "encode their time with this action button."
 msgstr ""
+"Om du behöver närvarorapportering från personalen, så kan det ske via detta "
+"verkty. Om varje anställd är knuten till ett användarid, så kan närvaron "
+"följas upp med denna knapp."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
-msgstr ""
+msgstr "Skriv ut veckovis närvarorapport"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,emp_id:0
@@ -427,7 +435,7 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance.month:0
 msgid "Print Attendance Report Monthly"
-msgstr ""
+msgstr "Skriv ut månatlig närvarorapport"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -454,6 +462,8 @@ msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the administrator to correct attendances."
 msgstr ""
+"Du försökte %s med ett datum i konflikt med ett annat evenemang!\n"
+"Kontakta administratören för att korrigera närvaron."
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -497,6 +507,9 @@ msgid ""
 "has been linked to a system user, then they can encode their time with this "
 "action button."
 msgstr ""
+"Komma/gå. I vissa företag, måste personalen registrera sig när de anländer "
+"till arbetsplatsen och logga ut igen vid dagens slut. Om varje anställd har "
+"ett användarid i systemet kan de göra detta med denna knapp."
 
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
@@ -556,7 +569,7 @@ msgstr "År"
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 msgid "hr.sign.in.out.ask"
-msgstr ""
+msgstr "hr.sign.in.out.ask"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

@@ -8,12 +8,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Unreconciliation" version="7.0">
-                <header>
-                    <button icon="gtk-ok" string="Unreconcile" name="trans_unrec" type="object" default_focus="1"/>
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                </header>
                 <separator string="Unreconciliate Transactions"/>
                 <label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disabled"/>
+                <footer>
+                    <button string="Unreconcile" name="trans_unrec" type="object" default_focus="1" class="oe_highlight"/>
+                    or                    
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
             </form>
             </field>
         </record>
@@ -43,8 +44,7 @@
             <field name="arch" type="xml">
             <form string="Unreconciliation" version="7.0">
                 <header>
-                    <button icon="gtk-ok" string="Unreconcile" name="trans_unrec_reconcile" type="object" default_focus="1"/>
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="gtk-ok" string="Unreconcile" name="trans_unrec_reconcile" type="object" default_focus="1" class="oe_highlight"  />
                 </header>
                 <separator string="Unreconciliation Transactions"/>
                 <label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable"/>

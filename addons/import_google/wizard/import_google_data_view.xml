@@ -6,25 +6,21 @@
             <field name="model">synchronize.google.import</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Import contacts from a google account">
+                <form string="Import contacts from a google account" version="7.0">
                     <group colspan="4" col="4" width="430">
                        <field name="group_name" colspan="4"/>
-                       <separator string="Import Options" colspan="4"/>
-                       <field name="create_partner" colspan="4"/>
                        <newline/>
-                       <group attrs="{'invisible': [('create_partner','!=','create_all')]}" colspan="4" col="4">
+                       <group colspan="4" col="4">
                             <separator string="Partner Status for this Group:" colspan="4"/>
                             <field name="customer" colspan="4"/>
                             <field name="supplier"  colspan="4"/>
                        </group>
                     </group>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="4">
-                        <group colspan="2" col="2">
-                            <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                            <button name="import_google" string="_Import Contacts" type="object" icon="terp-personal+"/>
-                        </group>
-                    </group>
+                    <footer>
+                        <button name="import_google" string="_Import Contacts" type="object" class="oe_highlight"  />
+                        or 
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -36,17 +32,15 @@
             <field name="model">synchronize.google.import</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Import Google Calendar Events">
+                <form string="Import Google Calendar Events" version="7.0">
                     <group colspan="4" col="4" width="320">
                        <field name="calendar_name" />
                     </group>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="4">
-                        <group colspan="2" col="2">
-                            <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                            <button name="import_google" string="_Import Events" type="object" icon="terp-calendar"/>
-                        </group>
-                    </group>
+                    <footer>
+                        <button name="import_google" string="_Import Events" type="object" class="oe_highlight"  />
+                        or 
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

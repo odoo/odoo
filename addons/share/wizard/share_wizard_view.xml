@@ -8,10 +8,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sharing: preparation" version="7.0">
-                    <header>
-                        <button name="go_step_1" string="Next" type="object" icon="gtk-go-forward"/>
-                        <button special="cancel" string="Cancel" icon='gtk-cancel'/>
-                    </header>
                     <separator
                         string="Please select the action that opens the screen containing the data you want to share."/>
                     <group>
@@ -20,6 +16,11 @@
                             string="Optionally, you may specify an additional domain restriction that will be applied to the shared data."/>
                         <field name="domain"/>
                     </group>
+                    <footer>
+                        <button name="go_step_1" string="Next" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -30,22 +31,23 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form version="7.0">
-                    <header>
-                        <button name="go_step_2" string="Share" type="object" icon="gtk-go-forward"/>
-                        <button special="cancel" string="Cancel" icon='gtk-cancel'/>
-                    </header>
-                    <field name="user_type" invisible="1"/>
-                    <field name="invite" invisible="1"/>
                     <group>
-                        <group name="emails_group" attrs="{'invisible':['|', ('user_type', '!=', 'emails'), ('invite', '=', True)]}" string="Share with these People (one email per line)">
-                            <field colspan="2" nolabel="1" name="new_users" attrs="{'required':[('user_type','=','emails'), ('invite', '!=', True)]}"/>
+                        <field name="user_type" invisible="1"/>
+                        <field name="invite" invisible="1"/>
+                    </group>
+                    <group>
+                        <group colspan="4" name="emails_group" attrs="{'invisible':['|', ('user_type', '!=', 'emails'), ('invite', '=', True)]}"
+                            string="Share with these People (one email per line)">
+                            <field nolabel="1" name="new_users" attrs="{'required':[('user_type','=','emails'), ('invite', '!=', True)]}"/>
                         </group>
-                        <group name="email_lines" attrs="{'invisible':[('invite', '!=', True)]}" string="Share with these People (one email per line)">
+                        <group colspan="4" name="email_lines" attrs="{'invisible':['|', ('invite', '!=', True), ('user_type', '!=', 'emails')]}"
+                            string="Share with these People (one email per line)">
                             <field name="email_1"/>
                             <field name="email_2"/>
                             <field name="email_3"/>
                         </group>
-                        <group attrs="{'invisible':[('user_type', '=', 'embedded')]}" string="Include an Optional Personal Message">
+                        <group colspan="4" attrs="{'invisible':[('user_type', '=', 'embedded')]}"
+                            string="Include an Optional Personal Message">
                             <field name="message" colspan="2" nolabel="1"/>
                         </group>
                         <group attrs="{'invisible':[('invite', '=', True)]}" string="Sharing Options">
@@ -53,6 +55,11 @@
                             <field name="access_mode"/>
                         </group>
                     </group>
+                    <footer>
+                        <button name="go_step_2" string="Share" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -63,13 +70,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Access granted!" version="7.0">
-                    <header>
-                        <button special="cancel" string="Close" icon='gtk-ok'/>
-                        <field name="user_type" invisible="1"/>
-                        <field name="access_mode" invisible="1"/>
-                    </header>
-                    <group attrs="{'invisible':[('user_type','=','embedded')]}">
-                        <separator string="An email notification with instructions has been sent to the following people:"/>
+                    <group attrs="{'invisible':[('user_type','=','embedded')]}"
+                        string="An email notification with instructions has been sent to the following people:">
                         <field name="result_line_ids" nolabel="1" mode="tree">
                             <tree string="Summary">
                                 <field name="login"/>
@@ -82,15 +84,22 @@
                         </field>
                     </group>
                     <group colspan="4" col="1" attrs="{'invisible':[('user_type','!=','embedded')]}">
-                        <separator string="Use this Link"/>
-                        <field name="embed_url"/>
-                        <separator string="Or insert the following code where you want to embed your documents"/>
-                        <group string="Options">
-                            <field name="embed_option_title" on_change="onchange_embed_options(embed_option_title, embed_option_search)"/>
-                            <field name="embed_option_search" on_change="onchange_embed_options(embed_option_title, embed_option_search)" attrs="{'invisible':[('access_mode','=','readonly')]}"/>
+                        <group string="Use this link">
+                            <field name="embed_url"/>
+                        </group>
+                        <group string="Or insert the following code where you want to embed your documents">
                             <field name="embed_code"/>
                         </group>
+                        <group string="Embedded code options">
+                            <field name="embed_option_title" on_change="onchange_embed_options(embed_option_title, embed_option_search)"/>
+                            <field name="embed_option_search" on_change="onchange_embed_options(embed_option_title, embed_option_search)"
+                                attrs="{'invisible':[('access_mode','=','readonly')]}"/>
+                        </group>
                     </group>
+                    <footer>
+                        <field name="user_type" invisible="1"/>
+                        <field name="access_mode" invisible="1"/>
+                    </footer>
 
                 </form>
             </field>

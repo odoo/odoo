@@ -10,22 +10,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Schedule/Log a Call" version="7.0">
-                    <header>
-                        <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
-                        <button name="action_schedule" type="object" string="Log Call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'log')]}" />
-                        <button name="action_schedule" type="object" string="Schedule Call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'schedule')]}" />
-                    </header>
                     <group col="4">
-                        <separator string="Schedule/Log a Call" colspan="4"/>
                         <field name="action"/>
-                        <separator string="Call Details" colspan="4"/>
                         <field name="name"/>
                         <field name="date" string="Planned Date" attrs="{'invisible': [('action','=','log')]}"/>
                         <field name="partner_id" readonly="True"/>
                         <field name="user_id" />
                         <field name="section_id"/>
-                        <field name="categ_id" string="Type" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                     </group>
+                    <footer>
+                        <button name="action_schedule" type="object" string="Log Call" attrs="{'invisible' : [('action', '!=', 'log')]}" class="oe_highlight"/>
+                        <button name="action_schedule" type="object" string="Schedule Call" attrs="{'invisible' : [('action', '!=', 'schedule')]}" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

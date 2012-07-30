@@ -7,10 +7,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Split in Lots" version="7.0">
-                    <header>
-                        <button icon='gtk-cancel' special="cancel" string="Cancel" />
-                        <button name="split_lot" string="Ok" type="object" icon="gtk-ok" />
-                    </header>
                     <group>
                         <field name="product_id" colspan="4" readonly="1"/>
                         <label for="qty"/>
@@ -44,6 +40,11 @@
                             </group>
                         </form>
                     </field>
+                    <footer>
+                        <button name="split_lot" string="Ok" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record> 

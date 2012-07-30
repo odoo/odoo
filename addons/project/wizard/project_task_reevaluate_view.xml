@@ -8,14 +8,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Reevaluate Task" version="7.0">
-                    <header>
-                        <button icon="gtk-apply" name="compute_hours" string="_Evaluate" type="object" default_focus="1"/>
-                        <button icon="gtk-cancel" special="cancel" string="_Cancel"/>
-                    </header>
                     <separator string="Reevaluation Task"/>
                     <group>
                         <field name="remaining_hours" widget="float_time"/>
                     </group>
+                    <footer>
+                        <button name="compute_hours" string="_Evaluate" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
