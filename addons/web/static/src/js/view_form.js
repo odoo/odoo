@@ -4665,9 +4665,27 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
      *  state (given by the key of (key, label)).
      */
     render_elements: function () {
+        var self = this;
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
-
+        clickable = this.node.attrs.clickable;
+        var result = true;
+        if(clickable == undefined) result = false;
+        if(result == true && clickable.toLowerCase() == 'true' || clickable == '1')
+        {
+            var elemts = this.$element.find('.oe_form_steps_item')
+            _.each(elemts, function(element){
+                $item = $(element);
+                if($item.attr("data-id") != self.selected_value){
+                    $item.attr("style", "cursor: pointer;");
+                    $item.click(function(event){
+                        var data_id = parseInt($(this).attr("data-id"))
+                        self.view.dataset.call('stage_set', [[self.view.datarecord.id],data_id]).then(function() {
+                        return self.view.reload();});
+                    });
+                };
+            });
+        }
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
         if (color) {
