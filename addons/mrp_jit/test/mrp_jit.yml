@@ -1,8 +1,8 @@
 -
-  In order to test mrp_jit module with OpenERP, I create procurement order
-  and check whether it runs without scheduler or not.
+  In order to test mrp_jit module with OpenERP, I create procurement order for 
+  Computer Case product and check whether it runs without scheduler or not.
 -
-  !record {model: procurement.order, id: mrp_production_mo0}:
+  !record {model: procurement.order, id: procurement_order_test1}:
     company_id: base.main_company
     date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_id: stock.stock_location_stock
@@ -15,10 +15,10 @@
   |
   I confirm the procurement order PROC/TEST/0001.
 -
-  !workflow {model: procurement.order, action: button_confirm, ref: mrp_production_mo0}
+  !workflow {model: procurement.order, action: button_confirm, ref: procurement_order_test1}
 -
   |
   I check that the procurement is scheduled automatically.
 -
-  !assert {model: procurement.order, id: mrp_production_mo0, string: procstate}:
+  !assert {model: procurement.order, id: procurement_order_test1, string: procstate}:
     - state<>'confirmed'
