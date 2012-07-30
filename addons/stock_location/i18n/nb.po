@@ -1,0 +1,400 @@
+# Norwegian Bokmal translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-07-22 21:37+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Norwegian Bokmal <nb@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-07-23 05:17+0000\n"
+"X-Generator: Launchpad (build 15654)\n"
+
+#. module: stock_location
+#: selection:product.pulled.flow,picking_type:0
+#: selection:stock.location.path,picking_type:0
+msgid "Sending Goods"
+msgstr "Vareforsendelse"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Pulled Paths"
+msgstr ""
+
+#. module: stock_location
+#: selection:product.pulled.flow,type_proc:0
+msgid "Move"
+msgstr "Bevegelse"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_stock_location_path
+msgid "Pushed Flows"
+msgstr ""
+
+#. module: stock_location
+#: selection:stock.location.path,auto:0
+msgid "Automatic No Step Added"
+msgstr ""
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Parameters"
+msgstr "Parametere"
+
+#. module: stock_location
+#: field:product.pulled.flow,location_src_id:0
+#: field:stock.location.path,location_from_id:0
+msgid "Source Location"
+msgstr "Kildelokasjon"
+
+#. module: stock_location
+#: help:product.pulled.flow,cancel_cascade:0
+msgid "Allow you to cancel moves related to the product pull flow"
+msgstr ""
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_product_pulled_flow
+#: field:product.product,flow_pull_ids:0
+msgid "Pulled Flows"
+msgstr ""
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "Du må velge en produksjonslot/batch for dette produktet"
+
+#. module: stock_location
+#: help:product.pulled.flow,location_src_id:0
+msgid "Location used by Destination Location to supply"
+msgstr ""
+
+#. module: stock_location
+#: selection:product.pulled.flow,picking_type:0
+#: selection:stock.location.path,picking_type:0
+msgid "Internal"
+msgstr "Intern"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:98
+#, python-format
+msgid ""
+"Pulled procurement coming from original location %s, pull rule %s, via "
+"original Procurement %s (#%d)"
+msgstr ""
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_stock_location
+msgid "Location"
+msgstr "Lokasjon"
+
+#. module: stock_location
+#: field:product.pulled.flow,invoice_state:0
+#: field:stock.location.path,invoice_state:0
+msgid "Invoice Status"
+msgstr "Fakturastatus"
+
+#. module: stock_location
+#: help:stock.location.path,auto:0
+msgid ""
+"This is used to define paths the product has to follow within the location "
+"tree.\n"
+"The 'Automatic Move' value will create a stock move after the current one "
+"that will be validated automatically. With 'Manual Operation', the stock "
+"move has to be validated by a worker. With 'Automatic No Step Added', the "
+"location is replaced in the original move."
+msgstr ""
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Conditions"
+msgstr "Vilkår"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_pack_zone
+msgid "Pack Zone"
+msgstr ""
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_b
+msgid "Gate B"
+msgstr "Gate B"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_a
+msgid "Gate A"
+msgstr "Gate A"
+
+#. module: stock_location
+#: selection:product.pulled.flow,type_proc:0
+msgid "Buy"
+msgstr "Kjøp"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Pushed flows"
+msgstr ""
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_dispatch_zone
+msgid "Dispatch Zone"
+msgstr ""
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "Lagerbevegelse"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Pulled flows"
+msgstr ""
+
+#. module: stock_location
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "Firma"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Logistics Flows"
+msgstr ""
+
+#. module: stock_location
+#: help:stock.move,cancel_cascade:0
+msgid "If checked, when this move is cancelled, cancel the linked move too"
+msgstr ""
+
+#. module: stock_location
+#: selection:product.pulled.flow,type_proc:0
+msgid "Produce"
+msgstr "Produser"
+
+#. module: stock_location
+#: selection:product.pulled.flow,procure_method:0
+msgid "Make to Order"
+msgstr "Produser på bestilling(Make to order)"
+
+#. module: stock_location
+#: selection:product.pulled.flow,procure_method:0
+msgid "Make to Stock"
+msgstr "Produser til lager"
+
+#. module: stock_location
+#: field:product.pulled.flow,partner_address_id:0
+msgid "Partner Address"
+msgstr "Partneradresse"
+
+#. module: stock_location
+#: selection:product.pulled.flow,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+msgid "To Be Invoiced"
+msgstr "Klare til fakturering"
+
+#. module: stock_location
+#: help:stock.location.path,delay:0
+msgid "Number of days to do this transition"
+msgstr ""
+
+#. module: stock_location
+#: help:product.pulled.flow,name:0
+msgid "This field will fill the packing Origin and the name of its moves"
+msgstr ""
+
+#. module: stock_location
+#: field:product.pulled.flow,type_proc:0
+msgid "Type of Procurement"
+msgstr ""
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company belong packings and moves"
+msgstr ""
+
+#. module: stock_location
+#: field:product.pulled.flow,name:0
+msgid "Name"
+msgstr "Navn"
+
+#. module: stock_location
+#: help:product.product,path_ids:0
+msgid ""
+"These rules set the right path of the product in the whole location tree."
+msgstr ""
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr "Kan ikke flytte produkter til eller fra en lokasjon av typen view."
+
+#. module: stock_location
+#: selection:stock.location.path,auto:0
+msgid "Manual Operation"
+msgstr "Manuell operasjon"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_product_product
+#: field:product.pulled.flow,product_id:0
+msgid "Product"
+msgstr "Produkt"
+
+#. module: stock_location
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "Innkjøpsmetode"
+
+#. module: stock_location
+#: field:product.pulled.flow,picking_type:0
+#: field:stock.location.path,picking_type:0
+msgid "Shipping Type"
+msgstr "Forsendelestype"
+
+#. module: stock_location
+#: help:product.pulled.flow,procure_method:0
+msgid ""
+"'Make to Stock': When needed, take from the stock or wait until re-"
+"supplying. 'Make to Order': When needed, purchase or produce for the "
+"procurement request."
+msgstr ""
+"'Make to Stock': When needed, take from the stock or wait until re-"
+"supplying. 'Make to Order': When needed, purchase or produce for the "
+"procurement request."
+
+#. module: stock_location
+#: help:product.pulled.flow,location_id:0
+msgid "Is the destination location that needs supplying"
+msgstr ""
+
+#. module: stock_location
+#: field:stock.location.path,product_id:0
+msgid "Products"
+msgstr "Produkter"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location via procurement %d"
+msgstr ""
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.stock_location_qualitytest0
+msgid "Quality Control"
+msgstr "Kvalitetskontroll"
+
+#. module: stock_location
+#: selection:product.pulled.flow,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+msgid "Not Applicable"
+msgstr "Ikke tilgjengelig"
+
+#. module: stock_location
+#: field:stock.location.path,delay:0
+msgid "Delay (days)"
+msgstr "Forsinkelse (dager)"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:67
+#, python-format
+msgid ""
+"Picking for pulled procurement coming from original location %s, pull rule "
+"%s, via original Procurement %s (#%d)"
+msgstr ""
+
+#. module: stock_location
+#: field:product.product,path_ids:0
+msgid "Pushed Flow"
+msgstr ""
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:89
+#, python-format
+msgid ""
+"Move for pulled procurement coming from original location %s, pull rule %s, "
+"via original Procurement %s (#%d)"
+msgstr ""
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr "Du forsøker å angi en lot som ikke tilhører samme produkt"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_procurement_order
+msgid "Procurement"
+msgstr "Innkjøp"
+
+#. module: stock_location
+#: field:product.pulled.flow,location_id:0
+#: field:stock.location.path,location_dest_id:0
+msgid "Destination Location"
+msgstr "Destinasjons Lokasjon"
+
+#. module: stock_location
+#: field:stock.location.path,auto:0
+#: selection:stock.location.path,auto:0
+msgid "Automatic Move"
+msgstr "Automatisk bevegelse"
+
+#. module: stock_location
+#: selection:product.pulled.flow,picking_type:0
+#: selection:stock.location.path,picking_type:0
+msgid "Getting Goods"
+msgstr ""
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Action Type"
+msgstr "Handlingstype"
+
+#. module: stock_location
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Feil: Ugyldig ean kode"
+
+#. module: stock_location
+#: help:product.pulled.flow,picking_type:0
+#: help:stock.location.path,picking_type:0
+msgid ""
+"Depending on the company, choose whatever you want to receive or send "
+"products"
+msgstr ""
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_order
+msgid "Order Processing"
+msgstr ""
+
+#. module: stock_location
+#: field:stock.location.path,name:0
+msgid "Operation"
+msgstr "Handling"
+
+#. module: stock_location
+#: view:stock.location.path:0
+msgid "Location Paths"
+msgstr ""
+
+#. module: stock_location
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "Journal"
+
+#. module: stock_location
+#: field:product.pulled.flow,cancel_cascade:0
+#: field:stock.move,cancel_cascade:0
+msgid "Cancel Cascade"
+msgstr ""
+
+#. module: stock_location
+#: selection:product.pulled.flow,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+msgid "Invoiced"
+msgstr "Fakturert"

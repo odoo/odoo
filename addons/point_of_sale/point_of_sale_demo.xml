@@ -4,7 +4,7 @@
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
         </record>
-    	<record id="account.cash_journal" model="account.journal">
+        <record id="account.cash_journal" model="account.journal">
             <field eval="True" name="journal_user"/>
         </record>
 

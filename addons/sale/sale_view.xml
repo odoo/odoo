@@ -3,10 +3,13 @@
     <data>
 
         <!-- Top menu item -->
+        <!--
+            This menu item's purpose is to overwrite another one defined in
+            the base module in order to set new groups.
+        -->
         <menuitem name="Sales"
             id="base.menu_base_partner"
-            groups="base.group_sale_salesman,base.group_sale_manager"
-            sequence="30"/>
+            groups="base.group_sale_salesman,base.group_sale_manager"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
@@ -153,16 +156,18 @@
                             <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
                             <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
                             <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
-                            <button name="action_quotation_send" string="Send by Mail" type="object" states="draft,sent"/>
-                            <button name="manual_invoice" states="manual" string="Create Final Invoice" type="object" class="oe_highlight"/>
-                            <button name="print_quotation" string="Send by Post" type="object" states="draft,sent"/>
-                            <button name="action_button_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                            <button name="action_quotation_send" string="Send by Mail" type="object" states="draft" class="oe_highlight"/>
+                            <button name="action_quotation_send" string="Send by Mail" type="object" states="sent"/>
+                            <button name="print_quotation" string="Send by Post" type="object" states="draft" class="oe_highlight"/>
+                            <button name="print_quotation" string="Send by Post" type="object" states="sent"/>
+                            <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
                             <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
                             <button name="action_view_delivery" string="Open Delivery Order" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
-                            <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" states="manual"/>
+                            <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                                type="action" states="manual" class="oe_highlight"/>
                             <button name="cancel" states="draft,sent" string="Cancel"/>
                             <button name="action_cancel" states="manual,progress" string="Cancel" type="object"/>
                             <button name="ship_cancel" states="shipping_except" string="Cancel"/>
@@ -196,11 +201,11 @@
                                 <form string="Sales Order Lines" version="7.0">
                                     <header>
                                         <button name="%(action_view_sale_order_line_make_invoice)d" states="confirmed" string="Invoice" type="action" icon="terp-document-new"/>
-                        <field name="invoiced" invisible="1"/>
                                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                                     </header>
                                     <group>
                                         <group>
+                                            <field name="state" invisible="1" />
                                             <field name="product_id"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 groups="base.group_user"
@@ -240,7 +245,8 @@
 
                                             <!-- we should put a config wizard for these two fields -->
                                             <field name="address_allotment_id"/>
-                                            <field name="property_ids" widget="many2many_tags"/>
+                                            <field name="property_ids" widget="many2many_tags"
+                                                groups="sale.group_mrp_properties"/>
                                         </group>
                                     </group>
                                     <label for="name"/>
@@ -252,13 +258,27 @@
                                         <field name="move_ids" widget="many2many"/>
                                     </div>
                                 </form>
-                                <tree string="Sales Order Lines">
-                                    <field name="sequence"/>
+                                <tree string="Sales Order Lines" editable="bottom">
+                                    <field name="state" invisible="1"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="delay" invisible="1"/>
+                                    <field name="tax_id" invisible="1"/>
+                                    <field name="type" invisible="1"/>
+                                    <field name="th_weight" invisible="1"/>
+                                    <field name="product_packaging" invisible="1"/>
+                                    <field name="product_id"
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
+                                        groups="base.group_user" 
+                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
                                     <field name="name"/>
-                                    <field name="product_uom_qty" string="Quantity"/>
-                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                    <field groups="product.group_uos" name="product_uos_qty" string="Quantity (UoS)"/>
-                                    <field groups="product.group_uos" name="product_uos" string="UoS"/>
+                                    <field name="product_uom_qty"
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
+                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
+                                    <field name="product_uom"
+                                        on_change="product_uom_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, context)"
+                                        groups="product.group_uom" class="oe_no_button"/>
+                                    <field name="product_uos_qty" groups="product.group_uos"/>
+                                    <field name="product_uos" string="UoS" groups="product.group_uos"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_unit"/>
                                     <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
@@ -451,7 +471,7 @@
                 <tree string="Sales Order Lines">
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
-                    <field name="product_id"/>
+                    <field name="name"/>
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="salesman_id"/>

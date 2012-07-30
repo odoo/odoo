@@ -46,7 +46,7 @@ class hr_employee(osv.osv):
     def _getEmployeeProduct(self, cr, uid, context=None):
         md = self.pool.get('ir.model.data')
         try:
-            result = md.get_object_reference(cr, uid, 'product', 'product_product_0')
+            result = md.get_object_reference(cr, uid, 'product', 'product_product_consultant')
             return result[1]
         except ValueError:
             pass
@@ -198,6 +198,13 @@ class account_analytic_account(osv.osv):
     _columns = {
         'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
     }
+    
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['use_timesheets'] = template.use_timesheets
+        return res
 
 account_analytic_account()
 

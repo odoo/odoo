@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <!-- This will set the unit of measure used in projects and tasks.-->
+        <record id="base.main_company" model="res.company">
+            <field name="project_time_mode_id" ref="product.product_uom_hour"></field>
+        </record>
 
         <!-- Requests Links -->
         <record id="req_link_project" model="res.request.link">
@@ -59,5 +63,21 @@
             <field name="case_default" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
+
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Project Management has been installed</value>
+            <value>Manage multi-level projects and tasks.  You can delegate tasks,
+                track the work done on tasks, and review your planning based on
+                the entered data.
+
+                You can manage todo lists on tasks by installing the module
+                "Todo Lists", which supports the methodology Getting Things
+                Done (GTD).  You can also manage issues/bugs in projects by
+                installing the module "Issues Tracker."
+            </value>
+        </function>
     </data>
 </openerp>

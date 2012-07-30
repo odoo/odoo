@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Events Organisation has been installed</value>
+            <value>Organize events and manage their registrations.  You can
+                automatically confirm and send acknowledgements of registrations
+                by email.
+            </value>
+        </function>
+    </data>
+</openerp>

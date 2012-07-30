@@ -2,9 +2,9 @@
 <openerp>
     <data noupdate="1">
         <!--
-	Resource: product.uom.categ
-	-->
-        <record id="product_category_0" model="product.category">
+    Resource: product.uom.categ
+    -->
+        <record id="product_category_all" model="product.category">
             <field name="name">All products</field>
         </record>
 
@@ -20,8 +20,8 @@
         <record id="uom_categ_length" model="product.uom.categ">
             <field name="name">Length / Distance</field>
         </record>
-        <record id="product_uom_categ_fluid" model="product.uom.categ">
-            <field name="name">Fluid</field>
+        <record id="product_uom_categ_vol" model="product.uom.categ">
+            <field name="name">Volume</field>
         </record>
 
         <!--
@@ -88,7 +88,7 @@
         </record>
         <record id="product_uom_litre" model="product.uom">
             <field name="name">Litre</field>
-            <field name="category_id" ref="product_uom_categ_fluid"/>
+            <field name="category_id" ref="product_uom_categ_vol"/>
             <field name="factor">1.0</field>
         </record>
 
@@ -185,13 +185,13 @@ parameter) will see those record just disappear.
         <!--
         Product
         -->
-        <record id="product_product_0" model="product.product">
+        <record id="product_product_consultant" model="product.product">
             <field name="list_price">75.0</field>
             <field name="standard_price">30.0</field>
             <field name="uom_id" ref="product.product_uom_hour"/>
             <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="name">Service on Demand</field>
-            <field name="categ_id" ref="product.product_category_0"/>
+            <field name="categ_id" ref="product.product_category_all"/>
             <field name="type">service</field>
             <field eval="False" name="purchase_ok"/>
         </record>

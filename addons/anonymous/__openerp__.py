@@ -1,6 +1,6 @@
 {
  'name': 'Anonymous',
- 'description': 'Allow anonymous access to OpenERP',
+ 'description': 'Allow anonymous access to OpenERP.',
  'author': 'OpenERP SA',
  'version': '1.0',
  'category': 'Tools',

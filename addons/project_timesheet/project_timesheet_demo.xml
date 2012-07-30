@@ -4,13 +4,13 @@
         <!-- Example employee -->
         <record id="hr.employee_qdp" model="hr.employee">
             <field name="user_id" ref="base.user_qdp"/>
-            <field name="product_id" ref="product.product_product_0"/>
+            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
 
         <record id="hr.employee_al" model="hr.employee">
             <field name="user_id" ref="base.user_al"/>
-            <field name="product_id" ref="product.product_product_0"/>
+            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
 
@@ -19,7 +19,7 @@
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="user_id" ref="base.user_niv"/>
             <field name="category_ids" eval="[(6, 0, [ref('hr.category_employee')])]"/>
-            <field name="product_id" ref="product.product_product_0"/>
+            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
 
@@ -28,7 +28,7 @@
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="user_id" ref="base.user_fpi"/>
             <field name="category_ids" eval="[(6, 0, [ref('hr.category_employee')])]"/>
-            <field name="product_id" ref="product.product_product_0"/>
+            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
         <record id="hr.employee_jth" model="hr.employee">
@@ -36,7 +36,7 @@
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="user_id" ref="base.user_jth"/>
             <field name="category_ids" eval="[(6, 0, [ref('hr.category_employee')])]"/>
-            <field name="product_id" ref="product.product_product_0"/>
+            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
         <record id="hr.employee7" model="hr.employee">
@@ -44,7 +44,7 @@
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="user_id" ref="base.user_mit"/>
             <field name="category_ids" eval="[(6, 0, [ref('hr.category_employee')])]"/>
-            <field name="product_id" ref="product.product_product_0"/>
+            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
         <record id="hr.employee8" model="hr.employee">
@@ -52,7 +52,7 @@
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="user_id" ref="base.user_vad"/>
             <field name="category_ids" eval="[(6, 0, [ref('hr.category_employee')])]"/>
-            <field name="product_id" ref="product.product_product_0"/>
+            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
 

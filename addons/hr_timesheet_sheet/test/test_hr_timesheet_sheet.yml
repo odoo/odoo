@@ -10,7 +10,7 @@
   I assign this product(Service on Timesheet) and journal(Timesheet Journal) to employee "Quentin Paolino"
 -
   !record {model: hr.employee, id: hr.employee_qdp}:
-    product_id: product.product_product_0
+    product_id: product.product_product_consultant
     journal_id: hr_timesheet.analytic_journal
 -
   I create my current timesheet for employee "Quentin Paolinon".
@@ -72,7 +72,7 @@
         user_id: base.user_qdp
         unit_amount: 6.00
         amount: -90.00
-        product_id: product.product_product_0
+        product_id: product.product_product_consultant
         general_account_id: account.a_expense
         journal_id: hr_timesheet.analytic_journal
 -
@@ -99,7 +99,7 @@
         unit_amount: 2.00
         user_id: base.user_qdp
         amount: -90.00
-        product_id: product.product_product_0
+        product_id: product.product_product_consultant
         general_account_id: account.a_expense
         journal_id: hr_timesheet.analytic_journal
 -

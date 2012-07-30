@@ -2,9 +2,6 @@
 <openerp>
     <data noupdate="1">
 <!--                      Partner                        -->
-        <record id="base.main_partner" model="res.partner">
-            <field name="name">OpenERP Corp.</field>
-        </record>
         <record id="res_partner_oerp_editor" model="res.partner">
             <field name="name">OpenERP Editor</field>
         </record>
@@ -22,10 +19,6 @@
         </record>
 
 <!--                      Company                        -->
-        <record id="base.main_company" model="res.company">
-            <field name="name">OpenERP Corp.</field>
-            <field name="currency_id" ref="base.EUR"/>
-        </record>
         <record id="res_company_oerp_editor" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_editor"/>
             <field name="parent_id" ref="base.main_company"/>
@@ -187,7 +180,7 @@
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
         <record id="Odoo1" model="product.category">
-            <field name="parent_id" ref="product.product_category_0"/>
+            <field name="parent_id" ref="product.product_category_all"/>
             <field name="name">Odoo Offers</field>
         </record>
         <record id="product_product_odoo1" model="product.product">

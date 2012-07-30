@@ -519,7 +519,7 @@ class project_issue(base_stage, osv.osv):
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
-    
+
     def message_get_subscribers(self, cr, uid, ids, context=None):
         """ Override to add responsible user. """
         user_ids = super(project_issue, self).message_get_subscribers(cr, uid, ids, context=context)
@@ -538,7 +538,7 @@ class project_issue(base_stage, osv.osv):
         return 'Project issue'
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
-        message = _("Project issue has been <b>converted</b> in to task.")
+        message = _("Project issue has been <b>converted</b> into task.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
@@ -592,6 +592,13 @@ class account_analytic_account(osv.osv):
     _columns = {
         'use_issues' : fields.boolean('Issues Tracking', help="Check this field if this project manages issues"),
     }
+    
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['use_issues'] = template.use_issues
+        return res
     
     def _trigger_project_creation(self, cr, uid, vals, context=None):
         res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
