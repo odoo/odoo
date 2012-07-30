@@ -56,6 +56,38 @@ class ImporterCase(common.TransactionCase):
             self.model.search(self.cr, openerp.SUPERUSER_ID, domain, context=context),
             context=context)
 
+class test_ids_stuff(ImporterCase):
+    model_name = 'export.integer'
+
+    def test_create_with_id(self):
+        self.assertRaises(
+            Exception, # dammit
+            self.import_, ['.id', 'value'], [['42', '36']])
+    def test_create_with_xid(self):
+        self.assertEqual(
+            self.import_(['id', 'value'], [['somexmlid', '42']]),
+            ok(1))
+        # TODO: get xid back, check that it is correct?
+
+    def test_update_with_id(self):
+        id = self.model.create(self.cr, openerp.SUPERUSER_ID, {'value': 36})
+        self.assertEqual(
+            36,
+            self.model.browse(self.cr, openerp.SUPERUSER_ID, id).value)
+
+        self.assertEqual(
+            self.import_(['.id', 'value'], [[str(id), '42']]),
+            ok(1))
+        self.assertEqual(
+            [42], # updated value to imported
+            values(self.read()))
+
+    def test_update_with_xid(self):
+        self.import_(['id', 'value'], [['somexmlid', '36']])
+        self.assertEqual([36], values(self.read()))
+
+        self.import_(['id', 'value'], [['somexmlid', '1234567']])
+        self.assertEqual([1234567], values(self.read()))
 
 class test_boolean_field(ImporterCase):
     model_name = 'export.boolean'
@@ -459,3 +491,8 @@ class test_o2m(ImporterCase):
         self.assertRaises(
             Exception, # FIXME: Why can't you be a ValueError like everybody else?
             self.import_, ['value/.id'], [[66]])
+# TODO: M2M
+# TODO: O2M
+
+# function, related, reference: written to db as-is...
+# => function uses @type for value coercion/conversion
