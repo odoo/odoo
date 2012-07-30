@@ -109,13 +109,12 @@ instance.web.DiagramView = instance.web.View.extend({
 
     get_label : function(){
     	var self = this
-    	if(self.$element.find('.oe_diagram_diagram_header').text() == ""){
-	    	_.each(self.labels,function(label){
-	    		html_label = "<p>" + label.attrs.string + "</p>"
-		    	self.$element.find('.oe_diagram_diagram_header').append(html_label)
+    	this.$element.find('.oe_diagram_diagram_header > p').remove();
+	    _.each(self.labels,function(label){
+	    	html_label = "<p>" + label.attrs.string + "</p>"
+	    	self.$element.find('.oe_diagram_diagram_header').append(html_label)
 		    	self.$element.find('.oe_diagram_diagram_header > p').css('padding-left','5px')
-	    	})
-    	}
+	    })
     },
 
     on_diagram_loaded: function(record) {
