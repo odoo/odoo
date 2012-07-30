@@ -843,10 +843,15 @@ openerp.mail = function(session) {
             this.ds = new session.web.DataSet(this, this.view.model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
-
+        
         start: function() {
             var self = this;
-            this._super.apply(this, arguments);
+            
+            // NB: all the widget should be modified to check the actual_mode property on view, not use
+            // any other method to know if the view is in create mode anymore
+            this.view.on("change:actual_mode", this, this._check_visibility);
+            this._check_visibility();
+            
             mail.ChatterUtils.bind_events(this);
             this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
             if (! this.params.see_subscribers_options) {
@@ -859,7 +864,11 @@ openerp.mail = function(session) {
                 .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
             this.reinit();
         },
-
+        
+        _check_visibility: function() {
+            this.$element.toggle(this.view.get("actual_mode") !== "create");
+        },
+        
         destroy: function () {
             this._super.apply(this, arguments);
         },
