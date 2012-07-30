@@ -97,6 +97,35 @@ $sheet-max-width: 860px
         color: $color
 
 // }}}
+// CSS animation bounces {{{
+@-moz-keyframes bounce
+    0%
+        -moz-transform: scale(0)
+        opacity: 0
+    50%
+        -moz-transform: scale(1.3)
+        opacity: 0.4
+    75%
+        -moz-transform: scale(0.9)
+        opacity: 0.7
+    100%
+        -moz-transform: scale(1)
+        opacity: 1
+
+@-webkit-keyframes bounce
+    0%
+        -webkit-transform: scale(0)
+        opacity: 0
+    50%
+        -webkit-transform: scale(1.3)
+        opacity: 0.4
+    75%
+        -webkit-transform: scale(0.9)
+        opacity: 0.7
+    100%
+        -webkit-transform: scale(1)
+        opacity: 1
+// }}}
 
 .openerp.openerp_webclient_container
     height: 100%
@@ -200,7 +229,9 @@ $sheet-max-width: 860px
             width: auto
             a.ui-state-active
                 background: #f0f0fa
-
+    div.ui-widget-overlay
+        background: black
+        @include opacity(0.3)
     // Modal box
     &.ui-dialog
         display: none
@@ -255,6 +286,29 @@ $sheet-max-width: 860px
                 &:hover
                     color: black
                     text-decoration: none
+        .oe_about
+            background-color: white
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+            @include radius(0 0 2px 2px)
+            a
+                color: #8A89BA
+                &:hover
+                    text-decoration: underline
+            .oe_logo
+                margin-left: -6px
+            .oe_bottom
+                position: absolute
+                top: 50%
+                left: 0
+                right: 0
+                bottom: 0
+                text-shadow: 0 1px 1px #999999
+                @include vertical-gradient(#b41616, #600606)
+                color: #eee
+                padding: 0 16px
+                @include radius(0 0 2px 2px)
+                a
+                    color: #eee
 
     &.ui-dialog.oe_act_window
         .ui-dialog-content
@@ -367,6 +421,9 @@ $sheet-max-width: 860px
             text-decoration: none
         .oe_star_on
             color: gold
+    .oe_bounce
+        -moz-animation: bounce .40s linear
+        -webkit-animation: bounce .40s linear
     // }}}
     // Tags (for many2many tags, among others) {{{
     .oe_tag
@@ -469,7 +526,7 @@ $sheet-max-width: 860px
         z-index: 1
         border: 1px solid #afafb6
         background: white
-        padding: 6px 0
+        padding: 4px 0
         min-width: 140px
         text-align: left
         @include radius(3px)
@@ -482,10 +539,10 @@ $sheet-max-width: 860px
             float: none
             display: block
             position: relative
+            padding: 2px 8px
             > a
                 white-space: nowrap
                 display: block
-                padding: 4px 15px
                 color: #4c4c4c
                 text-decoration: none
                 &:hover
@@ -566,7 +623,7 @@ $sheet-max-width: 860px
     // }}}
     // Login {{{
     .oe_login
-        background: url("/web/static/src/img/pattern.png") repeat
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
         text-align: center
         font-size: 14px
         height: 100%
@@ -734,11 +791,12 @@ $sheet-max-width: 860px
             @include background-clip()
             li
                 float: none
+                padding: 3px 12px
                 a
                     color: #eee
-                    &:hover
-                        @include vertical-gradient(#292929, #191919)
-                        @include box-shadow(none)
+                &:hover
+                    @include vertical-gradient(#292929, #191919)
+                    @include box-shadow(none)
 
     // }}}
     // Webclient.leftbar {{{
@@ -958,6 +1016,8 @@ $sheet-max-width: 860px
         // ViewManager.pager {{{
         .oe_view_manager_pager
             line-height: 26px
+            .oe_list_pager_single_page .oe_pager_group
+                display: none
         .oe_pager_value
             float: left
             margin-right: 8px
@@ -1101,19 +1161,20 @@ $sheet-max-width: 860px
                 border-right: 5px solid transparent
                 @include opacity()
 
+        .oe_searchview_search
+            @include text-to-icon("r", #a3a3a3)
+            @include box-shadow(none)
+            @include radius(0)
+            position: absolute
+            left: 3px
+            top: 1px
+            padding: 0
+            border: none
+            background: transparent
+
         .oe_searchview_facets
             min-height: 22px
-            &:before
-                color: #ccc
-                font-family: "mnmliconsRegular"
-                content: "r"
-                font-size: 130%
-                display: inline
-                position: relative
-                left: 6px
-                top: 2px
-                color: #a3a3a3
-                padding-right: 4px
+            margin-left: 15px
             *
                 vertical-align: top
                 display: inline-block
@@ -1125,7 +1186,7 @@ $sheet-max-width: 860px
                 &:focus
                     outline: none
             .oe_searchview_input
-                padding: 0 3px
+                padding: 0 0 0 6px
             .oe_searchview_facet
                 position: relative
                 cursor: pointer
@@ -1247,13 +1308,13 @@ $sheet-max-width: 860px
                     // after oe_selected so background color is not overridden
                     &:hover
                         background-color: $hover-background
-                form
-                    margin-left: 12px
-                    p
-                        margin: 4px 0
-                        line-height: 18px
-                    button
-                        margin: 0 0 8px 0
+            form
+                margin-left: 12px
+                p
+                    margin: 4px 0
+                    line-height: 18px
+                button
+                    margin: 0 0 8px 0
             .oe_searchview_custom
                 padding: 0 8px 8px 8px
                 form
@@ -1821,6 +1882,49 @@ $sheet-max-width: 860px
             input
                 text-align: right
     // }}}
+    // Tree view {{{
+    .tree_header
+        background-color: #f0f0f0
+        border-bottom: 1px solid #cacaca
+        color: #4c4c4c
+        padding: 5px
+        height: 25px
+        button
+            float: right
+            height: 27px
+            margin-right: 5px
+    .oe-treeview-table
+        width: 100%
+        background-color: white
+        border-spacing: 0
+        th
+            padding: 10px
+            color: #4c4c4c
+            font-weight: bold
+            background-color: #f0f0f0
+            border-bottom: 2px solid #cacaca
+        .treeview-tr, .treeview-td
+            cursor: pointer
+            border-right: 1px dotted #afafb6
+            vertical-align: top
+            text-align: left
+            border-bottom: 1px solid #cfcccc
+        tr:hover
+            background-color: #e0e0f8
+        .oe-number
+            text-align: right !important
+        span
+            font-size: 90%
+            font-weight: normal
+            white-space: nowrap
+            display: block
+        .treeview-tr.oe-treeview-first
+            background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat
+        .oe_open .treeview-tr.oe-treeview-first
+            background-image: url(/web/static/src/img/collapse.gif)
+        .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
+            margin-left: 16px
+    // }}}
     // Translation {{{
     .oe_trad_field.touched
         border: 1px solid green !important
@@ -1878,49 +1982,6 @@ $sheet-max-width: 860px
         float: right
         color: #333
     // }}}
-//Tree view
-.openerp
-    .tree_header
-        background-color: #f0f0f0
-        border-bottom: 1px solid #cacaca
-        color: #4c4c4c
-        padding: 5px
-        height: 25px
-        button
-            float: right
-            height: 27px
-            margin-right: 5px
-    .oe-treeview-table
-        width: 100%
-        background-color: white
-        border-spacing: 0
-        th
-            padding: 10px
-            color: #4c4c4c
-            font-weight: bold
-            background-color: #f0f0f0
-            border-bottom: 2px solid #cacaca
-        .treeview-tr, .treeview-td
-            cursor: pointer
-            border-right: 1px dotted #afafb6
-            vertical-align: top
-            text-align: left
-            border-bottom: 1px solid #cfcccc
-        tr:hover
-            background-color: #e0e0f8
-        .oe-number
-            text-align: right !important
-        span
-            font-size: 90%
-            font-weight: normal
-            white-space: nowrap
-            display: block
-        .treeview-tr.oe-treeview-first
-            background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat
-        .oe_open .treeview-tr.oe-treeview-first
-            background-image: url(/web/static/src/img/collapse.gif)
-        .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
-            margin-left: 16px
 // Kitten Mode {{{
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)
@@ -1931,8 +1992,6 @@ $sheet-max-width: 860px
 
 // }}}
 
-div.ui-widget-overlay
-    background: black
-    @include opacity(0.3)
+
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
