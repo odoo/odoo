@@ -15,8 +15,12 @@
                    <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
                    <separator/>
                    <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <separator />
+                   <separator/>
                    <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
+                   <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
+                   <separator orientation="vertical"/>
+                   <field name="categ_id" widget="selection" operator="child_of"/>
                    <group expand="0" string="Context...">
                        <field name="pricelist_id" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
                        <field name="company_id" groups="base.group_multi_company"/>

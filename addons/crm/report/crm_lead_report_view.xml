@@ -16,7 +16,6 @@
                 <field name="deadline_month" invisible="1"/>
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
-                <field name="categ_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
                 <field name="type" invisible="1"/>
@@ -92,6 +91,13 @@
                         <field name="type_id"/>
                         <field name="channel_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>
+                        <separator orientation="vertical"/>
+                        <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]" />
+                        <field name="type_id" widget="selection"/>
+                        <field name="channel_id" widget="selection"/>
+                        <separator orientation="vertical"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <newline/>
                         <field name="create_date"/>
                         <field name="opening_date"/>
                         <field name="date_closed"/>
@@ -112,6 +118,23 @@
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'creation_month'}"/>
                         <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'creation_day'}"/>
                         <filter string="Exp. Closing"  icon="terp-go-month" domain="[]" context="{'group_by':'deadline_month'}"/>
+                        <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
+                            domain="[]" context="{'group_by':'type_id'}" />
+                        <filter string="Channel" icon="terp-call-start"
+                            domain="[]" context="{'group_by':'channel_id'}" />
+                        <separator orientation="vertical" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize"
+                            domain="[]" context="{'group_by':'state'}" />
+                        <separator orientation="vertical" />
+                        <filter string="Year" icon="terp-go-year"
+                            domain="[]" context="{'group_by':'creation_year'}"/>
+                        <filter string="Month" icon="terp-go-month"
+                            domain="[]" context="{'group_by':'creation_month'}"/>
+                        <filter string="Day" icon="terp-go-today"
+                            domain="[]" context="{'group_by':'creation_day'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Exp. Closing"  icon="terp-go-month"
+                            domain="[]" context="{'group_by':'deadline_month'}"/>
                     </group>
                 </search>
             </field>
@@ -136,7 +159,6 @@
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="priority"  invisible="1"/>
-                <field name="categ_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
                 <field name="type" invisible="1"/>

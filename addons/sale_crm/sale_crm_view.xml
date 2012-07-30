@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
                     <field name="section_id" widget="selection"/>
-                    <field name="categ_id" widget="selection"/>
+                    <field name="categ_ids" widget="many2many_tags"/>
                 </field>
             </field>
         </record>

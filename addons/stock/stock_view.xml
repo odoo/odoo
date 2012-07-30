@@ -132,7 +132,7 @@
                     <page string="General Informations">
                         <field name="inventory_line_id">
                             <tree string="Products" editable="bottom">
-                                <field domain="[('usage','=','internal')]" name="location_id"/>
+                                <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
                                 <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom" groups="product.group_uom"/>
@@ -718,7 +718,7 @@
                     <!-- <button name="action_assign" states="confirmed" string="Check Availability" type="object"/> -->
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight"/>
                     <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" class="oe_highlight"/>
+                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice/Refund"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" class="oe_highlight"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
@@ -1226,27 +1226,28 @@
                         </group>
                         <group name="destination_grp" string="Destination">
                             <field name="location_dest_id" groups="stock.group_locations"/>
-                            <field name="partner_id" context="{'contact_display':'partner'}"/>
+                            <field name="partner_id" context="{'contact_display':'partner'}"
+                                groups="stock.group_locations"/>
                             <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                             <field name="date" groups="base.group_no_one"/>
                         </group>
-                        <group string="Tracability">
-                            <label for="tracking_id"/>
-                            <div>
-                                <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
+                        <group string="Tracability"
+                            groups="stock.group_tracking_lot,stock.group_production_lot">
+                            <label for="tracking_id" groups="stock.group_tracking_lot"/>
+                            <div groups="stock.group_tracking_lot">
+                                <field name="tracking_id" class="oe_inline"/>
                                 <button name="%(split_into)d" string="New Pack" type="action"
                                       groups="product.group_stock_packaging"
                                       icon="terp-stock_effects-object-colorize"
                                       states="draft,assigned,confirmed"/>
                             </div>
-                            <label for="prodlot_id"/>
-                            <div>
-                                <field name="prodlot_id" groups="stock.group_production_lot"
+                            <label for="prodlot_id" groups="stock.group_production_lot"/>
+                            <div groups="stock.group_production_lot">
+                                <field name="prodlot_id"
                                     context="{'location_id':location_id, 'product_id':product_id}"
                                     domain="[('product_id','=?',product_id)]" class="oe_inline"
                                     on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)"/>
                                 <button name="%(track_line)d"
-                                    groups="stock.group_tracking_lot"
                                     states="draft,waiting,confirmed,assigned"
                                     string="Split" type="action" icon="terp-stock_effects-object-colorize"/>
                             </div>

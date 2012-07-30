@@ -109,16 +109,16 @@
                         states="open,pending" class="oe_highlight"/>
                 <button name="case_open" string="Open" type="object"
                         states="draft,pending" class="oe_highlight"/>
-                <button name="case_pending" string="Pending" type="object"
+                <button name="case_pending" string="Pending" type="object" invisible="1"
                         states="open"/>
                 <button name="case_reset" string="Reset to New" type="object"
                         states="done,cancel"/>
                 <button name="case_cancel" string="Refuse" type="object"
                         states="draft,open,pending" class="oe_highlight"/>
                 <button name="stage_previous" string="Previous" type="object"
-                        states="open" icon="gtk-go-back"/>
+                        states="open"/>
                 <button name="stage_next" string="Next" type="object"
-                        states="open" icon="gtk-go-forward"/>
+                        states="open"/>
                 <field name="stage_id" widget="statusbar"/>
             </header>
             <sheet>
@@ -142,7 +142,7 @@
                     </h2>
                 </div>
                 <group>
-                    <group string="Contact Details">
+                    <group>
                         <field name="partner_id"
                                 on_change="onchange_partner_id(partner_id, email_from)"/>
                         <field name="email_from" widget="email"/>
@@ -150,7 +150,7 @@
                         <field name="partner_mobile"/>
                         <field name="type_id" placeholder="Degree"/>
                     </group>
-                    <group string="Application Followup">
+                    <group>
                         <field name="user_id"/>
                         <label for="title_action"/>
                         <div>
@@ -159,6 +159,8 @@
                         </div>
                         <field name="priority"/>
                         <field name="state" invisible="1"/>
+                        <field name="source_id"/>
+                        <field name="reference"/>
                     </group>
                     <group string="Job">
                         <field name="survey" invisible="1"/>
@@ -181,10 +183,6 @@
                             <field name="salary_proposed" class="oe_inline"/>, 
                             <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
-                    </group>
-                    <group string="Reference">
-                        <field name="source_id"/>
-                        <field name="reference"/>
                     </group>
                 </group>
                 <separator string="Application Summary"/>

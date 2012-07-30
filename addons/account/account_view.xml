@@ -2518,7 +2518,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <h1><field name="name" class="oe_inline" attrs="{'invisible':[('name','=','/')]}"/></h1>
                     <group>
                         <group>
-                            <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"/>
+                            <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" domain="[('type', '=', 'cash')]" />
                             <field name="user_id" readonly="1" string="Responsible"/>
                             <field name="total_entry_encoding"/>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
