@@ -161,6 +161,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_search: function(domain, context, group_by) {
         var self = this;
+        this.$element.find('.oe_view_nocontent').parent().addClass('oe_kanban_view').find('.oe_kanban_groups').show();
         this.$element.find('.oe_view_nocontent').remove();
         this.search_domain = domain;
         this.search_context = context;
@@ -335,7 +336,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             $('<div class="oe_view_nocontent">')
                 .append($('<img>', { src: '/web/static/src/img/view_empty_arrow.png' }))
                 .append($('<div>').html(this.options.action.help))
-        );
+        ).removeClass('oe_kanban_view').find('.oe_kanban_groups').hide();
     }
 });
 
