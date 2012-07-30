@@ -12,9 +12,9 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Project and Planning"/>
+                    <separator string="Project Management"/>
                     <group>
-                        <label for="id" string="Project"/>
+                        <label for="id" string="Task"/>
                         <div>
                             <div>
                                 <field name="module_project_mrp" class="oe_inline"/>
@@ -29,35 +29,35 @@
                                 <label for="module_pad"/>
                             </div>
                             <div>
-                                <field name="group_tasks_work_on_tasks" class="oe_inline"/>
-                                <label for="group_tasks_work_on_tasks" />
-                            </div>
-                            <div>
-                                <field name="group_time_work_estimation_tasks" class="oe_inline"/>
-                                <label for="group_time_work_estimation_tasks"/>
-                            </div>
-                            <div>
                                 <field name="group_manage_delegation_task" class="oe_inline"/>
                                 <label for="group_manage_delegation_task"/>
-                            </div>
-                            <div>
-                                <label for="time_unit"/>
-                                <field name="time_unit" class="oe_inline" domain="[('category_id.name','=','Working Time')]"/>
                             </div>
                         </div>
                     </group>
                     <group>    
                         <label for="id" string="Planning"/>
                         <div>
+                             <div>
+                                <field name="group_time_work_estimation_tasks" class="oe_inline"/>
+                                <label for="group_time_work_estimation_tasks"/>
+                            </div>
+                            <div>
+                                <label for="time_unit"/>
+                                <field name="time_unit" class="oe_inline" domain="[('category_id.name','=','Working Time')]"/>
+                            </div>
+                            <div>
+                                <field name="group_tasks_work_on_tasks" class="oe_inline"/>
+                                <label for="group_tasks_work_on_tasks" />
+                            </div>
                             <div>
                                 <field name="module_project_long_term" class="oe_inline"/>
                                 <label for="module_project_long_term"/>
                             </div>
                         </div>
                     </group>
-                    <separator string="Helpdesk and Support"/>
+                    <separator string="Helpdesk &amp; Support"/>
                     <group>
-                        <label for="id" string="Helpdesk and Support"/>
+                        <label for="id" string="Support"/>
                         <div>
                             <div>
                                 <field name="module_project_issue" class="oe_inline"/>
