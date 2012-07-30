@@ -49,7 +49,7 @@ import simplejson
 _logger = logging.getLogger(__name__)
 
 def _symbol_set(symb):
-    if symb == None or symb == False:
+    if symb is None or symb == False:
         return None
     elif isinstance(symb, unicode):
         return symb.encode('utf-8')
@@ -181,8 +181,8 @@ class reference(_column):
 class char(_column):
     _type = 'char'
 
-    def __init__(self, string, size, **args):
-        _column.__init__(self, string=string, size=size, **args)
+    def __init__(self, string="unknown", size=None, **args):
+        _column.__init__(self, string=string, size=size or None, **args)
         self._symbol_set = (self._symbol_c, self._symbol_set_char)
 
     # takes a string (encoded in utf8) and returns a string (encoded in utf8)
@@ -191,7 +191,7 @@ class char(_column):
         # * we need to remove the "symb==False" from the next line BUT
         #   for now too many things rely on this broken behavior
         # * the symb==None test should be common to all data types
-        if symb == None or symb == False:
+        if symb is None or symb == False:
             return None
 
         # we need to convert the string to a unicode object to be able
