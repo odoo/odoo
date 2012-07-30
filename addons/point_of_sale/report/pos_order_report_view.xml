@@ -43,6 +43,7 @@
                     <filter icon="terp-dolar" string="Not Invoiced" domain="[('state','=',('paid'))]"/>
                     <separator/>
                     <filter icon="terp-go-year" string="Year" name="year" domain="[('year','=',time.strftime('%%Y'))]" help="POS ordered created during current year"/>
+                    <separator/>
                     <filter icon="terp-go-today" string="Today" name="today" domain="[('date','=', time.strftime('%%Y-%%m-%%d'))]"
                          help="POS ordered created by today"/>
                     <separator/>

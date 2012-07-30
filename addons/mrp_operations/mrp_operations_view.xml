@@ -131,6 +131,7 @@
                 <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
                 <filter icon="terp-check" string="In Progress" name="Current" domain="[('state','=','startworking')]"/>
                 <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pause')]"/>
+                <separator/>
                 <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                     help="Production started late"/>
                 <group expand="0" string="Group By...">

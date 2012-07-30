@@ -122,6 +122,7 @@
                     <field name="product_id" />
                     <field name="state" />
                     <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
+                    <separator/>
                     <filter icon="terp-emblem-important" string="To Fix" name="perm_exceptions" domain="[('state','=','exception'),('message', '!=', '')]" help="Permanent Procurement Exceptions"/>
                     <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
                     <separator/>

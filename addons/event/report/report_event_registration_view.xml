@@ -56,6 +56,7 @@
                     <field name="user_id"/>
                     <filter icon="terp-document-new" string="New" domain="[('event_state','=','draft')]" help="Events which are in New state"/>
                     <filter icon="terp-check" string="Confirm" domain="[('event_state','=','confirm')]" help="Events which are in confirm state"/>
+                    <separator/>
                     <filter icon="terp-personal" string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="event_type" widget="selection"/>
