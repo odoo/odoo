@@ -429,7 +429,7 @@ class hr_applicant(base_stage, osv.Model):
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id
                                                      })
-                if context.get('onchange') == True:
+                if context.get('onchange'):
                     return {'value':{'emp_id': emp_id,'active': True, 'date_closed': fields.datetime.now()}}
                 else:
                     self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
