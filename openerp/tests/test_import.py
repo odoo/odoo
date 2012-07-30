@@ -55,7 +55,7 @@ class test_boolean_field(ImporterCase):
             ]),
             ok(2))
         records = self.read()
-        self.assertItemsEqual([
+        self.assertEqual([
             False,
             True,
         ], values(records))
@@ -68,9 +68,11 @@ class test_boolean_field(ImporterCase):
                 [u'false'],
                 [u'FALSE'],
                 [u'OFF'],
+                [u''],
             ]),
-            ok(5))
-        self.assertItemsEqual([
+            ok(6))
+        self.assertEqual([
+                False,
                 False,
                 False,
                 False,
@@ -90,6 +92,7 @@ class test_boolean_field(ImporterCase):
                 ['#f'],
             ]),
             ok(6))
-        self.assertItemsEqual(
+        self.assertEqual(
             [True] * 6,
             values(self.read()))
+
