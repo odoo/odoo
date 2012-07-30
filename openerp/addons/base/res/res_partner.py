@@ -200,7 +200,7 @@ class res_partner(osv.osv):
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the partner. It is automatically "\
-                 "resized as a 180x180 px image, with aspect ratio kept. "\
+                 "resized as a 180x180 px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized image", type="binary", multi="_get_image",
@@ -208,7 +208,7 @@ class res_partner(osv.osv):
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the partner. It is automatically "\
-                 "resized as a 50x50 px image, with aspect ratio keps. "\
+                 "resized as a 50x50 px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
