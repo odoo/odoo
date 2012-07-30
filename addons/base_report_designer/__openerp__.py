@@ -28,9 +28,8 @@
 This module is used along with OpenERP OpenOffice Plugin.
 =========================================================
 
-This module adds wizards to Import/Export .sxw report that
-you can modify in OpenOffice. Once you have modified it you can
-upload the report using the same wizard.
+This module adds wizards to Import/Export .sxw report that you can modify in OpenOffice. 
+Once you have modified it you can upload the report using the same wizard.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

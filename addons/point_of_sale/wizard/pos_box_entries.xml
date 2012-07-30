@@ -8,33 +8,42 @@
             <field name="model">pos.box.entries</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Put Money" version="7.0">
-                    <header>
-                        <button name="get_in" string="Put Money" type="object" class="oe_highlight"   />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <group>
-                        <separator string="Fill in this form if you put money in the cash register:"/>
-                     </group>
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="product_id"/>
-                        <field name="journal_id"/>
-                        <field name="amount"/>
+                <form string="Put Money">
+                    <separator string="Fill in this form if you put money in the cash register:" colspan="4"/>
+                    <field name="journal_id"/>
+                    <field name="product_id"/>
+                    <field name="amount"/>
+                    <field name="session_id" />
+                    <field name="name"/>
+                    <field name="user_id" invisible="1" />
+                    <separator colspan="4"/>
+                    <group colspan="4" col="4">
+                        <group col="2" colspan="2"/>
+                         <button icon="gtk-stop" special="cancel"
+                            string="Cancel" />
+                        <button name="get_in" string="Put Money"
+                            colspan="1" type="object" icon="gtk-apply" />
                     </group>
                 </form>
             </field>
         </record>
 
-        <record id="action_box_entries" model="ir.actions.act_window">
-             <field name="name">Put Money In</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.box.entries</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
+        <act_window name="Put Money In"
+            res_model="pos.box.entries"
+            src_model="account.bank.statement"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_box_entries" />
+
+        <act_window name="Put Money In"
+            res_model="pos.box.entries"
+            src_model="pos.session"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_pos_session_box_entries" />
+
 
     </data>
 </openerp>

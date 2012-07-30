@@ -634,7 +634,7 @@
                            <field name="child_ids"/>
                         </page>
                            <page string="Inputs">
-                                <field name="input_ids" mode="tree, form">
+                                <field name="input_ids" mode="tree">
                                     <tree string="Input Data" editable="bottom">
                                         <field name="name"/>
                                         <field name="code"/>
@@ -766,22 +766,6 @@
         <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_root_payroll"/>
 
         <!--  Shortcuts -->
-
-        <act_window name="Payslips"
-            domain="[('employee_id', '=', active_id)]"
-            context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
-            res_model="hr.payslip"
-            src_model="hr.employee"
-            view_id ="view_hr_payslip_tree"
-            id="act_hr_employee_payslip_list"
-            groups="base.group_hr_manager"/>
-
-        <act_window name="Payslip Computation Details"
-            domain="[('slip_id', '=', active_id)]"
-            context="{'default_slip_id': active_id}"
-            res_model="hr.payslip.line"
-            src_model="hr.payslip"
-            id="act_payslip_lines"/>
 
         <act_window name="Payslip Lines"
             domain="[('register_id', '=', active_id)]"

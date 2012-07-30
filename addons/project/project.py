@@ -1089,6 +1089,7 @@ class task(base_stage, osv.osv):
                     #raise osv.except_osv(_('Warning !'), _('Stage is not defined in the project.'))
                 write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
                 super(task,self).write(cr, uid, [t.id], write_vals, context=context)
+                self.stage_set_send_note(cr, uid, [t.id], new_stage, context=context)
             result = True
         else:
             result = super(task,self).write(cr, uid, ids, vals, context=context)
@@ -1225,6 +1226,13 @@ class account_analytic_account(osv.osv):
         'use_tasks': fields.boolean('Tasks Mgmt.',help="If check,this contract will be available in the project menu and you will be able to manage tasks or track issues"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
     }
+    
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['use_tasks'] = template.use_tasks
+        return res
 
     def _trigger_project_creation(self, cr, uid, vals, context=None):
         '''

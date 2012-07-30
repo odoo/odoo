@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
-            <menuitem name="Define Surveys" id="menu_define_survey"
-                 groups="base.group_tool_manager"
-                 parent="menu_surveys" />
-            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
-            <menuitem name="Reporting" parent="base.menu_tools"
-                id="base.menu_lunch_reporting" sequence="6"/>
-            <menuitem name="Reporting" id="menu_reporting" parent="menu_surveys" sequence="60"/>
+
+        <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
+        <menuitem name="Define Surveys" id="menu_define_survey"
+             groups="base.group_tool_manager"
+             parent="menu_surveys" />
+        <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
+        <menuitem name="Reporting" parent="base.menu_tools"
+            id="base.menu_lunch_reporting" sequence="6"/>
+        <menuitem name="Reporting" id="menu_reporting" parent="menu_surveys" sequence="60"/>
+
         <!--
             Survey
         -->
@@ -30,17 +32,18 @@
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel" string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
                         <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel" string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
                     </div>
-                    <label for="title" class="oe_edit_only"/>
-                    <h1>
-                        <field name="title" select="1" class="oe_inline"/>
-                        <label string=", " attrs="{'invisible':[('type','=',False)]}" class="oe_inline"/>
-                        <field name="type" class="oe_inline"/>
-                    </h1>
+                    <div class="oe_title">
+                        <label for="title" class="oe_edit_only"/>
+                        <h1>
+                            <field name="title"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
                             <field name="responsible_id" class="oe_inline"/>
                             <field name="send_response"/>
+                            <field name="type"/>
                         </group>
                         <group>
                             <field name="max_response_limit" attrs="{'readonly':[('state','in',('open','close'))]}"/>
@@ -268,7 +271,7 @@
             </field>
         </record>
 
-       <record id="survey_search" model="ir.ui.view">
+        <record id="survey_search" model="ir.ui.view">
             <field name="name">survey_search</field>
             <field name="model">survey</field>
             <field name="type">search</field>
@@ -294,7 +297,7 @@
                </search>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_survey_kanban">
             <field name="name">event.survey.kanban</field>
             <field name="model">survey</field>
@@ -749,7 +752,7 @@
             </field>
         </record>
 
-       <record id="survey_question_search" model="ir.ui.view">
+        <record id="survey_question_search" model="ir.ui.view">
             <field name="name">survey_question_search</field>
             <field name="model">survey.question</field>
             <field name="type">search</field>

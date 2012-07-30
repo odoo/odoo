@@ -27,19 +27,18 @@
     "website": "http://www.openerp.com",
     "category": "Project Management",
     "sequence": 8,
+    "summary": "Projects, Tasks",
     "images": ["images/gantt.png", "images/project_dashboard.jpeg","images/project_task_tree.jpeg","images/project_task.jpeg","images/project.jpeg","images/task_analysis.jpeg"],
     "depends": ["base_setup", "base_status", "product", "analytic", "board",  "mail", "resource","web_kanban"],
     "description": """
-Project management module tracks multi-level projects, tasks, work done on tasks, eso.
-======================================================================================
+Project Management module tracks multi-level projects, tasks, work done on tasks.
+=================================================================================
 
-It is able to render planning, order tasks, eso.
+It is able to render planning, order tasks.
 
-Dashboard for project members that includes:
---------------------------------------------
-    * List of my open tasks
-    * List of my delegated tasks
-    * Graph of My Projects: Planned vs Total Hours
+Dashboard for project management that includes:
+-----------------------------------------------
+    * List of My Open Tasks
     * Graph of My Remaining Hours by Project
     """,
     "init_xml": [],
