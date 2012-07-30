@@ -282,9 +282,21 @@ class crm_lead(base_stage, osv.osv):
         if not stage_id:
             return {'value':{}}
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
+        if stage.state == "draft":
+            return {'value':{'probability': 0.0}}
+        if stage.state == "open":
+            cases = self.browse(cr, uid, ids, context=context)
+            data = {'active': True}
+            for case in cases:
+                if case.stage_id and case.stage_id.state == 'draft':
+                    data['date_open'] = fields.datetime.now()
+                if not case.user_id:
+                    data['user_id'] = uid
+            return {'value':data}
         if not stage.on_change:
             return {'value':{}}
-        return {'value':{'probability': stage.probability}}
+        else:
+            return {'value':{'probability': stage.probability}}
 
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.

@@ -242,6 +242,28 @@ class hr_applicant(base_stage, osv.Model):
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
+    
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+        if context is None:
+            context = {}
+        if not stage_id:
+            return {'value':{}}
+        stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, stage_id, context)
+        if stage.state == 'done':
+            context['onchange'] = True
+            self.case_close_with_emp(cr, uid, ids, context)
+        if stage.state == "draft":
+            return {'value':{'active': True,'date_open': False, 'date_closed': False}}
+        if stage.state == "open":
+            cases = self.browse(cr, uid, ids, context=context)
+            data = {'active': True}
+            for case in cases:
+                if case.stage_id and case.stage_id.state == 'draft':
+                    data['date_open'] = fields.datetime.now()
+                if not case.user_id:
+                    data['user_id'] = uid
+            return {'value':data}
+        return {'value':{}}
 
     def onchange_job(self,cr, uid, ids, job, context=None):
         result = {}
@@ -407,8 +429,11 @@ class hr_applicant(base_stage, osv.Model):
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id
                                                      })
-                self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
-                self.case_close(cr, uid, [applicant.id], context)
+                if context.get('onchange'):
+                    return {'value':{'emp_id': emp_id,'active': True, 'date_closed': fields.datetime.now()}}
+                else:
+                    self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
+                    self.case_close(cr, uid, [applicant.id], context)
             else:
                 raise osv.except_osv(_('Warning!'),_('You must define Applied Job for this applicant.'))
 

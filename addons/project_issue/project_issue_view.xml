@@ -93,28 +93,16 @@
                 <form version="7.0">
                 <header>
                     <span groups="base.group_user">
-                        <button name="case_open" string="Open" type="object"
-                                states="draft,pending" class="oe_highlight"/>
                         <button name="case_close" string="Done" type="object"
                                 states="open"/>
                          <button name="case_close" string="Done" type="object"
                                 states="draft,pending"/>
-                        <button name="case_pending" string="Pending" type="object"
-                                states="draft,open"/>
                         <button name="case_escalate" string="Escalate" type="object"
                                 states="draft,open,pending"/>
-                        <button name="case_reset" string="Reset to New" type="object"
-                                states="cancelled,done"/>
-                        <button name="stage_previous" string="Previous Stage" type="object"
-                                states="open,pending" icon="gtk-go-back"
-                                attrs="{'invisible': [('stage_id','=', False)]}"/>
-                        <button name="stage_next" string="Next Stage" type="object"
-                                states="open,pending" icon="gtk-go-forward"
-                                attrs="{'invisible': [('stage_id','=', False)]}"/>
                         <button name="case_cancel" string="Cancel" type="object"
                                 states="draft,open,pending"/>
                     </span>
-                    <field name="stage_id" widget="statusbar"/>
+                    <field name="stage_id" widget="statusbar" on_change="onchange_stage_id(stage_id)" clickable="True"/>
                 </header>
                 <sheet string="Issue">
                     <label for="name" class="oe_edit_only"/>
