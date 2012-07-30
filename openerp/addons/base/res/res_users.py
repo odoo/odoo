@@ -198,14 +198,14 @@ class users(osv.osv):
         'image': fields.binary("Avatar",
             help="This field holds the image used as avatar for the "\
                  "user. The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 12024x1024 px image."),
+                 "It is limited to a 1024x1024 px image."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized avatar", type="binary", multi="_get_image",
             store = {
                 'res.users': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the user. It is automatically "\
-                 "resized as a 180x180px image, with aspect ratio kept. "\
+                 "resized as a 180x180 px image, with aspect ratio kept. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized avatar", type="binary", multi="_get_image",
@@ -213,7 +213,7 @@ class users(osv.osv):
                 'res.users': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the user. It is automatically "\
-                 "resized as a 50x50px image, with aspect ratio keps. "\
+                 "resized as a 50x50 px image, with aspect ratio keps. "\
                  "Use this field anywhere a small image is required."),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),

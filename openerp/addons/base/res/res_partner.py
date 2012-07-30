@@ -190,25 +190,25 @@ class res_partner(osv.osv):
         'birthdate': fields.char('Birthdate', size=64),
         'is_company': fields.boolean('Company', help="Check if the contact is a company, otherwise it is a person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
-        'image': fields.binary("Avatar",
+        'image': fields.binary("Image",
             help="This field holds the image used as avatar for the "\
-                 "user. The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 12024x1024 px image."),
+                 "partner. The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 1024x1024 px image."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized avatar", type="binary", multi="_get_image",
+            string="Medium-sized image", type="binary", multi="_get_image",
             store = {
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized image of the user. It is automatically "\
-                 "resized as a 180x180px image, with aspect ratio kept. "\
+            help="Medium-sized image of the partner. It is automatically "\
+                 "resized as a 180x180 px image, with aspect ratio kept. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized avatar", type="binary", multi="_get_image",
+            string="Small-sized image", type="binary", multi="_get_image",
             store = {
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized image of the user. It is automatically "\
-                 "resized as a 50x50px image, with aspect ratio keps. "\
+            help="Small-sized image of the partner. It is automatically "\
+                 "resized as a 50x50 px image, with aspect ratio keps. "\
                  "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
