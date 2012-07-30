@@ -95,7 +95,7 @@ class mail_group(osv.osv):
             result[id] = self.message_search(cr, uid, [id], limit=None, domain=[('date', '>=', lower_date)], count=True, context=context)
         return result
     
-    def _get_photo(self, cr, uid, context=None):
+    def _get_default_image(self, cr, uid, context=None):
         image_path = openerp.modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
         return tools.resize_image_big(open(image_path, 'rb').read().encode('base64'))
     
@@ -122,7 +122,7 @@ class mail_group(osv.osv):
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized photo of the group. It is automatically "\
-                 "resized as a 180x180px image, with aspect ratio kept. "\
+                 "resized as a 180x180px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized photo", type="binary", multi="_get_image",
@@ -130,7 +130,7 @@ class mail_group(osv.osv):
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the group. It is automatically "\
-                 "resized as a 50x50px image, with aspect ratio keps. "\
+                 "resized as a 50x50px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids,
             type='many2many', relation='res.users', string='Group members', multi='get_member_ids'),
@@ -145,7 +145,7 @@ class mail_group(osv.osv):
     _defaults = {
         'public': True,
         'responsible_id': (lambda s, cr, uid, ctx: uid),
-        'image': _get_photo,
+        'image': _get_default_image,
     }
 
     def _subscribe_user_with_group_m2m_command(self, cr, uid, ids, group_ids_command, context=None):

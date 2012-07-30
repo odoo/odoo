@@ -190,14 +190,14 @@ class hr_employee(osv.osv):
         'image': fields.binary("Photo",
             help="This field holds the image used as a photo for the "\
                  "employee. The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 12024x1024 px image."),
+                 "It is limited to a 1024x1024 px image."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized photo of the employee. It is automatically "\
-                 "resized as a 180x180px image, with aspect ratio kept. "\
+                 "resized as a 180x180 px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized photo", type="binary", multi="_get_image",
@@ -205,7 +205,7 @@ class hr_employee(osv.osv):
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the employee. It is automatically "\
-                 "resized as a 50x50px image, with aspect ratio keps. "\
+                 "resized as a 50x50 px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'active': fields.boolean('Active'),
         'passport_id':fields.char('Passport No', size=64),
@@ -263,13 +263,13 @@ class hr_employee(osv.osv):
             work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).user_email
         return {'value': {'work_email' : work_email}}
 
-    def _get_photo(self, cr, uid, context=None):
+    def _get_default_image(self, cr, uid, context=None):
         image_path = addons.get_module_resource('hr', 'images', 'photo.png')
         return tools.resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'active': 1,
-        'image': _get_photo,
+        'image': _get_default_image,
         'marital': 'single',
         'color': 0,
     }
