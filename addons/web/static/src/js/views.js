@@ -230,7 +230,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         } else {
             widget = new instance.web.ViewManagerAction(this, action);
             klass = 'oe_act_window';
-            add_breadcrumb = widget.add_breadcrumb
+            add_breadcrumb = widget.proxy('add_breadcrumb');
         }
         if (action.target === 'new') {
             if (this.dialog === null) {
