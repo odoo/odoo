@@ -113,62 +113,6 @@
                 <img class="search-clear" src="/point_of_sale/static/src/img/search_reset.gif" />
             </div>
         </header>
-<<<<<<< TREE
-        <div id="categories">
-            <ol>
-                <t t-foreach="categories" t-as="category">
-                    <li class="oe_pos_categories_list">
-                        <a href="javascript:void(0)" t-att-data-category-id="category.id" class="button">
-                            <t t-esc="category.name"/>
-                        </a>
-                    </li>
-                </t>
-            </ol>
-        </div>
-    </t>
-    <t t-name="pos-product-template">
-        <a href="#">
-            <div class="product-img">
-                <img t-att-src="'data:image/gif;base64,'+ image_medium" />
-                <span class="price-tag">
-                    <t t-esc="format_amount(list_price)"/>
-                </span>
-            </div>
-            <div class="product-name">
-                <t t-esc="name"/>
-            </div>
-        </a>
-    </t>
-    <t t-name="pos-orderline-template">
-        <td>
-            <t t-esc="name"/>
-        </td>
-        <td>
-            <t t-esc="format_amount(list_price.toFixed(2))"/>
-        </td>
-        <td>
-            <t t-esc="discount.toFixed(2)"/>
-        </td>
-        <td>
-            <t t-esc="quantity.toFixed(0)"/>
-        </td>
-        <td>
-            <t t-esc="format_amount((list_price * (1 - discount/100) * quantity).toFixed(2))"/>
-        </td>
-    </t>
-    <t t-name="pos-paymentline-template">
-        <td class="paymentline-type">
-            <t t-esc="name"/>
-        </td>
-        <td class="paymentline-amount pos-right-align">
-            <input type="text" t-att-value="amount.toFixed(2)" />
-            <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
-        </td>
-    </t>
-    <t t-name="pos-payment-button-template">
-        <button class="payment-button" t-att-cash-register-id="id">
-            <t t-esc="name"/>
-=======
         <t t-if="widget.subcategories.length > 0">
             <div id="categories">
                 <div class="white-gradient"></div>
@@ -398,7 +342,6 @@
         <li class='product'>
             <a href="#">
                 <div class="product-img">
-                    
                     <img t-att-src="'data:image/gif;base64,'+ widget.model.get('image_small')" />
                     <t t-if="!widget.model.get('to_weight')">
                         <span class="price-tag">
@@ -506,7 +449,6 @@
     <t t-name="PaypadButtonWidget">
         <button class="paypad-button" t-att-cash-register-id="widget.cashRegister.get('id')">
             <t t-esc="widget.cashRegister.get('journal').name"/>
->>>>>>> MERGE-SOURCE
         </button>
         <br />
     </t>
