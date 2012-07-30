@@ -326,6 +326,11 @@ class test_selection(ImporterCase):
             error(1, "Key/value 'Baz' not found in selection field 'value'",
                   # what the fuck?
                   value=False))
+        self.cr.rollback()
+        self.assertEqual(
+            self.import_(['value'], [[42]]),
+            error(1, "Key/value '42' not found in selection field 'value'",
+                  value=False))
 
 class test_selection_function(ImporterCase):
     model_name = 'export.selection.function'
