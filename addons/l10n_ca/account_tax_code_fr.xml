@@ -2,99 +2,99 @@
 <openerp>
     <data>
 
-	<record model="account.tax.code.template" id="vat_code_tax_fr">
-		<field name="name">Taxes</field>
-	</record>
-	
-	<record model="account.tax.code.template" id="vat_code_balance_net_fr">
-		<field name="name">Balance des taxes à payer</field>
-		<field name="parent_id" ref="vat_code_tax_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tax_fr">
+        <field name="name">Taxes</field>
+    </record>
+    
+    <record model="account.tax.code.template" id="vat_code_balance_net_fr">
+        <field name="name">Balance des taxes à payer</field>
+        <field name="parent_id" ref="vat_code_tax_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_receivable_tva_fr">
-		<field name="name">Taxes payées</field>
-		<field name="parent_id" ref="vat_code_balance_net_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_receivable_tva_fr">
+        <field name="name">Taxes payées</field>
+        <field name="parent_id" ref="vat_code_balance_net_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_receivable_tps_fr">
-		<field name="name">TPS payée</field>
-		<field name="parent_id" ref="vat_code_receivable_tva_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_receivable_tps_fr">
+        <field name="name">TPS payée</field>
+        <field name="parent_id" ref="vat_code_receivable_tva_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_receivable_tvp_fr">
-		<field name="name">TVP/TVQ payée</field>
-		<field name="parent_id" ref="vat_code_receivable_tva_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_receivable_tvp_fr">
+        <field name="name">TVP/TVQ payée</field>
+        <field name="parent_id" ref="vat_code_receivable_tva_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_receivable_tvh_fr">
-		<field name="name">TVH payée</field>
-		<field name="parent_id" ref="vat_code_receivable_tva_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_receivable_tvh_fr">
+        <field name="name">TVH payée</field>
+        <field name="parent_id" ref="vat_code_receivable_tva_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_payable_fr">
-		<field name="name">Taxes reçues</field>
-		<field name="parent_id" ref="vat_code_balance_net_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_payable_fr">
+        <field name="name">Taxes reçues</field>
+        <field name="parent_id" ref="vat_code_balance_net_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_payable_tps_fr">
-		<field name="name">TPS reçue</field>
-		<field name="parent_id" ref="vat_code_payable_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_payable_tps_fr">
+        <field name="name">TPS reçue</field>
+        <field name="parent_id" ref="vat_code_payable_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_payable_tvp_fr">
-		<field name="name">TVP/TVQ reçue</field>
-		<field name="parent_id" ref="vat_code_payable_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_payable_tvp_fr">
+        <field name="name">TVP/TVQ reçue</field>
+        <field name="parent_id" ref="vat_code_payable_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_payable_tvh_fr">
-		<field name="name">TVH reçue</field>
-		<field name="parent_id" ref="vat_code_payable_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_payable_tvh_fr">
+        <field name="name">TVH reçue</field>
+        <field name="parent_id" ref="vat_code_payable_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_net_fr">
-		<field name="name">Base de taxes</field>
-		<field name="parent_id" ref="vat_code_tax_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_net_fr">
+        <field name="name">Base de taxes</field>
+        <field name="parent_id" ref="vat_code_tax_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_receivable_fr">
-		<field name="name">Base des taxes de ventes</field>
-		<field name="parent_id" ref="vat_code_base_net_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_receivable_fr">
+        <field name="name">Base des taxes de ventes</field>
+        <field name="parent_id" ref="vat_code_base_net_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_receivable_tps_fr">
-		<field name="name">Base de la TPS pour les ventes</field>
-		<field name="parent_id" ref="vat_code_base_receivable_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_receivable_tps_fr">
+        <field name="name">Base de la TPS pour les ventes</field>
+        <field name="parent_id" ref="vat_code_base_receivable_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_receivable_tvp_fr">
-		<field name="name">Base de la TVP/TVQ pour les ventes</field>
-		<field name="parent_id" ref="vat_code_base_receivable_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_receivable_tvp_fr">
+        <field name="name">Base de la TVP/TVQ pour les ventes</field>
+        <field name="parent_id" ref="vat_code_base_receivable_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_receivable_tvh_fr">
-		<field name="name">Base de la TVH pour les ventes</field>
-		<field name="parent_id" ref="vat_code_base_receivable_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_receivable_tvh_fr">
+        <field name="name">Base de la TVH pour les ventes</field>
+        <field name="parent_id" ref="vat_code_base_receivable_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_payable_fr">
-		<field name="name">Base des taxes d'achats</field>
-		<field name="parent_id" ref="vat_code_base_net_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_payable_fr">
+        <field name="name">Base des taxes d'achats</field>
+        <field name="parent_id" ref="vat_code_base_net_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_payable_tps_fr">
-		<field name="name">Base de la TPS pour les achats</field>
-		<field name="parent_id" ref="vat_code_base_payable_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_payable_tps_fr">
+        <field name="name">Base de la TPS pour les achats</field>
+        <field name="parent_id" ref="vat_code_base_payable_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_payable_tvp_fr">
-		<field name="name">Base de la TVP/TVQ pour les achats</field>
-		<field name="parent_id" ref="vat_code_base_payable_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_payable_tvp_fr">
+        <field name="name">Base de la TVP/TVQ pour les achats</field>
+        <field name="parent_id" ref="vat_code_base_payable_fr"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_payable_tvh_fr">
-		<field name="name">Base de la TVH pour les achats</field>
-		<field name="parent_id" ref="vat_code_base_payable_fr"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_payable_tvh_fr">
+        <field name="name">Base de la TVH pour les achats</field>
+        <field name="parent_id" ref="vat_code_base_payable_fr"/>
+    </record>
 
     </data>
 </openerp>
