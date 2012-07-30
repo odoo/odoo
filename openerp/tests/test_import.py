@@ -180,3 +180,128 @@ class test_integer_field(ImporterCase):
         self.assertRaises(
             ValueError,
             self.import_, ['value'], [['zorglub']])
+
+class test_float_field(ImporterCase):
+    model_name = 'export.float'
+    def test_none(self):
+        self.assertEqual(
+            self.import_(['value'], []),
+            ok(0))
+
+    def test_empty(self):
+        self.assertEqual(
+            self.import_(['value'], [['']]),
+            ok(1))
+        self.assertEqual(
+            [False],
+            values(self.read()))
+
+    def test_zero(self):
+        self.assertEqual(
+            self.import_(['value'], [['0']]),
+            ok(1))
+        self.assertEqual(
+            self.import_(['value'], [['-0']]),
+            ok(1))
+        self.assertEqual([False, False], values(self.read()))
+
+    def test_positives(self):
+        self.assertEqual(
+            self.import_(['value'], [
+                ['1'],
+                ['42'],
+                [str(2**31-1)],
+                ['12345678'],
+                [str(2**33)],
+                ['0.000001'],
+            ]),
+            ok(6))
+        self.assertEqual([
+            1, 42, 2**31-1, 12345678, 2.0**33, .000001
+        ], values(self.read()))
+
+    def test_negatives(self):
+        self.assertEqual(
+            self.import_(['value'], [
+                ['-1'],
+                ['-42'],
+                [str(-2**31 + 1)],
+                [str(-2**31)],
+                ['-12345678'],
+                [str(-2**33)],
+                ['-0.000001'],
+            ]),
+            ok(7))
+        self.assertEqual([
+            -1, -42, -(2**31 - 1), -(2**31), -12345678, -2.0**33, -.000001
+        ], values(self.read()))
+
+    def test_nonsense(self):
+        self.assertRaises(
+            ValueError,
+            self.import_, ['value'], [['foobar']])
+
+class test_string_field(ImporterCase):
+    model_name = 'export.string.bounded'
+
+    def test_empty(self):
+        self.assertEqual(
+            self.import_(['value'], [['']]),
+            ok(1))
+        self.assertEqual([False], values(self.read()))
+
+    def test_imported(self):
+        self.assertEqual(
+            self.import_(['value'], [
+                [u'foobar'],
+                [u'foobarbaz'],
+                [u'Með suð í eyrum við spilum endalaust'],
+                [u"People 'get' types. They use them all the time. Telling "
+                 u"someone he can't pound a nail with a banana doesn't much "
+                 u"surprise him."]
+            ]),
+            ok(4))
+        self.assertEqual([
+            u"foobar",
+            u"foobarbaz",
+            u"Með suð í eyrum ",
+            u"People 'get' typ",
+        ], values(self.read()))
+
+class test_unbound_string_field(ImporterCase):
+    model_name = 'export.string'
+
+    def test_imported(self):
+        self.assertEqual(
+            self.import_(['value'], [
+                [u'í dag viðrar vel til loftárása'],
+                # ackbar.jpg
+                [u"If they ask you about fun, you tell them – fun is a filthy"
+                 u" parasite"]
+            ]),
+            ok(2))
+        self.assertEqual([
+            u"í dag viðrar vel til loftárása",
+            u"If they ask you about fun, you tell them – fun is a filthy parasite"
+        ], values(self.read()))
+
+class test_text(ImporterCase):
+    model_name = 'export.text'
+
+    def test_empty(self):
+        self.assertEqual(
+            self.import_(['value'], [['']]),
+            ok(1))
+        self.assertEqual([False], values(self.read()))
+
+    def test_imported(self):
+        s = (u"Breiðskífa er notað um útgefna hljómplötu sem inniheldur "
+             u"stúdíóupptökur frá einum flytjanda. Breiðskífur eru oftast "
+             u"milli 25-80 mínútur og er lengd þeirra oft miðuð við 33⅓ "
+             u"snúninga 12 tommu vínylplötur (sem geta verið allt að 30 mín "
+             u"hvor hlið).\n\nBreiðskífur eru stundum tvöfaldar og eru þær þá"
+             u" gefnar út á tveimur geisladiskum eða tveimur vínylplötum.")
+        self.assertEqual(
+            self.import_(['value'], [[s]]),
+            ok(1))
+        self.assertEqual([s], values(self.read()))
