@@ -758,7 +758,7 @@ class BaseModel(object):
                 'model_id': model_id,
                 'model': self._name,
                 'name': k,
-                'field_description': f.string.replace("'", " "),
+                'field_description': f.string,
                 'ttype': f._type,
                 'relation': f._obj or '',
                 'view_load': (f.view_load and 1) or 0,
@@ -767,7 +767,7 @@ class BaseModel(object):
                 'required': (f.required and 1) or 0,
                 'selectable': (f.selectable and 1) or 0,
                 'translate': (f.translate and 1) or 0,
-                'relation_field': (f._type=='one2many' and isinstance(f, fields.one2many)) and f._fields_id or '',
+                'relation_field': f._fields_id if isinstance(f, fields.one2many) else '',
                 'serialization_field_id': None,
             }
             if getattr(f, 'serialization_field', None):
@@ -1737,6 +1737,15 @@ class BaseModel(object):
 
         # translate view
         if 'lang' in context:
+            if node.text and node.text.strip():
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.text.strip())
+                if trans:
+                    node.text = node.text.replace(node.text.strip(), trans)
+            if node.tail and node.tail.strip():
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.tail.strip())
+                if trans:
+                    node.tail =  node.tail.replace(node.tail.strip(), trans)
+
             if node.get('string') and not result:
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
                 if trans == node.get('string') and ('base_model_name' in context):
@@ -1745,22 +1754,13 @@ class BaseModel(object):
                     trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
                 if trans:
                     node.set('string', trans)
-            if node.get('confirm'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('confirm'))
-                if trans:
-                    node.set('confirm', trans)
-            if node.get('sum'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum'))
-                if trans:
-                    node.set('sum', trans)
-            if node.get('help'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('help'))
-                if trans:
-                    node.set('help', trans)
-            if node.get('placeholder'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('placeholder'))
-                if trans:
-                    node.set('placeholder', trans)
+
+            for attr_name in ('confirm', 'sum', 'help', 'placeholder'):
+                attr_value = node.get(attr_name)
+                if attr_value:
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], attr_value)
+                    if trans:
+                        node.set(attr_name, trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):

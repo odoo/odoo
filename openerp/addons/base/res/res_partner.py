@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-import os
 import math
+import os
 from osv import osv, fields
+import re
 import tools
 from tools.translate import _
 import logging
@@ -103,12 +104,15 @@ class res_partner_category(osv.osv):
 
 class res_partner_title(osv.osv):
     _name = 'res.partner.title'
+    _order = 'name'
     _columns = {
         'name': fields.char('Title', required=True, size=46, translate=True),
-        'shortcut': fields.char('Abbreviation', required=True, size=16, translate=True),
+        'shortcut': fields.char('Abbreviation', size=16, translate=True),
         'domain': fields.selection([('partner','Partner'),('contact','Contact')], 'Domain', required=True, size=24)
     }
-    _order = 'name'
+    _defaults = {
+        'domain': 'contact',
+    }
 
 def _lang_get(self, cr, uid, context=None):
     lang_pool = self.pool.get('res.lang')
@@ -167,7 +171,7 @@ class res_partner(osv.osv):
         'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
-        'function': fields.char('Function', size=128),
+        'function': fields.char('Job Position', size=128),
         'type': fields.selection( [('default','Default'),('invoice','Invoice'),
                                    ('delivery','Delivery'), ('contact','Contact'),
                                    ('other','Other')],
@@ -338,6 +342,37 @@ class res_partner(osv.osv):
             res.append((record.id, name))
         return res
 
+    def name_create(self, cr, uid, name, context=None):
+        """ Override of orm's name_create method for partners. The purpose is
+            to handle some basic formats to create partners using the
+            name_create.
+            Supported syntax:
+            - 'raoul@grosbedon.fr': create a partner with name raoul@grosbedon.fr
+              and sets its email to raoul@grosbedon.fr
+            - 'Raoul Grosbedon <raoul@grosbedon.fr>': create a partner with name
+              Raoul Grosbedon, and set its email to raoul@grosbedon.fr
+            - anything else: fall back on the default name_create
+            Regex :
+            - ([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8}): raoul@grosbedon.fr
+            - ([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]:
+              Raoul Grosbedon, raoul@grosbedon.fr
+        """
+        contact_regex = re.compile('([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]')
+        email_regex = re.compile('([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})')
+        contact_regex_res = contact_regex.findall(name)
+        email_regex_res = email_regex.findall(name)
+        if contact_regex_res:
+            name = contact_regex_res[0][0].rstrip(' ') # remove extra spaces on the right
+            email = contact_regex_res[0][1]
+            rec_id = self.create(cr, uid, {self._rec_name: name, 'email': email}, context);
+            return self.name_get(cr, uid, [rec_id], context)[0]
+        elif email_regex:
+            email = '%s' % (email_regex_res[0])
+            rec_id = self.create(cr, uid, {self._rec_name: email, 'email': email}, context);
+            return self.name_get(cr, uid, [rec_id], context)[0]
+        else:
+            return super(res_partner, self).create(cr, uid, name, context)
+
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
@@ -348,7 +383,7 @@ class res_partner(osv.osv):
             query_args = [name2]
             if limit:
                 limit_str = ' limit %s'
-                query_args += [limit] 
+                query_args += [limit]
             cr.execute('''SELECT partner.id FROM res_partner partner
                           LEFT JOIN res_partner company ON partner.parent_id = company.id
                           WHERE partner.name || ' (' || COALESCE(company.name,'') || ')'

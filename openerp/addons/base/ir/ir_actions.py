@@ -210,10 +210,6 @@ class act_window(osv.osv):
             res[act.id] = str(field_get)
         return res
 
-    def _get_help_status(self, cr, uid, ids, name, arg, context=None):
-        activate_tips = self.pool.get('res.users').browse(cr, uid, uid).menu_tips
-        return dict([(id, activate_tips) for id in ids])
-
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
@@ -222,9 +218,10 @@ class act_window(osv.osv):
             help="Optional domain filtering of the destination data, as a Python expression"),
         'context': fields.char('Context Value', size=250, required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
-        'res_model': fields.char('Object', size=64, required=True,
+        'res_id': fields.integer('Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only"),
+        'res_model': fields.char('Destination Model', size=64, required=True,
             help="Model name of the object to open in the view window"),
-        'src_model': fields.char('Source Object', size=64,
+        'src_model': fields.char('Source Model', size=64,
             help="Optional model name of the objects on which this action should be visible"),
         'target': fields.selection([('current','Current Window'),('new','New Window'),('inline','Inline')], 'Target Window'),
         'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
@@ -250,8 +247,6 @@ class act_window(osv.osv):
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),
-        'display_menu_tip':fields.function(_get_help_status, type='boolean', string='Display Menu Tips',
-            help='It gives the status if the tip has to be displayed or not when a user executes an action'),
         'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
 

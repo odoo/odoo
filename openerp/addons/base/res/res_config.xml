@@ -1,53 +1,54 @@
 <openerp>
-  <data>
+<data>
     <record id="res_config_view_base" model="ir.ui.view">
-      <field name="name">res.config.view.base</field>
-      <field name="model">res.config</field>
-      <field name="type">form</field>
-      <field name="arch" type="xml">
-          <form version="7.0">
-             <header>
-               <button name="action_next" type="object"
-                       string="Apply" icon="gtk-go-forward" class="oe_highlight"/>
-               <button name="action_skip" type="object" special="cancel"
-                       string="Cancel" icon="gtk-jump-to"/>
-             </header>
-             <group string="res_config_contents"/>
-          </form>
-      </field>
+        <field name="name">res.config.view.base</field>
+        <field name="model">res.config</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form version="7.0">
+                <group string="res_config_contents"/>
+                <footer>
+                    <button name="action_next" type="object" string="Apply" class="oe_highlight"/>
+                    or
+                    <button name="action_skip" type="object" special="cancel" string="Cancel" class="oe_link"/>
+                </footer>
+            </form>
+        </field>
     </record>
 
     <record id="view_config_wizard_form" model="ir.ui.view">
-      <field name="name">Compabitiliby configuration wizard</field>
-      <field name="model">ir.actions.configuration.wizard</field>
-      <field name="type">form</field>
-      <field name="arch" type="xml">
-        <form string="Next Configuration Step" version="7.0">
-            <header>
-                <button name="action_next" type="object"
-                        string="Continue" icon="gtk-go-forward" class="oe_highlight"/>
-            </header>
-            <field name="note"/>
-        </form>
-      </field>
+        <field name="name">Compabitiliby configuration wizard</field>
+        <field name="model">ir.actions.configuration.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Next Configuration Step" version="7.0">
+                <group>
+                    <field name="note"/>
+                </group>
+                <footer>
+                    <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
     </record>
 
     <record id="res_config_installer" model="ir.ui.view">
-      <field name="name">Inheritable view for installer objects</field>
-      <field name="model">res.config.installer</field>
-      <field name="type">form</field>
-      <field name="arch" type="xml">
-        <form version="7.0">
-            <header>
-                <button name="action_next" type="object"
-                    string="Install Modules" icon="gtk-go-forward" class="oe_highlight"/>
-                <button name="action_skip" type="object" special="cancel"
-                    string="Cancel" icon="gtk-jump-to"/>
-            </header>
-            <separator string="title" colspan="4"/>
-        </form>
-      </field>
+        <field name="name">Inheritable view for installer objects</field>
+        <field name="model">res.config.installer</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form version="7.0">
+                <separator string="title" colspan="4"/>
+                <footer>
+                    <button name="action_next" type="object" string="Install Modules"  class="oe_highlight"/>
+                    or
+                    <button string="Skip" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
     </record>
 
-  </data>
+</data>
 </openerp>

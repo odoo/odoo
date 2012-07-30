@@ -70,10 +70,14 @@ class res_config_configurable(osv.osv_memory):
             res = next.action_launch(context=context)
             res['nodestroy'] = False
             return res
-        #if there is no next action and if html is in the context: reload instead of closing
-        if context and 'html' in context:
-            return {'type' : 'ir.actions.reload'}
-        return {'type' : 'ir.actions.act_window_close'}
+        # reload the client; open the first available root menu
+        menu_obj = self.pool.get('ir.ui.menu')
+        menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+            'params': {'menu_id': menu_ids and menu_ids[0] or False},
+        }
 
     def start(self, cr, uid, ids, context=None):
         return self.next(cr, uid, ids, context)

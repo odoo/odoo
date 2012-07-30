@@ -7,46 +7,27 @@
             <field name="model">base.language.export</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Export Translations">
-                    <group col="8">
-                        <group colspan="3">
-                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
-                            <newline/>
-                            <label colspan="4" width="220" string="OpenERP translations (core, modules, clients) are managed through Launchpad.net, our open source project management facility. We use their online interface to synchronize all translations efforts."/>
-                            <label colspan="4" width="220" string="To improve or expand the official translations, you should use directly Lauchpad's web interface (Rosetta). If you need to perform mass translation, Launchpad also allows uploading full .po files at once"/>
-                            <label colspan="4" width="220"/>
-                            <label colspan="4" width="220" string="To browse official translations, you can start with these links:"/>
-                            <label colspan="4" width="220" string="https://help.launchpad.net/Translations"/>
-                            <label colspan="4" width="220" string="https://translations.launchpad.net/openobject"/>
-                        </group>
-                        <separator orientation="vertical" rowspan="15"/>
-                        <group colspan="4">
-                            <group colspan="4" states="choose">
-                                <separator colspan="4" string="Export Translation"/>
-                                <field name="lang"/>
-                                <field name="format" required="1"/>
-                                <field height="200" name="modules" nolabel="1" colspan="4"/>
-                                <field invisible="1" name="state"/>
-                            </group>
-                            <group colspan="4" states="get">
-                                <separator string="Export done" colspan="4"/>
-                                <field name="name" invisible="1" colspan="4"/>
-                                <field name="data" nolabel="1" readonly="1" filename="name" colspan="4"/>
-                                <field height="80" name="advice" nolabel="1" colspan="4"/>
-                            </group>
-                        </group>
-                        <group colspan="8" col="8" states="choose">
-                            <separator string="" colspan="8"/>
-                            <label colspan="6" width="220"/>
-                            <button icon="gtk-cancel" name="act_cancel" special="cancel" string="_Close" type="object"/>
-                            <button icon="gtk-ok" name="act_getfile" string="_Export" type="object"/>
-                        </group>
-                        <group colspan="8" col="8" states="get">
-                            <separator string="" colspan="8"/>
-                            <label colspan="7" width="220"/>
-                            <button icon="gtk-close" name="act_destroy" special="cancel" string="_Close" type="object"/>
-                        </group>
+                <form string="Export Translations" version="7.0">
+                    <group colspan="4" states="choose">
+                        <separator colspan="4" string="Export Translation"/>
+                        <field name="lang"/>
+                        <field name="format" required="1"/>
+                        <field name="modules" nolabel="1"/>
+                        <field invisible="1" name="state"/>
                     </group>
+                    <group colspan="4" states="get">
+                        <separator string="Export done" colspan="4"/>
+                        <field name="name" invisible="1" colspan="4"/>
+                        <field name="data" nolabel="1" readonly="1" filename="name" colspan="4"/>
+                        <field height="80" name="advice" nolabel="1" colspan="4"/>
+                    </group>
+                    <footer states="choose">
+                        <button name="act_getfile" string="_Export" type="object" class="oe_highlight"/> or 
+                        <button name="act_cancel" special="cancel" string="_Cancel" type="object" class="oe_link"/>
+                    </footer>
+                    <footer states="get">
+                        <button name="act_cancel" special="cancel" string="_Close" type="object"/>
+                    </footer>
                 </form>
             </field>
         </record>

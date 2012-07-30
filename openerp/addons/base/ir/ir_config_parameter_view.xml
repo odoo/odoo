@@ -40,7 +40,6 @@
         </record>
 
         <act_window name="System Parameters" res_model="ir.config_parameter" id="ir_config_list_action"/>
-        <menuitem name="System Parameters" id="ir_config_menu"
-                  parent="base.next_id_4" action="ir_config_list_action" groups="base.group_no_one"/>
+        <menuitem id="ir_config_menu" name="System Parameters" parent="menu_ir_property" action="ir_config_list_action"/>
     </data>
 </openerp>

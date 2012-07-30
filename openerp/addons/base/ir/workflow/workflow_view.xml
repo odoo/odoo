@@ -15,14 +15,12 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
           <form string="Workflow" version="7.0">
-             <sheet>
               <group col="4">
                   <field name="name"/>
                   <field name="osv"/>
                   <field name="on_create"/>
               </group>
               <field name="activities"/>
-            </sheet>
           </form>
       </field>
     </record>
@@ -206,14 +204,18 @@
       <field name="arch" type="xml">
         <form string="Transition" version="7.0">
           <sheet>
-            <group col="6">
-                <field name="act_from"/>
-                <field name="act_to"/>
-                <field name="signal"/>
-                <field name="condition"/>
-                <field name="trigger_model"/>
-                <field name="trigger_expr_id"/>
-                <field name="group_id"/>
+            <group>
+                <group>
+                    <field name="act_from"/>
+                    <field name="act_to"/>
+                    <field name="signal"/>
+                    <field name="condition"/>
+                </group>
+                <group>
+                    <field name="group_id"/>
+                    <field name="trigger_model"/>
+                    <field name="trigger_expr_id"/>
+                </group>
             </group>
           </sheet>
         </form>
@@ -317,7 +319,7 @@
       <field name="context">{'search_default_active':1}</field>
       <field name="search_view_id" ref="view_workflow_instance_search"/>
     </record>
-    <menuitem action="action_workflow_instance_form" id="menu_workflow_instance" parent="base.menu_low_workflow"/>
+    <menuitem action="action_workflow_instance_form" id="menu_workflow_instance" parent="base.menu_workflow_root"/>
 
     <!--
         ================================
@@ -383,7 +385,7 @@
       <field name="context">{'search_default_active':1}</field>
       <field name="search_view_id" ref="view_workflow_workitem_search"/>
     </record>
-    <menuitem action="action_workflow_workitem_form" id="menu_workflow_workitem" parent="base.menu_low_workflow"/>
+    <menuitem action="action_workflow_workitem_form" id="menu_workflow_workitem" parent="base.menu_workflow_root"/>
 
   </data>
 </openerp>
