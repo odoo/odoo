@@ -33,7 +33,7 @@
                 <!-- contains threads -->
             </ul>
             <div class="oe_mail_wall_more">
-                <button class="oe_mail_wall_button_more" type="button">See more discussions</button>
+                <button class="oe_mail_wall_button_more" type="button">See more...</button>
             </div>
         </div>
         <div class="oe_mail_wall_aside">
@@ -129,7 +129,7 @@
                         <t t-if="display['show_delete']">
                                 <li t-if="record.is_author"><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
                         </t>
-                        <li t-if="display['show_hide']"><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove from Wall</a></li>
+                        <li t-if="display['show_hide']"><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Hide</a></li>
 <!--                    Uncomment when adding subtype hiding
                         <li t-if="display['show_hide']">
                             <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
@@ -143,16 +143,17 @@
                     <h1 t-if="record.subject" class="oe_mail_msg_title">
                         <t t-raw="record.subject"/>
                     </h1>
-                    <div t-if="params.thread_level > 0" class="oe_mail_msg_subtitle">
-                        <a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}"><t t-raw="record.record_name"/></a>
-                    </div>
-                    <div class="oe_clear"/>
                     <div class="oe_mail_msg_body">
-                        <a t-attf-href="#model=res.users&amp;id=#{record.user_id[0]}"><t t-raw="record.user_id[1]"/></a>
-                        <div class="oe_mail_msg_record_body"><t t-raw="record.body"/></div>
+                        
+                        <div class="oe_mail_msg_record_body">
+                            <a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}" t-if="(params.thread_level > 0) &amp; (!record.subject)"><t t-raw="record.record_name"/></a>
+                            <t t-raw="record.body"/>
+                        </div>
                     </div>
                     <div class="oe_clear"/>
                     <ul class="oe_mail_msg_footer">
+                      <li t-if="record.subject &amp; params.thread_level > 0"><a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}"><t t-raw="record.record_name"/></a></li>
+                      <li><a t-attf-href="#model=res.users&amp;id=#{record.user_id[0]}"><t t-raw="record.user_id[1]"/></a></li>
                       <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
                       <li t-if="display['show_reply']"><a href="#" class="oe_mail_msg_reply">Reply</a></li>
                       <!-- uncomment when merging vote
@@ -160,8 +161,8 @@
                       -->
                       <li t-if="record.attachment_ids.length > 0">
                           <a href="#" class="oe_mail_msg_view_attachments">
-                              <t t-if="record.attachment_ids.length == 1">Attachment</t>
-                              <t t-if="record.attachment_ids.length > 1">Attachments (<t t-raw="record.attachment_ids.length"/>)</t>
+                              <t t-if="record.attachment_ids.length == 1">1 Attachment</t>
+                              <t t-if="record.attachment_ids.length > 1"><t t-raw="record.attachment_ids.length"/> Attachments</t>
                           </a>
                       </li>
                     </ul>
