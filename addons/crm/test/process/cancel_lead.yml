@@ -2,12 +2,12 @@
   I cancel unqualified lead.
 -
   !python {model: crm.lead}: |
-    self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    self.case_cancel(cr, uid, [ref("crm_case_1")])
 -
   I check cancelled lead.
 -
   !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_itisatelesalescampaign0'))
+    lead = self.browse(cr, uid, ref('crm_case_1'))
     assert lead.stage_id.id == ref('crm.stage_lead7'), "Stage should be 'Dead' and is %s." % (lead.stage_id.name)
     assert lead.state == 'cancel', "Opportunity is not in 'cancel' state."
     assert lead.probability == 0.0, 'Opportunity probability is wrong and should be 0.0.'
@@ -15,31 +15,31 @@
   I reset cancelled lead into unqualified lead.
 -
   !python {model: crm.lead}: |
-    self.case_reset(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    self.case_reset(cr, uid, [ref("crm_case_1")])
 -
   I check unqualified lead after reset.
 -
-  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in draft state}:
+  !assert {model: crm.lead, id: crm.crm_case_1, string: Lead is in draft state}:
     - state == "draft"
 -
   I re-open the lead
 -
   !python {model: crm.lead}: |
-    self.case_open(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    self.case_open(cr, uid, [ref("crm_case_1")])
 -
  I check stage and state of the re-opened lead
 -
   !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm.crm_case_itisatelesalescampaign0'))
+    lead = self.browse(cr, uid, ref('crm.crm_case_1'))
     assert lead.stage_id.id == ref('crm.stage_lead2'), "Opportunity stage should be 'Qualification'."
     assert lead.state == 'open', "Opportunity should be in 'open' state."
 -
   I escalate the lead to parent team.
 -
   !python {model: crm.lead}: |
-    self.case_escalate(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    self.case_escalate(cr, uid, [ref("crm_case_1")])
 -
   I check the lead is correctly escalated to the parent team.
 -
-  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Escalate lead to parent team}:
+  !assert {model: crm.lead, id: crm.crm_case_1, string: Escalate lead to parent team}:
     - section_id.name == "Sales Department"

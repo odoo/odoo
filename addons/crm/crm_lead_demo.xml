@@ -5,7 +5,7 @@
             Demo Leads
             -->
 
-        <record id="crm_case_itisatelesalescampaign0" model="crm.lead">
+        <record id="crm_case_1" model="crm.lead">
             <field name="type_id" ref="crm.type_lead1"/>
             <field eval="'3'" name="priority"/>
             <field name="type">lead</field>
@@ -24,7 +24,7 @@
             <field eval="'Plan to Attend a Training'" name="name"/>
             <field eval="'0033 769 703-274'" name="phone"/>
         </record>
-        <record id="crm_case_electonicgoodsdealer0" model="crm.lead">
+        <record id="crm_case_2" model="crm.lead">
             <field name="type_id" ref="crm.type_lead7"/>
             <field eval="'4'" name="priority"/>
             <field name="type">lead</field>
@@ -44,7 +44,7 @@
             <field eval="'Interest in Your New Product'" name="name"/>
             <field eval="'(956) 293-2595'" name="phone"/>
         </record>
-        <record id="crm_case_developingwebapplications0" model="crm.lead">
+        <record id="crm_case_3" model="crm.lead">
             <field name="type_id" ref="crm.type_lead5"/>
             <field eval="'2'" name="priority"/>
             <field name="type">lead</field>
@@ -62,7 +62,7 @@
             <field eval="'(079) 681-2139'" name="phone"/>
             <field eval="'contact@thkompany.com'" name="email_from"/>
         </record>
-        <record id="crm_case_qrecorp0" model="crm.lead">
+        <record id="crm_case_4" model="crm.lead">
             <field name="type_id" ref="crm.type_lead8"/>
             <field eval="'3'" name="priority"/>
             <field name="type">lead</field>
@@ -78,7 +78,7 @@
             <field eval="'(514) 698-4118'" name="phone"/>
             <field eval="'hmc@thgascompany.com'" name="email_from"/>
         </record>
-        <record id="crm_case_itdeveloper0" model="crm.lead">
+        <record id="crm_case_5" model="crm.lead">
             <field name="type_id" ref="crm.type_lead4"/>
             <field eval="'3'" name="priority"/>
             <field name="type">lead</field>
@@ -97,7 +97,7 @@
             <field eval="'(855) 924-4364'" name="phone"/>
             <field eval="'helle@stonageit.be'" name="email_from"/>
         </record>
-        <record id="crm_case_mgroperations0" model="crm.lead">
+        <record id="crm_case_6" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type_id" ref="crm.type_lead3"/>
             <field name="partner_id" ref="base.res_partner_9"/>
@@ -117,7 +117,7 @@
             <field eval="'(373) 907-1009'" name="phone"/>
             <field eval="'info@opensides.be'" name="email_from"/>
         </record>
-        <record id="crm_case_vpoperations0" model="crm.lead">
+        <record id="crm_case_7" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type_id" ref="crm.type_lead8"/>
             <field eval="'3'" name="priority"/>
@@ -135,7 +135,7 @@
             <field eval="'Info about Your Company ?'" name="name"/>
             <field eval="'(282) 603-7489'" name="phone"/>
         </record>
-        <record id="crm_case_webvisitor0" model="crm.lead">
+        <record id="crm_case_8" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type_id" ref="crm.type_lead5"/>
             <field eval="'1'" name="priority"/>
@@ -153,7 +153,7 @@
             <field eval="'smith_john@gmail.com'" name="email_from"/>
             <field eval="'(282) 596-8584'" name="phone"/>
         </record>
-        <record id="crm_case_business_card0" model="crm.lead">
+        <record id="crm_case_9" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type_id" ref="crm.type_lead3"/>
             <field eval="'2'" name="priority"/>
@@ -171,7 +171,7 @@
             <field eval="'l.smith@marketing-business.com'" name="email_from"/>
             <field eval="'(252) 578-7894'" name="phone"/>
         </record>
-        <record id="crm_case_imported_contact0" model="crm.lead">
+        <record id="crm_case_10" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type_id" ref="crm.type_lead8"/>
             <field eval="'2'" name="priority"/>
@@ -181,7 +181,7 @@
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Business Group'" name="partner_name"/>
         </record>
-        <record id="crm_case_employee0" model="crm.lead">
+        <record id="crm_case_11" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type_id" ref="crm.type_lead3"/>
             <field eval="'3'" name="priority"/>
@@ -194,7 +194,7 @@
             <field eval="'Agrolait'" name="partner_name"/>
             <field eval="'Sylvie Lelitre'" name="contact_name"/>
         </record>
-        <record id="crm_case_company_partnership0" model="crm.lead">
+        <record id="crm_case_12" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type_id" ref="crm.type_lead3"/>
             <field eval="'3'" name="priority"/>
@@ -209,14 +209,14 @@
 
         <!--        Call Function to Cancel the leads (set as Dead) -->
         <function model="crm.lead" name="case_cancel"
-            eval="[ ref('crm_case_company_partnership0'), ref('crm_case_vpoperations0'),
-                    ref('crm_case_developingwebapplications0'), ref('crm_case_webvisitor0')],
+            eval="[ ref('crm_case_12'), ref('crm_case_7'),
+                    ref('crm_case_3'), ref('crm_case_8')],
                   {'install_mode': True}"
         />
         <!--        Call Function to set the leads as Unread -->
         <function model="crm.lead" name="message_mark_as_unread"
-            eval="[ ref('crm_case_itisatelesalescampaign0'), ref('crm_case_electonicgoodsdealer0'),
-                    ref('crm_case_itdeveloper0'), ref('crm_case_employee0')], {}"
+            eval="[ ref('crm_case_1'), ref('crm_case_2'),
+                    ref('crm_case_5'), ref('crm_case_11')], {}"
         />
 
 
@@ -224,7 +224,7 @@
             Demo Opportunities
             -->
 
-        <record id="crm_case_construstazunits0" model="crm.lead">
+        <record id="crm_case_13" model="crm.lead">
             <field eval="60" name="probability"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
@@ -239,7 +239,7 @@
             <field eval="'Plan to buy 200 PC2'" name="name"/>
             <field eval="'Conf call with purchase manager'" name="title_action"/>
         </record>
-        <record id="crm_case_rdroundfundingunits0" model="crm.lead">
+        <record id="crm_case_14" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
             <field name="type_id" ref="crm.type_lead2"/>
@@ -261,7 +261,7 @@
             <field eval="1000" name="zip"/>
             <field name="country_id" ref="base.be"/>
         </record>
-        <record id="crm_case_rdroundfundingunits25" model="crm.lead">
+        <record id="crm_case_15" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
             <field name="type_id" ref="crm.type_lead2"/>
@@ -288,7 +288,7 @@
         <record id="message_email0" model="mail.message">
             <field name="subject">Kitchen design</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="res_id" ref="crm_case_15"></field>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[Email0 inquiry]]></field>
             <field name="type">email</field>
@@ -298,7 +298,7 @@
         <record id="message_note0" model="mail.message">
             <field name="subject">Reply</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="res_id" ref="crm_case_15"></field>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[Internal note0]]></field>
             <field name="type">comment</field>
@@ -307,7 +307,7 @@
         <record id="message_note0_comment0" model="mail.message">
             <field name="subject">Reply</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="res_id" ref="crm_case_15"></field>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[comment on note0]]></field>
             <field name="parent_id" ref="message_note0"/>
@@ -317,7 +317,7 @@
         <record id="message_note0_comment1" model="mail.message">
             <field name="subject">Reply</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="res_id" ref="crm_case_15"></field>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[comment1 on note0]]></field>
             <field name="parent_id" ref="message_note0"/>
@@ -327,7 +327,7 @@
         <record id="message_email1" model="mail.message">
             <field name="subject">Your inquiry</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="res_id" ref="crm_case_15"></field>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[hello, outgoing email]]></field>
             <field name="type">email</field>
@@ -335,7 +335,7 @@
             <field name="user_id" ref="base.user_root"></field>
         </record>
         
-        <record id="crm_case_unifliege" model="crm.lead">
+        <record id="crm_case_16" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
             <field name="type_id" ref="crm.type_lead2"/>
@@ -358,7 +358,7 @@
             <field eval="75016" name="zip"/>
             <field name="country_id" ref="base.be"/>
         </record>
-        <record id="crm_case_bankwealthy2" model="crm.lead">
+        <record id="crm_case_17" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
             <field name="type_id" ref="crm.type_lead2"/>
@@ -380,7 +380,7 @@
             <field eval="75016" name="zip"/>
             <field name="country_id" ref="base.fr"/>
         </record>
-        <record id="crm_case_mediapoleunits0" model="crm.lead">
+        <record id="crm_case_18" model="crm.lead">
             <field eval="100" name="probability"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
@@ -397,7 +397,7 @@
             <field eval="time.strftime('%Y-%m-%d')" name="date_deadline"/>
             <field eval="'info@mycompany.net'" name="email_from"/>
         </record>
-        <record id="crm_case_abcfuelcounits0" model="crm.lead">
+        <record id="crm_case_19" model="crm.lead">
             <field eval="80" name="probability"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
@@ -420,7 +420,7 @@
             <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
             <field name="zip">L25 4RL</field>
         </record>
-        <record id="crm_case_dirtminingltdunits25" model="crm.lead">
+        <record id="crm_case_20" model="crm.lead">
             <field eval="30" name="probability"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
@@ -433,7 +433,7 @@
             <field name="stage_id" ref="crm.stage_lead8"/>
             <field eval="'Want to subscribe to your online solution'" name="name"/>
         </record>
-        <record id="crm_case_dirtminingltdunits0" model="crm.lead">
+        <record id="crm_case_21" model="crm.lead">
             <field eval="30" name="probability"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
@@ -446,7 +446,7 @@
             <field name="stage_id" ref="crm.stage_lead8"/>
             <field eval="'Interest in your Partnership Contract'" name="name"/>
         </record>
-        <record id="crm_case_dirtminingltdunits10" model="crm.lead">
+        <record id="crm_case_22" model="crm.lead">
             <field eval="30" name="probability"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
@@ -468,7 +468,7 @@
             <field eval="77420" name="zip"/>
             <field name="country_id" ref="base.fr"/>
         </record>
-        <record id="crm_case_construstazunits0" model="crm.lead">
+        <record id="crm_case_13" model="crm.lead">
             <field eval="60" name="probability"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
@@ -489,7 +489,7 @@
             <field eval="1659" name="zip"/>
             <field name="country_id" ref="base.ar"/>
         </record>
-        <record id="crm_case_ericdubois4" model="crm.lead">
+        <record id="crm_case_23" model="crm.lead">
             <field eval="65" name="probability"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
@@ -511,7 +511,7 @@
             <field eval="7000" name="zip"/>
             <field name="country_id" ref="base.be"/>
         </record>
-        <record id="crm_case_fabiendupont" model="crm.lead">
+        <record id="crm_case_24" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
             <field name="type_id" ref="crm.type_lead1"/>
@@ -522,7 +522,7 @@
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need more info about the onsite intervention'" name="name"/>
         </record>
-        <record id="crm_case_shelvehouse" model="crm.lead">
+        <record id="crm_case_25" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
             <field name="type_id" ref="crm.type_lead1"/>
@@ -536,8 +536,8 @@
 
         <!--        Call Function to set the opportunities as Unread -->
         <function model="crm.lead" name="message_mark_as_unread"
-            eval="[ ref('crm_case_rdroundfundingunits25'), ref('crm_case_unifliege'),
-                    ref('crm_case_ericdubois4'), ref('crm_case_abcfuelcounits0')], {}"
+            eval="[ ref('crm_case_15'), ref('crm_case_16'),
+                    ref('crm_case_23'), ref('crm_case_19')], {}"
         />
 
     </data>
