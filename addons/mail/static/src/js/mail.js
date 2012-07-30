@@ -341,7 +341,7 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             // customize display: add avatar, clean previous content
             var user_avatar = mail.ChatterUtils.get_image(this.session.prefix,
-                this.session.session_id, 'res.users', 'avatar', this.session.uid);
+                this.session.session_id, 'res.users', 'image_small', this.session.uid);
             this.$element.find('img.oe_mail_icon').attr('src', user_avatar);
             this.$element.find('div.oe_mail_msg_content').empty();
             // create a context for the default_get of the compose form
