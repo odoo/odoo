@@ -387,8 +387,16 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         var fields = $(form).serializeArray();
         self.rpc("/web/database/create", {'fields': fields}, function(result) {
             var form_obj = self.to_object(fields);
-            self.getParent().do_login( form_obj['db_name'], 'admin', form_obj['create_admin_pwd']);
-            self.destroy();
+            var client_action = {
+                type: 'ir.actions.client',
+                tag: 'login',
+                params: {
+                    'db': form_obj['db_name'],
+                    'login': 'admin',
+                    'password': form_obj['create_admin_pwd'],
+                },
+            };
+            self.do_action(client_action);
         });
 
     },
@@ -483,11 +491,12 @@ instance.web.Login =  instance.web.Widget.extend({
     remember_credentials: true,
     _db_list: null,
 
-    init: function(parent) {
+    init: function(parent, params) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
+        this.params = params;
 
         if (this.has_local_storage && this.remember_credentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
@@ -497,16 +506,17 @@ instance.web.Login =  instance.web.Widget.extend({
             }
         }
     },
-    open_db_manager: function(){
-        this.do_action("database_manager");
-    },
     start: function() {
         var self = this;
         self.$element.find("form").submit(self.on_submit);
         self.$element.find('.oe_login_manage_db').click(function() {
-            self.open_db_manager();
+            self.do_action("database_manager");
         });
-        return self.load_db_list().then(self.on_db_list_loaded);
+        return self.load_db_list().then(self.on_db_list_loaded).then(function() {
+            if(self.params) {
+                self.do_login(self.params.db, self.params.login, self.params.password);
+            }
+        });
     },
     load_db_list: function (force) {
         var d = $.when(), self = this;
@@ -527,7 +537,7 @@ instance.web.Login =  instance.web.Widget.extend({
         var dbdiv = this.$element.find('div.oe_login_dbpane');
         this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}));
         if(list.length === 0) {
-            self.open_db_manager();
+            this.do_action("database_manager");
         } else if(list && list.length === 1) {
             dbdiv.hide();
         } else {
@@ -574,7 +584,7 @@ instance.web.Login =  instance.web.Widget.extend({
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
-            self.do_action("login_sucessful");
+            self.trigger('login_successful');
         },function () {
             self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
@@ -582,16 +592,6 @@ instance.web.Login =  instance.web.Widget.extend({
     }
 });
 instance.web.client_actions.add("login", "instance.web.Login");
-
-instance.web.LoginSuccessful =  instance.web.Widget.extend({
-    init: function(parent) {
-        this._super(parent);
-    },
-    start: function() {
-        this.getParent().getParent().show_application();
-    },
-});
-instance.web.client_actions.add("login_sucessful", "instance.web.LoginSuccessful");
 
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
@@ -896,7 +896,7 @@ instance.web.Client = instance.web.Widget.extend({
         this.$element.on('click', '.oe_dropdown_toggle', function(ev) {
             ev.preventDefault();
             var $toggle = $(this);
-            var $menu = $toggle.find('.oe_dropdown_menu');
+            var $menu = $toggle.parent().find('.oe_dropdown_menu');
             var state = $menu.is('.oe_opened');
             setTimeout(function() {
                 // Do not alter propagation
@@ -969,10 +969,9 @@ instance.web.WebClient = instance.web.Client.extend({
         };
     },
     show_login: function() {
-        var self = this;
-        self.$('.oe_topbar').hide();
-        self.action_manager.do_action("login");
-        //self.login.appendTo(self.$element);
+        this.$('.oe_topbar').hide();
+        this.action_manager.do_action("login");
+        this.action_manager.inner_widget.on('login_successful', this, this.show_application);
     },
     show_application: function() {
         var self = this;
@@ -1084,10 +1083,13 @@ instance.web.WebClient = instance.web.Client.extend({
         }
     },
     set_content_full_screen: function(fullscreen) {
-        if (fullscreen)
+        if (fullscreen) {
             $(".oe_webclient", this.$element).addClass("oe_content_full_screen");
-        else
+            $("body").css({'overflow-y':'hidden'});
+        } else {
             $(".oe_webclient", this.$element).removeClass("oe_content_full_screen");
+            $("body").css({'overflow-y':'scroll'});
+        }
     }
 });
 
