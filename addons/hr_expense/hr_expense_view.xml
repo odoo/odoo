@@ -33,7 +33,7 @@
                     <field name="date"/>
                     <field name="user_id" invisible="1"/>
                     <field name="name"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="amount"/>
                     <field name="state"/>
                 </tree>
@@ -84,7 +84,7 @@
                         <group>
                             <field name="name"/>
                             <field name="user_valid"/>
-                            <field name="currency_id"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
                         </group>
                     </group>
                     <notebook>
