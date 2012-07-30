@@ -42,41 +42,17 @@ def valid_type_in_col(arch):
             return False
     return True
     
-def valid_colspan_view(arch):
-        for pred in [valid_type_in_colspan]:
-            if not pred(arch):
-                return False
-        return True
-        
-def valid_col_view(arch):
-        for pred in [valid_type_in_col]:
-            if not pred(arch):
-                return False
-        return True
-
-def valid_field_view(arch):
-        for pred in [valid_att_in_field]:
-            if not pred(arch):
-                return False
-        return True
-    
-def valid_label_view(arch):
-        for pred in [valid_att_in_label]:
-            if not pred(arch):
-                return False
-        return True
-    
 def valid_view(arch):
     if arch.tag == 'form':
-        for pred in [valid_page_in_book,valid_att_in_form]:
+        for pred in [valid_page_in_book,valid_att_in_form,valid_type_in_colspan,valid_type_in_col,valid_att_in_field,valid_att_in_label]:
             if not pred(arch):
                 return False
     elif arch.tag == 'graph':
-        for pred in [valid_field_in_graph]:
+        for pred in [valid_field_in_graph,valid_type_in_colspan,valid_type_in_col,valid_att_in_field,valid_att_in_label]:
             if not pred(arch):
                 return False
     elif arch.tag == 'tree':
-        for pred in [valid_field_in_tree]:
+        for pred in [valid_field_in_tree,valid_type_in_colspan,valid_type_in_col,valid_att_in_field,valid_att_in_label]:
             if not pred(arch):
                 return False
     return True
