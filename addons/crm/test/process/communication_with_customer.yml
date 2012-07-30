@@ -44,14 +44,14 @@
   I convert one phonecall request as a customer and put into regular customer list. 
 -
   !python {model: crm.phonecall2partner}: |
-    context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_case_phone06")], 'active_id': ref("crm.crm_case_phone06")})
+    context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_phonecall_6")], 'active_id': ref("crm.crm_phonecall_6")})
     new_id = self.create(cr, uid, {}, context=context)
     self.make_partner(cr, uid, [new_id],  context=context)
 -
   I check converted phonecall to partner.
 -
   !python {model: res.partner}: |
-    partner_id = self.search(cr, uid, [('phonecall_ids', '=', ref('crm.crm_case_phone06'))])
+    partner_id = self.search(cr, uid, [('phonecall_ids', '=', ref('crm.crm_phonecall_6'))])
     assert partner_id, "Customer is not found in regular customer list."
     data = self.browse(cr, uid, partner_id, context=context)[0]
     assert data.user_id.id == ref("base.user_root"), "User not assign properly"
