@@ -13,23 +13,22 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <separator string="Company Settings"/>
+                    <div>
+                        <label string="You will also find several configuration options on your company data:
+                        	address for the header and footer, overdue payments texts, etc."/>
+                        <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute" class="oe_inline oe_link"/>
+                    </div>
                     <group>
-                        <label for="id" string="Company"/>
+                        <label for="id" string="Options"/>
                         <div>
                             <div>
                                 <field name="module_multi_company" class="oe_inline"/>
                                 <label for="module_multi_company"/>
                             </div>
-                            <div>
-                                <label string="You will also find several configuration options on your company data:
-                                    address for the header and footer, overdue payments texts, etc."/>
-                                <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute" class="oe_inline oe_link"/>
-                            </div>
                         </div>
                     </group>
-                    <separator string="External Accesses"/>
                     <group>
-                        <label for="id" string="External Accesses"/>
+                    	<label for="id" string="Share Data"/>
                         <div>
                             <div>
                                 <field name="module_share" class="oe_inline"/>
@@ -39,13 +38,12 @@
                                 <field name="module_portal" class="oe_inline"/>
                                 <label for="module_portal"/>
                             </div>
-                        </div>
-                    </group>
-                    <separator string="Others"/>
-                    <group>
-                        <label for="id" string="Outgoing Mail Servers"/>
-                        <button type="action" name="%(base.action_ir_mail_server_list)d"
+							<div>
+								<label string="Configure outgoing email servers"/>		                        
+	                       		<button type="action" name="%(base.action_ir_mail_server_list)d"
                             string="Configure" icon="gtk-execute" class="oe_link"/>
+    		                </div>
+    		        	</div>        
                     </group>
                 </form>
             </field>
