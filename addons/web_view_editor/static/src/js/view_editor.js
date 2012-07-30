@@ -1,7 +1,7 @@
-openerp.web.view_editor = function(instance) {
+openerp.web_view_editor = function(instance) {
 var _t = instance.web._t;
 var QWeb = instance.web.qweb;
-instance.web.ViewEditor =   instance.web.OldWidget.extend({
+instance.web_view_editor.ViewEditor =   instance.web.OldWidget.extend({
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
         this.element_id = element_id;
@@ -9,7 +9,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         this.dataset = new instance.web.DataSetSearch(this, 'ir.ui.view', null, null),
         this.model = dataset.model;
         this.xml_element_id = 0;
-        this.property = instance.web.ViewEditor.property_widget;
+        this.property = instance.web_view_editor.ViewEditor.property_widget;
         this.one_object = false;
     },
     start: function() {
@@ -434,7 +434,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
                 break;
             }
             if (view_find.attr('level') < min_level) {
-            	min_level = parseInt(view_find.attr('level'));
+                min_level = parseInt(view_find.attr('level'));
             }
         }
         var val = _.detect(obj.att_list, function(val) {return val[0] == "name";});
@@ -1013,7 +1013,7 @@ instance.web.ViewEditor =   instance.web.OldWidget.extend({
         });
     }
 });
-instance.web.ViewEditor.Field = instance.web.Class.extend({
+instance.web_view_editor.ViewEditor.Field = instance.web.Class.extend({
     init: function(view, widget) {
         this.$element = view.$element;
         this.dirty = false;
@@ -1049,7 +1049,7 @@ instance.web.ViewEditor.Field = instance.web.Class.extend({
         return _.str.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}))
     }
 });
-instance.web.ViewEditor.FieldBoolean = instance.web.ViewEditor.Field.extend({
+instance.web_view_editor.ViewEditor.FieldBoolean = instance.web_view_editor.ViewEditor.Field.extend({
     template : "vieweditor_boolean",
     start: function() {
         var self = this;
@@ -1067,7 +1067,7 @@ instance.web.ViewEditor.FieldBoolean = instance.web.ViewEditor.Field.extend({
         return  this.$element.find("input[id=" + this.name + "]").is(':checked')? "1" : null;
     }
 });
-instance.web.ViewEditor.FieldChar = instance.web.ViewEditor.Field.extend({
+instance.web_view_editor.ViewEditor.FieldChar = instance.web_view_editor.ViewEditor.Field.extend({
     template : "vieweditor_char",
     start: function () {
         var self = this;
@@ -1083,7 +1083,7 @@ instance.web.ViewEditor.FieldChar = instance.web.ViewEditor.Field.extend({
         return this.$element.find("input[id=" + this.name + "]").val();
     }
 });
-instance.web.ViewEditor.FieldSelect = instance.web.ViewEditor.Field.extend({
+instance.web_view_editor.ViewEditor.FieldSelect = instance.web_view_editor.ViewEditor.Field.extend({
     template : "vieweditor_selection",
     start: function () {
         var self = this;
@@ -1113,7 +1113,7 @@ instance.web.ViewEditor.FieldSelect = instance.web.ViewEditor.Field.extend({
         return this.$element.find("select[id=" + this.name + "]").val();
     }
 });
-instance.web.ViewEditor.FieldSelectMulti = instance.web.ViewEditor.FieldSelect.extend({
+instance.web_view_editor.ViewEditor.FieldSelectMulti = instance.web_view_editor.ViewEditor.FieldSelect.extend({
     start: function () {
         this._super();
         this.$element.find("select[id=" + this.name + "]").css('height', '100px').attr("multiple", true);
@@ -1129,7 +1129,7 @@ instance.web.ViewEditor.FieldSelectMulti = instance.web.ViewEditor.FieldSelect.e
         });
     }
 });
-instance.web.ViewEditor.FieldFloat = instance.web.ViewEditor.FieldChar.extend({
+instance.web_view_editor.ViewEditor.FieldFloat = instance.web_view_editor.ViewEditor.FieldChar.extend({
 });
 
 var _PROPERTIES = {
@@ -1202,11 +1202,11 @@ var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
             'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
             'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph'
 ];
-instance.web.ViewEditor.property_widget = new instance.web.Registry({
-    'boolean' : 'instance.web.ViewEditor.FieldBoolean',
-    'selection_multi' : 'instance.web.ViewEditor.FieldSelectMulti',
-    'selection' : 'instance.web.ViewEditor.FieldSelect',
-    'char' : 'instance.web.ViewEditor.FieldChar',
-    'float' : 'instance.web.ViewEditor.FieldFloat'
+instance.web_view_editor.ViewEditor.property_widget = new instance.web.Registry({
+    'boolean' : 'instance.web_view_editor.ViewEditor.FieldBoolean',
+    'selection_multi' : 'instance.web_view_editor.ViewEditor.FieldSelectMulti',
+    'selection' : 'instance.web_view_editor.ViewEditor.FieldSelect',
+    'char' : 'instance.web_view_editor.ViewEditor.FieldChar',
+    'float' : 'instance.web_view_editor.ViewEditor.FieldFloat'
 });
 };

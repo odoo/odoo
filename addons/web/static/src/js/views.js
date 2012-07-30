@@ -739,7 +739,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 break;
             case 'manage_views':
                 if (current_view.fields_view && current_view.fields_view.arch) {
-                    var view_editor = new instance.web.ViewEditor(current_view, current_view.$element, this.dataset, current_view.fields_view.arch);
+                    var view_editor = new instance.web_view_editor.ViewEditor(current_view, current_view.$element, this.dataset, current_view.fields_view.arch);
                     view_editor.start();
                 } else {
                     this.do_warn(_t("Manage Views"),
