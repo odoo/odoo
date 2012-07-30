@@ -184,7 +184,7 @@ $sheet-max-width: 860px
         margin: 4px 0
     // }}}
     // Button style {{{
-    a.button:link, a.button:visited, button, input[type='submit']
+    a.button:link, a.button:visited, button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
         display: inline-block
         border: 1px solid #ababab
         color: #404040
@@ -199,16 +199,18 @@ $sheet-max-width: 860px
         -webkit-font-smoothing: antialiased
         outline: none
 
-    a.button:hover, button:hover, input[type='submit']:hover
+    a.button:hover, button:hover, input[type='submit']:hover, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         cursor: pointer
+        background-position: 0
 
-    a.button:focus, button:focus, input[type='submit']:focus
+    a.button:focus, button:focus, input[type='submit']:focus, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus
         border: 1px solid #80bfff
+        background-position: 0
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
-    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active
+    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active
         @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
@@ -231,9 +233,7 @@ $sheet-max-width: 860px
             width: auto
             a.ui-state-active
                 background: #f0f0fa
-    div.ui-widget-overlay
-        background: black
-        @include opacity(0.3)
+
     // Modal box
     &.ui-dialog
         display: none
@@ -270,6 +270,8 @@ $sheet-max-width: 860px
                 margin: 0
             .ui-dialog-buttonset
                 float: left
+                .ui-button
+                    margin-right: 4px
         .ui-dialog-titlebar-close
             padding: 0
             .ui-icon-closethick
@@ -296,6 +298,8 @@ $sheet-max-width: 860px
                 color: #8A89BA
                 &:hover
                     text-decoration: underline
+                &:focus
+                    outline: none
             .oe_logo
                 margin-left: -6px
             .oe_bottom
@@ -1993,6 +1997,10 @@ $sheet-max-width: 860px
 
 // }}}
 
+// The jQuery-ui overlay is outside the .openerp div, please don't add indentation !!!
+div.ui-widget-overlay
+    background: black
+    @include opacity(0.3)
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
