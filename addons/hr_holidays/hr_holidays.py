@@ -200,8 +200,8 @@ class hr_holidays(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
-            if rec.state<>'draft':
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft status !'))
+            if rec.state not in ['draft', 'cancel', 'confirm']:
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is in %s state!')%(rec.state))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
