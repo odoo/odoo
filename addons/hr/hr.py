@@ -264,7 +264,7 @@ class hr_employee(osv.osv):
         return {'value': {'work_email' : work_email}}
 
     def _get_default_image(self, cr, uid, context=None):
-        image_path = addons.get_module_resource('hr', 'images', 'photo.png')
+        image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
         return tools.resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {

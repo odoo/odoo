@@ -38,7 +38,12 @@ You can manage:
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/hr_department.jpeg', 'images/hr_employee.jpeg','images/hr_job_position.jpeg'],
+    'images': [
+        'images/hr_department.jpeg',
+        'images/hr_employee.jpeg',
+        'images/hr_job_position.jpeg',
+        'static/src/img/default_image.png',
+    ],
     'depends': ['base_setup','mail', 'resource', 'board'],
     'init_xml': [],
     'update_xml': [
