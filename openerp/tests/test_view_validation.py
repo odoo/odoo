@@ -14,7 +14,7 @@ invalid_form = etree.parse(StringIO('''\
     <group>
         <div>
             <page></page>
-            <label colspan="True"> </label>
+            <label colspan="True"></label>
             <field></field>
         </div>
     </group>
@@ -63,8 +63,8 @@ invalid_graph = etree.parse(StringIO('''\
 
 valid_graph = etree.parse(StringIO('''\
 <graph string="">
-    <field></field>
-    <field></field>
+    <field name=""></field>
+    <field name=""></field>
 </graph>
 ''')).getroot()
 
@@ -82,9 +82,10 @@ invalid_tree = etree.parse(StringIO('''\
 valid_tree= etree.parse(StringIO('''\
 <tree string="">
     <button></button>
-    <field></field>
-    <field></field>
-    <field></field>
+    <label string=""></label>
+    <field name=""></field>
+    <field name=""></field>
+    <field name=""></field>
     <button></button>
 </tree>
 ''')).getroot()
@@ -104,22 +105,22 @@ class test_view_validation(unittest2.TestCase):
         assert not  valid_att_in_field(invalid_form)
         assert  valid_att_in_field(valid_form)
 
-        assert not valid_field_view(invalid_form)
-        assert valid_field_view(valid_form)
+        assert not valid_view(invalid_form)
+        assert valid_view(valid_form)
 
     def test_all_label_validation(self):
         assert not  valid_att_in_label(invalid_form)
         assert  valid_att_in_label(valid_form)
 
-        assert not valid_label_view(invalid_form)
-        assert valid_label_view(valid_form)
+        assert not valid_view(invalid_form)
+        assert valid_view(valid_form)
         
     def test_form_string_validation(self):
         assert not valid_att_in_form(invalid_form)
         assert valid_att_in_form(valid_form)
 
-        assert not valid_form_view(invalid_form)
-        assert valid_form_view(valid_form)
+        assert not valid_view(invalid_form)
+        assert valid_view(valid_form)
 
     def test_graph_field_validation(self):
         assert not valid_field_in_graph(invalid_graph)
@@ -129,11 +130,11 @@ class test_view_validation(unittest2.TestCase):
         assert valid_view(valid_graph)        
 
     def test_graph_string_validation(self):
-        assert not valid_att_in_graph(invalid_graph)
-        assert valid_att_in_graph(valid_graph)
+        assert not valid_field_in_graph(invalid_graph)
+        assert valid_field_in_graph(valid_graph)
 
-        assert not valid_graph_view(invalid_graph)
-        assert valid_graph_view(valid_graph)
+        assert not valid_view(invalid_graph)
+        assert valid_view(valid_graph)
     
     def test_tree_field_validation(self):
         assert not valid_field_in_tree(invalid_tree)
@@ -143,25 +144,25 @@ class test_view_validation(unittest2.TestCase):
         assert valid_view(valid_tree)        
 
     def test_tree_string_validation(self):
-        assert not valid_att_in_tree(invalid_tree)
-        assert valid_att_in_tree(valid_tree)
+        assert not valid_field_in_tree(invalid_tree)
+        assert valid_field_in_tree(valid_tree)
     
-        assert not valid_tree_view(invalid_tree)
-        assert valid_tree_view(valid_tree)
+        assert not valid_view(invalid_tree)
+        assert valid_view(valid_tree)
         
     def test_colspan_datatype_validation(self):
         assert not valid_type_in_colspan(invalid_form)
         assert valid_type_in_colspan(valid_form)
         
-        assert not valid_colspan_view(invalid_form)
-        assert valid_colspan_view(valid_form)
+        assert not valid_view(invalid_form)
+        assert valid_view(valid_form)
     
     def test_col_datatype_validation(self):
         assert not valid_type_in_col(invalid_form)
         assert valid_type_in_col(valid_form)
         
-        assert not valid_col_view(invalid_form)
-        assert valid_col_view(valid_form)
+        assert not valid_view(invalid_form)
+        assert valid_view(valid_form)
 
 
 if __name__ == '__main__':
