@@ -42,7 +42,13 @@ for name, field in models:
         '_defaults': {'const': 4},
         'name_get': (lambda self, cr, uid, ids, context=None:
             [(record.id, "%s:%s" % (self._name, record.value))
-             for record in self.browse(cr, uid, ids, context=context)])
+             for record in self.browse(cr, uid, ids, context=context)]),
+        'name_search': (lambda self, cr, uid, name, operator, context=None:
+                self.name_get(cr, uid,
+                    self.search(cr, uid, [['value', operator, int(name.split(':')[1])]])
+                    , context=context)
+                if isinstance(name, basestring) and name.split(':')[0] == self._name
+                else [])
     }
     NewModel = type(
         'Export%s' % ''.join(section.capitalize() for section in name.split('.')),

@@ -50,6 +50,12 @@ class ImporterCase(common.TransactionCase):
             self.cr, openerp.SUPERUSER_ID,
             self.model.search(self.cr, openerp.SUPERUSER_ID, domain, context=context),
             fields=fields, context=context)
+    def browse(self, domain=(), context=None):
+        return self.model.browse(
+            self.cr, openerp.SUPERUSER_ID,
+            self.model.search(self.cr, openerp.SUPERUSER_ID, domain, context=context),
+            context=context)
+
 
 class test_boolean_field(ImporterCase):
     model_name = 'export.boolean'
@@ -353,3 +359,103 @@ class test_selection_function(ImporterCase):
         self.assertEqual(
             ['3', '1'],
             values(self.read()))
+
+class test_o2m(ImporterCase):
+    model_name = 'export.many2one'
+
+    def test_by_name(self):
+        # create integer objects
+        integer_id1 = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 42})
+        integer_id2 = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 36})
+        # get its name
+        name1 = dict(self.registry('export.integer').name_get(
+            self.cr, openerp.SUPERUSER_ID,[integer_id1]))[integer_id1]
+        name2 = dict(self.registry('export.integer').name_get(
+            self.cr, openerp.SUPERUSER_ID,[integer_id2]))[integer_id2]
+
+        self.assertEqual(
+            self.import_(['value'], [
+                # import by name_get
+                [name1],
+                [name1],
+                [name2],
+            ]),
+            ok(3))
+        # correct ids assigned to corresponding records
+        self.assertEqual([
+            (integer_id1, name1),
+            (integer_id1, name1),
+            (integer_id2, name2),],
+            values(self.read()))
+
+    # TODO: test import by xid
+
+    def test_by_id(self):
+        integer_id = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 42})
+        self.assertEqual(
+            self.import_(['value/.id'], [[integer_id]]),
+            ok(1))
+        b = self.browse()
+        self.assertEqual(42, b[0].value.value)
+
+    def test_by_names(self):
+        integer_id1 = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 42})
+        integer_id2 = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 42})
+        name1 = dict(self.registry('export.integer').name_get(
+            self.cr, openerp.SUPERUSER_ID,[integer_id1]))[integer_id1]
+        name2 = dict(self.registry('export.integer').name_get(
+            self.cr, openerp.SUPERUSER_ID,[integer_id2]))[integer_id2]
+        # names should be the same
+        self.assertEqual(name1, name2)
+
+        self.assertEqual(
+            self.import_(['value'], [[name2]]),
+            ok(1))
+        # FIXME: is it really normal import does not care for name_search collisions?
+        self.assertEqual([
+            (integer_id1, name1)
+        ], values(self.read()))
+
+    def test_fail_by_implicit_id(self):
+        """ Can't implicitly import records by id
+        """
+        # create integer objects
+        integer_id1 = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 42})
+        integer_id2 = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 36})
+
+        self.assertRaises(
+            ValueError, # Because name_search all the things. Fallback schmallback
+            self.import_, ['value'], [
+                # import by id, without specifying it
+                [integer_id1],
+                [integer_id2],
+                [integer_id1],
+            ])
+
+    def test_sub_field(self):
+        """ Does not implicitly create the record, does not warn that you can't
+        import m2o subfields (at all)...
+        """
+        self.assertRaises(
+            ValueError, # No record found for 42, name_searches the bloody thing
+            self.import_, ['value/value'], [['42']])
+
+    def test_fail_noids(self):
+        self.assertRaises(
+            ValueError,
+            self.import_, ['value'], [['nameisnoexist:3']])
+        self.cr.rollback()
+        self.assertRaises(
+            ValueError,
+            self.import_, ['value/id'], [['noxidhere']]),
+        self.cr.rollback()
+        self.assertRaises(
+            Exception, # FIXME: Why can't you be a ValueError like everybody else?
+            self.import_, ['value/.id'], [[66]])
