@@ -42,6 +42,10 @@ class mail_subscription(osv.osv):
                         help='Id of the followed resource'),
         'user_id': fields.many2one('res.users', string='Related User',
                         ondelete='cascade', required=True, select=1),
+        'subtype_ids': fields.many2many('mail.message.subtype',
+                                        'mail_message_subtyp_rel',
+                                        'subscription_id', 'subtype_id', 'Subtype',
+                                        help = "linking some subscription to several subtype for projet/task"),
     }
 
 class mail_notification(osv.osv):

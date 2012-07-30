@@ -20,6 +20,27 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_mail_subscription_form">
+            <field name="name">mail.subscription.form</field>
+            <field name="model">mail.subscription</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Subscription Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="res_model"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group>
+                                <field name="res_id"/>
+                                <field name="subtype_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
         <!-- 
             NOTIFICATION
                 !-->
