@@ -17,6 +17,13 @@
             <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
         </record>
 
+        <record id="portal_stock_picking_user_rule" model="ir.rule">
+            <field name="name">Portal Personal Delivery Orders Out</field>
+            <field ref="stock.model_stock_picking_out" name="model_id"/>
+            <field name="domain_force">[('partner_id','child_of',[user.partner_id.id])]</field>
+            <field name="groups" eval="[(4, ref('portal.group_portal_member'))]"/>
+        </record>
+
         <record id="portal_account_invoice_user_rule" model="ir.rule">
             <field name="name">Portal Personal Account Invoices</field>
             <field ref="account.model_account_invoice" name="model_id"/>
