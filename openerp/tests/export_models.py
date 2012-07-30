@@ -1,6 +1,16 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import orm, fields
 
+def selection_fn(obj, cr, uid, context=None):
+    return list(enumerate(["Corge", "Grault", "Wheee", "Moog"]))
+
+def function_fn(model, cr, uid, ids, field_name, arg, context):
+    return dict((id, 3) for id in ids)
+def function_fn_write(model, cr, uid, id, field_name, field_value, fnct_inv_arg, context):
+    """ just so CreatorCase.export can be used
+    """
+    pass
+
 models = [
     ('boolean', fields.boolean()),
     ('integer', fields.integer()),
@@ -12,13 +22,14 @@ models = [
     ('datetime', fields.datetime()),
     ('text', fields.text()),
     ('selection', fields.selection([(1, "Foo"), (2, "Bar"), (3, "Qux")])),
+    ('selection.function', fields.selection(selection_fn)),
     # just relate to an integer
     ('many2one', fields.many2one('export.integer')),
     ('one2many', fields.one2many('export.one2many.child', 'parent_id')),
-    ('many2many', fields.many2many('export.many2many.other'))
-    # TODO: function?
-    # TODO: related?
-    # TODO: reference?
+    ('many2many', fields.many2many('export.many2many.other')),
+    ('function', fields.function(function_fn, fnct_inv=function_fn_write, type="integer")),
+    # related: specialization of fields.function, should work the same way
+    # TODO: reference
 ]
 for name, field in models:
     attrs = {

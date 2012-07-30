@@ -7,7 +7,7 @@ from . import common, export_models
 
 
 def setUpModule():
-    openerp.tools.config['update'] = dict(base=1)
+    openerp.tools.config['update'] = {'base': 1}
     openerp.modules.registry.RegistryManager.new(
         common.DB, update_module=True)
 
@@ -236,6 +236,28 @@ class test_selection(CreatorCase):
         self.assertEqual(
             self.export(2),
             [[u"Bar"]])
+
+class test_selection_function(CreatorCase):
+    model_name = 'export.selection.function'
+
+    def test_empty(self):
+        self.assertEqual(
+            self.export(False),
+            [[False]])
+
+    def test_value(self):
+        """ selection functions export the *value* itself
+        """
+        self.assertEqual(
+            self.export(1),
+            [[u'1']])
+        self.assertEqual(
+            self.export(3),
+            [[u'3']])
+        # fucking hell
+        self.assertEqual(
+            self.export(0),
+            [[False]])
 
 class test_m2o(CreatorCase):
     model_name = 'export.many2one'
@@ -518,3 +540,13 @@ class test_m2m(CreatorCase):
             ]])
 
     # essentially same as o2m, so boring
+
+class test_function(CreatorCase):
+    model_name = 'export.function'
+
+    def test_value(self):
+        """ Exports value normally returned by accessing the function field
+        """
+        self.assertEqual(
+            self.export(42),
+            [[u'3']])
