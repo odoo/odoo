@@ -164,11 +164,14 @@
         <field name="arch" type="xml">
             <search string="Workflow Activity">
                 <field name="name" string="Workflow Activity"/>
+                <filter icon="terp-camera_test" string="Flow Start"
+                domain="[('flow_start', '=',True)]" />
+                <separator/>
+                <filter icon="terp-gtk-stop" string="Flow Stop"
+                domain="[('flow_stop', '=',True)]" />
                 <field name="wkf_id"/>
                 <field name="action_id"/>
                 <field name="kind"/>
-                <filter icon="terp-camera_test" string="Flow Start" domain="[('flow_start', '=',True)]" />
-                <filter icon="terp-gtk-stop" string="Flow Stop" domain="[('flow_stop', '=',True)]" />
                 <group expand="0" string="Group By...">
                     <filter string="Workflow" icon="terp-stage" domain="[]" context="{'group_by':'wkf_id'}"/>
                 </group>
@@ -295,10 +298,10 @@
         <field name="arch" type="xml">
             <search string="Workflow Instances">
                 <field name="res_type" string="Resource Object"/>
+                <filter icon="terp-camera_test" string="Active" domain="[('state','=','active')]" name="active"/>
                 <field name="wkf_id"/>
                 <field name="res_id"/>
                 <field name="state"/>
-                <filter icon="terp-camera_test" string="Active" domain="[('state','=','active')]" name="active"/>
         </search>
       </field>
     </record>
@@ -358,11 +361,11 @@
         <field name="arch" type="xml">
             <search string="Workflow Workitems">
                 <field name="state" string="State"/>
+                <filter icon="terp-camera_test" string="Active" name="active" domain="[('state','=','active')]"/>
                 <field name="wkf_id"/>
                 <field name="act_id"/>
                 <field name="subflow_id"/>
                 <field name="inst_id"/>
-                <filter icon="terp-camera_test" string="Active" name="active" domain="[('state','=','active')]"/>
             </search>
         </field>
     </record>

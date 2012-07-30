@@ -245,23 +245,25 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Partner">
-                    <field name="name" filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]" string="Partner"/>
-                    <field name="category_id"/>
-                    <field name="user_id"/>
-                    <field name="parent_id" filter_domain="[('parent_id','child_of',[self])]"/>
-                    <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
-                    <separator/>
-                    <filter string="Persons" name="type_person" icon="terp-personal" domain="[('is_company','=',0)]"/>
-                    <filter string="Companies" name="type_company" icon="terp-partner" domain="[('is_company','=',1)]"/>
-                    <separator/>
-                    <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
-                    <separator/>
-                    <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
-                        <filter string="Company" context="{'group_by': 'parent_id'}"/>
-                    </group>
-                </search>
+                   <field name="name"
+                       filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"
+                       string="Partner"/>
+                   <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
+                   <separator/>
+                   <filter string="Persons" name="type_person" icon="terp-personal" domain="[('is_company','=',0)]"/>
+                   <filter string="Companies" name="type_company" icon="terp-partner" domain="[('is_company','=',1)]"/>
+                   <separator/>
+                   <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+                   <separator/>
+                   <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                   <field name="category_id"/>
+                   <field name="user_id"/>
+                   <field name="parent_id" filter_domain="[('parent_id','child_of',[self])]"/>
+                   <group expand="0" string="Group By...">
+                       <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+                       <filter string="Company" context="{'group_by': 'parent_id'}"/>
+                   </group>
+               </search>
             </field>
         </record>
 
