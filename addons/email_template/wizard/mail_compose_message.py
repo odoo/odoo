@@ -91,6 +91,14 @@ class mail_compose_message(osv.osv_memory):
                 
                 values['attachments'] = False
                 attachments = {}
+                if len(context.get('active_ids')) == 1:
+                    values['email_from'] = self.render_template(cr, uid, template.email_from, template.model, res_id, context)
+                    values['email_to'] = self.render_template(cr, uid, template.email_to, template.model, res_id, context)
+                    values['email_cc'] = self.render_template(cr, uid, template.email_cc, template.model, res_id, context)
+                    values['email_bcc'] = self.render_template(cr, uid, template.email_bcc, template.model, res_id, context)
+                    values['reply_to'] = self.render_template(cr, uid, template.reply_to, template.model, res_id, context)
+                    values['subject'] = self.render_template(cr, uid, template.subject, template.model, res_id, context)
+                    values['body_text'] = self.render_template(cr, uid, template.body_text, template.model, res_id, context) or ''
                 if template.report_template:
                     report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
                     report_service = 'report.' + report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
