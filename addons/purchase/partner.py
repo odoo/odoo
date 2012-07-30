@@ -27,7 +27,7 @@ class res_partner(osv.osv):
     
     def _purchase_order_count(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        for partner in self.browse(cr, uid, ids, context):
+        for partner in self.browse(cr, uid, ids, context=context):
             res[partner.id] = len(partner.purchase_order_ids)
         return res
     
