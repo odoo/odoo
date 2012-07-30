@@ -581,7 +581,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
             $('.goodbye-message').css({opacity:1}).show();
             setTimeout(function(){
-                console.log('kill');
                 $('.goodbye-message').animate({opacity:0},500,'swing',function(){$('.goodbye-message').hide();});
             },3000);
         },
