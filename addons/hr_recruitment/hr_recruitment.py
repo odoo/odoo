@@ -249,9 +249,6 @@ class hr_applicant(base_stage, osv.Model):
         if not stage_id:
             return {'value':{}}
         stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, stage_id, context)
-        if stage.state == 'done':
-            context['onchange'] = True
-            self.case_close_with_emp(cr, uid, ids, context)
         if stage.state == "draft":
             return {'value':{'active': True,'date_open': False, 'date_closed': False}}
         if stage.state == "open":
@@ -462,6 +459,16 @@ class hr_applicant(base_stage, osv.Model):
         """
         res = super(hr_applicant, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
+        return res
+    
+    def stage_set(self, cr, uid, ids, stage_id, context=None):
+        if context is None:
+            context = {}
+        res = super(hr_applicant, self).stage_set(cr, uid, ids,stage_id, context)
+        stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, stage_id, context)
+        if stage.state == 'done':
+            context['onchange'] = True
+            self.case_close_with_emp(cr, uid, ids, context)
         return res
 
     def set_priority(self, cr, uid, ids, priority, *args):
