@@ -30,6 +30,7 @@ from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
 from tools.float_utils import float_round
+import tools
 
 _logger = logging.getLogger(__name__)
 
@@ -225,7 +226,7 @@ class account_account(osv.osv):
         while pos < len(args):
 
             if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
-                args[pos] = ('code', '=like', str(args[pos][2].replace('%', ''))+'%')
+                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
             if args[pos][0] == 'journal_id':
                 if not args[pos][2]:
                     del args[pos]
