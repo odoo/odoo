@@ -6,9 +6,12 @@
             <field name="inherit_id" ref="base_setup.view_general_configuration"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="module_portal" position="after">
-                    <field name="signup_template_user_id"/>
-                </field> 
+                <div name="portal" position="after">
+                    <div name="portal">
+                    	<label for="signup_template_user_id"/>
+                        <field name="signup_template_user_id" class="oe_inline"/>
+                    </div>
+                </div> 
             </field>
         </record>
     </data>
