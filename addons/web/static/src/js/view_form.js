@@ -313,7 +313,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         var titleDef = $.Deferred();
         if (record.id) {
-            this.dataset.name_get(record.id).then(function(names) {
+            this.dataset.name_get([record.id]).then(function(names) {
                 self.set({ 'title' : names[0][1] });
             }).always(function() {
                 titleDef.resolve();
