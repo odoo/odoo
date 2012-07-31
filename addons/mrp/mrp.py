@@ -448,6 +448,14 @@ class mrp_production(osv.osv):
             result[prod.id] = prod.date_planned[:10]
         return result
 
+    def _src_id_default(self, cr, uid, ids, context=None):
+        src_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
+        return src_location_id.id
+    
+    def _dest_id_default(self, cr, uid, ids, context=None):
+        dest_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
+        return dest_location_id.id        
+
     _columns = {
         'name': fields.char('Reference', size=64, required=True),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request."),
@@ -496,6 +504,8 @@ class mrp_production(osv.osv):
         'product_qty':  lambda *a: 1.0,
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'mrp.production') or '/',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
+        'location_src_id': _src_id_default,
+        'location_dest_id': _dest_id_default
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -567,10 +577,12 @@ class mrp_production(osv.osv):
         if bom_id:
             bom_point = bom_obj.browse(cr, uid, bom_id, context=context)
             routing_id = bom_point.routing_id.id or False
+
+        product_uom_id = product.uom_id and product.uom_id.id or False
         result = {
-            'product_uom': product.uom_id and product.uom_id.id or False,
+            'product_uom': product_uom_id,
             'bom_id': bom_id,
-            'routing_id': routing_id
+            'routing_id': routing_id,
         }
         return {'value': result}
 
