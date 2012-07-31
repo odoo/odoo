@@ -267,7 +267,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (this.$pager) {
             this.$pager.show();
         }
-        this.$element.show().css('visibility', 'hidden');
         this.$element.add(this.$buttons).removeClass('oe_form_dirty');
 
         var shown = this.has_been_loaded;
@@ -286,7 +285,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (options.editable) {
                 self.to_edit_mode();
             }
-            self.$element.css('visibility', 'visible');
         });
     },
     do_hide: function () {
@@ -2074,7 +2072,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function() {
-        this.delay_focus(this.$element.find('input:first'));
+        this.$element.find('input:first')[0].focus();
     }
 });
 
