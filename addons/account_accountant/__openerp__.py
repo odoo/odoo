@@ -24,7 +24,7 @@
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
     "sequence": 10,
-    "summary": "Accounts Moves, Journals, Chart of Accounts",
+    "summary": "Financial and Analytic Accounting",
     "description": """
 Accounting Access Rights.
 =========================

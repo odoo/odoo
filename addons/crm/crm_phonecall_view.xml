@@ -137,7 +137,7 @@
                     <field name="user_id" />
                     <field name="duration" widget="float_time" />
                     <field name="section_id" colspan="1" widget="selection" />
-                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" />
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                     <field name="categ_id" widget="selection"
                         domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                     <field name="partner_mobile" />
@@ -165,8 +165,7 @@
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"
-                    on_change="onchange_partner_id(partner_id)"
-                    string="Partner" />
+                    on_change="onchange_partner_id(partner_id)"/>
                 <field name="partner_phone"
                     invisible="1"/>
                 <field name="user_id"/>

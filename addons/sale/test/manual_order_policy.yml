@@ -16,7 +16,7 @@
     ctx = context.copy()
     ctx.update({"active_model": 'sale.order', "active_ids": [ref("order4")], "active_id":ref("order4")})
     order_line = self.pool.get('sale.order.line').browse(cr, uid, ref("line7"), context=context)
-    pay_id = self.create(cr, uid, {'product_id': order_line.product_id.id, 'amount': order_line.price_subtotal, 'qtty': order_line.product_uom_qty})
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'fixed', 'product_id': order_line.product_id.id, 'amount': order_line.price_subtotal, 'qtty': order_line.product_uom_qty})
     self.create_invoices(cr, uid, [pay_id], context=ctx)
 -
   I check Invoice which made advance
