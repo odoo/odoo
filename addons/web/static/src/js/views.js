@@ -505,6 +505,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         });
         this.getParent().push_breadcrumb({
             widget: this,
+            action: this.action,
             show: function(index, $e) {
                 var view_to_select = views[index];
                 self.$element.show();
@@ -513,9 +514,27 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
             },
             get_title: function() {
-                return _.map(views, function(v) {
-                    return self.views[v].controller.get('title');
+                var id;
+                var currentIndex;
+                _.each(self.getParent().breadcrumbs, function(bc, i) {
+                    if (bc.widget === self) {
+                        currentIndex = i;
+                    }
                 });
+                var next = self.getParent().breadcrumbs.slice(currentIndex + 1)[0];
+                var titles = _.map(views, function(v) {
+                    var controller = self.views[v].controller;
+                    if (v === 'form') {
+                        id = controller.datarecord.id;
+                    }
+                    return controller.get('title');
+                });
+                if (next && next.action.res_id && self.active_view === 'form' && self.model === next.action.res_model && id === next.action.res_id) {
+                    // If the current active view is a formview and the next item in the breadcrumbs
+                    // is an action on same object (model / res_id), then we omit the current formview's title
+                    titles.pop();
+                }
+                return titles;
             }
         });
     },
