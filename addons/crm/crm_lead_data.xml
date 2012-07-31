@@ -113,6 +113,28 @@
             <field name="name">Newsletter</field>
             <field name="section_id" ref="section_sales_department"/>
         </record>
+        
+        <!-- CASE Resource(type_id) -->
+
+        <record model="crm.case.resource.type" id="type_fund1">
+            <field name="name">Cash</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.case.resource.type" id="type_fund2">
+            <field name="name">Cheque</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.case.resource.type" id="type_fund3">
+            <field name="name">Credit Card</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.case.resource.type" id="type_fund4">
+            <field name="name">Demand Draft</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
 
         <!--  crm categories -->
         <record model="crm.case.categ" id="categ_oppor1">
