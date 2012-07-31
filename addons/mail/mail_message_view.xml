@@ -78,7 +78,6 @@
             <field name="priority">25</field>
             <field name="arch" type="xml">
                 <search string="Messages Search">
-                    <field name="user_id"/>
                     <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
                     <field name="type"/>
                     <filter icon="terp-personal+" string="My Feeds"
@@ -103,6 +102,7 @@
                             domain="[   ('date', '&lt;=', datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59')),
                                         ('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))
                                     ]"/>
+                    <field name="user_id"/>
                 </search>
             </field>
         </record>

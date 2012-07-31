@@ -177,8 +177,8 @@
             <field name="arch" type="xml">
                 <search string="Search Payslip Lines">
                     <field name="name" string="Payslip Lines" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <field name="slip_id"/>
                     <field name="amount_select"/>
+                    <field name="slip_id"/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
                         <filter string="Salary Rule Category" icon="terp-camera_test" name="category_id" context="{'group_by':'category_id'}"/>
                         <filter string="Contribution Register" name="register_id" icon="terp-folder-yellow" context="{'group_by':'register_id'}"/>
@@ -360,10 +360,10 @@
                 <search string="Search Payslips">
                     <field name="name" string="Payslips" filter_domain="['|',('name','ilike',self),('number','ilike',self)]"/>
                     <field name="date_from"/>
-                    <field name="employee_id"/>
-                    <field name="payslip_run_id"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
                     <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]" help="Done Slip"/>
+                    <field name="employee_id"/>
+                    <field name="payslip_run_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
                         <filter string="PaySlip Batch" name="payslip_run_id" icon="terp-folder-orange" context="{'group_by':'payslip_run_id'}"/>

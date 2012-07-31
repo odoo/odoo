@@ -171,11 +171,11 @@
             <field name="arch" type="xml">
                 <search string="Search Document Directory">
                     <field name="name" string="Document Directory"/>
+                    <filter string="Static" domain="[('type','=','directory')]"/>
+                    <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="storage_id" />
                     <field name="user_id" />
-                    <filter string="Static" domain="[('type','=','directory')]"/>
-                    <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>

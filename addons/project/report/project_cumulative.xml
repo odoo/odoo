@@ -55,8 +55,6 @@
             <field name="arch" type="xml">
                 <search string="Task's Analysis">
                     <field name="date"/>
-                    <field name="project_id"/>
-                    <field name="user_id"/>
                     <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="In Progress Tasks" icon="terp-camera_test"/>
                     <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                     <separator/>
@@ -67,6 +65,8 @@
                     <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
                     <separator/>
                     <filter string="My Projects" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
+                    <field name="project_id"/>
+                    <field name="user_id"/>
                 </search>
             </field>
         </record>

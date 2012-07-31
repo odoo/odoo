@@ -13,8 +13,8 @@
             <field name="arch" type="xml">
                 <search string="Membership Products">
                     <field name="name" filter_domain="['|',('name','ilike',self),('code','ilike',self)]" string="Membership Product"/>
-                    <field name="categ_id" operator="child_of"/>
                     <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',0)]"/>
+                    <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>
                         <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
                         <filter string='Date From' icon="terp-go-month" domain="[]" context="{'group_by' : 'membership_date_from'}" />

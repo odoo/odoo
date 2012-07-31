@@ -75,11 +75,11 @@
                 <search string="Search Subscription">
                     <field name="name" string="Subscription"/>
                     <field name="date_init"/>
-                    <field name="user_id"/>
-                    <field name="partner_id"/>
                     <filter icon="terp-check"
                             string="Running"
                             domain="[('state','=','running')]"/>
+                    <field name="user_id"/>
+                    <field name="partner_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" name="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" name="Partner" domain="[]" context="{'group_by':'partner_id'}"/>

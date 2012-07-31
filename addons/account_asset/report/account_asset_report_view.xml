@@ -45,12 +45,12 @@
             <search string="Assets Analysis">
                 <field name="purchase_date"/>
                 <field name="depreciation_date"/>
-                <field name="asset_id"/>
-                <field name="asset_category_id"/>
                 <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Assets in draft state"/>
                 <filter string="Running" icon="terp-check" domain="[('state','=','open')]" help="Assets in running state"/>
                 <separator/>
                 <filter string="Posted" name="posted" icon="terp-camera_test" domain="[('move_check','=',True)]" help="Posted depreciation lines" context="{'unposted_value_visible': 0}"/>
+                <field name="asset_id"/>
+                <field name="asset_category_id"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>

@@ -206,8 +206,6 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <field name="name" string="Issue" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
-                    <field name="user_id"/>
-                    <field name="project_id"/>
                     <field name="id"/>
                     <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
                     <separator/>
@@ -215,6 +213,8 @@
                     <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                     <separator/>
                     <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
+                    <field name="user_id"/>
+                    <field name="project_id"/>
                     <group expand="0" string="Group By..." >
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -344,11 +344,11 @@
                 <search string="Feature Tracker Search">
                     <field name="name" string="Feature description"/>
                     <field name="date"/>
-                    <field name="user_id"/>
-                    <field name="project_id" string="Project"/>
                     <field name="state" groups="base.group_no_one"/>
                     <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                     <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
+                    <field name="user_id"/>
+                    <field name="project_id" string="Project"/>
                 </search>
             </field>
         </record>

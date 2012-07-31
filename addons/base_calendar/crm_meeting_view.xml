@@ -303,11 +303,11 @@
         <field name="arch" type="xml">
             <search string="Search Meetings">
                 <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>
-                <field name="user_id"/>
-                <field name="partner_ids"/>
                 <filter string="Inbox" help="Unread messages" icon="terp-mail-message-new" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
                 <separator/>
                 <filter string="My Meetings" help="My Meetings" icon="terp-personal" domain="[('user_id','=',uid)]"/>
+                <field name="user_id"/>
+                <field name="partner_ids"/>
             </search>
         </field>
     </record>

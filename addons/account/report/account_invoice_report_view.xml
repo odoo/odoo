@@ -56,9 +56,6 @@
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
                 <field name="date"/>
-                <field name="partner_id"/>
-                <field name="user_id" />
-                <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                 <filter icon="terp-go-year" string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="year"/>
                 <separator/>
                 <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft Invoices"/>
@@ -69,6 +66,9 @@
                 <filter icon="terp-personal" string="Supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]" help="Supplier Invoices And Refunds"/>
                 <filter icon="terp-dolar" string="Invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]" help="Customer And Supplier Invoices"/>
                 <filter icon="terp-dolar_ok!" string="Refund" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]" help="Customer And Supplier Refunds"/>
+                <field name="partner_id"/>
+                <field name="user_id" />
+                <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                 <group expand="1" string="Group By...">
                     <filter string="Partner" name="partner" icon="terp-partner" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Salesperson" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>

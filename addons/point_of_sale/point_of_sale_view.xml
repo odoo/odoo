@@ -140,11 +140,11 @@
                 <search string="Search Sales Order">
                     <field name="name" string="Sales Order"/>
                     <field name="date_order"/>
-                    <field name="user_id"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
                     <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
                     <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
                     <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
@@ -831,9 +831,9 @@
             <field name="arch" type="xml">
                 <search string="Point of Sale Config">
                     <field name="name" />
-                    <field name="shop_id" />
                     <filter string="Active" domain="[('state', '=', 'active')]" />
                     <filter string="Inactive" domain="[('state', '=', 'inactive')]" />
+                    <field name="shop_id" />
                 </search>
             </field>
         </record>
@@ -978,12 +978,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Point of Sale Session">
-                    <field name="config_id" />
                     <field name="name" />
-                    <field name="user_id" />
                     <filter string="Open" domain="[('state', '=', 'opened')]" />
                     <separator/>
                     <filter string="Today" domain="[('start_at', '>=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" />
+                    <field name="config_id" />
+                    <field name="user_id" />
                     <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
                         <filter string="Point of Sales" domain="[]" context="{'group_by': 'user_id'}" />
@@ -1023,13 +1023,13 @@
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <field name="name"/>
-                    <field name="user_id"/>
                     <field name="date_order"/>
-                    <field name="session_id"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
                     <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
                     <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
                     <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
+                    <field name="user_id"/>
+                    <field name="session_id"/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>

@@ -53,14 +53,14 @@
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="creation_date"/>
-                    <field name="project_id"/>
-                    <field name="user_id"/>
-                    <field name="partner_id"/>
-                    <field name="version_id"/>
                     <filter  icon="terp-camera_test" string="New" domain="[('state','=','draft')]"/>
                     <filter  icon="terp-check" string="To Do" domain="[('state','=','open')]"/>
                     <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]"/>
                     <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
+                    <field name="project_id"/>
+                    <field name="user_id"/>
+                    <field name="partner_id"/>
+                    <field name="version_id"/>
                     <group  expand="1" string="Group By...">
                         <filter string="Assigned to" name="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />

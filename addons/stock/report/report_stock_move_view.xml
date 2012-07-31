@@ -56,14 +56,14 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Moves Analysis">
-                <field name="product_id" default_focus="1"/>
-                <field name="partner_id" context="{'contact_display':'partner'}"/>
                 <filter string="Done" name="done" icon="terp-dialog-close" domain="[('state','=','done')]" help = "Completed Stock-Moves"/>
                 <filter string="Todo" icon="terp-gtk-go-back-rtl" domain="[('state','in',('assigned','waiting','confirmed'))]" help = "Future Stock-Moves"/>
                 <separator/>
                 <filter icon="terp-go-home" name="in" string="Incoming" domain="[('type','=','in')]"/>
                 <filter icon="terp-go-home" name="internal" string="Internal" domain="[('type','=','internal')]"/>
                 <filter icon="terp-go-home" name="out" string="Outgoing" domain="[('type','=','out')]"/>
+                <field name="product_id" default_focus="1"/>
+                <field name="partner_id" context="{'contact_display':'partner'}"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="location_id" />
                     <field name="location_dest_id" />
@@ -144,15 +144,15 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Inventory Analysis">
-                <field name="product_id" default_focus="1"/>
-                <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
-                <field name="company_id" groups="base.group_multi_company"/>
                 <filter string="Real" name="real" icon="terp-check" domain="[('state','=','done')]"
                     help="Analysis of current inventory (only moves that have already been processed)"/>
                 <filter string="Future" icon="terp-stock" domain="[('state','in',('assigned','done','waiting','confirmed'))]"
                     help = "Analysis including future moves (similar to virtual stock)"/>
                 <separator/>
                 <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
+                <field name="product_id" default_focus="1"/>
+                <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="partner_id" context="{'contact_display':'partner'}"/>
                     <field name="product_categ_id" />

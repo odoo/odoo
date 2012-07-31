@@ -36,11 +36,11 @@
             <field name="arch" type="xml">
                 <search string="Membership">
                     <field name="date_from"/>
+                    <filter string="Forecast" icon="terp-gtk-jump-to-ltr" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
+                    <filter string="Revenue Done" name="Revenue" icon="terp-dolar" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
                     <field name="partner_id"/>
                     <field name="membership_id"/>
                     <field name="user_id"/>
-                    <filter string="Forecast" icon="terp-gtk-jump-to-ltr" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
-                    <filter string="Revenue Done" name="Revenue" icon="terp-dolar" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
                     <group expand="1" string="Group By...">
                         <filter string="Salesperson" icon="terp-personal" name="salesman"
                             domain="[]" context="{'group_by':'user_id'}"/>

@@ -48,11 +48,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet">
-                    <field name="account_id"/>
-                    <field name="user_id" />
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
                     <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]"/>
                     <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
+                    <field name="account_id"/>
+                    <field name="user_id" />
                     <group expand="0" string="Extended Filters...">
                         <field name="general_account_id"/>
                         <field name="to_invoice"/>

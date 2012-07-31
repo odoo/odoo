@@ -32,14 +32,14 @@
         <field name="arch" type="xml">
             <search string="Campaign Analysis">
                 <field name="date"/>
+                <filter icon="terp-gtk-go-back-rtl" string="To Do" domain="[('state','=','todo')]"/>
+                <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
+                <filter icon="terp-emblem-important" string="Exceptions" domain="[('state','=','exception')]"/>
                 <field name="campaign_id"/>
                 <field name="activity_id"/>
                 <field name="segment_id"/>
                 <field name="partner_id"/>
                 <field name="country_id"/>
-                <filter icon="terp-gtk-go-back-rtl" string="To Do" domain="[('state','=','todo')]"/>
-                <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
-                <filter icon="terp-emblem-important" string="Exceptions" domain="[('state','=','exception')]"/>
                 <group expand="0" string="Group By...">
                     <filter string="Campaign" name="Campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
                     <filter string="Segment" name="Segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}"/>

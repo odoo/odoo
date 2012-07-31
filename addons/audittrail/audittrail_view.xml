@@ -64,9 +64,9 @@
             <field name="arch" type="xml">
                 <search string="Search Audittrail Rule">
                     <field name="name" string="Audittrail Rule"/>
-                    <field name="object_id" string="Model"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft  Rule"/>
                     <filter icon="terp-camera_test" string="Subscribed" domain="[('state','=','subscribed')]" help="Subscribed Rule"/>
+                    <field name="object_id" string="Model"/>
                     <group expand="0" string="Group By...">
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>

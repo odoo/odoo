@@ -10,11 +10,11 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                     <field name="period_id"/>
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -34,11 +34,11 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Supplier"/>
                     <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                     <field name="period_id"/>
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>

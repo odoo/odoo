@@ -51,8 +51,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"/>
-                    <field name="user_id" string="Salesperson"/>
                     <filter icon="terp-gtk-go-back-rtl" string="Todo" domain="[('state','in',('draft','open'))]"
                         help="Phone calls which are in draft and open state"/>
                     <filter icon="terp-camera_test" string="Held" domain="[('state','=','done')]"
@@ -64,6 +62,8 @@
                             help="Phone calls that are assigned to one of the sale teams I manage"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Phone Calls" help="Phone Calls that are assigned to me" domain="[('user_id','=',uid)]" />
+                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"/>
+                    <field name="user_id" string="Salesperson"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="partner_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>

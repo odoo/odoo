@@ -45,9 +45,6 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <field name="date_from"/>
-                    <field name="employee_id"/>
-                    <field name="department_id"/>
-                    <field name="holiday_status_id"/>
                     <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
@@ -59,6 +56,9 @@
                     <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
                     <separator/>
                     <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="holiday_status_id"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_date_from" string="Start Date" icon="terp-personal" domain="[]" context="{'group_by':'date_from'}"/>
                         <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>

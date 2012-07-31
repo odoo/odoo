@@ -70,8 +70,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <field name="section_id" context="{'invisible_section': False}"/>
-                    <field name="user_id" string="Salesperson"/>
                     <filter icon="terp-personal" name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
                     <filter icon="terp-personal+" string="Opportunity" name="opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
                     <separator/>
@@ -84,6 +82,8 @@
                             help="Leads/Opportunities that are assigned to one of the sale teams I manage"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Case(s)" help="Leads/Opportunities that are assigned to me" domain="[('user_id','=',uid)]"/>
+                    <field name="section_id" context="{'invisible_section': False}"/>
+                    <field name="user_id" string="Salesperson"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="partner_id"/>
                         <field name="stage_id" domain="[('section_ids', '=', 'section_id')]" />

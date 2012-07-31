@@ -42,13 +42,13 @@
                 <search string="Follow-ups Sent">
                     <field name="date_move"/>
                     <field name="date_move_last"/>
-                    <field name="partner_id"/>
                     <field name="balance"/>
                     <filter icon="terp-go-year" string="This Fiscal year" name="fiscalyear" domain="[('period_id','in','current_year')]"
                         help="Follow-up Entries with period in current year"/>
                     <separator/>
                     <filter icon="terp-camera_test" string="Not Litigation" domain="[('blocked','=', False)]"
                         help = "Including journal entries marked as a litigation"/>
+                    <field name="partner_id"/>
                     <group expand="1" string="Group By...">
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Litigation" icon="terp-camera_test"  context="{'group_by':'blocked'}" />

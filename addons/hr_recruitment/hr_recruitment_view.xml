@@ -214,8 +214,6 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-                <field name="job_id"/>
-                <field name="user_id"/>
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                 <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
                 <separator/>
@@ -227,6 +225,8 @@
                 <separator/>
                 <filter icon="terp-gtk-jump-to-ltr" string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
+                <field name="job_id"/>
+                <field name="user_id"/>
                 <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>

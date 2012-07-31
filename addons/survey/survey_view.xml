@@ -279,11 +279,11 @@
                 <search string="Search Survey">
                     <field name="title" string="Survey"/>
                     <field name="type"/>
-                    <field name="responsible_id"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="All New Survey"/>
                     <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="All Open Survey"/>
                     <separator/>
                     <filter string="My Survey(s)" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
+                    <field name="responsible_id"/>
                    <group expand="0" string="Group By...">
                        <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'responsible_id'}"/>
                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'type'}"/>
@@ -752,9 +752,9 @@
             <field name="arch" type="xml">
                 <search string="Search Question">
                     <field name="question" string="Question"/>
-                    <field name="page_id"/>
                     <field name="survey"/>
                     <field name="type"/>
+                    <field name="page_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Page" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'page_id'}"/>
                     </group>
@@ -1172,13 +1172,13 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                     <field name="email" string="Survey"/>
-                    <field name="survey_id" widget="selection"/>
-                    <field name="user_id"/>
                     <filter icon="terp-gtk-media-pause" string="Waiting Answer" domain="[('state','=','waiting_answer')]"/>
                     <separator/>
                     <filter icon="terp-emblem-important" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
                     <separator/>
                     <filter string="My Survey(s)" icon="terp-personal" domain="[('user_id','=',uid)]"/>
+                    <field name="survey_id" widget="selection"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'survey_id'}"/>

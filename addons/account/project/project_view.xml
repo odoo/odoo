@@ -32,10 +32,10 @@
                 <search string="Analytic Account">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
                     <field name="date"/>
-                    <field name="partner_id"/>
-                    <field name="user_id"/>
                     <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
                     <filter icon="terp-camera_test" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Associated Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -178,13 +178,13 @@
                 <search string="Search Analytic Lines">
                     <field name="name" string="Analytic Line"/>
                     <field name="date"/>
-                    <field name="account_id"/>
-                    <field name="user_id"/>
                     <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-camera_test" help="Analytic Journal Items related to a sale journal."/>
                     <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
                     <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]" icon="terp-folder-orange"/>
                     <separator/>
                     <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
+                    <field name="account_id"/>
+                    <field name="user_id"/>
                     <group string="Group By..." expand="0">
                         <filter string="Account" context="{'group_by':'account_id'}" icon="terp-folder-green"/>
                         <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>

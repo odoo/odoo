@@ -50,10 +50,10 @@
             <search string="Sales Receipt Analysis">
                 <field name="date"/>
                 <field name="date_due"/>
-                <field name="partner_id"/>
                 <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft Vouchers"/>
                 <filter string="Pro-forma" icon="terp-gtk-media-pause" domain="[('state','=','proforma')]" help = "Pro-forma Vouchers"/>
                 <filter string="Posted" name="current" icon="terp-check" domain="[('state','not in', ('draft','cancel'))]" help = "Validated Vouchers"/>
+                <field name="partner_id"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="journal_id"/>
                     <field name="account_id"/>

@@ -9,12 +9,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
+                    <filter icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]"/>
+                    <filter icon="terp-dialog-close" string="Closed" domain="[('state','=','done')]"/>
                     <field name="section_id" context="{'invisible_section': False}"/>
                     <field name="grade_id"/>
                     <field name="user_id"/>
                     <field name="partner_assigned_id"/>
-                    <filter icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]"/>
-                    <filter icon="terp-dialog-close" string="Closed" domain="[('state','=','done')]"/>
                     <group  expand="0" string="Extended Filters...">
                       <field name="partner_id"/>
                       <separator/>

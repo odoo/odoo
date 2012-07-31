@@ -398,8 +398,8 @@
                 <search string="Product Lots Filter">
                     <field name="name" string="Product Lots" filter_domain="['|','|',('name','ilike',self),('prefix','ilike',self),('ref','ilike',self)]"/>
                     <field name="date"/>
-                    <field name="product_id"/>
                     <filter icon="terp-check" name="available" string="Available" domain="[('stock_available', '&gt;', 0)]" help="Available Product Lots"/>
+                    <field name="product_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                     </group>
@@ -554,10 +554,10 @@
             <field name="arch" type="xml">
                 <search string="Stock Locations">
                     <field name="name" string="Stock Locations"/>
-                    <field name="location_id" string="Parent Location"/>
                     <filter icon="terp-go-home" name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
                     <filter icon="terp-personal" name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
                     <filter icon="terp-personal" name="supplier" string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations"/>
+                    <field name="location_id" string="Parent Location"/>
                 </search>
             </field>
         </record>
@@ -871,12 +871,12 @@
             <field name="arch" type="xml">
                 <search string="Internal Picking List">
                     <field name="name" string="Internal Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
-                    <field name="partner_id"/>
-                    <field name="product_id"/>
-                    <field name="stock_journal_id"/>
                     <filter icon="terp-check" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="stock_journal_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
@@ -976,8 +976,6 @@
             <field name="arch" type="xml">
                 <search string="Picking list">
                     <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
-                    <field name="stock_journal_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
                     <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Delivery Orders"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Delivery Orders"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Delivery orders already processed"/>
@@ -985,6 +983,8 @@
                     <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
                     <separator/>
                     <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Delivery orders to invoice"/>
+                    <field name="stock_journal_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
@@ -1082,14 +1082,14 @@
             <field name="arch" type="xml">
                 <search string="Incoming Shipments">
                     <field name="name" string="Incoming Shipments" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
-                    <field name="stock_journal_id"/>
-                    <field name="product_id"/>
                     <filter icon="terp-check" name="available" string="Ready to Process" domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
                     <separator/>
                     <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
                     <separator/>
                     <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]"/>
+                    <field name="stock_journal_id"/>
+                    <field name="product_id"/>
                     <group expand="0" string="Group By...">
                         <filter icon="terp-stock_effects-object-colorize" name="state" string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
@@ -1267,15 +1267,15 @@
                 <search string="Stock Moves">
                     <field name="origin" string="Stock Moves"/>
                     <field name="date" groups="base.group_no_one"/>
-                    <field name="product_id"/>
-                    <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
-                    <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','ilike',self)]"/>
-                    <field name="prodlot_id"/>
                     <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
                     <filter icon="terp-stock" string="Future" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
                     <filter icon="terp-dialog-close" string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
                     <separator/>
                     <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
+                    <field name="product_id"/>
+                    <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
+                    <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','ilike',self)]"/>
+                    <field name="prodlot_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" name="by_product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Picking" name="groupby_picking_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'picking_id'}"/>
@@ -1371,13 +1371,13 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <field name="origin" string="Stock Moves"/>
-                    <field name="product_id"/>
-                    <field name="prodlot_id"/>
                     <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting " domain="[('state','in',('confirmed','assigned'))]" help="Stock to be receive"/>
                     <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state', '=', 'done')]"/>
                     <separator/>
                     <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
+                    <field name="product_id"/>
+                    <field name="prodlot_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
@@ -1396,13 +1396,13 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <field name="origin" string="Stock Moves"/>
-                    <field name="product_id"/>
-                    <field name="prodlot_id"/>
                     <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (Available or not)"/>
                     <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
                     <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
                     <separator/>
                     <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
+                    <field name="product_id"/>
+                    <field name="prodlot_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
@@ -1579,7 +1579,6 @@
             <field name="arch" type="xml">
                 <search string="Stock Journal">
                     <field name="name" string="Stock Journal"/>
-                    <separator orientation="vertical"/>
                     <field name="user_id"/>
                 </search>
             </field>

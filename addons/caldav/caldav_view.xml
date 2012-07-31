@@ -159,10 +159,10 @@
             <field name="arch" type="xml">
                 <search string="Calendars">
                     <field name="name" string="Calendar"/>
+                    <filter string="WebCal" icon="terp-calendar" domain="[('has_webcal', '=', True)]" help="Webcal Calendar"/>
+                    <field name="type"/>
                     <field name="user_id"/>
                     <field name="collection_id"/>
-                    <field name="type"/>
-                    <filter string="WebCal" icon="terp-calendar" domain="[('has_webcal', '=', True)]" help="Webcal Calendar"/>
                     <separator/>
                     <filter string="Event" icon="terp-calendar" domain="[('type', '=', 'vevent')]"/>
                     <filter string="Todo" icon="terp-calendar" domain="[('type', '=', 'vtodo')]"/>

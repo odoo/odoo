@@ -119,7 +119,6 @@
                 <search string="Search Procurement">
                     <field name="origin" string="Procurement"/>
                     <field name="date_planned"/>
-                    <field name="product_id" />
                     <field name="state" />
                     <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
                     <separator/>
@@ -127,6 +126,7 @@
                     <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
                     <separator/>
                     <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]" help="Procurement started late" />
+                    <field name="product_id" />
                     <group expand="0" string="Group By">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Reason" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'name'}"/>

@@ -76,9 +76,9 @@
             <field name="arch" type="xml">
                 <search string="Search Lunch Order">
                     <field name="date"/>
-                    <field name="user_id"/>
                     <filter icon="terp-check" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=',('confirmed'))]"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Category" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'category'}"/>
                     </group>
@@ -295,8 +295,8 @@
             <field name="arch" type="xml">
                 <search string="Products">
                     <field name="name" string="Product"/>
-                    <field name="category_id"/>
                     <field name="price"/>
+                    <field name="category_id"/>
                 </search>
             </field>
         </record>
@@ -370,9 +370,9 @@
             <field name="arch" type="xml">
                 <search string="Box Amount by User">
                     <field name="date"/>
-                    <field name="user_id"/>
                     <field name="box"/>
                     <field name="amount"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Box" icon="terp-dolar" context="{'group_by':'box'}"/>
                     </group>
