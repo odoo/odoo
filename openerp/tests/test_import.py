@@ -695,7 +695,28 @@ class test_m2m(ImporterCase):
             ValueError,
             self.import_, ['value'], [['wherethem2mhavenonames']])
 
-# TODO: O2M
+    def test_import_to_existing(self):
+        M2O_o = self.registry('export.many2many.other')
+        id1 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 3, 'str': 'record0'})
+        id2 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 44, 'str': 'record1'})
+        id3 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 84, 'str': 'record2'})
+        id4 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
+
+        xid = 'myxid'
+        self.assertEqual(
+            self.import_(['id', 'value/.id'], [[xid, '%d,%d' % (id1, id2)]]),
+            ok(1))
+        self.assertEqual(
+            self.import_(['id', 'value/.id'], [[xid, '%d,%d' % (id3, id4)]]),
+            ok(1))
+
+        b = self.browse()
+        self.assertEqual(len(b), 1)
+        # TODO: replacement of existing m2m values is correct?
+        self.assertEqual(values(b[0].value), [84, 9])
+
+class test_o2m(ImporterCase):
+    model_name = 'export.one2many'
 
 # function, related, reference: written to db as-is...
 # => function uses @type for value coercion/conversion
