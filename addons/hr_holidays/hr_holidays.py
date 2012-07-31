@@ -209,7 +209,7 @@ class hr_holidays(osv.osv):
         if date_to and date_from:
             diff_day = self._get_number_of_days(date_from, date_to)
             result['value'] = {
-                'number_of_days_temp': round(diff_day)+1
+                'number_of_days_temp': round(math.floor(diff_day))+1
             }
             return result
         result['value'] = {
