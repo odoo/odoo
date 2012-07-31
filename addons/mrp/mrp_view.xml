@@ -686,8 +686,8 @@
                     </group>
                     <notebook>
                         <page string="Consumed Products">
-                            <group>
-                                <group groups="stock.group_locations">
+                            <group groups="stock.group_locations">
+                                <group>
                                     <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)"/>
                                 </group>
                                 <group>
