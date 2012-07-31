@@ -97,6 +97,7 @@ class wizard(osv.osv_memory):
                     'context_lang': u.lang,
                     'share': True,
                     'partner_id': u.partner_id and u.partner_id.id,
+                    'groups_id': [(5,)], # prevent default groups!
                 }
 
     def _default_user_ids(self, cr, uid, context):
@@ -136,12 +137,11 @@ class wizard(osv.osv_memory):
     def action_create(self, cr, uid, ids, context=None):
         """ create new users in portal(s), and notify them by email """
         # we copy the context to change the language for translating emails
-        context0 = context or {}
-        context0['noshortcut'] = True           # prevent shortcut creation
-        context = context0.copy()
+        context = dict(context or {})
+        context['noshortcut'] = True           # prevent shortcut creation
         
         user_obj = self.pool.get('res.users')
-        user = user_obj.browse(cr, ROOT_UID, uid, context0)
+        user = user_obj.browse(cr, ROOT_UID, uid, context)
         if not user.user_email:
             raise osv.except_osv(_('Email required'),
                 _('You must have an email address in your User Preferences'
@@ -159,7 +159,7 @@ class wizard(osv.osv_memory):
             new_users_data = [ self.prepare_new_user_data(u, wiz, random_password())
                 for u in wiz.user_ids if u.user_email not in existing_logins ]
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                {'users': [(0, 0, data) for data in new_users_data]}, context0)
+                {'users': [(0, 0, data) for data in new_users_data]}, context)
             
             # send email to all users (translated in their language)
             data = {
