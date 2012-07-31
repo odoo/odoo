@@ -117,3 +117,9 @@ class Many2ManyChild(orm.Model):
     def name_get(self, cr, uid, ids, context=None):
         return [(record.id, "%s:%s" % (self._name, record.value))
             for record in self.browse(cr, uid, ids, context=context)]
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        return (self.name_get(cr, user,
+                    self.search(cr, user, [['value', operator, int(name.split(':')[1])]])
+                    , context=context)
+                if isinstance(name, basestring) and name.split(':')[0] == self._name
+                else [])

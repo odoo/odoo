@@ -537,7 +537,7 @@ class test_m2m(CreatorCase):
     def test_multiple_records_name(self):
         self.assertEqual(
             self.export(self.commands, fields=['const', 'value']),
-            [[
+            [[ # FIXME: hardcoded comma, import uses config.csv_internal_sep
                 u'4', u','.join(self.names)
             ]])
 

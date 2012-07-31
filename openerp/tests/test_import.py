@@ -56,6 +56,30 @@ class ImporterCase(common.TransactionCase):
             self.model.search(self.cr, openerp.SUPERUSER_ID, domain, context=context),
             context=context)
 
+    def xid(self, record):
+        ModelData = self.registry('ir.model.data')
+
+        ids = ModelData.search(
+            self.cr, openerp.SUPERUSER_ID,
+            [('model', '=', record._table_name), ('res_id', '=', record.id)])
+        if ids:
+            d = ModelData.read(
+                self.cr, openerp.SUPERUSER_ID, ids, ['name', 'module'])[0]
+            if d['module']:
+                return '%s.%s' % (d['module'], d['name'])
+            return d['name']
+
+        name = dict(record.name_get())[record.id]
+        # fix dotted name_get results, otherwise xid lookups blow up
+        name = name.replace('.', '-')
+        ModelData.create(self.cr, openerp.SUPERUSER_ID, {
+            'name': name,
+            'model': record._table_name,
+            'res_id': record.id,
+            'module': '__test__'
+        })
+        return '__test__.' + name
+
 class test_ids_stuff(ImporterCase):
     model_name = 'export.integer'
 
@@ -67,7 +91,9 @@ class test_ids_stuff(ImporterCase):
         self.assertEqual(
             self.import_(['id', 'value'], [['somexmlid', '42']]),
             ok(1))
-        # TODO: get xid back, check that it is correct?
+        self.assertEqual(
+            'somexmlid',
+            self.xid(self.browse()[0]))
 
     def test_update_with_id(self):
         id = self.model.create(self.cr, openerp.SUPERUSER_ID, {'value': 36})
@@ -423,17 +449,14 @@ class test_m2o(ImporterCase):
             values(self.read()))
 
     def test_by_xid(self):
-        integer_id = self.registry('export.integer').create(
+        ExportInteger = self.registry('export.integer')
+        integer_id = ExportInteger.create(
             self.cr, openerp.SUPERUSER_ID, {'value': 42})
-        self.registry('ir.model.data').create(self.cr, openerp.SUPERUSER_ID, {
-            'name': 'export-integer-value',
-            'model': 'export.integer',
-            'res_id': integer_id,
-            'module': 'test-export'
-        })
+        xid = self.xid(ExportInteger.browse(
+            self.cr, openerp.SUPERUSER_ID, [integer_id])[0])
 
         self.assertEqual(
-            self.import_(['value/id'], [['test-export.export-integer-value']]),
+            self.import_(['value/id'], [[xid]]),
             ok(1))
         b = self.browse()
         self.assertEqual(42, b[0].value.value)
@@ -506,7 +529,99 @@ class test_m2o(ImporterCase):
             Exception, # FIXME: Why can't you be a ValueError like everybody else?
             self.import_, ['value/.id'], [[66]])
 
-# TODO: M2M
+class test_m2m(ImporterCase):
+    model_name = 'export.many2many'
+
+    # apparently, one and only thing which works is a
+    # csv_internal_sep-separated list of ids, xids, or names (depending if
+    # m2m/.id, m2m/id or m2m[/anythingelse]
+    def test_ids(self):
+        id1 = self.registry('export.many2many.other').create(
+                self.cr, openerp.SUPERUSER_ID, {'value': 3, 'str': 'record0'})
+        id2 = self.registry('export.many2many.other').create(
+                self.cr, openerp.SUPERUSER_ID, {'value': 44, 'str': 'record1'})
+        id3 = self.registry('export.many2many.other').create(
+                self.cr, openerp.SUPERUSER_ID, {'value': 84, 'str': 'record2'})
+        id4 = self.registry('export.many2many.other').create(
+                self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
+        id5 = self.registry('export.many2many.other').create(
+                self.cr, openerp.SUPERUSER_ID, {'value': 99, 'str': 'record4'})
+
+        self.assertEqual(
+            self.import_(['value/.id'], [
+                ['%d,%d' % (id1, id2)],
+                ['%d,%d,%d' % (id1, id3, id4)],
+                ['%d,%d,%d' % (id1, id2, id3)],
+                ['%d' % id5]
+            ]),
+            ok(4))
+        ids = lambda records: [record.id for record in records]
+
+        b = self.browse()
+        self.assertEqual(ids(b[0].value), [id1, id2])
+        self.assertEqual(values(b[0].value), [3, 44])
+
+        self.assertEqual(ids(b[2].value), [id1, id2, id3])
+        self.assertEqual(values(b[2].value), [3, 44, 84])
+
+    def test_noids(self):
+        try:
+            self.import_(['value/.id'], [['42']])
+            self.fail("Should have raised an exception")
+        except Exception, e:
+            self.assertIs(type(e), Exception,
+                          "test should be fixed on exception subclass")
+
+    def test_xids(self):
+        M2O_o = self.registry('export.many2many.other')
+        id1 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 3, 'str': 'record0'})
+        id2 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 44, 'str': 'record1'})
+        id3 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 84, 'str': 'record2'})
+        id4 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
+        records = M2O_o.browse(self.cr, openerp.SUPERUSER_ID, [id1, id2, id3, id4])
+
+        self.assertEqual(
+            self.import_(['value/id'], [
+                ['%s,%s' % (self.xid(records[0]), self.xid(records[1]))],
+                ['%s' % self.xid(records[3])],
+                ['%s,%s' % (self.xid(records[2]), self.xid(records[1]))],
+            ]),
+            ok(3))
+
+        b = self.browse()
+        self.assertEqual(values(b[0].value), [3, 44])
+        self.assertEqual(values(b[2].value), [44, 84])
+    def test_noxids(self):
+        self.assertRaises(
+            ValueError,
+            self.import_, ['value/id'], [['noxidforthat']])
+
+    def test_names(self):
+        M2O_o = self.registry('export.many2many.other')
+        id1 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 3, 'str': 'record0'})
+        id2 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 44, 'str': 'record1'})
+        id3 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 84, 'str': 'record2'})
+        id4 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
+        records = M2O_o.browse(self.cr, openerp.SUPERUSER_ID, [id1, id2, id3, id4])
+
+        name = lambda record: dict(record.name_get())[record.id]
+
+        self.assertEqual(
+            self.import_(['value'], [
+                ['%s,%s' % (name(records[1]), name(records[2]))],
+                ['%s,%s,%s' % (name(records[0]), name(records[1]), name(records[2]))],
+                ['%s,%s' % (name(records[0]), name(records[3]))],
+            ]),
+            ok(3))
+
+        b = self.browse()
+        self.assertEqual(values(b[1].value), [3, 44, 84])
+        self.assertEqual(values(b[2].value), [3, 9])
+
+    def test_nonames(self):
+        self.assertRaises(
+            ValueError,
+            self.import_, ['value'], [['wherethem2mhavenonames']])
 
 # TODO: O2M
 
