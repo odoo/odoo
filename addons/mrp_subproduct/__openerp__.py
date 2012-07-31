@@ -47,7 +47,7 @@ With this module:
     ],
     'demo_xml': [],
     'test': [
-             #'test/mrp_subproduct.yml'
+             'test/mrp_subproduct.yml'
              ],
     'installable': True,
     'auto_install': False,
