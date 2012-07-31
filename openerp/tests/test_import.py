@@ -392,7 +392,7 @@ class test_selection_function(ImporterCase):
             ['3', '1'],
             values(self.read()))
 
-class test_o2m(ImporterCase):
+class test_m2o(ImporterCase):
     model_name = 'export.many2one'
 
     def test_by_name(self):
@@ -422,7 +422,21 @@ class test_o2m(ImporterCase):
             (integer_id2, name2),],
             values(self.read()))
 
-    # TODO: test import by xid
+    def test_by_xid(self):
+        integer_id = self.registry('export.integer').create(
+            self.cr, openerp.SUPERUSER_ID, {'value': 42})
+        self.registry('ir.model.data').create(self.cr, openerp.SUPERUSER_ID, {
+            'name': 'export-integer-value',
+            'model': 'export.integer',
+            'res_id': integer_id,
+            'module': 'test-export'
+        })
+
+        self.assertEqual(
+            self.import_(['value/id'], [['test-export.export-integer-value']]),
+            ok(1))
+        b = self.browse()
+        self.assertEqual(42, b[0].value.value)
 
     def test_by_id(self):
         integer_id = self.registry('export.integer').create(
@@ -491,7 +505,9 @@ class test_o2m(ImporterCase):
         self.assertRaises(
             Exception, # FIXME: Why can't you be a ValueError like everybody else?
             self.import_, ['value/.id'], [[66]])
+
 # TODO: M2M
+
 # TODO: O2M
 
 # function, related, reference: written to db as-is...
