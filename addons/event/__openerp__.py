@@ -25,7 +25,7 @@
     'name': 'Events Organisation',
     'version': '0.1',
     'category': 'Tools',
-    'summary': 'Invitations, Subscriptions',
+    'summary': 'For Trainings, Conferences & Meetings',
     'description': """
 Organization and management of Events.
 ======================================
