@@ -533,7 +533,7 @@ class mrp_operations_operation(osv.osv):
                   return False
             if code.start_stop=='cancel':
                if  not 'start' in code_lst :
-                   raise osv.except_osv(_('Error!'),_('There is no Operation to be cancelled!'))
+                   raise osv.except_osv(_('Error!'),_('No operation to cancel.'))
                    return False
                if 'done' in code_lst:
                   raise osv.except_osv(_('Error!'),_('Operation is already finished!'))

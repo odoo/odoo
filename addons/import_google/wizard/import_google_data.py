@@ -73,7 +73,7 @@ class synchronize_google(osv.osv_memory):
             user_obj = self.pool.get('res.users').browse(cr, uid, uid,context=context)
             google=self.pool.get('google.login')
             if not user_obj.gmail_user or not user_obj.gmail_password:
-                raise osv.except_osv(_('Warning !'), _("No Google username or password is defined for user.\nPlease define in user view."))
+                raise osv.except_osv(_('Warning !'), _("No Google Username or password is defined for user.\nPlease define on user's form."))
             gd_client = google.google_login(user_obj.gmail_user,user_obj.gmail_password,type='group')
             if not gd_client:
                 return [('failed', 'Connection to google fail')]
