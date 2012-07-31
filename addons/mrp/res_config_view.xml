@@ -13,16 +13,8 @@
                     </header>
                     <separator string="Manufacturing Order"/>
                     <group>
-                        <label for="id" string="Order Settings"/>
+                        <label for="id" string="Order"/>
                         <div>
-                            <div>
-                                <field name="module_mrp_operations" class="oe_inline"/>
-                                <label for="module_mrp_operations" />
-                            </div>
-                            <div>
-                                <field name="module_stock_planning" class="oe_inline"/>
-                                <label for="module_stock_planning"/>
-                            </div>    
                             <div>
                                 <field name="module_mrp_subproduct" class="oe_inline"/>
                                 <label for="module_mrp_subproduct"/>                          
@@ -30,40 +22,41 @@
                             <div>
                                 <field name="module_mrp_repair" class="oe_inline"/>
                                 <label for="module_mrp_repair"/>
-                            </div>                            
+                            </div> 
+                             <div>
+                                 <field name="module_stock_no_autopicking" class="oe_inline"/>
+                                 <label for="module_stock_no_autopicking" />
+                            </div>                           
                         </div>
                     </group>
-                    <separator string="Logistics" />
                     <group >
-                        <label for="id" string="Logistics Settings"/>   
+                        <label for="id" string="Planning"/>   
                         <div>
                             <div>
                                 <field name="module_mrp_jit" class="oe_inline"/>
                                <label for="module_mrp_jit" string="Real-Time"/>
                             </div>
                             <div>
-                                 <field name="module_stock_no_autopicking" class="oe_inline"/>
-                                 <label for="module_stock_no_autopicking" />
+                                <field name="group_mrp_routings" class="oe_inline"/>
+                                <label for="group_mrp_routings"/>
                             </div>
+                             <div>
+                                <field name="module_mrp_operations" class="oe_inline"/>
+                                <label for="module_mrp_operations" />
+                            </div>
+                            <div>
+                                <field name="module_stock_planning" class="oe_inline"/>
+                                <label for="module_stock_planning"/>
+                            </div>   
                         </div>    
                     </group>
-                    <separator string="Products"/>
+                    <separator string="Master Data"/>
                     <group >
-                        <label for="id" string="Product Settings"/>   
+                        <label for="id" string="Products"/>   
                         <div>
                             <div>
                                 <field name="module_product_manufacturer" class="oe_inline"/>
                                 <label for="module_product_manufacturer"/>
-                            </div>
-                        </div>    
-                    </group>                           
-                    <separator string="Bill Of Material" />
-                    <group >
-                        <label for="id" string="BOM Settings"/>   
-                        <div>
-                            <div>
-                                <field name="group_mrp_routings" class="oe_inline"/>
-                                <label for="group_mrp_routings"/>
                             </div>
                             <div>
                                 <field name="group_mrp_properties" class="oe_inline"/>
