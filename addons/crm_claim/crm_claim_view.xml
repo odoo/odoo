@@ -199,13 +199,13 @@
             <field name="arch" type="xml">
                 <search string="Search Claims">
                     <field name="name" string="Claims"/>
-                    <field name="partner_id"/>
-                    <field name="user_id"/>
                     <filter icon="terp-check" string="New" name="current" domain="[('state','=','draft')]" help="New Claims"/>
                     <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="In Progress Claims"/>
                     <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]"/>
                     <separator/>
                     <filter string="Unassigned Claims" icon="terp-personal-" domain="[('user_id','=', False)]" help="Unassigned Claims" />
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}"/>
                         <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}"/>

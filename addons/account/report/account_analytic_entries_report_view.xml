@@ -36,9 +36,6 @@
             <search string="Analytic Entries Analysis">
                 <field name="day" string="Day"/>
                 <field name="date"/>
-                <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                <field name="product_id" />
-                <field name="user_id"/>
                 <filter string="My Entries" icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
                 <group expand="0" string="Group By...">
                     <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
@@ -52,6 +49,9 @@
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" name="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="product_id" />
+                    <field name="user_id"/>
                 </group>
             </search>
         </field>

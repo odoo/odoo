@@ -353,9 +353,6 @@
                 <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                 <field name="subjects"/>
                 <field name="create_date"/>
-                <field name="user_id"/>
-                <field name="section_id" context="{'invisible_section': False}"/>
-                <field name="country_id" context="{'invisible_country': False}"/>
                 <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
                 <!-- subjects is not set as store=True so, it is placed outside filter_domain-->
                 <separator/>
@@ -367,6 +364,9 @@
                 <filter string="Leads Assigned to Me or My Team(s)" icon="terp-personal+" context="{'invisible_section': False}"
                         domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         help="Leads that are assigned to one of the sale teams I manage, or to me"/>
+                <field name="user_id"/>
+                <field name="section_id" context="{'invisible_section': False}"/>
+                <field name="country_id" context="{'invisible_country': False}"/>
                 <group expand="0" string="Group By...">
                     <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
@@ -584,10 +584,6 @@
             <search string="Search Opportunities">
                 <field name="name" string="Opportunity / Customer"
                     filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
-                <field name="user_id"/>
-                <field name="country_id"/>
-                <field name="partner_id"/>
-                <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
                 <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
                 <separator/>
                 <filter icon="terp-check" string="New" help="New Opportunities" name="new" domain="[('state','=','draft')]"/>
@@ -598,6 +594,10 @@
                 <filter string="Opportunities Assigned to Me or My Team(s)"  icon="terp-personal+"
                         domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                         help="Opportunities that are assigned to either me or one of the sale teams I manage" />
+                <field name="user_id"/>
+                <field name="country_id"/>
+                <field name="partner_id"/>
+                <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
                 <group expand="0" string="Group By..." colspan="16">
                     <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                     <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>

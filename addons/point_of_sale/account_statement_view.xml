@@ -29,8 +29,8 @@
                 <search string="Search Cash Statements">
                     <field name="name" string="Cash Statement"/>
                     <field name="date"/>
-                    <field name="journal_id"/>
                     <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                    <field name="journal_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
                         <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
@@ -48,9 +48,9 @@
                 <search string="Search Cash Statements">
                     <field name="name" string="Cash Statement"/>
                     <field name="date"/>
-                    <field name="journal_id"/>
                     <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
                     <filter string="Closed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                    <field name="journal_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
                         <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>

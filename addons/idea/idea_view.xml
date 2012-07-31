@@ -111,10 +111,10 @@
         <field name="arch" type="xml">
             <search string="Ideas">
                 <field name="name" string="Idea"/>
-                <field name="category_ids"/>
                 <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="New Ideas"/>
                 <filter icon="terp-camera_test" string="In Progress" domain="[('state','=', 'open')]" help="Open Ideas"/>
                 <filter icon="terp-check" string="Accepted" domain="[('state','=','close')]" help="Accepted Ideas" />
+                <field name="category_ids"/>
                 <group expand="0" string="Group By...">
                     <filter icon="terp-personal" string="Creator" help="By Creators" context="{'group_by':'create_uid'}"/>
                     <filter icon="terp-stock_symbol-selection" string="Category" help="By Idea Category" context="{'group_by':'category_ids'}"/>

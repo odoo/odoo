@@ -214,12 +214,12 @@
             <field name="arch" type="xml">
                 <search string="Search Payment Orders">
                     <field name="reference" string="Payment Order"/>
-                    <field name="mode"/>
                     <field name="state"/>
                     <field name="date_done"/>
                     <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                     <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
                     <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>
+                    <field name="mode"/>
                     <group expand="0" string="Group By...">
                         <filter string="Payment Mode" context="{'group_by': 'mode'}" icon="terp-dolar"/>
                         <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>

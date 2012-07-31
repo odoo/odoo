@@ -196,12 +196,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search  Sales Forecast">
+                    <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" />
                     <field name="company_id"/>
                     <field name="warehouse_id" />
                     <field name="period_id" />
                     <field name="product_id"/>
                     <field name="create_uid"/>
-                    <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" />
                     <group expand="0" string="Group By...">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>
@@ -302,11 +302,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Stock Planning">
+                    <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" />
                     <field name="company_id"/>
                     <field name="warehouse_id"/>
                     <field name="period_id"/>
                     <field name="product_id"/>
-                    <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" />
                     <group expand="0" string="Group By...">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>

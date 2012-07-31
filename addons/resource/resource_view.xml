@@ -11,10 +11,10 @@
             <field name="arch" type="xml">
                 <search string="Search Resource">
                    <field name="name" string="Resource"/>
-                   <field name="user_id" string="User"/>
-                   <field name="company_id" groups="base.group_multi_company"/>
                    <field name="resource_type"/>
                    <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                   <field name="user_id" string="User"/>
+                   <field name="company_id" groups="base.group_multi_company"/>
                    <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>

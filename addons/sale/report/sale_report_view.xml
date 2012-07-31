@@ -52,15 +52,15 @@
             <search string="Sales Analysis">
                 <field name="date"/>
                 <field name="date_confirm"/>
-                <field name="partner_id"/>
-                <field name="product_id"/>
-                <field name="user_id"/>
                 <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
                 <filter icon="terp-check" string="Sales" domain="[('state','not in',('draft','done','cancel'))]"/>
                 <separator/>
                 <filter icon="terp-accessories-archiver" string="Picked" domain="[('shipped','=',True)]"/>
                 <separator/>
                 <filter icon="terp-personal" string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="user_id"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="shop_id"/>
                     <field name="categ_id"/>

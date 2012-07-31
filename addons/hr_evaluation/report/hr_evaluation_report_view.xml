@@ -45,11 +45,11 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Appraisal Analysis">
-                <field name="employee_id"/>
-                <field name="plan_id"/>
                 <filter string="In Progress" icon="terp-camera_test" domain="[('state', '=' ,'wait')]" help = "In progress Evaluations"/>
                 <filter string="Final Validation" icon="terp-camera_test" domain="[('state','=','progress')]" help = "Final Validation Evaluations"/>
                 <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
+                <field name="employee_id"/>
+                <field name="plan_id"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="rating"/>
                     <field name="deadline"/>

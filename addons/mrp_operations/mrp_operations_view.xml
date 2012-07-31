@@ -125,8 +125,6 @@
             <search string="Search Work Orders">
                 <field name="name" string="Work Orders"/>
                 <field name="date_planned"/>
-                <field name="workcenter_id"/>
-                <field name="production_id"/>
                 <field name="state"/>
                 <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
                 <filter icon="terp-check" string="In Progress" name="Current" domain="[('state','=','startworking')]"/>
@@ -134,6 +132,8 @@
                 <separator/>
                 <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                     help="Production started late"/>
+                <field name="workcenter_id"/>
+                <field name="production_id"/>
                 <group expand="0" string="Group By...">
                     <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
                     <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>

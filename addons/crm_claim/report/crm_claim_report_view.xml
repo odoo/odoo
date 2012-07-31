@@ -53,9 +53,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="user_id" string="Salesperson"/>
-                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
                     <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]"/>
                     <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]"/>
@@ -65,6 +62,9 @@
                     <filter string="My Company" icon="terp-go-home" context="{'invisible_section': False}" domain="[('section_id.user_id.company_id','=',uid)]" help="My company"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"/>
                     <group  expand="0" string="Extended Filters...">
                         <field name="partner_id"/>
                         <field name="stage_id" domain="[('section_ids', '=', 'section_id')]"/>

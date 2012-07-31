@@ -86,12 +86,12 @@
                 <search string="Search Invitations">
                     <field name="email" string="Email"/>
                     <field name="event_date"/>
-                    <field name="user_id" string="Responsible"/>
                     <field name="cutype" string="Invitation type"/>
                     <filter icon="terp-gtk-jump-to-ltr" name="toreview" string="To Review" domain="[('state','=', 'needs-action')]" help="Invitations To Review" />
                     <filter icon="terp-check" string="Accepted" domain="[('state','=', 'accepted')]" help="Accepted Invitations" />
                     <filter icon="terp-dialog-close" string="Declined" domain="[('state','=', 'declined')]" help="Declined Invitations" />
                     <filter icon="gtk-sort-descending" string="Delegated" domain="[('state','=', 'delegated')]" help="Delegated Invitations" />
+                    <field name="user_id" string="Responsible"/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Contact" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}" />
@@ -395,12 +395,12 @@
             <field name="arch" type="xml">
                 <search string="Search Events">
                     <field name="name" filter_domain="['|',('name','ilike',self),('location','ilike',self)]" string="Event"/>
-                    <field name="user_id"/>
                     <field name="show_as"/>
                     <field name="class" string="Privacy"/>
                     <filter icon="terp-go-today" string="My Events" domain="[('user_id','=',uid)]" help="My Events" />
                     <separator/>
                     <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Events" />
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'show_as'}" />

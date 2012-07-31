@@ -51,11 +51,11 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Expenses Analysis">
-                <field name="employee_id"/>
-                <field name="department_id"/>
                 <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]" help = "Confirm Expenses"/>
                 <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]" help = "Approved Expenses"/>
                 <filter string="Invoiced" icon="terp-dolar" domain="[('state','in', ('invoiced', 'paid'))]" help = "Invoiced Expenses"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="product_id"/>
                     <field name="user_id"/>

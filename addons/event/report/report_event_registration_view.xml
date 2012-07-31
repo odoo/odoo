@@ -52,12 +52,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Event on Registration">
-                    <field name="event_id" string="Event"/>
-                    <field name="user_id"/>
                     <filter icon="terp-document-new" string="New" domain="[('event_state','=','draft')]" help="Events which are in New state"/>
                     <filter icon="terp-check" string="Confirm" domain="[('event_state','=','confirm')]" help="Events which are in confirm state"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
+                    <field name="event_id" string="Event"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="event_type" widget="selection"/>
                         <field name="event_date"/>

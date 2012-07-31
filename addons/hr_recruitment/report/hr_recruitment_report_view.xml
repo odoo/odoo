@@ -49,15 +49,15 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Recruitment Analysis">
-                <field name="job_id"/>
-                <field name="department_id"/>
-                <field name="user_id" string="Responsible"/>
                 <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft recruitment"/>
                 <filter string="In progress" icon="terp-camera_test" domain="[('state', '=' ,'open')]" help = "In progress recruitment"/>
                 <filter string="Pending" icon="terp-gtk-media-pause" domain="[('state','=','pending')]" help = "Pending recruitment"/>
                 <filter string="Hired" icon="terp-camera_test" domain="[('state','=','done')]" help = "Hired employees"/>
                 <separator/>
                 <filter icon="terp-personal" string="My Recruitment" help="My Recruitment" domain="[('user_id','=',uid)]"/>
+                <field name="job_id"/>
+                <field name="department_id"/>
+                <field name="user_id" string="Responsible"/>
                 <group expand="0" string="Extended Filters...">
                     <!--field name="job_id"/-->
                     <field name="priority"/>

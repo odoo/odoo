@@ -34,11 +34,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Point of Sale Analysis">
-                    <field name="partner_id"/>
                     <field name="date"/>
-                    <field name="user_id"/>
-                    <field name="partner_id"/>
-                    <field name="user_id"/>
                     <filter icon="terp-dolar" string="Invoiced" domain="[('state','=',('invoiced'))]"/>
                     <filter icon="terp-dolar" string="Not Invoiced" domain="[('state','=',('paid'))]"/>
                     <separator/>
@@ -48,6 +44,10 @@
                          help="POS ordered created by today"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
                     <group expand="1" string="Group By...">
                         <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                         <filter string="Customer" icon="terp-personal" context="{'group_by':'partner_id'}"/>

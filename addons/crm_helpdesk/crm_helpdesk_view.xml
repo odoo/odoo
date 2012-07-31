@@ -153,15 +153,15 @@
                 <search string="Search Helpdesk">
                     <field name="name" string="Query"/>
                     <field name="date"/>
-                    <field name="partner_id" />
-                    <field name="user_id"/>
-                    <field name="section_id" string="Sales Team"/>
                     <filter icon="terp-check" string="New" name="current" domain="[('state','=','draft')]" help="New Helpdesk Request" />
                     <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Helpdesk Request" />
                     <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="All pending Helpdesk Request" />
                     <separator/>
                     <filter string="Assigned to Me or My Sales Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="Helpdesk requests that are assigned to me or to one of the sale teams I manage" />
+                    <field name="partner_id" />
+                    <field name="user_id"/>
+                    <field name="section_id" string="Sales Team"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}" />
                         <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}" />

@@ -46,10 +46,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
+                    <filter icon="terp-personal" string="Non Assigned timesheets to users" help="Non Assigned timesheets to users" domain="[('user_id','=',False)]"/>
                     <field name="user_id"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id"/>
-                    <filter icon="terp-personal" string="Non Assigned timesheets to users" help="Non Assigned timesheets to users" domain="[('user_id','=',False)]"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="date"/>
                         <field name="invoice_id"/>
@@ -140,8 +140,8 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                     <field name="name" string="Timesheet by users"/>
-                    <field name="user_id"/>
                     <field name="month"/>
+                    <field name="user_id"/>
                 </search>
             </field>
         </record>
@@ -269,9 +269,9 @@
             <field name="arch" type="xml">
                 <search string="Daily timesheet by account">
                     <field name="name" string="Timesheet by account"/>
+                    <field name="month"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="user_id"/>
-                    <field name="month"/>
                 </search>
             </field>
         </record>
@@ -335,9 +335,9 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by account">
                     <field name="name" string="Timesheet by account"/>
+                    <field name="month"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="user_id"/>
-                    <field name="month"/>
                 </search>
             </field>
         </record>

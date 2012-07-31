@@ -231,10 +231,10 @@
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
                     <field name="date"/>
-                    <field name="employee_id" />
-                    <field name="plan_id"/>
                     <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Appraisal that are in Plan In Progress state"/>
                     <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Appraisal that are in waiting appreciation state"/>
+                    <field name="employee_id" />
+                    <field name="plan_id"/>
                     <group expand='0' string='Group by...'>
                         <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by' : 'employee_id'}" />
                         <filter string='Plan' icon="terp-stock_align_left_24" domain="[]" context="{'group_by' : 'plan_id'}" />
@@ -319,9 +319,9 @@
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
                     <field name="date_deadline"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
                     <field name="user_to_review_id"/>
                     <field name="user_id" string="Interviewer"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Interviewer" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'survey_id'}"/>
