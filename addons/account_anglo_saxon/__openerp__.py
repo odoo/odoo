@@ -38,7 +38,7 @@ transfer this amount to the debtor or creditor account. Secondly, price differen
 actual purchase price and fixed product standard price are booked on a separate account.""",
     "images": ["images/account_anglo_saxon.jpeg"],
     "depends": ["product", "purchase"],
-    "category": "Hidden/Dependency",
+    "category": "Accounting & Finance",
     "init_xml": [],
     "demo_xml": [],
     "update_xml": ["product_view.xml",],
