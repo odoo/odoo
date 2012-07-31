@@ -26,8 +26,9 @@
     "category": "Human Resources",
     "sequence": 12,
     "website": "http://www.openerp.com",
+    "summary": "All Infos on Employees",
     "description": """
-Module for human resource management.
+Module for Human Resource Management.
 =====================================
 
 You can manage:

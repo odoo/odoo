@@ -25,6 +25,7 @@
     'version': '1.0',
     'category': 'Project Management',
     "sequence": 22,
+    "summary": "Support, Bug Traker, Helpdesk",
     'description': """
 This module provides Issues/Bugs Management in Project.
 =======================================================

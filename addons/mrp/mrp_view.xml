@@ -2,17 +2,21 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" parent="" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager" sequence="8"
-            web_icon="images/manufacturing.png"
-            web_icon_hover="images/manufacturing-hover.png"/>
+        <!-- Top menu item -->
+        <menuitem name="Manufacturing"
+            id="base.menu_mrp_root"
+            groups="group_mrp_user,group_mrp_manager"
+            sequence="60"/>
 
-        <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
+        <menuitem name="Manufacturing"
+            id="menu_mrp_manufacturing"
+            parent="base.menu_mrp_root"
+            sequence="1"/>
 
         <menuitem name="Master Data"
             id="menu_mrp_bom"
             parent="base.menu_mrp_root"
-            sequence="5" />
+            sequence="5"/>
 
         <!--
         Property / Property Group
@@ -46,7 +50,7 @@
             name="Configuration"
             parent="base.menu_mrp_root"
             groups="group_mrp_manager"
-            sequence="50" />
+            sequence="50"/>
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
             <field name="name">mrp.property.tree</field>
@@ -86,7 +90,7 @@
                    <group>
                        <field name="name" string="Name"/>
                        <separator orientation="vertical"/>
-                       <field name="group_id"  widget="selection" />
+                       <field name="group_id"  widget="selection"/>
                        <field name="composition"/>
                    </group>
                    <newline/>
@@ -117,19 +121,19 @@
             id="menu_mrp_property"
             parent="menu_mrp_configuration"
             groups="mrp.group_mrp_routings,product.group_mrp_properties"
-            sequence="20" />
+            sequence="20"/>
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
             groups="product.group_mrp_properties"
             parent="menu_mrp_configuration"
-            sequence="30" />
+            sequence="30"/>
         <menuitem
             action="mrp_property_group_action"
             parent="menu_mrp_configuration"
             groups="base.group_no_one,product.group_mrp_properties"
             id="menu_mrp_property_group_action"
-            sequence="35" />
+            sequence="35"/>
 
         <!--
         Work Centers
@@ -345,7 +349,7 @@
                 <form string="Bill of Material" version="7.0">
                     <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
                     <h1>
-                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>: 
+                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>:
                         <field name="product_qty" class="oe_inline"/>
                         <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
                     </h1>
@@ -363,9 +367,9 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos" >
-                                <field name="product_uos_qty" 
+                                <field name="product_uos_qty"
                                     class="oe_inline"/>
-                                <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/> 
+                                <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
                                 <field name="product_uos" class="oe_inline"/>
                             </div>
                         </group>
@@ -402,7 +406,7 @@
                                 </group>
                             </group>
                             <separator string="Properties"/>
-                            <field name="property_ids" widget="many2many_tags" />
+                            <field name="property_ids" widget="many2many_tags"/>
                         </page>
                     </notebook>
                 </form>
@@ -424,10 +428,10 @@
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
+                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
+                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Starting Date"/>
                    </group>
@@ -649,7 +653,7 @@
                 <sheet>
                     <label for="product_id" class="oe_edit_only"/>
                     <h1>
-                        <field name="product_id" on_change="product_id_change(product_id)" domain="[('supply_method','=','produce')]" class="oe_inline"/>
+                        <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" class="oe_inline"/>
                     </h1>
                     <label for="product_qty" class="oe_edit_only"/>
                     <h2>
@@ -682,8 +686,8 @@
                     </group>
                     <notebook>
                         <page string="Consumed Products">
-                            <group>
-                                <group groups="stock.group_locations">
+                            <group groups="stock.group_locations">
+                                <group>
                                     <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)"/>
                                 </group>
                                 <group>
@@ -695,7 +699,7 @@
                                 <group string="Products to Consume">
                                     <field name="move_lines" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
                                         <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
-                                            <field name="product_id" />
+                                            <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="location_id"  string="Source Loc." groups="stock.group_locations"/>
@@ -703,12 +707,12 @@
                                             <button name="%(stock.move_consume)d"
                                                 string="Consume Products" type="action"
                                                 icon="gtk-go-forward" context="{'consume': True}"
-                                                states="draft,waiting,confirmed,assigned" />
+                                                states="draft,waiting,confirmed,assigned"/>
                                             <button
                                                    name="%(stock.track_line)d"
                                                    string="Split in Serial Numbers"
                                                    type="action" icon="gtk-justify-fill"
-                                                   states="draft,waiting,confirmed,assigned" />
+                                                   states="draft,waiting,confirmed,assigned"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
                                                 icon="gtk-convert" context="{'scrap': True}"
@@ -740,7 +744,7 @@
                                 <group string="Products to Produce">
                                     <field name="move_created_ids" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
                                         <tree string="Products to Finish">
-                                            <field name="product_id" />
+                                            <field name="product_id"/>
                                             <field name="product_qty"/>
                                             <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="state" invisible="1"/>
@@ -751,7 +755,7 @@
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
                                                 icon="gtk-convert" context="{'scrap': True}"
-                                                states="draft,waiting,confirmed,assigned" />
+                                                states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -769,7 +773,7 @@
                                                  string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action" icon="gtk-convert"
-                                                states="done,cancel" />
+                                                states="done,cancel"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -847,7 +851,7 @@
                            help="Manufacturing Orders which are currently in production."/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
-                           help="Production started late" />
+                           help="Production started late"/>
                        <separator orientation="vertical"/>
                        <field name="product_id"/>
                        <field name="routing_id" groups="mrp.group_mrp_routings"/>

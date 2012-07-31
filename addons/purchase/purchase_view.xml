@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-       <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases" sequence="3"
-           groups="group_purchase_manager,group_purchase_user"
-           web_icon="images/purchases.png"
-           web_icon_hover="images/purchases-hover.png"/>
-       <menuitem id="menu_procurement_management" name="Purchase"
+
+        <!-- Top menu item -->
+        <menuitem name="Purchases"
+            id="base.menu_purchase_root"
+            groups="group_purchase_manager,group_purchase_user"
+            sequence="40"/>
+        <menuitem id="menu_procurement_management" name="Purchase"
             parent="base.menu_purchase_root" sequence="1" />
 
         <menuitem id="menu_purchase_config_purchase" name="Configuration"
@@ -194,7 +196,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" domain="[('supplier','=',True)]"/>
                             <field name="partner_ref"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="product.group_purchase_pricelist"/>
                         </group>
@@ -221,11 +223,11 @@
                                 <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
                                 <div class="oe_subtotal_footer_separator oe_inline">
-				    <label for="amount_total"/>
-                                    <button name="button_dummy" 
-				    	states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                    <label for="amount_total"/>
+                                    <button name="button_dummy"
+                                        states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
                                 </div>
-			        <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>
                             </group>
                             <div class="oe_clear"/>
                             <label for="notes"/>
@@ -243,7 +245,7 @@
                                     <field name="invoice_method"/>
                                     <field name="invoiced"/>
                                     <field name="fiscal_position"/>
-				    <!-- we do not need these fields anymore, the information is in open chatter -->
+                    <!-- we do not need these fields anymore, the information is in open chatter -->
                                     <field name="validator" groups="base.group_no_one"/>
                                     <field name="date_approve" groups="base.group_no_one"/>
                                 </group>

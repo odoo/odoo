@@ -2,13 +2,14 @@
 <openerp>
     <data>
 
-        <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"
-            web_icon="images/hr.png"
-            web_icon_hover="images/hr-hover.png"
-            groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
+        <!-- Top menu item -->
+        <menuitem name="Human Resources"
+            id="menu_hr_root"
+            groups="base.group_hr_manager,base.group_hr_user,base.group_user"
+            sequence="110"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
-        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
+        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" groups="base.group_no_one" sequence="25"/>
         <menuitem id="menu_hr_reporting_timesheet" name="Reports"
             parent="menu_hr_reporting" sequence="6" />
 
@@ -20,7 +21,7 @@
             <field name="arch" type="xml">
                 <form string="Employee" version="7.0">
                     <sheet>
-                        <field name="photo" widget='image' class="oe_right" on_change="onchange_photo(photo)"/>    
+                        <field name="photo" widget='image' class="oe_right" on_change="onchange_photo(photo)"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -213,7 +214,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_employee_form"/>
             <field name="act_window_id" ref="open_view_employee_list_my"/>
-        </record> 
+        </record>
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
 
@@ -347,7 +348,7 @@
         </record>
 
         <menuitem action="open_view_categ_tree"
-            id="menu_view_employee_category_tree" parent="menu_hr_management" sequence="2"/>
+            id="menu_view_employee_category_tree" parent="menu_hr_management" groups="base.group_no_one" sequence="2"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
@@ -418,8 +419,8 @@
                 <search string="Jobs">
                     <field name="name" string="Job"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-camera_test"  
-                            domain="[('state','=','open')]" 
+                    <filter icon="terp-camera_test"
+                            domain="[('state','=','open')]"
                             string="In Position"
                             help="In Position"/>
                     <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment"
@@ -435,7 +436,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="view_hr_job_employee_form" model="ir.ui.view">
             <field name="name">hr.job.employee.form</field>
             <field name="model">hr.job</field>
@@ -452,7 +453,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_hr_job">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>

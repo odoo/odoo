@@ -45,7 +45,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], required=True),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
-        'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
+        'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a restitution is to made or not?'),
         'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to made or not?'),
         'client_nihil': fields.boolean('Last Declaration, no clients in client listing', help='Tick this case only if it concerns only the last statement on the civil or cessation of activity: ' \
             'no clients to be included in the client listing.'),
