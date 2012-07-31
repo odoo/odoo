@@ -23,7 +23,7 @@
     "name" : "eInvoicing & Payments",
     "version" : "1.0",
     "author" : 'OpenERP SA',
-    "summary": 'Supplier & Customer Invoices, Payments',
+    "summary": 'Send Invoices and Track Payments',
     "description": """
 eInvoicing & Payments module manage all Voucher Entries such as "Reconciliation Entries", "Adjustment Entries", "Closing or Opening Entries" for Sales, Purchase, Bank, Cash, Expense, Contra.
 ==============================================================================================================================================================================================
