@@ -657,7 +657,7 @@ class BaseModel(object):
     _columns = {}
     _constraints = []
     _defaults = {}
-    _rec_name = False
+    _rec_name = None
     _parent_name = 'parent_id'
     _parent_store = False
     _parent_order = False
@@ -1055,7 +1055,7 @@ class BaseModel(object):
                                      "in order to implement their access rights policy"
 
         # Validate rec_name
-        if self._rec_name:
+        if self._rec_name is None:
             assert self._rec_name in self._columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
         else:
             self._rec_name = 'name'
@@ -1921,7 +1921,7 @@ class BaseModel(object):
             return False
 
         view = etree.Element('calendar', string=self._description)
-        etree.SubElement(view, 'field', self._rec_name_get(cr,uid,context))
+        etree.SubElement(view, 'field', self._rec_name_fallback(cr,uid,context))
 
         if (self._date_name not in self._columns):
             date_found = False
