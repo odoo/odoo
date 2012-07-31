@@ -224,6 +224,11 @@ class test_datetime(CreatorCase):
 
 class test_selection(CreatorCase):
     model_name = 'export.selection'
+    translations_fr = [
+        ("Qux", "toto"),
+        ("Bar", "titi"),
+        ("Foo", "tete"),
+    ]
 
     def test_empty(self):
         self.assertEqual(
@@ -237,7 +242,28 @@ class test_selection(CreatorCase):
             self.export(2),
             [[u"Bar"]])
 
-    # TODO: localized export!
+    def test_localized_export(self):
+        self.registry('res.lang').create(self.cr, openerp.SUPERUSER_ID, {
+            'name': u'Français',
+            'code': 'fr_FR',
+            'translatable': True,
+            'date_format': '%d.%m.%Y',
+            'decimal_point': ',',
+            'thousand_sep': ' ',
+        })
+        Translations = self.registry('ir.translation')
+        for source, value in self.translations_fr:
+            Translations.create(self.cr, openerp.SUPERUSER_ID, {
+                'name': 'export.selection,value',
+                'lang': 'fr_FR',
+                'type': 'selection',
+                'src': source,
+                'value': value
+            })
+        # FIXME: can't import an exported selection field label if lang != en_US
+        self.assertEqual(
+            self.export(2, context={'lang': 'fr_FR'}),
+            [[u'Bar']])
 
 class test_selection_function(CreatorCase):
     model_name = 'export.selection.function'
@@ -390,7 +416,6 @@ class test_o2m(CreatorCase):
                 [u'record5', '', u'13'],
             ])
 
-# todo: test with multiple o2m fields and exporting all
 class test_o2m_multiple(CreatorCase):
     model_name = 'export.one2many.multiple'
 

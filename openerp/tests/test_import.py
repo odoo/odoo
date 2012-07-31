@@ -372,6 +372,11 @@ class test_text(ImporterCase):
 
 class test_selection(ImporterCase):
     model_name = 'export.selection'
+    translations_fr = [
+        ("Qux", "toto"),
+        ("Bar", "titi"),
+        ("Foo", "tete"),
+    ]
 
     def test_imported(self):
         self.assertEqual(
@@ -383,6 +388,38 @@ class test_selection(ImporterCase):
             ]),
             ok(4))
         self.assertEqual([3, 2, 1, 2], values(self.read()))
+
+    def test_imported_translated(self):
+        self.registry('res.lang').create(self.cr, openerp.SUPERUSER_ID, {
+            'name': u'Français',
+            'code': 'fr_FR',
+            'translatable': True,
+            'date_format': '%d.%m.%Y',
+            'decimal_point': ',',
+            'thousand_sep': ' ',
+        })
+        Translations = self.registry('ir.translation')
+        for source, value in self.translations_fr:
+            Translations.create(self.cr, openerp.SUPERUSER_ID, {
+                'name': 'export.selection,value',
+                'lang': 'fr_FR',
+                'type': 'selection',
+                'src': source,
+                'value': value
+            })
+
+        self.assertEqual(
+            self.import_(['value'], [
+                ['toto'],
+                ['tete'],
+                ['titi'],
+            ], context={'lang': 'fr_FR'}),
+            ok(3))
+        self.assertEqual([3, 1, 2], values(self.read()))
+        self.assertEqual(
+            self.import_(['value'], [['Foo']], context={'lang': 'fr_FR'}),
+            error(1, "Key/value 'Foo' not found in selection field 'value'",
+                  value=False))
 
     def test_invalid(self):
         self.assertEqual(
@@ -398,6 +435,12 @@ class test_selection(ImporterCase):
 
 class test_selection_function(ImporterCase):
     model_name = 'export.selection.function'
+    translations_fr = [
+        ("Corge", "toto"),
+        ("Grault", "titi"),
+        ("Whee", "tete"),
+        ("Moog", "tutu"),
+    ]
 
     def test_imported(self):
         """ By what bloody magic does that thing work?
@@ -407,7 +450,6 @@ class test_selection_function(ImporterCase):
            it: import does not actually know that the selection field uses a
            function
         """
-        # TODO: localized import
         self.assertEqual(
             self.import_(['value'], [
                 [3],
@@ -417,6 +459,36 @@ class test_selection_function(ImporterCase):
         self.assertEqual(
             ['3', '1'],
             values(self.read()))
+
+    def test_translated(self):
+        self.registry('res.lang').create(self.cr, openerp.SUPERUSER_ID, {
+            'name': u'Français',
+            'code': 'fr_FR',
+            'translatable': True,
+            'date_format': '%d.%m.%Y',
+            'decimal_point': ',',
+            'thousand_sep': ' ',
+        })
+        Translations = self.registry('ir.translation')
+        for source, value in self.translations_fr:
+            Translations.create(self.cr, openerp.SUPERUSER_ID, {
+                'name': 'export.selection,value',
+                'lang': 'fr_FR',
+                'type': 'selection',
+                'src': source,
+                'value': value
+            })
+        # FIXME: Fucking hell
+        self.assertEqual(
+            self.import_(['value'], [
+                ['toto'],
+                ['tete'],
+            ], context={'lang': 'fr_FR'}),
+            error(1, "Key/value 'toto' not found in selection field 'value'",
+                  value=False))
+        self.assertEqual(
+            self.import_(['value'], [['Wheee']], context={'lang': 'fr_FR'}),
+            ok(1))
 
 class test_m2o(ImporterCase):
     model_name = 'export.many2one'
