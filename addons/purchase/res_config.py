@@ -32,34 +32,34 @@ class purchase_config_settings(osv.osv_memory):
             [('manual', 'Based on Purchase Order Lines'),
              ('picking', 'Based on Receptions'),
              ('order', 'Pre-Generate Draft Invoices based on Purchase Orders'),
-            ], 'Default Invoicing Control Method', required=True, default_model='purchase.order'),
-        'group_purchase_pricelist':fields.boolean("Pricelist per Supplier",
+            ], 'default invoicing control method', required=True, default_model='purchase.order'),
+        'group_purchase_pricelist':fields.boolean("manage pricelist per supplier",
             implied_group='product.group_purchase_pricelist',
             help="""Allows to manage different prices based on rules per category of Supplier.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("Manage Different Units of Measure for Products",
+        'group_uom':fields.boolean("manage different units of measures for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_purchase_delivery_address': fields.boolean("Allow Different Addresses for Delivery and Invoice",
+        'group_purchase_delivery_address': fields.boolean("allow a different address for incoming products and invoicing",
             implied_group='purchase.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a purchase order."),
-        'module_purchase_analytic_plans': fields.boolean('Use Multiple Analytic Accounts on Purchases',
+        'module_purchase_analytic_plans': fields.boolean('use multiple analytic accounts on orders',
             help ="""Allows the user to maintain several analysis plans. These let you split
                 lines on a purchase order between several accounts and analytic plans.
                 This installs the module purchase_analytic_plans."""),
-        'module_warning': fields.boolean("Alerts by Products or Supplier",
+        'module_warning': fields.boolean("alerts by products or supllier",
             help="""Allow to configure warnings on products and trigger them when a user wants to purchase a given product or a given supplier.
             Example: Product: this product is deprecated, do not purchase more than 5.
                     Supplier: don't forget to ask for an express delivery."""),
 
-        'module_purchase_double_validation': fields.boolean("Two Levels of Approval",
+        'module_purchase_double_validation': fields.boolean("force two levels of approvals (limit to require a second approval)",
             help="""Provide a double validation mechanism for purchases exceeding minimum amount.
                 This installs the module purchase_double_validation."""),
-        'module_purchase_requisition': fields.boolean("Manage Purchase Requisitions",
+        'module_purchase_requisition': fields.boolean("manage purchase requisitions",
             help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products.
             You can configure per product if you directly do a Request for Quotation
             to one supplier or if you want a purchase requisition to negotiate with several suppliers."""),
-        'decimal_precision': fields.integer('Decimal Precision on Price',help="As an example, a decimal precision of 2 will allow prices   like: 9.99 EUR, whereas a decimal precision of 4 will allow prices  like:  0.0231 EUR per unit."),
+        'decimal_precision': fields.integer('specify decimal precision on price',help="As an example, a decimal precision of 2 will allow prices   like: 9.99 EUR, whereas a decimal precision of 4 will allow prices  like:  0.0231 EUR per unit."),
     }
 
     _defaults = {
@@ -80,7 +80,7 @@ class purchase_config_settings(osv.osv_memory):
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
-        'module_purchase_analytic_plans': fields.boolean('Several Analytic Accounts on Purchases',
+        'module_purchase_analytic_plans': fields.boolean('use multiple analytic accounts on orders',
             help="""This allows install module purchase_analytic_plans."""),
         'group_analytic_account_for_purchases': fields.boolean('Analytic Accounting for Purchases',
             implied_group='purchase.group_analytic_accounting',
