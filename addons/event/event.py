@@ -365,7 +365,7 @@ class event_registration(osv.osv):
                 self.write(cr, uid, ids, values)
                 self.message_append(cr, uid, ids, _('State set to Done'), body_text=_('Done'))
             else:
-                raise osv.except_osv(_('Error!'),_("You must wait the event starting day to do this action.") )
+                raise osv.except_osv(_('Error!'),_("You must wait for the starting day of the event to do this action.") )
         return True
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
