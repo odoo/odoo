@@ -20,10 +20,14 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Additional Features"/>
+                    <separator string="Human Resources Management"/>
                     <group>
                         <label for="id" string="Additional Features"/>
                         <div>
+                            <div>
+                                <field name="module_hr_holidays" class="oe_inline"/>
+                                <label for="module_hr_holidays"/>
+                            </div>
                             <div>
                                 <field name="module_hr_expense" class="oe_inline"/>
                                 <label for="module_hr_expense"/>
@@ -33,16 +37,12 @@
                                 <label for="module_hr_evaluation"/>
                             </div>
                             <div>
-                                <field name="module_hr_holidays" class="oe_inline"/>
-                                <label for="module_hr_holidays"/>
+                                <field name="module_hr_contract" class="oe_inline"/>
+                                <label for="module_hr_contract"/>
                             </div>
                             <div>
                                 <field name="module_hr_recruitment" class="oe_inline"/>
                                 <label for="module_hr_recruitment"/>
-                            </div>
-                            <div>
-                                <field name="module_hr_contract" class="oe_inline"/>
-                                <label for="module_hr_contract"/>
                             </div>
                             <div name="hr_payroll">
                                 <field name="module_hr_payroll" class="oe_inline"/>
@@ -53,9 +53,8 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Timesheets"/>
                     <group name="timesheet_grp">
-                        <label for="id" string="Timesheet Features"/>
+                        <label for="id" string="Time Tracking"/>
                         <div>
                             <div>
                                 <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)" class="oe_inline"/>
