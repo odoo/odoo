@@ -66,17 +66,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Planning of Users">
-                    <group>
-                       <field name="user_id"/>
-                       <field name="phase_id"/>
-                       <field name="project_id"/>
-                    </group>
-                    <newline/>
+                    <field name="user_id"/>
+                    <field name="phase_id"/>
+                    <field name="project_id"/>
                     <group expand="0" string="Group By...">
-                       <filter name="user" string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                       <separator orientation="vertical"/>
-                       <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
-                       <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
+                        <filter name="user" string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
                     </group>
                 </search>
             </field>
@@ -267,25 +263,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Project Phases">
-                    <group>
-                        <field name="name" string="Project Phases"/>
-                        <separator orientation="vertical"/>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <separator orientation="vertical"/>
-                        <filter string="New" domain="[('state','=','draft')]"  name="current" help="New Phases" icon="terp-check"/>
-                        <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="In Progress Phases" icon="terp-camera_test"/>
-                        <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-gtk-media-pause"/>
-                        <filter string="My Projects" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-folder-violet"/>
-                        <separator orientation="vertical"/>
-                        <field name="project_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Project Phases"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <filter string="New" domain="[('state','=','draft')]"  name="current" help="New Phases" icon="terp-check"/>
+                    <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="In Progress Phases" icon="terp-camera_test"/>
+                    <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-gtk-media-pause"/>
+                    <separator/>
+                    <filter string="My Projects" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-folder-violet"/>
+                    <field name="project_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" name="project"/>
-                        <separator orientation="vertical"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Start Month"/>
                     </group>
                 </search>

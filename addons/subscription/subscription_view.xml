@@ -69,23 +69,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Subscription">
-                    <group>
-                        <field name="name" string="Subscription"/>
-                        <separator orientation="vertical"/>
-                        <field name="date_init"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check"
+                    <field name="name" string="Subscription"/>
+                    <field name="date_init"/>
+                    <filter icon="terp-check"
                             string="Running"
                             domain="[('state','=','running')]"/>
-                        <separator orientation="vertical"/>
-                        <field name="user_id"/>
-                        <field name="partner_id"/>
-                    </group>
-                    <newline/>
+                    <field name="user_id"/>
+                    <field name="partner_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" name="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" name="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
@@ -163,11 +156,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Subscription Document">
-                    <group>
-                        <field name="name" string="Subscription Document"/>
-                        <separator orientation="vertical"/>
-                        <field name="model"/>
-                    </group>
+                    <field name="name" string="Subscription Document"/>
+                    <field name="model"/>
                 </search>
             </field>
         </record>

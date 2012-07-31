@@ -269,25 +269,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                    <group>
-                        <field name="name" string="Reference"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" help="Purchase order which are in draft state"/>
-                        <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]" help="Approved purchase order"/>
-                        <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
-                        <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase order which are in the exception state"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id"/>
-                        <field name="product_id"/>
-                        <field name="create_uid"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Reference"/>
+                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" help="Purchase order which are in draft state"/>
+                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]" help="Approved purchase order"/>
+                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase order which are in the exception state"/>
+                    <separator/>
+                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="create_uid"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
                     </group>
@@ -301,30 +295,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                    <group>
-                        <field name="name" string="Reference"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-mail-message-new"
-                            string="Inbox" help="Unread messages"
-                            name="needaction_pending"
-                            domain="[('needaction_pending','=',True)]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" help="Purchase orders which are in draft state"/>
-                        <filter icon="terp-check" name="approved" string="Purchase Orders" domain="[('state','not in',('draft','cancel'))]" help="Approved purchase orders"/>
-                        <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
-                        <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id"/>
-                        <field name="product_id"/>
-                        <field name="create_uid"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Reference"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <separator/>
+                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" help="Purchase orders which are in draft state"/>
+                    <filter icon="terp-check" name="approved" string="Purchase Orders" domain="[('state','not in',('draft','cancel'))]" help="Approved purchase orders"/>
+                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
+                    <separator/>
+                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="create_uid"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
                     </group>
@@ -493,21 +478,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                    <group>
-                        <field name="order_id"/>
-                        <field name="product_id"/>
-                        <field name="partner_id" string="Supplier"/>
-                    </group>
-                    <newline/>
+                    <field name="order_id"/>
+                    <field name="product_id"/>
+                    <field name="partner_id" string="Supplier"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by' : 'partner_id'}" />
-                        <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
                     </group>
-               </search>
+                </search>
             </field>
         </record>
 
@@ -573,6 +553,5 @@
                 </xpath>
             </field>
         </record>
-
     </data>
 </openerp>
