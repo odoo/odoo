@@ -295,10 +295,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             if (!group.state.folded) {
                 if (182*unfolded>=self.$element.width()) {
                     group.$element.css('width', "170px");
-                } else if (262*unfolded>self.$element.width()) {
-                    group.$element.css('width', Math.round(100/unfolded) + '%');
-                } else {
+                } else if (262*unfolded<self.$element.width()) {
                     group.$element.css('width', "250px");
+                } else {
+                    group.$element.css('width', Math.floor(self.$element.width()/unfolded) + 'px');
                 }
             }
         });
