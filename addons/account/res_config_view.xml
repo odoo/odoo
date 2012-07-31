@@ -15,7 +15,7 @@
             <field name="model">account.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Accounting" version="7.0">
+                <form string="Configure Accounting" version="7.0" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
@@ -69,13 +69,13 @@
                             </div>
                             <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',False)]}">
                                 <label for="purchase_tax"/>
-                                <field name="purchase_tax" 
+                                <field name="purchase_tax"
                                     domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"
-                                    class="oe_inline"/> 
+                                    class="oe_inline"/>
                             </div>
                             <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}">
                                 <label for="sale_tax_rate"/>
-                                <field name="sale_tax_rate" on_change="onchange_tax_rate(sale_tax_rate)"/> 
+                                <field name="sale_tax_rate" on_change="onchange_tax_rate(sale_tax_rate)"/>
                             </div>
                             <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}">
                                 <label for="purchase_tax_rate"/>
@@ -149,7 +149,7 @@
                             <div>
                                 <label for="sale_sequence_next"/>
                                 <field name="sale_sequence_prefix"
-                                    class="oe_inline" 
+                                    class="oe_inline"
                                     help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
                                 <field name="sale_sequence_next"
                                     class="oe_inline"
@@ -158,7 +158,7 @@
                             <div>
                                 <label for="sale_refund_sequence_next"/>
                                 <field name="sale_refund_sequence_prefix"
-                                    class="oe_inline" 
+                                    class="oe_inline"
                                     help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
                                 <field name="sale_refund_sequence_next"
                                     class="oe_inline"
@@ -182,7 +182,7 @@
                             <div>
                                 <label for="purchase_sequence_next"/>
                                 <field name="purchase_sequence_prefix"
-                                    class="oe_inline" 
+                                    class="oe_inline"
                                     help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
                                 <field name="purchase_sequence_next"
                                     class="oe_inline"
@@ -191,7 +191,7 @@
                             <div>
                                 <label for="purchase_refund_sequence_next"/>
                                 <field name="purchase_refund_sequence_prefix"
-                                    class="oe_inline" 
+                                    class="oe_inline"
                                     help='If you put "%%(year)s" in the prefix, it will be replaced by the current year.'/>
                                 <field name="purchase_refund_sequence_next"
                                     class="oe_inline"
