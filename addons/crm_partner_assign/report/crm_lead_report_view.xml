@@ -16,62 +16,25 @@
                     <filter icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]"/>
                     <filter icon="terp-dialog-close" string="Closed" domain="[('state','=','done')]"/>
                     <group  expand="0" string="Extended Filters...">
-                        <field name="partner_id"/>
-                        <field name="stage_id" domain="[('section_ids', '=', 'section_id')]"/>
-                        <field name="categ_id" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="creation_date"/>
-                        <field name="opening_date"/>
-                        <field name="date_closed"/>
-                    </group>
-                    <group  expand="1" string="Group By...">
-                        <filter string="Salesperson" name="user" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_assigned_id'}" />
-                        <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
-                        <filter string="Section" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" />
-                        <filter string="Grade" name="group_grade" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'grade_id'}" />
-                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
-                    <group>
-                        <filter icon="terp-check"
-                            string="Current"
-                            domain="[('state','in',('draft','open'))]"/>
-                        <filter icon="terp-dialog-close"
-                            string="Closed"
-                            domain="[('state','=','done')]"/>
-                        <separator orientation="vertical" />
-                        <field name="section_id"
-                            widget="selection"
-                            context="{'invisible_section': False}"/>
-                        <field name="grade_id"/>
-                        <field name="user_id"/>
-                        <field name="partner_assigned_id"/>
-                   </group>
-                   <newline/>
-                   <group  expand="0" string="Extended Filters...">
                       <field name="partner_id"/>
-                      <separator orientation="vertical"/>
+                      <separator/>
                       <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
-                      <separator orientation="vertical"/>
+                      <separator />
                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                      <newline/>
                       <field name="creation_date"/>
                       <field name="opening_date"/>
                       <field name="date_closed"/>
-                   </group>
-                   <newline/>
-                   <group  expand="1" string="Group By...">
-                       <filter string="Salesperson" name="user" icon="terp-personal"
+                    </group>
+                    <group  expand="1" string="Group By...">
+                        <filter string="Salesperson" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
-                       <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_assigned_id'}" />
-                       <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
-                        <separator orientation="vertical" />
+                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_assigned_id'}" />
+                        <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
                         <filter string="Section" icon="terp-personal+"
-                            domain="[]"
-                            context="{'group_by':'section_id'}" />
+                                domain="[]"
+                                context="{'group_by':'section_id'}" />
                         <filter string="Grade" name="group_grade" icon="terp-stock_symbol-selection"
-                            domain="[]" context="{'group_by':'grade_id'}" />
-
-                        <separator orientation="vertical" />
+                                domain="[]" context="{'group_by':'grade_id'}" />
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
