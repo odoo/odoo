@@ -25,6 +25,7 @@ import datetime, time
 from itertools import groupby
 from operator import itemgetter
 
+import math
 import netsvc
 from osv import fields, osv
 from tools.translate import _
