@@ -521,7 +521,7 @@ openerp.mail = function(session) {
             this.params.parent_id = this.params.parent_id || false;
             this.params.thread_level = this.params.thread_level || 0;
             this.params.is_wall = this.params.is_wall || (this.params.records != undefined) || false;
-            this.params.msg_more_limit = this.params.msg_more_limit || 150;
+            this.params.msg_more_limit = this.params.msg_more_limit || 250;
             this.params.limit = this.params.limit || 100;
             // this.params.limit = 3; // tmp for testing
             this.params.offset = this.params.offset || 0;
@@ -758,11 +758,11 @@ openerp.mail = function(session) {
             // expand feature
             this.$element.find('div.oe_mail_msg_body:last').expander({
                 slicePoint: this.params.msg_more_limit,
-                expandText: 'see more',
-                userCollapseText: 'see less',
+                expandText: 'read more',
+                userCollapseText: '[^]',
                 detailClass: 'oe_mail_msg_tail',
                 moreClass: 'oe_mail_expand',
-                lesClass: 'oe_mail_reduce',
+                lessClass: 'oe_mail_reduce',
                 });
         },
 
