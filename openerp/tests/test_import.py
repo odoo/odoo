@@ -23,8 +23,8 @@ def error(row, message, record=None, **kwargs):
         "Line %d : %s" % (row, message),
         '')
 
-def values(seq):
-    return [item['value'] for item in seq]
+def values(seq, field='value'):
+    return [item[field] for item in seq]
 
 def setupModule():
     openerp.tools.config['update'] = {'base': 1}
@@ -717,6 +717,115 @@ class test_m2m(ImporterCase):
 
 class test_o2m(ImporterCase):
     model_name = 'export.one2many'
+
+    def test_single(self):
+        self.assertEqual(
+            self.import_(['const', 'value/value'], [
+                ['5', '63']
+            ]),
+            ok(1))
+
+        (b,) = self.browse()
+        self.assertEqual(b.const, 5)
+        self.assertEqual(values(b.value), [63])
+
+    def test_multicore(self):
+        self.assertEqual(
+            self.import_(['const', 'value/value'], [
+                ['5', '63'],
+                ['6', '64'],
+            ]),
+            ok(2))
+
+        b1, b2 = self.browse()
+        self.assertEqual(b1.const, 5)
+        self.assertEqual(values(b1.value), [63])
+        self.assertEqual(b2.const, 6)
+        self.assertEqual(values(b2.value), [64])
+
+    def test_multisub(self):
+        self.assertEqual(
+            self.import_(['const', 'value/value'], [
+                ['5', '63'],
+                ['', '64'],
+                ['', '65'],
+                ['', '66'],
+            ]),
+            ok(4))
+
+        (b,) = self.browse()
+        self.assertEqual(values(b.value), [63, 64, 65, 66])
+
+    def test_multi_subfields(self):
+        self.assertEqual(
+            self.import_(['value/str', 'const', 'value/value'], [
+                ['this', '5', '63'],
+                ['is', '', '64'],
+                ['the', '', '65'],
+                ['rhythm', '', '66'],
+            ]),
+            ok(4))
+
+        (b,) = self.browse()
+        self.assertEqual(values(b.value), [63, 64, 65, 66])
+        self.assertEqual(
+            values(b.value, 'str'),
+            'this is the rhythm'.split())
+
+    def test_link(self):
+        id1 = self.registry('export.one2many.child').create(self.cr, openerp.SUPERUSER_ID, {
+            'str': 'Bf', 'value': 109
+        })
+        id2 = self.registry('export.one2many.child').create(self.cr, openerp.SUPERUSER_ID, {
+            'str': 'Me', 'value': 262
+        })
+
+        self.assertEqual(
+            self.import_(['const', 'value/.id'], [
+                ['42', str(id1)],
+                ['', str(id2)],
+            ]),
+            ok(2))
+
+        # No record values alongside id => o2m resolution skipped altogether,
+        # creates 2 records
+        b, b1 = self.browse()
+        self.assertEqual(b.const, 42)
+        self.assertEqual(values(b.value), [])
+        self.assertEqual(b1.const, 4)
+        self.assertEqual(values(b1.value), [])
+
+    def test_link_2(self):
+        O2M_c = self.registry('export.one2many.child')
+        id1 = O2M_c.create(self.cr, openerp.SUPERUSER_ID, {
+            'str': 'Bf', 'value': 109
+        })
+        id2 = O2M_c.create(self.cr, openerp.SUPERUSER_ID, {
+            'str': 'Me', 'value': 262
+        })
+
+        self.assertEqual(
+            self.import_(['const', 'value/.id', 'value/value'], [
+                ['42', str(id1), '1'],
+                ['', str(id2), '2'],
+            ]),
+            ok(2))
+
+        (b,) = self.browse()
+        # if an id (db or xid) is provided, expectations that objects are
+        # *already* linked and emits UPDATE (1, id, {}).
+        # Noid => CREATE (0, ?, {})
+        # TODO: xid ignored aside from getting corresponding db id?
+        self.assertEqual(b.const, 42)
+        self.assertEqual(values(b.value), [])
+
+        # FIXME: updates somebody else's records?
+        self.assertEqual(
+            O2M_c.read(self.cr, openerp.SUPERUSER_ID, id1),
+            {'id': id1, 'str': 'Bf', 'value': 1, 'parent_id': False})
+        self.assertEqual(
+            O2M_c.read(self.cr, openerp.SUPERUSER_ID, id2),
+            {'id': id2, 'str': 'Me', 'value': 2, 'parent_id': False})
 
 # function, related, reference: written to db as-is...
 # => function uses @type for value coercion/conversion

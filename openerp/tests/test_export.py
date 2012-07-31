@@ -376,6 +376,21 @@ class test_o2m(CreatorCase):
                 u'4', u','.join(self.names)
             ]])
 
+    def test_multiple_records_id(self):
+        export = self.export(self.commands, fields=['const', 'value/.id'])
+        O2M_c = self.registry('export.one2many.child')
+        ids = O2M_c.browse(self.cr, openerp.SUPERUSER_ID,
+                           O2M_c.search(self.cr, openerp.SUPERUSER_ID, []))
+        self.assertEqual(
+            export,
+            [
+                ['4', str(ids[0].id)],
+                ['', str(ids[1].id)],
+                ['', str(ids[2].id)],
+                ['', str(ids[3].id)],
+                ['', str(ids[4].id)],
+            ])
+
     def test_multiple_records_with_name_before(self):
         self.assertEqual(
             self.export(self.commands, fields=['const', 'value', 'value/value']),
@@ -383,7 +398,7 @@ class test_o2m(CreatorCase):
                 u'4', u','.join(self.names), u'4'
             ]])
 
-    def test_multiple_records_with_name_before(self):
+    def test_multiple_records_with_name_after(self):
         self.assertEqual(
             self.export(self.commands, fields=['const', 'value/value', 'value']),
             [ # completely ignores name_get request
