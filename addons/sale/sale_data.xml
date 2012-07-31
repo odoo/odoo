@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <!--
-    Requests Links
-    -->
+        <!-- Requests Links -->
         <record id="req_link_sale_order" model="res.request.link">
             <field name="name">Sales Order</field>
             <field name="object">sale.order</field>
         </record>
 
-        <!--
-    Resource: sale.shop
-    -->
+        <!-- Resource: sale.shop -->
         <record id="shop" model="sale.shop">
             <field name="company_id" ref="base.main_company"/>
             <field name="warehouse_id" ref="stock.warehouse0"/>
@@ -26,29 +22,15 @@
 
         <function eval="('default',False,'shop_id', [('sale.order', False)], shop, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
 
-    </data>
-    <data>
-            
-        <record id="message_welcome_sale" model="mail.message">
-            <field name="subject">Module sale installed!</field>
-            <field name="type">comment</field>
-            <field name="subtype">text</field>
-            <field name="model">res.users</field>
-            <field name="res_id" ref="base.user_root"/>
-            <field name="body_text">Welcome to OpenERP
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>The Sales Management application has been installed.</value>
+            <value>&lt;b&gt;Click on the top menu &lt;i&gt;'Sales'&lt;/i&gt;&lt;/em&gt; to start managing your customers, sending quotations and processing sale orders.
 
-                You can click on the top menu Sales to manage your
-                customers, your quotations and sales orders.
-
-                If you need to manage your sales pipeline (leads,
-                opportunities, phonecalls), you can install the CRM module
-                from the Settings top menu.
-            </field>
-        </record>
-        <record id="message_welcome_sale_root" model="mail.notification">
-            <field name="user_id" ref="base.user_root"/>
-            <field name="message_id" ref="message_welcome_sale"/>
-        </record>
-
+If you need to manage your sales pipeline (leads, opportunities, phonecalls), you can install the module &lt;i&gt;CRM&lt;/i&gt; from the top menu Settings.
+            </value>
+        </function>
     </data>
 </openerp>

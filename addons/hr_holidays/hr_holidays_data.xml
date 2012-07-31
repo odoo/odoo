@@ -1,34 +1,44 @@
 <?xml version="1.0"?>
 <openerp>
-  <data noupdate="1">
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Leaves Management has been installed</value>
+            <value>Manage employee leaves from the top menu "Human Resources."
+                Employees can create leave requests that are validated by their
+                manager and/or HR people.  Once validated, they are visible in
+                the employee's calendar.  HR people can define leave types and
+                allocate off-days for employees.
+            </value>
+        </function>
 
-    <!-- Casual leave -->
-    <record model="hr.holidays.status" id="holiday_status_cl">
-      <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
-      <field name="color_name">black</field>
-    </record>
+        <!-- Casual leave -->
+        <record model="hr.holidays.status" id="holiday_status_cl">
+            <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
+            <field name="color_name">black</field>
+        </record>
 
-    <!-- Sick leave -->
-    <record model="hr.holidays.status" id="holiday_status_sl">
-      <field name="name">Sick Leaves</field>
-      <field name="limit">True</field>
-      <field name="color_name">red</field>
-    </record>
+        <!-- Sick leave -->
+        <record model="hr.holidays.status" id="holiday_status_sl">
+            <field name="name">Sick Leaves</field>
+            <field name="limit">True</field>
+            <field name="color_name">red</field>
+        </record>
 
+        <!-- Compensatory Days -->
+        <record model="hr.holidays.status" id="holiday_status_comp">
+            <field name="name">Compensatory Days</field>
+            <field name="limit">True</field>
+            <field name="color_name">lavender</field>
+        </record>
 
-    <!-- Compensatory Days -->
-    <record model="hr.holidays.status" id="holiday_status_comp">
-      <field name="name">Compensatory Days</field>
-      <field name="limit">True</field>
-      <field name="color_name">lavender</field>
-    </record>
-
-    <!--Unpaid Leave -->
-    <record model="hr.holidays.status" id="holiday_status_unpaid">
-      <field name="name">Unpaid</field>
-      <field name="limit">True</field>
-      <field name="color_name">brown</field>
-    </record>
-
-  </data>
+        <!--Unpaid Leave -->
+        <record model="hr.holidays.status" id="holiday_status_unpaid">
+            <field name="name">Unpaid</field>
+            <field name="limit">True</field>
+            <field name="color_name">brown</field>
+        </record>
+    </data>
 </openerp>
