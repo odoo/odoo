@@ -7,23 +7,18 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
-                <group name="timesheet_grp" position="after">
-                    <group>
-                        <label for="id" string="Recruitment"/>
-                        <div>
-                            <div>
-                                <field name="module_document_ftp" class="oe_inline"/>
-                                <label for="module_document_ftp"/>
-                            </div>
-                            <div>
-                                <field name="fetchmail_applicants" class="oe_inline"/>
-                                <label for="fetchmail_applicants"/>
-                                <button name="configure_fetchmail_applicants" type="object" string="Configure" icon="gtk-go-forward"
-                                    attrs="{'invisible': [('fetchmail_applicants','=',False)]}" class="oe_link"/>
-                            </div>
-                        </div>
-                    </group>
-                </group>
+                <div name="recruitment" position="inside">
+                    <div>
+                        <field name="fetchmail_applicants" class="oe_inline"/>
+                        <label for="fetchmail_applicants"/>
+                        <button name="configure_fetchmail_applicants" type="object" string="Configure" icon="gtk-go-forward"
+                            attrs="{'invisible': [('fetchmail_applicants','=',False)]}" class="oe_link"/>
+                    </div>
+                    <div>
+                        <field name="module_document_ftp" class="oe_inline"/>
+                        <label for="module_document_ftp"/>
+                    </div>
+                </div>
             </field>
         </record>
     </data>
