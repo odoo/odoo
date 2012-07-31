@@ -2,19 +2,18 @@
 <openerp>
     <data>
         
-        <!-- <record id="view_shop_form_inherit" model="ir.ui.view">
+        <record id="view_shop_form_inherit" model="ir.ui.view">
             <field name="name">sale.shop.sale.stock</field>
             <field name="model">sale.shop</field>
             <field name="inherit_id" ref="sale.view_shop_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/label/h1/group[@name='shop']" position="before">
-                 
+                <xpath expr="//group[@name='shop']" position="before">
                     <label for="warehouse_id" class="oe_edit_only"/>
                     <h2><field name="warehouse_id" required="1"/></h2>
                 </xpath>
             </field>
-        </record> -->
+        </record>
 
          <record id="view_shop_tree_inherit" model="ir.ui.view">
              <field name="name">sale.shop.sale.stock</field>

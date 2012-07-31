@@ -24,7 +24,6 @@
             <field name="order_policy">manual</field>
         </record>
         
-        
         <record id="sale.order" model="sale.order">
             <field name="order_policy">picking</field>
             <field name="invoice_quantity">procurement</field> 
@@ -89,22 +88,22 @@
             <field name="type">make_to_order</field>
             <field name="delay">15</field>
         </record>
-        
+
         <record id="sale.order6_line1" model="sale.order.line">
             <field name="type">make_to_order</field>
             <field name="delay">15</field>
         </record>
-        
+
         <record id="sale.order7_line0" model="sale.order.line">
             <field name="type">make_to_stock</field>
             <field name="delay">15</field>
         </record>
-        
+
         <record id="sale.order7_line1" model="sale.order.line">
             <field name="type">make_to_stock</field>
             <field name="delay">15</field>
         </record>
-        
+
         <!-- Run all schedulers -->
         <function model="procurement.order" name="run_scheduler"/>
         
