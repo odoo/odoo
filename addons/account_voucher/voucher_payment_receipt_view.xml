@@ -154,11 +154,11 @@
                     <group>
                         <group>
                             <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id, 'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"  string="Supplier"/>
-                <label for="amount" string="Amount"/>
-                <div>
+                            <label for="amount" string="Amount"/>
+                            <div>
                                 <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)" class="oe_inline"/>
                                 <field name="currency_id" class="oe_inline"/>
-                </div>
+                            </div>
                             <field name="journal_id"
                                 domain="[('type','in',['bank', 'cash'])]"
                                 invisible="context.get('line_type', False)"
