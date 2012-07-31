@@ -431,6 +431,9 @@
                             <field name="progress" widget="progressbar"
                                 groups="project.group_time_work_estimation_tasks"/>
                         </group>
+                        <group>
+                            <field name="categ_ids" widget="many2many_tags"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Description">
@@ -512,6 +515,7 @@
                     <field name="date_deadline"/>
                     <field name="message_summary"/>
                     <field name="needaction_pending"/>
+                    <field name="categ_ids"/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -553,6 +557,13 @@
                                         <span class="oe_e">N</span>
                                         <t t-esc="Math.round(record.remaining_hours.raw_value)"/>
                                     </span>
+                                </div>
+                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <div class="oe_left oe_tags">
+                                        <t t-foreach="record.categ_ids.raw_value" t-as="categ_id">
+                                            <span class="oe_tag" t-att-data-categ_id="categ_id"></span>
+                                        </t>
+                                    </div>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -820,7 +831,7 @@
             </field>
         </record>
 
-      <!--     User Form-->
+        <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
 
     </data>

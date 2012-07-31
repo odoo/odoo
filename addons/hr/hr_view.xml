@@ -11,7 +11,7 @@
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" groups="base.group_no_one" sequence="25"/>
         <menuitem id="menu_hr_reporting_timesheet" name="Reports"
-            parent="menu_hr_reporting" sequence="6" />
+            parent="menu_hr_reporting" sequence="6"/>
 
         <!--Employee form view -->
         <record id="view_employee_form" model="ir.ui.view">
@@ -40,9 +40,9 @@
                             <!-- Put here related buttons -->
                         </div>
                         <group colspan="4" col="4">
-                            <field name="work_email" widget="email" />
+                            <field name="work_email" widget="email"/>
                             <field name="work_phone"/>
-                            <field name="address_id" on_change="onchange_address_id(address_id)" />
+                            <field name="address_id" on_change="onchange_address_id(address_id)"/>
                             <field name="mobile_phone"/>
                         </group>
                         <notebook>
@@ -50,7 +50,7 @@
                                 <group>
                                     <group>
                                         <field name="user_id" on_change="onchange_user(user_id)"/>
-                                        <field name="parent_id" />
+                                        <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
@@ -142,7 +142,9 @@
                                 <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
                             </div>
                             <div class="oe_employee_details">
-                                <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
+                                <h4>
+                                    <a type="edit"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
+                                </h4>
                                 <ul>
                                     <li id="last_login">
                                         <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
@@ -225,12 +227,7 @@
             <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
         </record>
 
-        <!--
-        =======================
-        Employee architecture
-        =======================
-        -->
-
+        <!-- Employee architecture -->
         <record id="view_partner_tree2" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
@@ -269,12 +266,7 @@
             <field eval="True" name="replace"/>
         </ir_set>
 
-        <!--
-        ============
-        Employee Category
-        ============
-        -->
-
+        <!-- Employee Category -->
        <record id="view_employee_category_form" model="ir.ui.view">
             <field name="name">hr.employee.category.form</field>
             <field name="model">hr.employee.category</field>
@@ -373,8 +365,8 @@
                         </h1>
                         <group>
                             <group>
-                                <field name="no_of_employee"/>
-                                <field name="expected_employees"/>
+                                <field name="no_of_employee" groups="base.group_user"/>
+                                <field name="expected_employees" groups="base.group_user"/>
                                 <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
                             </group>
                             <group>
@@ -427,7 +419,7 @@
                         help="In Recruitment"/>
                     <separator orientation="vertical"/>
                     <field name="department_id" widget="selection"/>
-                    <newline />
+                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>

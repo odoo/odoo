@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
         <act_window
             id="act_event_list_register_event"
             name="Registration"
@@ -13,6 +14,7 @@
         <!-- Top menu item -->
         <menuitem name="Events"
             id="event_main_menu"
+            groups="base.group_user"
             sequence="80"/>
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu"/>
 
@@ -102,10 +104,12 @@
             <field name="arch" type="xml">
                 <form string="Events" version="7.0">
                     <header>
-                        <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
-                        <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
-                        <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
-                        <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
+                        <span groups="base.user_group">
+                            <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
+                            <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
+                            <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
+                            <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
+                        </span>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
@@ -126,20 +130,20 @@
                                         <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}"/>
                                         <field name="street" placeholder="Street..."/>
                                         <div>
-                                             <field name="zip" class="oe_inline" placeholder="Zip"/>
-                                             <field name="city" class="oe_inline" placeholder="City"/>
+                                            <field name="zip" class="oe_inline" placeholder="Zip"/>
+                                            <field name="city" class="oe_inline" placeholder="City"/>
                                         </div>
                                     </div>
                                 </group>
                                 <group>
-                                       <field name="type" on_change="onchange_event_type(type,context)"/>
-                                       <field name="register_min"/>
-                                       <field name="register_max"/>
-                                       <label for="register_current" string="Current Registrations"/>
-                                       <div>
-                                           Confirmed: <field name="register_current" class="oe_inline"/>, Unconfirmed: <field name="register_prospect" class="oe_inline"/>
-                                       </div>
-                                   </group>
+                                    <field name="type" on_change="onchange_event_type(type,context)"/>
+                                    <field name="register_min"/>
+                                    <field name="register_max"/>
+                                    <label for="register_current" string="Current Registrations" groups="base.group_user"/>
+                                    <div groups="base.group_user">
+                                       Confirmed: <field name="register_current" class="oe_inline"/>, Unconfirmed: <field name="register_prospect" class="oe_inline"/>
+                                    </div>
+                                </group>
                             </group>
                         </div>
                         <!-- <div class="oe_right" style="height: 200px"></div> -->
@@ -474,8 +478,8 @@
                                 <div>
                                     <field name="email" class="oe_inline"/>
                                     <button class="oe_inline oe_right" string="Send Email"
-                                      name="%(mail.action_email_compose_message_wizard)d"
-                                      icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
+                                        name="%(mail.action_email_compose_message_wizard)d"
+                                        icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
                                 </div>
                             </group>
                             <group>
@@ -541,9 +545,9 @@
                         <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                         <filter icon="terp-personal"
-                              string="My Registrations"
-                                help="My Registrations"
-                              domain="[('user_id','=',uid)]"/>
+                            string="My Registrations"
+                            help="My Registrations"
+                            domain="[('user_id','=',uid)]"/>
                         <separator orientation="vertical"/>
                         <field name="event_id" widget="selection"/>
                         <field name="user_id"/>
@@ -571,12 +575,11 @@
           <field name="search_view_id" ref="view_registration_search"/>
         </record>view_
 
-        <menuitem
-            name="Registrations"
+        <menuitem name="Registrations"
             id="menu_action_registration" parent="base.menu_event_main"
             action="action_registration" groups="event.group_event_manager,event.group_event_user"/>
 
-
         <menuitem name="Reporting" id="base.menu_report_association" parent="event_main_menu" sequence="20"/>
+
     </data>
 </openerp>
