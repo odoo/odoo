@@ -518,25 +518,25 @@
             <div class="oe_form_dropdown_section">
                 <button class="oe_dropdown_toggle oe_dropdown_arrow">
                     <t t-esc="section.label"/>
-                    <ul class="oe_dropdown_menu">
-                        <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
-                            <a class="oe_sidebar_action_a" t-att-title="item.title" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
-                                <t t-raw="item.label"/>
-                            </a>
-                            <a t-if="section.name == 'files'" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">x</a>
-                        </li>
-                        <li t-if="section.name == 'files'" class="oe_sidebar_add_attachment">
-                            <t t-call="HiddenInputFile">
-                                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                                <t t-set="fileupload_action">/web/binary/upload_attachment</t>
-                                <input type="hidden" name="model" t-att-value="widget.dataset and widget.dataset.model"/>
-                                <input type="hidden" name="id" t-att-value="widget.model_id"/>
-                                <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
-                                <span>Add...</span>
-                            </t>
-                        </li>
-                    </ul>
                 </button>
+                <ul class="oe_dropdown_menu">
+                    <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
+                        <a class="oe_sidebar_action_a" t-att-title="item.title" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
+                            <t t-raw="item.label"/>
+                        </a>
+                        <a t-if="section.name == 'files'" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">x</a>
+                    </li>
+                    <li t-if="section.name == 'files'" class="oe_sidebar_add_attachment">
+                        <t t-call="HiddenInputFile">
+                            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                            <t t-set="fileupload_action">/web/binary/upload_attachment</t>
+                            <input type="hidden" name="model" t-att-value="widget.dataset and widget.dataset.model"/>
+                            <input type="hidden" name="id" t-att-value="widget.model_id"/>
+                            <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+                            <span>Add...</span>
+                        </t>
+                    </li>
+                </ul>
             </div>
         </t>
     </div>
@@ -645,10 +645,9 @@
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
         <t t-set="record" t-value="records.at(index)"/>
-        <t t-set="row_parity" t-value="index_parity"/>
     </t>
 </t>
-<tr t-name="ListView.row" t-att-class="row_parity"
+<tr t-name="ListView.row"
         t-att-data-id="record.get('id')"
         t-att-style="view.style_for(record)">
     <t t-set="asData" t-value="record.toForm().data"/>
@@ -1444,18 +1443,18 @@
     <div>
     </div>
 </div>
-<div t-name="SearchView.addtodashboard" class="oe_searchview_dashboard">
-    <h4>Add to Dashboard</h4>
+<div t-name="SearchView.addtoreporting" class="oe_searchview_dashboard">
+    <h4>Add to Reporting</h4>
     <form>
-        <p><input placeholder ="Title of new Dashboard item" title = "Title of new Dashboard item" type="text"/></p>
-        <button class="oe_apply" type="submit">Save</button>
+        <p><input placeholder="Title of new dashboard item"/></p>
+        <button class="oe_apply" type="submit">Add</button>
     </form>
 </div>
-<t t-name="SearchView.addtodashboard.selection">
-    <select  title = "Select Dashboard to add this filter to">
-        <t t-foreach="selections" t-as="element">
-        <option t-att-value="element.id || element.res_id "><t t-esc="element.name"/></option>
-        </t>
+<t t-name="SearchView.addtoreporting.selection">
+    <select>
+        <option t-foreach="selections" t-as="element"
+                t-att-value="element.id || element.res_id ">
+            <t t-esc="element.name"/></option>
     </select>
 </t>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">

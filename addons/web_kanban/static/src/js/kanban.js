@@ -174,6 +174,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_process_groups: function(groups) {
         var self = this;
+        this.$element.remove('oe_kanban_ungrouped').addClass('oe_kanban_grouped');
         this.add_group_mutex.exec(function() {
             self.do_clear_groups();
             self.dataset.ids = [];
@@ -195,6 +196,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_process_dataset: function(dataset) {
         var self = this;
+        this.$element.remove('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
         this.add_group_mutex.exec(function() {
             var def = $.Deferred();
             self.do_clear_groups();
@@ -296,10 +298,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             if (!group.state.folded) {
                 if (182*unfolded>=self.$element.width()) {
                     group.$element.css('width', "170px");
-                } else if (262*unfolded>self.$element.width()) {
-                    group.$element.css('width', Math.round(100/unfolded) + '%');
-                } else {
+                } else if (262*unfolded<self.$element.width()) {
                     group.$element.css('width', "250px");
+                } else {
+                    group.$element.css('width', Math.floor(self.$element.width()/unfolded) + 'px');
                 }
             }
         });
@@ -721,9 +723,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).then(function(records) {
             if (records.length) {
                 self.set_record(records[0]);
-                var $render = $(self.render());
-                self.$element.replaceWith($render);
-                self.$element = $render;
+                this.replaceElement($(self.render()));
                 self.$element.data('widget', self);
                 self.bind_events();
                 self.group.compute_cards_auto_height();

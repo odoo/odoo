@@ -16,6 +16,7 @@ Contents:
     async
     rpc
 
+    widget
     search-view
 
     list-view

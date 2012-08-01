@@ -57,9 +57,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
-        if (content) {
-            this.$element = content instanceof $ ? content : $(content);
-        }
+        this.setElement(content || this.make(this.tagName));
         this.dialog_options = {
             modal: true,
             destroy_on_close: true,
@@ -584,24 +582,20 @@ instance.web.Login =  instance.web.Widget.extend({
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
-            self.do_action("login_sucessful");
+            self.trigger('login_successful');
         },function () {
             self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
         });
+    },
+    show: function () {
+        this.$element.show();
+    },
+    hide: function () {
+        this.$element.hide();
     }
 });
 instance.web.client_actions.add("login", "instance.web.Login");
-
-instance.web.LoginSuccessful =  instance.web.Widget.extend({
-    init: function(parent) {
-        this._super(parent);
-    },
-    start: function() {
-        this.getParent().getParent().show_application();
-    },
-});
-instance.web.client_actions.add("login_sucessful", "instance.web.LoginSuccessful");
 
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
@@ -890,12 +884,11 @@ instance.web.Client = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        return instance.connection.session_bind(this.origin).then(function() {
+        return instance.connection.session_bind(this.origin).pipe(function() {
             var $e = $(QWeb.render(self._template, {}));
-            self.$element.replaceWith($e);
-            self.$element = $e;
+            self.replaceElement($e);
             self.bind_events();
-            self.show_common();
+            return self.show_common();
         });
     },
     bind_events: function() {
@@ -906,7 +899,8 @@ instance.web.Client = instance.web.Widget.extend({
         this.$element.on('click', '.oe_dropdown_toggle', function(ev) {
             ev.preventDefault();
             var $toggle = $(this);
-            var $menu = $toggle.find('.oe_dropdown_menu');
+            var $menu = $toggle.siblings('.oe_dropdown_menu');
+            $menu = $menu.size() >= 1 ? $menu : $toggle.find('.oe_dropdown_menu');
             var state = $menu.is('.oe_opened');
             setTimeout(function() {
                 // Do not alter propagation
@@ -923,8 +917,10 @@ instance.web.Client = instance.web.Widget.extend({
                 }
             }, 0);
         });
-        instance.web.bus.on('click', this, function() {
-            self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
+        instance.web.bus.on('click', this, function(ev) {
+            if (!$(ev.target).is('input[type=file]')) {
+                self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
+            }
         });
     },
     show_common: function() {
@@ -979,10 +975,9 @@ instance.web.WebClient = instance.web.Client.extend({
         };
     },
     show_login: function() {
-        var self = this;
-        self.$('.oe_topbar').hide();
-        self.action_manager.do_action("login");
-        //self.login.appendTo(self.$element);
+        this.$('.oe_topbar').hide();
+        this.action_manager.do_action("login");
+        this.action_manager.inner_widget.on('login_successful', this, this.show_application);
     },
     show_application: function() {
         var self = this;

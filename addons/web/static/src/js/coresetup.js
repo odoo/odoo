@@ -19,15 +19,14 @@ instance.web.OldWidget = instance.web.Widget.extend({
         this._super(parent);
         this.element_id = element_id;
         this.element_id = this.element_id || _.uniqueId('widget-');
+
         var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : $(document.createElement(this.tagName));
+        this.setElement(tmp || this._make_descriptive());
     },
     renderElement: function() {
         var rendered = this.render();
         if (rendered) {
-            var elem = $(rendered);
-            this.$element.replaceWith(elem);
-            this.$element = elem;
+            this.replaceElement($(rendered));
         }
         return this;
     },
@@ -416,12 +415,12 @@ instance.web.Bus = instance.web.Class.extend(instance.web.EventDispatcherMixin, 
         //           check gtk bindings
         // http://unixpapa.com/js/key.html
         _.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
-            $('html').on(evtype, self, function(ev) {
+            $('html').on(evtype, function(ev) {
                 self.trigger(evtype, ev);
             });
         });
         _.each('resize,scroll'.split(','), function(evtype) {
-            $(window).on(evtype, self, function(ev) {
+            $(window).on(evtype, function(ev) {
                 self.trigger(evtype, ev);
             });
         });

@@ -63,6 +63,8 @@
     // KanbanGroups {{{
     .oe_kanban_groups
         height: inherit
+    &.oe_kanban_ungrouped .oe_kanban_groups
+        width: 100%
     .oe_kanban_header
         &:hover
             .oe_dropdown_kanban
@@ -86,7 +88,7 @@
     .oe_kanban_group_header.oe_kanban_no_group
         padding: 0px
 
-    .oe_kanban_column.oe_kanban_grouped, .oe_kanban_group_header
+    &.oe_kanban_grouped .oe_kanban_column, .oe_kanban_group_header
         background: #f0eeee
         border-left: 1px solid #f0f8f8
         border-right: 1px solid #b9b9b9
@@ -190,7 +192,7 @@
         .oe_kanban_title
             font-weight: bold
             margin: 2px 4px
-    .oe_kanban_grouped .oe_kanban_record
+    &.oe_kanban_grouped .oe_kanban_record
         margin-bottom: 6px
     .oe_kanban_gravatar
         display: block
@@ -225,9 +227,9 @@
     .oe_kanban_show_more
         clear: both
         text-align: center
-    .oe_kanban_grouped .oe_kanban_show_more .oe_button
+    &.oe_kanban_grouped .oe_kanban_show_more .oe_button
         width: 100%
-    .oe_kanban_ungrouped
+    &.oe_kanban_ungrouped .oe_kanban_column
         background: white
         .oe_kanban_record
             float: left

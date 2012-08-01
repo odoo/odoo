@@ -48,8 +48,7 @@ instance.web_mobile.Login =  instance.web.OldWidget.extend({
         jQuery("#oe_header").children().remove();
         this.rpc("/web/database/get_list", {}, function(result) {
             self.db_list = result.db_list;
-            $('#'+self.element_id).html(self.render(self));
-            self.$element = $('#'+self.element_id);
+            this.setElement($('#'+self.element_id).html(self.render(self)));
             if(self.session.db!=""){
                 self.$element.find("#database").val(self.session.db);
             }
