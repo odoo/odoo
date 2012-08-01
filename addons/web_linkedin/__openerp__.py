@@ -9,8 +9,7 @@
         This module provides the Integration of the LinkedIn with OpenERP.
         """,
     'update_xml': [
-        'res_partner_view.xml',
-        'res_config_view.xml',
+        'web_linkedin_view.xml',
     ],
     "depends" : ["base"],
     "js": [
