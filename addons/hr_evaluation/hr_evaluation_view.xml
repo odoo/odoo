@@ -8,12 +8,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Appraisal Plan">
-                   <group>
-                       <field name="name" string="Appraisal Plans"/>
-                       <separator orientation="vertical"/>
-                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                   </group>
-                   <newline/>
+                   <field name="name" string="Appraisal Plans"/>
+                   <field name="company_id" groups="base.group_multi_company"/>
                    <group expand="0" string="Group By..." groups="base.group_multi_company">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
@@ -234,22 +230,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
-                   <group>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Appraisal that are in Plan In Progress state"/>
-                        <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Appraisal that are in waiting appreciation state"/>
-                        <separator orientation="vertical"/>
-                        <field name="employee_id" />
-                        <field name="plan_id" widget="selection" />
-                    </group>
-                    <newline/>
+                    <field name="date"/>
+                    <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Appraisal that are in Plan In Progress state"/>
+                    <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Appraisal that are in waiting appreciation state"/>
+                    <field name="employee_id" />
+                    <field name="plan_id"/>
                     <group expand='0' string='Group by...'>
                         <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by' : 'employee_id'}" />
-                        <separator orientation="vertical"/>
                         <filter string='Plan' icon="terp-stock_align_left_24" domain="[]" context="{'group_by' : 'plan_id'}" />
                         <filter string='Status' icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
-                        <separator orientation="vertical"/>
                         <filter string='Date' icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
                    </group>
                </search>
@@ -281,7 +270,6 @@
                         <button string="Cancel" name="survey_req_cancel" states="draft,waiting_answer" type="object" icon="gtk-cancel"/>
                         <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
                         <button name="action_print_survey" string="Print Survey" type="object" states="draft" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
-                        <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
                         <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" states="waiting_answer" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="waiting_answer,done"/>
                     </header>
@@ -330,20 +318,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
-                   <group>
-                        <field name="date_deadline"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
-                        <separator orientation="vertical"/>
-                        <field name="user_to_review_id"/>
-                        <field name="user_id" string="Interviewer"/>
-                   </group>
-                   <newline/>
+                    <field name="date_deadline"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
+                    <field name="user_to_review_id"/>
+                    <field name="user_id" string="Interviewer"/>
                     <group expand="0" string="Group By...">
                         <filter string="Interviewer" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'survey_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                </search>

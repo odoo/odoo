@@ -28,7 +28,7 @@
                         <field name="place_of_birth"/>
                     </field>
                     <field name="bank_account_id" position="replace">
-                        <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
+                        <field name="bank_account_id" context="{'display_partner':True}"/>
                     </field>
                 </data>
             </field>
@@ -40,22 +40,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract">
-                   <group>
-                       <field name="name" string="Contracts"/>
-                       <separator orientation="vertical"/>
-                       <field name="date_start"/>
-                       <field name="date_end"/>
-                       <separator orientation="vertical"/>
-                       <field name="employee_id"/>
-                       <field name="working_hours"/>
-                   </group>
-                   <newline/>
+                   <field name="name" string="Contracts"/>
+                   <field name="date_start"/>
+                   <field name="date_end"/>
+                   <field name="working_hours"/>
+                   <field name="employee_id"/>
                    <group expand="0" string="Group By...">
                        <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                       <separator orientation="vertical"/>
                        <filter string="Working Schedule" icon="terp-go-week" domain="[]" context="{'group_by':'working_hours'}"/>
                        <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                       <separator orientation="vertical"/>
                        <filter string="Contract Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
                    </group>
                </search>
@@ -174,9 +167,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract Type">
-                   <group>
-                       <field name="name" string="Contract Type"/>
-                   </group>
+                    <field name="name" string="Contract Type"/>
                </search>
             </field>
         </record>

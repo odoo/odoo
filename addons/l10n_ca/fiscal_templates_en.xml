@@ -39,354 +39,618 @@
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
     </record>
 
+        <!-- PURCHASES TAXES -->
+
     <!--  Alberta Fiscal Position Tax Templates (default is gst) -->
 
-    <record id="fiscal_position_tax_template_21_ab_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_21_en"/>
-        <field name="tax_src_id" ref="gst_en"/>
-        <field name="tax_dest_id" ref="hst12_en"/>
+    <record id="fiscal_position_tax_template_21_ab_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="gst_purc_en" />
+        <field name="tax_dest_id" ref="hst12_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_22_ab_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_22_en"/>
-        <field name="tax_src_id" ref="gst_en"/>
-        <field name="tax_dest_id" ref="hst13_en"/>
+    <record id="fiscal_position_tax_template_22_ab_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="gst_purc_en" />
+        <field name="tax_dest_id" ref="hst13_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_23_ab_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_23_en"/>
-        <field name="tax_src_id" ref="gst_en"/>
-        <field name="tax_dest_id" ref="hst135_en"/>
+    <record id="fiscal_position_tax_template_23_ab_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="gst_purc_en" />
+        <field name="tax_dest_id" ref="hst135_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_24_ab_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_24_en"/>
-        <field name="tax_src_id" ref="gst_en"/>
-        <field name="tax_dest_id" ref="hst15_en"/>
+    <record id="fiscal_position_tax_template_24_ab_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="gst_purc_en" />
+        <field name="tax_dest_id" ref="hst15_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_4_ab_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4_en"/>
-        <field name="tax_src_id" ref="gst_en"/>
-        <field name="tax_dest_id" ref="notax_en"/>
+    <record id="fiscal_position_tax_template_4_ab_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="gst_purc_en" />
     </record>
 
     <!--  British Columbia Fiscal Position Tax Templates (default is hst12) -->
 
-    <record id="fiscal_position_tax_template_22_12c_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_22_en"/>
-        <field name="tax_src_id" ref="hst12_en"/>
-        <field name="tax_dest_id" ref="hst13_en"/>
+    <record id="fiscal_position_tax_template_22_12_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="hst12_purc_en" />
+        <field name="tax_dest_id" ref="hst13_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_23_12_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_23_en"/>
-        <field name="tax_src_id" ref="hst12_en"/>
-        <field name="tax_dest_id" ref="hst135_en"/>
+    <record id="fiscal_position_tax_template_23_12_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="hst12_purc_en" />
+        <field name="tax_dest_id" ref="hst135_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_24_12_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_24_en"/>
-        <field name="tax_src_id" ref="hst12_en"/>
-        <field name="tax_dest_id" ref="hst15_en"/>
+    <record id="fiscal_position_tax_template_24_12_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="hst12_purc_en" />
+        <field name="tax_dest_id" ref="hst15_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_3_12_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3_en"/>
-        <field name="tax_src_id" ref="hst12_en"/>
-        <field name="tax_dest_id" ref="gst_en"/>
+    <record id="fiscal_position_tax_template_3_12_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="hst12_purc_en" />
+        <field name="tax_dest_id" ref="gst_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_4_12_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4_en"/>
-        <field name="tax_src_id" ref="hst12_en"/>
-        <field name="tax_dest_id" ref="notax_en"/>
+    <record id="fiscal_position_tax_template_4_12_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="hst12_purc_en" />
     </record>
 
     <!--  Manitoba Fiscal Position Tax Templates (default is gstpst_mb) -->
 
-    <record id="fiscal_position_tax_template_21_mb_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_21_en"/>
-        <field name="tax_src_id" ref="gstpst_mb_en"/>
-        <field name="tax_dest_id" ref="hst12_en"/>
+    <record id="fiscal_position_tax_template_21_mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_purc_en" />
+        <field name="tax_dest_id" ref="hst12_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_22_mb_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_22_en"/>
-        <field name="tax_src_id" ref="gstpst_mb_en"/>
-        <field name="tax_dest_id" ref="hst13_en"/>
+    <record id="fiscal_position_tax_template_22_mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_purc_en" />
+        <field name="tax_dest_id" ref="hst13_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_23_mb_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_23_en"/>
-        <field name="tax_src_id" ref="gstpst_mb_en"/>
-        <field name="tax_dest_id" ref="hst135_en"/>
+    <record id="fiscal_position_tax_template_23_mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_purc_en" />
+        <field name="tax_dest_id" ref="hst135_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_24_mb_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_24_en"/>
-        <field name="tax_src_id" ref="gstpst_mb_en"/>
-        <field name="tax_dest_id" ref="hst15_en"/>
+    <record id="fiscal_position_tax_template_24_mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_purc_en" />
+        <field name="tax_dest_id" ref="hst15_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_3_mb_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3_en"/>
-        <field name="tax_src_id" ref="gstpst_mb_en"/>
-        <field name="tax_dest_id" ref="gst_en"/>
+    <record id="fiscal_position_tax_template_3_mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_purc_en" />
+        <field name="tax_dest_id" ref="gst_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_4_mb_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4_en"/>
-        <field name="tax_src_id" ref="gstpst_mb_en"/>
-        <field name="tax_dest_id" ref="notax_en"/>
+    <record id="fiscal_position_tax_template_4_mb_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_purc_en" />
     </record>
 
     <!--  New Brunswick, Newfoundland and Labrador and Ontario Fiscal Position Tax Templates (default is hst13) -->
 
-    <record id="fiscal_position_tax_template_21_13_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_21_en"/>
-        <field name="tax_src_id" ref="hst13_en"/>
-        <field name="tax_dest_id" ref="hst12_en"/>
+    <record id="fiscal_position_tax_template_21_13_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="hst13_purc_en" />
+        <field name="tax_dest_id" ref="hst12_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_23_13_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_23_en"/>
-        <field name="tax_src_id" ref="hst13_en"/>
-        <field name="tax_dest_id" ref="hst135_en"/>
+    <record id="fiscal_position_tax_template_23_13_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="hst13_purc_en" />
+        <field name="tax_dest_id" ref="hst135_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_24_13_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_24_en"/>
-        <field name="tax_src_id" ref="hst13_en"/>
-        <field name="tax_dest_id" ref="hst15_en"/>
+    <record id="fiscal_position_tax_template_24_13_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="hst13_purc_en" />
+        <field name="tax_dest_id" ref="hst15_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_3_13_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3_en"/>
-        <field name="tax_src_id" ref="hst13_en"/>
-        <field name="tax_dest_id" ref="gst_en"/>
+    <record id="fiscal_position_tax_template_3_13_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="hst13_purc_en" />
+        <field name="tax_dest_id" ref="gst_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_4_13_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4_en"/>
-        <field name="tax_src_id" ref="hst13_en"/>
-        <field name="tax_dest_id" ref="notax_en"/>
+    <record id="fiscal_position_tax_template_4_13_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="hst13_purc_en" />
     </record>
 
     <!--  Nova Scotia Fiscal Position Tax Templates (default is hst15) -->
 
-    <record id="fiscal_position_tax_template_21_15_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_21_en"/>
-        <field name="tax_src_id" ref="hst15_en"/>
-        <field name="tax_dest_id" ref="hst12_en"/>
+    <record id="fiscal_position_tax_template_21_15_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="hst15_purc_en" />
+        <field name="tax_dest_id" ref="hst12_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_22_15_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_22_en"/>
-        <field name="tax_src_id" ref="hst15_en"/>
-        <field name="tax_dest_id" ref="hst13_en"/>
+    <record id="fiscal_position_tax_template_22_15_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="hst15_purc_en" />
+        <field name="tax_dest_id" ref="hst13_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_23_15_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_23_en"/>
-        <field name="tax_src_id" ref="hst15_en"/>
-        <field name="tax_dest_id" ref="hst135_en"/>
+    <record id="fiscal_position_tax_template_23_15_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="hst15_purc_en" />
+        <field name="tax_dest_id" ref="hst135_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_3_15_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3_en"/>
-        <field name="tax_src_id" ref="hst15_en"/>
-        <field name="tax_dest_id" ref="gst_en"/>
+    <record id="fiscal_position_tax_template_3_15_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="hst15_purc_en" />
+        <field name="tax_dest_id" ref="gst_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_4_15_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4_en"/>
-        <field name="tax_src_id" ref="hst15_en"/>
-        <field name="tax_dest_id" ref="notax_en"/>
+    <record id="fiscal_position_tax_template_4_15_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="hst15_purc_en" />
     </record>
 
     <!--  Prince Edward Island Fiscal Position Tax Templates (default is gstpst_pe)-->
 
-    <record id="fiscal_position_tax_template_21_pe_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_21_en"/>
-        <field name="tax_src_id" ref="gstpst_pe_en"/>
-        <field name="tax_dest_id" ref="hst12_en"/>
+    <record id="fiscal_position_tax_template_21_pe_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_purc_en" />
+        <field name="tax_dest_id" ref="hst12_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_22_pe_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_22_en"/>
-        <field name="tax_src_id" ref="gstpst_pe_en"/>
-        <field name="tax_dest_id" ref="hst13_en"/>
+    <record id="fiscal_position_tax_template_22_pe_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_purc_en" />
+        <field name="tax_dest_id" ref="hst13_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_23_pe_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_23_en"/>
-        <field name="tax_src_id" ref="gstpst_pe_en"/>
-        <field name="tax_dest_id" ref="hst135_en"/>
+    <record id="fiscal_position_tax_template_23_pe_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_purc_en" />
+        <field name="tax_dest_id" ref="hst135_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_24_pe_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_24_en"/>
-        <field name="tax_src_id" ref="gstpst_pe_en"/>
-        <field name="tax_dest_id" ref="hst15_en"/>
+    <record id="fiscal_position_tax_template_24_pe_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_purc_en" />
+        <field name="tax_dest_id" ref="hst15_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_3_pe_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3_en"/>
-        <field name="tax_src_id" ref="gstpst_pe_en"/>
-        <field name="tax_dest_id" ref="gst_en"/>
+    <record id="fiscal_position_tax_template_3_pe_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_purc_en" />
+        <field name="tax_dest_id" ref="gst_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_4_qc_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4_en"/>
-        <field name="tax_src_id" ref="gstpst_pe_en"/>
-        <field name="tax_dest_id" ref="notax_en"/>
+    <record id="fiscal_position_tax_template_4_qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_purc_en" />
     </record>
 
-    <!--  Quebec Fiscal Position Tax Templates (default is gstpst_qc)-->
+    <!--  Quebec Fiscal Position Tax Templates (default is gsttvq)-->
 
-    <record id="fiscal_position_tax_template_21_qc_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_21_en"/>
-        <field name="tax_src_id" ref="gstpst_qc_en"/>
-        <field name="tax_dest_id" ref="hst12_en"/>
+    <record id="fiscal_position_tax_template_21_qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="gsttvq_purc_en" />
+        <field name="tax_dest_id" ref="hst12_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_22_qc_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_22_en"/>
-        <field name="tax_src_id" ref="gstpst_qc_en"/>
-        <field name="tax_dest_id" ref="hst13_en"/>
+    <record id="fiscal_position_tax_template_22_qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="gsttvq_purc_en" />
+        <field name="tax_dest_id" ref="hst13_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_24_qc_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_24_en"/>
-        <field name="tax_src_id" ref="gstpst_qc_en"/>
-        <field name="tax_dest_id" ref="hst15_en"/>
+    <record id="fiscal_position_tax_template_24_qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="gsttvq_purc_en" />
+        <field name="tax_dest_id" ref="hst15_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_3_qc_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3_en"/>
-        <field name="tax_src_id" ref="gstpst_qc_en"/>
-        <field name="tax_dest_id" ref="gst_en"/>
+    <record id="fiscal_position_tax_template_3_qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="gsttvq_purc_en" />
+        <field name="tax_dest_id" ref="gst_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_4_qc_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4_en"/>
-        <field name="tax_src_id" ref="gstpst_qc_en"/>
-        <field name="tax_dest_id" ref="notax_en"/>
+    <record id="fiscal_position_tax_template_4_qc_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="gsttvq_purc_en" />
     </record>
 
     <!--  Saskatchewan Fiscal Position Tax Templates (default is gstpst_sk)-->
 
-    <record id="fiscal_position_tax_template_21_sk_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_21_en"/>
-        <field name="tax_src_id" ref="gstpst_sk_en"/>
-        <field name="tax_dest_id" ref="hst12_en"/>
+    <record id="fiscal_position_tax_template_21_sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_purc_en" />
+        <field name="tax_dest_id" ref="hst12_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_22_sk_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_22_en"/>
-        <field name="tax_src_id" ref="gstpst_sk_en"/>
-        <field name="tax_dest_id" ref="hst13_en"/>
+    <record id="fiscal_position_tax_template_22_sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_purc_en" />
+        <field name="tax_dest_id" ref="hst13_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_23_sk_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_23_en"/>
-        <field name="tax_src_id" ref="gstpst_sk_en"/>
-        <field name="tax_dest_id" ref="hst135_en"/>
+    <record id="fiscal_position_tax_template_23_sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_purc_en" />
+        <field name="tax_dest_id" ref="hst135_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_24_sk_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_24_en"/>
-        <field name="tax_src_id" ref="gstpst_sk_en"/>
-        <field name="tax_dest_id" ref="hst15_en"/>
+    <record id="fiscal_position_tax_template_24_sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_purc_en" />
+        <field name="tax_dest_id" ref="hst15_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_3_sk_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_3_en"/>
-        <field name="tax_src_id" ref="gstpst_sk_en"/>
-        <field name="tax_dest_id" ref="gst_en"/>
+    <record id="fiscal_position_tax_template_3_sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_purc_en" />
+        <field name="tax_dest_id" ref="gst_purc_en" />
     </record>
 
-    <record id="fiscal_position_tax_template_4_sk_en" model="account.fiscal.position.tax.template">
-        <field name="position_id" ref="fiscal_position_template_4_en"/>
-        <field name="tax_src_id" ref="gstpst_sk_en"/>
-        <field name="tax_dest_id" ref="notax_en"/>
+    <record id="fiscal_position_tax_template_4_sk_purc_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_purc_en" />
     </record>
 
-    <!-- Fiscal Position Account Templates - Incomes -->
 
-    <record id="fiscal_position_account_template_21_income_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_21_en"/>
-        <field name="account_src_id" ref="chart411_en"/>
-        <field name="account_dest_id" ref="chart412_en"/>
+        <!-- SALES TAXES -->
+
+
+    <!--  Alberta Fiscal Position Tax Templates (default is gst) -->
+
+    <record id="fiscal_position_tax_template_21_ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="gst_sale_en" />
+        <field name="tax_dest_id" ref="hst12_sale_en" />
     </record>
 
-    <record id="fiscal_position_account_template_22_income_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_22_en"/>
-        <field name="account_src_id" ref="chart411_en"/>
-        <field name="account_dest_id" ref="chart412_en"/>
+    <record id="fiscal_position_tax_template_22_ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="gst_sale_en" />
+        <field name="tax_dest_id" ref="hst13_sale_en" />
     </record>
 
-    <record id="fiscal_position_account_template_23_income_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_23_en"/>
-        <field name="account_src_id" ref="chart411_en"/>
-        <field name="account_dest_id" ref="chart412_en"/>
+    <record id="fiscal_position_tax_template_23_ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="gst_sale_en" />
+        <field name="tax_dest_id" ref="hst135_sale_en" />
     </record>
 
-    <record id="fiscal_position_account_template_24_income_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_24_en"/>
-        <field name="account_src_id" ref="chart411_en"/>
-        <field name="account_dest_id" ref="chart412_en"/>
+    <record id="fiscal_position_tax_template_24_ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="gst_sale_en" />
+        <field name="tax_dest_id" ref="hst15_sale_en" />
     </record>
 
-    <record id="fiscal_position_account_template_3_income_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_3_en"/>
-        <field name="account_src_id" ref="chart411_en"/>
-        <field name="account_dest_id" ref="chart413_en"/>
+    <record id="fiscal_position_tax_template_4_ab_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="gst_sale_en" />
     </record>
 
-    <record id="fiscal_position_account_template_4_income_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_4_en"/>
-        <field name="account_src_id" ref="chart411_en"/>
-        <field name="account_dest_id" ref="chart414_en"/>
+    <!--  British Columbia Fiscal Position Tax Templates (default is hst12) -->
+
+    <record id="fiscal_position_tax_template_22_12c_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="hst12_sale_en" />
+        <field name="tax_dest_id" ref="hst13_sale_en" />
     </record>
 
-    <!-- Fiscal Position Account Templates - Expenses -->
-
-    <record id="fiscal_position_account_template_21_expense_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_21_en"/>
-        <field name="account_src_id" ref="chart5111_en"/>
-        <field name="account_dest_id" ref="chart5112_en"/>
+    <record id="fiscal_position_tax_template_23_12_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="hst12_sale_en" />
+        <field name="tax_dest_id" ref="hst135_sale_en" />
     </record>
 
-    <record id="fiscal_position_account_template_22_expense_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_22_en"/>
-        <field name="account_src_id" ref="chart5111_en"/>
-        <field name="account_dest_id" ref="chart5112_en"/>
+    <record id="fiscal_position_tax_template_24_12_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="hst12_sale_en" />
+        <field name="tax_dest_id" ref="hst15_sale_en" />
     </record>
 
-    <record id="fiscal_position_account_template_23_expense_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_23_en"/>
-        <field name="account_src_id" ref="chart5111_en"/>
-        <field name="account_dest_id" ref="chart5112_en"/>
+    <record id="fiscal_position_tax_template_3_12_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="hst12_sale_en" />
+        <field name="tax_dest_id" ref="gst_sale_en" />
     </record>
 
-    <record id="fiscal_position_account_template_24_expense_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_24_en"/>
-        <field name="account_src_id" ref="chart5111_en"/>
-        <field name="account_dest_id" ref="chart5112_en"/>
+    <record id="fiscal_position_tax_template_4_12_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="hst12_sale_en" />
     </record>
 
-    <record id="fiscal_position_account_template_3_expense_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_3_en"/>
-        <field name="account_src_id" ref="chart5111_en"/>
-        <field name="account_dest_id" ref="chart5113_en"/>
+    <!--  Manitoba Fiscal Position Tax Templates (default is gstpst_mb) -->
+
+    <record id="fiscal_position_tax_template_21_mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_sale_en" />
+        <field name="tax_dest_id" ref="hst12_sale_en" />
     </record>
 
-    <record id="fiscal_position_account_template_4_expense_en" model="account.fiscal.position.account.template">
-        <field name="position_id" ref="fiscal_position_template_4_en"/>
-        <field name="account_src_id" ref="chart5111_en"/>
-        <field name="account_dest_id" ref="chart5114_en"/>
+    <record id="fiscal_position_tax_template_22_mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_sale_en" />
+        <field name="tax_dest_id" ref="hst13_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_sale_en" />
+        <field name="tax_dest_id" ref="hst135_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_sale_en" />
+        <field name="tax_dest_id" ref="hst15_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_sale_en" />
+        <field name="tax_dest_id" ref="gst_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_mb_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="gstpst_mb_sale_en" />
+    </record>
+
+    <!--  New Brunswick, Newfoundland and Labrador and Ontario Fiscal Position Tax Templates (default is hst13) -->
+
+    <record id="fiscal_position_tax_template_21_13_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="hst13_sale_en" />
+        <field name="tax_dest_id" ref="hst12_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_13_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="hst13_sale_en" />
+        <field name="tax_dest_id" ref="hst135_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_13_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="hst13_sale_en" />
+        <field name="tax_dest_id" ref="hst15_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_13_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="hst13_sale_en" />
+        <field name="tax_dest_id" ref="gst_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_13_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="hst13_sale_en" />
+    </record>
+
+    <!--  Nova Scotia Fiscal Position Tax Templates (default is hst15) -->
+
+    <record id="fiscal_position_tax_template_21_15_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="hst15_sale_en" />
+        <field name="tax_dest_id" ref="hst12_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_22_15_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="hst15_sale_en" />
+        <field name="tax_dest_id" ref="hst13_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_15_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="hst15_sale_en" />
+        <field name="tax_dest_id" ref="hst135_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_15_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="hst15_sale_en" />
+        <field name="tax_dest_id" ref="gst_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_15_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="hst15_sale_en" />
+    </record>
+
+    <!--  Prince Edward Island Fiscal Position Tax Templates (default is gstpst_pe)-->
+
+    <record id="fiscal_position_tax_template_21_pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_sale_en" />
+        <field name="tax_dest_id" ref="hst12_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_22_pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_sale_en" />
+        <field name="tax_dest_id" ref="hst13_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_sale_en" />
+        <field name="tax_dest_id" ref="hst135_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_sale_en" />
+        <field name="tax_dest_id" ref="hst15_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_pe_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_sale_en" />
+        <field name="tax_dest_id" ref="gst_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="gstpst_pe_sale_en" />
+    </record>
+
+    <!--  Quebec Fiscal Position Tax Templates (default is gsttvq)-->
+
+    <record id="fiscal_position_tax_template_21_qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="gsttvq_sale_en" />
+        <field name="tax_dest_id" ref="hst12_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_22_qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="gsttvq_sale_en" />
+        <field name="tax_dest_id" ref="hst13_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="gsttvq_sale_en" />
+        <field name="tax_dest_id" ref="hst15_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="gsttvq_sale_en" />
+        <field name="tax_dest_id" ref="gst_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_qc_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="gsttvq_sale_en" />
+    </record>
+
+    <!--  Saskatchewan Fiscal Position Tax Templates (default is gstpst_sk)-->
+
+    <record id="fiscal_position_tax_template_21_sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_sale_en" />
+        <field name="tax_dest_id" ref="hst12_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_22_sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_sale_en" />
+        <field name="tax_dest_id" ref="hst13_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_23_sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_sale_en" />
+        <field name="tax_dest_id" ref="hst135_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_24_sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_sale_en" />
+        <field name="tax_dest_id" ref="hst15_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_3_sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_sale_en" />
+        <field name="tax_dest_id" ref="gst_sale_en" />
+    </record>
+
+    <record id="fiscal_position_tax_template_4_sk_sale_en" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="tax_src_id" ref="gstpst_sk_sale_en" />
+    </record>
+
+    <!-- Fiscal Position Account Templates - Products -->
+
+    <record id="fiscal_position_product_template_21_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="account_src_id" ref="chart411_en" />
+        <field name="account_dest_id" ref="chart412_en" />
+    </record>
+
+    <record id="fiscal_position_product_template_22_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="account_src_id" ref="chart411_en" />
+        <field name="account_dest_id" ref="chart412_en" />
+    </record>
+
+    <record id="fiscal_position_product_template_23_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="account_src_id" ref="chart411_en" />
+        <field name="account_dest_id" ref="chart412_en" />
+    </record>
+
+    <record id="fiscal_position_product_template_24_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="account_src_id" ref="chart411_en" />
+        <field name="account_dest_id" ref="chart412_en" />
+    </record>
+
+    <record id="fiscal_position_product_template_3_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="account_src_id" ref="chart411_en" />
+        <field name="account_dest_id" ref="chart413_en" />
+    </record>
+
+    <record id="fiscal_position_product_template_4_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="account_src_id" ref="chart411_en" />
+        <field name="account_dest_id" ref="chart414_en" />
+    </record>
+
+    <!-- Fiscal Position Account Templates - Charges -->
+
+    <record id="fiscal_position_charge_template_21_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_21_en"  />
+        <field name="account_src_id" ref="chart5111_en" />
+        <field name="account_dest_id" ref="chart5112_en" />
+    </record>
+
+    <record id="fiscal_position_charge_template_22_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_22_en"  />
+        <field name="account_src_id" ref="chart5111_en" />
+        <field name="account_dest_id" ref="chart5112_en" />
+    </record>
+
+    <record id="fiscal_position_charge_template_23_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_23_en"  />
+        <field name="account_src_id" ref="chart5111_en" />
+        <field name="account_dest_id" ref="chart5112_en" />
+    </record>
+
+    <record id="fiscal_position_charge_template_24_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_24_en"  />
+        <field name="account_src_id" ref="chart5111_en" />
+        <field name="account_dest_id" ref="chart5112_en" />
+    </record>
+
+    <record id="fiscal_position_charge_template_3_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3_en"  />
+        <field name="account_src_id" ref="chart5111_en" />
+        <field name="account_dest_id" ref="chart5113_en" />
+    </record>
+
+    <record id="fiscal_position_charge_template_4_en" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_4_en"  />
+        <field name="account_src_id" ref="chart5111_en" />
+        <field name="account_dest_id" ref="chart5114_en" />
     </record>
 
     </data>

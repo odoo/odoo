@@ -29,6 +29,8 @@ import pooler
 from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
+from tools.float_utils import float_round
+
 _logger = logging.getLogger(__name__)
 
 def check_cycle(self, cr, uid, ids, context=None):
@@ -313,8 +315,8 @@ class account_account(osv.osv):
             cr.execute(request, params)
             _logger.debug('Status: %s',(cr.statusmessage))
 
-            for res in cr.dictfetchall():
-                accounts[res['id']] = res
+            for row in cr.dictfetchall():
+                accounts[row['id']] = row
 
             # consolidate accounts with direct children
             children_and_consolidated.reverse()
@@ -2090,7 +2092,7 @@ class account_tax(osv.osv):
         tax_compute_precision = precision
         if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
             tax_compute_precision += 5
-        totalin = totalex = round(price_unit * quantity, precision)
+        totalin = totalex = float_round(price_unit * quantity, precision)
         tin = []
         tex = []
         for tax in taxes:

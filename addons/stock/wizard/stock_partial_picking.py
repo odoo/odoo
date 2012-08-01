@@ -98,9 +98,15 @@ class stock_partial_picking(osv.osv_memory):
         if context is None: context = {}
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         picking_ids = context.get('active_ids', [])
-        if context['active_model'] == 'purchase.order':
+        active_model = context.get('active_model')
+
+        if active_model == 'purchase.order':
             for purchase_order in self.pool.get('purchase.order').browse(cr, uid, picking_ids, context=context):
                 picking_ids = [picking_id.id for picking_id in purchase_order.picking_ids]
+        elif active_model == 'sale.order':
+            for sale_order in self.pool.get('sale.order').browse(cr, uid, picking_ids, context=context):
+                picking_ids = [picking.id for picking in sale_order.picking_ids]
+
         if not picking_ids or len(picking_ids) != 1:
             # Partial Picking Processing may only be done for one picking at a time
             return res
@@ -108,7 +114,7 @@ class stock_partial_picking(osv.osv_memory):
         # (already seen in previous bug where context passed was containing ir.ui.menu as active_model and the menu 
         # ID as active_id). Though this should be fixed in clients now, this place is sensitive enough to ensure the
         # consistancy of the context.
-        assert context.get('active_model') in ('stock.picking', 'stock.picking.in', 'stock.picking.out', 'purchase.order'), 'Bad context propagation'
+        assert active_model in ('stock.picking', 'stock.picking.in', 'stock.picking.out', 'purchase.order', 'sale.order'), 'Bad context propagation'
         picking_id, = picking_ids
         if 'picking_id' in fields:
             res.update(picking_id=picking_id)

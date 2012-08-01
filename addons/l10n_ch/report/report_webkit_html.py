@@ -20,22 +20,31 @@
 ##############################################################################
 
 import time
-from report import report_sxw
-from report_webkit import webkit_report
-from report_webkit import report_helper 
-from osv import osv
-from tools import mod10r
 import sys
 import os
 import re
+
+from mako.template import Template
+from mako.lookup import TemplateLookup
+from mako import exceptions
+
+
+from report import report_sxw
+from report_webkit import webkit_report
+from report_webkit import report_helper 
+
+from osv import osv
+from osv.osv import except_osv
+
+from tools import mod10r
+from tools.translate import _
+from tools.config import config
+
 import wizard
 import addons
 import pooler
-from tools.config import config
-from mako.template import Template
-from mako import exceptions
-from tools.translate import _
-from osv.osv import except_osv
+
+
 
 
 class l10n_ch_report_webkit_html(report_sxw.rml_parse):
@@ -143,53 +152,26 @@ class l10n_ch_report_webkit_html(report_sxw.rml_parse):
                           'digits!\nPlease check your company '
                           'information for the invoice:\n%s') %(invoice_name)))
         return ''
+        
+def mako_template(text):
+    """Build a Mako template.
+
+    This template uses UTF-8 encoding
+    """
+    tmp_lookup  = TemplateLookup() #we need it in order to allow inclusion and inheritance
+    return Template(text, input_encoding='utf-8', output_encoding='utf-8', lookup=tmp_lookup)
 
 class BVRWebKitParser(webkit_report.WebKitParser):
     
-    def setLang(self, lang):
-        if not lang:
-            lang = 'en_US'
-        self.localcontext['lang'] = lang
-        
-    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False):
-        """format using the know cursor, language from localcontext"""
-        if digits is None:
-            digits = self.parser_instance.get_digits(value)
-        if isinstance(value, (str, unicode)) and not value:
-            return ''
-        pool_lang = self.pool.get('res.lang')
-        lang = self.localcontext['lang']
-
-        lang_ids = pool_lang.search(self.parser_instance.cr, self.parser_instance.uid, [('code','=',lang)])[0]
-        lang_obj = pool_lang.browse(self.parser_instance.cr, self.parser_instance.uid, lang_ids)
-
-        if date or date_time:
-            if not str(value):
-                return ''
-
-            date_format = lang_obj.date_format
-            parse_format = '%Y-%m-%d'
-            if date_time:
-                value=value.split('.')[0]
-                date_format = date_format + " " + lang_obj.time_format
-                parse_format = '%Y-%m-%d %H:%M:%S'
-            if not isinstance(value, time.struct_time):
-                return time.strftime(date_format, time.strptime(value, parse_format))
-
-            else:
-                date = datetime(*value.timetuple()[:6])
-            return date.strftime(date_format)
-
-        return lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
-    
     def create_single_pdf(self, cursor, uid, ids, data, report_xml, context=None):
         """generate the PDF"""
-        self.parser_instance = self.parser(
-                                            cursor, 
+        context = context or {}
+        if report_xml.report_type != 'webkit':
+            return super(WebKitParser,self).create_single_pdf(cursor, uid, ids, data, report_xml, context=context)
+        self.parser_instance = self.parser(cursor, 
                                             uid, 
                                             self.name2, 
-                                            context=context
-                                        )
+                                            context=context)
         self.pool = pooler.get_pool(cursor.dbname)
         objs = self.getObjects(cursor, uid, ids, context)
         self.parser_instance.set_context(objs, data, ids, report_xml.report_type)
@@ -201,7 +183,7 @@ class BVRWebKitParser(webkit_report.WebKitParser):
         if not template and report_xml.report_webkit_data :
             template =  report_xml.report_webkit_data
         if not template :
-            raise except_osv(_('Webkit Report template not found !'), _(''))
+            raise except_osv(_('Error'),_('Webkit Report template not found !'))
         header = report_xml.webkit_header.html
         footer = report_xml.webkit_header.footer_html
         if not header and report_xml.header:
@@ -210,43 +192,19 @@ class BVRWebKitParser(webkit_report.WebKitParser):
                 _('Please set a header in company settings.')
             )
         if not report_xml.header :
-            #I know it could be cleaner ...
-            header = u"""
-<html>
-    <head>
-        <style type="text/css"> 
-            ${css}
-        </style>
-        <script>
-        function subst() {
-           var vars={};
-           var x=document.location.search.substring(1).split('&');
-           for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
-           var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
-           for(var i in x) {
-             var y = document.getElementsByClassName(x[i]);
-             for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
-           }
-         }
-        </script>
-    </head>
-<body style="border:0; margin: 0;" onload="subst()">
-</body>
-</html>"""
-        self.parser_instance.localcontext.update({'setLang':self.setLang})
-        self.parser_instance.localcontext.update({'formatLang':self.formatLang})
+            header = ''
+            default_head = addons.get_module_resource('report_webkit', 'default_header.html')
+            with open(default_head,'r') as f:
+                header = f.read()
         css = report_xml.webkit_header.css
         if not css :
             css = ''
         user = self.pool.get('res.users').browse(cursor, uid, uid)
         company = user.company_id
-        parse_template = template
-        #default_filters=['unicode', 'entity'] can be used to set global filter
-        body_mako_tpl = Template(parse_template ,input_encoding='utf-8', output_encoding='utf-8')
+        body_mako_tpl = mako_template(template)
         #BVR specific
         bvr_path = addons.get_module_resource(os.path.join('l10n_ch','report','bvr.mako'))
-        body_bvr_tpl = Template(file(bvr_path).read(), input_encoding='utf-8', output_encoding='utf-8')
-
+        body_bvr_tpl = mako_template(file(bvr_path).read())
         helper = report_helper.WebKitHelper(cursor, uid, report_xml.id, context)
         ##BVR Specific
         htmls = []
@@ -254,58 +212,48 @@ class BVRWebKitParser(webkit_report.WebKitParser):
             self.parser_instance.localcontext['objects'] = [obj]
             if not company.bvr_only:
                 try:
-                    html = body_mako_tpl.render(
-                                                helper=helper, 
+                    html = body_mako_tpl.render(helper=helper, 
                                                 css=css,
                                                 _=self.translate_call,
-                                                **self.parser_instance.localcontext
-                                                )
+                                                **self.parser_instance.localcontext)
                 except Exception, e:
                    raise Exception(exceptions.text_error_template().render())
                 htmls.append(html)
             if not company.invoice_only:
                 try:
-                    bvr = body_bvr_tpl.render(
-                                        helper=helper, 
-                                        css=css,
-                                        _=self.translate_call,
-                                        **self.parser_instance.localcontext
-                                        )
+                    bvr = body_bvr_tpl.render(helper=helper, 
+                                              css=css,
+                                              _=self.translate_call,
+                                              **self.parser_instance.localcontext)
                 except Exception, e:
                    raise Exception(exceptions.text_error_template().render())
                 htmls.append(bvr)                            
         head_mako_tpl = Template(header, input_encoding='utf-8', output_encoding='utf-8')
         try:
-            head = head_mako_tpl.render(
-                                        helper=helper, 
+            head = head_mako_tpl.render(helper=helper, 
                                         css=css,
                                         _debug=False,
                                         _=self.translate_call,
-                                        **self.parser_instance.localcontext
-                                    )
+                                        **self.parser_instance.localcontext)
         except Exception, e:
            raise Exception(exceptions.text_error_template().render())
         foot = False
         if footer and company.invoice_only :
             foot_mako_tpl = Template(footer, input_encoding='utf-8', output_encoding='utf-8')
             try:
-                foot = foot_mako_tpl.render(
-                                            helper=helper, 
+                foot = foot_mako_tpl.render(helper=helper, 
                                             css=css, 
                                             _=self.translate_call,
-                                            **self.parser_instance.localcontext
-                                            )
+                                            **self.parser_instance.localcontext)
             except Exception, e:
                raise Exception(exceptions.text_error_template().render())
         if report_xml.webkit_debug :
             try:
-                deb = head_mako_tpl.render(
-                                            helper=helper, 
+                deb = head_mako_tpl.render(helper=helper, 
                                             css=css, 
                                             _debug=html,
                                             _=self.translate_call,
-                                            **self.parser_instance.localcontext
-                                            )
+                                            **self.parser_instance.localcontext)
             except Exception, e:
                raise Exception(exceptions.text_error_template().render())
             return (deb, 'html')

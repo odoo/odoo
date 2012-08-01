@@ -23,6 +23,7 @@ import time
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
+from openerp import SUPERUSER_ID
 
 class event_type(osv.osv):
     """ Event Type """
@@ -159,7 +160,7 @@ class event_event(osv.osv):
                 elif field == 'register_prospect':
                     number = reg_draft
                 elif field == 'register_avail':
-                    #the number of ticket is unlimited if the event.register_max field is not set. 
+                    #the number of ticket is unlimited if the event.register_max field is not set.
                     #In that cas we arbitrary set it to 9999, it is used in the kanban view to special case the display of the 'subscribe' button
                     number = event.register_max - reg_open if event.register_max != 0 else 9999
                 res[event.id][field] = number
@@ -178,7 +179,7 @@ class event_event(osv.osv):
                     if reg.state in ('open','done'):
                         res[event.id]= True
                         continue
-        return res 
+        return res
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
@@ -189,7 +190,7 @@ class event_event(osv.osv):
         'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_numbers'),
         'register_avail': fields.function(_get_register, string='Available Registrations', multi='register_numbers',type='integer'),
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_numbers'),
-        'register_attended': fields.function(_get_register, string='# of Participations', multi='register_numbers'), 
+        'register_attended': fields.function(_get_register, string='# of Participations', multi='register_numbers'),
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
         'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -227,18 +228,18 @@ class event_event(osv.osv):
         self.check_registration_limits_before(cr, uid, ids, num_of_seats, context=context)
         user = user_pool.browse(cr, uid, uid, context=context)
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
-        #the subscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to subscribe
+        #the subscription is done with SUPERUSER_ID because in case we share the kanban view, we want anyone to be able to subscribe
         if not curr_reg_ids:
-            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats})]
+            curr_reg_ids = [register_pool.create(cr, SUPERUSER_ID, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats})]
         else:
             register_pool.write(cr, uid, curr_reg_ids, {'nb_register': num_of_seats}, context=context)
-        return register_pool.confirm_registration(cr, 1, curr_reg_ids, context=context)
+        return register_pool.confirm_registration(cr, SUPERUSER_ID, curr_reg_ids, context=context)
 
     def unsubscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
-        #the unsubscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to unsubscribe
-        curr_reg_ids = register_pool.search(cr, 1, [('user_id', '=', uid), ('event_id', '=', ids[0])])
-        return register_pool.button_reg_cancel(cr, 1, curr_reg_ids, context=context)
+        #the unsubscription is done with SUPERUSER_ID because in case we share the kanban view, we want anyone to be able to unsubscribe
+        curr_reg_ids = register_pool.search(cr, SUPERUSER_ID, [('user_id', '=', uid), ('event_id', '=', ids[0])])
+        return register_pool.button_reg_cancel(cr, SUPERUSER_ID, curr_reg_ids, context=context)
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
@@ -260,7 +261,7 @@ class event_event(osv.osv):
               'register_max': type_info.default_registration_max,
             }
             return {'value': dic}
-        
+
     # ----------------------------------------
     # OpenChatter methods and notifications
     # ----------------------------------------
@@ -415,7 +416,7 @@ class event_registration(osv.osv):
             return {}
         event_obj = self.pool.get('event.event')
         data_event =  event_obj.browse(cr, uid, event_id, context=context)
-        return {'value': 
+        return {'value':
                     {'event_begin_date': data_event.date_begin,
                      'event_end_date': data_event.date_end,
                      'company_id': data_event.company_id and data_event.company_id.id or False,

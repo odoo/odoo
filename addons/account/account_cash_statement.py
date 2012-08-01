@@ -32,7 +32,7 @@ class account_cashbox_line(osv.osv):
 
     _name = 'account.cashbox.line'
     _description = 'CashBox Line'
-    _rec_name = 'number'
+    _rec_name = 'pieces'
 
     def _sub_total(self, cr, uid, ids, name, arg, context=None):
 
@@ -332,7 +332,7 @@ account_journal()
 
 class account_journal_cashbox_line(osv.osv):
     _name = 'account.journal.cashbox.line'
-    _rec_name = 'value'
+    _rec_name = 'pieces'
     _columns = {
         'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
         'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1),

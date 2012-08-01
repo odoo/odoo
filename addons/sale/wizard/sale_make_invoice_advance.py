@@ -26,189 +26,198 @@ class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
     _description = "Sales Advance Payment Invoice"
 
-    def _default_product_id(self, cr, uid, context=None):
-        try:
-            product_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'advance_product_0')
-        except ValueError:
-            #a ValueError is returned if the xml id given is not found in the table ir_model_data
-            return False
-        return product_id[1]
-
     _columns = {
-        'product_id': fields.many2one('product.product', 'Advance Product', help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
-        'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Sale Price'), required=True, help="The amount to be invoiced in advance."),
+        'advance_payment_method':fields.selection(
+            [('all', 'All'), ('percentage','Percentage'), ('fixed','Fixed Price'),
+                ('lines', 'Some Order Lines')],
+            'Type', required=True,
+            help="""Use All to create the final invoice.
+                Use Percentage to invoice a percentage of the total amount.
+                Use Fixed Price to invoice a specific amound in advance.
+                Use Some Order Lines to invoice a selection of the sale order lines."""),
         'qtty': fields.float('Quantity', digits=(16, 2), required=True),
-        'advance_payment_method':fields.selection([('percentage','Percentage'), ('fixed','Fixed Price')], 'Type', required=True, help="Use Fixed Price if you want to give specific amount in Advance. Use Percentage if you want to give percentage of Total Invoice Amount."),
+        'product_id': fields.many2one('product.product', 'Advance Product',
+            help="""Select a product of type service which is called 'Advance Product'.
+                You may have to create it and set it as a default value on this field."""),
+        'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Sale Price'),
+            help="The amount to be invoiced in advance."),
     }
+
+    def _get_advance_product(self, cr, uid, context=None):
+        try:
+            product = self.pool.get('ir.model.data').get_object(cr, uid, 'sale', 'advance_product_0')
+        except ValueError:
+            # a ValueError is returned if the xml id given is not found in the table ir_model_data
+            return False
+        return product.id
 
     _defaults = {
+        'advance_payment_method': 'all',
         'qtty': 1.0,
-        'advance_payment_method': 'fixed',
-        'product_id': _default_product_id,
+        'product_id': _get_advance_product,
     }
 
-    def onchange_advance_payment_method(self, cr, uid, ids, advance_payment_method, product_id, context=None):
+    def onchange_method(self, cr, uid, ids, advance_payment_method, product_id, context=None):
         if advance_payment_method == 'percentage':
             return {'value': {'amount':0, 'product_id':False }}
-        if not product_id:
-            return {'value': {'amount': 0}}
-        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-        return {'value': {'amount': product.list_price}}
-
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            return {'value': {'amount': product.list_price}}
+        return {'value': {'amount': 0}}
 
     def create_invoices(self, cr, uid, ids, context=None):
-        """
-             To create invoices.
-
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one
-             @param context: A standard dictionary
-
-             @return:
-
-        """
-        list_inv = []
-        obj_sale = self.pool.get('sale.order')
-        obj_lines = self.pool.get('account.invoice.line')
-        inv_obj = self.pool.get('account.invoice')
+        """ create invoices for the active sale orders """
         if context is None:
             context = {}
+        wizard = self.browse(cr, uid, ids[0], context)
+        sale_ids = context.get('active_ids', [])
 
-        for sale_adv_obj in self.browse(cr, uid, ids, context=context):
-            for sale in obj_sale.browse(cr, uid, context.get('active_ids', []), context=context):
-                create_ids = []
-                ids_inv = []
-                if sale.order_policy == 'postpaid':
-                    raise osv.except_osv(
-                        _('Error'),
-                        _("You cannot make an advance on a sales order \
-                             that is defined as 'Automatic Invoice after delivery'."))
-                val = obj_lines.product_id_change(cr, uid, [], sale_adv_obj.product_id.id,
-                        uom = False, partner_id = sale.partner_id.id, fposition_id = sale.fiscal_position.id)
-                res = val['value']
+        if wizard.advance_payment_method == 'all':
+            # create the final invoices of the active sale orders
+            res = self.pool.get('sale.order').manual_invoice(cr, uid, sale_ids, context)
+            if context.get('open_invoices', False):
+                return res
+            return {'type': 'ir.actions.act_window_close'}
 
-                if not sale_adv_obj.product_id.id :
-                    prop = self.pool.get('ir.property').get(cr, uid,
-                                         'property_account_income_categ', 'product.category',
-                                         context=context)
-                    account_id = prop and prop.id or False
-                    account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, sale.fiscal_position.id or False, account_id)
-                    if not account_id:
-                        raise osv.except_osv(_('Configuration Error!'),
-                                _('Please define income account as global property.'))
-                    res['account_id'] = account_id
+        if wizard.advance_payment_method == 'lines':
+            # open the list view of sale order lines to invoice
+            act_window = self.pool.get('ir.actions.act_window')
+            res = act_window.for_xml_id(cr, uid, 'sale', 'action_order_line_tree2', context)
+            res['context'] = {
+                'search_default_uninvoiced': 1,
+                'search_default_order_id': sale_ids and sale_ids[0] or False,
+            }
+            return res
 
-                if not res.get('account_id'):
-                    raise osv.except_osv(_('Configuration Error!'),
-                                _('Please define income account ' \
-                                        'for this product: "%s" (id:%d).') % \
-                                        (sale_adv_obj.product_id.name, sale_adv_obj.product_id.id,))
+        assert wizard.advance_payment_method in ('fixed', 'percentage')
 
-                final_amount = 0
-                if sale_adv_obj.amount <= 0.00:
-                    raise osv.except_osv(_('Data Insufficient!'),
-                        _('Please check the Advance Amount, it should not be 0 or less!'))
-                if sale_adv_obj.advance_payment_method == 'percentage':
-                    final_amount = sale.amount_total * sale_adv_obj.amount / 100
-                    if not res.get('name'):
-                        res['name'] = _("Advance of %s %%") % (sale_adv_obj.amount)
-                else:
-                    final_amount = sale_adv_obj.amount
-                    if not res.get('name'):
-                        #TODO: should find a way to call formatLang() from rml_parse
-                        if sale.pricelist_id.currency_id.position == 'after':
-                            res['name'] = _("Advance of %s %s") % (final_amount, sale.pricelist_id.currency_id.symbol)
-                        else:
-                            res['name'] = _("Advance of %s %s") % (sale.pricelist_id.currency_id.symbol, final_amount)
+        sale_obj = self.pool.get('sale.order')
+        inv_obj = self.pool.get('account.invoice')
+        inv_line_obj = self.pool.get('account.invoice.line')
+        inv_ids = []
 
-                if res.get('invoice_line_tax_id'):
-                    res['invoice_line_tax_id'] = [(6, 0, res.get('invoice_line_tax_id'))]
-                else:
-                    res['invoice_line_tax_id'] = False
+        for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
+            if sale.order_policy == 'postpaid':
+                raise osv.except_osv(
+                    _('Error'),
+                    _("You cannot make an advance on a sales order \
+                         that is defined as 'Automatic Invoice after delivery'."))
 
-                line_id = obj_lines.create(cr, uid, {
+            val = inv_line_obj.product_id_change(cr, uid, [], wizard.product_id.id,
+                    uom=False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
+            res = val['value']
+
+            # determine and check income account
+            if not wizard.product_id.id :
+                prop = self.pool.get('ir.property').get(cr, uid,
+                            'property_account_income_categ', 'product.category', context=context)
+                prop_id = prop and prop.id or False
+                account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, sale.fiscal_position.id or False, prop_id)
+                if not account_id:
+                    raise osv.except_osv(_('Configuration Error !'),
+                            _('There is no income account defined as global property.'))
+                res['account_id'] = account_id
+            if not res.get('account_id'):
+                raise osv.except_osv(_('Configuration Error !'),
+                        _('There is no income account defined for this product: "%s" (id:%d)') % \
+                            (wizard.product_id.name, wizard.product_id.id,))
+
+            # determine invoice amount
+            if wizard.amount <= 0.00:
+                raise osv.except_osv(_('Incorrect Data'),
+                    _('The value of Advance Amount must be positive.'))
+            if wizard.advance_payment_method == 'percentage':
+                inv_amount = sale.amount_total * wizard.amount / 100
+                if not res.get('name'):
+                    res['name'] = _("Advance of %s %%") % (wizard.amount)
+            else:
+                inv_amount = wizard.amount
+                if not res.get('name'):
+                    #TODO: should find a way to call formatLang() from rml_parse
+                    symbol = sale.pricelist_id.currency_id.symbol
+                    if sale.pricelist_id.currency_id.position == 'after':
+                        res['name'] = _("Advance of %s %s") % (inv_amount, symbol)
+                    else:
+                        res['name'] = _("Advance of %s %s") % (symbol, inv_amount)
+
+            # determine taxes
+            if res.get('invoice_line_tax_id'):
+                res['invoice_line_tax_id'] = [(6, 0, res.get('invoice_line_tax_id'))]
+            else:
+                res['invoice_line_tax_id'] = False
+
+            # create the invoice
+            inv_line_values = {
+                'name': res.get('name'),
+                'account_id': res['account_id'],
+                'price_unit': inv_amount,
+                'quantity': wizard.qtty or 1.0,
+                'discount': False,
+                'uos_id': res.get('uos_id', False),
+                'product_id': wizard.product_id.id,
+                'invoice_line_tax_id': res.get('invoice_line_tax_id'),
+                'account_analytic_id': sale.project_id.id or False,
+            }
+            inv_values = {
+                'name': sale.client_order_ref or sale.name,
+                'origin': sale.name,
+                'type': 'out_invoice',
+                'reference': False,
+                'account_id': sale.partner_id.property_account_receivable.id,
+                'partner_id': sale.partner_id.id,
+                'invoice_line': [(0, 0, inv_line_values)],
+                'currency_id': sale.pricelist_id.currency_id.id,
+                'comment': '',
+                'payment_term': sale.payment_term.id,
+                'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id
+            }
+            inv_id = inv_obj.create(cr, uid, inv_values, context=context)
+            inv_obj.button_reset_taxes(cr, uid, [inv_id], context=context)
+            inv_ids.append(inv_id)
+
+            # add the invoice to the sale order's invoices
+            sale.write({'invoice_ids': [(4, inv_id)]})
+
+            # If invoice on picking: add the cost on the SO
+            # If not, the advance will be deduced when generating the final invoice
+            if sale.order_policy == 'picking':
+                vals = {
+                    'order_id': sale.id,
                     'name': res.get('name'),
-                    'account_id': res['account_id'],
-                    'price_unit': final_amount,
-                    'quantity': sale_adv_obj.qtty or 1.0,
+                    'price_unit': -inv_amount,
+                    'product_uom_qty': wizard.qtty or 1.0,
+                    'product_uos_qty': wizard.qtty or 1.0,
+                    'product_uos': res.get('uos_id', False),
+                    'product_uom': res.get('uom_id', False),
+                    'product_id': wizard.product_id.id or False,
                     'discount': False,
-                    'uos_id': res.get('uos_id', False),
-                    'product_id': sale_adv_obj.product_id.id,
-                    'invoice_line_tax_id': res.get('invoice_line_tax_id'),
-                    'account_analytic_id': sale.project_id.id or False,
-                    #'note':'',
-                })
-                create_ids.append(line_id)
-                inv = {
-                    'name': sale.client_order_ref or sale.name,
-                    'origin': sale.name,
-                    'type': 'out_invoice',
-                    'reference': False,
-                    'account_id': sale.partner_id.property_account_receivable.id,
-                    'partner_id': sale.partner_id.id,
-                    'invoice_line': [(6, 0, create_ids)],
-                    'currency_id': sale.pricelist_id.currency_id.id,
-                    'comment': '',
-                    'payment_term': sale.payment_term.id,
-                    'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id
+                    'tax_id': res.get('invoice_line_tax_id'),
                 }
+                self.pool.get('sale.order.line').create(cr, uid, vals, context=context)
 
-                inv_id = inv_obj.create(cr, uid, inv)
-                inv_obj.button_reset_taxes(cr, uid, [inv_id], context=context)
-
-                for inv in sale.invoice_ids:
-                    ids_inv.append(inv.id)
-                ids_inv.append(inv_id)
-                obj_sale.write(cr, uid, [sale.id], {'invoice_ids': [(6, 0, ids_inv)]})
-                list_inv.append(inv_id)
-        #
-        # If invoice on picking: add the cost on the SO
-        # If not, the advance will be deduced when generating the final invoice
-        #
-                if sale.order_policy == 'picking':
-                    vals = {
-                        'order_id': sale.id,
-                        'name': res.get('name'),
-                        'price_unit': -final_amount,
-                        'product_uom_qty': sale_adv_obj.qtty or 1.0,
-                        'product_uos_qty': sale_adv_obj.qtty or 1.0,
-                        'product_uos': res.get('uos_id', False),
-                        'product_uom': res.get('uom_id', False),
-                        'product_id': sale_adv_obj.product_id.id or False,
-                        'discount': False,
-                        'tax_id': res.get('invoice_line_tax_id'),
-                    }
-                    self.pool.get('sale.order.line').create(cr, uid, vals, context=context)
-
-        context.update({'invoice_id':list_inv})
-
-        if context.get('open_invoices'):
-            return self.open_invoices( cr, uid, ids, context=context)
+        if context.get('open_invoices', False):
+            return self.open_invoices( cr, uid, ids, inv_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-    def open_invoices(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        mod_obj = self.pool.get('ir.model.data')
-        for advance_pay in self.browse(cr, uid, ids, context=context):
-            form_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-            form_id = form_res and form_res[1] or False
-            tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
-            tree_id = tree_res and tree_res[1] or False
+    def open_invoices(self, cr, uid, ids, invoice_ids, context=None):
+        """ open a view on one of the given invoice_ids """
+        ir_model_data = self.pool.get('ir.model.data')
+        form_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_form')
+        form_id = form_res and form_res[1] or False
+        tree_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_tree')
+        tree_id = tree_res and tree_res[1] or False
 
         return {
             'name': _('Advance Invoice'),
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'account.invoice',
-            'res_id': int(context['invoice_id'][0]),
+            'res_id': invoice_ids[0],
             'view_id': False,
             'views': [(form_id, 'form'), (tree_id, 'tree')],
             'context': "{'type': 'out_invoice'}",
             'type': 'ir.actions.act_window',
-         }
+        }
 
 sale_advance_payment_inv()
 
