@@ -82,6 +82,11 @@
                     <h1>
                         <field name="name" string="Project Name"/>
                     </h1>
+                    <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <label for="alias_name" class="oe_edit_only"/>
+                        <field name="alias_name" required="0" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/>
+                        <field name="alias_model" invisible="1" class="oe_inline oe_edit_only"/>
+                    </div>
                     <label for="parent_id" class="oe_edit_only" string="Parent Project"/>
                     <h2>
                         <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
@@ -139,14 +144,6 @@
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                                     <field name="currency_id" groups="base.group_multi_company" required="1"/>
-                                </group>
-                                <group string="Mailbox Alias" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                   <div>
-                                        <label for="alias_name"/>
-                                        <field name="alias_name" required="0" class="oe_inline"/>@
-                                        <field name="alias_domain" class="oe_inline"/>
-                                    </div>
-                                    <field name="alias_model" invisible="1"/>
                                 </group>
                             </group>
                         </page>

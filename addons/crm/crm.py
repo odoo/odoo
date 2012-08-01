@@ -122,9 +122,9 @@ class crm_case_section(osv.osv):
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16,2 )),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
-                                    help="This Unique Mail Box Alias of the Sales Team allows to manage the Seamless email communication between Mail Box and OpenERP,"
-                                         "This Alias MailBox also create and Manage the new Email Leads for this Sales Team and also manage the existing Lead email communication."),
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+                                    help="The email address associated with this team. New emails received will automatically "
+                                         "create new leads assigned to the team."),
     }
     
     def _get_stage_common(self, cr, uid, context):

@@ -171,7 +171,9 @@ class project(osv.osv):
         for task in self.pool.get('project.task').browse(cr, uid, task_ids, context):
             res[task.project_id.id] += 1
         return res
-    def _get_alias_model(self, cr, uid, context=None):
+
+    def _get_alias_models(self, cr, uid, context=None):
+        """Overriden in project_issue to offer more options"""
         return [('project.task', "Tasks")]
 
     def _get_followers(self, cr, uid, ids, name, arg, context=None):
@@ -190,6 +192,9 @@ class project(osv.osv):
         project_obj = self.pool.get('project.project')
         project_ids = project_obj.search(cr, uid, [('message_ids.user_id.id', 'in', args[0][2])], context=context)
         return [('id', 'in', project_ids)]
+
+    # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field 
+    _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
 
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
@@ -224,11 +229,11 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'alias_id': fields.many2one('mail.alias', 'Mail Alias', ondelete="cascade", required=True, 
-                                    help="This Unique Mail Box Alias of the Project allows to manage the Seamless email communication between Mail Box and OpenERP," 
-                                        "This Alias MailBox also create and Manage the new Email Tasks/Issues for this Project and also manage the existing Task/Issue email communication."),
-        'alias_model': fields.selection(_get_alias_model, "Alias Model",select="1", required=True, 
-                                        help="Allows to select Model for the Mail alias .Based on selected model Task/issue will created for fetched mails or it will maintain communication for related Task/Issue."),
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+                                    help="The email address associated with this project. New emails received will automatically "
+                                         "create project tasks (optionally project issues if the Project Issue module is installed)."),
+        'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True, 
+                                        help="The kind of document created when an email is received by this project's email alias"),
         'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility'),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
@@ -249,7 +254,7 @@ class project(osv.osv):
         'priority': 1,
         'sequence': 10,
         'type_ids': _get_type_common,
-        'alias_model':'project.task',
+        'alias_model': 'project.task',
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -510,7 +515,7 @@ def Project():
             name = vals.get('alias_name') or vals['name']
             alias_id = alias_pool.create_unique_alias(cr, uid, 
                     {'alias_name': "project_"+name, 
-                    'alias_model_id': vals.get('alias_model', 'project.task')}, context=context)
+                     'alias_model_id': vals.get('alias_model', 'project.task')}, context=context)
             alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
             vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
         res = super( project, self).create(cr, uid, vals, context)
@@ -539,12 +544,10 @@ def Project():
 
     def write(self, cr, uid, ids, vals, context=None):
         model_pool = self.pool.get('ir.model')
-        alias_pool = self.pool.get('mail.alias')
-        # if alias_model have been changed then change alias_model_id of alias also.
+        # if alias_model has been changed, update alias_model_id of alias accordingly
         if vals.get('alias_model'):
             model_ids = model_pool.search(cr, uid, [('model', '=', vals.get('alias_model','project.task'))])
-            alias_id = self.browse(cr, uid, ids[0], context).alias_id
-            alias_pool.write(cr, uid, [alias_id.id], {'alias_model_id': model_ids[0]}, context=context)
+            vals.update(alias_model_id=model_ids[0])
         return super(project, self).write(cr, uid, ids, vals, context=context)
 
 class task(base_stage, osv.osv):

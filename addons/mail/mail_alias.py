@@ -76,10 +76,12 @@ class mail_alias(osv.Model):
                                            "If set, this will disable the creation of new records completely."),
         'alias_domain': fields.function(_get_alias_domain, string="Alias Doamin", type='char', size=None),
     }
+
     _defaults = {
         'alias_defaults': '{}',
         'alias_user_id': lambda self,cr,uid, context: uid
     }
+
     _sql_constraints = [
         ('mailbox_uniq', 'UNIQUE(alias_name)', 'Unfortunately this mail alias is already used, please choose a unique one')
     ]
@@ -93,12 +95,12 @@ class mail_alias(osv.Model):
         for record in self.browse(cr, uid, ids, context=context):
             try:
                 dict(eval(record.alias_defaults))
-            except:
+            except Exception:
                 return False
         return True
 
     _constraints = [
-        (_check_alias_defaults, "Default Values are in wrong format.\nIt must be in python dictionary format e.g.{'field_name': 'value' or {}}", ['alias_defaults']),
+        (_check_alias_defaults, '''Invalid expression, it must be a literal python dictionary definition e.g. "{'field': 'value'}"''', ['alias_defaults']),
     ]
 
     def name_get(self, cr, uid, ids, context=None):

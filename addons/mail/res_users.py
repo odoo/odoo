@@ -41,8 +41,8 @@ class res_users(osv.osv):
                         ], 'Receive Feeds by Email', required=True,
                         help="Choose in which case you want to receive an email when you receive new feeds."),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
-                                    help="This Unique Mail Box Alias of the User allows to manage the Seamless email communication between Mail Box and OpenERP," 
-                                         "This Alias MailBox manage the Users email communication."),
+                                    help="The email address associated with this user. New emails received will automatically "
+                                         "appear in the user's notifications."),
     }
     
     _defaults = {
