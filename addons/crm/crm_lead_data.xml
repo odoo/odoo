@@ -86,11 +86,11 @@
             <field name="section_id" ref="section_sales_department"/>
         </record>
         <record model="crm.case.resource.type" id="type_lead2">
-            <field name="name">Mail Campaign 1</field>
+            <field name="name">Email Campaign - Services</field>
             <field name="section_id" ref="section_sales_department"/>
         </record>
         <record model="crm.case.resource.type" id="type_lead3">
-            <field name="name">Mail Campaign 2</field>
+            <field name="name">Email Campaign - Products</field>
             <field name="section_id" ref="section_sales_department"/>
         </record>
         <record model="crm.case.resource.type" id="type_lead4">
@@ -102,7 +102,7 @@
             <field name="section_id" ref="section_sales_department"/>
         </record>
         <record model="crm.case.resource.type" id="type_lead6">
-            <field name="name">Google Adwords 2</field>
+            <field name="name">Banner Ads</field>
             <field name="section_id" ref="section_sales_department"/>
         </record>
         <record model="crm.case.resource.type" id="type_lead7">
@@ -116,12 +116,12 @@
 
         <!--  crm categories -->
         <record model="crm.case.categ" id="categ_oppor1">
-            <field name="name">Interest in Computer</field>
+            <field name="name">Interested in Product</field>
             <field name="section_id" ref="section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
         <record model="crm.case.categ" id="categ_oppor2">
-            <field name="name">Interest in Accessories</field>
+            <field name="name">Inquiry about Software</field>
             <field name="section_id" ref="section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
@@ -141,7 +141,7 @@
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
         <record model="crm.case.categ" id="categ_oppor6">
-            <field name="name">Potential Reseller</field>
+            <field name="name">Interested in Training</field>
             <field name="section_id" ref="section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
