@@ -268,6 +268,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.$pager.show();
         }
         this.$element.add(this.$buttons).removeClass('oe_form_dirty');
+        self.$element.css('visibility', 'visible');
 
         var shown = this.has_been_loaded;
         if (options.reload !== false) {
