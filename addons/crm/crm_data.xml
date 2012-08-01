@@ -18,6 +18,28 @@
             <field name="code">Sales</field>
         </record>
 
+        <!-- Payment Mode -->
+
+        <record model="crm.payment.mode" id="payment_mode_1">
+            <field name="name">Cash</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_2">
+            <field name="name">Cheque</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_3">
+            <field name="name">Credit Card</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_4">
+            <field name="name">Demand Draft</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
         <!-- notify all employees of module installation -->
         <function model="mail.group" name="message_append_note">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
