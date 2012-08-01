@@ -79,6 +79,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         _.defaults(this.options, {
             "not_interactible_on_create": false,
             "initial_mode": "view",
+            "disable_autofocus": false,
         });
         this.is_initialized = $.Deferred();
         this.mutating_mutex = new $.Mutex();
@@ -269,9 +270,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (this.$pager) {
             this.$pager.show();
         }
+        this.$element.show().css({
+            opacity: '0',
+            filter: 'alpha(opacity = 0)'
+        });
         this.$element.add(this.$buttons).removeClass('oe_form_dirty');
-        this.$element.css('visibility', 'visible');
-        this._super();
 
         var shown = this.has_been_loaded;
         if (options.reload !== false) {
@@ -291,6 +294,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (options.editable) {
                 self.to_edit_mode();
             }
+            self.$element.css({
+                opacity: '1',
+                filter: 'alpha(opacity = 100)'
+            });
         });
     },
     do_hide: function () {
@@ -350,6 +357,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 self.do_push_state({id:record.id});
             }
             self.$element.add(self.$buttons).removeClass('oe_form_dirty');
+            self.autofocus();
         });
     },
     /**
@@ -649,13 +657,21 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             _.each(this.fields,function(field){
                 field.set({"force_readonly": false});
             });
-            var fields_order = self.fields_order.slice(0);
-            if (self.default_focus_field) {
-                fields_order.unshift(self.default_focus_field.name);
+            this.autofocus();
+        }
+    },
+    autofocus: function() {
+        if (this.get("actual_mode") === "edit" && !this.options.disable_autofocus) {
+            var fields_order = this.fields_order.slice(0);
+            console.log('default focus = ', this.default_focus);
+            if (this.default_focus_field) {
+                fields_order.unshift(this.default_focus_field.name);
             }
+            console.log(fields_order);
             for (var i = 0; i < fields_order.length; i += 1) {
-                var field = self.fields[fields_order[i]];
+                var field = this.fields[fields_order[i]];
                 if (!field.get('effective_invisible') && !field.get('effective_readonly')) {
+                    console.log('FOCUS ', field.name);
                     field.focus();
                     break;
                 }
