@@ -25,12 +25,12 @@ class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
     _columns = {
-        'module_multi_company': fields.boolean('Multi Company',
+        'module_multi_company': fields.boolean('manage multiple companies',
             help="""Work in multi-company environments, with appropriate security access between companies.
                 This installs the module multi_company."""),
-        'module_portal': fields.boolean('Activate Customer Portal',
+        'module_portal': fields.boolean('activate customer portal',
             help="""The portal will give access to a series of documents for your  customers; his quotations, his invoices, his projects, etc."""),
-        'module_share': fields.boolean('Allow Sharing Resources to External Users',
+        'module_share': fields.boolean('allow sharing documents to',
             help="""As an example, you will be able to share a project or some tasks to  your customers, or quotes/sales to several persons at your customer  company, or your agenda availabilities to your contacts."""),
     }
 

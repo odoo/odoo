@@ -7,11 +7,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="purchase.view_purchase_configuration"/>
             <field name="arch" type="xml">
-                <div name="module_purchase_double_validation" position="before">
-                    <div>
-                        <label for="limit_amount"/>
-                        <field name="limit_amount" attrs="{'required': [('module_purchase_double_validation','=',True)]}" class="oe_inline"/>
-                    </div>
+                <div name="module_purchase_double_validation" position="inside">
+                     <label string="("/>
+                     <label for="limit_amount" />
+                     <field name="limit_amount" attrs="{'required': [('module_purchase_double_validation','=',True)]}" class="oe_inline"/>
+                     <label string=")"/>
                 </div>
             </field>
         </record>
