@@ -267,7 +267,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (this.$pager) {
             this.$pager.show();
         }
-        this.$element.show().css('visibility', 'hidden');
         this.$element.add(this.$buttons).removeClass('oe_form_dirty');
 
         var shown = this.has_been_loaded;
@@ -277,8 +276,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     // null index means we should start a new record
                     return self.on_button_new();
                 }
-                return self.dataset.read_index(_.keys(self.fields_view.fields), {
-                    context: { 'bin_size': true }
+                var fields = _.keys(self.fields_view.fields);
+                fields.push('display_name');
+                return self.dataset.read_index(fields, {
+                    context: { 'bin_size': true, 'future_display_name' : true }
                 }).pipe(self.on_record_loaded);
             });
         }
@@ -286,7 +287,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (options.editable) {
                 self.to_edit_mode();
             }
-            self.$element.css('visibility', 'visible');
         });
     },
     do_hide: function () {
@@ -302,7 +302,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this._super();
     },
     on_record_loaded: function(record) {
-        var self = this, defs = [];
+        var self = this, set_values = [];
         if (!record) {
             this.set({ 'title' : undefined });
             this.do_warn("Form", "The record could not be found in the database.", true);
@@ -310,19 +310,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this.datarecord = record;
         this._actualize_mode();
-
-        var titleDef = $.Deferred();
-        if (record.id) {
-            this.dataset.name_get(record.id).then(function(names) {
-                self.set({ 'title' : names[0][1] });
-            }).always(function() {
-                titleDef.resolve();
-            });
-        } else {
-            this.set({ 'title' : "New record" });
-            titleDef.resolve();
-        }
-        defs.push(titleDef);
+        this.set({ 'title' : record.id ? record.display_name : "New record" });
 
         if (this.qweb) {
             this.kill_current_form();
@@ -334,9 +322,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
             var result = field.set_value(self.datarecord[f] || false);
-            defs.push(result);
+            set_values.push(result);
         });
-        return $.when.apply(null, defs).pipe(function() {
+        return $.when.apply(null, set_values).pipe(function() {
             if (!record.id) {
                 // New record: Second pass in order to trigger the onchanges
                 // respecting the fields order defined in the view
@@ -868,8 +856,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (self.dataset.index == null || self.dataset.index < 0) {
                 return $.when(self.on_button_new());
             } else {
-                return self.dataset.read_index(_.keys(self.fields_view.fields), {
-                    context : { 'bin_size' : true }
+                var fields = _.keys(self.fields_view.fields);
+                fields.push('display_name');
+                return self.dataset.read_index(fields, {
+                    context : { 'bin_size' : true, 'future_display_name' : true }
                 }).pipe(self.on_record_loaded);
             }
         });
@@ -2074,7 +2064,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function() {
-        this.delay_focus(this.$element.find('input:first'));
+        this.$element.find('input:first')[0].focus();
     }
 });
 

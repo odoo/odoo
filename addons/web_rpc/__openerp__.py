@@ -1,7 +1,7 @@
 {
     "name" : "OpenERP Web Web",
     "category" : "Hidden",
-    "description":'Openerp Web Web',
+    "description":"""Openerp Web Web.""",
     "version" : "2.0",
     "depends" : [],
     "installable" : False,
