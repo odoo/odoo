@@ -199,7 +199,7 @@ class crm_payment_mode(osv.osv):
     _name = "crm.payment.mode"
     _description = "CRM Payment Mode"
     _columns = {
-        'name': fields.char('Payment Mode', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
