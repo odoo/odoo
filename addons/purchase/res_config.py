@@ -52,7 +52,7 @@ class purchase_config_settings(osv.osv_memory):
             Example: Product: this product is deprecated, do not purchase more than 5.
                     Supplier: don't forget to ask for an express delivery."""),
 
-        'module_purchase_double_validation': fields.boolean("force two levels of approvals (limit to require a second approval)",
+        'module_purchase_double_validation': fields.boolean("force two levels of approvals",
             help="""Provide a double validation mechanism for purchases exceeding minimum amount.
                 This installs the module purchase_double_validation."""),
         'module_purchase_requisition': fields.boolean("manage purchase requisitions",
