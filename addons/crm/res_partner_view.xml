@@ -37,6 +37,7 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="category_id" position="after">
+                        <field name="section_id" completion="1"/>
                         <field name="section_id" completion="1" widget="selection" context="{'invisible_section': False}"/>
                     </field>
                     <xpath expr="//field[@name='user_id']" position="after">
@@ -129,7 +130,7 @@
                     <button type="action"
                         string="Schedule a Meeting"
                         name="%(base_calendar.action_crm_meeting)d"
-                        context="{'search_default_partner_ids': active_id}"/>
+                        context="{'search_default_partner_ids': active_id, 'default_partner_ids' : [active_id]}"/>
                     <button type="action" string="Schedule a Call" 
                         name="%(crm.crm_case_categ_phone_create_partner)d" 
                         context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
