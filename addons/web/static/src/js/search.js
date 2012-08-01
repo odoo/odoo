@@ -1683,37 +1683,33 @@ instance.web.search.AddToDashboard = instance.web.Widget.extend({
     _in_drawer: true,
     start: function () {
         var self = this;
-        this.data_loaded = $.Deferred();
-        this.dashboard_data =[];
         this.$element
             .on('click', 'h4', this.proxy('show_option'))
             .on('submit', 'form', function (e) {
                 e.preventDefault();
                 self.add_dashboard();
             });
-        return $.when(this.load_data(),this.data_loaded).pipe(this.proxy("render_data"));
+        return this.load_data().then(this.proxy("render_data"));
     },
     load_data:function(){
         if (!instance.webclient) { return $.Deferred().reject(); }
-        var self = this,dashboard_menu = instance.webclient.menu.data.data.children;
-        var ir_model_data = new instance.web.Model('ir.model.data',{},[['name','=','menu_reporting_dashboard']]).query(['res_id']);
-        var map_data = function(result){
-            _.detect(dashboard_menu, function(dash){
-                var id = _.pluck(dash.children, "id"),indexof = _.indexOf(id, result.res_id);
-                if(indexof !== -1){
-                    self.dashboard_data = dash.children[indexof].children
-                    self.data_loaded.resolve();
-                    return;
-                }
-            });
-        };
-        return ir_model_data._execute().done(function(result){map_data(result[0])}); 
+        var dashboard_menu = instance.webclient.menu.data.data.children;
+        return new instance.web.Model('ir.model.data')
+                .query(['res_id'])
+                .filter([['name','=','menu_reporting_dashboard']])
+                .first().pipe(function (result) {
+            var menu = _(dashboard_menu).chain()
+                .pluck('children')
+                .flatten(true)
+                .find(function (child) { return child.id === result.res_id; })
+                .value();
+            return menu ? menu.children : [];
+        });
     },
-    
-    render_data: function(){
-        var self = this;
-        var selection = instance.web.qweb.render("SearchView.addtodashboard.selection",{selections:this.dashboard_data});
-        this.$element.find("input").before(selection)
+    render_data: function(dashboard_data){
+        var selection = instance.web.qweb.render(
+            "SearchView.addtodashboard.selection", {selections: dashboard_data});
+        this.$("input").before(selection)
     },
     add_dashboard:function(){
         var self = this;
@@ -1721,11 +1717,11 @@ instance.web.search.AddToDashboard = instance.web.Widget.extend({
         var view_parent = this.getParent().getParent();
         if (! view_parent.action || ! this.$element.find("select").val())
             return this.do_warn("Can't find dashboard action");
-        data = getParent.build_search_data(),
-        context = new instance.web.CompoundContext(getParent.dataset.get_context() || []),
-        domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
-        _.each(data.contexts, function(x) {context.add(x);});
-        _.each(data.domains, function(x) {domain.add(x);});
+        var data = getParent.build_search_data();
+        var context = new instance.web.CompoundContext(getParent.dataset.get_context() || []);
+        var domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
+        _.each(data.contexts, context.add, context);
+        _.each(data.domains, domain.add, domain);
         this.rpc('/web/searchview/add_to_dashboard', {
             menu_id: this.$element.find("select").val(),
             action_id: view_parent.action.id,
@@ -1746,7 +1742,7 @@ instance.web.search.AddToDashboard = instance.web.Widget.extend({
         this.$element.toggleClass('oe_opened');
         if (! this.$element.hasClass('oe_opened'))
             return;
-        this.$element.find("input").val(this.getParent().fields_view.name || "" );
+        this.$("input").val(this.getParent().fields_view.name || "" );
     }
 });
 

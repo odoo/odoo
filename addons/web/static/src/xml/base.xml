@@ -1446,15 +1446,16 @@
 <div t-name="SearchView.addtodashboard" class="oe_searchview_dashboard">
     <h4>Add to Dashboard</h4>
     <form>
-        <p><input placeholder ="Title of new Dashboard item" title = "Title of new Dashboard item" type="text"/></p>
+        <p><input placeholder="Title of new Dashboard item"
+                  title="Title of new Dashboard item" type="text"/></p>
         <button class="oe_apply" type="submit">Save</button>
     </form>
 </div>
 <t t-name="SearchView.addtodashboard.selection">
-    <select  title = "Select Dashboard to add this filter to">
-        <t t-foreach="selections" t-as="element">
-        <option t-att-value="element.id || element.res_id "><t t-esc="element.name"/></option>
-        </t>
+    <select title="Select Dashboard to add this filter to">
+        <option t-foreach="selections" t-as="element"
+                t-att-value="element.id || element.res_id ">
+            <t t-esc="element.name"/></option>
     </select>
 </t>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
