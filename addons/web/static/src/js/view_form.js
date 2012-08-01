@@ -2467,9 +2467,6 @@ instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
     }
 });
 
-instance.web.form.FieldTextXml = instance.web.form.AbstractField.extend({
-// to replace view editor
-});
 
 instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldSelection',
