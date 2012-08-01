@@ -503,7 +503,7 @@ class purchase_order(osv.osv):
                 if inv and inv.state not in ('cancel','draft'):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
-                        _('First cancel all receptions related to this purchase order.'))
+                        _('You must first cancel all receptions related to this purchase order.'))
                 if inv:
                     wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})

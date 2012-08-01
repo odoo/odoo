@@ -315,7 +315,7 @@ class hr_timesheet_sheet(osv.osv):
     def check_sign(self, cr, uid, ids, typ, context=None):
         sheet = self.browse(cr, uid, ids, context=context)[0]
         if not sheet.date_current == time.strftime('%Y-%m-%d'):
-            raise osv.except_osv(_('Error !'), _('You cannot sign in/sign out from an other date than today.'))
+            raise osv.except_osv(_('Error !'), _('You cannot sign in/sign out from other date than today.'))
         return True
 
     def sign(self, cr, uid, ids, typ, context=None):
