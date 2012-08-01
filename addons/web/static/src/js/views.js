@@ -755,15 +755,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                         width: '95%'}, $root).open();
                 });
                 break;
-            case 'manage_views':
-                if (current_view.fields_view && current_view.fields_view.arch) {
-                    var view_editor = new instance.web.ViewEditor(current_view, current_view.$element, this.dataset, current_view.fields_view.arch);
-                    view_editor.start();
-                } else {
-                    this.do_warn(_t("Manage Views"),
-                            _t("Could not find current view declaration"));
-                }
-                break;
             case 'edit_workflow':
                 return this.do_action({
                     res_model : 'workflow',
@@ -1384,7 +1375,6 @@ instance.web.xml_to_json = function(node) {
 }
 instance.web.json_node_to_xml = function(node, human_readable, indent) {
     // For debugging purpose, this function will convert a json node back to xml
-    // Maybe useful for xml view editor
     indent = indent || 0;
     var sindent = (human_readable ? (new Array(indent + 1).join('\t')) : ''),
         r = sindent + '<' + node.tag,
