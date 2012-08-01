@@ -72,6 +72,8 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment" version="7.0">
                     <group col="6">
+                        <field name="company_id" invisible="1" />
+                        <field name="state" invisible="1" />
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Supplier" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'invoice_currency': currency_id}" />
                         <field name="amount" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
                         <field name="journal_id"
