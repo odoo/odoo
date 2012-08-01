@@ -494,7 +494,11 @@ instance.web.Login =  instance.web.Widget.extend({
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
-        this.params = params;
+        this.params = params || {};
+
+        if (this.params.login_successful) {
+            this.on('login_successful', this, this.params.login_successful);
+        }
 
         if (this.has_local_storage && this.remember_credentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
@@ -511,7 +515,7 @@ instance.web.Login =  instance.web.Widget.extend({
             self.do_action("database_manager");
         });
         return self.load_db_list().then(self.on_db_list_loaded).then(function() {
-            if(self.params) {
+            if (self.params.db) {
                 self.do_login(self.params.db, self.params.login, self.params.password);
             }
         });
