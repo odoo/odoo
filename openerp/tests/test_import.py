@@ -772,6 +772,8 @@ class test_o2m(ImporterCase):
             values(b.value, 'str'),
             'this is the rhythm'.split())
 
+    # TODO: failing inline LINK_TO
+
     def test_link(self):
         id1 = self.registry('export.one2many.child').create(self.cr, openerp.SUPERUSER_ID, {
             'str': 'Bf', 'value': 109
@@ -788,7 +790,8 @@ class test_o2m(ImporterCase):
             ok(2))
 
         # No record values alongside id => o2m resolution skipped altogether,
-        # creates 2 records
+        # creates 2 records => remove/don't import columns sideshow columns,
+        # get completely different semantics
         b, b1 = self.browse()
         self.assertEqual(b.const, 42)
         self.assertEqual(values(b.value), [])
@@ -826,6 +829,67 @@ class test_o2m(ImporterCase):
         self.assertEqual(
             O2M_c.read(self.cr, openerp.SUPERUSER_ID, id2),
             {'id': id2, 'str': 'Me', 'value': 2, 'parent_id': False})
+
+    # TODO: name_get?
+
+class test_o2m_multiple(ImporterCase):
+    model_name = 'export.one2many.multiple'
+
+    def test_multi_mixed(self):
+        self.assertEqual(
+            self.import_(['const', 'child1/value', 'child2/value'], [
+                ['5', '11', '21'],
+                ['', '12', '22'],
+                ['', '13', '23'],
+                ['', '14', ''],
+            ]),
+            ok(4))
+        # Oh yeah, that's the stuff
+        (b, b1, b2) = self.browse()
+        self.assertEqual(values(b.child1), [11])
+        self.assertEqual(values(b.child2), [21])
+
+        self.assertEqual(values(b1.child1), [12])
+        self.assertEqual(values(b1.child2), [22])
+
+        self.assertEqual(values(b2.child1), [13, 14])
+        self.assertEqual(values(b2.child2), [23])
+
+    def test_multi(self):
+        self.assertEqual(
+            self.import_(['const', 'child1/value', 'child2/value'], [
+                ['5', '11', '21'],
+                ['', '12', ''],
+                ['', '13', ''],
+                ['', '14', ''],
+                ['', '', '22'],
+                ['', '', '23'],
+            ]),
+            ok(6))
+        # What the actual fuck?
+        (b, b1) = self.browse()
+        self.assertEqual(values(b.child1), [11, 12, 13, 14])
+        self.assertEqual(values(b.child2), [21])
+        self.assertEqual(values(b1.child2), [22, 23])
+
+    def test_multi_fullsplit(self):
+        self.assertEqual(
+            self.import_(['const', 'child1/value', 'child2/value'], [
+                ['5', '11', ''],
+                ['', '12', ''],
+                ['', '13', ''],
+                ['', '14', ''],
+                ['', '', '21'],
+                ['', '', '22'],
+                ['', '', '23'],
+            ]),
+            ok(7))
+        # oh wow
+        (b, b1) = self.browse()
+        self.assertEqual(b.const, 5)
+        self.assertEqual(values(b.child1), [11, 12, 13, 14])
+        self.assertEqual(b1.const, 36)
+        self.assertEqual(values(b1.child2), [21, 22, 23])
 
 # function, related, reference: written to db as-is...
 # => function uses @type for value coercion/conversion
