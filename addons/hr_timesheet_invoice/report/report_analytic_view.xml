@@ -113,13 +113,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Lines to Invoice">
-                   <group>
-                        <field name="name" string="Analytic Lines"/>
-                        <separator orientation="vertical"/>
-                        <field name="product_id"/>
-                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                        <field name="month"/>
-                   </group>
+                    <field name="name" string="Analytic Lines"/>
+                    <field name="month"/>
+                    <field name="product_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                </search>
             </field>
         </record>
