@@ -661,7 +661,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             null, _(this.select_for_drawer()).invoke(
                 'appendTo', this.$element.find('.oe_searchview_drawer')));
         
-        new instance.web.search.AddToDashboard(this).appendTo($('.oe_searchview_drawer', this.$element));
+        new instance.web.search.AddToReporting(this).appendTo($('.oe_searchview_drawer', this.$element));
 
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
@@ -1678,8 +1678,8 @@ instance.web.search.Filters = instance.web.search.Input.extend({
         }));
     }
 });
-instance.web.search.AddToDashboard = instance.web.Widget.extend({
-    template: 'SearchView.addtodashboard',
+instance.web.search.AddToReporting = instance.web.Widget.extend({
+    template: 'SearchView.addtoreporting',
     _in_drawer: true,
     start: function () {
         var self = this;
@@ -1706,9 +1706,10 @@ instance.web.search.AddToDashboard = instance.web.Widget.extend({
             return menu ? menu.children : [];
         });
     },
-    render_data: function(dashboard_data){
+    render_data: function(dashboard_choices){
         var selection = instance.web.qweb.render(
-            "SearchView.addtodashboard.selection", {selections: dashboard_data});
+            "SearchView.addtoreporting.selection", {
+                selections: dashboard_choices});
         this.$("input").before(selection)
     },
     add_dashboard:function(){
