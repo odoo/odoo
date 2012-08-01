@@ -1,23 +1,21 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem
-            id="menu_hr_recruitment_recruitment"
-            name="Recruitment"
-            parent="hr.menu_hr_configuration"
-            sequence="40" />
 
-        <act_window
-            id="act_hr_applicant_to_meeting"
-            name="Meetings"
-            res_model="crm.meeting"
-            src_model="hr.applicant"
-            view_mode="tree,form,calendar,graph"
-            view_type="form"/>
+    <menuitem name="Recruitment"
+        id="menu_hr_recruitment_recruitment"
+        parent="hr.menu_hr_configuration"
+        sequence="40"/>
 
-    # ------------------------------------------------------
-    # Stage
-    # ------------------------------------------------------
+    <act_window
+        id="act_hr_applicant_to_meeting"
+        name="Meetings"
+        res_model="crm.meeting"
+        src_model="hr.applicant"
+        view_mode="tree,form,calendar,graph"
+        view_type="form"/>
+
+    <!-- Stage -->
     <record id="hr_job_stage_act" model="ir.actions.act_window">
         <field name="name">Recruitment / Applicants Stages</field>
         <field name="res_model">hr.recruitment.stage</field>
@@ -28,10 +26,7 @@
     </record>
 
 
-    # ------------------------------------------------------
-    # Jobs
-    # ------------------------------------------------------
-
+    <!-- Jobs -->
     <!-- Applicant Read/Unread actions -->
     <record id="actions_server_applicant_unread" model="ir.actions.server">
         <field name="name">Mark unread</field>
@@ -44,9 +39,9 @@
     <record id="action_applicant_unread" model="ir.values">
         <field name="name">action_project_unread</field>
         <field name="action_id" ref="actions_server_applicant_unread"/>
-        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_unread'))" />
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_unread'))"/>
         <field name="key">action</field>
-        <field name="model_id" ref="model_hr_applicant" />
+        <field name="model_id" ref="model_hr_applicant"/>
         <field name="model">hr.applicant</field>
         <field name="key2">client_action_multi</field>
     </record>
@@ -62,9 +57,9 @@
     <record id="action_applicant_read" model="ir.values">
         <field name="name">action_project_read</field>
         <field name="action_id" ref="actions_server_applicant_read"/>
-        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_read'))" />
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_read'))"/>
         <field name="key">action</field>
-        <field name="model_id" ref="model_hr_applicant" />
+        <field name="model_id" ref="model_hr_applicant"/>
         <field name="model">hr.applicant</field>
         <field name="key2">client_action_multi</field>
     </record>
@@ -175,12 +170,12 @@
                     <group string="Contract">
                         <label for="salary_expected"/>
                         <div>
-                            <field name="salary_expected" class="oe_inline"/>, 
+                            <field name="salary_expected" class="oe_inline"/>,
                             <field name="salary_expected_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
                         <label for="salary_proposed"/>
                         <div>
-                            <field name="salary_proposed" class="oe_inline"/>, 
+                            <field name="salary_proposed" class="oe_inline"/>,
                             <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
                     </group>
@@ -214,45 +209,29 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="terp-mail-message-new"
-                   string="Inbox" help="Unread messages"
-                   name="needaction_pending"
-                   domain="[('needaction_pending','=',True)]"/>
-               <separator orientation="vertical"/>
-               <filter icon="terp-document-new" string="New" name="filter_new"/>
-               <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-               <separator orientation="vertical"/>
-               <filter icon="terp-document-new" string="New" 
-                   domain="[('state','=','draft')]"
-                   help="All Initial Jobs"/>
-               <filter icon="terp-camera_test" string="In Progress" 
-                   domain="[('state','=','open')]"
-                   help="Open Jobs"/>
-               <filter icon="terp-gtk-media-pause" string="Pending"
-                   domain="[('state','=','pending')]"
-                   help="Pending Jobs"/>
-               <filter string="Unassigned Recruitments" domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-"/>
-               <filter icon="terp-gtk-jump-to-ltr" string="Next Actions"
-                    context="{'invisible_next_action':False, 'invisible_next_date':False}"
-                    domain="[('date_action','&lt;&gt;',False)]"
-                    help="Filter and view on next actions and date"/>
-               <separator orientation="vertical"/>
-               <field name="job_id" widget="selection"/>
-               <field name="user_id"/>
-               <newline/>
+                <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
+                <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                <separator/>
+                <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]" help="All Initial Jobs"/>
+                <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="Open Jobs"/>
+                <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Jobs"/>
+                <separator/>
+                <filter string="Unassigned Recruitments" domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-"/>
+                <separator/>
+                <filter icon="terp-gtk-jump-to-ltr" string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
+                    domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
+                <field name="job_id"/>
+                <field name="user_id"/>
                 <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                     <filter string="Degree" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'type_id'}"/>
                     <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'availability'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Appreciation" icon="terp-face-plain" domain="[]" context="{'group_by':'priority'}"/>
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Source" icon="terp-face-plain" domain="[]" context="{'group_by':'source_id'}"/>
-                    <separator orientation="vertical" groups="base.group_no_one"/>
                     <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                 </group>
            </search>
@@ -260,7 +239,6 @@
     </record>
 
     <!-- CRM Lead Calendar View -->
-
     <record model="ir.ui.view" id="hr_applicant_calendar_view">
         <field name="name">Hr Applicants Calendar</field>
         <field name="model">hr.applicant</field>
@@ -269,15 +247,14 @@
         <field name="arch" type="xml">
             <calendar string="Applicants"
                 date_start="date_action" color="user_id">
-                <field name="name" />
-                <field name="partner_name" />
+                <field name="name"/>
+                <field name="partner_name"/>
                 <field name="title_action"/>
             </calendar>
         </field>
     </record>
 
-    <!-- hr Applicant Kanban View -->
-
+    <!-- Hr Applicant Kanban View -->
     <record model="ir.ui.view" id="hr_kanban_view_applicant">
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
@@ -346,10 +323,7 @@
         </field>
     </record>
 
-    # ------------------------------------------------------
-    # HR Job
-    # ------------------------------------------------------
-
+    <!-- HR Job -->
     <record id="hr_job_survey" model="ir.ui.view">
         <field name="name">hr.job.form1</field>
         <field name="model">hr.job</field>
@@ -357,20 +331,19 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <field name="no_of_recruitment" version="7.0" position="after">
-            <label for="survey_id" />
-            <div>
-                <field name="survey_id" class="oe_inline"/>
-                <button class="oe_inline"
-                    string="Interview" icon="gtk-print"
-                    name="action_print_survey" type="object"
-                    attrs="{'invisible':[('survey_id','=',False)]}"/>
-            </div>
+                <label for="survey_id" groups="base.group_user"/>
+                <div groups="base.group_user">
+                    <field name="survey_id" class="oe_inline"/>
+                    <button class="oe_inline"
+                        string="Interview" icon="gtk-print"
+                        name="action_print_survey" type="object"
+                        attrs="{'invisible':[('survey_id','=',False)]}"/>
+                </div>
             </field>
         </field>
     </record>
 
-<!-- Stage Tree View -->
-
+    <!-- Stage Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_tree">
         <field name="name">hr.recruitment.stage.tree</field>
         <field name="model">hr.recruitment.stage</field>
@@ -385,8 +358,7 @@
         </field>
     </record>
 
-<!-- Stage Form View -->
-
+    <!-- Stage Form View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_form">
         <field name="name">hr.recruitment.stage.form</field>
         <field name="model">hr.recruitment.stage</field>
@@ -405,8 +377,7 @@
         </field>
     </record>
 
-<!-- Stage Action -->
-
+    <!-- Stage Action -->
     <record id="hr_recruitment_stage_act" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">hr.recruitment.stage</field>
@@ -422,8 +393,7 @@
         action="hr_recruitment_stage_act"
         sequence="1" groups="base.group_no_one"/>
 
-<!-- Degree Tree View -->
-
+    <!-- Degree Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_tree">
         <field name="name">hr.recruitment.degree.tree</field>
         <field name="model">hr.recruitment.degree</field>
@@ -436,8 +406,7 @@
         </field>
     </record>
 
-<!-- Degree Form View -->
-
+    <!-- Degree Form View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_form">
         <field name="name">hr.recruitment.degree.form</field>
         <field name="model">hr.recruitment.degree</field>
@@ -452,8 +421,7 @@
         </field>
     </record>
 
-<!-- Degree Action -->
-
+    <!-- Degree Action -->
     <record id="hr_recruitment_degree_action" model="ir.actions.act_window">
         <field name="name">Degree</field>
         <field name="res_model">hr.recruitment.degree</field>
@@ -468,8 +436,7 @@
             action="hr_recruitment_degree_action"
             sequence="5" groups="base.group_no_one"/>
 
-<!-- Source Tree View -->
-
+    <!-- Source Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_source_tree">
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
@@ -496,11 +463,12 @@
         <field name="view_type">form</field>
     </record>
 
-     <menuitem
-            id="menu_hr_recruitment_source"
-            parent="menu_hr_recruitment_recruitment"
-            action="hr_recruitment_source_action"
-            sequence="10" groups="base.group_no_one"/>
+    <menuitem
+        id="menu_hr_recruitment_source"
+        parent="menu_hr_recruitment_recruitment"
+        action="hr_recruitment_source_action"
+        groups="base.group_no_one"
+        sequence="10"/>
 
     </data>
 </openerp>
