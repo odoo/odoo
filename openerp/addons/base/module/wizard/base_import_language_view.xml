@@ -9,14 +9,10 @@
             <field name="arch" type="xml">
                 <form string="Import Translation" version="7.0">
                     <group>
-                        <separator string="Import Translation" colspan="2"/>
-                        <label nolabel="1" string="If you need another language than the official ones available, you can import a language pack from here. Other OpenERP languages than the official ones can be found on launchpad." colspan="2"/>
-                        <group col="4">
-                            <field name="name"/>
-                            <field name="code"/>
-                            <field name="data"/>
-                            <field name="overwrite"/>
-                        </group>
+                        <field name="name"/>
+                        <field name="code" string="Code" placeholder="en_US"/>
+                        <field name="data"/>
+                        <field name="overwrite"/>
                     </group>
                     <footer>
                         <button name="import_lang" string="_Import" type="object" class="oe_highlight"/>

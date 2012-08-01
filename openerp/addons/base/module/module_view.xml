@@ -41,21 +41,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search modules">
-                    <group col='10' colspan='4'>
-                        <field name="name" filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]" string="Module"/>
-                        <field name="description" string="Keywords"/>
-                        <separator orientation="vertical"/>
-                        <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
-                        <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
-                        <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
-                        <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
-                        <separator orientation="vertical"/>
-                        <field name="category_id"/>
-                        <newline/>
-                        <group expand="0" string="Group By...">
-                            <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
-                            <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
-                        </group>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]" string="Module"/>
+                    <field name="description" string="Keywords" filter_domain="['|', ('description', 'ilike', self), ('summary', 'ilike', self)]"/>
+                    <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
+                    <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
+                    <separator/>
+                    <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
+                    <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
+                    <field name="category_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
                     </group>
                </search>
             </field>
@@ -70,6 +66,7 @@
                   <field name="icon"/>
                   <field name="name"/>
                   <field name="state"/>
+                  <field name="summary"/>
                   <templates>
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette oe_kanban_auto_height">
@@ -78,7 +75,8 @@
                         <div class="oe_module_desc">
                           <h4><a type="edit"><field name="shortdesc"/></a></h4>
                           <p class="oe_module_name">
-                             <field name="name"/><br/>
+                             <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
+                             <i><field name="name" groups="base.group_no_one"/></i>
                           </p>
                           <button type="object" name="button_immediate_install" states="uninstalled">Install</button>
                           <button t-if="installed" disabled="disabled">Installed</button>

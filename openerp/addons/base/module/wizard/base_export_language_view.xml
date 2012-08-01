@@ -21,10 +21,12 @@
                         <field name="data" nolabel="1" readonly="1" filename="name" colspan="4"/>
                         <field height="80" name="advice" nolabel="1" colspan="4"/>
                     </group>
-                    <footer>
-                        <button name="act_getfile" string="_Export" type="object" states="choose" class="oe_highlight"/>
-                        <label string="or" states="choose"/>
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                    <footer states="choose">
+                        <button name="act_getfile" string="_Export" type="object" class="oe_highlight"/> or 
+                        <button name="act_cancel" special="cancel" string="_Cancel" type="object" class="oe_link"/>
+                    </footer>
+                    <footer states="get">
+                        <button name="act_cancel" special="cancel" string="_Close" type="object"/>
                     </footer>
                 </form>
             </field>
