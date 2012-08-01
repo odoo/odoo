@@ -23,11 +23,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Account">
-                    <group>
-                        <field name="sheet_id" />
-                        <field name="name" groups="analytic.group_analytic_accounting"/>
-                        <field name="invoice_rate"/>
-                    </group>
+                    <field name="name" groups="analytic.group_analytic_accounting"/>
+                    <field name="invoice_rate"/>
+                    <field name="sheet_id" />
                 </search>
             </field>
         </record>
@@ -158,16 +156,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                    <group>
-                        <field name="date_from"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
-                        <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-                        <separator orientation="vertical"/>
-                        <field name="employee_id"/>
-                        <field name="department_id" widget="selection"/>
-                    </group>
-                    <newline/>
+                    <field name="date_from"/>
+                    <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
+                    <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
