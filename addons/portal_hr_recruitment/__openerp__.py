@@ -21,13 +21,12 @@
 
 
 {
-    'name': 'Portal Jobs',
+    'name': 'Portal HR recruitment',
     'version': '0.1',
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-This module adds applications menu and features to your portal if hr and portal 
-are installed.
+This module adds a jobs page to your portal if hr and portal are installed.
     """,
     'author': 'OpenERP SA',
     'depends': ['hr','portal'],

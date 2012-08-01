@@ -113,12 +113,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Process">
-                    <group>
-                        <field name="name" string="Process"/>
-                        <separator orientation="vertical"/>
-                        <field name="model_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Process"/>
+                    <field name="model_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
@@ -217,13 +213,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search ProcessNode">
-                <group>
-                    <field name="name" string="Process Node"/>
-                    <separator orientation="vertical"/>
-                    <field name="model_id"/>
-                    <field name="kind" />
-                </group>
-                <newline/>
+                <field name="name" string="Process Node"/>
+                <field name="kind" />
+                <field name="model_id"/>
                 <group expand="0" string="Group By...">
                     <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                     <filter string="Kind Of Node" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'kind'}"/>
@@ -310,12 +302,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Process Transition">
-                <group>
-                    <field name="name" string="Process Transition"/>
-                    <separator orientation="vertical"/>
-                    <field name="source_node_id"/>
-                    <field name="target_node_id"/>
-                </group>
+                <field name="name" string="Process Transition"/>
+                <field name="source_node_id"/>
+                <field name="target_node_id"/>
 <!--
                 <newline/>
                 <group expand="0" string="Group By..." colspan="4" col="4">
