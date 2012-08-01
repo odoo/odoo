@@ -1881,7 +1881,7 @@ class BaseModel(object):
         :rtype: etree._Element
         """
         view = etree.Element('search', string=self._description)
-        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr,uid,context))
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
         return view
 
     def _get_default_tree_view(self, cr, user, context=None):
@@ -1894,7 +1894,7 @@ class BaseModel(object):
         :rtype: etree._Element
         """
         view = etree.Element('tree', string=self._description)
-        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr,uid,context))
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
         return view
 
     def _get_default_calendar_view(self, cr, user, context=None):
@@ -1921,7 +1921,7 @@ class BaseModel(object):
             return False
 
         view = etree.Element('calendar', string=self._description)
-        etree.SubElement(view, 'field', self._rec_name_fallback(cr,uid,context))
+        etree.SubElement(view, 'field', self._rec_name_fallback(cr, user, context))
 
         if (self._date_name not in self._columns):
             date_found = False
