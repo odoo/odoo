@@ -29,7 +29,7 @@ class stock_config_settings(osv.osv_memory):
         'module_claim_from_delivery': fields.boolean("allow claim on deliveries",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
-        'module_stock_invoice_directly': fields.boolean("generate directly invoice from the picking",
+        'module_stock_invoice_directly': fields.boolean("generate invoice directly from the picking",
             help="""This allows to automatically launch the invoicing wizard if the delivery is
                 to be invoiced when you send or deliver goods.
                 This installs the module stock_invoice_directly."""),
@@ -49,7 +49,7 @@ class stock_config_settings(osv.osv_memory):
         'group_uom': fields.boolean("manage units of measure on products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_uos': fields.boolean("invoice products in a different units of measure then the",
+        'group_uos': fields.boolean("invoice products in a different unit of measure than the sale order",
             implied_group='product.group_uos',
             help="""Allows you to sell units of a product, but invoice based on a different unit of measure.
                 For instance, you can sell pieces of meat that you invoice based on their weight."""),
@@ -60,7 +60,7 @@ class stock_config_settings(osv.osv_memory):
             implied_group='stock.group_production_lot',
             help="""This allows you to manage products by using serial numbers.
                 When you select a lot, you can get the upstream or downstream traceability of the products contained in lot."""),
-        'group_stock_tracking_lot': fields.boolean("track serial number on logistic units(pallets)",
+        'group_stock_tracking_lot': fields.boolean("track serial number on logistic units (pallets)",
             implied_group='stock.group_tracking_lot',
             help="""Allows you to get the upstream or downstream traceability of the products contained in lot."""),
         'group_stock_inventory_valuation': fields.boolean("generate accounting entries per stock movement",
@@ -72,8 +72,8 @@ class stock_config_settings(osv.osv_memory):
                 instead of having a single default one."""),
         'group_product_variant': fields.boolean("support multiple variants per products  ",
             implied_group='product.group_product_variant',
-            help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),                
-        'decimal_precision': fields.integer('decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
+            help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),
+        'decimal_precision': fields.integer('Decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
     }
 
     def get_default_dp(self, cr, uid, fields, context=None):

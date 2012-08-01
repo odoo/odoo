@@ -38,11 +38,11 @@ class sale_configuration(osv.osv_memory):
                 the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
                 and to automatically creates project tasks from procurement lines.
                 This installs the modules project_timesheet and project_mrp."""),
-        'timesheet': fields.boolean('prapare invoices based on timesheets',
+        'timesheet': fields.boolean('prepare invoices based on timesheets',
             help = """For modifying account analytic view to show important data to project manager of services companies.
                 You can also view the report of account analytic summary user-wise as well as month wise.
                 This installs the module account_analytic_analysis."""),
-        'module_account_analytic_analysis': fields.boolean('Use Contract Management',
+        'module_account_analytic_analysis': fields.boolean('use contracts management',
             help = """Allows to define your customer contracts conditions: invoicing
             method (fixed price, on timesheet, advance invoice), the exact pricing
             (650€/day for a developer), the duration (one year support contract).
@@ -59,14 +59,14 @@ class sale_configuration(osv.osv_memory):
         'time_unit': fields.many2one('product.uom', 'The default working time unit for services is'),
         'default_picking_policy' : fields.boolean("configure per order if deliver in one pack or each product when available",
             help = "You will be able to configure, per sale order, if you deliver all  products at once or if you deliver each product when it is available.  This may have an impact on the shipping price."),
-        'group_sale_pricelist':fields.boolean("use pricelists to adopt your price per customers",
+        'group_sale_pricelist':fields.boolean("use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'group_uom':fields.boolean("allow using different units of measures",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_sale_delivery_address': fields.boolean("allow a different address for delivary and invoicing ",
+        'group_sale_delivery_address': fields.boolean("allow a different address for delivery and invoicing ",
             implied_group='sale.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a sale order."),
         'group_mrp_properties': fields.boolean('properties on lines',
@@ -82,7 +82,7 @@ class sale_configuration(osv.osv_memory):
             help="""Allow to configure warnings on products and trigger them when a user wants to sale a given product or a given customer.
             Example: Product: this product is deprecated, do not purchase more than 5.
             Supplier: don't forget to ask for an express delivery."""),
-        'module_sale_margin': fields.boolean("display margins on sale order",
+        'module_sale_margin': fields.boolean("display margins on sales orders",
             help="""This adds the 'Margin' on sales order.
                 This gives the profitability by calculating the difference between the Unit Price and Cost Price.
                 This installs the module sale_margin."""),
@@ -90,7 +90,7 @@ class sale_configuration(osv.osv_memory):
             help="""Allows you to categorize your sales and deliveries (picking lists) between different journals,
                 and perform batch operations on journals.
                 This installs the module sale_journal."""),
-        'module_analytic_user_function': fields.boolean("Assign User Roles per Contract",
+        'module_analytic_user_function': fields.boolean("assign user roles per contract",
             help="""Allows you to define what is the default function of a specific user on a given account.
                 This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
                 But the possibility to change these values is still available.
@@ -98,7 +98,7 @@ class sale_configuration(osv.osv_memory):
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
         'module_project': fields.boolean("Project"),
-        'decimal_precision': fields.integer("What's the decimal precision on prices:",help="As an example, a decimal precision of 2 will allow prices  like: 9.99 EUR, whereas a decimal precision of 4 will allow prices like:  0.0231 EUR per unit."),
+        'decimal_precision': fields.integer("Decimal precision on prices:",help="As an example, a decimal precision of 2 will allow prices  like: 9.99 EUR, whereas a decimal precision of 4 will allow prices like:  0.0231 EUR per unit."),
     }
     def _check_decimal(self, cr, uid, ids, context=None):
         for decimal in self.browse(cr, uid, ids, context=context):
