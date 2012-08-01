@@ -64,9 +64,7 @@
             <field name="arch" type="xml">
                 <search string="Messages Search">
                     <field name="model" string="Message"/>
-                    <separator orientation="vertical"/>
                     <field name="date"/>
-                    <separator orientation="vertical"/>
                     <field name="user_id"/>
                 </search>
             </field>
@@ -80,7 +78,6 @@
             <field name="priority">25</field>
             <field name="arch" type="xml">
                 <search string="Messages Search">
-                    <field name="user_id"/>
                     <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
                     <field name="type"/>
                     <filter icon="terp-personal+" string="My Feeds"
@@ -105,6 +102,7 @@
                             domain="[   ('date', '&lt;=', datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59')),
                                         ('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))
                                     ]"/>
+                    <field name="user_id"/>
                 </search>
             </field>
         </record>
@@ -208,31 +206,26 @@
             <field name="arch" type="xml">
                 <search string="Email Search">
                     <field name="email_from" filter_domain="['|' '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
-                    <separator orientation="vertical"/>
                     <field name="date"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test" name="received" string="Received" domain="[('state','=','received')]"/>
                     <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
                     <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
                     <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
+                    <separator/>
                     <filter icon="terp-camera_test" name="type_email" string="Email" domain="[('type','=','email')]"/>
                     <filter icon="terp-camera_test" name="type_comment" string="Comment" domain="[('type','=','comment')]"/>
                     <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('type','=','notification')]"/>
-                    <newline/>
                     <group expand="0" string="Extended Filters...">
                         <field name="user_id" string="User"/>
                         <field name="partner_id" string="Partner Name"/>
                         <field name="model"/>
                         <field name="res_id"/>
                     </group>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Thread" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>

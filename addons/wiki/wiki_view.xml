@@ -176,14 +176,10 @@
                     <field name="name"
                         filter_domain="['|', '|', ('name','ilike',self), ('section','ilike',self), ('tags','ilike',self)]"
                         string="Wiki"/>
-                    <separator orientation="vertical"/>
                     <field name="write_date" groups="base.group_no_one"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-jump-to-ltr" string="Need Review" domain="[('review','=',True)]"/>
-                    <separator orientation="vertical"/>
                     <field name="group_id"/>
                     <field name="write_uid"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter icon="terp-folder-blue" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
                         <filter icon="terp-personal" string="Author" domain="[]" context="{'group_by':'create_uid'}"/>
