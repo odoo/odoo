@@ -71,11 +71,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Follow-up">
-                    <group>
-                        <field name="name" string="Follow-up"/>
-                        <separator orientation="vertical"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    </group>
+                    <field name="name" string="Follow-up"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
         </record>

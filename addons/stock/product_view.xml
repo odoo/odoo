@@ -9,8 +9,8 @@
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <field name="pricelist_id" position="before">
-                    <field name="location_id" widget="selection" context="{'location': self}"/>
-                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
+                    <field name="location_id" context="{'location': self}"/>
+                    <field name="warehouse_id" context="{'warehouse': self}"/>
                 </field>
             </field>
         </record>
@@ -105,15 +105,15 @@
                 <group name="status" position="before" version="7.0">
                     <group string="Stock and Expected Variations">
                         <field name="qty_available"/>
-                        <field name="incoming_qty"/>
-                        <label for="virtual_available"/>
-                        <div>
+                        <field name="incoming_qty" groups="base.group_user"/>
+                        <label for="virtual_available" groups="base.group_user"/>
+                        <div groups="base.group_user">
                             <field name="virtual_available" class="oe_inline"/>
 
                             <button name="%(action_view_change_product_quantity)d" string="Update" attrs="{'invisible': [('type', '=', 'service')]}"
                                 type="action" icon="gtk-execute" groups="stock.group_stock_manager,stock.group_stock_user" class="oe_inline"/>
                         </div>
-                        <field name="outgoing_qty"/>
+                        <field name="outgoing_qty" groups="base.group_user"/>
                     </group>
                     <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
                         <field name="track_production" groups="stock.group_production_lot"/>
@@ -123,7 +123,7 @@
                 </group>
             </field>
         </record>
-        
+
         <record id="action_receive_move" model="ir.actions.act_window">
             <field name="name">Receive Products</field>
             <field name="res_model">stock.move</field>
@@ -136,7 +136,7 @@
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
             <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
         </record>
-       
+
         <record id="action_deliver_move" model="ir.actions.act_window">
             <field name="name">Receive Products</field>
             <field name="res_model">stock.move</field>
@@ -214,18 +214,6 @@
                 </group>
             </field>
         </record>
-
-<!--        <record id="view_product_valuation_form" model="ir.ui.view">
-            <field name="name">product.valuation.stock.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <field name="cost_method" position="after">
-                    <field name="valuation"/>
-                </field>
-            </field>
-        </record>-->
 
     </data>
 </openerp>

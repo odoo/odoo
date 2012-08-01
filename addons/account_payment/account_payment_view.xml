@@ -47,12 +47,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Payment Mode">
-                    <field name="name"
-                        string="Payment Mode"/>
-                    <separator orientation="vertical"/>
-                    <field name="journal" widget='selection'/>
-                    <field name="company_id" widget='selection' groups="base.group_multi_company"/>
-                    <newline/>
+                    <field name="name" string="Payment Mode"/>
+                    <field name="journal"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal'}"/>
                     </group>
@@ -216,20 +213,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payment Orders">
-                    <group>
-                        <field name="reference"
-                            string="Payment Order"/>
-                        <separator orientation="vertical"/>
-                        <field name="date_done"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
-                        <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
-                        <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>
-                        <separator orientation="vertical"/>
-                        <field name="mode" widget='selection'/>
-                        <field name="state"/>
-                    </group>
-                    <newline/>
+                    <field name="reference" string="Payment Order"/>
+                    <field name="date_done"/>
+                    <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                    <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
+                    <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>
+                    <field name="mode"/>
+                    <field name="state"/>
                     <group expand="0" string="Group By...">
                         <filter string="Payment Mode" context="{'group_by': 'mode'}" icon="terp-dolar"/>
                         <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
