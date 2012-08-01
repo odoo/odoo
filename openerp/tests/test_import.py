@@ -772,7 +772,24 @@ class test_o2m(ImporterCase):
             values(b.value, 'str'),
             'this is the rhythm'.split())
 
-    # TODO: failing inline LINK_TO
+    def test_link_inline(self):
+        id1 = self.registry('export.one2many.child').create(self.cr, openerp.SUPERUSER_ID, {
+            'str': 'Bf', 'value': 109
+        })
+        id2 = self.registry('export.one2many.child').create(self.cr, openerp.SUPERUSER_ID, {
+            'str': 'Me', 'value': 262
+        })
+
+        try:
+            self.import_(['const', 'value/.id'], [
+                ['42', '%d,%d' % (id1, id2)]
+            ])
+        except ValueError, e:
+            # should be Exception(Database ID doesn't exist: export.one2many.child : $id1,$id2)
+            self.assertIs(type(e), ValueError)
+            self.assertEqual(
+                e.args[0],
+                "invalid literal for int() with base 10: '%d,%d'" % (id1, id2))
 
     def test_link(self):
         id1 = self.registry('export.one2many.child').create(self.cr, openerp.SUPERUSER_ID, {
@@ -829,8 +846,6 @@ class test_o2m(ImporterCase):
         self.assertEqual(
             O2M_c.read(self.cr, openerp.SUPERUSER_ID, id2),
             {'id': id2, 'str': 'Me', 'value': 2, 'parent_id': False})
-
-    # TODO: name_get?
 
 class test_o2m_multiple(ImporterCase):
     model_name = 'export.one2many.multiple'
