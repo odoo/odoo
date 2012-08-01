@@ -86,9 +86,11 @@ $(document).ready(function () {
     test('no template, default', function () {
         var w = new (instance.web.Widget.extend({ }));
 
-        ok(!w.$element, "should not initially have a root element");
+        var $original = w.$element;
+        ok($original, "should initially have a root element");
         w.renderElement();
         ok(w.$element, "should have generated a root element");
+        ok($original !== w.$element, "should have generated a new root element");
         strictEqual(w.$element, w.$element, "should provide $element alias");
         ok(w.$element.is(w.el), "should provide raw DOM alias");
 
