@@ -29,7 +29,7 @@
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_4'))
     assert lead.type == 'opportunity', 'Lead is not converted to opportunity!'
-    assert lead.partner_id.id == ref("base.res_partner_2"), 'Partner missmatch!'
+    assert lead.partner_id.id == ref("base.res_partner_2"), 'Partner mismatch!'
     assert lead.stage_id.id == ref("stage_lead1"), 'Stage of opportunity is incorrect!'
 -
   Now I begin communication and schedule a phone call with the customer.
@@ -81,16 +81,16 @@
 -
   !python {model: crm.lead}: |
     opp = self.browse(cr, uid, ref('crm_case_11'))
-    assert opp.name == "Need Info about Onsite Intervention", "Opportunity name not correct"
+    assert opp.name == "Need estimated cost for new project", "Opportunity name not correct"
     assert opp.type == 'opportunity', 'Lead is not converted to opportunity!'
-    assert opp.partner_id.name == "Agrolait", 'Partner missmatch!'
+    assert opp.partner_id.name == "Thomas Passot", 'Partner mismatch!'
     assert opp.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
 -
   Then check for second lead converted on opportunity.
 -
   !python {model: crm.lead}: |
     opp = self.browse(cr, uid, ref('crm_case_2'))
-    assert opp.name == "Interest in Your New Product", "Opportunity name not correct"
+    assert opp.name == "Interest in Your New Software", "Opportunity name not correct"
     assert opp.type == 'opportunity', 'Lead is not converted to opportunity!'
     assert opp.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
 -
