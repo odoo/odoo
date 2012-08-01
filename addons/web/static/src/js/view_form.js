@@ -663,17 +663,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     autofocus: function() {
         if (this.get("actual_mode") === "edit" && !this.options.disable_autofocus) {
             var fields_order = this.fields_order.slice(0);
-            console.log('default focus = ', this.default_focus);
             if (this.default_focus_field) {
                 fields_order.unshift(this.default_focus_field.name);
             }
-            console.log(fields_order);
             for (var i = 0; i < fields_order.length; i += 1) {
                 var field = this.fields[fields_order[i]];
                 if (!field.get('effective_invisible') && !field.get('effective_readonly')) {
-                    console.log('FOCUS ', field.name);
-                    field.focus();
-                    break;
+                    if (field.focus() !== false) {
+                        break;
+                    }
                 }
             }
         }
