@@ -240,7 +240,7 @@ class test_integer_field(ImporterCase):
 
 
     def test_nonsense(self):
-        # dafuq? why does that one raise an error?
+        # FIXME: shit error reporting, exceptions half the time, messages the other half
         self.assertRaises(
             ValueError,
             self.import_, ['value'], [['zorglub']])
@@ -384,7 +384,7 @@ class test_selection(ImporterCase):
                 ['Qux'],
                 ['Bar'],
                 ['Foo'],
-                [2],
+                ['2'],
             ]),
             ok(4))
         self.assertEqual([3, 2, 1, 2], values(self.read()))
@@ -408,6 +408,8 @@ class test_selection(ImporterCase):
                 'value': value
             })
 
+        # FIXME: can't import an exported selection field label if lang != en_US
+        # (see test_export.test_selection.test_localized_export)
         self.assertEqual(
             self.import_(['value'], [
                 ['toto'],
@@ -443,16 +445,14 @@ class test_selection_function(ImporterCase):
     ]
 
     def test_imported(self):
-        """ By what bloody magic does that thing work?
-
-        => import uses fields_get, so translates import label (may or may not
-           be good news) *and* serializes the selection function to reverse
-           it: import does not actually know that the selection field uses a
-           function
+        """ import uses fields_get, so translates import label (may or may not
+        be good news) *and* serializes the selection function to reverse it:
+        import does not actually know that the selection field uses a function
         """
+        # NOTE: conflict between a value and a label => ?
         self.assertEqual(
             self.import_(['value'], [
-                [3],
+                ['3'],
                 ["Grault"],
             ]),
             ok(2))
@@ -461,6 +461,8 @@ class test_selection_function(ImporterCase):
             values(self.read()))
 
     def test_translated(self):
+        """ Expects output of selection function returns translated labels
+        """
         self.registry('res.lang').create(self.cr, openerp.SUPERUSER_ID, {
             'name': u'Français',
             'code': 'fr_FR',
@@ -478,7 +480,6 @@ class test_selection_function(ImporterCase):
                 'src': source,
                 'value': value
             })
-        # FIXME: Fucking hell
         self.assertEqual(
             self.import_(['value'], [
                 ['toto'],

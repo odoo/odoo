@@ -218,6 +218,7 @@ class test_datetime(CreatorCase):
 
         .. note:: on the other hand, export uses user lang for name_get
         """
+        # NOTE: ignores user timezone, always exports to UTC
         self.assertEqual(
             self.export('2011-11-07 21:05:48', context={'tz': 'Pacific/Norfolk'}),
             [[u'2011-11-07 21:05:48']])
@@ -260,7 +261,6 @@ class test_selection(CreatorCase):
                 'src': source,
                 'value': value
             })
-        # FIXME: can't import an exported selection field label if lang != en_US
         self.assertEqual(
             self.export(2, context={'lang': 'fr_FR'}),
             [[u'Bar']])
@@ -274,8 +274,7 @@ class test_selection_function(CreatorCase):
             [[False]])
 
     def test_value(self):
-        """ selection functions export the *value* itself
-        """
+        # FIXME: selection functions export the *value* itself
         self.assertEqual(
             self.export(1),
             [[u'1']])
