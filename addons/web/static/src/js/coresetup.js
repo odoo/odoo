@@ -415,12 +415,12 @@ instance.web.Bus = instance.web.Class.extend(instance.web.EventDispatcherMixin, 
         //           check gtk bindings
         // http://unixpapa.com/js/key.html
         _.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
-            $('html').on(evtype, self, function(ev) {
+            $('html').on(evtype, function(ev) {
                 self.trigger(evtype, ev);
             });
         });
         _.each('resize,scroll'.split(','), function(evtype) {
-            $(window).on(evtype, self, function(ev) {
+            $(window).on(evtype, function(ev) {
                 self.trigger(evtype, ev);
             });
         });
