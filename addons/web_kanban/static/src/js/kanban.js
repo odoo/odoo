@@ -173,6 +173,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_process_groups: function(groups) {
         var self = this;
+        this.$element.remove('oe_kanban_ungrouped').addClass('oe_kanban_grouped');
         this.add_group_mutex.exec(function() {
             self.do_clear_groups();
             self.dataset.ids = [];
@@ -194,6 +195,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_process_dataset: function(dataset) {
         var self = this;
+        this.$element.remove('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
         this.add_group_mutex.exec(function() {
             var def = $.Deferred();
             self.do_clear_groups();
