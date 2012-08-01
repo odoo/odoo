@@ -113,7 +113,7 @@ class hr_holidays(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Description', required=True, size=64),
+        'name': fields.char('Description', size=64),
         'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
             'State', readonly=True, help='The state is set to \'To Submit\', when a holiday request is created.\
             \nThe state is \'To Approve\', when holiday request is confirmed by user.\
