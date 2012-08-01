@@ -2,11 +2,7 @@
 <openerp>
     <data>
 
-        <!--
-    ======================
-    department
-    ======================
-    -->
+        <!-- Department -->
         <record id="view_department_form" model="ir.ui.view">
             <field name="name">hr.department.form</field>
             <field name="model">hr.department</field>
@@ -37,18 +33,17 @@
                 </tree>
             </field>
         </record>
-         <record id="view_department_filter" model="ir.ui.view">
+        <record id="view_department_filter" model="ir.ui.view">
             <field name="name">Departments</field>
             <field name="model">hr.department</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Departments">
                     <field name="name" string="Department"/>
-                    <separator orientation="vertical"/>
                     <field name="manager_id" />
                 </search>
              </field>
-         </record>
+        </record>
 
         <record id="open_module_tree_department" model="ir.actions.act_window">
             <field name="name">Departments</field>
@@ -60,5 +55,5 @@
 
        <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="hr.menu_hr_configuration" sequence="5"/>
 
-        </data>
+    </data>
 </openerp>
