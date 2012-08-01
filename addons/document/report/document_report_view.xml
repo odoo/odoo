@@ -41,13 +41,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="All users files">
-                    <group>
-                        <field name="name"
-                            filter_domain="['|', '|',('name','ilike',self), ('user','ilike',self), ('directory','ilike',self)]"
-                            string="Users File"/>
-                        <separator orientation="vertical"/>
-                        <field name="month"/>
-                    </group>
+                    <field name="name" filter_domain="['|', '|',('name','ilike',self), ('user','ilike',self), ('directory','ilike',self)]" string="Users File"/>
+                    <field name="month"/>
                </search>
             </field>
         </record>

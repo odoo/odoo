@@ -55,16 +55,13 @@
             <field name="arch" type="xml">
                 <search string="Hr Attendance Search">
                     <field name="name" string="Attendance"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
-                    <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
-                    <separator orientation="vertical"/>
-                    <field name="employee_id"/>
                     <field name="action"/>
-                    <newline/>
+                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
+                    <separator/>
+                    <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
+                    <field name="employee_id"/>
                     <group expand="0" string="Group By...">
                         <filter name="employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}"/>
                     </group>
                 </search>
