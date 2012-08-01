@@ -669,9 +669,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             for (var i = 0; i < fields_order.length; i += 1) {
                 var field = this.fields[fields_order[i]];
                 if (!field.get('effective_invisible') && !field.get('effective_readonly')) {
-                    console.log("trying to focus ", field.name, field);
                     if (field.focus() !== false) {
-                        console.log("----------------- YIPEEEEEEEE");
                         break;
                     } else {
                     }
