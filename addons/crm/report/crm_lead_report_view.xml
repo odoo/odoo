@@ -70,47 +70,26 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <group>
-                        <filter icon="terp-personal"
-                            name="lead"
-                            string="Lead"
-                            domain="[('type','=', 'lead')]"
-                            help="Show only lead"/>
-                        <filter icon="terp-personal+"
-                            string="Opportunity"
-                            name="opportunity"
-                            domain="[('type','=','opportunity')]"
-                            help="Show only opportunity"/>
-                        <separator orientation="vertical" />
-                        <filter icon="terp-check"
-                            string="New"
-                            domain="[('state','=','draft')]"
-                            help="Leads/Opportunities which are in New state"/>
-                        <filter icon="terp-camera_test"
-                            string="Open"
-                            domain="[('state','=','open')]"
-                            help="Leads/Opportunities which are in open state"/>
-                        <filter icon="gtk-media-pause"
-                            string="Pending"
-                            domain="[('state','=','pending')]"
-                            help="Leads/Opportunities which are in pending state"/>
-                        <filter icon="terp-dialog-close"
-                            string="Closed"
-                            domain="[('state','=','done')]"
-                            help="Leads/Opportunities which are in done state"/>
-                        <filter string="My Sales Team(s)" icon="terp-personal+"
-                                context="{'invisible_section': False}"
-                                domain="[('section_id.user_id','=',uid)]"
-                                help="Leads/Opportunities that are assigned to one of the sale teams I manage"/>
-                        <filter icon="terp-personal" string="My Case(s)" help="Leads/Opportunities that are assigned to me" domain="[('user_id','=',uid)]"/>
-                        <separator orientation="vertical" />
-                        <field name="section_id"
-                            context="{'invisible_section': False}"/>
-                        <field name="user_id" string="Salesperson"/>
-                    </group>
-                    <newline/>
+                    <filter icon="terp-personal" name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
+                    <filter icon="terp-personal+" string="Opportunity" name="opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
+                    <separator/>
+                    <filter icon="terp-check" string="New" domain="[('state','=','draft')]" help="Leads/Opportunities which are in New state"/>
+                    <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Leads/Opportunities which are in open state"/>
+                    <filter icon="gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Leads/Opportunities which are in pending state"/>
+                    <filter icon="terp-dialog-close" string="Closed" domain="[('state','=','done')]" help="Leads/Opportunities which are in done state"/>
+                    <separator/>
+                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]"
+                            help="Leads/Opportunities that are assigned to one of the sale teams I manage"/>
+                    <separator/>
+                    <filter icon="terp-personal" string="My Case(s)" help="Leads/Opportunities that are assigned to me" domain="[('user_id','=',uid)]"/>
+                    <field name="section_id" context="{'invisible_section': False}"/>
+                    <field name="user_id" string="Salesperson"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="partner_id"/>
+                        <field name="stage_id" domain="[('section_ids', '=', 'section_id')]" />
+                        <field name="type_id"/>
+                        <field name="channel_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
                         <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]" />
                         <field name="type_id" widget="selection"/>
@@ -122,22 +101,21 @@
                         <field name="opening_date"/>
                         <field name="date_closed"/>
                     </group>
-                    <newline/>
                     <group expand="1" string="Group By...">
-                        <filter string="Salesperson" name="user" icon="terp-personal"
-                            domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+"
-                            domain="[]"
-                            context="{'group_by':'section_id'}" />
+                        <filter string="Salesperson" name="user" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
-                        <filter string="Company" icon="terp-go-home"
-                            domain="[]"
-                            context="{'group_by':'company_id'}"
-                            groups="base.group_multi_company"/>
-                        <separator orientation="vertical" />
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Stage" name="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
+                        <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}" />
+                        <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
+                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'creation_year'}"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'creation_month'}"/>
+                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'creation_day'}"/>
+                        <filter string="Exp. Closing"  icon="terp-go-month" domain="[]" context="{'group_by':'deadline_month'}"/>
                         <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
                             domain="[]" context="{'group_by':'type_id'}" />
                         <filter string="Channel" icon="terp-call-start"
