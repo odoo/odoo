@@ -194,9 +194,12 @@ class WebClient(openerpweb.Controller):
             if mods is not None:
                 path += '?mods=' + mods
             return [path]
-        # old code to force cache reloading
-        #return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
-        return [el[1] for el in self.manifest_glob(req, mods, extension)]
+        no_sugar = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1
+        no_sugar = no_sugar or req.httprequest.environ.get('HTTP_REFERER', '').count("no_sugar") >= 1
+        if not no_sugar:
+            return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
+        else:
+            return [el[1] for el in self.manifest_glob(req, mods, extension)]
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods=None):
@@ -993,6 +996,16 @@ class DataSet(openerpweb.Controller):
                 kwargs[k] = req.session.eval_context(kwargs[k])
             elif isinstance(kwargs[k], common.nonliterals.BaseDomain):
                 kwargs[k] = req.session.eval_domain(kwargs[k])
+
+        # Temporary implements future display_name special field for model#read()
+        if method == 'read' and kwargs.get('context') and kwargs['context'].get('future_display_name'):
+            if 'display_name' in args[1]:
+                names = req.session.model(model).name_get(args[0], **kwargs)
+                args[1].remove('display_name')
+                r = getattr(req.session.model(model), method)(*args, **kwargs)
+                for i in range(len(r)):
+                    r[i]['display_name'] = names[i][1] or "%s#%d" % (model, names[i][0])
+                return r
 
         return getattr(req.session.model(model), method)(*args, **kwargs)
 

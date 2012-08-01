@@ -97,6 +97,35 @@ $sheet-max-width: 860px
         color: $color
 
 // }}}
+// CSS animation bounces {{{
+@-moz-keyframes bounce
+    0%
+        -moz-transform: scale(0)
+        opacity: 0
+    50%
+        -moz-transform: scale(1.3)
+        opacity: 0.4
+    75%
+        -moz-transform: scale(0.9)
+        opacity: 0.7
+    100%
+        -moz-transform: scale(1)
+        opacity: 1
+
+@-webkit-keyframes bounce
+    0%
+        -webkit-transform: scale(0)
+        opacity: 0
+    50%
+        -webkit-transform: scale(1.3)
+        opacity: 0.4
+    75%
+        -webkit-transform: scale(0.9)
+        opacity: 0.7
+    100%
+        -webkit-transform: scale(1)
+        opacity: 1
+// }}}
 
 .openerp.openerp_webclient_container
     height: 100%
@@ -200,7 +229,9 @@ $sheet-max-width: 860px
             width: auto
             a.ui-state-active
                 background: #f0f0fa
-
+    div.ui-widget-overlay
+        background: black
+        @include opacity(0.3)
     // Modal box
     &.ui-dialog
         display: none
@@ -390,6 +421,9 @@ $sheet-max-width: 860px
             text-decoration: none
         .oe_star_on
             color: gold
+    .oe_bounce
+        -moz-animation: bounce .40s linear
+        -webkit-animation: bounce .40s linear
     // }}}
     // Tags (for many2many tags, among others) {{{
     .oe_tag
@@ -982,6 +1016,8 @@ $sheet-max-width: 860px
         // ViewManager.pager {{{
         .oe_view_manager_pager
             line-height: 26px
+            .oe_list_pager_single_page .oe_pager_group
+                display: none
         .oe_pager_value
             float: left
             margin-right: 8px
@@ -1846,6 +1882,49 @@ $sheet-max-width: 860px
             input
                 text-align: right
     // }}}
+    // Tree view {{{
+    .tree_header
+        background-color: #f0f0f0
+        border-bottom: 1px solid #cacaca
+        color: #4c4c4c
+        padding: 5px
+        height: 25px
+        button
+            float: right
+            height: 27px
+            margin-right: 5px
+    .oe-treeview-table
+        width: 100%
+        background-color: white
+        border-spacing: 0
+        th
+            padding: 10px
+            color: #4c4c4c
+            font-weight: bold
+            background-color: #f0f0f0
+            border-bottom: 2px solid #cacaca
+        .treeview-tr, .treeview-td
+            cursor: pointer
+            border-right: 1px dotted #afafb6
+            vertical-align: top
+            text-align: left
+            border-bottom: 1px solid #cfcccc
+        tr:hover
+            background-color: #e0e0f8
+        .oe-number
+            text-align: right !important
+        span
+            font-size: 90%
+            font-weight: normal
+            white-space: nowrap
+            display: block
+        .treeview-tr.oe-treeview-first
+            background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat
+        .oe_open .treeview-tr.oe-treeview-first
+            background-image: url(/web/static/src/img/collapse.gif)
+        .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
+            margin-left: 16px
+    // }}}
     // Translation {{{
     .oe_trad_field.touched
         border: 1px solid green !important
@@ -1903,49 +1982,6 @@ $sheet-max-width: 860px
         float: right
         color: #333
     // }}}
-//Tree view
-.openerp
-    .tree_header
-        background-color: #f0f0f0
-        border-bottom: 1px solid #cacaca
-        color: #4c4c4c
-        padding: 5px
-        height: 25px
-        button
-            float: right
-            height: 27px
-            margin-right: 5px
-    .oe-treeview-table
-        width: 100%
-        background-color: white
-        border-spacing: 0
-        th
-            padding: 10px
-            color: #4c4c4c
-            font-weight: bold
-            background-color: #f0f0f0
-            border-bottom: 2px solid #cacaca
-        .treeview-tr, .treeview-td
-            cursor: pointer
-            border-right: 1px dotted #afafb6
-            vertical-align: top
-            text-align: left
-            border-bottom: 1px solid #cfcccc
-        tr:hover
-            background-color: #e0e0f8
-        .oe-number
-            text-align: right !important
-        span
-            font-size: 90%
-            font-weight: normal
-            white-space: nowrap
-            display: block
-        .treeview-tr.oe-treeview-first
-            background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat
-        .oe_open .treeview-tr.oe-treeview-first
-            background-image: url(/web/static/src/img/collapse.gif)
-        .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
-            margin-left: 16px
 // Kitten Mode {{{
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)
@@ -1956,8 +1992,6 @@ $sheet-max-width: 860px
 
 // }}}
 
-div.ui-widget-overlay
-    background: black
-    @include opacity(0.3)
+
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

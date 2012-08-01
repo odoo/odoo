@@ -423,26 +423,64 @@ openerp.web.list_editable = function (instance) {
         keyup_ESCAPE: function () {
             return this.cancel_edition();
         },
+        /**
+         * Gets the selection range (start, end) for the provided element,
+         * returns ``null`` if it can't get a range.
+         *
+         * @private
+         */
         _text_selection_range: function (el) {
-            if (el.selectionStart !== undefined) {
+            var selectionStart;
+            try {
+                selectionStart = el.selectionStart;
+            } catch (e) {
+                // radio or checkbox throw on selectionStart access
+                return null;
+            }
+            if (selectionStart !== undefined) {
                 return {
-                    start: el.selectionStart,
+                    start: selectionStart,
                     end: el.selectionEnd
                 };
-            } else if(document.body.createTextRange) {
+            } else if (document.body.createTextRange) {
                 throw new Error("Implement text range handling for MSIE");
                 var sel = document.body.createTextRange();
                 if (sel.parentElement() === el) {
 
                 }
             }
+            // Element without selection ranges (select, div/@contenteditable)
+            return null;
         },
         _text_cursor: function (el) {
             var selection = this._text_selection_range(el);
-            if (selection.start !== selection.end) {
+            if (!selection) {
                 return null;
             }
-            return selection.start;
+            if (selection.start !== selection.end) {
+                return {position: null, collapsed: false};
+            }
+            return {position: selection.start, collapsed: true};
+        },
+        /**
+         * Checks if the cursor is at the start of the provided el
+         *
+         * @param {HTMLInputElement | HTMLTextAreaElement}
+         * @returns {Boolean}
+         * @private
+         */
+        _at_start: function (cursor, el) {
+            return cursor.collapsed && (cursor.position === 0);
+        },
+        /**
+         * Checks if the cursor is at the end of the provided el
+         *
+         * @param {HTMLInputElement | HTMLTextAreaElement}
+         * @returns {Boolean}
+         * @private
+         */
+        _at_end: function (cursor, el) {
+            return cursor.collapsed && (cursor.position === el.value.length);
         },
         /**
          * @param DOMEvent event
@@ -452,10 +490,11 @@ openerp.web.list_editable = function (instance) {
          */
         _key_move_record: function (event, record_direction, is_valid_move) {
             if (!this.editor.is_editing('edit')) { return $.when(); }
-            // FIXME: assumes editable widgets are input-type elements
-            var index = this._text_cursor(event.target);
-            // If selecting or not at the start of the input
-            if (!is_valid_move(event.target, index)) { return $.when(); }
+            var cursor = this._text_cursor(event.target);
+            // if text-based input (has a cursor)
+            //    and selecting (not collapsed) or not at a field boundary
+            //        don't move to the next record
+            if (cursor && !is_valid_move(event.target, cursor)) { return $.when(); }
 
             event.preventDefault();
             var source_field = $(event.target).closest('[data-fieldname]')
@@ -464,13 +503,15 @@ openerp.web.list_editable = function (instance) {
 
         },
         keydown_UP: function (e) {
-            return this._key_move_record(e, 'pred', function (el, index) {
-                return index === 0;
+            var self = this;
+            return this._key_move_record(e, 'pred', function (el, cursor) {
+                return self._at_start(cursor, el);
             });
         },
         keydown_DOWN: function (e) {
-            return this._key_move_record(e, 'succ', function (el, index) {
-                return index === el.value.length;
+            var self = this;
+            return this._key_move_record(e, 'succ', function (el, cursor) {
+                return self._at_end(cursor, el);
             });
         },
 
@@ -478,8 +519,8 @@ openerp.web.list_editable = function (instance) {
             // If the cursor is at the beginning of the field
             var source_field = $(e.target).closest('[data-fieldname]')
                     .attr('data-fieldname');
-            var index = this._text_cursor(e.target);
-            if (index !== 0) { return $.when(); }
+            var cursor = this._text_cursor(e.target);
+            if (cursor && !this._at_start(cursor, e.target)) { return $.when(); }
 
             var fields_order = this.editor.form.fields_order;
             var field_index = _(fields_order).indexOf(source_field);
@@ -502,8 +543,8 @@ openerp.web.list_editable = function (instance) {
             // looking for new fields at the right
             var source_field = $(e.target).closest('[data-fieldname]')
                     .attr('data-fieldname');
-            var index = this._text_cursor(e.target);
-            if (index !== e.target.value.length) { return $.when(); }
+            var cursor = this._text_cursor(e.target);
+            if (cursor && !this._at_end(cursor, e.target)) { return $.when(); }
 
             var fields_order = this.editor.form.fields_order;
             var field_index = _(fields_order).indexOf(source_field);

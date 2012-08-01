@@ -3,8 +3,10 @@
     "category": "Hidden",
     "description":
         """
-        OpenERP Web core module.
-        This module provides the core of the OpenERP Web Client.
+OpenERP Web core module.
+========================
+
+This module provides the core of the OpenERP Web Client.
         """,
     "depends" : [],
     'auto_install': True,
@@ -20,6 +22,7 @@
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
+        "static/lib/spinjs/spin.js",
         "static/lib/jquery.blockUI/jquery.blockUI.js",
         "static/lib/jquery.ui/js/jquery-ui-1.8.17.custom.min.js",
         "static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js",

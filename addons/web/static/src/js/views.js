@@ -120,7 +120,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
                 state['title'] = this.inner_action.name;
-                state['model'] = this.inner_action.res_model;
+                if(this.inner_action.type == 'ir.actions.act_window') {
+                    state['model'] = this.inner_action.res_model;
+                }
                 if (this.inner_action.id) {
                     state['action_id'] = this.inner_action.id;
                 }
@@ -178,7 +180,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     do_action: function(action, on_close) {
-        if (_.isNumber(action) || _.isString(action)) {
+        if (_.isString(action) && instance.web.client_actions.contains(action)) {
+            var action_client = { type: "ir.actions.client", tag: action };
+            return this.do_action(action_client);
+        } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
             return self.rpc("/web/action/load", { action_id: action }, function(result) {
                 self.do_action(result.result, on_close);
@@ -209,21 +214,30 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog_stop();
         this.clear_breadcrumbs();
     },
-    ir_actions_act_window: function (action, on_close) {
-        var self = this;
-        if (_(['base.module.upgrade', 'base.setup.installer'])
-                .contains(action.res_model)) {
-            var old_close = on_close;
-            on_close = function () {
-                instance.webclient.do_reload().then(old_close);
-            };
+
+    do_ir_actions_common: function(action, on_close) {
+        var self = this, klass, widget, add_breadcrumb;
+        if (action.type === 'ir.actions.client') {
+            var ClientWidget = instance.web.client_actions.get_object(action.tag);
+            widget = new ClientWidget(this, action.params);
+            klass = 'oe_act_client';
+            add_breadcrumb = function() {
+                self.push_breadcrumb({
+                    widget: widget,
+                    title: action.name
+                });
+            }
+        } else {
+            widget = new instance.web.ViewManagerAction(this, action);
+            klass = 'oe_act_window';
+            add_breadcrumb = widget.proxy('add_breadcrumb');
         }
         if (action.target === 'new') {
             if (this.dialog === null) {
                 // These buttons will be overwrited by <footer> if any
                 this.dialog = new instance.web.Dialog(this, {
                     buttons: { "Close": function() { $(this).dialog("close"); }},
-		    dialogClass: 'oe_act_window'
+                    dialogClass: klass
                 });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
@@ -231,7 +245,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 this.dialog_widget.destroy();
             }
             this.dialog.dialog_title = action.name;
-            this.dialog_widget = new instance.web.ViewManagerAction(this, action);
+            this.dialog_widget = widget;
             this.dialog_widget.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
@@ -242,10 +256,33 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 });
             }
             this.inner_action = action;
-            var inner_widget = this.inner_widget = new instance.web.ViewManagerAction(this, action);
-            inner_widget.add_breadcrumb();
+            this.inner_widget = widget;
+            add_breadcrumb();
             this.inner_widget.appendTo(this.$element);
         }
+    },
+
+    ir_actions_act_window: function (action, on_close) {
+        var self = this;
+        if (_(['base.module.upgrade', 'base.setup.installer'])
+                .contains(action.res_model)) {
+            var old_close = on_close;
+            on_close = function () {
+                instance.webclient.do_reload().then(old_close);
+            };
+        }
+        if (action.target !== 'new') {
+            if(action.menu_id) {
+                this.dialog_stop();
+                return this.getParent().do_action(action, function () {
+                    instance.webclient.menu.open_menu(action.menu_id);
+                });
+            }
+        }
+        return this.do_ir_actions_common(action, on_close);
+    },
+    ir_actions_client: function (action, on_close) {
+        return this.do_ir_actions_common(action, on_close);
     },
     ir_actions_act_window_close: function (action, on_closed) {
         if (!this.dialog && on_closed) {
@@ -261,16 +298,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }).then(function (action) {
             self.do_action(action, on_closed)
         });
-    },
-    ir_actions_client: function (action) {
-        this.dialog_stop();
-        var ClientWidget = instance.web.client_actions.get_object(action.tag);
-        this.inner_widget = new ClientWidget(this, action.params);
-        this.push_breadcrumb({
-            widget: this.inner_widget,
-            title: action.name
-        });
-        this.inner_widget.appendTo(this.$element);
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
@@ -477,6 +504,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         });
         this.getParent().push_breadcrumb({
             widget: this,
+            action: this.action,
             show: function(index, $e) {
                 var view_to_select = views[index];
                 self.$element.show();
@@ -485,9 +513,27 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
             },
             get_title: function() {
-                return _.map(views, function(v) {
-                    return self.views[v].controller.get('title');
+                var id;
+                var currentIndex;
+                _.each(self.getParent().breadcrumbs, function(bc, i) {
+                    if (bc.widget === self) {
+                        currentIndex = i;
+                    }
                 });
+                var next = self.getParent().breadcrumbs.slice(currentIndex + 1)[0];
+                var titles = _.map(views, function(v) {
+                    var controller = self.views[v].controller;
+                    if (v === 'form') {
+                        id = controller.datarecord.id;
+                    }
+                    return controller.get('title');
+                });
+                if (next && next.action.res_id && self.active_view === 'form' && self.model === next.action.res_model && id === next.action.res_id) {
+                    // If the current active view is a formview and the next item in the breadcrumbs
+                    // is an action on same object (model / res_id), then we omit the current formview's title
+                    titles.pop();
+                }
+                return titles;
             }
         });
     },

@@ -295,10 +295,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             if (!group.state.folded) {
                 if (182*unfolded>=self.$element.width()) {
                     group.$element.css('width', "170px");
-                } else if (262*unfolded>self.$element.width()) {
-                    group.$element.css('width', Math.round(100/unfolded) + '%');
-                } else {
+                } else if (262*unfolded<self.$element.width()) {
                     group.$element.css('width', "250px");
+                } else {
+                    group.$element.css('width', Math.floor(self.$element.width()/unfolded) + 'px');
                 }
             }
         });
@@ -419,6 +419,15 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
                 });
             self.quick.appendTo($(".oe_kanban_group_list_header", self.$records));
             self.quick.focus();
+        });
+        // Add bounce effect on image '+' of kanban header when click on empty space of kanban grouped column.
+        var add_btn = this.$element.find('.oe_kanban_add');
+        this.$records.click(function (ev) {
+            if (ev.target == ev.currentTarget) {
+                if (!self.state.folded) {
+                    add_btn.wrap('<div>').addClass('oe_bounce');
+                } 
+            }
         });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
