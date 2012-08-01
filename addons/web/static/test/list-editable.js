@@ -72,7 +72,7 @@ $(document).ready(function () {
     });
     asyncTest('base-state', 2, function () {
         var e = new instance.web.list.Editor({
-            dataset: {},
+            dataset: {ids: []},
             edition_view: function () {
                 return makeFormView();
             }
