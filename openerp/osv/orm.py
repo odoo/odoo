@@ -1055,7 +1055,7 @@ class BaseModel(object):
                                      "in order to implement their access rights policy"
 
         # Validate rec_name
-        if self._rec_name is None:
+        if self._rec_name is not None:
             assert self._rec_name in self._columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
         else:
             self._rec_name = 'name'
