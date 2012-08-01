@@ -1135,7 +1135,8 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
             uid: new py.float(this.uid),
             datetime: datetime,
             time: time,
-            relativedelta: relativedelta
+            relativedelta: relativedelta,
+            current_date: date.today.__call__().strftime(['%Y-%m-%d'])
         };
     },
     /**
