@@ -302,18 +302,12 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Meetings">
-                <group>
-                    <field name="name" string="Meeting"
-                        filter_domain="[('name','ilike',self)]"/>
-                    <filter string="Inbox" help="Unread messages" icon="terp-mail-message-new"
-                        name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
-                    <separator orientation="vertical"/>
-                    <filter string="My Meetings" help="My Meetings" icon="terp-personal"
-                        domain="[('user_id','=',uid)]"/>
-                    <separator orientation="vertical"/>
-                    <field name="user_id"/>
-                    <field name="partner_ids"/>
-                </group>
+                <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>
+                <filter string="Inbox" help="Unread messages" icon="terp-mail-message-new" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                <separator/>
+                <filter string="My Meetings" help="My Meetings" icon="terp-personal" domain="[('user_id','=',uid)]"/>
+                <field name="user_id"/>
+                <field name="partner_ids"/>
             </search>
         </field>
     </record>
