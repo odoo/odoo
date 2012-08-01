@@ -27,7 +27,6 @@ class report_event_registration(osv.osv):
     _name = "report.event.registration"
     _description = "Events Analysis"
     _auto = False
-    _rec_name = 'date'
     _columns = {
         'event_date': fields.char('Event Start Date', size=64, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
