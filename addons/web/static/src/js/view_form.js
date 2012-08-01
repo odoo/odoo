@@ -302,7 +302,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this._super();
     },
     on_record_loaded: function(record) {
-        var self = this, set_values = [];
+        var self = this, defs = [];
         if (!record) {
             this.set({ 'title' : undefined });
             this.do_warn("Form", "The record could not be found in the database.", true);
@@ -310,7 +310,19 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this.datarecord = record;
         this._actualize_mode();
-        this.set({ 'title' : record.id ? record.name : "New record" });
+
+        var titleDef = $.Deferred();
+        if (record.id) {
+            this.dataset.name_get(record.id).then(function(names) {
+                self.set({ 'title' : names[0][1] });
+            }).always(function() {
+                titleDef.resolve();
+            });
+        } else {
+            this.set({ 'title' : "New record" });
+            titleDef.resolve();
+        }
+        defs.push(titleDef);
 
         if (this.qweb) {
             this.kill_current_form();
@@ -322,9 +334,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
             var result = field.set_value(self.datarecord[f] || false);
-            set_values.push(result);
+            defs.push(result);
         });
-        return $.when.apply(null, set_values).pipe(function() {
+        return $.when.apply(null, defs).pipe(function() {
             if (!record.id) {
                 // New record: Second pass in order to trigger the onchanges
                 // respecting the fields order defined in the view
@@ -4669,8 +4681,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
         clickable = this.node.attrs.clickable;
-        if(clickable != undefined && String(clickable.toLowerCase()) in ['true', '1'])
-        {
+        if (clickable != undefined && (clickable.toLowerCase() === 'true' || clickable === "1")) {
             var elemts = this.$element.find('.oe_form_steps_item')
             _.each(elemts, function(element){
                 $item = $(element);
