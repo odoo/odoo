@@ -33,7 +33,7 @@ class sale_configuration(osv.osv_memory):
         'group_invoice_deli_orders': fields.boolean('generate invoices after and based on delivery orders',
             implied_group='sale.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
-        'task_work': fields.boolean('prepare invoices based on tasks activities',
+        'task_work': fields.boolean("prepare invoices based on task's activities",
             help="""Lets you transfer the entries under tasks defined for Project Management to
                 the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
                 and to automatically creates project tasks from procurement lines.
