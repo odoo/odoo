@@ -35,16 +35,6 @@ CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_payment_mode(osv.osv):
-    """ Payment Mode for Fund """
-    _name = "crm.payment.mode"
-    _description = "Payment Mode"
-    _columns = {
-        'name': fields.char('Payment Mode', size=64, required=True),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-    }
-crm_payment_mode()
-
 class crm_lead(base_stage, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
