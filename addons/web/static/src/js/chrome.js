@@ -57,9 +57,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
-        if (content) {
-            this.$element = content instanceof $ ? content : $(content);
-        }
+        this.setElement(content || this.make(this.tagName));
         this.dialog_options = {
             modal: true,
             destroy_on_close: true,
@@ -589,6 +587,12 @@ instance.web.Login =  instance.web.Widget.extend({
             self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
         });
+    },
+    show: function () {
+        this.$element.show();
+    },
+    hide: function () {
+        this.$element.hide();
     }
 });
 instance.web.client_actions.add("login", "instance.web.Login");
@@ -880,12 +884,11 @@ instance.web.Client = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        return instance.connection.session_bind(this.origin).then(function() {
+        return instance.connection.session_bind(this.origin).pipe(function() {
             var $e = $(QWeb.render(self._template, {}));
-            self.$element.replaceWith($e);
-            self.$element = $e;
+            self.replaceElement($e);
             self.bind_events();
-            self.show_common();
+            return self.show_common();
         });
     },
     bind_events: function() {

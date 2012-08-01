@@ -101,7 +101,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             w.off('focused blurred');
             w.destroy();
         });
-        this.$element.off('.formBlur');
+        if (this.$element) {
+            this.$element.off('.formBlur');
+        }
         this._super();
     },
     on_loaded: function(data) {
@@ -3076,7 +3078,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.views = views;
 
         this.viewmanager = new instance.web.form.One2ManyViewManager(this, this.dataset, views, {});
-        this.viewmanager.$element.addClass("oe_view_manager_one2many");
         this.viewmanager.o2m = self;
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
@@ -4304,7 +4305,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this.selection.view = this.view;
         this.selection.set({force_readonly: this.get('effective_readonly')});
         this.selection.on("change:value", this, this.on_selection_changed);
-        this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
+        this.selection.setElement(this.$(".oe_form_view_reference_selection"));
         this.selection.renderElement();
         this.selection.start();
         this.selection
@@ -4317,7 +4318,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this.m2o.view = this.view;
         this.m2o.set({force_readonly: this.get("effective_readonly")});
         this.m2o.on("change:value", this, this.data_changed);
-        this.m2o.$element = $(".oe_form_view_reference_m2o", this.$element);
+        this.m2o.setElement(this.$(".oe_form_view_reference_m2o"));
         this.m2o.renderElement();
         this.m2o.start();
         this.m2o

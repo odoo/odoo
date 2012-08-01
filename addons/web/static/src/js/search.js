@@ -861,13 +861,13 @@ instance.web.search.Invalid = instance.web.Class.extend( /** @lends instance.web
         );
     }
 });
-instance.web.search.Widget = instance.web.OldWidget.extend( /** @lends instance.web.search.Widget# */{
+instance.web.search.Widget = instance.web.Widget.extend( /** @lends instance.web.search.Widget# */{
     template: null,
     /**
      * Root class of all search widgets
      *
      * @constructs instance.web.search.Widget
-     * @extends instance.web.OldWidget
+     * @extends instance.web.Widget
      *
      * @param view the ancestor view of this widget
      */

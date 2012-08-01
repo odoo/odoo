@@ -423,7 +423,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
 
-        $.when(view_promise).then(function () {
+        return $.when(view_promise).then(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
@@ -445,7 +445,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
             });
         });
-        return view_promise;
     },
     do_create_view: function(view_type) {
         // Lazy loading of views
@@ -1175,7 +1174,7 @@ instance.web.View = instance.web.Widget.extend({
         this.view_id = view_id;
         this.set_default_options(options);
     },
-    start: function() {
+    start: function () {
         return this.load_view();
     },
     load_view: function() {
