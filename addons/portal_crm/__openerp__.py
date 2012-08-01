@@ -26,18 +26,20 @@
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-This module adds crm menu and features (contact form) to your portal if crm and 
-portal are installed.
+This module adds a contact page (with a contact form creating a lead when
+submitted) to your portal if crm and portal are installed.
     """,
     'author': 'OpenERP SA',
     'depends': ['crm','portal'],
     'data': [
-        'security/ir.model.access.csv',
         'wizard/contact_view.xml',
     ],
-    'installable': True,
-    'auto_install':True,
+    'installable': True
+,    'auto_install':True,
     'category':'Hidden',
+    'css': [
+        'static/src/css/portal_crm.css',
+    ],
 
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

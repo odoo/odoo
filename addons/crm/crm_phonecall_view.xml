@@ -214,40 +214,24 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <filter icon="terp-mail-message-new"
-                   string="Inbox" help="Unread messages"
-                   name="needaction_pending"
-                   domain="[('needaction_pending','=',True)]"/>
-               <separator orientation="vertical"/>
                <field name="name" string="Phonecalls"/>
-               <separator orientation="vertical"/>
                <field name="date"/>
-               <separator orientation="vertical"/>
+               <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+               <separator/>
                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
-               <filter string="Unassigned Phonecalls"
-                       icon="terp-personal-"
-                       domain="[('user_id','=',False)]"
-                       help="Unassigned Phonecalls"/>
-               <filter string="Phone Calls Assigned to Me or My Team(s)"
-                        icon="terp-personal+"
-                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+               <separator/>
+               <filter string="Unassigned Phonecalls" icon="terp-personal-" domain="[('user_id','=',False)]" help="Unassigned Phonecalls"/>
+               <separator/>
+               <filter string="Phone Calls Assigned to Me or My Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="Phone Calls that are assigned to me or to my team(s)" />
-               <separator orientation="vertical"/>
                <field name="partner_id"/>
                <field name="user_id"/>
-               <field name="section_id"
-                   widget="selection" string="Sales Team"/>
-               <newline/>
+               <field name="section_id" string="Sales Team"/>
                <group expand="0" string="Group By...">
-                   <filter string="Partner" icon="terp-partner" domain="[]"
-                       context="{'group_by':'partner_id'}" />
-                   <filter string="Responsible" icon="terp-personal"
-                       domain="[]" context="{'group_by':'user_id'}" />
-                   <separator orientation="vertical" />
-                   <filter string="Creation" icon="terp-go-month" help="Creation Date"
-                       domain="[]" context="{'group_by':'create_date'}" />
-                   <filter string="Date" icon="terp-go-month" domain="[]"
-                       context="{'group_by':'date'}" help="Date of Call" />
+                   <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}" />
+                   <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
+                   <filter string="Creation" icon="terp-go-month" help="Creation Date" domain="[]" context="{'group_by':'create_date'}" />
+                   <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Date of Call" />
                </group>
            </search>
         </field>
