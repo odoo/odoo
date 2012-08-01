@@ -914,8 +914,10 @@ instance.web.Client = instance.web.Widget.extend({
                 }
             }, 0);
         });
-        instance.web.bus.on('click', this, function() {
-            self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
+        instance.web.bus.on('click', this, function(ev) {
+            if (!$(ev.target).is('input[type=file]')) {
+                self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
+            }
         });
     },
     show_common: function() {
