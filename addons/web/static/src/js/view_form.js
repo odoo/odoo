@@ -4674,8 +4674,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
         clickable = this.node.attrs.clickable;
-        if (clickable != undefined && (clickable.toLowerCase() === 'true' || clickable === "1") /*&& 
-                this.view.get("actual_mode") !== 'view'*/) {            
+        if (clickable != undefined && (clickable.toLowerCase() === 'true' || clickable === "1")) {            
             var elemts = this.$element.find('.oe_form_steps_item')
             _.each(elemts, function(element){
                 $item = $(element);
@@ -4688,15 +4687,15 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                         });
                     });
                 } else {
-                   $item.attr("disable", true).addClass("ui-state-disabled");
+                   $item.addClass('oe_highlight');
                 }
             });
         }
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
-        if (color) {
-            var elem = this.$element.find("li.oe_form_steps_active span");
-            elem.css("color", color);
+        if (color) {            
+            var elem = this.$element.find("li.oe_form_steps_active button");
+            elem.css("color", color);            
         }
     },
     focus: function() {
