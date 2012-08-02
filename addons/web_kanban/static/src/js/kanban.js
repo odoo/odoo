@@ -29,8 +29,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             records : {}
         };
         this.groups = [];
-        this.form_dialog = new instance.web.form.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
-        this.form_dialog.on_form_dialog_saved.add_last(this.do_reload);
         this.aggregates = {};
         this.group_operators = ['avg', 'max', 'min', 'sum', 'count'];
         this.qweb = new QWeb2.Engine();
@@ -704,14 +702,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             return do_it();
     },
     do_action_edit: function($action) {
-        var self = this;
-        if ($action.attr('target') === 'dialog') {
-            this.view.form_dialog.select_id(this.id).then(function() {
-                self.view.form_dialog.open();
-            });
-        } else {
-            this.view.open_record(this.id, true);
-        }
+        this.view.open_record(this.id, true);
     },
     do_action_object: function ($action) {
         var button_attrs = $action.data();
