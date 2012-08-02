@@ -528,7 +528,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     }
                     return controller.get('title');
                 });
-                if (next && next.action.res_id && self.active_view === 'form' && self.model === next.action.res_model && id === next.action.res_id) {
+                if (next && next.action && next.action.res_id && self.active_view === 'form' && self.model === next.action.res_model && id === next.action.res_id) {
                     // If the current active view is a formview and the next item in the breadcrumbs
                     // is an action on same object (model / res_id), then we omit the current formview's title
                     titles.pop();
