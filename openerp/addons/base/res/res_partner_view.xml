@@ -101,23 +101,23 @@
                 <sheet>
                     <field name="photo" widget='image' class="oe_avatar oe_left"/>
                     <div class="oe_title">
-                        <div class="oe_edit_only">
-                            <label for="name" string="Customer Name"/>
-                            (<field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)
-                        </div>
                         <h1>
-                            <field name="name" default_focus="1"/>
+                            <field name="name" default_focus="1" placeholder="Name" />
                         </h1>
-                        <field name="category_id" widget="many2many_tags" placeholder="Select Tags"/>
+                        <field name="parent_id"
+                            string="Work for Company"
+                            domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
+                            attrs="{'invisible': [('is_company','=', True)]}"
+                            on_change="onchange_address(use_parent_address, parent_id)"/>
+                        <div class="oe_edit_only">
+                            <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Company?"/>
+                            <field name="category_id" widget="many2many_tags" placeholder="Select Tags"/>
+                        </div>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons"> </div>
 
                     <group>
                         <group>
-                            <field name="parent_id"
-                                domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
-                                attrs="{'invisible': [('is_company','=', True)]}"
-                                on_change="onchange_address(use_parent_address, parent_id)"/>,
                             <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
                             <div attrs="{'invisible': [('parent_id','=', False)]}">
                                 <field class="oe_inline"
