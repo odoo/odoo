@@ -2280,12 +2280,12 @@ class BaseModel(object):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        rec_name = self._rec_name
-        if rec_name not in self._columns:
-            res = [(r['id'], "%s,%s"%(self._name,r['id'])) for r in self.read(cr, user, ids, ['id'], context, load='_classic_write')]
-        else:
-            res = [(r['id'], tools.ustr(r[rec_name])) for r in self.read(cr, user, ids, [rec_name], context, load='_classic_write')]
-        return res
+        if self._rec_name in self._all_columns:
+            rec_name_column = self._all_columns[self._rec_name].column
+            return [(r['id'], rec_name_column.as_display_name(cr, user, self, r[self._rec_name], context=context))
+                        for r in self.read(cr, user, ids, [self._rec_name],
+                                       load='_classic_write', context=context)]
+        return [(id, "%s,%s" % (self._name, id)) for id in ids]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         """Search for records that have a display name matching the given ``name`` pattern if compared
