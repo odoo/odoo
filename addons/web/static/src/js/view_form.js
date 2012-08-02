@@ -2816,6 +2816,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 } else if (item.action) {
                     self.floating = true;
                     item.action();
+                    // Cancel widget blurring, to avoid form blur event
+                    self.trigger('focused');
                     return false;
                 }
             },
