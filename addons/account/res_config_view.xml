@@ -21,6 +21,7 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
+
                     <field name="has_default_company" invisible="1" />
                     <field name="has_chart_of_accounts" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
@@ -104,12 +105,6 @@
                     <group>
                         <label for="id" string="Configuration"/>
                         <div name="account_config">
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                                <label for="default_sale_tax"/>
-                                <field name="default_sale_tax"
-                                    domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]"
-                                    class="oe_inline"/>
-                            </div>
                             <div>
                                 <field name="module_account_accountant" class="oe_inline"/>
                                 <label for="module_account_accountant"/>
@@ -121,12 +116,6 @@
                             <div>
                                 <label for="decimal_precision"/>
                                 <field name="decimal_precision" class="oe_inline"/>
-                            </div>
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                                <label for="default_purchase_tax"/>
-                                <field name="default_purchase_tax"
-                                    domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]"
-                                    class="oe_inline"/>
                             </div>
                             <div>
                                 <label for="tax_calculation_rounding_method"/>
@@ -142,10 +131,16 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Invoices"/>
+                    <separator string="eInvoicing &amp; Payments"/>
                     <group>
-                        <label for="id" string="Customer Settings"/>
+                        <label for="id" string="Customer"/>
                         <div>
+                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                                <label for="default_sale_tax"/>
+                                <field name="default_sale_tax"
+                                    domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]"
+                                    class="oe_inline"/>
+                            </div>
                             <div>
                                 <label for="sale_sequence_next"/>
                                 <field name="sale_sequence_prefix"
@@ -177,8 +172,14 @@
                                 <label for="group_proforma_invoices"/>
                             </div>
                         </div>
-                        <label for="id" string="Supplier Settings"/>
+                        <label for="id" string="Supplier"/>
                         <div name="other_cofing">
+                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                                <label for="default_purchase_tax"/>
+                                <field name="default_purchase_tax"
+                                    domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]"
+                                    class="oe_inline"/>
+                            </div>
                             <div>
                                 <label for="purchase_sequence_next"/>
                                 <field name="purchase_sequence_prefix"
