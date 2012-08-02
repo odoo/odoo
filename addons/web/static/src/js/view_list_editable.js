@@ -96,9 +96,6 @@ openerp.web.list_editable = function (instance) {
         },
         on_loaded: function (data, grouped) {
             var self = this;
-            if (this.editor) {
-                this.editor.destroy();
-            }
             // tree/@editable takes priority on everything else if present.
             var result = this._super(data, grouped);
             if (this.editable()) {
@@ -118,6 +115,7 @@ openerp.web.list_editable = function (instance) {
                             self.start_edition();
                         }
                     });
+                this.editor.destroy();
                 // Editor is not restartable due to formview not being
                 // restartable
                 this.editor = this.make_editor();
@@ -604,6 +602,7 @@ openerp.web.list_editable = function (instance) {
             this.form = new (this.options.formView)(
                 this, this.delegate.dataset, false, {
                     initial_mode: 'edit',
+                    disable_autofocus: true,
                     $buttons: $(),
                     $pager: $()
             });
@@ -683,9 +682,8 @@ openerp.web.list_editable = function (instance) {
                 if (!field.$element.is(':visible')) {
                     return false;
                 }
-                field.focus();
                 // Stop as soon as a field got focused
-                return true;
+                return field.focus() !== false;
             });
         },
         edit: function (record, configureField, options) {

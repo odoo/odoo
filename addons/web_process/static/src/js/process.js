@@ -3,12 +3,13 @@ openerp.web_process = function (instance) {
           _t = instance.web._t;
     instance.web.ViewManager.include({
         start: function() {
-            this._super();
+            var _super = this._super();
             this.process_check();
             this.process_help = this.action ? this.action.help : 'Help: Not Defined';
             this.model = this.dataset.model;
             if(this.action) this.process_model = this.action.res_model;
             else this.process_model = this.model;
+            return _super;
         },
         process_check: function() {
             var self = this,

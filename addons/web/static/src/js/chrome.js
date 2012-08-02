@@ -57,9 +57,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
-        if (content) {
-            this.$element = content instanceof $ ? content : $(content);
-        }
+        this.content_to_set = content;
         this.dialog_options = {
             modal: true,
             destroy_on_close: true,
@@ -82,11 +80,6 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
         if (options) {
             _.extend(this.dialog_options, options);
-        }
-        if (this.dialog_options.autoOpen) {
-            this.open();
-        } else {
-            instance.web.dialog(this.$element, this.get_options());
         }
     },
     get_options: function(options) {
@@ -116,31 +109,44 @@ instance.web.Dialog = instance.web.Widget.extend({
         } else if (val.slice(-1) == "%") {
             return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
         } else {
-            return parseInt(val, 10);
+            return parseInt(val, 10);        
+        }
+    },
+    renderElement: function() {
+        if (this.content_to_set) {
+            this.setElement(this.content_to_set);
+        } else if (this.template) {
+            this._super();
         }
     },
     open: function(options) {
-        // TODO fme: bind window on resize
-        if (this.template) {
-            this.$element.html(this.renderElement());
-        }
+        if (! this.dialog_inited)
+            this.init_dialog();
         var o = this.get_options(options);
-        instance.web.dialog(this.$element, o).dialog('open');
+        instance.web.dialog(this.$element, o).dialog('open');     
         if (o.height === 'auto' && o.max_height) {
             this.$element.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
         return this;
     },
+    init_dialog: function(options) {
+        this.renderElement();
+        var o = this.get_options(options);
+        instance.web.dialog(this.$element, o);
+        var res = this.start();
+        this.dialog_inited = true;
+        return res;
+    },
     close: function() {
         this.$element.dialog('close');
     },
     on_close: function() {
-	if (this.__tmp_dialog_destroying)
-	    return;
+        if (this.__tmp_dialog_destroying)
+            return;
         if (this.dialog_options.destroy_on_close) {
-	    this.__tmp_dialog_closing = true;
+            this.__tmp_dialog_closing = true;
             this.destroy();
-	    this.__tmp_dialog_closing = undefined;
+            this.__tmp_dialog_closing = undefined;
         }
     },
     on_resized: function() {
@@ -150,10 +156,10 @@ instance.web.Dialog = instance.web.Widget.extend({
             el.destroy();
         });
         if (! this.__tmp_dialog_closing) {
-	    this.__tmp_dialog_destroying = true;
-	    this.close();
-	    this.__tmp_dialog_destroying = undefined;
-	}
+            this.__tmp_dialog_destroying = true;
+            this.close();
+            this.__tmp_dialog_destroying = undefined;
+        }
         if (! this.isDestroyed()) {
             this.$element.dialog('destroy');
         }
@@ -263,11 +269,11 @@ instance.web.Loading = instance.web.Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
-	    if (instance.connection.debug) {
-		this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
-	    } else {
-		this.$element.text(_t("Loading"));
-	    }
+            if (instance.connection.debug) {
+                this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+            } else {
+                this.$element.text(_t("Loading"));
+            }
             this.$element.show();
             this.getParent().$element.addClass('oe_wait');
         } else {
@@ -496,7 +502,11 @@ instance.web.Login =  instance.web.Widget.extend({
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
-        this.params = params;
+        this.params = params || {};
+
+        if (this.params.login_successful) {
+            this.on('login_successful', this, this.params.login_successful);
+        }
 
         if (this.has_local_storage && this.remember_credentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
@@ -513,7 +523,7 @@ instance.web.Login =  instance.web.Widget.extend({
             self.do_action("database_manager");
         });
         return self.load_db_list().then(self.on_db_list_loaded).then(function() {
-            if(self.params) {
+            if (self.params.db) {
                 self.do_login(self.params.db, self.params.login, self.params.password);
             }
         });
@@ -589,6 +599,12 @@ instance.web.Login =  instance.web.Widget.extend({
             self.$(".oe_login_pane").fadeIn("fast");
             self.$element.addClass("oe_login_invalid");
         });
+    },
+    show: function () {
+        this.$element.show();
+    },
+    hide: function () {
+        this.$element.hide();
     }
 });
 instance.web.client_actions.add("login", "instance.web.Login");
@@ -880,12 +896,11 @@ instance.web.Client = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        return instance.connection.session_bind(this.origin).then(function() {
+        return instance.connection.session_bind(this.origin).pipe(function() {
             var $e = $(QWeb.render(self._template, {}));
-            self.$element.replaceWith($e);
-            self.$element = $e;
+            self.replaceElement($e);
             self.bind_events();
-            self.show_common();
+            return self.show_common();
         });
     },
     bind_events: function() {
@@ -914,8 +929,10 @@ instance.web.Client = instance.web.Widget.extend({
                 }
             }, 0);
         });
-        instance.web.bus.on('click', this, function() {
-            self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
+        instance.web.bus.on('click', this, function(ev) {
+            if (!$(ev.target).is('input[type=file]')) {
+                self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
+            }
         });
     },
     show_common: function() {

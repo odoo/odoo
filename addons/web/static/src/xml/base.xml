@@ -406,10 +406,10 @@
 <t t-name="ViewManager">
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">
-	    <col width="20%"/>
-	    <col width="25%"/>
-	    <col width="20%"/>
-	    <col width="35%"/>
+            <col width="20%"/>
+            <col width="25%"/>
+            <col width="20%"/>
+            <col width="35%"/>
             <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
@@ -1443,18 +1443,18 @@
     <div>
     </div>
 </div>
-<div t-name="SearchView.addtodashboard" class="oe_searchview_dashboard">
-    <h4>Add to Dashboard</h4>
+<div t-name="SearchView.addtoreporting" class="oe_searchview_dashboard">
+    <h4>Add to Reporting</h4>
     <form>
-        <p><input placeholder ="Title of new Dashboard item" title = "Title of new Dashboard item" type="text"/></p>
-        <button class="oe_apply" type="submit">Save</button>
+        <p><input placeholder="Title of new dashboard item"/></p>
+        <button class="oe_apply" type="submit">Add</button>
     </form>
 </div>
-<t t-name="SearchView.addtodashboard.selection">
-    <select  title = "Select Dashboard to add this filter to">
-        <t t-foreach="selections" t-as="element">
-        <option t-att-value="element.id || element.res_id "><t t-esc="element.name"/></option>
-        </t>
+<t t-name="SearchView.addtoreporting.selection">
+    <select>
+        <option t-foreach="selections" t-as="element"
+                t-att-value="element.id || element.res_id ">
+            <t t-esc="element.name"/></option>
     </select>
 </t>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
@@ -1500,70 +1500,6 @@
         <option t-att-value="element[0]"><t t-esc="element[1]"/></option>
         </t>
     </select>
-</t>
-
-<t t-name="view_editor">
-    <table class="oe_view_editor">
-        <t t-call="view_editor.row"/>
-    </table>
-</t>
-<t t-name="view_editor.row">
-    <tr  t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
-        <td width="90%">
-            <table class="oe_view_editor_field">
-                <tr>
-                    <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
-                        <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
-                            t-att-src='_s + "/web/static/src/img/collapse.gif"' width="16" height="16" border="0"/>
-                    </td>
-                    <td style="cursor: pointer;">
-                        <a style="text-decoration:none" href="javascript:void(0);">
-                            <t t-esc="rec.name"/>
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length"
-                id="side-add" t-att-src='_s + "/web/static/src/img/icons/gtk-add.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img  id="side-remove" t-att-src='_s + "/web/static/src/img/icons/gtk-remove.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
-                id="side-edit" t-att-src='_s + "/web/static/src/img/icons/gtk-edit.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length"
-                id="side-up" t-att-src='_s + "/web/static/src/img/icons/gtk-go-up.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length"
-                id="side-down" t-att-src='_s + "/web/static/src/img/icons/gtk-go-down.png"' style="cursor: pointer;"/>
-        </td>
-        <t t-if="rec.child_id.length">
-            <t t-set="data" t-value="rec.child_id"/>
-            <t t-call="view_editor.row"/>
-        </t>
-    </tr>
-</t>
-<t t-name="vieweditor_char">
-    <input type="text" t-att-id="widget.name" class="field_char" size="50"/>
-</t>
-<t t-name="vieweditor_selection">
-    <select t-att-id="widget.name" >
-        <t t-if="widget.selection" t-foreach="widget.selection" t-as="option">
-            <option
-                t-att-value="typeof option === 'object' ? option[0] : option">
-                <t t-esc="typeof option === 'object' ? option[1] : option"/>
-            </option>
-        </t>
-    </select>
-</t>
-<t t-name="vieweditor_boolean">
-    <input type="checkbox" t-att-id="widget.name"/>
 </t>
 
 <t t-name="ExportView">

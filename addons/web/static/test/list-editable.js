@@ -72,7 +72,7 @@ $(document).ready(function () {
     });
     asyncTest('base-state', 2, function () {
         var e = new instance.web.list.Editor({
-            dataset: {},
+            dataset: {ids: []},
             edition_view: function () {
                 return makeFormView();
             }
@@ -240,8 +240,7 @@ $(document).ready(function () {
         };
 
         var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
-        var l = new instance.web.ListView({}, ds);
-        l.set_editable(true);
+        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
 
         l.appendTo($fix)
             .pipe(l.proxy('reload_content'))
@@ -305,8 +304,7 @@ $(document).ready(function () {
             counter: 0,
             onEvent: function (e) { this.counter++; }
         };
-        var l = new instance.web.ListView({}, ds);
-        l.set_editable(true);
+        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
         l.on('edit:before edit:after', o, o.onEvent);
         l.appendTo($fix)
             .pipe(l.proxy('reload_content'))
@@ -326,8 +324,7 @@ $(document).ready(function () {
     asyncTest('edition events: cancelling', 3, function () {
         var edit_after = false;
         var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
-        var l = new instance.web.ListView({}, ds);
-        l.set_editable(true);
+        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
         l.on('edit:before', {}, function (e) {
             e.cancel = true;
         });
