@@ -45,9 +45,9 @@ class procurement_order(osv.osv):
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
         product_uom = self.pool.get('product.uom')
-        company_time_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
-        if procurement.product_uom.id != company_time_uom_id:
-            planned_hours = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, company_time_uom_id)
+        company_time_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id
+        if procurement.product_uom.id != company_time_uom_id.id and procurement.product_uom.category_id.id == company_time_uom_id.category_id.id:
+            planned_hours = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, company_time_uom_id.id)
         else:
             planned_hours = procurement.product_qty
         return planned_hours
@@ -71,7 +71,7 @@ class procurement_order(osv.osv):
             task_id = project_task.create(cr, uid, {
                 'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
                 'date_deadline': procurement.date_planned,
-                'planned_hours':planned_hours,
+                'planned_hours': planned_hours,
                 'remaining_hours': planned_hours,
                 'user_id': procurement.product_id.product_manager.id,
                 'notes': procurement.note,

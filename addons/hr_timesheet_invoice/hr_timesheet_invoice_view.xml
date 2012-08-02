@@ -89,11 +89,11 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
-                <field name="date" position="before">
+                <xpath expr="//filter[@name='others']" position="after">
+                    <separator/>
                     <filter name="to_invoice" string="To Invoice" context="{'to_invoice': 1}" domain="[('invoice_id','=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/>
                     <filter name="invoiced" string="Invoiced" domain="[('invoice_id','!=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/> 
-                    <separator orientation="vertical"/>
-                </field>
+                </xpath>
             </field>
         </record>
 
@@ -114,7 +114,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
-                <field name="product_uom_id" position="after">
+                <field name="amount" position="before">
                     <field name="to_invoice"/>
                     <field name="invoice_id"/>
                 </field>
@@ -123,7 +123,7 @@
 
         <!-- Menus -->
         <record id="action_hr_analytic_timesheet_open_tree" model="ir.actions.act_window">
-            <field name="name">Bill Tasks Works</field>
+            <field name="name">Invoice Tasks Work</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -144,9 +144,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Type of invoicing">
-                    <group>
-                        <field name="name" string="Type of invoicing"/>
-                    </group>
+                    <field name="name" string="Type of invoicing"/>
                 </search>
             </field>
         </record>

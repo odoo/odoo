@@ -10,29 +10,25 @@
             <field name="arch" type="xml">
                 <search string="Product">
                    <field name="name" string="Product" filter_domain="['|',('name','ilike',self),('default_code','ilike',self)]"/>
-                   <separator orientation="vertical"/>
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
+                   <separator/>
                    <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <separator/>
                    <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
-                   <separator orientation="vertical"/>
-                   <field name="categ_id" widget="selection" operator="child_of"/>
+                   <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
+                   <field name="categ_id" operator="child_of"/>
                    <group expand="0" string="Context...">
-                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
-                       <separator orientation="vertical" groups="base.group_multi_company"/>
-                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                       <field name="pricelist_id" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
+                       <field name="company_id" groups="base.group_multi_company"/>
                    </group>
-                   <newline/>
                    <group  expand='0' string='Group by...'>
                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
-                       <separator orientation="vertical"/>
                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
-                       <separator orientation="vertical"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
-                       <separator orientation="vertical" groups="base.group_multi_company"/>
                        <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
-
                 </search>
             </field>
         </record>
@@ -73,7 +69,7 @@
 
                         <div class="oe_title">
                             <div class="oe_edit_only">
-                                <label for="name" string="Product Name"/> 
+                                <label for="name" string="Product Name"/>
                             </div>
                             <h1>
                                 <field name="name"/>
@@ -95,12 +91,12 @@
                                     </group>
                                     <group string="Procurement">
                                         <field name="type"/>
-                                        <field name="procure_method"/>
+                                        <field name="procure_method" groups="base.group_user"/>
                                         <field name="supply_method" groups="base.group_user"/>
                                     </group>
                                     <group string="Prices">
                                         <field name="list_price"/>
-                                        <field name="cost_method"/>
+                                        <field name="cost_method" groups="base.group_user"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                         <field name="price_margin" groups="product.group_product_variant"/>
                                         <field name="price_extra" groups="product.group_product_variant"/>
@@ -183,9 +179,9 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <footer>
+                    <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
-                    </footer>
+                    </div>
                 </form>
             </field>
         </record>
@@ -301,7 +297,6 @@
             <field name="arch" type="xml">
                 <search string="Product Categories">
                     <field name="name" string="Product Categories"/>
-                    <separator orientation="vertical"/>
                     <field name="parent_id"/>
                 </search>
             </field>
@@ -314,18 +309,18 @@
                 <form string="Product Categories" version="7.0">
                     <sheet>
                         <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <label for="name" class="oe_edit_only"/>
                                 <field name="name"/>
                             </h1>
                         </div>
                         <group>
-                                <group>
-                                    <field name="type"/>
-                                </group>
-                                <group>
-                                    <field name="parent_id"/>
-                                </group>
+                            <group>
+                                <field name="parent_id"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
                         </group>
                         <group name="basic">
                             <group name="account_property" string="Account Properties"/>

@@ -7,7 +7,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
-                <field name="property_supplier_payment_term" position="after" version="7.0">
+                <field name="property_account_position" position="after" version="7.0">
                     <label for="vat"/>
                     <div>
                         <field name="vat" on_change="vat_change(vat)" placeholder="BE0477472702" class="oe_inline"/>

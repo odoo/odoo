@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-21 01:12+0000\n"
-"Last-Translator: Cintia Sayuri Sato - http://www.tompast.com.br <Unknown>\n"
+"PO-Revision-Date: 2012-07-28 20:47+0000\n"
+"Last-Translator: Fábio Martinelli <webmaster@guaru.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 04:57+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-29 04:37+0000\n"
+"X-Generator: Launchpad (build 15694)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -43,6 +43,7 @@ msgstr "Acompanhamento"
 msgid ""
 "Check if you want to print followups without changing followups level."
 msgstr ""
+"Marque se deseja mostrar as cobranças sem modificar o nível de cobrança."
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -67,6 +68,26 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Prezado %(partner_name)s,\n"
+"\n"
+"Necessitamos de uma atenção especial em relação a sua conta, pois apesar de "
+"termos enviado um lembrete não confirmamos o pagamento.\n"
+"\n"
+"É essencial que seja feito um pagamento imediato, caso contrário não "
+"poderemos mais continuar fornecendo sua empresa com bens e serviços.\n"
+"\n"
+"Por favor tome as medidas apropriadas para efetuar esse pagamento nos "
+"próximos 8 dias.\n"
+"\n"
+"Se houver algum problema para efetuar o pagamento da fatura que nós não "
+"estejamos cientes, por favor não deixe de entrar em contato com nosso "
+"departamento financeiro para que possamos resolver isso o mais breve "
+"possível.\n"
+"\n"
+"Os detalhes do pagamento em aberto seguem abaixo.\n"
+"\n"
+"Atenciosamente,\n"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -283,6 +304,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Prezado %(partner_name)s,\n"
+"\n"
+"Não detectamos o pagamento de sua fatura, por favor tome as medidas "
+"necessárias para efetuar o pagamento nos próximos 8 dias.\n"
+"\n"
+"Se tiver algum problema com a fatura ou o pagamento não deixe de entrar em "
+"contato com nosso departamento financeiro.\n"
+"\n"
+"Se o pagamento já foi feito, por favor desconsidere essa mensagem.\n"
+"\n"
+"Atenciosamente,\n"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -520,7 +553,7 @@ msgstr "Relatório de Acompanhamento"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "Passos para Cobrança"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -552,7 +585,7 @@ msgstr "Máximo Nível de Acompanhamento"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr ""
+msgstr "Rever as Cobranças de Pagamento"
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -567,6 +600,10 @@ msgid ""
 "code to adapt the email content to the good context (good name, good date) "
 "and you can manage the multi language of messages."
 msgstr ""
+"Defina níveis de cobrança e suas mensagens relacionadas. Para cada passo, "
+"especifique a mensagem e o dia de atraso. Use a legenda para saber o código "
+"usado e adaptar o conteúdo do email para o bom contexto (bom nome e data "
+"boa) e você pode gerenciar mensagens em diversos idiomas."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -581,6 +618,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"O E-Mail não foi enviado aos seguintes Parceiros, E-mail não disponível!\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -596,7 +636,7 @@ msgstr "%(date)s: Data Atual"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Incluindo os itens de diário marcados como em protesto"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -612,7 +652,7 @@ msgstr "Descrição"
 #. module: account_followup
 #: constraint:account_followup.followup:0
 msgid "Only One Followup by Company."
-msgstr ""
+msgstr "Apenas uma cobrança por Empresa"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -630,6 +670,8 @@ msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
 msgstr ""
+"Não altere a mensagem de texto se você deseja enviar o email no idioma do "
+"parceiro, ou configurar pela Empresa"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
@@ -704,6 +746,22 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Prezado %(partner_name)s,\n"
+"\n"
+"Apesar de diversas mensagens, ainda não confirmamos o pagamento de sua "
+"fatura.\n"
+"\n"
+"A menos que o pagamento seja efetuado  nos próximos 8 dias, ações legais "
+"para a recuperação do crédito poderão ser tomadas sem próximo aviso.\n"
+"\n"
+"Acreditamos em suas ações para resolver essa pendência o mais breve "
+"possível, os detalhes do pagamento seguem abaixo.\n"
+"\n"
+"No caso de qualquer dúvida sobre esta questão, não deixe de entrar em "
+"contato com nosso departamento financeiro.\n"
+"\n"
+"Atenciosamente,\n"
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -713,7 +771,7 @@ msgstr "Você não pode criar ítens de diário em uma conta fechada."
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
-msgstr ""
+msgstr "%(line)s: Lançamentos no Razão"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -723,7 +781,7 @@ msgstr "Sequência"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(company_name)s: User's Company Name"
-msgstr ""
+msgstr "%(company_name)s: Empresa do Usuário"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0

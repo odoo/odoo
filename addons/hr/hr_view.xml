@@ -2,15 +2,16 @@
 <openerp>
     <data>
 
-        <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"
-            web_icon="images/hr.png"
-            web_icon_hover="images/hr-hover.png"
-            groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
+        <!-- Top menu item -->
+        <menuitem name="Human Resources"
+            id="menu_hr_root"
+            groups="base.group_hr_manager,base.group_hr_user,base.group_user"
+            sequence="110"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
-        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
+        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" groups="base.group_no_one" sequence="25"/>
         <menuitem id="menu_hr_reporting_timesheet" name="Reports"
-            parent="menu_hr_reporting" sequence="6" />
+            parent="menu_hr_reporting" sequence="6"/>
 
         <!--Employee form view -->
         <record id="view_employee_form" model="ir.ui.view">
@@ -20,10 +21,7 @@
             <field name="arch" type="xml">
                 <form string="Employee" version="7.0">
                     <sheet>
-                        <field name="photo" widget='image' class="oe_right" on_change="onchange_photo(photo)"/>    
-                        <div class="oe_right oe_button_box" name="button_box">
-                            <!-- Put here related buttons -->
-                        </div>
+                        <field name="photo" widget='image' class="oe_right" on_change="onchange_photo(photo)"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -38,10 +36,13 @@
                             <label for="category_ids" class="oe_edit_only"/>
                             <h3><field name="category_ids" widget="many2many_tags"/></h3>
                         </div>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <!-- Put here related buttons -->
+                        </div>
                         <group colspan="4" col="4">
-                            <field name="work_email" widget="email" />
+                            <field name="work_email" widget="email"/>
                             <field name="work_phone"/>
-                            <field name="address_id" on_change="onchange_address_id(address_id)" />
+                            <field name="address_id" on_change="onchange_address_id(address_id)"/>
                             <field name="mobile_phone"/>
                         </group>
                         <notebook>
@@ -49,7 +50,7 @@
                                 <group>
                                     <group>
                                         <field name="user_id" on_change="onchange_user(user_id)"/>
-                                        <field name="parent_id" />
+                                        <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
@@ -108,16 +109,13 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees"/>
-                    <separator orientation="vertical"/>
-                    <field name="department_id" widget="selection"/>
-                    <field name="job_id" widget="selection"/>
+                    <field name="department_id" />
+                    <field name="job_id"/>
                     <field name="parent_id"/>
                     <field name="category_ids"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -141,7 +139,9 @@
                                 <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
                             </div>
                             <div class="oe_employee_details">
-                                <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
+                                <h4>
+                                    <a type="edit"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
+                                </h4>
                                 <ul>
                                     <li id="last_login">
                                         <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
@@ -213,7 +213,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_employee_form"/>
             <field name="act_window_id" ref="open_view_employee_list_my"/>
-        </record> 
+        </record>
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
 
@@ -224,12 +224,7 @@
             <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
         </record>
 
-        <!--
-        =======================
-        Employee architecture
-        =======================
-        -->
-
+        <!-- Employee architecture -->
         <record id="view_partner_tree2" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
@@ -268,12 +263,7 @@
             <field eval="True" name="replace"/>
         </ir_set>
 
-        <!--
-        ============
-        Employee Category
-        ============
-        -->
-
+        <!-- Employee Category -->
        <record id="view_employee_category_form" model="ir.ui.view">
             <field name="name">hr.employee.category.form</field>
             <field name="model">hr.employee.category</field>
@@ -347,7 +337,7 @@
         </record>
 
         <menuitem action="open_view_categ_tree"
-            id="menu_view_employee_category_tree" parent="menu_hr_management" sequence="2"/>
+            id="menu_view_employee_category_tree" parent="menu_hr_management" groups="base.group_no_one" sequence="2"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
@@ -372,8 +362,8 @@
                         </h1>
                         <group>
                             <group>
-                                <field name="no_of_employee"/>
-                                <field name="expected_employees"/>
+                                <field name="no_of_employee" groups="base.group_user"/>
+                                <field name="expected_employees" groups="base.group_user"/>
                                 <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
                             </group>
                             <group>
@@ -417,16 +407,9 @@
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-camera_test"  
-                            domain="[('state','=','open')]" 
-                            string="In Position"
-                            help="In Position"/>
-                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment"
-                        help="In Recruitment"/>
-                    <separator orientation="vertical"/>
-                    <field name="department_id" widget="selection"/>
-                    <newline />
+                    <filter icon="terp-camera_test" domain="[('state','=','open')]" string="In Position" help="In Position"/>
+                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment" help="In Recruitment"/>
+                    <field name="department_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -435,7 +418,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="view_hr_job_employee_form" model="ir.ui.view">
             <field name="name">hr.job.employee.form</field>
             <field name="model">hr.job</field>
@@ -452,7 +435,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_hr_job">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>

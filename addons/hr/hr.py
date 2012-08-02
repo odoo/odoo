@@ -212,6 +212,16 @@ class hr_employee(osv.osv):
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
     }
 
+    def create(self, cr, uid, data, context=None):
+        employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
+        try:
+            (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
+            employee = self.browse(cr, uid, employee_id, context=context)
+            self.pool.get('mail.group').message_append_note(cr, uid, [mail_group_id], body='Welcome to %s! Please help him make its first steps in OpenERP!' % (employee.name), context=context)
+        except:
+            pass # group deleted: do not push a message
+        return employee_id
+
     def unlink(self, cr, uid, ids, context=None):
         resource_obj = self.pool.get('resource.resource')
         resource_ids = []
@@ -250,13 +260,13 @@ class hr_employee(osv.osv):
             work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).user_email
         return {'value': {'work_email' : work_email}}
 
-    def _get_photo(self, cr, uid, context=None):
+    def _default_get_photo(self, cr, uid, context=None):
         photo_path = addons.get_module_resource('hr','images','photo.png')
         return self._photo_resize(cr, uid, open(photo_path, 'rb').read().encode('base64'), context=context)
 
     _defaults = {
         'active': 1,
-        'photo': _get_photo,
+        'photo': _default_get_photo,
         'marital': 'single',
         'color': 0,
     }
@@ -308,6 +318,10 @@ class res_users(osv.osv):
                 _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
 
         return user_id
+
+    _columns = {
+        'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
+        }
 
 res_users()
 

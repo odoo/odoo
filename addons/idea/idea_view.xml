@@ -72,14 +72,17 @@
                     <button name="idea_cancel" string="Refuse" states="open"  class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
                 </header>
+                <sheet>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="category_ids"/>
-                    <h2><field name="category_ids"/></h2>
+                    <label for="category_ids" class="oe_edit_only"/>
+                    <field name="category_ids" widget="many2many_tags"/>
+                    <label for="description"/><newline/>
                     <field name="description"/>
-                <footer>
+                </sheet>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
             </form>
         </field>
     </record>
@@ -107,22 +110,14 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Ideas">
-                <group>
-                    <field name="name" string="Idea"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="New Ideas"/>
-                    <filter icon="terp-camera_test" string="In Progress" domain="[('state','=', 'open')]" help="Open Ideas"/>
-                    <filter icon="terp-check" string="Accepted"
-                        domain="[('state','=','close')]" help="Accepted Ideas" />
-                    <separator orientation="vertical"/>
-                    <field name="category_ids"/>
-                </group>
-                <newline/>
+                <field name="name" string="Idea"/>
+                <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="New Ideas"/>
+                <filter icon="terp-camera_test" string="In Progress" domain="[('state','=', 'open')]" help="Open Ideas"/>
+                <filter icon="terp-check" string="Accepted" domain="[('state','=','close')]" help="Accepted Ideas" />
+                <field name="category_ids"/>
                 <group expand="0" string="Group By...">
                     <filter icon="terp-personal" string="Creator" help="By Creators" context="{'group_by':'create_uid'}"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-stock_symbol-selection" string="Category" help="By Idea Category" context="{'group_by':'category_ids'}"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-stock_effects-object-colorize" string="Status" help="By States" context="{'group_by':'state'}"/>
                 </group>
             </search>

@@ -195,7 +195,7 @@ class account_invoice(osv.osv):
         'number': fields.related('move_id','name', type='char', readonly=True, size=64, relation='account.move', store=True, string='Number'),
         'internal_number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
-        'reference_type': fields.selection(_get_reference_type, 'Reference Type',
+        'reference_type': fields.selection(_get_reference_type, 'Payment Reference',
             required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'comment': fields.text('Additional Information'),
 
@@ -757,7 +757,7 @@ class account_invoice(osv.osv):
             for tax in inv.tax_line:
                 if tax.manual:
                     continue
-                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
+                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id, tax.account_analytic_id.id)
                 tax_key.append(key)
                 if not key in compute_taxes:
                     raise osv.except_osv(_('Warning !'), _('Global taxes defined, but they are not in invoice lines !'))
@@ -1346,7 +1346,7 @@ class account_invoice_line(osv.osv):
     _name = "account.invoice.line"
     _description = "Invoice Line"
     _columns = {
-        'name': fields.char('Description', size=256, required=True),
+        'name': fields.text('Description', required=True),
         'origin': fields.char('Source', size=256, help="Reference of the document that produced this invoice."),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
@@ -1358,7 +1358,6 @@ class account_invoice_line(osv.osv):
         'quantity': fields.float('Quantity', required=True),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Account')),
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
-        'note': fields.text('Notes'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
@@ -1431,7 +1430,8 @@ class account_invoice_line(osv.osv):
 
         domain = {}
         result['uos_id'] = res.uom_id.id or uom or False
-        result['note'] = res.description
+        if res.description:
+            result['name'] += '\n'+res.description
         if result['uos_id']:
             res2 = res.uom_id.category_id.id
             if res2:
@@ -1525,7 +1525,7 @@ class account_invoice_line(osv.osv):
     def move_line_get_item(self, cr, uid, line, context=None):
         return {
             'type':'src',
-            'name': line.name[:64],
+            'name': line.name.split('\n')[0][:64],
             'price_unit':line.price_unit,
             'quantity':line.quantity,
             'price':line.price_subtotal,
@@ -1579,6 +1579,7 @@ class account_invoice_tax(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice Line', ondelete='cascade', select=True),
         'name': fields.char('Tax Description', size=64, required=True),
         'account_id': fields.many2one('account.account', 'Tax Account', required=True, domain=[('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')]),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'base': fields.float('Base', digits_compute=dp.get_precision('Account')),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'manual': fields.boolean('Manual'),
@@ -1649,14 +1650,16 @@ class account_invoice_tax(osv.osv):
                     val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
                     val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
                     val['account_id'] = tax['account_collected_id'] or line.account_id.id
+                    val['account_analytic_id'] = tax['account_analytic_collected_id']
                 else:
                     val['base_code_id'] = tax['ref_base_code_id']
                     val['tax_code_id'] = tax['ref_tax_code_id']
                     val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
                     val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['ref_tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
                     val['account_id'] = tax['account_paid_id'] or line.account_id.id
+                    val['account_analytic_id'] = tax['account_analytic_paid_id']
 
-                key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
+                key = (val['tax_code_id'], val['base_code_id'], val['account_id'], val['account_analytic_id'])
                 if not key in tax_grouped:
                     tax_grouped[key] = val
                 else:
@@ -1688,7 +1691,8 @@ class account_invoice_tax(osv.osv):
                 'price': t['amount'] or 0.0,
                 'account_id': t['account_id'],
                 'tax_code_id': t['tax_code_id'],
-                'tax_amount': t['tax_amount']
+                'tax_amount': t['tax_amount'],
+                'account_analytic_id': t['account_analytic_id'],
             })
         return res
 

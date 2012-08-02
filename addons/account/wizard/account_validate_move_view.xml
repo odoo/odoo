@@ -8,24 +8,22 @@
             <field name="model">validate.account.move</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-	            <form string="Post Journal Entries" version="7.0">
-	                <header>
-	                    <button string="Approve" name="validate_move" type="object" class="oe_highlight"/>
-	                    or
-	                    <button string="Cancel" class="oe_link" special="cancel"/>
-	                </header>
-	                <separator string="Post Journal Entries of a Journal"/>
-	                <label string="All draft account entries in this journal and period will be validated. It means you won't be able to modify their accounting fields anymore."/>
-	                <group>
-	                    <field name="journal_id"/>
-	                    <field name="period_id"/>
-	                </group>
-	            </form>
+                <form string="Post Journal Entries" version="7.0">
+                    <group>
+                        <field name="journal_id"/>
+                        <field name="period_id"/>
+                    </group>
+                    <footer>
+                        <button string="Approve" name="validate_move" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
             </field>
         </record>
 
         <record id="action_validate_account_move" model="ir.actions.act_window">
-            <field name="name">Open Journal</field>
+            <field name="name">Post Journal Entries</field>
             <field name="res_model">validate.account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -47,15 +45,15 @@
             <field name="model">validate.account.move.lines</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-	            <form string="Post Journal Entries" version="7.0">
-	                <header>
-	                    <button string="Approve" name="validate_move_lines" type="object" default_focus="1" class="oe_highlight"/>
-	                    or
-	                    <button string="Cancel" class="oe_link" special="cancel"/>
-	                </header>
+                <form string="Post Journal Entries" version="7.0">
                     <separator string="Post Journal Entries"/>
-	                <label string="All selected journal entries will be validated and posted. It means you won't be able to modify their accounting fields anymore."/>
-	            </form>
+                    <label string="All selected journal entries will be validated and posted. It means you won't be able to modify their accounting fields anymore."/>
+                    <footer>
+                        <button string="Approve" name="validate_move_lines" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
             </field>
         </record>
 

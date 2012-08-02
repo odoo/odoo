@@ -619,7 +619,7 @@ class stock_picking(osv.osv):
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'origin': fields.char('Source', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
         'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
-        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Shipping type specify, goods coming in or going out."),
+        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, readonly=True, help="Shipping type specify, goods coming in or going out."),
         'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'location_id': fields.many2one('stock.location', 'Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Keep empty if you produce at the location where the finished products are needed." \
@@ -1728,10 +1728,15 @@ class stock_move(osv.osv):
             if location_xml_id:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
         return location_id
+    
+    def _default_destination_address(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.company_id.partner_id.id
 
     _defaults = {
         'location_id': _default_location_source,
         'location_dest_id': _default_location_destination,
+        'partner_id': _default_destination_address,
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,

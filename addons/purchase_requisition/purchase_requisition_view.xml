@@ -104,9 +104,9 @@
                     </page>
                 </notebook>
             </sheet>
-            <footer>
+            <div class="oe_chatter">
                   <field name="message_ids" widget="mail_thread"/>
-            </footer> 
+            </div> 
             </form>
         </field>
     </record>
@@ -134,28 +134,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
-                <group>
                     <field name="name" string="Purchase Requisition"/>
-                    <separator orientation="vertical"/>
+                    <field name="exclusive" />
                     <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Purchase Requisition"/>
                     <filter icon="terp-camera_test" string="Sent to Suppliers" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>
                     <filter icon="terp-dialog-close" string="Purchase Done" domain="[('state','=','done')]" help="Current Purchase Requisition"/>
-                    <separator orientation="vertical"/>
+                    <separator/>
                     <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
-                    <separator orientation="vertical"/>
                     <field name="user_id" />
-                    <field name="exclusive" />
-                </group>
-                <newline/>
-                <group expand="0" string="Group By...">
-                    <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
-                    <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
-                </group>
+                    <group expand="0" string="Group By...">
+                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
+                    </group>
                 </search>
             </field>
         </record>

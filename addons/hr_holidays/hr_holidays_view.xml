@@ -44,36 +44,28 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Leave">
-                    <group>
-                        <field name="date_from"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-mail-message-new"
-                            string="Inbox" help="Unread messages"
-                            name="needaction_pending"
-                            domain="[('needaction_pending','=',True)]"/>
-                        <separator orientation="vertical"/>
-                        <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
-                        <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
-                        <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
-                        <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
-                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
-                        <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
-                        <separator orientation="vertical"/>
-                        <field name="employee_id"/>
-                        <field name="department_id" widget="selection"/>
-                        <field name="holiday_status_id" widget="selection"/>
-                    </group>
-                    <newline/>
+                    <field name="date_from"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <separator/>
+                    <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
+                    <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
+                    <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
+                    <separator/>
+                    <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
+                    <separator/>
+                    <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
+                    <separator/>
+                    <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="holiday_status_id"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_date_from" string="Start Date" icon="terp-personal" domain="[]" context="{'group_by':'date_from'}"/>
-                        <separator orientation="vertical"/>
                         <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter name="group_category" string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id','set_visible':True}"/>
-                        <separator orientation="vertical"/>
                         <filter name="group_type" string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'holiday_status_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
@@ -146,9 +138,9 @@
                         </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                </footer>
+                </div>
                 </form>
             </field>
         </record>
@@ -193,9 +185,9 @@
                         </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                </footer>
+                </div>
                 </form>
             </field>
         </record>
@@ -408,8 +400,7 @@
             <field name="arch" type="xml">
                 <search string="Search Leave Type">
                     <field name="name" string="Leave Types"/>
-                    <separator orientation="vertical"/>
-                    <field name="categ_id" widget="selection"/>
+                    <field name="categ_id"/>
                 </search>
             </field>
         </record>
@@ -475,8 +466,7 @@
             <field name="arch" type="xml">
                 <search string="Leave Type">
                     <field name="name" string="Leave Types"/>
-                    <separator orientation="vertical"/>
-                    <field name="categ_id" widget="selection"/>
+                    <field name="categ_id"/>
                 </search>
             </field>
         </record>
@@ -501,7 +491,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
             <field name="arch" type="xml">
-                <field name="date_to" position="after">
+                <field name="name" position="after">
                     <field name="holiday_id"/>
                 </field>
             </field>
@@ -579,7 +569,6 @@
             name="Leave Meetings"
             src_model="hr.holidays"
             res_model="crm.meeting"
-            domain="[('leave_id', '=', active_id)]"
             view_mode="tree,form,calendar,gantt"
             view_type="form"/>
 

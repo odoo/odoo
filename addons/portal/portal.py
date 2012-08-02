@@ -32,7 +32,7 @@ class portal(osv.osv):
     _name = 'res.portal'
     _description = 'Portal'
     _inherits = {'res.groups': 'group_id'}
-    
+
     _columns = {
         'group_id': fields.many2one('res.groups', required=True, ondelete='cascade',
             string='Group',
@@ -53,40 +53,40 @@ class portal(osv.osv):
             string='Widgets',
             help='Widgets assigned to portal users'),
     }
-    
+
     def copy(self, cr, uid, id, values, context=None):
         """ override copy(): menu_action_id must be different """
         values['menu_action_id'] = None
         return super(portal, self).copy(cr, uid, id, values, context)
-    
+
     def create(self, cr, uid, values, context=None):
         """ extend create() to assign the portal menu to users """
         if context is None:
             context = {}
-        
+
         # create portal (admin should not be included)
         context['noadmin'] = True
         portal_id = super(portal, self).create(cr, uid, values, context)
-        
+
         # assign menu action and widgets to users
         if values.get('users') or values.get('menu_action_id'):
             self._assign_menu(cr, uid, [portal_id], context)
         if values.get('users') or values.get('widget_ids'):
             self._assign_widgets(cr, uid, [portal_id], context)
-        
+
         return portal_id
-    
+
     def write(self, cr, uid, ids, values, context=None):
         """ extend write() to reflect changes on users """
         # first apply portal changes
         super(portal, self).write(cr, uid, ids, values, context)
-        
+
         # assign menu action and widgets to users
         if values.get('users') or values.get('menu_action_id'):
             self._assign_menu(cr, uid, ids, context)
         if values.get('users') or values.get('widget_ids'):
             self._assign_widgets(cr, uid, ids, context)
-        
+
         # if parent_menu_id has changed, apply the change on menu_action_id
         if 'parent_menu_id' in values:
             act_window_obj = self.pool.get('ir.actions.act_window')
@@ -95,7 +95,7 @@ class portal(osv.osv):
             if action_ids:
                 action_values = {'domain': [('parent_id', '=', values['parent_menu_id'])]}
                 act_window_obj.write(cr, uid, action_ids, action_values, context)
-        
+
         return True
 
     def _assign_menu(self, cr, uid, ids, context=None):
@@ -131,26 +131,26 @@ portal()
 
 class portal_override_menu(osv.osv):
     """
-        extend res.portal with a boolean field 'Override Users Menu', that
+        Extend res.portal with a boolean field 'Override Users Menu', that
         triggers the creation or removal of menu_action_id
     """
     _name = 'res.portal'
     _inherit = 'res.portal'
-    
+
     def _get_override_menu(self, cr, uid, ids, field_name, arg, context=None):
         assert field_name == 'override_menu'
         result = {}
         for p in self.browse(cr, uid, ids, context):
             result[p.id] = bool(p.menu_action_id)
         return result
-    
+
     def _set_override_menu(self, cr, uid, id, field_name, field_value, arg, context=None):
         assert field_name == 'override_menu'
         if field_value:
             self.create_menu_action(cr, uid, id, context)
         else:
             self.write(cr, uid, [id], {'menu_action_id': False}, context)
-    
+
     def create_menu_action(self, cr, uid, id, context=None):
         """ create, if necessary, a menu action that opens the menu items below
             parent_menu_id """
@@ -169,7 +169,7 @@ class portal_override_menu(osv.osv):
             }
             action_id = actions_obj.create(cr, uid, action_values, context)
             self.write(cr, uid, [id], {'menu_action_id': action_id}, context)
-    
+
     _columns = {
         'override_menu': fields.function(
             _get_override_menu, fnct_inv=_set_override_menu,

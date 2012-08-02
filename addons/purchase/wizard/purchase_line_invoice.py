@@ -121,7 +121,6 @@ class purchase_line_invoice(osv.osv_memory):
                         'uos_id': line.product_uom.id,
                         'product_id': line.product_id.id or False,
                         'invoice_line_tax_id': [(6, 0, [x.id for x in line.taxes_id])],
-                        'note': line.notes,
                         'account_analytic_id': line.account_analytic_id and line.account_analytic_id.id or False,
                     })
                     purchase_line_obj.write(cr, uid, [line.id], {'invoiced': True, 'invoice_lines': [(4, inv_id)]})

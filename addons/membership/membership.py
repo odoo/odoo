@@ -146,7 +146,7 @@ class membership_line(osv.osv):
         'date_to': fields.date('To', readonly=True),
         'date_cancel': fields.date('Cancel date'),
         'date': fields.date('Join Date', help="Date on which member has joined the membership"),
-        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True,  help='Amount for the membership'),
+        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True, help='Amount for the membership'),
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
         'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
         'state': fields.function(_state,
@@ -315,11 +315,11 @@ class Partner(osv.osv):
         return self._membership_state(*args, **kwargs)
 
     _columns = {
-        'associate_member': fields.many2one('res.partner', 'Associate member',help="A member with whom you want to associate your membership.It will consider the membership state of the associated member."),
+        'associate_member': fields.many2one('res.partner', 'Associate Member',help="A member with whom you want to associate your membership.It will consider the membership state of the associated member."),
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
-        'free_member': fields.boolean('Free member', help = "Select if you want to give membership free of cost."),
+        'free_member': fields.boolean('Free Member', help = "Select if you want to give membership free of cost."),
         'membership_amount': fields.float(
-                    'Membership amount', digits=(16, 2),
+                    'Membership Amount', digits=(16, 2),
                     help = 'The price negotiated by the partner'),
         'membership_state': fields.function(
                     __get_membership_state,
@@ -338,7 +338,7 @@ class Partner(osv.osv):
                     -Paid Member: A member who has paid the membership amount."""),
         'membership_start': fields.function(
                     _membership_date, multi = 'membeship_start',
-                    string = 'Start membership date', type = 'date',
+                    string = 'Start Membership Date', type = 'date',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10, ),
@@ -346,7 +346,7 @@ class Partner(osv.osv):
                     }, help="Date from which membership becomes active."),
         'membership_stop': fields.function(
                     _membership_date,
-                    string = 'Stop membership date', type='date', multi='membership_stop',
+                    string = 'Stop Membership Date', type='date', multi='membership_stop',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
@@ -354,7 +354,7 @@ class Partner(osv.osv):
                     }, help="Date until which membership remains active."),
         'membership_cancel': fields.function(
                     _membership_date,
-                    string = 'Cancel membership date', type='date', multi='membership_cancel',
+                    string = 'Cancel Membership Date', type='date', multi='membership_cancel',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 11),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),

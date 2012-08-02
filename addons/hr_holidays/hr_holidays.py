@@ -76,7 +76,7 @@ class hr_holidays_status(osv.osv):
         'name': fields.char('Leave Type', size=64, required=True, translate=True),
         'categ_id': fields.many2one('crm.meeting.type', 'Meeting Type',
             help='Once a leave is validated, OpenERP will create a corresponding meeting of this type in the calendar.'),
-        'color_name': fields.selection([('red', 'Red'),('blue','Blue'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
+        'color_name': fields.selection([('red', 'Red'),('blue','Blue'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Department.'),
         'limit': fields.boolean('Allow to Override Limit', help='If you select this checkbox, the system allows the employees to take more leaves than the available ones for this type.'),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
         'max_leaves': fields.function(_user_left_days, string='Maximum Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
@@ -267,7 +267,7 @@ class hr_holidays(osv.osv):
                 meeting_obj = self.pool.get('crm.meeting')
                 meeting_vals = {
                     'name': record.name,
-                    'categ_id': record.holiday_status_id.categ_id.id,
+                    'categ_ids': record.holiday_status_id.categ_id and [(6,0,[record.holiday_status_id.categ_id.id])] or [],
                     'duration': record.number_of_days_temp * 8,
                     'description': record.notes,
                     'user_id': record.user_id.id,
@@ -418,7 +418,7 @@ class resource_calendar_leaves(osv.osv):
     _inherit = "resource.calendar.leaves"
     _description = "Leave Detail"
     _columns = {
-        'holiday_id': fields.many2one("hr.holidays", "Holiday"),
+        'holiday_id': fields.many2one("hr.holidays", "Leave Request"),
     }
 
 resource_calendar_leaves()

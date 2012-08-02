@@ -84,40 +84,20 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invitations">
-                   <field name="email" string="Email"/>
-                   <separator orientation="vertical"/>
-                   <field name="event_date"/>
-                   <separator orientation="vertical"/>
-                   <filter icon="terp-gtk-jump-to-ltr" name="toreview" string="To Review"
-                       domain="[('state','=', 'needs-action')]"
-                       help="Invitations To Review" />
-                   <filter icon="terp-check" string="Accepted"
-                       domain="[('state','=', 'accepted')]"
-                       help="Accepted Invitations" />
-                   <filter icon="terp-dialog-close" string="Declined"
-                       domain="[('state','=', 'declined')]"
-                       help="Declined Invitations" />
-                   <filter icon="gtk-sort-descending" string="Delegated"
-                       domain="[('state','=', 'delegated')]"
-                       help="Delegated Invitations" />
-                   <separator orientation="vertical"/>
-                   <field name="user_id" string="Responsible"/>
-                   <separator orientation="vertical"/>
-                   <field name="cutype" string="Invitation type"/>
-                   <newline/>
+                    <field name="email" string="Email"/>
+                    <field name="event_date"/>
+                    <filter icon="terp-gtk-jump-to-ltr" name="toreview" string="To Review" domain="[('state','=', 'needs-action')]" help="Invitations To Review" />
+                    <filter icon="terp-check" string="Accepted" domain="[('state','=', 'accepted')]" help="Accepted Invitations" />
+                    <filter icon="terp-dialog-close" string="Declined" domain="[('state','=', 'declined')]" help="Declined Invitations" />
+                    <filter icon="gtk-sort-descending" string="Delegated" domain="[('state','=', 'delegated')]" help="Delegated Invitations" />
+                    <field name="user_id" string="Responsible"/>
+                    <field name="cutype" string="Invitation type"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Responsible" icon="terp-personal" domain="[]"
-                            context="{'group_by':'user_id'}" />
-                        <filter string="Contact" icon="terp-personal" domain="[]"
-                            context="{'group_by':'partner_id'}" />
-                        <separator orientation="vertical" />
-                        <filter string="Type" icon="terp-stock_symbol-selection" help="Invitation Type"
-                            domain="[]" context="{'group_by':'cutype'}" />
-                        <filter string="Role" icon="terp-gtk-select-all"
-                            domain="[]" context="{'group_by':'role'}" />
-                        <filter string="Required Reply" icon="terp-mail-replied"
-                            domain="[]" context="{'group_by':'rsvp'}" />
-                        <separator orientation="vertical" />
+                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Contact" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}" />
+                        <filter string="Type" icon="terp-stock_symbol-selection" help="Invitation Type" domain="[]" context="{'group_by':'cutype'}" />
+                        <filter string="Role" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'role'}" />
+                        <filter string="Required Reply" icon="terp-mail-replied" domain="[]" context="{'group_by':'rsvp'}" />
                         <filter string="Status" icon="terp-stock_effects-object-colorize" help="Invitation Type"
                             domain="[]" context="{'group_by':'state'}" />
                     </group>
@@ -136,7 +116,7 @@
 
         <!-- Calenadar's menu -->
         <menuitem id="base.menu_calendar_configuration" name="Calendar"
-            parent="base.menu_base_config" sequence="50" groups="base.group_sale_manager" />
+            parent="base.menu_base_config" sequence="50" groups="base.group_no_one"/>
 
         <!-- Invitation menu -->
 
@@ -414,37 +394,20 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Events">
-                       <group>
-                           <field name="name" filter_domain="['|',('name','ilike',self),('location','ilike',self)]" string="Event"/>
-                           <separator orientation="vertical"/>
-                           <filter icon="terp-go-today" string="My Events"
-                               domain="[('user_id','=',uid)]"
-                               help="My Events" />
-                           <separator orientation="vertical"/>
-                           <filter icon="terp-check" string="Confirmed"
-                               domain="[('state','=','confirmed')]"
-                               help="Confirmed Events" />
-                           <separator orientation="vertical"/>
-                           <field name="user_id"/>
-                           <separator orientation="vertical"/>
-                           <field name="show_as"/>
-                           <field name="class" string="Privacy"/>
-                       </group>
-                       <newline/>
-                        <group expand="0" string="Group By...">
-                            <filter string="Responsible" icon="terp-personal" domain="[]"
-                                context="{'group_by':'user_id'}" />
-                            <separator orientation="vertical" />
-                            <filter string="Availability" icon="terp-camera_test"
-                                domain="[]" context="{'group_by':'show_as'}" />
-                            <filter string="Privacy" icon="terp-locked"
-                                domain="[]" context="{'group_by':'class'}" />
-                            <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"
-                                context="{'group_by':'state'}" />
-                            <separator orientation="vertical" />
-                            <filter string="Date" icon="terp-go-month"
-                                domain="[]" context="{'group_by':'date'}" />
-                        </group>
+                    <field name="name" filter_domain="['|',('name','ilike',self),('location','ilike',self)]" string="Event"/>
+                    <field name="show_as"/>
+                    <field name="class" string="Privacy"/>
+                    <filter icon="terp-go-today" string="My Events" domain="[('user_id','=',uid)]" help="My Events" />
+                    <separator/>
+                    <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Events" />
+                    <field name="user_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'show_as'}" />
+                        <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" />
+                    </group>
                 </search>
             </field>
         </record>

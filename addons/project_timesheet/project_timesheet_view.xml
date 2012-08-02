@@ -47,8 +47,9 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
-                <xpath expr='//filter[@string="Member"]' position='after'>
-                   <filter icon="terp-camera_test" string="Billable" domain="[('to_invoice','!=', False)]" help="Billable Project"/>
+                <xpath expr='//filter[@string="Project(s) Manager"]' position='after'>
+                    <separator/>
+                    <filter icon="terp-camera_test" string="Billable" domain="[('to_invoice','!=', False)]" help="Billable Project"/>
                 </xpath>
             </field>
         </record>
@@ -70,7 +71,7 @@
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
-                   <field name="account_id" string="Analytic account/project" on_change="on_change_account_id(account_id)"/>
+                   <field name="account_id" string="Analytic Account/Project" on_change="on_change_account_id(account_id)"/>
                 </field>
             </field>
         </record>
@@ -88,7 +89,7 @@
 
         <!-- Menus -->
         <record id="action_project_timesheet_bill_task" model="ir.actions.act_window">
-            <field name="name">Bill Tasks Works</field>
+            <field name="name">Invoice Tasks Work</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
