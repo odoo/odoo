@@ -713,7 +713,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).then(function(records) {
             if (records.length) {
                 self.set_record(records[0]);
-                this.replaceElement($(self.render()));
+                self.replaceElement($(self.render()));
                 self.$element.data('widget', self);
                 self.bind_events();
                 self.group.compute_cards_auto_height();
