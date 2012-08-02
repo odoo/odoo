@@ -44,7 +44,7 @@ class account_config_settings(osv.osv_memory):
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
             string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the OpenERP portal."),
         'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
-            string='Bank accounts on reports', help="Bank accounts as printed in the footer of each customer  document. This is for information purpose only, you should configure  these bank accounts through the above button \"Configure Bank Accounts\"."),
+            string='Bank accounts on reports', help="Bank accounts as printed in the footer of each customer  document. This is for information purpose only, you should configure these bank accounts through the above button \"Configure Bank Accounts\"."),
 
         'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Template', domain="[('visible','=', True)]"),
@@ -79,33 +79,33 @@ class account_config_settings(osv.osv_memory):
         'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier credit note sequence'),
         'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier credit note number'),
 
-        'module_account_check_writing': fields.boolean('Check writing',
+        'module_account_check_writing': fields.boolean('check writing',
             help="""This allows you to check writing and printing.
                 This installs the module account_check_writing."""),
-        'module_account_accountant': fields.boolean('Accountant features',
+        'module_account_accountant': fields.boolean('accountant features',
             help="""If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of  Accounts, ...)"""),
-        'module_account_asset': fields.boolean('Assets management',
+        'module_account_asset': fields.boolean('assets management',
             help="""This allows you to manage the assets owned by a company or a person.
                 It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
                 This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments,
                 but not accounting (Journal Items, Chart of Accounts, ...)"""),
-        'module_account_budget': fields.boolean('Budget management',
+        'module_account_budget': fields.boolean('budget management',
             help="""This allows accountants to manage analytic and crossovered budgets.
                 Once the master budgets and the budgets are defined,
                 the project managers can set the planned amount on each analytic account.
                 This installs the module account_budget."""),
-        'module_account_payment': fields.boolean('Manage payment orders',
+        'module_account_payment': fields.boolean('manage payment orders',
             help="""This allows you to create and manage your payment orders, with purposes to
                     * serve as base for an easy plug-in of various automated payment mechanisms, and
                     * provide a more efficient way to manage invoice payments.
                 This installs the module account_payment."""),
-        'module_account_voucher': fields.boolean('Manage customer payments',
+        'module_account_voucher': fields.boolean('anage customer payments',
             help="""This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.
                 This installs the module account_voucher."""),
-        'module_account_followup': fields.boolean('Manage customer payment follow-ups',
+        'module_account_followup': fields.boolean('manage customer payment follow-ups',
             help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
                 This installs the module account_followup."""),
-        'group_proforma_invoices': fields.boolean('Allow pro-forma invoices',
+        'group_proforma_invoices': fields.boolean('allow pro-forma invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
         'default_sale_tax': fields.many2one('account.tax', 'Default sale tax',

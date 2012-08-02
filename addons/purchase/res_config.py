@@ -82,7 +82,7 @@ class account_config_settings(osv.osv_memory):
     _columns = {
         'module_purchase_analytic_plans': fields.boolean('use multiple analytic accounts on orders',
             help="""This allows install module purchase_analytic_plans."""),
-        'group_analytic_account_for_purchases': fields.boolean('Analytic Accounting for Purchases',
+        'group_analytic_account_for_purchases': fields.boolean('analytic accounting for purchases',
             implied_group='purchase.group_analytic_accounting',
             help="Allows you to specify an analytic account on purchase orders."),
     }
