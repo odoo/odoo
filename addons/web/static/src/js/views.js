@@ -435,7 +435,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                         container.hide();
                         controller.do_hide();
                     }
-		    // put the <footer> in the dialog's buttonpane
+                    // put the <footer> in the dialog's buttonpane
                     if (self.$element.parent('.ui-dialog-content') && self.$element.find('footer')) {
                         self.$element.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonset').hide()
                         self.$element.find('footer').appendTo(

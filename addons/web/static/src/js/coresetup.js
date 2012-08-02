@@ -393,13 +393,13 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         timer = setTimeout(waitLoop, CHECK_INTERVAL);
     },
     synchronized_mode: function(to_execute) {
-    	var synch = this.synch;
-    	this.synch = true;
-    	try {
-    		return to_execute();
-    	} finally {
-    		this.synch = synch;
-    	}
+        var synch = this.synch;
+        this.synch = true;
+        try {
+            return to_execute();
+        } finally {
+            this.synch = synch;
+        }
     }
 });
 
@@ -540,10 +540,10 @@ $.async_when = function() {
 // special tweak for the web client
 var old_async_when = $.async_when;
 $.async_when = function() {
-	if (instance.connection.synch)
-		return $.when.apply(this, arguments);
-	else
-		return old_async_when.apply(this, arguments);
+    if (instance.connection.synch)
+        return $.when.apply(this, arguments);
+    else
+        return old_async_when.apply(this, arguments);
 };
 
 /** Setup blockui */
