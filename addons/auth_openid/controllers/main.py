@@ -21,7 +21,7 @@
 
 import logging
 import os
-import sys
+import tempfile
 import urllib
 
 import werkzeug.urls
@@ -31,52 +31,50 @@ from openerp.modules.registry import RegistryManager
 try:
     import openerp.addons.web.common.http as openerpweb
 except ImportError:
-    import web.common.http as openerpweb
+    import web.common.http as openerpweb    # noqa
 
 from openid import oidutil
-from openid.store import memstore
-#from openid.store import filestore
+from openid.store import filestore
 from openid.consumer import consumer
 from openid.cryptutil import randomString
 from openid.extensions import ax, sreg
 
 from .. import utils
 
-
-
 _logger = logging.getLogger('web.auth_openid')
 oidutil.log = logging.getLogger('openid').debug
 
+_storedir = os.path.join(tempfile.gettempdir(), 'openerp-auth_openid-store')
 
 class GoogleAppsAwareConsumer(consumer.GenericConsumer):
     def complete(self, message, endpoint, return_to):
         if message.getOpenIDNamespace() == consumer.OPENID2_NS:
-            server_url = message.getArg(consumer.OPENID2_NS, 'op_endpoint', consumer.no_default)
+            server_url = message.getArg(consumer.OPENID2_NS, 'op_endpoint', '')
             if server_url.startswith('https://www.google.com/a/'):
-                # update fields
-                for attr in ['claimed_id', 'identity']:
-                    value = message.getArg(consumer.OPENID2_NS, attr)
-                    value = 'https://www.google.com/accounts/o8/user-xrds?uri=%s' % urllib.quote_plus(value)
-                    message.setArg(consumer.OPENID2_NS, attr, value)
-
-                # now, resign the message
                 assoc_handle = message.getArg(consumer.OPENID_NS, 'assoc_handle')
                 assoc = self.store.getAssociation(server_url, assoc_handle)
-                message.delArg(consumer.OPENID2_NS, 'sig')
-                message.delArg(consumer.OPENID2_NS, 'signed')
-                message = assoc.signMessage(message)
+                if assoc:
+                    # update fields
+                    for attr in ['claimed_id', 'identity']:
+                        value = message.getArg(consumer.OPENID2_NS, attr, '')
+                        value = 'https://www.google.com/accounts/o8/user-xrds?uri=%s' % urllib.quote_plus(value)
+                        message.setArg(consumer.OPENID2_NS, attr, value)
 
-        return super(GoogleAppsAwareConsumer, self).complete(message, endpoint, return_to) 
+                    # now, resign the message
+                    message.delArg(consumer.OPENID2_NS, 'sig')
+                    message.delArg(consumer.OPENID2_NS, 'signed')
+                    message = assoc.signMessage(message)
+
+        return super(GoogleAppsAwareConsumer, self).complete(message, endpoint, return_to)
 
 
 class OpenIDController(openerpweb.Controller):
     _cp_path = '/auth_openid/login'
 
-    _store = memstore.MemoryStore()  # TODO use a filestore
+    _store = filestore.FileOpenIDStore(_storedir)
 
     _REQUIRED_ATTRIBUTES = ['email']
     _OPTIONAL_ATTRIBUTES = 'nickname fullname postcode country language timezone'.split()
-
 
     def _add_extensions(self, request):
         """Add extensions to the request"""
@@ -157,7 +155,6 @@ class OpenIDController(openerpweb.Controller):
             form_html = request.htmlMarkup(realm, redirect_to)
             return {'action': 'post', 'value': form_html, 'session_id': req.session_id}
 
-    
     @openerpweb.httprequest
     def process(self, req, **kw):
         session = getattr(req.session, 'openid_session', None)
@@ -197,10 +194,8 @@ class OpenIDController(openerpweb.Controller):
                         domain += ['|', ('openid_email', '=', False)]
                     domain += [('openid_email', '=', openid_email)]
 
-                    domain += [
-                               ('openid_url', '=', openid_url),
-                               ('active', '=', True),
-                              ]
+                    domain += [('openid_url', '=', openid_url), ('active', '=', True)]
+
                     ids = Users.search(cr, 1, domain)
                     assert len(ids) < 2
                     if ids:
@@ -211,12 +206,11 @@ class OpenIDController(openerpweb.Controller):
                         # TODO fill empty fields with the ones from sreg/ax
                         cr.commit()
 
-                        u = req.session.authenticate(dbname, login, key, {})
+                        req.session.authenticate(dbname, login, key, {})
 
             if not user_id:
                 session['message'] = 'This OpenID identifier is not associated to any active users'
 
-                
         elif info.status == consumer.SETUP_NEEDED:
             session['message'] = info.setup_url
         elif info.status == consumer.FAILURE and display_identifier:
@@ -229,9 +223,8 @@ class OpenIDController(openerpweb.Controller):
             # information in a log.
             session['message'] = 'Verification failed.'
 
-
         fragment = '#loginerror' if not user_id else ''
-        return werkzeug.utils.redirect('/'+fragment)
+        return werkzeug.utils.redirect('/' + fragment)
 
     @openerpweb.jsonrequest
     def status(self, req):
