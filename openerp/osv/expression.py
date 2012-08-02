@@ -474,6 +474,10 @@ class expression(object):
                     # the function field doesn't provide a search function and doesn't store
                     # values in the database, so we must ignore it : we generate a dummy leaf
                     self.__exp[i] = TRUE_LEAF
+                    _logger.error(
+                        "The field '%s' can not be searched: non-stored "
+                        "function field without fnct_search",
+                        field.string)
                 else:
                     subexp = field.search(cr, uid, table, left, [self.__exp[i]], context=context)
                     if not subexp:
