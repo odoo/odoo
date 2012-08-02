@@ -101,7 +101,7 @@ authentication if installed at the same time.
 
 
     "website" : "http://www.openerp.com",
-    "category" : "Tools",
+    "category" : "Authentication",
     "data" : [
         "users_ldap_view.xml",
         "user_ldap_installer.xml",

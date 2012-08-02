@@ -1,4 +1,4 @@
-openerp.anonymous = function(instance) {
+openerp.auth_anonymous = function(instance) {
 
     instance.web.Login.include({
         start: function() {
@@ -19,7 +19,7 @@ openerp.anonymous = function(instance) {
         init: function(parent) {
             this._super(parent);
             if (this.session.username == 'anonymous') {
-                this.template = 'UserMenu.anonymous';
+                this.template = 'UserMenu.auth_anonymous';
                 this.do_update = function() {};     // avoid change of avatar
             }
         },

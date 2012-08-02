@@ -3,17 +3,17 @@
  'description': 'Allow anonymous access to OpenERP.',
  'author': 'OpenERP SA',
  'version': '1.0',
- 'category': 'Tools',
+ 'category': 'Authentication',
  'website': 'http://www.openerp.com',
  'installable': True,
  'depends': ['web'],
  'data': [
-    'anonymous.xml',
+    'auth_anonymous.xml',
  ],
  'js': [
-    'static/src/js/anonymous.js',
+    'static/src/js/auth_anonymous.js',
  ],
  'qweb': [
-     'static/src/xml/anonymous.xml',
+     'static/src/xml/auth_anonymous.xml',
  ],
 }

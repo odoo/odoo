@@ -3,10 +3,10 @@
  'description': 'Allow users to reset their password from the login page',
  'author': 'OpenERP SA',
  'version': '1.0',
- 'category': 'Tools',
+ 'category': 'Authentication',
  'website': 'http://www.openerp.com',
  'installable': True,
- 'depends': ['anonymous', 'email_template'],
+ 'depends': ['auth_anonymous', 'email_template'],
  'data': [
     'email_templates.xml',
     'res_users.xml',
