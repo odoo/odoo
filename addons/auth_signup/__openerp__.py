@@ -8,8 +8,8 @@
  'installable': True,
  'depends': ['anonymous', 'base_setup'],
  'data': [
+    'auth_signup.xml',
     'res_config.xml',
-    'signup.xml',
  ],
  'js': [
     'static/src/js/auth_signup.js',

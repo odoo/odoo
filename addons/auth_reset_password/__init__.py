@@ -1,2 +1,1 @@
-import res_users
-import controllers
+import auth_reset_password

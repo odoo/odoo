@@ -1,4 +1,4 @@
-openerp.reset_password = function(instance) {
+openerp.auth_reset_password = function(instance) {
     var _t = instance.web._t;
     instance.web.Login.include({
         start: function() {

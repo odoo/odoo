@@ -35,7 +35,7 @@ class res_users(osv.osv):
         ('email_uniq', 'UNIQUE (user_email)', 'You can not have two users with the same email!')
     ]
 
-    def _auth_reset_password_secret(self, cr, uid, ids, context=None)
+    def _auth_reset_password_secret(self, cr, uid, ids, context=None):
         uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
         res = {
             'dbname': cr.dbname,
@@ -95,7 +95,7 @@ class auth_reset_password(osv.TransientModel):
             raise osv.except_osv('Error', 'Passwords missmatch')
 
         Users = self.pool.get('res.users')
-        data = Users._auth_reset_password_check_token(self, cr, uid, values['token']):
+        data = Users._auth_reset_password_check_token(self, cr, uid, values['token'])
         if data:
             Users.write(cr, 1, data['uid'], {'password': pw}, context=context)
         else:

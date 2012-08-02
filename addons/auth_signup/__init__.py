@@ -1,2 +1,2 @@
 import res_config
-import signup
+import auth_signup
