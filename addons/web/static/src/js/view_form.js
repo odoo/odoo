@@ -661,7 +661,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
     },
     autofocus: function() {
-        if (this.get("actual_mode") === "edit" && !this.options.disable_autofocus) {
+        if (this.get("actual_mode") !== "view" && !this.options.disable_autofocus) {
             var fields_order = this.fields_order.slice(0);
             if (this.default_focus_field) {
                 fields_order.unshift(this.default_focus_field.name);
