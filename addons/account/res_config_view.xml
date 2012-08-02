@@ -232,19 +232,22 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Electronic Payments"/>
-                    <group>
-                        <label for="id" string="Payment Settings"/>
-                    </group>
                     <separator name="analytic_account" string="Analytic Accounting" invisible="1"/>
                     <group name="analytic_account" invisible="1">
-                        <label for="id" string="Settings"/>
+                        <label for="id" string="Sale"/>
+                        <div name="analytic_account_sale"/>
+                        <label for="id" string="Purchase"/>
+                        <div name="analytic_account_purchase"/>
+
                         <div name="analytic_account"/>
                     </group>
+
                     <field name="sale_journal_id" invisible="1"/>
                     <field name="sale_refund_journal_id" invisible="1"/>
                     <field name="purchase_journal_id" invisible="1"/>
                     <field name="purchase_refund_journal_id" invisible="1"/>
+
+                    <!-- Move those fields to the right place or delete them (from xml AND py if they are not necessary) -->
                     <separator string="No idea where these should go"/>
                     <group>
                         <field name="company_footer"/>
