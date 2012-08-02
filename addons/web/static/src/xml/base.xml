@@ -1032,8 +1032,8 @@
     <t t-set="size" t-value="widget.to_show.length"/>
     <t t-foreach="_.range(size)" t-as="i">
         <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
-            <!-- <button t-if="widget.view.get('actual_mode') === 'edit'" class="oe_form_steps_item" t-att-data-id="widget.to_show[i][0]"><t t-esc="widget.to_show[i][1]"/></button> -->
-            <span class="oe_form_steps_item" t-att-data-id="widget.to_show[i][0]"><t t-esc="widget.to_show[i][1]"/></span>
+            <button class="oe_form_steps_item" t-att-data-id="widget.to_show[i][0]"><t t-esc="widget.to_show[i][1]"/></button>
+            <!-- <span class="oe_form_steps_item" t-att-data-id="widget.to_show[i][0]"><t t-esc="widget.to_show[i][1]"/></span> -->
             <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
         </li>
     </t>
