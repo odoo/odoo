@@ -8,11 +8,10 @@
  'installable': True,
  'depends': ['auth_anonymous', 'email_template'],
  'data': [
-    'email_templates.xml',
-    'res_users.xml',
+     'auth_reset_password.xml',
  ],
  'js': [
-    'static/src/js/reset_password.js',
+     'static/src/js/reset_password.js',
  ],
  'css': [
      'static/src/css/reset_password.css',
