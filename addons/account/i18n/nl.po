@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-07-30 11:21+0000\n"
-"Last-Translator: Erwin <Unknown>\n"
+"PO-Revision-Date: 2012-08-01 14:49+0000\n"
+"Last-Translator: Stefan Rijnhart (Therp) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-31 05:23+0000\n"
-"X-Generator: Launchpad (build 15702)\n"
+"X-Launchpad-Export-Date: 2012-08-02 05:23+0000\n"
+"X-Generator: Launchpad (build 15719)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -270,9 +270,9 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
 msgstr ""
-"De rekeningsoort wordt gebruikt voor (land-specifieke) rapportagedoeleinden "
-"en bepaalt de handelswijze bij het afsluiten van het boekjaar en het openen "
-"van de balans."
+"De rekening categorie wordt gebruikt voor (land-specifieke) "
+"rapportagedoeleinden en bepaalt de handelswijze bij het afsluiten van het "
+"boekjaar en het openen van de balans."
 
 #. module: account
 #: report:account.overdue:0
@@ -3923,7 +3923,7 @@ msgstr "Effective date"
 #: model:ir.actions.act_window,name:account.action_bank_tree
 #: model:ir.ui.menu,name:account.menu_action_bank_tree
 msgid "Setup your Bank Accounts"
-msgstr "Stel uw bankrekeningen in"
+msgstr "Bankrekeningen"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
@@ -4165,7 +4165,7 @@ msgstr ""
 #: field:report.account.receivable,type:0
 #: field:report.account_type.sales,user_type:0
 msgid "Account Type"
-msgstr "Rekeningsoort"
+msgstr "Rekening categorie"
 
 #. module: account
 #: view:res.partner:0
@@ -4525,7 +4525,7 @@ msgstr "Genereer boekingen vanuit standaard modellen"
 #: field:account.account,reconcile:0
 #: field:account.account.template,reconcile:0
 msgid "Allow Reconciliation"
-msgstr "Verrekening toestaan"
+msgstr "Afletteren toestaan"
 
 #. module: account
 #: code:addons/account/account.py:1077
@@ -6802,8 +6802,9 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"Deze rekening zal gebruikt worden in plaats van de standaard- als de "
-"opbrengsten verkoop rekening voor de huidige relatie."
+"Deze rekening zal gebruikt worden als de debiteuren rekening voor de huidige "
+"relatie, in plaats van de standaard rekening, zoals ingesteld bij "
+"Instellingen\\Instellingen\\Parameters\\Configuratie parameters."
 
 #. module: account
 #: field:account.tax,python_applicable:0
@@ -7783,7 +7784,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Unposted Journal Entries"
-msgstr "Niet geboekte journaalposten"
+msgstr "Ongeboekte journaalposten"
 
 #. module: account
 #: view:product.product:0
@@ -9910,8 +9911,9 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"Deze rekening zal gebruikt worden in plaats van de standaard- als de "
-"crediteurenrekening van de huidige relatie."
+"Deze rekening zal gebruikt worden als de crediteuren rekening van de huidige "
+"relatie in plaats van de standaard rekening, zoals ingesteld bij "
+"Instellingen\\Instellingen\\Parameters\\Configuratie parameters."
 
 #. module: account
 #: field:account.period,special:0
@@ -9970,7 +9972,7 @@ msgstr ""
 #: code:addons/account/account.py:181
 #, python-format
 msgid "Profit & Loss (Income account)"
-msgstr "Winst & verlies (omzet rekening)"
+msgstr "Winst & verlies (Omzet rekening)"
 
 #. module: account
 #: constraint:account.account:0
@@ -10076,7 +10078,7 @@ msgstr "April"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitloss_toreport0
 msgid "Profit (Loss) to report"
-msgstr "Winst (verlies) te rapoprteren"
+msgstr "Winst (verlies) te rapporteren"
 
 #. module: account
 #: view:account.move.line.reconcile.select:0
@@ -10599,8 +10601,8 @@ msgstr ""
 "Het 'Interne Type' wordt gebruikt voor functies die beschikbaar zijn op "
 "verschillende soorten rekeningen: 'Weergave' kan geen boekingen hebben, "
 "consolidatie zijn rekeningen die onderliggende rekeningen kunnen hebben voor "
-"multi-company consolidaties, te crediteuren/debiteuren zijn voor de "
-"relatierekeningen  (voor debet/credit berekeningen), gesloten wodrt gebruikt "
+"multi-company consolidaties, de crediteuren/debiteuren zijn voor de "
+"relatierekeningen  (voor debet/credit berekeningen), gesloten wordt gebruikt "
 "voor afgeschreven rekeningen."
 
 #. module: account
@@ -10748,11 +10750,12 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' state."
 msgstr ""
-"Alle handmatig gemaakte nieuwe journaalposten zijn meestal in de staat 'Niet "
-"geboekt', maar u kunt met de optie instellen om deze status over te slaan op "
-"het betreffende dagboek. In dat geval worden ze behandeld als journaalposten "
-"automatisch aangemaakt door het systeem bij document validatie (facturen, "
-"bankafschriften, ...). Tevens worden ze aangemaakt in de 'Geboekt' staat."
+"Alle handmatig gemaakte nieuwe journaalposten zijn meestal in de staat "
+"'Ongeboekt', maar u kunt met de optie instellen om deze status over te slaan "
+"op het betreffende dagboek. In dat geval worden ze behandeld als "
+"journaalposten automatisch aangemaakt door het systeem bij document "
+"validatie (facturen, bankafschriften, ...). Tevens worden ze aangemaakt in "
+"de 'Geboekt' staat."
 
 #. module: account
 #: view:account.fiscal.position.template:0

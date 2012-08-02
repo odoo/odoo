@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-07-30 04:27+0000\n"
+"PO-Revision-Date: 2012-08-01 19:13+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-31 05:23+0000\n"
-"X-Generator: Launchpad (build 15702)\n"
+"X-Launchpad-Export-Date: 2012-08-02 05:23+0000\n"
+"X-Generator: Launchpad (build 15719)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -659,7 +659,7 @@ msgstr "Ana dizi şuandakinden farklı olmalı"
 #: code:addons/account/account_move_line.py:1251
 #, python-format
 msgid "No period found or more than one period found for the given date."
-msgstr ""
+msgstr "Hiç dönem bulunmadı ya da verilen tarih için birden çok dönem var."
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -718,6 +718,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Günlük Girişinizin tarihi tanımlanan dönem içinde değil! Tarihi "
+"değiştirmelisiniz ya da günlükten bu kıstlamayı kaldırmalısınız."
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -752,7 +754,7 @@ msgstr "Bu yılın satış günlüğü"
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children with hierarchy"
-msgstr ""
+msgstr "Altları sıradüzeniyle gösterin"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -839,7 +841,7 @@ msgstr "Uzlaşılmamış"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "At 14 net days 2 percent, remaining amount at 30 days end of month."
-msgstr ""
+msgstr "14 Net günde yüzde 2, kalan tutar 30 günde ay sonunda."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
@@ -909,7 +911,7 @@ msgstr "Hesaplama"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: refund invoice and reconcile"
-msgstr ""
+msgstr "Vazgeç: faturayı iade et ve uzlaştır"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
@@ -946,6 +948,8 @@ msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
 "belong to chart of accounts \"%s\"!"
 msgstr ""
+"Bu günlük girişini doğrulayamazsınız çünkü \"%s\" hesabı \"%s\" hesap "
+"tablosuna ait değil!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:835
@@ -954,6 +958,8 @@ msgid ""
 "This account does not allow reconciliation! You should update the account "
 "definition to change this."
 msgstr ""
+"Bu esap uzlaşmaya izin vermiyor! Bunu değiştirmek için hesap tanımını "
+"güncellemelisiniz."
 
 #. module: account
 #: view:account.invoice:0
@@ -1024,7 +1030,7 @@ msgstr ""
 #: code:addons/account/account.py:2596
 #, python-format
 msgid "I can not locate a parent code for the template account!"
-msgstr ""
+msgstr "Şablon hesap için ana kodu bulamıyorum!"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1100,6 +1106,8 @@ msgid ""
 "You cannot change the type of account from '%s' to '%s' type as it contains "
 "journal items!"
 msgstr ""
+"Günlük maddeleri içerdiğinden hesap türünü '%s' ten '%s' türüne "
+"çeviremezsiniz!"
 
 #. module: account
 #: field:account.report.general.ledger,sortby:0
@@ -1125,7 +1133,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry !"
-msgstr ""
+msgstr "Giriş farkını silmek/takas etmek için bir hesap belirtmelisiniz!"
 
 #. module: account
 #: view:account.tax:0
@@ -1164,7 +1172,7 @@ msgstr "Önce Giriş oluşturun:"
 #. module: account
 #: view:account.move.line:0
 msgid "Unbalanced Journal Items"
-msgstr ""
+msgstr "Denk olmayan Günlük Maddeleri"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
@@ -1994,7 +2002,7 @@ msgstr ""
 #: code:addons/account/account_invoice.py:73
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr ""
+msgstr "'%s' Türünde bir analitik günlük tanımlamalısınız!"
 
 #. module: account
 #: field:account.installer,config_logo:0
@@ -2013,7 +2021,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_financial_report_tree
 msgid "Makes a generic system to draw financial reports easily."
-msgstr ""
+msgstr "Mali raporları kolaylıkla çizmek için bir genel sistem oluşturur."
 
 #. module: account
 #: view:account.invoice:0
@@ -2032,12 +2040,12 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a sale journal."
-msgstr ""
+msgstr "Satış günlüğüne bağlı Analitik Günlük Maddeleri."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Italic Text (smaller)"
-msgstr ""
+msgstr "Yatık Metin (daha küçük)"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2055,7 +2063,7 @@ msgstr "Draft"
 #. module: account
 #: report:account.journal.period.print.sale.purchase:0
 msgid "VAT Declaration"
-msgstr ""
+msgstr "KDV Bildirimi"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
@@ -2126,7 +2134,7 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:357
 #, python-format
 msgid "You have to assign an analytic journal on the '%s' journal!"
-msgstr ""
+msgstr "'%s' günlüğüne bir analitik günlük atamalısınız!"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -2175,6 +2183,9 @@ msgid ""
 "Put a sequence in the journal definition for automatic numbering or create a "
 "sequence manually for this piece."
 msgstr ""
+"Bu parça için otomatik bir dizi oluşturulamıyor!\n"
+"Bu parça için günlük tanımına otomatik numaralandırma koyun ya da elle dizi "
+"girin ."
 
 #. module: account
 #: code:addons/account/account.py:787
@@ -2335,7 +2346,7 @@ msgstr "Keep empty for all open fiscal year"
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr ""
+msgstr "Hesap Satırı"
 
 #. module: account
 #: code:addons/account/account.py:1468
@@ -2462,7 +2473,7 @@ msgstr ""
 #: model:account.payment.term,name:account.account_payment_term_advance
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "30% Advance End 30 Days"
-msgstr ""
+msgstr "%30 Avans 30 Günde Biter"
 
 #. module: account
 #: view:account.entries.report:0
