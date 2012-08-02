@@ -681,9 +681,8 @@ openerp.web.list_editable = function (instance) {
                 if (!field.$element.is(':visible')) {
                     return false;
                 }
-                field.focus();
                 // Stop as soon as a field got focused
-                return true;
+                return field.focus() !== false;
             });
         },
         edit: function (record, configureField, options) {
