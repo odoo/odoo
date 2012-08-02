@@ -22,15 +22,11 @@ openerp.web_linkedin = function(instance) {
                 tag.src = "http://platform.linkedin.com/in.js";
                 tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true';
                 document.getElementsByTagName('head')[0].appendChild(tag);
-                linkedin_added = true;
+                self.linkedin_added = true;
                 $(tag).load(function() {
                     self.linkedin_def.resolve();
                 });
                 return self.linkedin_def.promise();
-            }, function() {
-                /*return new instance.web.Model("ir.config_parameter").call("set_param", ["web.linkedin.apikey", "cxnr0l53n73x"]).pipe(function() {
-                    return self.test_linkedin();
-                });*/
             });
         },
         test_api_key: function() {
@@ -48,6 +44,10 @@ openerp.web_linkedin = function(instance) {
         },
     });
     
+                /*return new instance.web.Model("ir.config_parameter").call("set_param", ["web.linkedin.apikey", "cxnr0l53n73x"]).pipe(function() {
+                    return self.test_linkedin();
+                });*/
+    
     instance.web_linkedin.tester = new instance.web_linkedin.LinkedinTester();
     
     instance.web_linkedin.Linkedin = instance.web.form.FieldChar.extend({
@@ -55,20 +55,21 @@ openerp.web_linkedin = function(instance) {
             this._super.apply(this, arguments);
             var self = this;
             this.display_dm = new instance.web.DropMisordered(true);
-            this.on("linkedin_loaded", this, function() {
-                $("input", self.$element).after(QWeb.render("FieldChar.linkedin"));
-            });
         },
         initialize_content: function() {
             this._super();
+            var $ht = $(QWeb.render("FieldChar.linkedin"));
+            var $in = this.$("input");
+            $in.replaceWith($ht);
+            this.$(".oe_linkedin_input").append($in);
+            this.$(".oe_linkedin_img").click(_.bind(this.search_linkedin, this));
+
+        },
+        search_linkedin: function() {
             var self = this;
-            if (! this.get("effective_readonly")) {
-                this.display_dm.add(instance.web_linkedin.tester.test_linkedin()).then(function() {
-                    self.trigger("linkedin_loaded");
-                });
-            } else {
-                this.display_dm.add($.when());
-            }
+            this.display_dm.add(instance.web_linkedin.tester.test_linkedin()).then(function() {
+                debugger;
+            });
         },
     });
     instance.web.form.widgets.add('linkedin', 'instance.web_linkedin.Linkedin');
