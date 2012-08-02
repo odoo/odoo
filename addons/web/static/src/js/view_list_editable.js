@@ -602,6 +602,7 @@ openerp.web.list_editable = function (instance) {
             this.form = new (this.options.formView)(
                 this, this.delegate.dataset, false, {
                     initial_mode: 'edit',
+                    disable_autofocus: true,
                     $buttons: $(),
                     $pager: $()
             });
