@@ -120,8 +120,41 @@ openerp.web_linkedin = function(instance) {
                     return el;
                 });
                 lst = lst.concat(plst);
-                console.log("found", lst.length, lst);
+                console.log("Linkedin search found:", lst.length, lst);
+                self.result = lst;
+                self.display_result();
             });
+        },
+        display_result: function() {
+            var self = this;
+            self.$element.html("<div style='display: table;width:100%'/>");
+            var i = 0;
+            var $row;
+            _.each(self.result, function(el) {
+                var pc = new instance.web_linkedin.PeopleCompany(self, el);
+                if (i % 5 === 0) {
+                    $row = $("<div style='display: table-row;width:100%'/>");
+                    $row.appendTo(self.$(">div"));
+                }
+                pc.appendTo($row);
+                pc.$element.css("display", "table-cell");
+                i++;
+            });
+        },
+    });
+    
+    instance.web_linkedin.PeopleCompany = instance.web.Widget.extend({
+        template: "PeopleCompany",
+        init: function(parent, data) {
+            this._super(parent);
+            this.data = data;
+        },
+        start: function() {
+            if (this.data.__type === "company") {
+                this.$("h3").text(this.data.name);
+            } else { // people
+                this.$("h3").text(_.str.sprintf("%s %s", this.data.firstName, this.data.lastName));
+            }
         },
     });
 };
