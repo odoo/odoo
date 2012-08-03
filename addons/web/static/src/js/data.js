@@ -803,7 +803,7 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends openerp.web.Da
         return this.ids.length;
     },
     alter_ids: function(n_ids) {
-    	this.ids = n_ids;
+        this.ids = n_ids;
     },
 });
 instance.web.DataSetStatic =  instance.web.DataSet.extend({
@@ -1042,7 +1042,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                         self.cache.push({id: id, values: record});
                     } else {
                         // I assume cache value is prioritary
-                    	cached.values = _.defaults(_.clone(cached.values), record);
+                        cached.values = _.defaults(_.clone(cached.values), record);
                     }
                 });
                 return_records();
@@ -1067,7 +1067,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         return this._super(method, args, callback, error_callback);
     },
     alter_ids: function(n_ids) {
-    	this._super(n_ids);
+        this._super(n_ids);
         this.on_change();
     },
 });

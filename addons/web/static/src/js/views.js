@@ -423,7 +423,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
 
-        $.when(view_promise).then(function () {
+        return $.when(view_promise).then(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
@@ -435,7 +435,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                         container.hide();
                         controller.do_hide();
                     }
-		    // put the <footer> in the dialog's buttonpane
+                    // put the <footer> in the dialog's buttonpane
                     if (self.$element.parent('.ui-dialog-content') && self.$element.find('footer')) {
                         self.$element.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonset').hide()
                         self.$element.find('footer').appendTo(
@@ -445,7 +445,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
             });
         });
-        return view_promise;
     },
     do_create_view: function(view_type) {
         // Lazy loading of views
@@ -505,6 +504,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         });
         this.getParent().push_breadcrumb({
             widget: this,
+            action: this.action,
             show: function(index, $e) {
                 var view_to_select = views[index];
                 self.$element.show();
@@ -513,9 +513,27 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
             },
             get_title: function() {
-                return _.map(views, function(v) {
-                    return self.views[v].controller.get('title');
+                var id;
+                var currentIndex;
+                _.each(self.getParent().breadcrumbs, function(bc, i) {
+                    if (bc.widget === self) {
+                        currentIndex = i;
+                    }
                 });
+                var next = self.getParent().breadcrumbs.slice(currentIndex + 1)[0];
+                var titles = _.map(views, function(v) {
+                    var controller = self.views[v].controller;
+                    if (v === 'form') {
+                        id = controller.datarecord.id;
+                    }
+                    return controller.get('title');
+                });
+                if (next && next.action && next.action.res_id && self.active_view === 'form' && self.model === next.action.res_model && id === next.action.res_id) {
+                    // If the current active view is a formview and the next item in the breadcrumbs
+                    // is an action on same object (model / res_id), then we omit the current formview's title
+                    titles.pop();
+                }
+                return titles;
             }
         });
     },
@@ -736,15 +754,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                                              self.dataset.model),
                         width: '95%'}, $root).open();
                 });
-                break;
-            case 'manage_views':
-                if (current_view.fields_view && current_view.fields_view.arch) {
-                    var view_editor = new instance.web.ViewEditor(current_view, current_view.$element, this.dataset, current_view.fields_view.arch);
-                    view_editor.start();
-                } else {
-                    this.do_warn(_t("Manage Views"),
-                            _t("Could not find current view declaration"));
-                }
                 break;
             case 'edit_workflow':
                 return this.do_action({
@@ -1156,7 +1165,7 @@ instance.web.View = instance.web.Widget.extend({
         this.view_id = view_id;
         this.set_default_options(options);
     },
-    start: function() {
+    start: function () {
         return this.load_view();
     },
     load_view: function() {
@@ -1366,7 +1375,6 @@ instance.web.xml_to_json = function(node) {
 }
 instance.web.json_node_to_xml = function(node, human_readable, indent) {
     // For debugging purpose, this function will convert a json node back to xml
-    // Maybe useful for xml view editor
     indent = indent || 0;
     var sindent = (human_readable ? (new Array(indent + 1).join('\t')) : ''),
         r = sindent + '<' + node.tag,

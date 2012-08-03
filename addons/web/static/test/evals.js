@@ -133,4 +133,20 @@ $(document).ready(function () {
         }]);
         deepEqual(result, {type: 'out_invoice'});
     });
+    module('eval.domains', {
+        setup: function () {
+            openerp = window.openerp.testing.instanceFor('coresetup');
+            window.openerp.web.dates(openerp);
+        }
+    });
+    test('current_date', function () {
+        var current_date = openerp.web.date_to_str(new Date());
+        var result = openerp.connection.test_eval_domains(
+            [[],{"__ref":"domain","__debug":"[('name','>=',current_date),('name','<=',current_date)]","__id":"5dedcfc96648"}],
+            openerp.connection.test_eval_get_context());
+        deepEqual(result, [
+            ['name', '>=', current_date],
+            ['name', '<=', current_date]
+        ]);
+    })
 });

@@ -226,6 +226,8 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         }
     },
     renderElement: function() {
+        this._super();
+
         var check = _.detect(this.node.children, function(column, column_index) {
             return _.detect(column.children,function(element){
                 return element.tag === "action"? element: false;
