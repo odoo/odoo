@@ -203,7 +203,7 @@ class reference(_column):
             model_name, res_id = value.split(',')
             model = obj.pool.get(model_name)
             if model and res_id:
-                return model.name_get(cr, uid, [res_id], context=context)[0][1]
+                return model.name_get(cr, uid, [int(res_id)], context=context)[0][1]
         return tools.ustr(value)
 
 class char(_column):
