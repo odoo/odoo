@@ -13,7 +13,7 @@
                     </header>
                     <separator string="Invoicing Process"/>
                     <group>
-                        <label for="id" string="Invoicing Settings"/>   
+                        <label for="id" string="Invoicing Settings"/>
                         <div>
                             <div>
                                 <label for="default_invoice_method"/>
@@ -23,37 +23,37 @@
                                  <label for="decimal_precision"/>
                                  <field name="decimal_precision" class="oe_inline"/>
                             </div>
-                        </div>            
+                        </div>
                     </group>
                     <separator string="Purchase Order"/>
                     <group>
-                        <label for="id" string="Supplier Features"/>   
+                        <label for="id" string="Supplier Features"/>
                         <div>
                             <div>
                                 <field name="group_purchase_pricelist" class="oe_inline"/>
                                 <label for="group_purchase_pricelist"/>
                             </div>
-                            <div>    
+                            <div>
                                 <field name="module_warning" class="oe_inline"/>
                                 <label for="module_warning"/>
                             </div>
                         </div>
                     </group>
                     <group>
-                        <label for="id" string="Purchase Order"/> 
-                        <div>            
+                        <label for="id" string="Purchase Order"/>
+                        <div>
                             <div>
                                 <field name="group_uom" class="oe_inline"/>
                                 <label for="group_uom"/>
-                            </div>                   
+                            </div>
                             <div>
                                 <field name="group_purchase_delivery_address" class="oe_inline"/>
                                 <label for="group_purchase_delivery_address"/>
-                            </div>    
+                            </div>
                             <div name="module_purchase_double_validation">
                                 <field name="module_purchase_double_validation" class="oe_inline"/>
                                 <label for="module_purchase_double_validation"/>
-                            </div>     
+                            </div>
                             <div>
                                 <field name="module_purchase_requisition" class="oe_inline"/>
                                 <label for="module_purchase_requisition"/>
@@ -62,7 +62,7 @@
                                 <field name="module_purchase_analytic_plans" class="oe_inline"/>
                                 <label for="module_purchase_analytic_plans"/>
                             </div>
-                        </div>    
+                        </div>
                     </group>
                 </form>
             </field>
@@ -92,7 +92,7 @@
                 <group name="analytic_account" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </group>
-                <div name="analytic_account" position="inside">
+                <div name="analytic_account_purchase" position="inside">
                     <div>
                         <field name="group_analytic_account_for_purchases" class="oe_inline"/>
                         <label for="group_analytic_account_for_purchases"/>

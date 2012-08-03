@@ -29,8 +29,8 @@
                                 <field name="timesheet" class="oe_inline" on_change="onchange_timesheet(timesheet)"/>
                                 <label for="timesheet"/>
                             </div>
-                        </div>    
-                    </group> 
+                        </div>
+                    </group>
                     <group>
                         <label for="id" string="Default Options" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False),('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False),('task_work','=',False), ('module_account_analytic_analysis','=',False)]}"/>
                         <div>
@@ -144,7 +144,7 @@
                 <group name="analytic_account" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </group>
-                <div name="analytic_account" position="inside">
+                <div name="analytic_account_sale" position="inside">
                     <div>
                         <field name="group_analytic_account_for_sales" class="oe_inline"/>
                         <label for="group_analytic_account_for_sales"/>
