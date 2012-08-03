@@ -25,6 +25,65 @@ $(document).ready(function () {
              date2.getUTCHours(), date2.getUTCMinutes(), date2.getUTCSeconds()],
             [2011, 12 - 1, 10, 0, 0, 0]);
     });
+    test('Server datetime: CET -> EST', function () {
+        // NOTE: this test may only work in the EU (CET/EST), no idea how to handle *that*
+        // DST transition is at 01:00 UTC on a specific day
+        // http://en.wikipedia.org/wiki/European_Summer_Time
+
+        // right before transition
+        strictEqual(
+            openerp.web.str_to_datetime('2012-03-25 00:59:46').toString(),
+            new Date(Date.UTC(2012, 2, 25, 0, 59, 46)).toString());
+        // Right after transition
+        strictEqual(
+            openerp.web.str_to_datetime('2012-03-25 01:01:33').toString(),
+            new Date(Date.UTC(2012, 2, 25, 1, 1, 33)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-03-25 01:24:33').toString(),
+            new Date(Date.UTC(2012, 2, 25, 1, 24, 33)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-03-25 01:42:33').toString(),
+            new Date(Date.UTC(2012, 2, 25, 1, 42, 33)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-03-25 02:05:14').toString(),
+            new Date(Date.UTC(2012, 2, 25, 2, 5, 14)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-03-25 02:42:14').toString(),
+            new Date(Date.UTC(2012, 2, 25, 2, 42, 14)).toString());
+        // End of overlapping time
+        strictEqual(
+            openerp.web.str_to_datetime('2012-03-25 03:05:14').toString(),
+            new Date(Date.UTC(2012, 2, 25, 3, 5, 14)).toString());
+    });
+    test('Server datetime: EST -> CET', function () {
+        strictEqual(
+            openerp.web.str_to_datetime('2012-10-27 23:59:46').toString(),
+            new Date(Date.UTC(2012, 9, 27, 23, 59, 46)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-10-28 00:59:46').toString(),
+            new Date(Date.UTC(2012, 9, 28, 0, 59, 46)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-10-28 01:01:33').toString(),
+            new Date(Date.UTC(2012, 9, 28, 1, 1, 33)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-10-28 01:24:33').toString(),
+            new Date(Date.UTC(2012, 9, 28, 1, 24, 33)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-10-28 01:42:33').toString(),
+            new Date(Date.UTC(2012, 9, 28, 1, 42, 33)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-10-28 02:05:14').toString(),
+            new Date(Date.UTC(2012, 9, 28, 2, 5, 14)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-10-28 02:42:14').toString(),
+            new Date(Date.UTC(2012, 9, 28, 2, 42, 14)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-10-28 03:05:14').toString(),
+            new Date(Date.UTC(2012, 9, 28, 3, 5, 14)).toString());
+        strictEqual(
+            openerp.web.str_to_datetime('2012-10-28 05:05:14').toString(),
+            new Date(Date.UTC(2012, 9, 28, 5, 5, 14)).toString());
+    });
     test('Parse server date', function () {
         var date = openerp.web.str_to_date("2009-05-04");
         deepEqual(
