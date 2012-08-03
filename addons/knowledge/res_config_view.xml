@@ -1,4 +1,5 @@
 
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
 
@@ -10,7 +11,7 @@
                 <form string="Configure Knowledge" class= "oe_form_configuration" version="7.0">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or 
+                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <separator string="Knowledge and Documents Management"/>
@@ -19,17 +20,17 @@
                         <div>
                             <div>
                                 <field name="module_document" class="oe_inline"/>
-                                <label for="module_document"/>    
-                            </div>    
+                                <label for="module_document"/>
+                            </div>
                             <div>
                                 <field name="module_document_ftp" class="oe_inline"/>
                                 <label for="module_document_ftp"/>
                             </div>
                             <div>
                                 <field name="module_document_webdav" class="oe_inline"/>
-                                <label for="module_document_webdav"/>    
+                                <label for="module_document_webdav"/>
                             </div>
-                        </div>        
+                        </div>
                     </group>
                     <group>
                         <label for="id" string="Wiki"/>
@@ -37,12 +38,12 @@
                             <div>
                                 <field name="module_wiki_quality_manual" class="oe_inline"/>
                                 <label for="module_wiki_quality_manual"/>
-                            </div>   
+                            </div>
                             <div>
                                 <field name="module_wiki_faq" class="oe_inline"/>
                                 <label for="module_wiki_faq"/>
                             </div>
-                        </div>                           
+                        </div>
                     </group>
                 </form>
             </field>
