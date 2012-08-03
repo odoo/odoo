@@ -539,7 +539,7 @@ class marketing_campaign_transition(osv.osv):
         assert len(ids) == 1
         transition = self.browse(cr, uid, ids[0], context=context)
         if transition.trigger != 'time':
-            raise ValueError('Delta is only relevant for timed transiton.')
+            raise ValueError('Delta is only relevant for timed transition.')
         return relativedelta(**{str(transition.interval_type): transition.interval_nbr})
 
 

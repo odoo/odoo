@@ -155,7 +155,7 @@ class project(osv.osv):
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
-                raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. I suggest you to desactivate it.'))
+                raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks.  You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
 
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
@@ -1227,7 +1227,7 @@ class account_analytic_account(osv.osv):
         'use_tasks': fields.boolean('Tasks Mgmt.',help="If check,this contract will be available in the project menu and you will be able to manage tasks or track issues"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
     }
-    
+
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
         if template_id and 'value' in res:

@@ -167,7 +167,7 @@ class product_uom(osv.osv):
         if value == 'reference':
             return {'value': {'factor': 1, 'factor_inv': 1}}
         return {}
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
@@ -231,7 +231,7 @@ class product_category(osv.osv):
     _parent_store = True
     _parent_order = 'sequence, name'
     _order = 'parent_left'
-    
+
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
@@ -330,7 +330,7 @@ class product_template(osv.osv):
             for product in self.browse(cr, uid, ids, context=context):
                 old_uom = product.uom_po_id
                 if old_uom.category_id.id != new_uom.category_id.id:
-                    raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may desactivate this product from the 'Procurement & Locations' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
+                    raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurement & Locations' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
     _defaults = {
@@ -461,8 +461,8 @@ class product_product(osv.osv):
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + \
                     (data['name'] or '') + (data['variants'] and (' - '+data['variants']) or '')
         return res
-        
-        
+
+
     def _get_main_product_supplier(self, cr, uid, product, context=None):
         """Determines the main (best) product supplier for ``product``,
         returning the corresponding ``supplierinfo`` record, or False

@@ -136,7 +136,7 @@ class account_account_type(osv.osv):
 
     def _get_current_report_type(self, cr, uid, ids, name, arg, context=None):
         obj_data = self.pool.get('ir.model.data')
-        obj_financial_report = self.pool.get('account.financial.report') 
+        obj_financial_report = self.pool.get('account.financial.report')
         res = {}
         financial_report_ref = {
             'asset': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_assets0')[1], context=context),
@@ -154,7 +154,7 @@ class account_account_type(osv.osv):
 
     def _save_report_type(self, cr, uid, account_type_id, field_name, field_value, arg, context=None):
         obj_data = self.pool.get('ir.model.data')
-        obj_financial_report = self.pool.get('account.financial.report') 
+        obj_financial_report = self.pool.get('account.financial.report')
         #unlink if it exists somewhere in the financial reports related to BS or PL
         financial_report_ref = {
             'asset': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_assets0')[1], context=context),
@@ -179,7 +179,7 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category', 
+        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category',
             selection= [('none','/'),
                         ('income', _('Profit & Loss (Income account)')),
                         ('expense', _('Profit & Loss (Expense account)')),
@@ -2742,7 +2742,7 @@ class account_chart_template(osv.osv):
     _columns={
         'name': fields.char('Name', size=64, required=True),
         'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
-        'code_digits': fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"), 
+        'code_digits': fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This last choice assumes that the set of tax defined on this template is complete'),
         'account_root_id': fields.many2one('account.account.template', 'Root Account', domain=[('parent_id','=',False)]),
@@ -3026,7 +3026,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return res
 
     def default_get(self, cr, uid, fields, context=None):
-        res = super(wizard_multi_charts_accounts, self).default_get(cr, uid, fields, context=context) 
+        res = super(wizard_multi_charts_accounts, self).default_get(cr, uid, fields, context=context)
         tax_templ_obj = self.pool.get('account.tax.template')
 
         if 'bank_accounts_id' in fields:
@@ -3102,7 +3102,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             # Get the analytic journal
             data = False
             if journal_type in ('sale', 'sale_refund'):
-                data = obj_data.get_object_reference(cr, uid, 'account', 'analytic_journal_sale') 
+                data = obj_data.get_object_reference(cr, uid, 'account', 'analytic_journal_sale')
             elif journal_type in ('purchase', 'purchase_refund'):
                 pass
             elif journal_type == 'general':
@@ -3128,7 +3128,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             if journal_type in ('general', 'situation'):
                 data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_view')
             elif journal_type in ('sale_refund', 'purchase_refund'):
-                data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_refund_journal_view') 
+                data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_refund_journal_view')
             else:
                 data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_journal_view')
             return data and data[1] or False
@@ -3357,7 +3357,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
         '''
-        This function prepares the value to use for the creation of a bank journal created through the wizard of 
+        This function prepares the value to use for the creation of a bank journal created through the wizard of
         generating COA from templates.
 
         :param line: dictionary containing the values encoded by the user related to his bank account
@@ -3375,9 +3375,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view')
         view_id_cash = tmp and tmp[1] or False
 
-        # we need to loop again to find next number for journal code 
+        # we need to loop again to find next number for journal code
         # because we can't rely on the value current_num as,
-        # its possible that we already have bank journals created (e.g. by the creation of res.partner.bank) 
+        # its possible that we already have bank journals created (e.g. by the creation of res.partner.bank)
         # and the next number for account code might have been already used before for journal
         for num in xrange(current_num, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
@@ -3464,7 +3464,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 journal_data.append(vals)
         ref_acc_bank = obj_wizard.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
-            raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of accounts hasnot a code.'))
+            raise osv.except_osv(_('Configuration Error !'), _('You have to set a code for the bank account defined on the selected chart of accounts.'))
 
         current_num = 1
         for line in journal_data:
