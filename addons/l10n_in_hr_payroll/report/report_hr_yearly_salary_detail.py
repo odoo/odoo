@@ -40,7 +40,6 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         })
 
         self.context = context
-        self.mnths = []
 
     def get_periods(self, form):
         self.mnths = []
