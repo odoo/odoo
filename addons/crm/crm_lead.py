@@ -278,13 +278,21 @@ class crm_lead(base_stage, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
     
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value':{}}
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
+
+    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
+        result = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            result = {'partner_name' : partner.name}
+        return {'value' : result}
+
 
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.

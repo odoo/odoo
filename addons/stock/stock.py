@@ -1547,6 +1547,7 @@ class stock_move(osv.osv):
         cr.execute('select id from stock_tracking where create_uid=%s order by id desc limit 1', (uid,))
         res = cr.fetchone()
         return (res and res[0]) or False
+
     _name = "stock.move"
     _description = "Stock Move"
     _order = 'date_expected desc, id'
@@ -1743,6 +1744,13 @@ class stock_move(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
         'date_expected': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        # TODO
+        # the create_date is passed in the vals dict, and the ORM has a problem with that !
+        # make a real patch and remove this workaround
+        vals.pop('create_date', False)
+        return super(stock_move, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
