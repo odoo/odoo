@@ -36,7 +36,7 @@ You can also add ZIP and bank completion with:
 
 ------------------------------------------------------------------------
 
-Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp.
+Module incluant la localisation Suisse de OpenERP revu et corrigé par Camptocamp.
 Cette nouvelle version comprend la gestion et l'émissionde BVR, le paiement
 électronique via DTA (pour les banques, le système postal est en développement)
 et l'import du relevé de compte depuis la banque de manière automatisée. De plus,
