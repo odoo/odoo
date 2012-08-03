@@ -428,9 +428,11 @@
                         <button string="Schedule/Log Call"
                             name="%(opportunity2phonecall_act)d"
                             type="action"/>
-                        <button string="Schedule Meeting"
+                        <button string="Meeting"
                             name="action_makeMeeting"
-                            type="object"/>
+                            type="object"
+                            context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"
+                            />
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
