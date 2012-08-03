@@ -426,10 +426,13 @@ class DisableCacheMiddleware(object):
             referer = environ.get('HTTP_REFERER', '')
             parsed = urlparse.urlparse(referer)
             debug = parsed.query.count('debug') >= 1
-            filtered_headers = [(k,v) for k,v in headers if not (k=='Last-Modified' or (debug and (k=='Cache-Control' or k=='Expires')))]
+            nh = dict(headers)
+            if 'Last-Modified' in nh: del nh['Last-Modified']
             if debug:
-                filtered_headers.append(('Cache-Control', 'no-cache'))
-            start_response(status, filtered_headers)
+                if 'Expires' in nh: del nh['Expires']
+                if 'Etag' in nh: del nh['Etag']
+                nh['Cache-Control'] = 'no-cache'
+            start_response(status, nh.items())
         return self.app(environ, start_wrapped)
 
 class Root(object):

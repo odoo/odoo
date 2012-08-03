@@ -1,10 +1,7 @@
 {
     "name" : "Process",
     "version": "2.0",
-     "description":
-        """
-        OpenERP Web process view.
-        """,
+     "description":"""OpenERP Web process view.""",
     "depends" : ["web_diagram"],
     "js": [
         'static/lib/dracula/*.js',

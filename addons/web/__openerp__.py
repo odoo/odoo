@@ -3,8 +3,10 @@
     "category": "Hidden",
     "description":
         """
-        OpenERP Web core module.
-        This module provides the core of the OpenERP Web Client.
+OpenERP Web core module.
+========================
+
+This module provides the core of the OpenERP Web Client.
         """,
     "depends" : [],
     'auto_install': True,
@@ -51,7 +53,6 @@
         "static/src/js/view_list.js",
         "static/src/js/view_list_editable.js",
         "static/src/js/view_tree.js",
-        "static/src/js/view_editor.js"
     ],
     'css' : [
         "static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.8.16.custom.css",
