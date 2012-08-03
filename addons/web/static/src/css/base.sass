@@ -7,7 +7,7 @@ $tag-bg-dark: #8786b7
 $tag-border: #afafb6
 $tag-border-selected: #a6a6fe
 $hover-background: #f0f0fa
-$colour4: #8a89ba
+$link-color: #8a89ba
 $sheet-max-width: 860px
 // }}}
 // Mixins {{{
@@ -226,6 +226,8 @@ $sheet-max-width: 860px
     .ui-widget
         font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
         font-size: 13px
+    .ui-widget-content a
+        color: $link-color
     .ui-menu
         .ui-menu-item
             margin: 0 8px 0 0
@@ -295,7 +297,7 @@ $sheet-max-width: 860px
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
             @include radius(0 0 2px 2px)
             a
-                color: #8A89BA
+                color: $link-color
                 &:hover
                     text-decoration: underline
                 &:focus
@@ -397,7 +399,6 @@ $sheet-max-width: 860px
         button
             margin: 4px
     .oe_avatar
-        margin: 0 6px 15px 0
         > img
             height: 90px
             max-width: 100px
@@ -412,7 +413,7 @@ $sheet-max-width: 860px
             display: none
         span
             @include reset()
-            color: #8A89BA
+            color: $link-color
             font-weight: bold
             &:hover
                 text-decoration: underline
@@ -886,7 +887,7 @@ $sheet-max-width: 860px
     .oe_secondary_menu_section
         font-weight: bold
         margin-left: 8px
-        color: $colour4
+        color: $link-color
     .oe_secondary_submenu
         padding: 2px 0 8px 0
         margin: 0
@@ -904,7 +905,7 @@ $sheet-max-width: 860px
                 top: 1px
                 right: 1px
                 font-size: 10px
-                background: $colour4
+                background: $link-color
                 color: white
                 padding: 2px 4px
                 margin: 1px 6px 0 0
@@ -918,7 +919,7 @@ $sheet-max-width: 860px
             margin: 0px
             padding: 1px 4px
         .oe_active
-            background: $colour4
+            background: $link-color
             border-top: 1px solid lightGray
             border-bottom: 1px solid lightGray
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
@@ -927,12 +928,12 @@ $sheet-max-width: 860px
                 color: white
             .oe_menu_label
                 background: #eee
-                color: $colour4
+                color: $link-color
                 text-shadow: 0 1px 1px white
                 @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2))
             .oe_menu_counter
                 background: #eee
-                color: #8a89ba
+                color: $link-color
         .oe_menu_toggler:before
             width: 0
             height: 0
@@ -959,7 +960,7 @@ $sheet-max-width: 860px
     .oe_application
         width: 100%
         a
-            color: $colour4
+            color: $link-color
             &:hover
                 text-decoration: underline
         > div
@@ -993,7 +994,7 @@ $sheet-max-width: 860px
                 margin: 0
                 float: left
                 a
-                    color: $colour4
+                    color: $link-color
             .oe_button_group
                 display: inline-block
                 border: 1px solid #ababab
@@ -1706,19 +1707,14 @@ $sheet-max-width: 860px
      * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
      */
     .oe_hidden_input_file
-        overflow: hidden
-        position: relative
-        display: inline-block
-        width: 45px
-        height: 30px
         input.oe_form_binary_file
             z-index: 0
             line-height: 0
             font-size: 12px
             position: absolute
-            // Should be adjusted for all browsers
             top: 1px
-            right: 10px
+            left: 0
+            right: 0
             opacity: 0
             filter: alpha(opacity = 0)
             -ms-filter: "alpha(opacity=0)"
@@ -1733,15 +1729,14 @@ $sheet-max-width: 860px
             vertical-align: top
             .oe_form_field_image_controls
                 position: absolute
-                white-space: nowrap
                 top: 1px
-                padding: 3px 0 0 0
-                margin: 0 1px
+                padding: 4px
+                width: 100%
                 display: none
-                width: 99%
                 text-align: center
-                background: url(/web/static/src/img/form_sheetbg.png)
-                border-bottom: 1px dotted black
+                color: #eee
+                background: rgba(37,37,37,0.9)
+                @include radius(3px 3px 0 0)
                 @include box-sizing(border)
             &:hover .oe_form_field_image_controls
                 display: block

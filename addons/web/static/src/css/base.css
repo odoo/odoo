@@ -224,6 +224,9 @@
   font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
   font-size: 13px;
 }
+.openerp .ui-widget-content a {
+  color: #8a89ba;
+}
 .openerp .ui-menu .ui-menu-item {
   margin: 0 8px 0 0;
   padding: 0 0 0 12px;
@@ -486,9 +489,6 @@
 }
 .openerp .oe_button_box button {
   margin: 4px;
-}
-.openerp .oe_avatar {
-  margin: 0 6px 15px 0;
 }
 .openerp .oe_avatar > img {
   height: 90px;
@@ -2199,20 +2199,14 @@
 .openerp .oe_form_editable .oe_form .oe_form_field_datetime {
   width: 11.5em !important;
 }
-.openerp .oe_hidden_input_file {
-  overflow: hidden;
-  position: relative;
-  display: inline-block;
-  width: 45px;
-  height: 30px;
-}
 .openerp .oe_hidden_input_file input.oe_form_binary_file {
   z-index: 0;
   line-height: 0;
   font-size: 12px;
   position: absolute;
   top: 1px;
-  right: 10px;
+  left: 0;
+  right: 0;
   opacity: 0;
   filter: alpha(opacity=0);
   -ms-filter: "alpha(opacity=0)";
@@ -2228,15 +2222,16 @@
 }
 .openerp .oe_form .oe_form_field_image .oe_form_field_image_controls {
   position: absolute;
-  white-space: nowrap;
   top: 1px;
-  padding: 3px 0 0 0;
-  margin: 0 1px;
+  padding: 4px;
+  width: 100%;
   display: none;
-  width: 99%;
   text-align: center;
-  background: url(/web/static/src/img/form_sheetbg.png);
-  border-bottom: 1px dotted black;
+  color: #eeeeee;
+  background: rgba(37, 37, 37, 0.9);
+  -moz-border-radius: 3px 3px 0 0;
+  -webkit-border-radius: 3px 3px 0 0;
+  border-radius: 3px 3px 0 0;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;

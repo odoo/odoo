@@ -1042,13 +1042,8 @@
         <div class="oe_form_field_image_controls oe_edit_only">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                <button class="oe_button" type="button" title="Set Image">
-                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                </button>
+                Edit 
             </t>
-            <button class="oe_button oe_form_binary_file_clear" type="button" title="Clear">
-                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
-            </button>
             <div class="oe_form_binary_progress" style="display: none">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
