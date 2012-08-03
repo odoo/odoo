@@ -61,10 +61,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Payroll Structures">
-                    <group col="8" colspan="4">
-                        <field name="name" string="Payroll Structures" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Payroll Structures" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                 </search>
             </field>
         </record>
@@ -179,19 +176,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payslip Lines">
-                    <group col="8" colspan="4">
-                        <field name="name" string="Payslip Lines" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="slip_id"/>
-                        <field name="amount_select"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Payslip Lines" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <field name="amount_select"/>
+                    <field name="slip_id"/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
                         <filter string="Salary Rule Category" icon="terp-camera_test" name="category_id" context="{'group_by':'category_id'}"/>
                         <filter string="Contribution Register" name="register_id" icon="terp-folder-yellow" context="{'group_by':'register_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Amount Type" name="amount_select" icon="terp-stock_symbol-selection" context="{'group_by':'amount_select'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Employees" name="employee_id" icon="terp-personal" context="{'group_by':'employee_id'}"/>
                     </group>
                 </search>
@@ -367,25 +358,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payslips">
-                    <group>
-                        <field name="name" string="Payslips" filter_domain="['|',('name','ilike',self),('number','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="date_from"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
-                        <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]" help="Done Slip"/>
-                        <separator orientation="vertical"/>
-                        <field name="employee_id"/>
-                        <field name="payslip_run_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Payslips" filter_domain="['|',('name','ilike',self),('number','ilike',self)]"/>
+                    <field name="date_from"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
+                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]" help="Done Slip"/>
+                    <field name="employee_id"/>
+                    <field name="payslip_run_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="PaySlip Batch" name="payslip_run_id" icon="terp-folder-orange" context="{'group_by':'payslip_run_id'}"/>
-                        <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Companies" name="company_id" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="States" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     </group>
                 </search>
@@ -526,8 +508,7 @@
             <field name="arch" type="xml">
                 <search string="Contribution Registers">
                     <field name="name" string="Contribution Registers"/>
-                    <separator orientation="vertical"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
         </record>
@@ -655,13 +636,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Salary Rule">
-                    <group col="8">
-                        <field name="name" string="Salary Rules" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="category_id"/>
-                        <field name="condition_range_min"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Salary Rules" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <field name="category_id"/>
+                    <field name="condition_range_min"/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
                         <filter string="Category" icon="terp-folder-yellow" name="head" context="{'group_by':'category_id'}"/>
                     </group>
@@ -682,11 +659,10 @@
 
 
         <act_window name="All Children Rules"
-            domain="[('id', 'in', [active_id])]"
+            domain="[('parent_rule_id', '=', active_id)]"
             res_model="hr.salary.rule"
             src_model="hr.salary.rule"
-            view_id="hr_salary_rule_tree"
-            view_type="tree"
+            view_id="hr_salary_rule_list"
             id="act_children_salary_rules"/>
 
         <!-- payslip runs -->
@@ -698,10 +674,8 @@
             <field name="arch" type="xml">
                 <search string="Search Payslip Batches">
                     <field name="name" string="Payslip Batches"/>
-                    <separator orientation="vertical"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
                     <filter name="done_filter" icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
                 </search>

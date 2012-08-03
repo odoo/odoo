@@ -152,54 +152,24 @@
             <field name="arch" type="xml">
                 <search string="Search Helpdesk">
                     <field name="name" string="Query"/>
-                    <separator orientation="vertical"/>
                     <field name="date"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-check" string="New"
-                        name="current"
-                        domain="[('state','=','draft')]"
-                        help="New Helpdesk Request" />
-                    <filter icon="terp-camera_test"
-                        string="Open"
-                        domain="[('state','=','open')]"
-                        help="Open Helpdesk Request"
-                    />
-                    <filter icon="terp-gtk-media-pause"
-                        string="Pending"
-                        domain="[('state','=','pending')]"
-                        help="All pending Helpdesk Request"
-                    />
-                    <filter string="Assigned to Me or My Sales Team(s)"
-                            icon="terp-personal+"
-                            domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                    <filter icon="terp-check" string="New" name="current" domain="[('state','=','draft')]" help="New Helpdesk Request" />
+                    <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Helpdesk Request" />
+                    <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="All pending Helpdesk Request" />
+                    <separator/>
+                    <filter string="Assigned to Me or My Sales Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="Helpdesk requests that are assigned to me or to one of the sale teams I manage" />
-                    <separator orientation="vertical"/>
                     <field name="partner_id" />
-                    <field name="user_id" widget="selection"/>
-                    <field name="section_id" widget="selection" string="Sales Team"/>
-                    <newline/>
+                    <field name="user_id"/>
+                    <field name="section_id" string="Sales Team"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Partner" icon="terp-partner"
-                            domain="[]" help="Partner"
-                            context="{'group_by':'partner_id'}" />
-                        <filter string="Responsible" icon="terp-personal"
-                            domain="[]" help="Responsible User"
-                            context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+"
-                            domain="[]" help="Sales Team"
-                            context="{'group_by':'section_id'}" />
-                        <separator orientation="vertical"/>
-                        <filter string="Priority" icon="terp-rating-rated"
-                            domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"
-                            context="{'group_by':'state'}" />
-                        <separator orientation="vertical"/>
-                        <filter string="Date" icon="terp-go-month"
-                            domain="[]" help="Request Date"
-                            context="{'group_by':'date'}" />
-                        <filter string="Deadline" icon="terp-go-month"
-                            domain="[]"
-                            context="{'group_by':'date_deadline'}" />
+                        <filter string="Partner" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" icon="terp-personal+" domain="[]" help="Sales Team" context="{'group_by':'section_id'}" />
+                        <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
+                        <filter string="Date" icon="terp-go-month" domain="[]" help="Request Date" context="{'group_by':'date'}" />
+                        <filter string="Deadline" icon="terp-go-month" domain="[]" context="{'group_by':'date_deadline'}" />
                     </group>
                 </search>
             </field>
