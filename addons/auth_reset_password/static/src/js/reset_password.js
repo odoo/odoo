@@ -3,8 +3,8 @@ openerp.auth_reset_password = function(instance) {
     instance.web.Login.include({
         start: function() {
             var $e = this.$element;
-            $e.find('.oe_login_switch a').click(function() {
-                $e.find('.oe_login_switch').toggle();
+            $e.find('a.oe_login_switch').click(function() {
+                $e.find('ul.oe_login_switch').toggle();
                 var $m = $e.find('form input[name=is_reset_pw]');
                 $m.attr('checked', !$m.is(':checked'));
             });
@@ -23,7 +23,7 @@ openerp.auth_reset_password = function(instance) {
             }
             var $m = $e.find('form input[name=is_reset_pw]');
             if ($m.is(':checked')) {
-                var email = $e.find('form input[name=email]').val()
+                var email = $e.find('form input[name=email]').val();
                 return this.do_reset_password(db, email);
             } else {
                 return this._super(ev);
@@ -44,7 +44,7 @@ openerp.auth_reset_password = function(instance) {
                 // cannot log as anonymous or reset_password not installed
                 self.do_warn(_t('Reset Password'), _.str.sprintf(_t('Reset Password functionnality is not available for database %s'), db), true);
             });
-        },
+        }
     });
 
     instance.reset_password = {};
@@ -58,11 +58,10 @@ openerp.auth_reset_password = function(instance) {
                 name: 'Reset Password',
                 type: 'ir.actions.act_window',
                 context: {default_token: this.token},
-                res_model: 'reset_password.wizard',
+                res_model: 'auth.reset_password',
                 target: 'new',
-                views: [[false, 'form']],
+                views: [[false, 'form']]
             });
-
         }
     });
 

@@ -10,11 +10,11 @@ from openerp.osv import osv, fields
 TWENTY_FOUR_HOURS = 24 * 60 * 60
 
 def message_sign(data, secret):
-    src = simplejson.dumps([data,secret], indent=None, separators=(',', ':'), sort_keys=True)
+    src = simplejson.dumps([data, secret], indent=None, separators=(',', ':'), sort_keys=True)
     sign = hashlib.sha1(src).hexdigest()
-    msg = simplejson.dumps([data,sign], indent=None, separators=(',', ':'), sort_keys=True)
+    msg = simplejson.dumps([data, sign], indent=None, separators=(',', ':'), sort_keys=True)
     # pad message to avoid '='
-    pad = (3-len(msg)%3)%3
+    pad = (3 - len(msg) % 3) % 3
     msg = msg + " " * pad
     msg = base64.urlsafe_b64encode(msg)
     return msg, sign
@@ -35,7 +35,7 @@ class res_users(osv.osv):
         ('email_uniq', 'UNIQUE (user_email)', 'You can not have two users with the same email!')
     ]
 
-    def _auth_reset_password_secret(self, cr, uid, ids, context=None):
+    def _auth_reset_password_secret(self, cr, uid, context=None):
         uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
         res = {
             'dbname': cr.dbname,
@@ -44,34 +44,46 @@ class res_users(osv.osv):
         }
         return res
 
-    def _auth_reset_password_host(self, cr, uid, ids, context=None):
+    def _auth_reset_password_host(self, cr, uid, context=None):
         return self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', '')
 
     def _auth_reset_password_link(self, cr, uid, ids, context=None):
         assert len(ids) == 1
-        user = self.browse(cr, uid, ids[0], context=context)
-        host = self._auth_reset_password_host(cr, uid, ids, context)
-        secret = self._auth_reset_password_secret(cr, uid, ids, context)
+        host = self._auth_reset_password_host(cr, uid, context)
+        secret = self._auth_reset_password_secret(cr, uid, context)
         msg_src = {
-            'time' : time.time(),
-            'uid' : ids[0],
+            'time': time.time(),
+            'uid': ids[0],
         }
         msg, sign = message_sign(msg_src, secret)
-        link = urlparse.urljoin(host, '/web/webclient/home#action_id=reset_password&token=%s' % msg)
+        link = urlparse.urljoin(host, '/web/webclient/login?db=%s&login=anonymous&key=anonymous#client_action=reset_password&token=%s' % (cr.dbname, msg))
         return link
 
     def _auth_reset_password_check_token(self, cr, uid, token, context=None):
-        secret = self._auth_reset_password_secret(cr, uid, ids, context)
+        secret = self._auth_reset_password_secret(cr, uid, context)
         data = message_check(token, secret)
         if data and (time.time() - data['time'] < TWENTY_FOUR_HOURS):
             return data
+        return None
+
+    def _auth_reset_password_send_email(self, cr, uid, email_to, tpl_name, res_id, context=None):
+        model, tpl_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_reset_password', tpl_name)
+        assert model == 'email.template'
+
+        msg_id = self.pool.get(model).send_mail(cr, uid, tpl_id, res_id, force_send=False, context=context)
+        MailMessage = self.pool.get('mail.message')
+        MailMessage.write(cr, uid, [msg_id], {'email_to': email_to}, context=context)
+        MailMessage.send(cr, uid, [msg_id], context=context)
 
     def send_reset_password_request(self, cr, uid, email, context=None):
         ids = self.pool.get('res.users').search(cr, 1, [('user_email', '=', email)], context=context)
         if ids:
-            model, template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_reset_password', 'reset_password_email')
-            msg_id = self.pool.get('email.template').send_mail(cr, uid, template_id, ids[0], context=ctx)
-        return True
+            self._auth_reset_password_send_email(cr, 1, email, 'reset_password_email', ids[0], context=context)
+            return True
+        #else:
+        #    _m, company_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'main_company')
+        #    self._auth_reset_password_send_email(cr, uid, email, 'email_no_user', company_id, context=context)
+        return False
 
 class auth_reset_password(osv.TransientModel):
     _name = 'auth.reset_password'
@@ -86,16 +98,16 @@ class auth_reset_password(osv.TransientModel):
         'state': 'draft',
     }
 
-
     def create(self, cr, uid, values, context=None):
         # NOTE here, invalid values raises exceptions to avoid storing
         # sensitive data into the database (which then are available to anyone)
 
-        if values['password'] != values['password_confirmation']:
+        pw = values.get('password')
+        if not pw or pw != values.get('password_confirmation'):
             raise osv.except_osv('Error', 'Passwords missmatch')
 
         Users = self.pool.get('res.users')
-        data = Users._auth_reset_password_check_token(self, cr, uid, values['token'])
+        data = Users._auth_reset_password_check_token(cr, uid, values.get('token', ''))
         if data:
             Users.write(cr, 1, data['uid'], {'password': pw}, context=context)
         else:
@@ -113,3 +125,8 @@ class auth_reset_password(osv.TransientModel):
             return {'value': {'state': 'missmatch'}}
         return {'value': {'state': 'draft'}}
 
+    def onchange_token(self, cr, uid, ids, token, context=None):
+        Users = self.pool.get('res.users')
+        if not Users._auth_reset_password_check_token(cr, uid, token, context=context):
+            return {'value': {'state': 'error'}}
+        return {}
