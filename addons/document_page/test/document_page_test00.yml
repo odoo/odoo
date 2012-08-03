@@ -1,0 +1,71 @@
+-
+    In order to test the document_page in OpenERP, I create a new document page type on Select Display Method Tree
+-
+    !record {model: document.page.type, id: wiki_groups_wikigrouptest0}:
+      method: tree
+      name: Wiki Group Test
+      notes: I can Generate New Group for Select Display method = Tree.
+-
+    Now I will create new Doucment page and assign Group test to this page
+-
+    !record {model: document.page, id: wiki_wiki_openerpwikiediting0}:
+      name: OpenERP Wiki Test
+      content: '=The Open ERP wiki=
+
+      The Open ERP wiki allows you to manage your enterprise contents using wiki
+
+      restructured texts. This module provides a collaborative way to manage internal
+
+      FAQs, quality manuals, technical references, etc.'
+
+-
+    Now I will update the wikipage with other text
+-
+    !record {model: document.page, id: wiki_wiki_openerpwikiediting0}:
+      content: '=The Open ERP wiki=
+
+      The Open ERP wiki allows you to manage your enterprise contents using wiki
+
+      restructured texts. This module provides a collaborative way to manage internal
+
+      FAQs, quality manuals, technical references, etc.
+      
+      Wiki text can easily be edited
+      '
+-
+    I check the page history for the current page by clicking on "Page History".After that find difference between history.
+-
+    !python {model: wizard.document.page.history.show_diff}: |
+      hist_obj = model.pool.get('document.page.history')
+      ids = hist_obj.search(cr, uid, [('document_id', '=', ref("wiki_wiki_openerpwikiediting0"))])
+      model.get_diff(cr, uid, {'active_ids': ids[:] })
+-
+    I create a new Document page type on the Given Home Page
+-
+    !record {model: document.page.type, id: wiki_groups_wikigroupediting0}:
+      name: Wiki Group Editing
+      home: document_page.wiki_wiki_quickstart0
+-
+    I Open the page for click on  "Open Document Page" button.
+-
+    !python {model: document.page.type}: |
+      self.open_document_page(cr, uid, [ref("wiki_groups_wikigroupediting0")], context)
+-
+    In order to create a menu I will create wizard data
+-
+    !record {model: document.page.type, id: document_page.wiki_groups_wikiformatting0}:
+      home: document_page.wiki_wiki_main
+-
+    I create a Menu by clicking on "create menu" button.
+-
+    !record {model: document.page.create.menu, id: wiki_create_menu_0}:
+      menu_name: Wiki Test menu
+      menu_parent_id: base.menu_base_partner
+-
+    I fill in the form and create the menu
+-
+    !python {model: document.page.create.menu}: |
+      ids = self.search(cr, uid, [])
+      self.document_page_menu_create(cr, uid, ids, context)
+
+

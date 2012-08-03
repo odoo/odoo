@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- Create Index Form view  -->
+
+        <record id="view_wiki_make_index" model="ir.ui.view">
+            <field name="name">Create Index</field>
+            <field name="model">document.page.make.index</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Create Index" version="7.0">
+                    <label string="Want to create a Index on Selected Pages ? "/>
+                    <footer>
+                        <button name="document_page_do_index" string="Create Index" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+<!-- Create Index Action  -->
+
+        <record id="action_view_wiki_make_index" model="ir.actions.act_window">
+            <field name="name">Create Index</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">document.page.make.index</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+<!-- Create Index Action Window  -->
+
+        <act_window id="action_view_wiki_make_index_values"
+            key2="client_action_multi" name="Create Index"
+            res_model="document.page.make.index" src_model="document.page"
+            view_mode="form" target="new" view_type="form" />
+
+    </data>
+</openerp>

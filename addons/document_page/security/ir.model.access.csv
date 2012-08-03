@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+document_page_all,document.page,model_document_page,,1,0,0,0
+document_page_type_all,document.page.type,model_document_page_type,,1,0,0,0
+document_page,document.page,model_document_page,base.group_user,1,1,1,1
+document_page_type,document.page.type,model_document_page_type,base.group_system,1,1,1,1
+document_page_history,document.page.history,model_document_page_history,base.group_user,1,0,1,0
+access_document_page_sale_manager,document.page.manager,model_document_page,base.group_sale_manager,1,1,1,1
+document_page_user,document.page user,model_document_page,base.group_document_user,1,1,1,1
