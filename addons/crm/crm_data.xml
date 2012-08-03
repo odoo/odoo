@@ -25,5 +25,27 @@
             <field name="code">Sales</field>
             <field name="alias_id" ref="mail_alias_sales_department"/>
         </record>
+
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module CRM has been installed</value>
+            <value>From the top menu Sales, manage your sales pipeline: leads,
+                opportunities, meetings, phone calls, and customers.  OpenERP
+                ensures that all cases are successfully tracked by all parties.
+                It can automatically send reminders, escalate requests, trigger
+                specific methods and lots of other actions based on your own
+                enterprise rules.
+
+                In the Sales settings, you can configure an email gateway to
+                automatically create leads from messages sent on a particular
+                email address.
+
+                To manage quotations and sale orders, install the module "Sales
+                Management".  With this module, you will be able to create
+                quotations directly from opportunities.
+            </value>
+        </function>
     </data>
 </openerp>

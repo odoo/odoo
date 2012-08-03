@@ -19,32 +19,24 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Account">
-                    <group col="8" colspan="4">
-                        <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-camera_test" name="open" string="Open" domain="[('state','in',('open','draft'))]" help="Contracts in progress"/>
-                        <filter icon="terp-gtk-media-pause" name="pending" string="Pending" domain="[('state','=','pending')]" help="Pending contracts to renew with your customer"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="To Renew" domain="['|', '&amp;', ('date', '!=', False), ('date', '&lt;=', time.strftime('%%Y-%%m-%%d')), ('is_overdue_quantity', '=', True)]"
-                            name="renew"
-                            help="The contracts to be renewed because the deadline is passed or the working hours are higher than the allocated hours" />
-                        <separator orientation="vertical"/>
-                        <filter string="Contracts Having a Partner" help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
-                        <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
-                        <separator orientation="vertical"/>
-                        <field name="partner_id"/>
-                        <field name="user_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
+                    <field name="date"/>
+                    <filter icon="terp-camera_test" name="open" string="Open" domain="[('state','in',('open','draft'))]" help="Contracts in progress"/>
+                    <filter icon="terp-gtk-media-pause" name="pending" string="Pending" domain="[('state','=','pending')]" help="Pending contracts to renew with your customer"/>
+                    <separator/>
+                    <filter icon="terp-go-today" string="To Renew" domain="['|', '&amp;', ('date', '!=', False), ('date', '&lt;=', time.strftime('%%Y-%%m-%%d')), ('is_overdue_quantity', '=', True)]" name="renew"
+                        help="The contracts to be renewed because the deadline is passed or the working hours are higher than the allocated hours" />
+                    <separator/>
+                    <filter string="Contracts Having a Partner" help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
+                    <separator/>
+                    <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Status" icon="terp-personal" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Parent" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by' : 'date_start'}" />
                         <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
                     </group>

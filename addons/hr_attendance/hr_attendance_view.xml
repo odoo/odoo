@@ -55,16 +55,13 @@
             <field name="arch" type="xml">
                 <search string="Hr Attendance Search">
                     <field name="name" string="Attendance"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
-                    <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
-                    <separator orientation="vertical"/>
-                    <field name="employee_id"/>
                     <field name="action"/>
-                    <newline/>
+                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
+                    <separator/>
+                    <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
+                    <field name="employee_id"/>
                     <group expand="0" string="Group By...">
                         <filter name="employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}"/>
                     </group>
                 </search>
@@ -133,12 +130,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="coach_id" position="after">
-                    <group colspan="2">
-                        <field name="state"/>
-                        <button name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
-                        <button name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
-                    </group>
+                <field name="active" position="before">
+                    <label for="state"/>
+                    <div>
+                        <field name="state" class="oe_inline"/>
+                        <button class="oe_inline oe_right" name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
+                        <button class="oe_inline oe_right" name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
+                    </div>
                 </field>
             </field>
         </record>

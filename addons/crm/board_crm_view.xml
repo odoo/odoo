@@ -69,10 +69,10 @@
             <field name="name">Meetings</field>
             <field name="res_model">crm.meeting</field>
             <field name="view_mode">calendar,tree,form,gantt</field>
-            <field name="view_id" ref="crm.crm_case_tree_view_meet"/>
+            <field name="view_id" ref="base_calendar.view_crm_meeting_tree"/>
             <field name="context">{"calendar_default_user_id":uid}</field>
             <field name="domain">[('state','=','open'),('date','&gt;',datetime.date.today().strftime("%Y-%m-%d %H:%M:%S"))]</field>
-            <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
+            <field name="search_view_id" ref="base_calendar.view_crm_meeting_search"/>
         </record>
 
         <record model="ir.ui.view" id="board_crm_statistical_form">

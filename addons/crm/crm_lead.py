@@ -41,6 +41,7 @@ class crm_lead(base_stage, osv.osv):
     _description = "Lead/Opportunity"
     _order = "priority,date_action,id desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _mail_compose_message = True
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
@@ -200,14 +201,13 @@ class crm_lead(base_stage, osv.osv):
         'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+        'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Categories', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
             domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
-        'opt_in': fields.boolean('Opt-In', oldname='optin', help="If opt-in is checked, this contact has accepted to receive emails."),
         'opt_out': fields.boolean('Opt-Out', oldname='optout', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
@@ -278,19 +278,21 @@ class crm_lead(base_stage, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
     
-    def on_change_opt_in(self, cr, uid, ids, opt_in):
-        return {'value':{'opt_in':opt_in,'opt_out':False}}
-
-    def on_change_opt_out(self, cr, uid, ids, opt_out):
-        return {'value':{'opt_out':opt_out,'opt_in':False}}
-
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value':{}}
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
+
+    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
+        result = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            result = {'partner_name' : partner.name}
+        return {'value' : result}
+
 
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.
@@ -763,43 +765,22 @@ class crm_lead(base_stage, osv.osv):
         }
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
+        """ This opens Meeting's calendar view to schedule meeting on current Opportunity
+            @return : Dictionary value for created Meeting view
         """
-        This opens Meeting's calendar view to schedule meeting on current Opportunity
-        @return : Dictionary value for created Meeting view
-        """
-        if context is None:
-            context = {}
-        value = {}
-        data_obj = self.pool.get('ir.model.data')
-        for opp in self.browse(cr, uid, ids, context=context):
-            # Get meeting views
-            tree_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_meet')
-            form_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_meet')
-            calander_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-            search_view = data_obj.get_object_reference(cr, uid, 'crm', 'view_crm_case_meetings_filter')
-            context.update({
-                'default_opportunity_id': opp.id,
-                'default_partner_id': opp.partner_id and opp.partner_id.id or False,
-                'default_user_id': uid,
-                'default_section_id': opp.section_id and opp.section_id.id or False,
-                'default_email_from': opp.email_from,
-                'default_state': 'open',
-                'default_name': opp.name
-            })
-            value = {
-                'name': _('Meetings'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(calander_view and calander_view[1] or False, 'calendar'), (form_view and form_view[1] or False, 'form'), (tree_view and tree_view[1] or False, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view and search_view[1] or False,
-                'nodestroy': True
-            }
-        return value
-
+        opportunity = self.browse(cr, uid, ids[0], context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res['context'] = {
+            'default_opportunity_id': opportunity.id,
+            'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
+            'default_partner_ids' : opportunity.partner_id and [opportunity.partner_id.id] or False,
+            'default_user_id': uid,
+            'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
+            'default_email_from': opportunity.email_from,
+            'default_state': 'open',
+            'default_name': opportunity.name,
+        }
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context):

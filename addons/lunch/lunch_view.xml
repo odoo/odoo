@@ -30,14 +30,18 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>
                 <sheet string="Order">
-                    <group col="4">
-                        <field name="user_id"/>
-                        <field name="date"/>
-                        <field name="product" on_change="onchange_product(product)"/>
-                        <field name="category"/>
-                        <field name="descript"/>
-                        <field name="price"/>
-                        <field name="cashmove"/>
+                    <group>
+                        <group>
+                            <field name="product" on_change="onchange_product(product)"/>
+                            <field name="descript"/>
+                            <field name="price"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="cashmove"/>
+                            <field name="date"/>
+                        </group>
                     </group>
                 </sheet>
                 </form>
@@ -72,12 +76,9 @@
             <field name="arch" type="xml">
                 <search string="Search Lunch Order">
                     <field name="date"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-check" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=',('confirmed'))]"/>
-                    <separator orientation="vertical"/>
                     <field name="user_id"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Category" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'category'}"/>
                     </group>
@@ -105,8 +106,10 @@
             <field name="model">lunch.cashbox</field>
             <field name="arch" type="xml">
                 <form string="Cashboxes" version="7.0">
-                    <field name="name"/>
-                    <field name="manager"/>
+                    <group colspan="4">
+                        <field name="name"/>
+                        <field name="manager"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -145,14 +148,16 @@
             <field name="model">lunch.cashmove</field>
             <field name="arch" type="xml">
                 <form string="CashMove" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="user_cashmove"/>
-                        <field name="amount"/>
-                        <field name="box"/>
-                        <field name="create_date"/>
-                        <field name="active"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="user_cashmove"/>
+                            <field name="amount"/>
+                            <field name="box"/>
+                            <field name="create_date"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -184,12 +189,9 @@
                 <search string="Search CashMove">
                     <field name="create_date"/>
                     <field name="user_cashmove"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]"  context="{'group_by':'user_cashmove'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Box" icon="terp-dolar" domain="[]"  context="{'group_by':'box'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-today" domain="[]"  context="{'group_by':'create_date'}"/>
                     </group>
                 </search>
@@ -216,8 +218,9 @@
             <field name="model">lunch.category</field>
             <field name="arch" type="xml">
                 <form string="Category" version="7.0">
-                    <separator string="Category Related to Products" colspan="4"/>
-                    <field name="name"/>
+                    <group>
+                        <field name="name"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -250,18 +253,19 @@
             <field name="model">lunch.product</field>
             <field name="arch" type="xml">
                 <form string="Products" version="7.0">
-                     <group col="6">
-                          <field name="name"/>
-                          <field name="category_id"/>
-                          <field name="price" />
-                     </group>
-                     <notebook colspan="4">
-                         <page string="General Information">
-                              <field name="active"/>
-                              <separator string="Description" colspan="4" />
-                              <field name="description" nolabel="1" colspan="4" />
-                          </page>
-                     </notebook>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="category_id"/>
+                                <field name="price" />
+                            </group>
+                            <group>
+                                <field name="active"/>
+                            </group>
+                            <field name="description" placeholder="Add a description" nolabel="1" colspan="4"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -291,8 +295,8 @@
             <field name="arch" type="xml">
                 <search string="Products">
                     <field name="name" string="Product"/>
-                    <field name="category_id"/>
                     <field name="price"/>
+                    <field name="category_id"/>
                 </search>
             </field>
         </record>
@@ -365,14 +369,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Box Amount by User">
-                    <group>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <field name="user_id"/>
-                        <field name="box"/>
-                        <field name="amount"/>
-                    </group>
-                    <newline/>
+                    <field name="date"/>
+                    <field name="box"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Box" icon="terp-dolar" context="{'group_by':'box'}"/>
                     </group>

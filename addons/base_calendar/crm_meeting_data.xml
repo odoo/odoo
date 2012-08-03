@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <!--    CASE CATEGORY(categ_id)        -->
+
+        <record model="crm.meeting.type" id="categ_meet1">
+            <field name="name">Customer Meeting</field>
+        </record>
+
+        <record model="crm.meeting.type" id="categ_meet2">
+            <field name="name">Internal Meeting</field>
+        </record>
+
+        <record model="crm.meeting.type" id="categ_meet3">
+            <field name="name">Phone Call</field>
+        </record>
+
+         <record model="res.request.link" id="request_link_meeting">
+            <field name="name">Meeting</field>
+            <field name="object">crm.meeting</field>
+        </record>
+    </data>
+</openerp>

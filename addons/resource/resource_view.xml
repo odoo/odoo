@@ -10,23 +10,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Resource">
-                   <group>
-                       <field name="name" string="Resource"/>
-                       <separator orientation="vertical"/>
-                       <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
-                       <separator orientation="vertical"/>
-                       <field name="user_id" string="User"/>
-                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                       <field name="resource_type"/>
-                   </group>
-                   <newline/>
+                   <field name="name" string="Resource"/>
+                   <field name="resource_type"/>
+                   <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                   <field name="user_id" string="User"/>
+                   <field name="company_id" groups="base.group_multi_company"/>
                    <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
-                        <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <separator orientation="vertical" />
                         <filter string="Working Period" icon="terp-go-today" domain="[]" context="{'group_by':'calendar_id'}"/>
                     </group>
                </search>
@@ -39,12 +31,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Working Time">
-                   <group>
-                       <field name="name" string="Working Time"/>
-                       <separator orientation="vertical"/>
-                       <field name="manager"/>
-                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                   </group>
+                   <field name="name" string="Working Time"/>
+                   <field name="manager"/>
+                   <field name="company_id" groups="base.group_multi_company"/>
                </search>
             </field>
         </record>
@@ -55,19 +44,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Working Period Leaves">
-                   <group>
-                       <field name="name" string="Reason"/>
-                       <separator orientation="vertical"/>
-                       <field name="resource_id" string="Resource"/>
-                       <field name="company_id" string="Company" widget="selection" groups="base.group_multi_company"/>
-                       <field name="calendar_id" string="Working Period" widget="selection"/>
-                   </group>
-                   <newline/>
-                   <group expand="0" string="Group By...">
+                    <field name="name" string="Reason"/>
+                    <field name="resource_id" string="Resource"/>
+                    <field name="company_id" string="Company" groups="base.group_multi_company"/>
+                    <field name="calendar_id" string="Working Period"/>
+                    <group expand="0" string="Group By...">
                         <filter string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave"/>
                     </group>
                </search>
@@ -120,11 +103,12 @@
             <field name="model">resource.calendar.attendance</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Working Time">
+                <tree string="Working Time" editable="top">
                     <field name="name"/>
                     <field name="dayofweek"/>
-                    <field name="hour_from" widget="float_time" />
-                    <field name="hour_to" widget="float_time" />
+                    <field name="hour_from" widget="float_time"/>
+                    <field name="hour_to" widget="float_time"/>
+                    <field name="date_from"/>
                 </tree>
             </field>
         </record>
@@ -135,11 +119,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Working Time" version="7.0">
-                    <field colspan="4" name="name"/>
-                    <field name="date_from"/>
-                    <field name="dayofweek"/>
-                    <field name="hour_from" widget="float_time"/>
-                    <field name="hour_to" widget="float_time"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="date_from"/>
+                        <label for="hour_from" string="Hours"/>
+                        <div>
+                            <field name="hour_from" widget="float_time" class="oe_inline"/> - 
+                            <field name="hour_to" widget="float_time" class="oe_inline"/>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
@@ -179,16 +167,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Resource" version="7.0">
-                   <group col="4">
-                       <field name="name" colspan="4"/>
-                       <field name="active"/>
-                       <newline/>
-                       <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
-                       <field name="resource_type" />
-                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                       <newline/>
-                       <field name="calendar_id" string="Working Period"/>
-                       <field name="time_efficiency"/>
+                   <group>
+                      <group>
+                        <field name="name"/>
+                        <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="active"/>
+                       </group>
+                       <group>
+                        <field name="resource_type" />
+                        <field name="calendar_id"/>
+                        <field name="time_efficiency"/>
+                       </group>
                     </group>
                 </form>
             </field>
@@ -204,7 +194,7 @@
                     <field name="user_id" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="resource_type" />
-                    <field name="calendar_id" string="Working Period"/>
+                    <field name="calendar_id"/>
                     <field name="time_efficiency"/>
                 </tree>
             </field>
@@ -225,25 +215,29 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Leave Detail" version="7.0">
-                    <sheet>
+                    <group>
+                        <group>
+                            <field name="resource_id" on_change="onchange_resource(resource_id)"/>
+                            <field name="name" string="Reason"/>
+                        </group>
+                        <group>
+                            <field name="calendar_id"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
                     <group>
                        <group>
-                           <field name="resource_id" on_change="onchange_resource(resource_id)"/>
-                           <field name="name" string="Reason"/>
+                         <label for="date_from" string="Duration"/> 
+                         <div>
+                           <field name="date_from" class="oe_inline"/> - 
+                           <field name="date_to" class="oe_inline"/>
+                         </div>
                        </group>
-                       <group>
-                           <field name="date_from"/>
-                           <field name="calendar_id" string="Working Period"/>
-                           <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                       </group>
-                       <group>
-                           <field name="date_to"/>
-                       </group>
-                   </group>
-                   </sheet>
+                    </group>
                 </form>
             </field>
         </record>
+        
         <record id="resource_calendar_leave_tree" model="ir.ui.view">
             <field name="name">resource.calendar.leaves.tree</field>
             <field name="model">resource.calendar.leaves</field>

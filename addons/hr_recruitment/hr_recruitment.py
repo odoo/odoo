@@ -24,15 +24,10 @@ import time
 from datetime import datetime, timedelta
 from lxml import etree
 from osv import fields, osv
-from crm import crm
 import tools
 import collections
 import binascii
-import tools
 from tools.translate import _
-from crm import wizard
-
-wizard.mail_compose_message.SUPPORTED_MODELS.append('hr.applicant')
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
@@ -67,8 +62,8 @@ class hr_recruitment_stage(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
-        'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
-        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
+        'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
+        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change according to the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
         'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
         'requirements': fields.text('Requirements'),
     }
@@ -98,6 +93,7 @@ class hr_applicant(base_stage, osv.Model):
     _description = "Applicant"
     _order = "id desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _mail_compose_message = True
 
     def _get_default_department_id(self, cr, uid, context=None):
         """ Gives default department by checking if present in the context """
@@ -181,7 +177,7 @@ class hr_applicant(base_stage, osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True),
+        'name': fields.char('Subject', size=128, required=True),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
@@ -213,7 +209,7 @@ class hr_applicant(base_stage, osv.Model):
         'salary_expected_extra': fields.char('Expected Salary Extra', size=100, help="Salary Expected by Applicant, extra advantages"),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
         'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
-        'availability': fields.integer('Availability (Days)'),
+        'availability': fields.integer('Availability'),
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
@@ -239,7 +235,7 @@ class hr_applicant(base_stage, osv.Model):
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
         'priority': lambda *a: '',
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.applicant', context=c),
         'color': 0,
     }
 
@@ -257,8 +253,6 @@ class hr_applicant(base_stage, osv.Model):
         return {'value': {'department_id': False}}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, context=None):
-        if not department_id:
-            return {'value': {'stage_id': False}}
         obj_recru_stage = self.pool.get('hr.recruitment.stage')
         stage_ids = obj_recru_stage.search(cr, uid, ['|',('department_id','=',department_id),('department_id','=',False)], context=context)
         stage_id = stage_ids and stage_ids[0] or False
@@ -293,49 +287,20 @@ class hr_applicant(base_stage, osv.Model):
         return False
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
+        """ This opens Meeting's calendar view to schedule meeting on current applicant
+            @return: Dictionary value for created Meeting view
         """
-        This opens Meeting's calendar view to schedule meeting on current Opportunity
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Opportunity to Meeting IDs
-        @param context: A standard dictionary for contextual values
-
-        @return: Dictionary value for created Meeting view
-        """
-        data_obj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        value = {}
-        for opp in self.browse(cr, uid, ids, context=context):
-            # Get meeting views
-            search_view = data_obj.get_object(cr, uid, 'crm', 'view_crm_case_meetings_filter', context)
-            calendar_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_calendar_view_meet', context)
-            form_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_form_view_meet', context)
-            tree_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_tree_view_meet', context)
-            category = data_obj.get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
-            context.update({
-                'default_applicant_id': opp.id,
-                'default_partner_id': opp.partner_id and opp.partner_id.id or False,
-                'default_email_from': opp.email_from,
-                'default_state': 'open',
-                'default_categ_id': category.id,
-                'default_name': opp.name,
-            })
-            value = {
-                'name': ('Meetings'),
-                'domain': "[('user_id','=',%s)]" % (uid),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(calendar_view.id, 'calendar'), (form_view.id, 'form'), (tree_view.id, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view.id,
-                'nodestroy': True,
-            }
-        return value
+        applicant = self.browse(cr, uid, ids[0], context)
+        category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res['context'] = {
+            'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
+            'default_user_id': uid,
+            'default_state': 'open',
+            'default_name': applicant.name,
+            'default_categ_ids': category and [category.id] or False,
+        }
+        return res
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """
@@ -587,12 +552,5 @@ class hr_job(osv.osv):
                 'context' : context,
                 'nodestroy':True,
             }
-
-
-class crm_meeting(osv.osv):
-    _inherit = 'crm.meeting'
-    _columns = {
-        'applicant_id': fields.many2one('hr.applicant','Applicant'),
-    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

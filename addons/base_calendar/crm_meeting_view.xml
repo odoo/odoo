@@ -1,0 +1,359 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <!-- Read/Unread actions -->
+
+    <record id="actions_server_crm_meeting_read" model="ir.actions.server">
+        <field name="name">Mark read</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_crm_meeting"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_crm_meeting_read" model="ir.values">
+        <field name="name">action_crm_meeting_read</field>
+        <field name="action_id" ref="actions_server_crm_meeting_read"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_read'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_crm_meeting" />
+        <field name="model">crm.meeting</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
+    <record id="actions_server_crm_meeting_unread" model="ir.actions.server">
+        <field name="name">Mark unread</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_crm_meeting"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_crm_meeting_unread" model="ir.values">
+        <field name="name">action_crm_meeting_unread</field>
+        <field name="action_id" ref="actions_server_crm_meeting_unread"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_unread'))" />
+        <field name="key">action</field>
+        <field name="model_id" ref="model_crm_meeting" />
+        <field name="model">crm.meeting</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
+    <!-- CRM Meetings Types Form View -->
+
+    <record id="view_crm_meeting_type_tree" model="ir.ui.view">
+        <field name="name">Meeting Types Tree</field>
+        <field name="model">crm.meeting.type</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Meeting Types" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_crm_meeting_type" model="ir.actions.act_window">
+        <field name="name">Meeting Types</field>
+        <field name="res_model">crm.meeting.type</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_crm_meeting_type_tree"/>
+        <field name="help">Create different meeting categories to better organize and classify your meetings.</field>
+    </record>
+
+    <menuitem id="menu_crm_meeting_type" parent="base.menu_calendar_configuration" sequence="1"
+        action="action_crm_meeting_type" groups="base.group_no_one"/>
+
+    <!-- CRM Meetings Form View -->
+
+    <record model="ir.ui.view" id="view_crm_meeting_form">
+        <field name="name">CRM - Meetings Form</field>
+        <field name="model">crm.meeting</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Meetings" version="7.0">
+                <header>
+                    <button name="case_open" string="Confirm" type="object"
+                            states="draft"/>
+                    <button name="case_close" string="Done" type="object"
+                            states="open"/>
+                    <button name="case_reset" string="Reset to Unconfirmed" type="object" 
+                            states="cancel,done"/>
+                    <button name="case_cancel" string="Cancel" type="object"
+                            states="draft,open"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="name"/> 
+                        </div>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <label for="partner_ids" class="oe_edit_only"/>
+                        <h2>
+                            <field name="partner_ids" widget="many2many_tags"/>
+                        </h2>
+                    </div>
+                    <notebook>
+                    <page string="Meeting Detail">
+                        <group>
+                            <group>
+                                <field name="user_id" />
+                                <field name="categ_ids" widget="many2many_tags"/>
+                                <field name="location"/>
+                                <field name="organizer" groups="base.group_no_one"/>
+                            </group>
+                            <group>
+                                <label for="date" string="Starting at"/>
+                                <div>
+                                    <field name="date"/>
+                                    <span attrs="{'invisible': [('allday','=',True)]}">
+				        (<field name="duration" widget="float_time"
+                                        on_change="onchange_dates(date,duration,False,allday)"
+                                        class="oe_inline"/> hours)
+			            </span>
+
+                                </div>
+
+                                <label for="date_deadline" />
+                                <div>
+                                    <field name="date_deadline" 
+                                        string="End Date" attrs="{'invisible': [('allday','=',True)]}"
+                                        on_change="onchange_dates(date,False,date_deadline)"/>
+                                    (<field name="allday" on_change="onchange_dates(date,False,False,allday)" class="oe_inline"/>
+                                    <label for="allday" string="All Day?"/>)
+                                </div>
+                                    <field name="recurrency"
+                                        attrs="{'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}"/>
+                            </group>
+                            <group>
+                                <field name="alarm_id" widget="selection" />
+                                <field name="class"/>
+                                <field name="show_as"/>
+                                <field name="rrule" invisible="1" readonly="1"/>
+                                <field name="recurrent_id" invisible="1"/>
+                                <field name="recurrent_uid" invisible="1"/>
+                            </group>
+                            <group attrs="{'invisible': [('recurrency','=',False)]}">
+                                <label for="interval"/>
+                                <div>
+                                    <field name="interval" class="oe_inline"/>
+                                    <field name="rrule_type" class="oe_inline"/>
+                                </div>
+                                <label string="Until" for="end_type"/>
+                                <div>
+                                    <field name="end_type" class="oe_inline"/>
+                                    <field name="count" attrs="{'invisible' : [('end_type', '!=', 'count')] }" class="oe_inline"/>
+                                    <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
+                                </div>
+                                <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
+                                <group col="4" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
+                                    <field name="mo" />
+                                    <field name="tu" />
+                                    <field name="we" />
+                                    <field name="th" />
+                                    <field name="fr" />
+                                    <field name="sa" />
+                                    <field name="su" />
+                                </group>
+
+                                <label string="Day of Month"
+                                    attrs="{'invisible' : [('rrule_type','!=','monthly')]}"/>
+
+                                <div attrs="{'invisible' : [('rrule_type','!=','monthly')]}">
+                                    <field name="select1" />
+                                    <field name="day"
+                                        attrs="{'required' : [('select1','=','date'), ('rrule_type','=','monthly')],
+                                            'invisible' : [('select1','=','day')]}" />
+                                    <field name="byday" string="The"
+                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
+                                    <field name="week_list" nolabel="1"
+                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
+                                </div>
+
+                            </group>
+                        </group>
+                        <label for="description"/>
+                        <field name="description"/>
+                    </page>
+                    <page string="Invitation Detail">
+                        <button string="Invite People"
+                            name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                            icon="terp-partner" type="action"
+                            attrs="{'readonly': [('state', '=', 'done')]}"
+                            context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
+                        <field name="attendee_ids" widget="one2many" mode="tree">
+                            <tree string="Invitation details" editable="top">
+                                <field name="sent_by_uid" string="From"/>
+                                <field name="user_id" string="To"/>
+                                <field name="email" string="Mail To"/>
+                                <field name="role" />
+                                <field name="state" />
+                                <button name="do_tentative"
+                                    states="needs-action,declined,accepted"
+                                    string="Uncertain" type="object"
+                                    icon="terp-crm" />
+                                <button name="do_accept" string="Accept"
+                                    states="needs-action,tentative,declined"
+                                    type="object" icon="gtk-apply" />
+                                <button name="do_decline" string="Decline"
+                                    states="needs-action,tentative,accepted"
+                                    type="object" icon="gtk-cancel" />
+                                <button
+                                    name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                                    string="Delegate" type="action"
+                                    icon="gtk-sort-descending"
+                                    states="needs-action,tentative,declined,accepted"
+                                    context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                            </tree>
+                            <form string="Invitation details" version="7.0">
+                                <header>
+                                    <button name="do_tentative" type="object"
+                                        states="needs-action,declined,accepted"
+                                        string="Uncertain" icon="terp-crm" />
+                                    <button name="do_accept" type="object"
+                                        states="needs-action,tentative,declined"
+                                        string="Accept" icon="gtk-apply" />
+                                    <button name="do_decline" type="object"
+                                        states="needs-action,tentative,accepted"
+                                        string="Decline" icon="gtk-cancel" />
+                                    <button name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d" type="action"
+                                        states="needs-action,tentative,declined,accepted"
+                                        string="Delegate" icon="gtk-sort-descending"
+                                        context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                                    <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
+                                </header>
+                                <group>
+                                    <group>
+                                        <field name="email" />
+                                        <field name="rsvp" />
+                                        <field name="cutype" />
+                                        <field name="role" />
+                                    </group>
+                                    <group>
+                                        <field name="user_id"/>
+                                    </group>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- CRM Meeting Tree View  -->
+
+    <record model="ir.ui.view" id="view_crm_meeting_tree">
+        <field name="name">CRM - Meetings Tree</field>
+        <field name="model">crm.meeting</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Meetings" fonts="bold:needaction_pending==True"
+                colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                <field name="name" string="Subject" />
+                <field name="user_id"/>
+                <field name="date"/>
+                <field name="state"/>
+                <field name="duration" />
+                <field name="needaction_pending" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- CRM Meeting Calendar -->
+
+    <record model="ir.ui.view" id="view_crm_meeting_calendar">
+        <field name="name">CRM - Meetings Calendar</field>
+        <field name="model">crm.meeting</field>
+        <field name="type">calendar</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Meetings" date_start="date" color="user_id" date_stop="date_deadline" date_delay="duration">
+                <field name="name"/>
+                <field name="user_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- CRM Meeting Gantt  -->
+
+    <record id="view_crm_meeting_gantt" model="ir.ui.view">
+        <field name="name">CRM - Meetings Gantt</field>
+        <field name="model">crm.meeting</field>
+        <field name="type">gantt</field>
+        <field name="arch" type="xml">
+            <gantt date_delay="duration" date_start="date" string="Meetings"/>
+        </field>
+    </record>
+
+    <!-- CRM Meeting Search View  -->
+
+    <record id="view_crm_meeting_search" model="ir.ui.view">
+        <field name="name">CRM - Meetings Search</field>
+        <field name="model">crm.meeting</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Meetings">
+                <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>
+                <filter string="Inbox" help="Unread messages" icon="terp-mail-message-new" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                <separator/>
+                <filter string="My Meetings" help="My Meetings" icon="terp-personal" domain="[('user_id','=',uid)]"/>
+                <field name="user_id"/>
+                <field name="partner_ids"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- CRM Meetings action and menu -->
+
+    <record id="action_crm_meeting" model="ir.actions.act_window">
+        <field name="name">Meetings</field>
+        <field name="res_model">crm.meeting</field>
+        <field name="view_mode">calendar,tree,form,gantt</field>
+        <field name="view_id" ref="view_crm_meeting_calendar"/>
+        <field name="search_view_id" ref="view_crm_meeting_search"/>
+        <field name="context">{"calendar_default_user_id": uid}</field>
+        <field name="help">
+            The meeting calendar is shared between the sales teams and fully integrated with other applications
+            such as the employee holidays or the business opportunities.
+            You can also synchronize meetings with your mobile phone using the caldav interface.
+        </field>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_view_crm_meeting_calendar">
+        <field name="act_window_id" ref="action_crm_meeting"/>
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_crm_meeting_calendar"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_view_crm_meeting_tree">
+        <field name="act_window_id" ref="action_crm_meeting"/>
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_crm_meeting_tree"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_view_crm_meeting_form">
+        <field name="act_window_id" ref="action_crm_meeting"/>
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_crm_meeting_form"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_view_crm_meeting_gantt">
+        <field name="act_window_id" ref="action_crm_meeting"/>
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="view_crm_meeting_gantt"/>
+    </record>
+
+    <menuitem id="menu_crm_meeting" parent="base.menu_sales" sequence="8"
+        name="Meetings" action="action_crm_meeting"/>
+
+    </data>
+</openerp>

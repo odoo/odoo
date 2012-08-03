@@ -23,11 +23,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Account">
-                    <group>
-                        <field name="sheet_id" />
-                        <field name="name" groups="analytic.group_analytic_accounting"/>
-                        <field name="invoice_rate"/>
-                    </group>
+                    <field name="name" groups="analytic.group_analytic_accounting"/>
+                    <field name="invoice_rate"/>
+                    <field name="sheet_id" />
                 </search>
             </field>
         </record>
@@ -62,39 +60,50 @@
                     <label for="employee_id" class="oe_edit_only"/>
                     <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)"/></h1>
                     <label for="date_from" class="oe_edit_only" string="Timesheet Period"/>
-                    <h2>
-                        From <field name="date_from"/>
-                        to <field name="date_to"/>
-                    </h2>
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="department_id"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="user_id" invisible="1"/>
+                    <h2>From <field name="date_from"/> to <field name="date_to"/></h2>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="department_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="total_attendance" widget="float_time"/>
+                            <field name="total_timesheet" widget="float_time"/>
+                            <field name="total_difference" widget="float_time"/>
+                            <field name="user_id" invisible="1"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Daily">
-                            <group col="6" colspan="4">
-                                <button name="button_dummy" string="Go to:" type="object" icon="terp-gtk-jump-to-ltr"/>
-                                <field name="date_current" nolabel="1"/>
-                                <label string=""/>
-                                <button icon="terp-gtk-go-back-ltr" name="date_previous" string="" type="object"/>
-                                <button name="date_today" string="Today" type="object" icon="terp-go-today"/>
-                                <button icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
+                            <group>
+                                <div>
+                                    <button name="button_dummy" class="oe_inline" string="Go to" type="object" icon="terp-gtk-jump-to-ltr"/> :
+                                    <field name="date_current" class="oe_inline"/>
+                                </div>
+                                <div align="right">
+                                    <button class="oe_inline" icon="terp-gtk-go-back-ltr" name="date_previous" string="" type="object"/>
+                                    <button class="oe_inline" name="date_today" string="Today" type="object" icon="terp-go-today"/>
+                                    <button class="oe_inline" icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
+                                </div>
                             </group>
-
-                            <field colspan="3" context="{'name':date_current,'user_id':user_id}" height="100" name="attendances_ids" nolabel="1">
-                                <tree string="Attendances" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="action"/>
-                                    <field invisible="1" name="employee_id"/>
-                                </tree>
-                            </field>
-                            <group col="4" colspan="1">
+                            <group colspan="4" col="3">
+                                <field context="{'name':date_current,'user_id':user_id}" name="attendances_ids" nolabel="1">
+                                    <tree string="Attendances" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="action"/>
+                                        <field invisible="1" name="employee_id"/>
+                                    </tree>
+                                </field>
+                                <group>
+                                    <div align="right">
+                                        <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
+                                        <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
+                                    </div>
+                                </group>
+                            </group>
+                            <group col="4">
                                 <field name="state_attendance"/>
-                                <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
-                                <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
-                                <field name="total_attendance_day" widget="float_time" colspan="4"/>
                             </group>
                             <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Lines">
@@ -124,8 +133,6 @@
                                     <field name="user_id" required="1"/>
                                 </form>
                             </field>
-                            <field name="total_difference_day" widget="float_time"/>
-                            <field name="total_timesheet_day" widget="float_time"/>
                         </page>
                         <page string="Summary">
                             <field colspan="4" name="period_ids" nolabel="1">
@@ -136,11 +143,6 @@
                                     <field name="total_difference" widget="float_time"/>
                                 </tree>
                             </field>
-                            <group colspan="4" col="6">
-                                <field name="total_attendance" widget="float_time"/>
-                                <field name="total_timesheet" widget="float_time"/>
-                                <field name="total_difference" widget="float_time"/>
-                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -154,16 +156,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                    <group>
-                        <field name="date_from"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
-                        <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-                        <separator orientation="vertical"/>
-                        <field name="employee_id"/>
-                        <field name="department_id" widget="selection"/>
-                    </group>
-                    <newline/>
+                    <field name="date_from"/>
+                    <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
+                    <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
@@ -196,12 +193,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
-                    <separator string="Timesheets" colspan="4"/>
-                    <field name="timesheet_range"/>
-                    <field name="timesheet_max_difference"/>
-                    <newline/>
-                </page>
+                <xpath expr="//group[@name='account_grp']" position="after">
+                    <group name="timesheets_grp" string="Timesheets">
+                        <field name="timesheet_range"/>
+                        <field name="timesheet_max_difference"/>
+                    </group>
+                </xpath>
             </field>
         </record>
 
@@ -227,7 +224,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
             <field name="arch" type="xml">
-                <field name="user_id" position="before">
+                <field name="date" position="before">
                     <field name="sheet_id"/>
                 </field>
             </field>
@@ -349,6 +346,17 @@
   <act_window
            context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
            id="act_hr_employee_2_hr_timesheet" name="Timesheets" res_model="hr_timesheet_sheet.sheet" src_model="hr.employee"/>
+           
+      <record id="hr_timesheet_sheet_employee_extd_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.employee.extd_form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_employee_extd_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(act_hr_employee_2_hr_timesheet)d" string="Timesheets" type="action"/>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>
