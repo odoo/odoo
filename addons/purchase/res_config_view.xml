@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
         <record id="view_purchase_configuration" model="ir.ui.view">
@@ -89,10 +90,10 @@
                 <separator name="analytic_account" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </separator>
-                <group name="analytic_account" position="attributes">
+                <group name="analytic_account_purchase" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </group>
-                <div name="analytic_account_purchase" position="inside">
+                <xpath expr="//group[@name='analytic_account_purchase']/div" position="inside">
                     <div>
                         <field name="group_analytic_account_for_purchases" class="oe_inline"/>
                         <label for="group_analytic_account_for_purchases"/>
@@ -101,7 +102,7 @@
                         <field name="module_purchase_analytic_plans" on_change="onchange_purchase_analytic_plans(module_purchase_analytic_plans)" class="oe_inline"/>
                         <label for="module_purchase_analytic_plans"/>
                     </div>
-                </div>
+                </xpath>
             </field>
         </record>
 

@@ -141,10 +141,10 @@
                 <separator name="analytic_account" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </separator>
-                <group name="analytic_account" position="attributes">
+                <group name="analytic_account_sale" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </group>
-                <div name="analytic_account_sale" position="inside">
+                <xpath expr="//group[@name='analytic_account_sale']/div" position="inside">
                     <div>
                         <field name="group_analytic_account_for_sales" class="oe_inline"/>
                         <label for="group_analytic_account_for_sales"/>
@@ -153,7 +153,7 @@
                         <field name="module_sale_analytic_plans" on_change="onchange_sale_analytic_plans(module_sale_analytic_plans)" class="oe_inline"/>
                         <label for="module_sale_analytic_plans"/>
                     </div>
-                </div>
+                </xpath>
             </field>
         </record>
     </data>
