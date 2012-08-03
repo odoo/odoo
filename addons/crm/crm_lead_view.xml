@@ -139,17 +139,6 @@
                     </div>
                     <group>
                         <group>
-                            <field name="user_id" />
-                            <field name="section_id"/>
-                            <field name="type" invisible="1"/>
-                        </group>
-                        <group>
-                            <field name="priority"/>
-                            <field name="categ_ids"
-                                widget="many2many_tags"
-                                domain="[('object_id.model','=','crm.lead')]"/>
-                        </group>
-                        <group>
                             <field name="partner_name" string="Company Name"/>
                             <field name="partner_id" string="Customer" 
                                 on_change="on_change_partner(partner_id)" />
@@ -182,6 +171,17 @@
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" type="action" colspan="1"/>
                             -->
+                        </group>
+                        <group>
+                            <field name="user_id" />
+                            <field name="section_id"/>
+                            <field name="type" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="priority"/>
+                            <field name="categ_ids"
+                                widget="many2many_tags"
+                                domain="[('object_id.model','=','crm.lead')]"/>
                         </group>
                     </group>
                     <notebook colspan="4">
