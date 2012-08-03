@@ -612,6 +612,7 @@
         <menuitem action="action_location_tree"
             id="menu_action_location_tree"
             parent="menu_stock_inventory_control"
+            groups="stock.group_locations"
             sequence="20"/>
 
         <record id="view_warehouse" model="ir.ui.view">
@@ -913,6 +914,20 @@
         </record>
 
         <!-- Sending Products -->
+        <record model="ir.ui.view" id="stock_picking_out_calendar">
+            <field name="name">stock.picking.out.calendar</field>
+            <field name="model">stock.picking.out</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
+                    <field name="origin"/>
+                    <field name="type"/>
+                    <field name="partner_id"/>
+                </calendar>
+            </field>
+        </record>
+        
         <record id="view_picking_out_tree" model="ir.ui.view">
             <field name="name">stock.picking.out.tree</field>
             <field name="model">stock.picking</field>
@@ -1016,11 +1031,26 @@
         <record id="action_picking_tree_out_view2_waiting_cal" model="ir.actions.act_window.view">
             <field eval="3" name="sequence"/>
             <field name="view_mode">calendar</field>
+            <field name="view_id" ref="stock_picking_out_calendar"/>
             <field name="act_window_id" ref="action_picking_tree"/>
         </record>
         <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_warehouse_mgmt" sequence="3"/>
 
         <!-- Incomming Shipments -->
+        <record model="ir.ui.view" id="stock_picking_in_calendar">
+            <field name="name">stock.picking.in.calendar</field>
+            <field name="model">stock.picking.in</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
+                    <field name="origin"/>
+                    <field name="type"/>
+                    <field name="partner_id"/>
+                </calendar>
+            </field>
+        </record>
+
         <record id="view_picking_in_tree" model="ir.ui.view">
             <field name="name">stock.picking.in.tree</field>
             <field name="model">stock.picking.in</field>
@@ -1118,6 +1148,7 @@
         <record id="action_invoice_tree5_view2_cal" model="ir.actions.act_window.view">
             <field eval="3" name="sequence"/>
             <field name="view_mode">calendar</field>
+            <field name="view_id" ref="stock_picking_in_calendar"/>
             <field name="act_window_id" ref="action_picking_tree4"/>
         </record>
         <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_warehouse_mgmt" sequence="1"/>
@@ -1220,7 +1251,7 @@
                             <field name="date" groups="base.group_no_one"/>
                         </group>
                         <group string="Tracability"
-                            groups="stock.group_tracking_lot,stock.group_production_lot">
+                            groups="stock.group_tracking_lot">
                             <label for="tracking_id" groups="stock.group_tracking_lot"/>
                             <div groups="stock.group_tracking_lot">
                                 <field name="tracking_id" class="oe_inline"/>

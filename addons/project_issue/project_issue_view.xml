@@ -105,10 +105,10 @@
                         <button name="case_reset" string="Reset to New" type="object"
                                 states="cancelled,done"/>
                         <button name="stage_previous" string="Previous Stage" type="object"
-                                states="open,pending" icon="gtk-go-back"
+                                states="open,pending"
                                 attrs="{'invisible': [('stage_id','=', False)]}"/>
                         <button name="stage_next" string="Next Stage" type="object"
-                                states="open,pending" icon="gtk-go-forward"
+                                states="open,pending"
                                 attrs="{'invisible': [('stage_id','=', False)]}"/>
                         <button name="case_cancel" string="Cancel" type="object"
                                 states="draft,open,pending"/>
@@ -126,10 +126,10 @@
                         </group>
                         <group>
                             <field name="priority"/>
-                            <field name="project_id" required="True" on_change="on_change_project(project_id)"/>
+                            <field name="project_id" required="True" on_change="on_change_project(project_id)" context="{'default_use_issues':1}"/>
                             <label for="task_id"/>
                             <div>
-                                <field name="task_id" on_change="onchange_task_id(task_id)" class="oe_inline"/>
+                                <field name="task_id" on_change="onchange_task_id(task_id)" class="oe_inline" context="{'default_project_id':project_id}"/>
                                 <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}" class="oe_inline"/>
                             </div>
                             <field name="categ_ids" widget="many2many_tags"/>

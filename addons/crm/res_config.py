@@ -44,6 +44,9 @@ class crm_configuration(osv.osv_memory):
         'module_google_map': fields.boolean("Google Maps on Customer",
             help="""Locate customers on Google Map.
                 This installs the module google_map."""),
+        'group_fund_raising': fields.boolean("Manage Fund Raising",
+            implied_group='crm.group_fund_raising',
+            help="""Allows you to trace and manage your activities for fund raising."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
