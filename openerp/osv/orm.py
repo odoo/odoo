@@ -4160,6 +4160,12 @@ class BaseModel(object):
 
         self.check_create(cr, user)
 
+        if self._log_access:
+            for f in LOG_ACCESS_COLUMNS:
+                if vals.pop(f, None) is not None:
+                    _logger.warning(
+                        'Field `%s` is not allowed when creating the model `%s`.',
+                        f, self._name)
         vals = self._add_missing_default_values(cr, user, vals, context)
 
         tocreate = {}
