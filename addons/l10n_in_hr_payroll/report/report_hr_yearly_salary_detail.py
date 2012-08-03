@@ -41,9 +41,6 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
 
         self.context = context
         self.mnths = []
-        self.allow_list = []
-        self.deduct_list = []
-        self.total = 0.00
 
     def get_periods(self, form):
         self.mnths = []
@@ -113,32 +110,28 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         return None
 
     def cal_monthly_amt(self, form, emp_id):
-
         result = []
         salaries = {}
         total = 0.0
-
-        line_ids = self.pool.get('hr.payslip.line').search(self.cr, self.uid, [], context=self.context)
-
         self.cr.execute('''SELECT rc.code, pl.name, sum(pl.total), \
                 to_char(date_to,'mm-yyyy') as to_date  FROM hr_payslip_line as pl \
                 LEFT JOIN hr_salary_rule_category AS rc on (pl.category_id = rc.id) \
                 LEFT JOIN hr_payslip as p on pl.slip_id = p.id \
                 LEFT JOIN hr_employee as emp on emp.id = p.employee_id \
-                WHERE pl.id in %s and p.employee_id = %s \
+                WHERE p.employee_id = %s \
                 GROUP BY rc.parent_id, pl.sequence, pl.id, pl.category_id,pl.name,p.date_to,rc.code \
-                ORDER BY pl.sequence, rc.parent_id''',(tuple(line_ids),emp_id))
-        sal = self.cr.fetchall()
+                ORDER BY pl.sequence, rc.parent_id''',([emp_id]))
+        salary = self.cr.fetchall()
 
-        for x in sal:
-            if x[0] not in salaries:
-                salaries[x[0]] = {}
-                salaries[x[0]].update({x[1]: {x[3]: x[2]}})
-            elif x[1] not in salaries[x[0]]:
-                salaries[x[0]][x[1]] = {}
-                salaries[x[0]][x[1]].update({x[3]: x[2]})
+        for category in salary:
+            if category[0] not in salaries:
+                salaries[category[0]] = {}
+                salaries[category[0]].update({category[1]: {category[3]: category[2]}})
+            elif category[1] not in salaries[category[0]]:
+                salaries[category[0]][category[1]] = {}
+                salaries[category[0]][category[1]].update({category[3]: category[2]})
             else:
-                salaries[x[0]][x[1]].update({x[3]: x[2]})
+                salaries[category[0]][category[1]].update({category[3]: category[2]})
 
         for code in ['BASIC', 'ALW', 'DED', 'GROSS', 'NET']:
             if code in salaries:
