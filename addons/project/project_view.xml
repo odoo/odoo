@@ -10,7 +10,7 @@
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
-        
+
         <act_window
             context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
             id="act_project_project_2_project_task_all"
@@ -19,7 +19,7 @@
             src_model="project.project"
             view_mode="kanban,tree,form,calendar,graph"
             view_type="form"/>
-       
+
         <!-- Project Read/Unread actions -->
         <record id="actions_server_project_unread" model="ir.actions.server">
             <field name="name">Mark unread</field>
