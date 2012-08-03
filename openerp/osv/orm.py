@@ -370,7 +370,7 @@ class browse_record(object):
                 else:
                     return attr
             else:
-                error_msg = "Field '%s' does not exist in object '%s'" % (name, self) 
+                error_msg = "Field '%s' does not exist in object '%s'" % (name, self)
                 self.__logger.warning(error_msg)
                 raise KeyError(error_msg)
 
@@ -705,7 +705,7 @@ class BaseModel(object):
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
         return _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
-    
+
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
         pass
@@ -895,7 +895,7 @@ class BaseModel(object):
                                     # If new class defines a constraint with
                                     # same function name, we let it override
                                     # the old one.
-                                    
+
                                     new[c2] = c
                                     exist = True
                                     break
@@ -1589,7 +1589,7 @@ class BaseModel(object):
     def user_has_groups(self, cr, uid, groups, context=None):
         """Return true if the user is at least member of one of the groups
            in groups_str. Typically used to resolve ``groups`` attribute
-           in view and model definitions. 
+           in view and model definitions.
 
            :param str groups: comma-separated list of fully-qualified group
                               external IDs, e.g.: ``base.group_user,base.group_system``
@@ -1632,7 +1632,7 @@ class BaseModel(object):
                  the field should be completely removed from the view, as it is
                  completely unavailable for non-members
 
-               :return: True if field should be included in the result of fields_view_get 
+               :return: True if field should be included in the result of fields_view_get
             """
             if node.tag == 'field' and node.get('name') in self._all_columns:
                 column = self._all_columns[node.get('name')].column
@@ -1900,7 +1900,7 @@ class BaseModel(object):
     def _get_default_calendar_view(self, cr, user, context=None):
         """ Generates a default calendar view by trying to infer
         calendar fields from a number of pre-set attribute names
-        
+
         :param cr: database cursor
         :param int user: user id
         :param dict context: connection context
@@ -1979,7 +1979,7 @@ class BaseModel(object):
 
         def raise_view_error(error_msg, child_view_id):
             view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
-            error_msg = error_msg % {'parent_xml_id': view.xml_id} 
+            error_msg = error_msg % {'parent_xml_id': view.xml_id}
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
                                  %  (child_view.xml_id, self._name, error_msg))
 
@@ -2015,7 +2015,7 @@ class BaseModel(object):
                 if all(node.get(attr) == spec.get(attr) \
                         for attr in spec.attrib
                             if attr not in ('position','version')):
-                    # Version spec should match parent's root element's version 
+                    # Version spec should match parent's root element's version
                     if spec.get('version') and spec.get('version') != source.get('version'):
                         return None
                     return node
@@ -2089,7 +2089,7 @@ class BaseModel(object):
                         raise_view_error("Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
                                             (tag, spec.get('version'), source.get('version')), inherit_id)
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
-                    
+
             return source
 
         def apply_view_inheritance(cr, user, source, inherit_id):
@@ -2304,7 +2304,7 @@ class BaseModel(object):
                                 or ``'='``.
            :param int limit: optional max number of records to return
            :rtype: list
-           :return: list of pairs ``(id,text_repr)`` for all matching records. 
+           :return: list of pairs ``(id,text_repr)`` for all matching records.
         """
         return self._name_search(cr, user, name, args, operator, context, limit)
 
@@ -2434,7 +2434,7 @@ class BaseModel(object):
         # This is useful to implement kanban views for instance, where all columns
         # should be displayed even if they don't contain any record.
 
-        # Grab the list of all groups that should be displayed, including all present groups 
+        # Grab the list of all groups that should be displayed, including all present groups
         present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
         all_groups = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
                                                   read_group_order=read_group_order,
@@ -2808,28 +2808,28 @@ class BaseModel(object):
 
     def _m2o_fix_foreign_key(self, cr, source_table, source_field, dest_model, ondelete):
         # Find FK constraint(s) currently established for the m2o field,
-        # and see whether they are stale or not 
+        # and see whether they are stale or not
         cr.execute("""SELECT confdeltype as ondelete_rule, conname as constraint_name,
                              cl2.relname as foreign_table
                       FROM pg_constraint as con, pg_class as cl1, pg_class as cl2,
                            pg_attribute as att1, pg_attribute as att2
-                      WHERE con.conrelid = cl1.oid 
-                        AND cl1.relname = %s 
-                        AND con.confrelid = cl2.oid 
-                        AND array_lower(con.conkey, 1) = 1 
-                        AND con.conkey[1] = att1.attnum 
-                        AND att1.attrelid = cl1.oid 
-                        AND att1.attname = %s 
-                        AND array_lower(con.confkey, 1) = 1 
-                        AND con.confkey[1] = att2.attnum 
-                        AND att2.attrelid = cl2.oid 
-                        AND att2.attname = %s 
+                      WHERE con.conrelid = cl1.oid
+                        AND cl1.relname = %s
+                        AND con.confrelid = cl2.oid
+                        AND array_lower(con.conkey, 1) = 1
+                        AND con.conkey[1] = att1.attnum
+                        AND att1.attrelid = cl1.oid
+                        AND att1.attname = %s
+                        AND array_lower(con.confkey, 1) = 1
+                        AND con.confkey[1] = att2.attnum
+                        AND att2.attrelid = cl2.oid
+                        AND att2.attname = %s
                         AND con.contype = 'f'""", (source_table, source_field, 'id'))
         constraints = cr.dictfetchall()
         if constraints:
             if len(constraints) == 1:
                 # Is it the right constraint?
-                cons, = constraints 
+                cons, = constraints
                 if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
                     or cons['foreign_table'] != dest_model._table:
                     _schema.debug("Table '%s': dropping obsolete FK constraint: '%s'",
@@ -3202,7 +3202,7 @@ class BaseModel(object):
 
     def _o2m_raise_on_missing_reference(self, cr, f):
         # TODO this check should be a method on fields.one2many.
-        
+
         other = self.pool.get(f._obj)
         if other:
             # TODO the condition could use fields_get_keys().
@@ -3710,7 +3710,7 @@ class BaseModel(object):
            the length of `ids`, and raise an appropriate exception if it does not.
         """
         if cr.rowcount != len(ids):
-            # Attempt to distinguish record rule restriction vs deleted records, 
+            # Attempt to distinguish record rule restriction vs deleted records,
             # to provide a more specific error message
             cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(ids),))
             if cr.rowcount != len(ids):
@@ -3777,7 +3777,7 @@ class BaseModel(object):
                     self._check_record_rules_result_count(cr, uid, sub_ids, operation, context=context)
 
     def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
-        """Call given workflow trigger as a result of a CRUD operation""" 
+        """Call given workflow trigger as a result of a CRUD operation"""
         wf_service = netsvc.LocalService("workflow")
         for res_id in ids:
             getattr(wf_service, trigger)(uid, self._name, res_id, cr)
@@ -3808,7 +3808,7 @@ class BaseModel(object):
         self.check_unlink(cr, uid)
 
         ir_property = self.pool.get('ir.property')
-        
+
         # Check if the records are used as default properties.
         domain = [('res_id', '=', False),
                   ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
@@ -4927,7 +4927,7 @@ class BaseModel(object):
 
         :return: map of ids to their fully qualified XML ID,
                  defaulting to an empty string when there's none
-                 (to be usable as a function field), 
+                 (to be usable as a function field),
                  e.g.::
 
                      { 'id': 'module.ext_id',
@@ -4944,7 +4944,7 @@ class BaseModel(object):
     # backwards compatibility
     get_xml_id = get_external_id
     _get_xml_ids = _get_external_ids
-    
+
     def _get_needaction_info(self, cr, uid, user_id, limit=None, order=None, domain=False, context=None):
         """Base method for needaction mechanism
            - see ir.needaction for actual implementation
@@ -4974,7 +4974,7 @@ class BaseModel(object):
             return [True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context)]
         else:
             return [False, 0]
-            
+
     # Transience
     def is_transient(self):
         """ Return whether the model is transient.
