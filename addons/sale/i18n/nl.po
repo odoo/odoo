@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-07-24 15:05+0000\n"
+"PO-Revision-Date: 2012-08-02 09:44+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-25 05:04+0000\n"
-"X-Generator: Launchpad (build 15679)\n"
+"X-Launchpad-Export-Date: 2012-08-03 06:21+0000\n"
+"X-Generator: Launchpad (build 15734)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -124,8 +124,8 @@ msgid ""
 "orders."
 msgstr ""
 "Om een ​​bevestigde verkooporder te verwijderen, moet u deze eerst "
-"annuleren! Om een verkooporder te annuleren, moet u eerst de gereleateerde "
-"leveringsopdrachten annuleren."
+"annuleren! Om een verkooporder te annuleren, moet u eerst de gerelateerde "
+"uitgaande levering annuleren."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -189,7 +189,7 @@ msgstr "Std. betalingstermijn"
 #. module: sale
 #: field:sale.config.picking_policy,deli_orders:0
 msgid "Based on Delivery Orders"
-msgstr "Gebaseerd op leveringsopdrachten"
+msgstr "Gebaseerd op uitgaande leveringen"
 
 #. module: sale
 #: field:sale.config.picking_policy,time_unit:0
@@ -332,14 +332,14 @@ msgstr ""
 "Het factureerbeleid wordt gebruikt om facturatie en leveringsopdrachten te "
 "synchroniseren.\n"
 "  - De 'Vooruitbetaling' keuze genereert eerst de factuur en genereert de "
-"leveringsopdracht na betaling van de factuur.\n"
-"  - De 'Leveren & Handmatig factureren' keuze maakt de leveringsopdracht "
+"uitgaande leveringen na betaling van de factuur.\n"
+"  - De 'Leveren & Handmatig factureren' keuze maakt de uitgaande leveringen "
 "direct en wacht met het genereren van een concept factuur totdat de "
 "gebruiker de 'Factureren' knop drukt.\n"
 "  - De 'Factuur van order na levering' keuze genereert de concept factuur "
 "gebaseerd op de verkooporder nadat alle verzamelijsten zijn verwerkt. \n"
-"  - De 'Factuur van leveringsopdracht' keuze wordt gebruikt om een factuur "
-"te maken gedurende het verzamel proces."
+"  - De 'Factuur van uitgaande leveringen' keuze wordt gebruikt om een "
+"factuur te maken gedurende het verzamel proces."
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
@@ -1144,7 +1144,7 @@ msgstr "Maak factuur opnieuw"
 #: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "Te factureren leveringsopdrachten"
+msgstr "Te factureren uitgaande leveringen"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -1651,7 +1651,7 @@ msgstr "Het bedrag zonder BTW."
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
 msgstr ""
-"U moet eerst alle leveringsopdrachten bij deze verkooporder annuleren."
+"U moet eerst alle uitgaande leveringen bij deze verkooporder annuleren."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
