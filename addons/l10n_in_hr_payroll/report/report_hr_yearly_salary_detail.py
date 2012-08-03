@@ -46,6 +46,7 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         self.total = 0.00
 
     def get_periods(self, form):
+        self.mnths =[]
 #       Get start year-month-date and end year-month-date
         first_year = int(form['date_from'][0:4])
         last_year = int(form['date_to'][0:4])
@@ -86,8 +87,9 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         #for Basic Salary
         res = self.cal_monthly_amt(form, obj.id)
         basic = res[0]
-        self.total += basic[0][len(basic[0])-1]
-        self.allow_list.append(basic[0])
+        if basic:
+            self.total += basic[0][len(basic[0])-1]
+            self.allow_list.append(basic[0])
 
         #for allowance
         allow = res[1]
@@ -95,8 +97,9 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         for i in range(1, len(allow)+1):
             self.allow_list.append(allow[i-1])
             self.total += allow[i-1][len(allow[i-1])-1]
-        self.total += gross[0][len(gross[0])-1]
-        self.allow_list.append(gross[0])
+        if gross:
+            self.total += gross[0][len(gross[0])-1]
+            self.allow_list.append(gross[0])
 
         #for Deduction
         deduct = res[2] 
@@ -104,8 +107,9 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         for i in range(1, len(deduct)+1):
             self.deduct_list.append(deduct[i-1])
             self.total -= deduct[i-1][len(deduct[i-1])-1]
-        self.total += net[0][len(net[0])-1]
-        self.deduct_list.append(net[0])
+        if net:
+            self.total += net[0][len(net[0])-1]
+            self.deduct_list.append(net[0])
         return None
 
     def cal_monthly_amt(self, form, emp_id):
@@ -185,11 +189,9 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         return result
 
     def salary_list(self, salaries):
-        cnt = 0
         cat_salary_all = []
         for category_name,amount in salaries.items():
             cat_salary = []
-            cnt += 1
             tot = 0.0
             cat_salary.append(category_name)
             for mnth in self.mnths:
@@ -205,7 +207,6 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
                     cat_salary.append('')
             cat_salary.append(tot)
             cat_salary_all.append(cat_salary)
-        cnt = 1
         return cat_salary_all
 
     def get_allow(self):
@@ -217,6 +218,6 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
     def get_total(self):
         return self.total
 
-report_sxw.report_sxw('report.salary.detail.byyear', 'yearly.salary.detail', 'hr_payroll/report/report_yearly_salary_detail.rml', parser=employees_yearly_salary_report, header='internal landscape')
+report_sxw.report_sxw('report.salary.detail.byyear', 'yearly.salary.detail', 'hr_payroll/report/report_hr_yearly_salary_detail.rml', parser=employees_yearly_salary_report, header='internal landscape')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
