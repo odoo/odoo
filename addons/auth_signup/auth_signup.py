@@ -34,7 +34,7 @@ class signup_signup(osv.TransientModel):
             'active': True,
         }
 
-        user_template_id = self.pool.get('ir.config_parameter').get_param(cr, uid, 'auth.signup_user_template_id', 0)
+        user_template_id = self.pool.get('ir.config_parameter').get_param(cr, uid, 'auth.signup_template_user_id', 0)
         if user_template_id:
             self.pool.get('res.users').copy(cr, 1, user_template_id, new_user, context=context)
         else:

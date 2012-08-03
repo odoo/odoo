@@ -16,5 +16,4 @@ class base_config_settings(osv.TransientModel):
     def set_signup(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context=context)
         icp = self.pool.get('ir.config_parameter')
-        icp.set_param(cr, uid, 'auth.signup_template_user_id', config.signup_user_template_id.id)
-
+        icp.set_param(cr, uid, 'auth.signup_template_user_id', config.auth_signup_template_user_id.id)
