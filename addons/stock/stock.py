@@ -2801,6 +2801,14 @@ class stock_inventory_line(osv.osv):
         'state': fields.related('inventory_id','state',type='char',string='Status',readonly=True),
     }
 
+    def _default_stock_location(self, cr, uid, context=None):
+        stock_location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
+        return stock_location.id
+
+    _defaults = {
+        'location_id': _default_stock_location
+    }
+
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, to_date=False):
         """ Changes UoM and name if product_id changes.
         @param location_id: Location id
@@ -2832,8 +2840,20 @@ class stock_warehouse(osv.osv):
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage','=','internal')]),
         'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True, domain=[('usage','<>','view')]),
     }
+
+    def _default_lot_input_stock_id(self, cr, uid, context=None):
+        lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
+        return lot_input_stock.id
+
+    def _default_lot_output_id(self, cr, uid, context=None):
+        lot_output = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_output')
+        return lot_output.id
+
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
+        'lot_input_id': _default_lot_input_stock_id,
+        'lot_stock_id': _default_lot_input_stock_id,
+        'lot_output_id': _default_lot_output_id,
     }
 
 stock_warehouse()

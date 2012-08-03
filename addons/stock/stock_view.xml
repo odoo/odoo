@@ -626,9 +626,9 @@
                     <h1><field name="name"/></h1>
                     <group>
                         <group>
-                            <field name="lot_input_id"/>
-                            <field name="lot_stock_id"/>
-                            <field name="lot_output_id"/>
+                            <field name="lot_input_id" groups="stock.group_locations"/>
+                            <field name="lot_stock_id" groups="stock.group_locations"/>
+                            <field name="lot_output_id" groups="stock.group_locations"/>
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -645,9 +645,9 @@
             <field name="arch" type="xml">
                 <tree string="Warehouse">
                     <field name="name"/>
-                    <field name="lot_input_id"/>
-                    <field name="lot_stock_id"/>
-                    <field name="lot_output_id"/>
+                    <field name="lot_input_id" groups="stock.group_locations"/>
+                    <field name="lot_stock_id" groups="stock.group_locations"/>
+                    <field name="lot_output_id" groups="stock.group_locations"/>
                     <field name="partner_id"/>
                 </tree>
             </field>
@@ -734,7 +734,7 @@
                     <group>
                         <group>
                             <field name="backorder_id" readonly="1"/>
-                            <field name="invoice_state" string="Invoice Control" groups="account.group_account_invoice"/>
+                            <field name="invoice_state" string="Invoice Control" groups="account.group_account_invoice" attrs="{'invisible':[('invoice_state', '=', 'none')]}"/>
                             <field name="stock_journal_id" widget="selection" groups="account.group_account_user"/>
                         </group>
                         <group>
