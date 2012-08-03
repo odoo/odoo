@@ -68,24 +68,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet">
-                    <group>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <field name="user_id"/>
-                        <field name="account_id"/>
-                    </group>
-                    <newline/>
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="account_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Analytic account" icon="terp-folder-green" domain="[]" context="{'group_by':'account_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
             </field>
-
         </record>
         
         <record id="account_analytic_account_timesheet_form" model="ir.ui.view">

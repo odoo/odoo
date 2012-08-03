@@ -24,7 +24,7 @@
     'version': '1.0',
     'category': 'Human Resources',
     "sequence": 24,
-    "summary": "Job Descriptions, Recruitment Process",
+    "summary": "Recruitment Process, Job Descriptions",
     'description': """
 Manages job positions and the recruitment process.
 ==================================================

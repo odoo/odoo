@@ -27,7 +27,7 @@
     "website" : "http://www.openerp.com",
     "category" : "Manufacturing",
     "sequence": 18,
-    "summary": "Manufacturing, Production, Bill of Materials",
+    "summary": "Manufacturing Orders, Bill of Materials, Routing",
     "images" : ["images/bill_of_materials.jpeg", "images/manufacturing_order.jpeg", "images/planning_manufacturing_order.jpeg", "images/production_analysis.jpeg", "images/production_dashboard.jpeg","images/routings.jpeg","images/work_centers.jpeg"],
     "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
@@ -36,11 +36,11 @@ This is the base module to manage the manufacturing process in OpenERP.
 
 Features:
 ---------
-    * Make to Stock / Make to Order (by line)
+    * Make to Stock/Make to Order (by line)
     * Multi-level BoMs, no limit
     * Multi-level routing, no limit
     * Routing and work center integrated with analytic accounting
-    * Scheduler computation periodically / Just In Time module
+    * Scheduler computation periodically/Just In Time module
     * Multi-pos, multi-warehouse
     * Different reordering policies
     * Cost method by product: standard price, average price
@@ -59,12 +59,12 @@ Reports provided by this module:
     * Load forecast on Work Centers
     * Print a production order
     * Stock forecasts
+    * Cost Structure
 
 Dashboard provided by this module:
 ----------------------------------
-    * List of next production orders
     * List of procurements in exception
-    * Graph of work center load
+    * List of next production orders
     * Graph of stock value variation
     """,
     'init_xml': [],

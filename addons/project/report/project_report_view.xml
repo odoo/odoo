@@ -58,60 +58,32 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
-                    <group>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <field name="date_deadline"/>
-                        <separator orientation="vertical"/>
-                        <filter string="New"
-                                icon="terp-document-new"
-                                domain="[('state','=','draft')]"
-                                help = "New tasks"/>
-                        <filter string="In progress"
-                                icon="terp-check"
-                                domain="[('state', '=' ,'open')]"
-                                help = "In progress tasks"/>
-                        <filter string="Pending"
-                                icon="terp-gtk-media-pause"
-                                domain="[('state','=','pending')]"
-                                help = "Pending tasks"/>
-                        <filter string="Done"
-                                icon="terp-dialog-close"
-                                name="done"
-                                domain="[('state','=','done')]"/>
-                        <filter icon="terp-folder-violet"
-                                string="My Projects"
-                                help="My Projects" domain="[('project_id.user_id','=',uid)]"/>
-                        <filter icon="terp-personal"
-                                string="My Task"
-                                help = "My tasks"
-                                domain="[('user_id','=',uid)]" />
-                        <filter icon="terp-personal-"
-                                string="Non Assigned Tasks to users"
-                                help="Non Assigned Tasks to users"
-                                domain="[('user_id','=',False)]"/>
-                         <separator orientation="vertical"/>
-                         <field name="project_id"/>
-                         <field name="user_id" widget="selection"/>
-                         <field name="partner_id" />
-                    </group>
-                    <newline/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="date_deadline"/>
+                    <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help = "New tasks"/>
+                    <filter string="In progress" icon="terp-check" domain="[('state', '=' ,'open')]" help = "In progress tasks"/>
+                    <filter string="Pending" icon="terp-gtk-media-pause" domain="[('state','=','pending')]" help = "Pending tasks"/>
+                    <filter string="Done" icon="terp-dialog-close" name="done" domain="[('state','=','done')]"/>
+                    <separator/>
+                    <filter icon="terp-folder-violet" string="My Projects" help="My Projects" domain="[('project_id.user_id','=',uid)]"/>
+                    <separator/>
+                    <filter icon="terp-personal" string="My Task" help = "My tasks" domain="[('user_id','=',uid)]" />
+                    <filter icon="terp-personal-" string="Non Assigned Tasks to users" help="Non Assigned Tasks to users" domain="[('user_id','=',False)]"/>
+                    <field name="project_id"/>
+                    <field name="user_id"/>
+                    <field name="partner_id" />
                     <group expand="0" string="Extended Filters...">
                         <field name="priority"/>
-                        <separator orientation="vertical"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
-                    <newline/>
                     <group expand="1" string="Group By...">
                         <filter string="Project" name="project" icon="terp-folder-violet" context="{'group_by':'project_id'}"/>
                         <filter string="Task" icon="terp-stock_align_left_24" context="{'group_by':'name'}" />
-                        <separator orientation="vertical"/>
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Assigned to" name="User" icon="terp-personal" context="{'group_by':'user_id'}" />
-                        <separator orientation="vertical"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                         <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
-                        <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Creation Date"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Creation Date"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Creation Date"/>

@@ -25,13 +25,14 @@
     'version': '1.0',
     'category': 'Customer Relationship Management',
     "sequence": 2,
-    "summary": "Agenda, Leads, Opportunities",
+    "summary": "Leads, Opportunities, Agenda",
     'description': """
 The generic OpenERP Customer Relationship Management.
 =====================================================
 
 This system enables a group of people to intelligently and efficiently manage
-leads, opportunities, meeting, phonecall etc.
+leads, opportunities, meeting, phonecall.
+
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
@@ -42,16 +43,19 @@ specific methods and lots of other actions based on your own enterprise rules.
 The greatest thing about this system is that users don't need to do anything
 special. They can just send email to the request tracker. OpenERP will take
 care of thanking them for their message, automatically routing it to the
-appropriate staff, and make sure all future correspondence gets to the right
+appropriate staff and make sure all future correspondence gets to the right
 place.
 
 The CRM module has a email gateway for the synchronisation interface
 between mails and OpenERP.
 
 Creates a dashboard for CRM that includes:
-    * Opportunities by Categories (graph)
-    * Opportunities by Stage (graph)
+------------------------------------------
+    * List of New Leads
+    * List of My Opportunities
+    * List of My Next Meetings
     * Planned Revenue by Stage and User (graph)
+    * Opportunities by Stage (graph)
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
