@@ -103,7 +103,7 @@
                                     <field name="tax_id" 
                                         on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
                                         widget="selection" nolabel="1"
-					placeholder="select tax..."
+					placeholder="Select tax..."
                                         domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
                                     <field name="tax_amount" nolabel="1"/>
                                     <div class="oe_subtotal_footer_separator">
@@ -262,7 +262,7 @@
                                     <field name="tax_id" 
                                         on_change="onchange_price(line_dr_ids, tax_id, partner_id)"
                                         widget="selection" nolabel="1"
-					placeholder="select tax..."
+					placeholder="Select tax..."
 
                                         domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"
                                         />
