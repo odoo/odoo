@@ -69,7 +69,7 @@ class sale_configuration(osv.osv_memory):
         'group_sale_delivery_address': fields.boolean("allow a different address for delivery and invoicing ",
             implied_group='sale.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a sale order."),
-        'group_mrp_properties': fields.boolean('properties on lines',
+        'group_mrp_properties': fields.boolean('product properties on order lines',
             implied_group='sale.group_mrp_properties',
             help="Allows you to tag sale order lines with properties."),
         'group_discount_per_so_line': fields.boolean("allow setting a discount on the sale order lines",
