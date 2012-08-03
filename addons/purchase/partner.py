@@ -24,13 +24,21 @@ from osv import fields, osv
 class res_partner(osv.osv):
     _name = 'res.partner'
     _inherit = 'res.partner'
-    
+
     def _purchase_order_count(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for partner in self.browse(cr, uid, ids, context=context):
             res[partner.id] = len(partner.purchase_order_ids)
         return res
-    
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+
+        default.update({'purchase_order_ids': []})
+
+        super(res_partner, self).copy(cr, uid, id, default=default, context=context)
+
     _columns = {
         'property_product_pricelist_purchase': fields.property(
           'product.pricelist',
