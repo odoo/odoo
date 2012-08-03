@@ -122,6 +122,7 @@ start the server specifying the --unaccent flag.
 """
 
 import logging
+import traceback
 
 from openerp.tools import flatten, reverse_enumerate
 import fields
@@ -426,6 +427,7 @@ class expression(object):
 
             # If the field is _inherits'd, search for the working_table,
             # and extract the field.
+            field = None
             if field_path[0] in table._inherit_fields:
                 while True:
                     field = working_table._columns.get(field_path[0])
@@ -474,6 +476,13 @@ class expression(object):
                     # the function field doesn't provide a search function and doesn't store
                     # values in the database, so we must ignore it : we generate a dummy leaf
                     self.__exp[i] = TRUE_LEAF
+                    _logger.error(
+                        "The field '%s' (%s) can not be searched: non-stored "
+                        "function field without fnct_search",
+                        field.string, left)
+                    # avoid compiling stack trace if not needed
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        _logger.debug(''.join(traceback.format_stack()))
                 else:
                     subexp = field.search(cr, uid, table, left, [self.__exp[i]], context=context)
                     if not subexp:
