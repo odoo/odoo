@@ -86,6 +86,7 @@ openerp.web_linkedin = function(instance) {
         init: function(parent, text) {
             this._super(parent);
             this.text = text;
+            this.limit = 10;
         },
         start: function() {
             this._super();
@@ -96,8 +97,30 @@ openerp.web_linkedin = function(instance) {
             });
         },
         authentified: function() {
-            IN.API.PeopleSearch().params({"last-name": this.text}).result(function(a, b, c) {
-                console.log("result", a);
+            var self = this;
+            cdef = $.Deferred();
+            pdef = $.Deferred();
+            IN.API.Raw(_.str.sprintf("company-search?keywords=%s&count=%d", encodeURI(this.text), this.limit)).result(function (result) {
+                cdef.resolve(result);
+            });
+            IN.API.PeopleSearch().params({"keywords": this.text, "count": this.limit}).result(function(result) {
+                pdef.resolve(result);
+            });
+            return $.when(cdef, pdef).then(function(companies, people) {
+                var lst = companies.companies.values;
+                var plst = people.people.values;
+                lst = _.initial(lst, _.min([self.limit / 2, plst.length]));
+                _.map(lst, function(el) {
+                    el.__type = "company";
+                    return el;
+                });
+                plst = _.first(people.people.values, self.limit - lst.length)
+                _.map(plst, function(el) {
+                    el.__type = "people";
+                    return el;
+                });
+                lst = lst.concat(plst);
+                console.log("found", lst.length, lst);
             });
         },
     });
