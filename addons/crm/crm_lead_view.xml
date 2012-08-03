@@ -151,7 +151,8 @@
                         </group>
                         <group>
                             <field name="partner_name" string="Company Name"/>
-                            <field name="partner_id" string="Customer"/>
+                            <field name="partner_id" string="Customer" 
+                                on_change="on_change_partner(partner_id)" />
                             <label for="street" string="Address"/>
                             <div>
                                 <field name="street" placeholder="Street..."/>
