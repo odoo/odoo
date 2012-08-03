@@ -166,6 +166,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             var action = state.client_action;
             if(_.isString(action)) {
                 action = {
+                    type: 'ir.actions.client',
                     tag: action,
                     params: state,
                 };
