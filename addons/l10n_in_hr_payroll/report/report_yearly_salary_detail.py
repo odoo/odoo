@@ -43,7 +43,6 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         self.mnths = []
         self.allow_list = []
         self.deduct_list = []
-        self.month_total_list = []
         self.total = 0.00
 
     def get_periods(self, form):
