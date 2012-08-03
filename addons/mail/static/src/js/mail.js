@@ -373,7 +373,8 @@ openerp.mail = function(session) {
                 action_buttons: false,
                 pager: false,
                 initial_mode: 'edit',
-                });
+                disable_autofocus: true,
+            });
             // add the form, bind events, activate the form
             var msg_node = this.$element.find('div.oe_mail_msg_content');
             return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
