@@ -176,6 +176,10 @@
                                 <field name="module_account_payment" class="oe_inline"/>
                                 <label for="module_account_payment"/>
                             </div>
+                            <div>
+                                <field name="module_account_check_writing" class="oe_inline"/>
+                                <label for="module_account_check_writing"/>
+                            </div>
                         </div>
                     </group>
                     <separator string="Bank &amp; Cash"/>
@@ -196,6 +200,10 @@
                             <div>
                                 <label for="paypal_account"/>
                                 <field name="paypal_account" placeholder="sales@openerp.com" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="company_footer"/>:
+                                <field name="company_footer" class="oe_inline"/>
                             </div>
                         </div>
                     </group>
@@ -239,18 +247,10 @@
                         <label for="id" string="Purchase"/>
                         <div name="analytic_account_purchase"></div>
                     </group>
-
                     <field name="sale_journal_id" invisible="1"/>
                     <field name="sale_refund_journal_id" invisible="1"/>
                     <field name="purchase_journal_id" invisible="1"/>
                     <field name="purchase_refund_journal_id" invisible="1"/>
-
-                    <!-- Move those fields to the right place or delete them (from xml AND py if they are not necessary) -->
-                    <separator string="No idea where these should go"/>
-                    <group>
-                        <field name="company_footer"/>
-                        <field name="module_account_check_writing"/>
-                    </group>
                 </form>
             </field>
         </record>

@@ -79,7 +79,7 @@ class account_config_settings(osv.osv_memory):
         'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier credit note sequence'),
         'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier credit note number'),
 
-        'module_account_check_writing': fields.boolean('check writing',
+        'module_account_check_writing': fields.boolean('pay your supplier by check',
             help="""This allows you to check writing and printing.
                 This installs the module account_check_writing."""),
         'module_account_accountant': fields.boolean('accountant features',
