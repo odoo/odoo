@@ -37,10 +37,10 @@ class purchase_config_settings(osv.osv_memory):
             implied_group='product.group_purchase_pricelist',
             help="""Allows to manage different prices based on rules per category of Supplier.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("manage different units of measures for products",
+        'group_uom':fields.boolean("manage different units of measure for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_purchase_delivery_address': fields.boolean("allow a different address for incoming products and invoicing",
+        'group_purchase_delivery_address': fields.boolean("allow a different address for incoming products and invoicings",
             implied_group='purchase.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a purchase order."),
         'module_purchase_analytic_plans': fields.boolean('use multiple analytic accounts on orders',
@@ -82,7 +82,7 @@ class account_config_settings(osv.osv_memory):
     _columns = {
         'module_purchase_analytic_plans': fields.boolean('use multiple analytic accounts on orders',
             help="""This allows install module purchase_analytic_plans."""),
-        'group_analytic_account_for_purchases': fields.boolean('Analytic Accounting for Purchases',
+        'group_analytic_account_for_purchases': fields.boolean('analytic accounting for purchases',
             implied_group='purchase.group_analytic_accounting',
             help="Allows you to specify an analytic account on purchase orders."),
     }

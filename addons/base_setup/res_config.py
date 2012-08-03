@@ -30,7 +30,7 @@ class base_config_settings(osv.osv_memory):
                 This installs the module multi_company."""),
         'module_portal': fields.boolean('activate customer portal',
             help="""The portal will give access to a series of documents for your  customers; his quotations, his invoices, his projects, etc."""),
-        'module_share': fields.boolean('allow sharing documents to',
+        'module_share': fields.boolean('allow documents sharing',
             help="""As an example, you will be able to share a project or some tasks to  your customers, or quotes/sales to several persons at your customer  company, or your agenda availabilities to your contacts."""),
     }
 
@@ -54,14 +54,14 @@ class sale_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
     _columns = {
         'module_crm': fields.boolean('CRM'),
-        'module_plugin_thunderbird': fields.boolean('Thunderbird plugin.',
+        'module_plugin_thunderbird': fields.boolean('enable Thunderbird plugin',
             help="""The plugin allows you archive email and its attachments to the selected
                 OpenERP objects. You can select a partner, or a lead and
                 attach the selected mail as a .eml file in
                 the attachment of a selected record. You can create documents for CRM Lead,
                 Partner from the selected emails.
                 This installs the module plugin_thunderbird."""),
-        'module_plugin_outlook': fields.boolean('Outlook plugin',
+        'module_plugin_outlook': fields.boolean('enable Outlook plugin',
             help="""The Outlook plugin allows you to select an object that you would like to add
                 to your email and its attachments from MS Outlook. You can select a partner,
                 or a lead object and archive a selected

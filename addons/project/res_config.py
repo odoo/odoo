@@ -41,13 +41,13 @@ class project_configuration(osv.osv_memory):
                 the timesheet line entries for particular date and user, with the effect of creating,
                 editing and deleting either ways.
                 This installs the module project_timesheet."""),
-        'module_project_long_term': fields.boolean("manage resources palnning on gantt view",
+        'module_project_long_term': fields.boolean("manage resources planning on gantt view",
             help="""A long term project management module that tracks planning, scheduling, and resource allocation.
                 This installs the module project_long_term."""),
-        'module_project_issue': fields.boolean("track issues and bug",
+        'module_project_issue': fields.boolean("track issues and bugs",
             help="""Provides management of issues/bugs in projects.
                 This installs the module project_issue."""),
-        'time_unit': fields.many2one('product.uom', 'working time unit', required=True,
+        'time_unit': fields.many2one('product.uom', 'Working time unit', required=True,
             help="""This will set the unit of measure used in projects and tasks."""),
         'module_project_issue_sheet': fields.boolean("invoice working time on issues",
             help="""Provides timesheet support for the issues/bugs management in project.

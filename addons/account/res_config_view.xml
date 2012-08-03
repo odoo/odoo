@@ -21,6 +21,7 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
+
                     <field name="has_default_company" invisible="1" />
                     <field name="has_chart_of_accounts" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
@@ -42,16 +43,18 @@
                             </div>
                         </div>
                     </group>
+                    <separator string="Chart of Account and Fiscal Year"/>
                     <group attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
-                        <label for="id" string="Select Chart"/>
+                        <label for="id" string="Chart of Account"/>
                         <div>
                             <div>
+                                <label for="chart_template_id"/>
                                 <field name="chart_template_id"
                                     widget="selection"
                                     domain="[('visible','=', True)]"
                                     on_change="onchange_chart_template_id(chart_template_id)"
                                     class="oe_inline"/>
-                                <button string="Install More Chart Templates"
+                                <button string="Install more chart templates"
                                     icon="gtk-go-forward"
                                     name="%(open_account_charts_modules)d"
                                     type="action"
@@ -100,52 +103,16 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Accounting Configuration"/>
+                    <separator string="eInvoicing &amp; Payments"/>
                     <group>
-                        <label for="id" string="Configuration"/>
-                        <div name="account_config">
+                        <label for="id" string="Customer"/>
+                        <div>
                             <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
                                 <label for="default_sale_tax"/>
                                 <field name="default_sale_tax"
                                     domain="[('type_tax_use','=','sale'), ('company_id','=',company_id)]"
                                     class="oe_inline"/>
                             </div>
-                            <div>
-                                <field name="module_account_accountant" class="oe_inline"/>
-                                <label for="module_account_accountant"/>
-                            </div>
-                            <div>
-                                <label for="currency_id"/>
-                                <field name="currency_id" class="oe_inline"/>
-                            </div>
-                            <div>
-                                <label for="decimal_precision"/>
-                                <field name="decimal_precision" class="oe_inline"/>
-                            </div>
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                                <label for="default_purchase_tax"/>
-                                <field name="default_purchase_tax"
-                                    domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]"
-                                    class="oe_inline"/>
-                            </div>
-                            <div>
-                                <label for="tax_calculation_rounding_method"/>
-                                <field name="tax_calculation_rounding_method" class="oe_inline"/>
-                            </div>
-                            <div>
-                                <field name="module_account_asset" class="oe_inline"/>
-                                <label for="module_account_asset"/>
-                            </div>
-                            <div>
-                                <field name="module_account_budget" class="oe_inline"/>
-                                <label for="module_account_budget"/>
-                            </div>
-                        </div>
-                    </group>
-                    <separator string="Invoices"/>
-                    <group>
-                        <label for="id" string="Customer Settings"/>
-                        <div>
                             <div>
                                 <label for="sale_sequence_next"/>
                                 <field name="sale_sequence_prefix"
@@ -165,6 +132,10 @@
                                     attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
                             </div>
                             <div>
+                                <field name="group_proforma_invoices" class="oe_inline"/>
+                                <label for="group_proforma_invoices"/>
+                            </div>
+                            <div>
                                 <field name="module_account_voucher" class="oe_inline"/>
                                 <label for="module_account_voucher"/>
                             </div>
@@ -172,13 +143,17 @@
                                 <field name="module_account_followup" class="oe_inline"/>
                                 <label for="module_account_followup"/>
                             </div>
-                            <div>
-                                <field name="group_proforma_invoices" class="oe_inline"/>
-                                <label for="group_proforma_invoices"/>
-                            </div>
                         </div>
-                        <label for="id" string="Supplier Settings"/>
+                    </group>
+                    <group>
+                        <label for="id" string="Supplier"/>
                         <div name="other_cofing">
+                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                                <label for="default_purchase_tax"/>
+                                <field name="default_purchase_tax"
+                                    domain="[('type_tax_use','=','purchase'), ('company_id','=',company_id)]"
+                                    class="oe_inline"/>
+                            </div>
                             <div>
                                 <label for="purchase_sequence_next"/>
                                 <field name="purchase_sequence_prefix"
@@ -203,22 +178,15 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Electronic Payments"/>
-                    <group>
-                        <label for="id" string="Payment Settings"/>
-                        <div>
-                            <div>
-                                <label for="paypal_account"/>
-                                <field name="paypal_account" placeholder="sales@openerp.com" class="oe_inline"/>
-                            </div>
-                        </div>
-                    </group>
                     <separator string="Bank &amp; Cash"/>
+                    <div style="color:grey">
+                        Bank accounts displays on reports: IBAN: XX12 3456 7890 1234 5678 - SWIFT: SWIFTCODE - VAT: Company vat number
+                    </div>
                     <group>
                         <label for="id" string="Configuration"/>
                         <div>
                             <div>
-                                <label string="Configure Bank Accounts"/>
+                                <label string="Configure your bank accounts"/>
                                 <button name="%(action_bank_tree)d"
                                     string="Configure"
                                     icon="gtk-go-forward"
@@ -226,24 +194,63 @@
                                     class="oe_inline oe_link"/>
                             </div>
                             <div>
-                                <label for="company_footer"/>
-                                <field name="company_footer" class="oe_inline"/>
+                                <label for="paypal_account"/>
+                                <field name="paypal_account" placeholder="sales@openerp.com" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="Accounting &amp; Finance"/>
+                    <group>
+                        <label for="id" string="Options"/>
+                        <div name="account_config">
+                            <div>
+                                <label for="currency_id"/>
+                                <field name="currency_id" class="oe_inline"/>
                             </div>
                             <div>
-                                <field name="module_account_check_writing" class="oe_inline"/>
-                                <label for="module_account_check_writing"/>
+                                <label for="decimal_precision"/>
+                                <field name="decimal_precision" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="tax_calculation_rounding_method"/>
+                                <field name="tax_calculation_rounding_method" class="oe_inline"/>
+                            </div>
+                        </div>
+                        <label for="id" string="Features"/>
+                        <div>
+                            <div>
+                                <field name="module_account_accountant" class="oe_inline"/>
+                                <label for="module_account_accountant"/>
+                            </div>
+                            <div>
+                                <field name="module_account_asset" class="oe_inline"/>
+                                <label for="module_account_asset"/>
+                            </div>
+                            <div>
+                                <field name="module_account_budget" class="oe_inline"/>
+                                <label for="module_account_budget"/>
                             </div>
                         </div>
                     </group>
                     <separator name="analytic_account" string="Analytic Accounting" invisible="1"/>
                     <group name="analytic_account" invisible="1">
-                        <label for="id" string="Settings"/>
-                        <div name="analytic_account"/>
+                        <label for="id" string="Sale"/>
+                        <div name="analytic_account_sale"></div>
+                        <label for="id" string="Purchase"/>
+                        <div name="analytic_account_purchase"></div>
                     </group>
+
                     <field name="sale_journal_id" invisible="1"/>
                     <field name="sale_refund_journal_id" invisible="1"/>
                     <field name="purchase_journal_id" invisible="1"/>
                     <field name="purchase_refund_journal_id" invisible="1"/>
+
+                    <!-- Move those fields to the right place or delete them (from xml AND py if they are not necessary) -->
+                    <separator string="No idea where these should go"/>
+                    <group>
+                        <field name="company_footer"/>
+                        <field name="module_account_check_writing"/>
+                    </group>
                 </form>
             </field>
         </record>

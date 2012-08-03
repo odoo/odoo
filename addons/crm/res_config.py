@@ -26,10 +26,10 @@ class crm_configuration(osv.osv_memory):
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'fetchmail_lead': fields.boolean("create leades from incoming mails",
+        'fetchmail_lead': fields.boolean("create leads from incoming mails",
             fetchmail_model='crm.lead', fetchmail_name='Incoming Leads',
             help="""Allows you to configure your incoming mail server, and create leads from incoming emails."""),
-        'module_crm_caldav': fields.boolean("Applications with Caldev protocol",
+        'module_crm_caldav': fields.boolean("applications with Caldav protocol",
             help="""Use protocol caldav to synchronize meetings with other calendar applications (like Sunbird).
                 This installs the module crm_caldav."""),
         'module_import_sugarcrm': fields.boolean("SugarCRM",

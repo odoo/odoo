@@ -44,7 +44,7 @@ class mrp_config_settings(osv.osv_memory):
         'module_mrp_operations': fields.boolean("allow detailed planning of work order",
             help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
                 This installs the module mrp_operations."""),
-        'module_mrp_subproduct': fields.boolean("produce several prouducts from one manufacturing order",
+        'module_mrp_subproduct': fields.boolean("produce several products from one manufacturing order",
             help="""You can configure sub-products in the bill of material.
                 Without this module: A + B + C -> D.
                 With this module: A + B + C -> D + E.
@@ -59,7 +59,7 @@ class mrp_config_settings(osv.osv_memory):
                 For example to manage production made by your suppliers (sub-contracting).
                 To achieve this, set the assembled product which is sub-contracted to "No Auto-Picking"
                 and put the location of the supplier in the routing of the assembly operation.
-                This installs the module stock_no_autopicking."""),                
+                This installs the module stock_no_autopicking."""),
         'group_mrp_routings': fields.boolean("manage routings and work orders ",
             implied_group='mrp.group_mrp_routings',
             help="""Routings allow you to create and manage the manufacturing operations that should be followed
@@ -74,7 +74,7 @@ class mrp_config_settings(osv.osv_memory):
                     * Manufacturer Product Name
                     * Manufacturer Product Code
                     * Product Attributes.
-                This installs the module product_manufacturer."""),        
+                This installs the module product_manufacturer."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
