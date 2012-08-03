@@ -116,12 +116,9 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
 
         result = []
         salaries = {}
-        tot = 0.0
+        total = 0.0
 
-        payslip_line_obj = self.pool.get('hr.payslip.line')
-
-        line_ids = payslip_line_obj.search(self.cr, self.uid, [], context=self.context)
-        lines  = payslip_line_obj.browse(self.cr, self.uid, line_ids, context=self.context)
+        line_ids = self.pool.get('hr.payslip.line').search(self.cr, self.uid, [], context=self.context)
 
         self.cr.execute('''SELECT rc.code, pl.name, sum(pl.total), \
                 to_char(date_to,'mm-yyyy') as to_date  FROM hr_payslip_line as pl \
@@ -134,51 +131,14 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         sal = self.cr.fetchall()
 
         for x in sal:
-            if x[0] == 'BASIC':
-                if x[0] not in salaries:
-                    salaries[x[0]] = {}
-                    salaries[x[0]].update({x[1]: {x[3]: x[2]}})
-                elif x[1] not in salaries[x[0]]:
-                    salaries[x[0]][x[1]] = {}
-                    salaries[x[0]][x[1]].update({x[3]: x[2]})
-                else:
-                    salaries[x[0]][x[1]].update({x[3]: x[2]})
-            if x[0] == 'ALW':
-                if x[0] not in salaries:
-                    salaries[x[0]] = {}
-                    salaries[x[0]].update({x[1]: {x[3]: x[2]}})
-                elif x[1] not in salaries[x[0]]:
-                    salaries[x[0]][x[1]] = {}
-                    salaries[x[0]][x[1]].update({x[3]: x[2]})
-                else:
-                    salaries[x[0]][x[1]].update({x[3]: x[2]})
-            if x[0] == 'DED':
-                if x[0] not in salaries:
-                    salaries[x[0]] = {}
-                    salaries[x[0]].update({x[1]: {x[3]: x[2]}})
-                elif x[1] not in salaries[x[0]]:
-                    salaries[x[0]][x[1]] = {}
-                    salaries[x[0]][x[1]].update({x[3]: x[2]})
-                else:
-                    salaries[x[0]][x[1]].update({x[3]: x[2]})
-            if x[0] == 'GROSS':
-                if x[0] not in salaries:
-                    salaries[x[0]] = {}
-                    salaries[x[0]].update({x[1]: {x[3]: x[2]}})
-                elif x[1] not in salaries[x[0]]:
-                    salaries[x[0]][x[1]] = {}
-                    salaries[x[0]][x[1]].update({x[3]: x[2]})
-                else:
-                    salaries[x[0]][x[1]].update({x[3]: x[2]})
-            if x[0] == 'NET':
-                if x[0] not in salaries:
-                    salaries[x[0]] = {}
-                    salaries[x[0]].update({x[1]: {x[3]: x[2]}})
-                elif x[1] not in salaries[x[0]]:
-                    salaries[x[0]][x[1]] = {}
-                    salaries[x[0]][x[1]].update({x[3]: x[2]})
-                else:
-                    salaries[x[0]][x[1]].update({x[3]: x[2]})
+            if x[0] not in salaries:
+                salaries[x[0]] = {}
+                salaries[x[0]].update({x[1]: {x[3]: x[2]}})
+            elif x[1] not in salaries[x[0]]:
+                salaries[x[0]][x[1]] = {}
+                salaries[x[0]][x[1]].update({x[3]: x[2]})
+            else:
+                salaries[x[0]][x[1]].update({x[3]: x[2]})
 
         for code in ['BASIC', 'ALW', 'DED', 'GROSS', 'NET']:
             if code in salaries:
@@ -192,7 +152,7 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         cat_salary_all = []
         for category_name,amount in salaries.items():
             cat_salary = []
-            tot = 0.0
+            total = 0.0
             cat_salary.append(category_name)
             for mnth in self.mnths:
                 if mnth <> 'None':
@@ -200,12 +160,12 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
                         mnth = '0' + str(mnth)
                     if mnth in amount and amount[mnth]:
                         cat_salary.append(amount[mnth])
-                        tot += amount[mnth]
+                        total += amount[mnth]
                     else:
                         cat_salary.append(0.00)
                 else:
                     cat_salary.append('')
-            cat_salary.append(tot)
+            cat_salary.append(total)
             cat_salary_all.append(cat_salary)
         return cat_salary_all
 
