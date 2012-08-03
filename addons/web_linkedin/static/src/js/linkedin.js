@@ -169,10 +169,9 @@ openerp.web_linkedin = function(instance) {
             });
             if (this.data.__type === "company") {
                 this.$("h3").text(this.data.name);
-                //IN.API.Raw(_.str.sprintf("companies/%d:(logo-url)", this.data.id)).result(function (result) {
-                //    self.$("img").attr("src", result.logoUrl);
-                //});
-                self.$("img").attr("src", "http://m3.licdn.com/media/p/2/000/03b/36c/283399d.png");
+                IN.API.Raw(_.str.sprintf("companies/%d:(logo-url)", this.data.id)).result(function (result) {
+                    self.$("img").attr("src", result.logoUrl);
+                });
             } else { // people
                 this.$("h3").text(_.str.sprintf("%s %s", this.data.firstName, this.data.lastName));
             }
