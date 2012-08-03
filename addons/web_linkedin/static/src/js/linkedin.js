@@ -82,7 +82,11 @@ openerp.web_linkedin = function(instance) {
             });
         },
         selected_entity: function(entity) {
-            debugger;
+            if (entity.__type === "company") {
+                
+            } else { //people
+                
+            }
         },
     });
     instance.web.form.widgets.add('linkedin', 'instance.web_linkedin.Linkedin');
@@ -136,7 +140,7 @@ openerp.web_linkedin = function(instance) {
             var i = 0;
             var $row;
             _.each(self.result, function(el) {
-                var pc = new instance.web_linkedin.PeopleCompany(self, el);
+                var pc = new instance.web_linkedin.EntityWidget(self, el);
                 if (i % 5 === 0) {
                     $row = $("<div style='display: table-row;width:100%'/>");
                     $row.appendTo(self.$(">div"));
@@ -152,8 +156,8 @@ openerp.web_linkedin = function(instance) {
         },
     });
     
-    instance.web_linkedin.PeopleCompany = instance.web.Widget.extend({
-        template: "PeopleCompany",
+    instance.web_linkedin.EntityWidget = instance.web.Widget.extend({
+        template: "EntityWidget",
         init: function(parent, data) {
             this._super(parent);
             this.data = data;
@@ -165,9 +169,10 @@ openerp.web_linkedin = function(instance) {
             });
             if (this.data.__type === "company") {
                 this.$("h3").text(this.data.name);
-                IN.API.Raw(_.str.sprintf("companies/%d:(logo-url)", this.data.id)).result(function (result) {
-                    self.$("img").attr("src", result.logoUrl);
-                });
+                //IN.API.Raw(_.str.sprintf("companies/%d:(logo-url)", this.data.id)).result(function (result) {
+                //    self.$("img").attr("src", result.logoUrl);
+                //});
+                self.$("img").attr("src", "http://m3.licdn.com/media/p/2/000/03b/36c/283399d.png");
             } else { // people
                 this.$("h3").text(_.str.sprintf("%s %s", this.data.firstName, this.data.lastName));
             }
