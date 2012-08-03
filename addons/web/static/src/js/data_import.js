@@ -40,6 +40,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.all_fields = [];
         this.fields_with_defaults = [];
         this.required_fields = null;
+        this.context = dataset.get_context();
 
         var convert_fields = function (root, prefix) {
             prefix = prefix || '';
@@ -80,7 +81,8 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.$element.delegate('fieldset legend', 'click', function() {
             $(this).parent().toggleClass('oe-closed');
         });
-        this.ready.push(new openerp.web.DataSet(this, this.model).call(
+        this.ready.push(new openerp.web.DataSet(
+                this, this.model, this.context).call(
             'fields_get', [], function (fields) {
                 self.graft_fields(fields);
                 self.ready.push(new openerp.web.DataSet(self, self.model)
@@ -136,7 +138,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             case 'many2one':
                 // push a copy for the bare many2one field, to allow importing
                 // using name_search too - even if we default to exporting the XML ID
-                var many2one_field = _.extend({}, f)
+                var many2one_field = _.extend({}, f);
                 parent.fields.push(many2one_field);
                 f.name += '/id';
                 break;
@@ -145,7 +147,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 f.fields = [];
                 // only fetch sub-fields to a depth of 2 levels
                 if (level < 2) {
-                    self.ready.push(new openerp.web.DataSet(self, field.relation).call(
+                    self.ready.push(new openerp.web.DataSet(self, field.relation, self.context).call(
                         'fields_get', [], function (fields) {
                             self.graft_fields(fields, f, level+1);
                     }));
@@ -184,7 +186,8 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 meta: JSON.stringify({
                     skip: lines_to_skip,
                     indices: indices,
-                    fields: fields
+                    fields: fields,
+                    context: this.context
                 })
             }
         }, this.on_import_results);

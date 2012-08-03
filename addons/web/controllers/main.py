@@ -1913,9 +1913,9 @@ class Import(View):
     @openerpweb.httprequest
     def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, jsonp,
                     meta):
-        modle_obj = req.session.model(model)
-        skip, indices, fields = operator.itemgetter('skip', 'indices', 'fields')(
-            simplejson.loads(meta))
+        skip, indices, fields, context = \
+            operator.itemgetter('skip', 'indices', 'fields', 'context')(
+                simplejson.loads(meta, object_hook=common.nonliterals.non_literal_decoder))
 
         error = None
         if not (csvdel and len(csvdel) == 1):
@@ -1965,9 +1965,9 @@ class Import(View):
                 jsonp, simplejson.dumps({'error': {'message': error}}))
 
         try:
-            (code, record, message, _nope) = modle_obj.import_data(
+            (code, record, message, _nope) = req.session.model(model).import_data(
                 fields, data, 'init', '', False,
-                req.session.eval_context(req.context))
+                req.session.eval_context(context))
         except xmlrpclib.Fault, e:
             error = {"message": u"%s, %s" % (e.faultCode, e.faultString)}
             return '<script>window.top.%s(%s);</script>' % (
