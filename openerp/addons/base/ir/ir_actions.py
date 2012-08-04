@@ -749,20 +749,6 @@ class act_window_close(osv.osv):
     }
 act_window_close()
 
-class ir_actions_todo_category(osv.osv):
-    """
-    Category of Configuration Wizards
-    """
-
-    _name = 'ir.actions.todo.category'
-    _description = "Configuration Wizard Category"
-    _columns = {
-         'name':fields.char('Name', size=64, translate=True, required=True),
-         'sequence': fields.integer('Sequence'),
-         'wizards_ids': fields.one2many('ir.actions.todo', 'category_id', 'Configuration Wizards'),
-    }
-ir_actions_todo_category()
-
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done')]
@@ -787,7 +773,6 @@ Automatic: Runs whenever the system is reconfigured.
 Launch Manually Once: after hacing been launched manually, it sets automatically to Done."""),
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
-        'category_id': fields.many2one('ir.actions.todo.category','Category'),
     }
     _defaults={
         'state': 'open',
