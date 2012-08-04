@@ -31,14 +31,8 @@
         <field name="target">new</field>
     </record>
 
-    <record id="category_knowledge_mgmt_config" model="ir.actions.todo.category">
-        <field name="name">Knowledge Management</field>
-        <field name="sequence">5</field>
-    </record>
-
     <record model="ir.actions.todo" id="config_auto_directory">
         <field name="action_id" ref="action_config_auto_directory"/>
-        <field name="category_id" ref="category_knowledge_mgmt_config"/>
         <field name="type">automatic</field>
     </record>
   </data>
