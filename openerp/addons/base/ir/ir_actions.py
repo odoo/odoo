@@ -762,8 +762,7 @@ class ir_actions_todo(osv.osv):
     _description = "Configuration Wizards"
     _columns={
         'action_id': fields.many2one(
-            'ir.actions.act_window', 'Action', select=True, required=True,
-            ondelete='cascade'),
+            'ir.actions.actions', 'Action', select=True, required=True),
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
         'name': fields.char('Name', size=64),
@@ -779,7 +778,7 @@ Launch Manually Once: after hacing been launched manually, it sets automatically
         'sequence': 10,
         'type': 'manual',
     }
-    _order="sequence,name,id"
+    _order="sequence,id"
 
     def action_launch(self, cr, uid, ids, context=None):
         """ Launch Action of Wizard"""
@@ -789,7 +788,11 @@ Launch Manually Once: after hacing been launched manually, it sets automatically
             wizard.write({'state': 'done'})
 
         # Load action
-        res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
+        act_type = self.pool.get('ir.actions.actions').read(cr, uid, wizard.action_id.id, ['type'], context=context)
+
+        res = self.pool.get(act_type['type']).read(cr, uid, wizard.action_id.id, [], context=context)
+        if act_type<>'ir.actions.act_window':
+            return res
         res.setdefault('context','{}')
         res['nodestroy'] = True
 
@@ -864,8 +867,10 @@ class act_client(osv.osv):
         ])
 
     def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
-        assert isinstance(field_value, dict), "params can only be dictionaries"
-        self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
+        if isinstance(field_value, dict):
+            self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
+        else:
+            self.write(cr, uid, id, {'params_store': field_value}, context=context)
 
     _columns = {
         'tag': fields.char('Client action tag', size=64, required=True,
