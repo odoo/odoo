@@ -130,7 +130,15 @@
             <field name="domain">[]</field>
             <field name="context">{'search_default_to_invoice': 1}</field>
             <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>            
-            <field name="help">This list shows you every task you can invoice to the customer. Select the lines and click the Action button to generate the invoices automatically.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to add some tasks work to be invoiced.
+              </p><p>
+                This list shows every task you can invoice to the customer.
+                Select the lines and invoice from the '<i>more...</i>' contextual
+                menu to generate invoices automatically.
+              </p>
+            </field>
         </record>
         <menuitem
             action="action_hr_analytic_timesheet_open_tree"
@@ -181,7 +189,17 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_timesheet_invoice_factor_tree"/>
             <field name="search_view_id" ref="view_hr_timesheet_invoice_factor_search"/>
-            <field name="help">OpenERP allows you to create default invoicing types. You might have to regularly assign discounts because of a specific contract or agreement with a customer. From this menu, you can create additional types of invoicing to speed up your invoicing.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to add a new type of invoicing.
+              </p><p>
+                OpenERP allows you to create default invoicing types. You might
+                have to regularly assign discounts because of a specific
+                contract or agreement with a customer. From this menu, you can
+                create additional types of invoicing to speed up your
+                invoicing.
+              </p>
+            </field>
         </record>
         <menuitem
             action="action_hr_timesheet_invoice_factor_form"

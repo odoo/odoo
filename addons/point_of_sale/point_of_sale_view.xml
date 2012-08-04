@@ -168,7 +168,19 @@
             <field name="context" eval="{'default_pos_categ_id': ref('point_of_sale.categ_others')}"/>
             <field name="view_id" ref="product.product_product_tree_view"/>
             <field name="search_view_id" ref="product.product_search_form_view"/>
-            <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to add a new product.
+              </p><p>
+                You must define a product for everything you sell through
+                the point of sale interface.
+              </p><p>
+                Do not forget to set the price and the point of sale category
+                in which it should appear. If a product has no point of sale
+                category, you can not sell it through the point of sale
+                interface.
+              </p>
+            </field>
         </record>
         <menuitem
             action="product_normal_action"
@@ -693,7 +705,14 @@
             <field name="view_mode">tree,form</field>
             <field name="context" eval="{'default_journal_user': 1, 'default_type': 'cash'}"/>
             <field name="domain">[('journal_user','=', 1)]</field>
-            <field name="help">Payment methods are defined by accounting journals having the field Payment Method checked.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to add a payment method.
+              </p><p>
+                Payment methods are defined by accounting journals having the
+                field <i>Payment Method</i> checked.
+              </p>
+            </field>
         </record>
 
         <menuitem action="action_account_journal_form"

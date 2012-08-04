@@ -691,7 +691,15 @@
             <field name="view_id" eval="False"/>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="help">Tasks allow you to organize your work into a project. Click on button "Create" to create a new task.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to create a new task.
+              </p><p>
+                OpenERP's project management allows you to manage the pipeline
+                of tasks in order to get things done efficiently. You can
+                track progress, discuss on tasks, attach documents, etc.
+              </p>
+            </field>
         </record>
         <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
@@ -786,7 +794,16 @@
             <field name="res_model">project.task.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="task_type_tree"/>
-            <field name="help">Define the steps that will be used in the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress in solving a task or an issue.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to add a stage in the task pipeline.
+              </p><p>
+                Define the steps that will be used in the project from the
+                creation of the task, up to the closing of the task or issue.
+                You will use these stages in order to track the progress in
+                solving a task or an issue.
+              </p>
+            </field>
         </record>
 
         <menuitem id="menu_tasks_config" name="GTD" parent="base.menu_definitions" sequence="1"/>

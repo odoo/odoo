@@ -125,7 +125,7 @@
         </record>
 
         <record id="action_receive_move" model="ir.actions.act_window">
-            <field name="name">Receive Products</field>
+            <field name="name">Receptions</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -134,11 +134,19 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
-            <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to register a reception for this product. 
+              </p><p>
+                Here you will find the history of all receptions related to
+                this product, as well as all future receptions you are waiting
+                from your suppliers.
+              </p>
+            </field>
         </record>
 
         <record id="action_deliver_move" model="ir.actions.act_window">
-            <field name="name">Receive Products</field>
+            <field name="name">Deliveries</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -147,7 +155,15 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
-            <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
+            <field name="help" type="xml">
+              <p>
+                Click to add a delivery order for this product.
+              </p><p>
+                Here you will find the history of all past deliveries related to
+                this product, as well as all the products you must deliver to
+                customers.
+              </p>
+            </field>
         </record>
 
         <record model="ir.ui.view" id="product.product_kanban_view">

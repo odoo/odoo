@@ -193,7 +193,15 @@
             <field name="context">{}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
-            <field name="help">Here you can manage your work force by creating employees and assigning them specific properties in the system. Maintain all employee related information and keep track of anything that needs to be recorded for them. The personal information tab will help you maintain their identity data. The Categories tab gives you the opportunity to assign them related employee categories depending on their position and activities within the company. A category can be a seniority level within the company or a department. The Timesheets tab allows to assign them a specific timesheet and analytic journal where they will be able to enter time through the system. In the note tab, you can enter text data that should be recorded for a specific employee.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the OpenERP employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
         </record>
 
         <record id="open_view_employee_list_my_kanban" model="ir.actions.act_window.view">
@@ -443,7 +451,20 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_job_filter"/>
             <field name="context">{"search_default_Current":1}</field>
-            <field name="help">Job Positions are used to define jobs and their requirements. You can keep track of the number of employees you have per job position and how many you expect in the future. You can also attach a survey to a job position that will be used in the recruitment process to evaluate the applicants for this job position.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to define a new job position.
+              </p><p>
+                Job Positions are used to define jobs and their requirements.
+                You can keep track of the number of employees you have per job
+                position and follow the evolution according to what you planned
+                for the future.
+              </p><p>
+                You can attach a survey to a job position. It will be used in
+                the recruitment process to evaluate the applicants for this job
+                position.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>

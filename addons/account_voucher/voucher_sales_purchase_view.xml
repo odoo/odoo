@@ -165,10 +165,13 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
-            <field name="help">
-                Click here to create a sale receipt.
-                &lt;p&gt;
-                When the sales receipt is confirmed, you can record the customer payment related to this sales receipt.
+            <field name="help" type="xml">
+              <p>
+                Click to create a sale receipt.
+              </p><p>
+                When the sale receipt is confirmed, you can record the customer
+                payment related to this sales receipt.
+              </p>
             </field>
         </record>
         <record id="action_sale_receipt_tree" model="ir.actions.act_window.view">
@@ -315,10 +318,13 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>
-            <field name="help">
-                Click here to create a purchase receipt.
-                &lt;p&gt;
-                When the purchase receipt is confirmed, you can record the supplier payment related to this purchase receipt.
+            <field name="help" type="xml">
+              <p>
+                Click to register a purchase receipt. 
+              </p><p>
+                When the purchase receipt is confirmed, you can record the
+                supplier payment related to this purchase receipt.
+              </p>
             </field>
         </record>
         <record id="action_purchase_receipt_tree" model="ir.actions.act_window.view">

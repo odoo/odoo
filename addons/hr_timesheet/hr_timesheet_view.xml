@@ -104,7 +104,14 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{"search_default_today":1}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
-            <field name="help">Through this menu you can register and follow your workings hours by project every day.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to your timesheets.
+              </p><p>
+                Through this menu you can register and follow your workings
+                hours by project every day.
+              </p>
+            </field>
         </record>
 
         <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>

@@ -45,7 +45,16 @@
             <field name="res_model">product.pricelist.version</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_pricelist_version_tree_view"/>
-            <field name="help">There can be more than one version of a pricelist. Here you can create and manage new versions of a price list. Some examples of versions: 2010, 2011, Summer Promotion, etc.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to add a pricelist version.
+              </p><p>
+                There can be more than one version of a pricelist, each of
+                these must be valid during a certain period of time. Some
+                examples of versions: Main Prices, 2010, 2011, Summer Sales,
+                etc.
+              </p>
+            </field>
         </record>
         <menuitem
             action="product_pricelist_action" id="menu_product_pricelist_action"
@@ -178,7 +187,19 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="product_pricelist_view_search" />
             <field name="context">{"default_type":"sale", "search_default_type":"sale"}</field>
-            <field name="help">A price list contains rules to be evaluated in order to compute the purchase or sales price for all the partners assigned to a price list. Price lists have several versions (2010, 2011, Promotion of February 2010, etc.) and each version has several rules. Example: the customer price of a product category will be based on the supplier price multiplied by 1.80.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to create a pricelist.
+              </p><p>
+                A price list contains rules to be evaluated in order to compute
+                the sales price of the products.
+              </p><p>
+                Price lists may have several versions (2010, 2011, Promotion of
+                February 2010, etc.) and each version may have several rules.
+                (e.g. the customer price of a product category will be based on
+                the supplier price multiplied by 1.80).
+              </p>
+            </field>
         </record>
         <record id="product_pricelist_action_for_purchase" model="ir.actions.act_window">
             <field name="name">Pricelists</field>
@@ -188,7 +209,20 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="product_pricelist_view_search" />
             <field name="context">{"default_type":"purchase", "search_default_type":"purchase"}</field>
-            <field name="help">A price list contains rules to be evaluated in order to compute the purchase or sales price for all the partners assigned to a price list. Price lists have several versions (2010, 2011, Promotion of February 2010, etc.) and each version has several rules. Example: the customer price of a product category will be based on the supplier price multiplied by 1.80.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to create a pricelist.
+              </p><p>
+                A price list contains rules to be evaluated in order to compute
+                the purchase price. The default price list has only one rule; use
+                the cost price defined on the product form, so that you do not have to
+                worry about supplier pricelists if you have very simple needs.
+              </p><p>
+                But you can also import complex price lists form your supplier
+                that may depends on the quantities ordered or the current
+                promotions.
+              </p>
+            </field>
         </record>
         <menuitem
             action="product_pricelist_action2" id="menu_product_pricelist_action2"

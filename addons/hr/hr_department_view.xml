@@ -50,7 +50,15 @@
             <field name="res_model">hr.department</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_department_filter"/>
-            <field name="help">Your Company's Department Structure is used to manage all documents related to employees by departments: expenses and timesheet validation, leaves management, recruitments, etc.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to create a department.
+              </p><p>
+                OpenERP's department structure is used to manage all documents
+                related to employees by departments: expenses, timesheets,
+                leaves and holidays, recruitments, etc.
+              </p>
+            </field>
         </record>
 
        <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="hr.menu_hr_configuration" sequence="5"/>

@@ -10,13 +10,17 @@
         <field name="view_id" ref="crm_case_tree_view_leads"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
         <field name="context">{'default_type':'lead', 'stage_type':'lead'}</field>
-        <field name="help">
-            &lt;img src="http://www.thaicrmsoftware.com/wp-content/uploads/2011/11/lead-conversion.jpg" align="right" style="padding: 6px" width="306" height="223"&gt;
-            &lt;h2&gt;Click here to create a Lead. &lt;/h2&gt;
-            &lt;p&gt;
-            A lead is usually the first step in your sales cycle.
-            &lt;p&gt;
-            Once qualified, a lead may be converted into a business opportunity, while creating the related partner for further detailed tracking of any linked activities.
+        <field name="help" type="xml">
+          <p>
+            Click to create an unqualified lead. 
+          </p><p>
+            A lead is usually the first step in your sales cycle. It can be
+            a contact with a new prospect, a company you target, a contact form
+            filled in your website, etc.
+          </p><p>
+            Once qualified, the lead can be converted into a business
+            opportunity and a new customer in your address book.
+          </p>
         </field>
     </record>
 
@@ -42,9 +46,18 @@
           <field name="context">{'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
           <field name="view_id" eval="False"/>
           <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
-          <field name="help">With opportunities you can manage and keep track of your sales pipeline by creating specific customer- or prospect-related sales documents to follow up potential sales. Information such as expected revenue, opportunity stage, expected closing date, communication history and much more can be stored. Opportunities can be connected to the email gateway: new emails may create opportunities, each of them automatically gets the history of the conversation with the customer.
-
-You and your team(s) will be able to plan meetings and phone calls from opportunities, convert them into quotations, manage related documents, track all customer related activities, and much more.</field>
+          <field name="help" type="xml">
+            <p>
+              Click to create a new opportunity.
+            </p><p>
+              OpenERP helps you keep track of your sales pipeline to follow
+              up potential sales and better forecast your future revenues.
+            </p><p>
+              You will be able to plan meetings and phone calls from
+              opportunities, convert them into quotations, attach related
+              documents, track all discussions, and much more.
+            </p>
+          </field>
      </record>
 
      <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_oppor11">

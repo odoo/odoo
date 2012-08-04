@@ -258,9 +258,14 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_vendor_pay"/>
             <field name="target">current</field>
-            <field name="help">Click on "Create" to register a supplier payment.
-                    &lt;p&gt;
-                    Track payments you do to your supplier and amounts you pay.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to create a new supplier payment.
+              </p><p>
+                OpenERP helps you easily track payments you do and remining
+                balance to pay to your supplier.
+              </p>
+            </field>
         </record>
         <record id="action_vendor_payment_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -422,10 +427,15 @@
             <field name="search_view_id" ref="view_voucher_filter_customer_pay"/>
             <field name="view_id" eval="False"/>
             <field name="target">current</field>
-            <field name="help">
-                Click on create to register a payment.
-                &lt;p&gt;
-                Enter the customer and the payment method and then, either create manually a payment record or OpenERP will propose to you automatically the reconciliation of this payment with the open invoices or sales receipts.
+            <field name="help" type="xml">
+              <p>
+                Click to register a new payment. 
+              </p><p>
+                Enter the customer and the payment method and then, either
+                create manually a payment record or OpenERP will propose to you
+                automatically the reconciliation of this payment with the open
+                invoices or sales receipts.
+              </p>
             </field>
         </record>
         <record id="action_vendor_receipt_tree" model="ir.actions.act_window.view">

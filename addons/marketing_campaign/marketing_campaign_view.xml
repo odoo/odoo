@@ -133,7 +133,20 @@
         <field name="view_id" ref="view_marketing_campaign_tree"/>
         <field name="context">{'group_by': []}</field>
         <field name="search_view_id" ref="view_marketing_campaign_search"/>
-        <field name="help">A marketing campaign is an event or activity that will help you manage and reach your partners with specific messages. A campaign can have many activities that will be triggered from a specific situation. One action could be sending an email template that has previously been created in the system.</field>
+        <field name="help" type="xml">
+          <p>
+            Click to create a marketing campaign.
+          </p><p>
+            OpenERP's marketing campaign allows you to automate communication
+            to your prospects. You can define a segment (set of conditions) on
+            your leads and partners to fullfil the campaign.
+          </p><p>
+            A campaign can have many activities like sending an email, printing
+            a letter, assigning to a team, etc. These activities are triggered
+            from specific situations; contact form, 10 days after first
+            contact, if a lead is not closed yet, etc.
+          </p>
+        </field>
     </record>
 
     <menuitem name="Campaigns" id="menu_marketing_campaign" parent="base.marketing_menu"/>

@@ -145,7 +145,20 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="context">{'search_default_current':1}</field>
-            <field name="help">A procurement order is used to record a need for a specific product at a specific location. A procurement order is usually created automatically from sales orders, a Pull Logistics rule or Minimum Stock Rules. When the procurement order is confirmed, it automatically creates the necessary operations to fullfil the need: purchase order proposition, manufacturing order, etc.</field>
+            <field name="help" type="xml">
+              <p>
+                Click to create a procurement order. 
+              </p><p>
+                A procurement order is used to record a need for a specific
+                product at a specific location.  Procurement orders are usually
+                created automatically from sales orders, pull logistic rules or
+                minimum stock rules.
+              </p><p>
+                When the procurement order is confirmed, it automatically
+                creates the necessary operations to fullfil the need: purchase
+                order proposition, manufacturing order, etc.
+              </p>
+            </field>
         </record>
 
         <record id="procurement_exceptions" model="ir.actions.act_window">

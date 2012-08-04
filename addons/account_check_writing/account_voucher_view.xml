@@ -34,7 +34,17 @@
             <field name="context">{'type':'payment','write_check':True}</field>
             <field name="search_view_id" ref="account_voucher.view_voucher_filter"/>
             <field name="target">current</field>
-            <field name="help">The check payment form allows you to track the payment you do to your suppliers specially by check. When you select a supplier, the payment method and an amount for the payment, OpenERP will propose to reconcile your payment with the open supplier invoices or bills.You can print the check</field>
+            <field name="help" type="xml">
+              <p>
+                Click to create a new check. 
+              </p><p>
+                The check payment form allows you to track the payment you do
+                to your suppliers using checks. When you select a supplier, the
+                payment method and an amount for the payment, OpenERP will
+                propose to reconcile your payment with the open supplier
+                invoices or bills.
+              </p>
+            </field>
         </record>
 
         <record id="action_write_check_form" model="ir.actions.act_window.view">

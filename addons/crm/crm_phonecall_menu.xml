@@ -68,14 +68,18 @@
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help">
-            Click on "Create" to log a new call.
-            &lt;p&gt;
-            This tool allows you to log your calls on the fly.
-            &lt;p&gt;
-            From this feature, you can trigger a request for another call, a meeting or an opportunity.
+        <field name="help" type="xml">
+          <p>
+            Click to log the summary of a phone call. 
+          </p><p>
+            OpenERP allows you to log inbound calls on the fly to track the
+            history of the communication with a customer or to inform another
+            team member.
+          </p><p>
+            In order to follow up on the call, you can trigger a request for
+            another call, a meeting or an opportunity.
+          </p>
         </field>
-
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_incoming0">
@@ -112,12 +116,16 @@
         <field name="domain">[('state','!=','done')]</field>
         <field name="context" eval="'{\'default_state\':\'open\'}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help">
-            Click here to schedule a new call.
-            &lt;p&gt;
-            Scheduled calls list all the calls to be done by your sales team.
-            &lt;p&gt;
-            This information will be stored in the partner form to trace every contact you have with a customer.
+        <field name="help" type="xml">
+          <p>
+            Click to schedule a call 
+          </p><p>
+            OpenERP allows you to easily define all the calls to be done
+            by your sales team and follow up based on their summary.
+          </p><p>  
+            You can use the import feature to massicely import a new list of
+            prospects to qualify.
+          </p>
         </field>
     </record>
 
