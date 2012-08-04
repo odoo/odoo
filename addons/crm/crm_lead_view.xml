@@ -229,6 +229,20 @@
         </field>
         </record>
 
+        <!-- CRM Lead Graph View -->
+        <record model="ir.ui.view" id="crm_case_graph_view_leads">
+            <field name="name">Opportunities</field>
+            <field name="model">crm.lead</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunities" type="bar">
+                    <field name="stage_id"/>
+                    <field name="planned_revenue" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+
         <!-- CRM Lead Tree View -->
         <record model="ir.ui.view" id="crm_case_tree_view_leads">
             <field name="name">Leads</field>
