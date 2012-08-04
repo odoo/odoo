@@ -15,7 +15,7 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
             <field name="context" eval="{'object_id': ref('model_crm_claim')}"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a claim category.
               </p><p>
@@ -65,7 +65,7 @@
             <field name="res_model">crm.claim.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_claim_stage_tree"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to setup a new stage in the processing of the claims. 
               </p><p>

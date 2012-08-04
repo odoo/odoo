@@ -63,7 +63,7 @@
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to set a new stage in your lead/opportunity pipeline.
               </p><p>
@@ -87,7 +87,7 @@
             <field name="view_id" ref="crm_case_categ_tree-view"/>
             <field name="context" eval="{'object_id': ref('model_crm_lead')}"/>
             <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new sales tag. 
               </p><p>

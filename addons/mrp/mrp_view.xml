@@ -41,7 +41,7 @@
             <field name="res_model">mrp.property.group</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a group of properties.
               </p><p>
@@ -117,7 +117,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_mrp_property_search"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new property.
               </p><p>
@@ -335,7 +335,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
             <field name="search_view_id" ref="mrp_routing_search_view"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a routing.
               </p><p>
@@ -494,7 +494,7 @@
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','=',False)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a bill of material. 
               </p><p>
@@ -514,7 +514,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_bom_component_tree_view"/>
             <field name="domain">[('bom_id','!=',False)]</field>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a component to a bill of material.
               </p><p>
@@ -883,7 +883,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{}</field>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a manufacturing order. 
               </p><p>
@@ -906,7 +906,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">calendar,tree,form,graph</field>
             <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to start a new manufacturing order. 
               </p><p>
@@ -1059,7 +1059,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a work center.
               </p><p>

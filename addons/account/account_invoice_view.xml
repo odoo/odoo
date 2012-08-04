@@ -509,7 +509,7 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a customer invoice.
               </p><p>
@@ -549,7 +549,7 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to record a new supplier invoice.
               </p><p>
@@ -570,7 +570,7 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'default_type':'out_refund', 'type':'out_refund', 'journal_type': 'sale_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a customer refund. 
               </p><p>
@@ -606,7 +606,7 @@
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to register a refund you received from a supplier.
               </p><p>

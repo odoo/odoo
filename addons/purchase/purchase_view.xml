@@ -81,7 +81,7 @@
         <field name="domain">[('type','=','in_invoice')]</field>
         <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-        <field name="help" type="xml">
+        <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a draft invoice.
           </p><p>
@@ -353,7 +353,7 @@
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a request for quotation.
               </p><p>
@@ -377,7 +377,7 @@
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="context">{'search_default_approved': 1}</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a quotation that will be converted into a purchase order. 
               </p><p>
@@ -535,7 +535,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="purchase_order_line_search"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p>
                 Here you can track all the lines of purchase orders where the
                 invoicing is "Based on Purchase Order Lines", and for which you

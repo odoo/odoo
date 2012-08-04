@@ -58,7 +58,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new sale shop.
               </p><p>
@@ -399,7 +399,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="context">{"search_default_sales":1}</field>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a quotation that can be converted into a sale
                 order.
@@ -441,7 +441,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{"search_default_draft":1}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a quotation, the first step of a new sale.
               </p><p>
@@ -602,7 +602,7 @@
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter"/>
             <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p>
                 Here is a list of each sales order line to be invoiced. You can
                 invoice sales orders partially, by lines of sales order. You do

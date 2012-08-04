@@ -68,7 +68,7 @@
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help" type="xml">
+        <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to log the summary of a phone call. 
           </p><p>
@@ -116,7 +116,7 @@
         <field name="domain">[('state','!=','done')]</field>
         <field name="context" eval="'{\'default_state\':\'open\'}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help" type="xml">
+        <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to schedule a call 
           </p><p>

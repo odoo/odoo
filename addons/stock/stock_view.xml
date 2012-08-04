@@ -200,7 +200,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_inventory_tree"/>
             <field name="search_view_id" ref="view_inventory_filter"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to start an inventory. 
               </p><p>
@@ -264,7 +264,7 @@
             <field name="res_model">stock.tracking</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_tracking_tree"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a tracking number.
               </p><p>
@@ -430,7 +430,7 @@
             <field name="view_id" ref="view_production_lot_tree"/>
             <field name="search_view_id" ref="search_product_lot_filter"/>
             <field name="context">{}</field>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a serial number.
               </p><p>
@@ -613,7 +613,7 @@
             <field name="view_id" ref="view_location_tree2"/>
             <field name="search_view_id" ref="view_location_search"/>
             <field name="context">{'search_default_in_location':1}</field>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a location.
               </p><p>
@@ -653,7 +653,7 @@
             <field name="domain">[('location_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_location_tree"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a location.
               </p><p>
@@ -711,7 +711,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_tree"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new warehouse.
               </p>
@@ -955,7 +955,7 @@
             <field name="domain">[('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create an internal move request. 
               </p><p>
@@ -1066,7 +1066,7 @@
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="view_picking_out_search"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a delivery order. 
               </p><p>
@@ -1176,7 +1176,7 @@
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{'contact_display': 'partner_address', 'default_type': 'in'}</field>
             <field name="search_view_id" ref="view_picking_in_search"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create an incoming shipment. 
               </p><p>
@@ -1371,7 +1371,7 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
             <field name="context">{}</field>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a stock movement.
               </p><p>
@@ -1501,7 +1501,7 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p>
                 Click to register a product reception. 
               </p><p>
@@ -1639,7 +1639,7 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p>
                 You will find in this list all products you have to deliver to
                 your customers. You can process the deliveries directly from
@@ -1707,7 +1707,7 @@
             <field name="res_model">stock.journal</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="help" type="xml">
+            <field name="help" type="html">
               <p>
                 Click to create a new journal. 
               </p><p>
