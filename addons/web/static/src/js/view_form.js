@@ -2295,7 +2295,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         if (back_orig_value === undefined) { // first use after a set_value()
             return;
         }
-        if (this.value != undefined && ((back_orig_value ? back_orig_value[0] : null)
+        if (this.value !== undefined && ((back_orig_value ? back_orig_value[0] : null)
                 !== (this.value ? this.value[0] : null))) {
             this.on_ui_change();
         }
