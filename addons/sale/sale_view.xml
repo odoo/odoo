@@ -59,7 +59,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to define a new sale shop.
               </p><p>
                 Each quotation or sale order must be linked to a shop. The
@@ -400,7 +400,7 @@
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="context">{"search_default_sales":1}</field>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to create a quotation that can be converted into a sale
                 order.
               </p><p>
@@ -442,7 +442,7 @@
             <field name="context">{"search_default_draft":1}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to create a quotation, the first step of a new sale.
               </p><p>
                 OpenERP will help you handle efficiently the complete sale flow:
@@ -453,8 +453,7 @@
                 order, and allow your customers to keep track of the evolution
                 of the sale order.
               </p>
-          </p>
-        </field>
+            </field>
         </record>
 
         <menuitem id="menu_sale_quotations"

@@ -169,7 +169,7 @@
             <field name="view_id" ref="product.product_product_tree_view"/>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to add a new product.
               </p><p>
                 You must define a product for everything you sell through
@@ -706,7 +706,7 @@
             <field name="context" eval="{'default_journal_user': 1, 'default_type': 'cash'}"/>
             <field name="domain">[('journal_user','=', 1)]</field>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to add a payment method.
               </p><p>
                 Payment methods are defined by accounting journals having the

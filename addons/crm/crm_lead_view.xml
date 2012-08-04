@@ -64,7 +64,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to set a new stage in your lead/opportunity pipeline.
               </p><p>
                 Stages will allow salespersons to easily track how a specific
@@ -88,7 +88,7 @@
             <field name="context" eval="{'object_id': ref('model_crm_lead')}"/>
             <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to define a new sales tag. 
               </p><p>
                 Create specific tags that fit your company's activities

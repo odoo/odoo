@@ -79,7 +79,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to start a new fiscal year.
               </p><p>
                 Define your company's financial year according to your needs. A
@@ -166,7 +166,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_draft': 1}</field>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to add a fiscal period.
               </p><p>
                 An accounting period typically is a month or a quarter. It
@@ -280,7 +280,7 @@
             <field name="search_view_id" ref="view_account_search"/>
             <field name="view_id" ref="view_account_list"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to add an account.
               </p><p>
                 An account is part of a ledger allowing your company
@@ -351,7 +351,7 @@
             <field name="view_id" ref="view_account_gain_loss_tree"/>
             <field name="domain">[('currency_id','!=',False)]</field>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to add an account.
               </p><p>
                 When doing multi-currency transactions, you may loose or gain
@@ -438,7 +438,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_journal_view_search"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to specify lists of columns to display for a type of journal.
               </p><p>
                 Journal views determine the way you can record entries in
@@ -564,7 +564,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to add a journal.
               </p><p>
                 A journal is used to record transactions of all accounting data
@@ -725,7 +725,7 @@
             <field name="context">{'journal_type':'bank'}</field>
             <field name="search_view_id" ref="view_bank_statement_search"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to register a bank statement.
               </p><p>
                 A bank statement is a summary of all financial transactions
@@ -815,7 +815,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_type_search"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to define a new account type.
               </p><p>
                 An account type is used to determine how an account is used in
@@ -937,7 +937,7 @@
             <field name="view_id" ref="view_tax_code_tree"/>
             <field name="search_view_id" ref="view_tax_code_search"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to define a new tax code.
               </p><p>
                 Depending on the country, a tax code is usually a cell to fill
@@ -1282,7 +1282,7 @@
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to register a new journal item.
               </p><p>
                 This view can be used by accountants in order to quickly record
@@ -1525,7 +1525,7 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to create a journal entry.
               </p><p>
                 A journal entry consists of several journal items, each of
@@ -1955,7 +1955,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_subscription_search"/>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to define a new recurring entry.
               </p><p>
                 A recurring entry occurs on a recurrent basis from a specific
@@ -2743,7 +2743,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
             <field name="context">{'journal_type':'cash'}</field>
             <field name="help" type="xml">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to create a new cash log.
               </p><p>
                 A Cash Register allows you to manage cash entries in your cash
