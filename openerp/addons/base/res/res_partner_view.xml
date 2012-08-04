@@ -329,12 +329,14 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
-            <field name="help">
-                Click on "Create" to add a new contact in your address book.
-                &lt;p&gt;
-                A contact is either a person or a company; a person can be linked to a company as a contact of that company.
-                &lt;p&gt;
-                You will be able to follow documents and history of your contacts (invoices, meetings, projects, etc.)
+            <field name="help" type="xml">
+              <p>
+                Click to add a contact in your address book.
+              </p><p>
+                OpenERP helps you easily track all activities related to
+                a customer; discussions, history of business opportunities,
+                documents, etc.
+              </p>
             </field>
         </record>
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
@@ -366,12 +368,14 @@
             <field name="domain">[('customer','=',1)]</field>
             <field name="context">{'default_customer':1, 'search_default_customer':1}</field>
             <field name="filter" eval="True"/>
-            <field name="help">
-                Click on "Create" to add a new customer in your address book.
-                &lt;p&gt;
-                A contact is either a person or a company; a person can be linked to a company as a contact of that company.
-                &lt;p&gt;
-                You will be able to follow documents and history of your contacts (invoices, meetings, projects, etc.)
+            <field name="help" type="xml">
+              <p>
+                Click to add a contact in your address book.
+              </p><p>
+                OpenERP helps you easily track all activities related to
+                a customer: discussions, history of business opportunities,
+                documents, etc.
+              </p>
             </field>
         </record>
 
@@ -384,12 +388,14 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_supplier': 1,'default_customer': 0,'default_supplier': 1}</field>
             <field name="filter" eval="True"/>
-            <field name="help">
-                Click on "Create" to add a new supplier in your address book.
-                &lt;p&gt;
-                A supplier is either a person or a company; a person can be linked to a company as a contact of that company.
-                &lt;p&gt;
-                You will be able to follow documents and history of your contacts (invoices, meetings, projects, etc.)
+            <field name="help" type="xml">
+              <p>
+                Click to add a contact in your address book.
+              </p><p>
+                OpenERP helps you easily track all activities related to
+                a supplier: discussions, history of purchases,
+                documents, etc.
+              </p>
             </field>
         </record>
 
