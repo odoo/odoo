@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="todo_open_hr_menu" model="ir.actions.todo">
+            <field name="action_id" ref="hr.action_client_hr_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
     <data>
         <record id="view_hr_apll_config_settings" model="ir.ui.view">
             <field name="name">hr settings for recruitment</field>

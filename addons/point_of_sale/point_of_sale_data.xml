@@ -1,5 +1,18 @@
 <?xml version="1.0" ?>
 <openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_pos_menu" model="ir.actions.client">
+            <field name="name">Open POS Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_point_root')}"/>
+        </record>
+        <record id="todo_open_pos_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_pos_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
     <data>
         <record model="pos.config" id="pos_config_main">
             <field name="name">Main PoS</field>
