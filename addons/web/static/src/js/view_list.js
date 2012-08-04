@@ -880,9 +880,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
         this.$element.find('table:first').hide();
         this.$element.prepend(
-            $('<div class="oe_view_nocontent">')
-                .append($('<img>', { src: '/web/static/src/img/view_empty_arrow.png' }))
-                .append($('<div>').html(this.options.action.help))
+            $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
     }
 });

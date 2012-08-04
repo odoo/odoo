@@ -1808,15 +1808,21 @@
   margin: 0 0 0 4px;
   padding: 0;
 }
-.openerp .oe_view_nocontent > img {
-  float: left;
-  margin: 1.5em;
-}
-.openerp .oe_view_nocontent > div {
-  overflow: hidden;
-  padding: 35px 0px 0px 0px;
-  max-width: 700px;
+.openerp .oe_view_nocontent {
+  padding-left: 15px;
+  margin-top: 0;
+  color: #777777;
   font-size: 125%;
+  max-width: 700px;
+}
+.openerp .oe_view_nocontent .oe_view_nocontent_create {
+  background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 0 0;
+  padding-top: 35px;
+  min-height: 35px;
+  color: #4c4c4c;
+}
+.openerp .oe_view_nocontent > p {
+  padding-left: 95px;
 }
 .openerp .oe_formview {
   background: white;

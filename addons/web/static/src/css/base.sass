@@ -1400,15 +1400,18 @@ $sheet-max-width: 860px
     // }}}
     // Views Common {{{
     .oe_view_nocontent
-        > img
-            float: left
-            margin: 1.5em
-        > div
-            // don't encroach on my arrow
-            overflow: hidden
-            padding: 35px 0px 0px 0px
-            max-width: 700px
-            font-size: 125%
+        padding-left: 15px
+        margin-top: 0
+        color: #777777
+        font-size: 125%
+        max-width: 700px
+        .oe_view_nocontent_create
+            background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 0 0
+            padding-top: 35px
+            min-height: 35px
+            color: #4c4c4c
+        > p
+            padding-left: 95px
     // }}}
     // FormView.base and dynamic tags {{{
     .oe_formview
