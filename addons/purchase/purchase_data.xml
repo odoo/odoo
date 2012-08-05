@@ -6,14 +6,10 @@
         <function model="mail.group" name="message_append_note">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Module Purchase Management has been installed</value>
-            <value>From the top menu Purchases, create purchase orders to buy
-                products from your suppliers, encode supplier invoices and
-                manage your payments.
+            <value>Module Purchase Management has been installed.</value>
+            <value>From the top menu Purchases, create purchase orders to buy products from your suppliers, encode supplier invoices and manage your payments.
 
-                You can also manage purchase requisitions, see the Purchase
-                Settings.
-            </value>
+You can also manage purchase requisitions, see the Purchase Settings.</value>
         </function>
 
         <record id="req_link_purchase_order" model="res.request.link">
