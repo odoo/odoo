@@ -110,10 +110,11 @@ openerp.web_linkedin = function(instance) {
             var self = this;
             cdef = $.Deferred();
             pdef = $.Deferred();
-            IN.API.Raw(_.str.sprintf("company-search?keywords=%s&count=%d", encodeURI(this.text), this.limit)).result(function (result) {
+            IN.API.Raw(_.str.sprintf("company-search:(companies:(id,name,logo-url))?keywords=%s&count=%d", encodeURI(this.text), this.limit)).result(function (result) {
                 cdef.resolve(result);
             });
-            IN.API.PeopleSearch().params({"keywords": this.text, "count": this.limit}).result(function(result) {
+            IN.API.PeopleSearch().fields(["id", "first-name", "last-name","picture-url"]).
+                params({"keywords": this.text, "count": this.limit}).result(function(result) {
                 pdef.resolve(result);
             });
             return $.when(cdef, pdef).then(function(companies, people) {
@@ -129,7 +130,7 @@ openerp.web_linkedin = function(instance) {
                     el.__type = "people";
                     return el;
                 });
-                lst = lst.concat(plst);
+                lst = plst.concat(lst);
                 console.log("Linkedin search found:", lst.length, lst);
                 self.result = lst;
                 self.display_result();
@@ -169,11 +170,10 @@ openerp.web_linkedin = function(instance) {
             });
             if (this.data.__type === "company") {
                 this.$("h3").text(this.data.name);
-                IN.API.Raw(_.str.sprintf("companies/%d:(logo-url)", this.data.id)).result(function (result) {
-                    self.$("img").attr("src", result.logoUrl);
-                });
+                self.$("img").attr("src", this.data.logoUrl);
             } else { // people
                 this.$("h3").text(_.str.sprintf("%s %s", this.data.firstName, this.data.lastName));
+                self.$("img").attr("src", this.data.pictureUrl);
             }
         },
     });
