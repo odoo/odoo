@@ -86,10 +86,12 @@
                     <div name="config_sale">
                         <field name="module_crm" invisible="1"/>
                         <separator string="Emails Integration" attrs="{'invisible': [('module_crm','=',False)]}"/>
-                        <div style="color:grey" attrs="{'invisible': [('module_crm','=',False)]}">
-                            The email integration allows you to automatically create leads or others documents from an incoming emails account.
-                            Users can do it from the mail client by pressing a button or it can be configured to automatically synchronize from your mail server.
-                        </div>
+                        <p attrs="{'invisible': [('module_crm','=',False)]}">
+                            OpenERP allows to automatically create leads (or others documents)
+                            from incoming emails. You can synchronize emails with OpenERP
+                            by connecting the mail gateway to your mail server or by manually
+                            pressing buttons in our mail clients.
+                        </p>
                         <group name="On Mail Client" attrs="{'invisible': [('module_crm','=',False)]}">
                             <label for="id" string="On Mail Client"/>
                             <div>
