@@ -118,14 +118,14 @@ openerp.web_linkedin = function(instance) {
                 pdef.resolve(result);
             });
             return $.when(cdef, pdef).then(function(companies, people) {
-                var lst = companies.companies.values;
-                var plst = people.people.values;
+                var lst = companies.companies.values || [];
+                var plst = people.people.values || [];
                 lst = _.initial(lst, _.min([self.limit / 2, plst.length]));
                 _.map(lst, function(el) {
                     el.__type = "company";
                     return el;
                 });
-                plst = _.first(people.people.values, self.limit - lst.length)
+                plst = _.first(plst, self.limit - lst.length)
                 _.map(plst, function(el) {
                     el.__type = "people";
                     return el;
