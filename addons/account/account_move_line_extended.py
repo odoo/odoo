@@ -22,6 +22,13 @@
 import tools
 from osv import fields,osv
 
+class act_window(osv.osv):
+    _inherit = 'ir.actions.act_window'
+    _columns = {
+        'extended_form_view_id': fields.many2one('ir.ui.view', 'Account form view ref.'),
+    }
+act_window()
+  
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
