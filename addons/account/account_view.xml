@@ -2049,7 +2049,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" default_selection="get_selection_ids">
+                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" default_selection="get_unreconcile_entry">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="statement_id" string="St."/>

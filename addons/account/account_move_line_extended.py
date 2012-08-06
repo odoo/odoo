@@ -32,7 +32,7 @@ res_partner()
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
     
-    def get_selection_ids(self, cr, uid, ids, context=None):
+    def get_unreconcile_entry(self, cr, uid, ids, context=None):
         records = self.read(cr, uid, ids, ['reconcile_id'])
         res = []
         for record in records:
