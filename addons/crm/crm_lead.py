@@ -245,7 +245,7 @@ class crm_lead(base_stage, osv.osv):
         'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
-        
+
         # Fields for address, due to separation from crm and res.partner
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),

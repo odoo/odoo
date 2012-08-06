@@ -363,7 +363,15 @@
            <field name="view_mode">kanban,calendar,tree,form,graph</field>
            <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
-           <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>
+           <field name="help" type="html">
+             <p class="oe_view_nocontent_create">
+               Click to add a new event.
+             </p><p>
+               OpenERP helps you schedule and efficiently organize your events:
+               track subscriptions and participations, automate the confirmation emails,
+               sell tickets, etc.
+             </p>
+           </field>
         </record>
 
         <act_window

@@ -55,10 +55,14 @@
             <field name="view_mode">tree,form</field>
             <!-- a context is necessary to get the right portal form view -->
             <field name="context">{'form_view_ref': 'portal.portal_form_view'}</field>
-            <field name="help">
-A portal helps defining specific views and rules for a group of users (the
-portal group).  A portal menu, widgets and specific groups may be assigned to
-the portal's users.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new portal. 
+              </p><p>
+                A portal helps defining specific views and rules for a group of
+                users (the portal group).  A portal menu, widgets and specific
+                groups may be assigned to the portal's users.
+              </p>
             </field>
         </record>
         <!-- menu Administration/Portals/Portals -->

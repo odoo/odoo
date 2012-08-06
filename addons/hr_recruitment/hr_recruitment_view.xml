@@ -22,7 +22,15 @@
         <field name="view_type">form</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
-        <field name="help">Define here your stages of the recruitment process, for example: qualification call, first interview, second interview, refused, hired.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a new stage in the recruitment process.
+          </p><p>
+            Define here your stages of the recruitment process, for example:
+            qualification call, first interview, second interview, refused,
+            hired.
+          </p>
+        </field>
     </record>
 
 
@@ -388,7 +396,14 @@
         <field name="res_model">hr.recruitment.stage</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="hr_recruitment_stage_tree"/>
-        <field name="help"> Check if the following stages are matching your recruitment process. Don't forget to specify the department if your recruitment process is different according to the job position.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a new stage in the recruitment process.
+          </p><p>
+            Don't forget to specify the department if your recruitment process
+            is different according to the job position.
+          </p>
+        </field>
     </record>
 
     <menuitem
