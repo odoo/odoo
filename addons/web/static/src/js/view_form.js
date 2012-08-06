@@ -3520,8 +3520,14 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
                     self.view.do_add_record();
                 });
             });
-        this.$current.append(
-            $('<tr>').append($cell))
+
+        var $padding = this.$current.find('tr:not([data-id]):first');
+        var $newrow = $('<tr>').append($cell);
+        if ($padding.length) {
+            $padding.before($newrow);
+        } else {
+            this.$current.append($newrow)
+        }
     }
 });
 
