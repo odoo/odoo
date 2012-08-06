@@ -78,13 +78,13 @@ def _str2time(cre):
 
 class BoundStream2(object):
     """Wraps around a seekable buffer, reads a determined range of data
-    
+
         Note that the supplied stream object MUST support a size() which
         should return its data length (in bytes).
-    
+
         A variation of the class in websrv_lib.py
     """
-    
+
     def __init__(self, stream, offset=None, length=None, chunk_size=None):
         self._stream = stream
         self._offset = offset or 0
@@ -99,7 +99,7 @@ class BoundStream2(object):
     def read(self, size=-1):
         if not self._stream:
             raise IOError(errno.EBADF, "read() without stream.")
-        
+
         if self._rem_length == 0:
             return ''
         elif self._rem_length < 0:
@@ -110,7 +110,7 @@ class BoundStream2(object):
             rsize = size
         if self._chunk_size and self._chunk_size < rsize:
             rsize = self._chunk_size
-        
+
         data = self._stream.read(rsize)
         self._rem_length -= len(data)
 
@@ -136,25 +136,25 @@ class BoundStream2(object):
         """
         if whence == os.SEEK_SET:
             if pos < 0 or pos > self._length:
-                raise IOError(errno.EINVAL,"Cannot seek!")
+                raise IOError(errno.EINVAL,"Cannot seek.")
             self._stream.seek(pos - self._offset)
             self._rem_length = self._length - pos
         elif whence == os.SEEK_CUR:
             if pos > 0:
                 if pos > self._rem_length:
-                    raise IOError(errno.EINVAL,"Cannot seek past end!")
+                    raise IOError(errno.EINVAL,"Cannot seek past end.")
                 elif pos < 0:
                     oldpos = self.tell()
                     if oldpos + pos < 0:
-                        raise IOError(errno.EINVAL,"Cannot seek before start!")
+                        raise IOError(errno.EINVAL,"Cannot seek before start.")
                 self._stream.seek(pos, os.SEEK_CUR)
                 self._rem_length -= pos
         elif whence == os.SEEK_END:
             if pos > 0:
-                raise IOError(errno.EINVAL,"Cannot seek past end!")
+                raise IOError(errno.EINVAL,"Cannot seek past end.")
             else:
                 if self._length + pos < 0:
-                    raise IOError(errno.EINVAL,"Cannot seek before start!")
+                    raise IOError(errno.EINVAL,"Cannot seek before start.")
             newpos = self._offset + self._length + pos
             self._stream.seek(newpos, os.SEEK_SET)
             self._rem_length = 0 - pos
@@ -400,7 +400,7 @@ class openerp_dav_handler(dav_interface):
                 domain = None
                 if filters:
                     domain = node.get_domain(cr, filters)
-                    
+
                     if hasattr(filters, 'getElementsByTagNameNS'):
                         hrefs = filters.getElementsByTagNameNS('DAV:', 'href')
                         if hrefs:
@@ -434,7 +434,7 @@ class openerp_dav_handler(dav_interface):
         except DAV_Error:
             raise
         except Exception, e:
-            self.parent.log_error("Cannot get_children: "+ str(e))
+            self.parent.log_error("Cannot get_children: "+str(e)+".")
             raise
         finally:
             if cr: cr.close()
@@ -488,7 +488,7 @@ class openerp_dav_handler(dav_interface):
             if not node:
                 raise DAV_NotFound2(uri2)
             # TODO: if node is a collection, for some specific set of
-            # clients ( web browsers; available in node context), 
+            # clients ( web browsers; available in node context),
             # we may return a pseydo-html page with the directory listing.
             try:
                 res = node.open_data(cr,'r')
@@ -508,7 +508,7 @@ class openerp_dav_handler(dav_interface):
                     else:
                         length = res.size() - start
                     res = BoundStream2(res, offset=start, length=length)
-                
+
             except TypeError,e:
                 # for the collections that return this error, the DAV standard
                 # says we'd better just return 200 OK with empty data
@@ -564,10 +564,10 @@ class openerp_dav_handler(dav_interface):
 
     @memoize(CACHE_SIZE)
     def _get_dav_getcontentlength(self, uri):
-        """ return the content length of an object """        
+        """ return the content length of an object """
         self.parent.log_message('get length: %s' % uri)
         result = 0
-        cr, uid, pool, dbname, uri2 = self.get_cr(uri)        
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
             return str(result)
@@ -602,7 +602,7 @@ class openerp_dav_handler(dav_interface):
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             return time.time()
-        try:            
+        try:
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound2(uri2)
@@ -623,11 +623,11 @@ class openerp_dav_handler(dav_interface):
 
     @memoize(CACHE_SIZE)
     def get_creationdate(self, uri):
-        """ return the last modified date of the object """        
+        """ return the last modified date of the object """
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             raise DAV_Error, 409
-        try:            
+        try:
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound2(uri2)
@@ -643,7 +643,7 @@ class openerp_dav_handler(dav_interface):
         if not dbname:
             if cr: cr.close()
             return 'httpd/unix-directory'
-        try:            
+        try:
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound2(uri2)
@@ -651,8 +651,8 @@ class openerp_dav_handler(dav_interface):
             return result
             #raise DAV_NotFound, 'Could not find %s' % path
         finally:
-            if cr: cr.close()    
-    
+            if cr: cr.close()
+
     def mkcol(self,uri):
         """ create a new collection
             see par. 9.3 of rfc4918
@@ -690,9 +690,9 @@ class openerp_dav_handler(dav_interface):
             node = self.uri2object(cr, uid, pool, uri2[:])
         except Exception:
             node = False
-        
+
         objname = misc.ustr(uri2[-1])
-        
+
         ret = None
         if not node:
             dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
@@ -706,14 +706,14 @@ class openerp_dav_handler(dav_interface):
                 cr.commit()
                 cr.close()
                 raise DAV_Error(400, "Failed to create resource.")
-            
+
             uparts=urlparse.urlparse(uri)
             fileloc = '/'.join(newchild.full_path())
             if isinstance(fileloc, unicode):
                 fileloc = fileloc.encode('utf-8')
             # the uri we get is a mangled one, where the davpath has been removed
             davpath = self.parent.get_davpath()
-            
+
             surl = '%s://%s' % (uparts[0], uparts[1])
             uloc = urllib.quote(fileloc)
             hurl = False
@@ -727,19 +727,19 @@ class openerp_dav_handler(dav_interface):
             ret = (str(hurl), etag)
         else:
             self._try_function(node.set_data, (cr, data), "save %s" % objname, cr=cr)
-            
+
         cr.commit()
         cr.close()
         return ret
 
     def rmcol(self,uri):
         """ delete a collection """
-        cr, uid, pool, dbname, uri2 = self.get_cr(uri)        
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
             raise DAV_Error, 409
 
-        node = self.uri2object(cr, uid, pool, uri2)             
+        node = self.uri2object(cr, uid, pool, uri2)
         self._try_function(node.rmcol, (cr,), "rmcol %s" % uri, cr=cr)
 
         cr.commit()
@@ -748,14 +748,14 @@ class openerp_dav_handler(dav_interface):
 
     def rm(self,uri):
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
-        if not dbname:        
+        if not dbname:
             if cr: cr.close()
             raise DAV_Error, 409
         node = self.uri2object(cr, uid, pool, uri2)
         res = self._try_function(node.rm, (cr,), "rm %s"  % uri, cr=cr)
         if not res:
             if cr: cr.close()
-            raise OSError(1, 'Operation not permited.')        
+            raise OSError(1, 'Operation not permitted.')
         cr.commit()
         cr.close()
         return 204
@@ -922,8 +922,8 @@ class openerp_dav_handler(dav_interface):
         return result
 
     def unlock(self, uri, token):
-        """ Unlock a resource from that token 
-        
+        """ Unlock a resource from that token
+
         @return True if unlocked, False if no lock existed, Exceptions
         """
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
@@ -959,9 +959,9 @@ class openerp_dav_handler(dav_interface):
             node = self.uri2object(cr, uid, pool, uri2[:])
         except Exception:
             node = False
-        
+
         objname = misc.ustr(uri2[-1])
-        
+
         if not node:
             dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
             if not dir_node:
@@ -976,7 +976,7 @@ class openerp_dav_handler(dav_interface):
                 cr.commit()
                 cr.close()
                 raise DAV_Error(400, "Failed to create resource.")
-            
+
             created = True
 
         try:
@@ -993,9 +993,9 @@ class openerp_dav_handler(dav_interface):
             cr.commit()
             cr.close()
             raise DAV_Error(423, "Resource already locked.")
-        
+
         assert isinstance(lres, list), 'lres: %s' % repr(lres)
-        
+
         try:
             data = mk_lock_response(self, uri, lres)
             cr.commit()

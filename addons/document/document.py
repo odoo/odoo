@@ -23,7 +23,7 @@ import base64
 from osv import osv, fields
 import os
 
-# from psycopg2 import Binary
+#from psycopg2 import Binary
 #from tools import config
 import tools
 from tools.translate import _
@@ -37,8 +37,8 @@ DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['roo
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _rec_name = 'datas_fname'
-   
-   
+
+
     def _attach_parent_id(self, cr, uid, ids=None, context=None):
         """Migrate ir.attachments to the document module.
 
@@ -61,7 +61,7 @@ class document_file(osv.osv):
             return False
 
         if ids is not None:
-            raise NotImplementedError("Ids is just there by convention,please do not use it.")
+            raise NotImplementedError("Ids are just there by convention, please do not use it.")
 
         cr.execute("UPDATE ir_attachment " \
                     "SET parent_id = %s, db_datas = decode(encode(db_datas,'escape'), 'base64') " \
@@ -294,7 +294,7 @@ class document_file(osv.osv):
                 ('datas_fname', '=', vals['datas_fname']),
             ]
             attach_ids = self.search(cr, uid, domain, context=context)
-            super(document_file, self).write(cr, uid, attach_ids, 
+            super(document_file, self).write(cr, uid, attach_ids,
                                              {'datas' : vals['datas']},
                                              context=context)
             result = attach_ids[0]

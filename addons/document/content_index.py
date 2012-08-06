@@ -93,13 +93,13 @@ class indexer(object):
             except NhException:
                 pass
 
-        raise NhException('No appropriate method to index file !')
+        raise NhException('No appropriate method to index file.')
 
     def _doIndexContent(self,content):
-        raise NhException("Content cannot be handled here!")
+        raise NhException("Content cannot be handled here.")
 
     def _doIndexFile(self,fpath):
-        raise NhException("Content cannot be handled here!")
+        raise NhException("Content cannot be handled here.")
 
     def __repr__(self):
         return "<indexer %s.%s>" %(self.__module__, self.__class__.__name__)
@@ -116,7 +116,7 @@ def mime_match(mime, mdict):
     return (None, None)
 
 class contentIndex(object):
-    
+
     def __init__(self):
         self.mimes = {}
         self.exts = {}

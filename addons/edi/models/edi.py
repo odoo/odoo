@@ -149,7 +149,7 @@ class edi_document(osv.osv):
             module = edi_document.get('__import_module') or edi_document.get('__module')
             assert module, 'a `__module` or `__import_module` attribute is required in each EDI document.'
             if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
-                raise osv.except_osv(_('Missing Application !'),
+                raise osv.except_osv(_('Missing application.'),
                             _("The document you are trying to import requires the OpenERP `%s` application. "
                               "You can install it by connecting as the administrator and opening the configuration assistant.")%(module,))
             model = edi_document.get('__import_model') or edi_document.get('__model')
@@ -276,7 +276,7 @@ class EDIMixin(object):
                     # this could happen for data records defined in a module that depends
                     # on the module that owns the model, e.g. purchase defines
                     # product.pricelist records.
-                    _logger.debug('Mismatching module! expected %s, got %s, for %s.',
+                    _logger.debug('Mismatching module: expected %s, got %s, for %s.',
                                   module, record._original_module, record)
                 # ID is unique cross-db thanks to db_uuid
                 module = "%s:%s" % (module, db_uuid)
@@ -515,7 +515,7 @@ class EDIMixin(object):
                 file_name = record.name_get()[0][1]
                 file_name = re.sub(r'[^a-zA-Z0-9_-]', '_', file_name)
                 file_name += ".pdf"
-                ir_attachment = self.pool.get('ir.attachment').create(cr, uid, 
+                ir_attachment = self.pool.get('ir.attachment').create(cr, uid,
                                                                       {'name': file_name,
                                                                        'datas': result,
                                                                        'datas_fname': file_name,
@@ -593,22 +593,22 @@ class EDIMixin(object):
         target = self._edi_get_object_by_external_id(cr, uid, external_id, model, context=context)
         need_new_ext_id = False
         if not target:
-            _logger.debug("%s: Importing EDI relationship [%r,%r] - ID is not found, trying name_get.",
+            _logger.debug("%s: Importing EDI relationship [%r,%r] - ID not found, trying name_get.",
                           self._name, external_id, value)
             target = self._edi_get_object_by_name(cr, uid, value, model, context=context)
             need_new_ext_id = True
         if not target:
-            _logger.debug("%s: Importing EDI relationship [%r,%r] - name is not found, creating it!",
+            _logger.debug("%s: Importing EDI relationship [%r,%r] - name not found, creating it.",
                           self._name, external_id, value)
             # also need_new_ext_id here, but already been set above
             model = self.pool.get(model)
-            # should use name_create() but e.g. res.partner won't allow it at the moment 
+            # should use name_create() but e.g. res.partner won't allow it at the moment
             res_id = model.create(cr, uid, {model._rec_name: value}, context=context)
             target = model.browse(cr, uid, res_id, context=context)
         if need_new_ext_id:
             ext_id_members = split_external_id(external_id)
             # module name is never used bare when creating ir.model.data entries, in order
-            # to avoid being taken as part of the module's data, and cleanup up at next update  
+            # to avoid being taken as part of the module's data, and cleanup up at next update
             module = "%s:%s" % (ext_id_members['module'], ext_id_members['db_uuid'])
             # create a new ir.model.data entry for this value
             self._edi_external_id(cr, uid, target, existing_id=ext_id_members['id'], existing_module=module, context=context)

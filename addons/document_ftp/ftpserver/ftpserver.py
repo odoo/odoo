@@ -302,13 +302,13 @@ class DummyAuthorizer:
         provide customized response strings when user log-in and quit.
         """
         if self.has_user(username):
-            raise AuthorizerError('User "%s" already exists!' %username)
+            raise AuthorizerError('User "%s" already exists.' %username)
         homedir = os.path.realpath(homedir)
         if not os.path.isdir(homedir):
-            raise AuthorizerError('No such directory: "%s"!' %homedir)
+            raise AuthorizerError('No such directory: "%s".' %homedir)
         for p in perm:
             if p not in 'elradfmw':
-                raise AuthorizerError('No such permission: "%s"!' %p)
+                raise AuthorizerError('No such permission: "%s".' %p)
         for p in perm:
             if (p in self.write_perms) and (username == 'anonymous'):
                 warnings.warn("Write permissions are assigned to anonymous user.",
@@ -638,7 +638,7 @@ class DTPHandler(asyncore.dispatcher):
         elif type == 'i':
             self.data_wrapper = lambda x: x
         else:
-            raise TypeError, "Unsupported type!"
+            raise TypeError, "Unsupported type."
         self.receive = True
 
     def get_transmitted_bytes(self):
@@ -767,7 +767,7 @@ class DTPHandler(asyncore.dispatcher):
             # some other exception occurred;  we don't want to provide
             # confidential error messages
             logerror(traceback.format_exc())
-            error = "Internal error!"
+            error = "Internal error."
         self.cmd_channel.respond("426 %s; transfer aborted." %error)
         self.close()
 
@@ -823,7 +823,7 @@ class FileProducer:
         elif type == 'i':
             self.data_wrapper = lambda x: x
         else:
-            raise TypeError, "Unsupported type!"
+            raise TypeError, "Unsupported type."
 
     def more(self):
         """Attempt a chunk of data of size self.buffer_size."""
@@ -2150,7 +2150,7 @@ class FTPHandler(asynchat.async_chat):
             datacr = self.get_crdata2(line, mode='list')
             # RFC-3659 requires 501 response code if path is not a directory
             if not self.fs.isdir(datacr[1]):
-                err = 'No such directory!'
+                err = 'No such directory.'
                 self.log('FAIL MLSD "%s". %s.' %(line, err))
                 self.respond("501 %s." %err)
                 return
@@ -2191,7 +2191,7 @@ class FTPHandler(asynchat.async_chat):
                 fd.seek(self.restart_position)
                 ok = 1
             except AssertionError:
-                why = "Invalid REST parameter!"
+                why = "Invalid REST parameter."
             except IOError, err:
                 why = _strerror(err)
             self.restart_position = 0
@@ -2240,7 +2240,7 @@ class FTPHandler(asynchat.async_chat):
                 fd.seek(self.restart_position)
                 ok = 1
             except AssertionError:
-                why = "Invalid REST parameter!"
+                why = "Invalid REST parameter."
             except IOError, err:
                 why = _strerror(err)
             self.restart_position = 0
@@ -2760,7 +2760,7 @@ class FTPHandler(asynchat.async_chat):
     def ftp_OPTS(self, line):
         """Specify options for FTP commands as specified in RFC-2389."""
         try:
-            assert (not line.count(' ') > 1), 'Invalid number of arguments!'
+            assert (not line.count(' ') > 1), 'Invalid number of arguments.'
             if ' ' in line:
                 cmd, arg = line.split(' ')
                 assert (';' in arg), 'Invalid argument!'

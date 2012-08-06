@@ -303,7 +303,7 @@ class abstracted_fs(object):
                 raise
             if not uid:
                 cr.close()
-                raise OSError(2, 'Authentification is Required!')
+                raise OSError(2, 'Authentification required.')
             n = get_node_context(cr, uid, {})
             node = n.get_uri(cr, p_parts[1:])
             return (cr, node, rem_path)
@@ -318,7 +318,7 @@ class abstracted_fs(object):
                 node = self.cwd_node
             if node is False and mode not in ('???'):
                 cr.close()
-                raise IOError(errno.ENOENT, 'Path does not exist!')
+                raise IOError(errno.ENOENT, 'Path does not exist.')
             return (cr, node, rem_path)
 
     def get_node_cr_uid(self, node):

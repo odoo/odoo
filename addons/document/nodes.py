@@ -45,7 +45,7 @@ _logger = logging.getLogger(__name__)
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)
-    
+
         Note: a place to fix if datetime is used in db.
     """
     if not cre:
@@ -62,7 +62,7 @@ def get_node_context(cr, uid, context):
 
 class node_context(object):
     """ This is the root node, representing access to some particular context
-    
+
     A context is a set of persistent data, which may influence the structure
     of the nodes. All other transient information during a data query should
     be passed down with function arguments.
@@ -99,7 +99,7 @@ class node_context(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
-    
+
     def get(self, name, default=None):
         return self.context.get(name, default)
 
@@ -119,7 +119,7 @@ class node_context(object):
         """Create (or locate) a node for a directory
             @param dbro a browse object of document.directory
         """
-        
+
         fullpath = dbro.get_full_path(context=self.context)
         klass = dbro.get_node_class(dbro, context=self.context)
         return klass(fullpath, None ,self, dbro)
@@ -183,7 +183,7 @@ class node_descriptor(object):
 
     def __nonzero__(self):
         """ Ensure that a node_descriptor will never equal False
-        
+
             Since we do define __len__ and __iter__ for us, we must avoid
             being regarded as non-true objects.
         """
@@ -244,7 +244,7 @@ class node_class(object):
         else:
             s.append(self.path)
         return s #map(lambda x: '/' +x, s)
-        
+
     def __repr__(self):
         return "%s@/%s" % (self.our_type, '/'.join(self.full_path()))
 
@@ -323,7 +323,7 @@ class node_class(object):
     def get_dav_eprop(self, cr, ns, prop):
         if not self.DAV_M_NS:
             return None
-        
+
         if self.DAV_M_NS.has_key(ns):
             prefix = self.DAV_M_NS[ns]
         else:
@@ -340,12 +340,12 @@ class node_class(object):
             r = m(cr)
             return r
         except AttributeError:
-            _logger.debug('Property %s not supported.' % prop, exc_info=True)
+            _logger.debug('The property %s is not supported.' % prop, exc_info=True)
         return None
 
     def get_dav_resourcetype(self, cr):
         """ Get the DAV resource type.
-        
+
             Is here because some nodes may exhibit special behaviour, like
             CalDAV/GroupDAV collections
         """
@@ -385,7 +385,7 @@ class node_class(object):
         """
         _logger.warning("Attempted to create a file under %r, not possible.", self)
         raise IOError(errno.EPERM, "Not allowed to create file(s) here.")
-    
+
     def create_child_collection(self, cr, objname):
         """ Create a child collection (directory) under self
         """
@@ -404,7 +404,7 @@ class node_class(object):
 
     def check_perms(self, perms):
         """ Check the permissions of the current node.
-        
+
         @param perms either an integers of the bits to check, or
                 a string with the permission letters
 
@@ -414,7 +414,7 @@ class node_class(object):
         4, r : allow read of file, or listing of dir contents
         8, u : allow remove (unlink)
         """
-        
+
         if isinstance(perms, str):
             pe2 = 0
             chars = { 'x': 1, 'w': 2, 'r': 4, 'u': 8 }
@@ -426,7 +426,7 @@ class node_class(object):
                 raise ValueError("Invalid permission bits.")
         else:
             raise ValueError("Invalid permission attribute.")
-        
+
         return ((self.uidperms & perms) == perms)
 
 class node_database(node_class):
@@ -463,7 +463,7 @@ class node_database(node_class):
             is_allowed = self.check_perms(1)
         else:
             is_allowed = self.check_perms(5)
-        
+
         if not is_allowed:
             raise IOError(errno.EPERM, "Permission into directory denied.")
 
@@ -493,7 +493,7 @@ def mkdosname(company_name, default='noname'):
     for c in company_name[:8]:
         n += (c in badchars and '_') or c
     return n
-    
+
 
 def _uid2unixperms(perms, has_owner):
     """ Convert the uidperms and the owner flag to full unix bits
@@ -566,7 +566,7 @@ class node_dir(node_database):
 
     def _file_get(self, cr, nodename=False):
         res = super(node_dir,self)._file_get(cr, nodename)
-        
+
         is_allowed = self.check_perms(nodename and 1 or 5)
         if not is_allowed:
             raise IOError(errno.EPERM, "Permission into directory denied.")
@@ -583,7 +583,7 @@ class node_dir(node_database):
                 res.extend(res3)
 
         return res
-    
+
     def _child_get(self, cr, name=None, domain=None):
         dirobj = self.context._dirobj
         uid = self.context.uid
@@ -595,7 +595,7 @@ class node_dir(node_database):
             is_allowed = self.check_perms(1)
         else:
             is_allowed = self.check_perms(5)
-        
+
         if not is_allowed:
             raise IOError(errno.EPERM, "Permission into directory denied.")
 
@@ -640,7 +640,7 @@ class node_dir(node_database):
                 raise OSError(39, 'Directory not empty.')
             res = self.context._dirobj.unlink(cr, uid, [directory.id])
         else:
-            raise OSError(1, 'Operation is not permited.')
+            raise OSError(1, 'Operation is not permitted.')
         return res
 
     def create_child_collection(self, cr, objname):
@@ -654,7 +654,7 @@ class node_dir(node_database):
         ctx.update(self.dctx)
         obj = dirobj.browse(cr, uid, self.dir_id)
         if obj and (obj.type == 'ressource') and not object2:
-            raise OSError(1, 'Operation is not permited.')
+            raise OSError(1, 'Operation is not permitted.')
 
         #objname = uri2[-1]
         val = {
@@ -730,7 +730,7 @@ class node_dir(node_database):
         ret = {}
         if new_name and (new_name != dbro.name):
             if ndir_node.child(cr, new_name):
-                raise IOError(errno.EEXIST, "Destination path already exists!")
+                raise IOError(errno.EEXIST, "Destination path already exists.")
             ret['name'] = new_name
 
         del dbro
@@ -864,10 +864,10 @@ class node_res_dir(node_class):
             if not res_name:
                 continue
                 # Yes! we can't do better but skip nameless records.
-            
+
             # Escape the name for characters not supported in filenames
             res_name = res_name.replace('/','_') # any other weird char?
-            
+
             if name and (res_name != ustr(name)):
                 # we have matched _ to any character, but we only meant to match
                 # the special ones.
@@ -1057,7 +1057,7 @@ class node_res_obj(node_class):
         where2 = where + [('parent_id','=',self.dir_id) ]
         ids = dirobj.search(cr, uid, where2, context=ctx)
         bo = obj.browse(cr, uid, self.res_id, context=ctx)
-        
+
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             if name and (name != dirr.name):
                 continue
@@ -1114,7 +1114,7 @@ class node_res_obj(node_class):
 
         obj = dirobj.browse(cr, uid, self.dir_id)
         if obj and (obj.type == 'ressource') and not object2:
-            raise OSError(1, 'Operation is not permited.')
+            raise OSError(1, 'Operation is not permitted.')
 
 
         val = {
@@ -1177,14 +1177,14 @@ class node_file(node_class):
         self.write_date = fil.write_date or fil.create_date
         self.content_length = fil.file_size
         self.displayname = fil.name
-        
+
         self.uidperms = 14
         if parent:
             if not parent.check_perms('x'):
                 self.uidperms = 0
             elif not parent.check_perms('w'):
                 self.uidperms = 4
-    
+
         try:
             self.uuser = (fil.user_id and fil.user_id.login) or 'nobody'
         except Exception:
@@ -1323,7 +1323,7 @@ class node_file(node_class):
             # there *must* be a parent node for this one
             self.parent = self.context.get_dir_node(cr, dbro.parent_id)
             assert self.parent
-        
+
         ret = {}
         if ndir_node and self.parent != ndir_node:
             if not (isinstance(self.parent, node_dir) and isinstance(ndir_node, node_dir)):
@@ -1373,7 +1373,7 @@ class node_content(node_class):
             self.uidperms = parent.uidperms & 14
             self.uuser = parent.uuser
             self.ugroup = parent.ugroup
-        
+
         self.extension = cnt.extension
         self.report_id = cnt.report_id and cnt.report_id.id
         #self.mimetype = cnt.extension.
@@ -1417,13 +1417,13 @@ class node_content(node_class):
             cperms = 'rw'
         else:
             raise IOError(errno.EINVAL, "Cannot open at mode %s." % mode)
-        
+
         if not self.check_perms(cperms):
             raise IOError(errno.EPERM, "Permission denied.")
 
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        
+
         return nodefd_content(self, cr, mode, ctx)
 
     def get_data_len(self, cr, fil_obj = None):
@@ -1451,7 +1451,7 @@ class node_content(node_class):
         return ''
 
 class nodefd_content(StringIO, node_descriptor):
-    
+
     """ A descriptor to content nodes
     """
     def __init__(self, parent, cr, mode, ctx):
@@ -1474,7 +1474,7 @@ class nodefd_content(StringIO, node_descriptor):
             StringIO.__init__(self, None)
         else:
             _logger.error("Incorrect mode %s is specified.", mode)
-            raise IOError(errno.EINVAL, "Invalid file mode!")
+            raise IOError(errno.EINVAL, "Invalid file mode.")
         self.mode = mode
 
     def size(self):
@@ -1506,7 +1506,7 @@ class nodefd_content(StringIO, node_descriptor):
         StringIO.close(self)
 
 class nodefd_static(StringIO, node_descriptor):
-    
+
     """ A descriptor to nodes with static data.
     """
     def __init__(self, parent, cr, mode, ctx=None):
@@ -1528,7 +1528,7 @@ class nodefd_static(StringIO, node_descriptor):
             StringIO.__init__(self, None)
         else:
             _logger.error("Incorrect mode %s is specified.", mode)
-            raise IOError(errno.EINVAL, "Invalid file mode!")
+            raise IOError(errno.EINVAL, "Invalid file mode.")
         self.mode = mode
 
     def size(self):
