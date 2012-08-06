@@ -19,4 +19,15 @@
 #
 ##############################################################################
 
+import web.common.http
+import base64
+import urllib2
+
+class Binary(web.common.http.Controller):
+    _cp_path = "/web_linkedin/binary"
+
+    @web.common.http.jsonrequest
+    def url2binary(self, req,url):
+        bfile = urllib2.urlopen(url)
+        return base64.b64encode(bfile.read())
 

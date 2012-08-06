@@ -82,13 +82,29 @@ openerp.web_linkedin = function(instance) {
             });
         },
         selected_entity: function(entity) {
+            var self = this;
             var to_change = {};
+            var defs = [];
             if (entity.__type === "company") {
                 to_change.name = entity.name;
+                if (entity.logoUrl) {
+                    defs.push(self.rpc('/web_linkedin/binary/url2binary',
+                                       {'url': entity.logoUrl}).pipe(function(data){
+                        to_change.photo = data;
+                    }));
+                }
             } else { //people
                 to_change.name = _.str.sprintf("%s %s", entity.firstName, entity.lastName);
+                if (entity.pictureUrl) {
+                    defs.push(self.rpc('/web_linkedin/binary/url2binary',
+                                       {'url': entity.pictureUrl}).pipe(function(data){
+                        to_change.photo = data;
+                    }));
+                }
             }
-            this.view.on_processed_onchange({value:to_change});
+            $.when.apply($, defs).then(function() {
+                self.view.on_processed_onchange({value:to_change});
+            });
         },
     });
     
