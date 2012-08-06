@@ -80,6 +80,14 @@
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
    */
 }
+.openerp :-moz-placeholder {
+  color: #afafb6 !important;
+  font-style: italic !important;
+}
+.openerp ::-webkit-input-placeholder {
+  color: #afafb6 !important;
+  font-style: italic !important;
+}
 .openerp a {
   text-decoration: none;
 }
@@ -1808,15 +1816,29 @@
   margin: 0 0 0 4px;
   padding: 0;
 }
-.openerp .oe_view_nocontent > img {
-  float: left;
-  margin: 1.5em;
-}
-.openerp .oe_view_nocontent > div {
-  overflow: hidden;
-  padding: 35px 0px 0px 0px;
-  max-width: 700px;
+.openerp .oe_view_nocontent {
+  padding: 15px;
+  margin-top: 0;
+  color: #777777;
   font-size: 125%;
+  max-width: 700px;
+}
+.openerp .oe_view_nocontent .oe_view_nocontent_create {
+  background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 7px 0;
+  margin-top: 0;
+  padding-top: 35px;
+  min-height: 28px;
+  color: #4c4c4c;
+}
+.openerp .oe_view_nocontent > p {
+  padding-left: 95px;
+}
+.openerp .oe_view_nocontent .oe_empty_custom_dashboard {
+  background: transparent url(/web/static/src/img/graph_background.png) no-repeat 0 0;
+  margin-top: -15px;
+  padding: 100px 0 0 137px;
+  min-height: 327px;
+  margin-left: -15px;
 }
 .openerp .oe_formview {
   background: white;
@@ -1907,6 +1929,16 @@
   min-width: 650px;
   max-width: 860px;
   margin: 0 auto;
+}
+.openerp .oe_form div.oe_form_configuration div.oe_horizontal_separator {
+  margin: 25px 0 10px 0;
+}
+.openerp .oe_form div.oe_form_configuration p {
+  color: #aaaaaa;
+  max-width: 650px;
+}
+.openerp .oe_form div.oe_form_configuration label {
+  min-width: 150px;
 }
 .openerp ul.oe_form_steps {
   height: 30px;
@@ -2001,7 +2033,7 @@
 }
 .openerp .oe_form td.oe_form_group_cell_label {
   border-right: 1px solid #dddddd;
-  padding: 2px 0px 2px 0px;
+  padding: 4px 0px 4px 0px;
 }
 .openerp .oe_form td.oe_form_group_cell_label label {
   line-height: 18px;
@@ -2013,7 +2045,7 @@
 }
 .openerp .oe_form .oe_form_group {
   width: 100%;
-  margin: 6px 0 6px 0;
+  margin: 9px 0 9px 0;
 }
 .openerp .oe_form .oe_form_group .oe_form_group_cell.oe_group_right {
   padding-left: 20px;
@@ -2038,7 +2070,7 @@
   font-weight: bold;
   font-size: 20px;
   margin: 8px 0px 8px 0px;
-  color: #aaaabb;
+  color: #53637e;
 }
 .openerp .oe_horizontal_separator:empty {
   height: 5px;

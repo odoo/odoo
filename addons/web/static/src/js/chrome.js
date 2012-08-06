@@ -609,6 +609,55 @@ instance.web.Login =  instance.web.Widget.extend({
 });
 instance.web.client_actions.add("login", "instance.web.Login");
 
+/**
+ * Client action to reload the whole interface.
+ * If params has an entry 'menu_id', it opens the given menu entry.
+ */
+instance.web.Reload = instance.web.Widget.extend({
+    init: function(parent, params) {
+        this._super(parent);
+        this.menu_id = (params && params.menu_id) || false;
+    },
+    start: function() {
+        var l = window.location;
+        var timestamp = new Date().getTime();
+        var search = "?ts=" + timestamp;
+        if (l.search) {
+            search = l.search + "&ts=" + timestamp;
+        } 
+        var hash = l.hash;
+        if (this.menu_id) {
+            hash = "#menu_id=" + this.menu_id;
+        }
+        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+        window.location = url;
+    }
+});
+instance.web.client_actions.add("reload", "instance.web.Reload");
+
+/**
+ * Client action to go back in breadcrumb history.
+ * If can't go back in history stack, will go back to home.
+ */
+instance.web.HistoryBack = instance.web.Widget.extend({
+    init: function(parent, params) {
+        if (!parent.history_back()) {
+            window.location = '/' + (window.location.search || '');
+        }
+    }
+});
+instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
+
+/**
+ * Client action to go back home.
+ */
+instance.web.Home = instance.web.Widget.extend({
+    init: function(parent, params) {
+        window.location = '/' + (window.location.search || '');
+    }
+});
+instance.web.client_actions.add("home", "instance.web.Home");
+
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
     init: function() {
