@@ -70,10 +70,17 @@
                 'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
-            <field name="help">
-                With opportunities you can manage and keep track of your sales pipeline by creating specific customer- or prospect-related sales documents to follow up potential sales. Information such as expected revenue, opportunity stage, expected closing date, communication history and much more can be stored. Opportunities can be connected to the email gateway: new emails may create opportunities, each of them automatically gets the history of the conversation with the customer.
-
-                You and your team(s) will be able to plan meetings and phone calls from opportunities, convert them into quotations, manage related documents, track all customer related activities, and much more.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an opportunity related to this customer.
+              </p><p>
+                Use opportunities to keep track of your sales pipeline, follow
+                up potential sales and better forecast your future revenues.
+              </p><p>
+                You will be able to plan meetings and phone calls from
+                opportunities, convert them into quotations, attach related
+                documents, track all discussions, and much more.
+              </p>
             </field>
         </record>
         <record model="ir.actions.act_window.view" id="relate_partner_opportunities_kanban">

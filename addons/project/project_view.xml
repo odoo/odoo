@@ -285,12 +285,16 @@
             <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
-            <field name="help" type="xml">
-                <p>Click <i>'Create'</i> to <b>start a new project</b>.</p>
-                <p>Projects are used to organize your activities; plan tasks,
-                track issues, invoice timesheets. You can define internal
-                projects (R&amp;D, Improve Sales Process), private projects (My
-                Todos) or customer ones.</p>
+            <field name="help" type="html">
+                <p class="oe_form_nocontent_create">
+                  Click to start a new project.
+                </p>
+                <p>
+                  Projects are used to organize your activities; plan
+                  tasks, track issues, invoice timesheets. You can define
+                  internal projects (R&amp;D, Improve Sales Process),
+                  private projects (My Todos) or customer ones.
+                </p>
                 <p>
                     You will be able collaborate with internal users on
                     projects or invite customers to share your activities.
@@ -415,7 +419,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="project_id"  on_change="onchange_project(project_id)"/>
+                            <field name="project_id"  on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
@@ -538,15 +542,15 @@
                                     <i><field name="date_deadline"/></i>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="" name="set_kanban_state_done" class="oe_kanban_status"> </a>
-                                    <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
+                                    <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="Ready to Pull" name="set_kanban_state_done" class="oe_kanban_status"> </a>
+                                    <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready to Pull" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
                                     <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
-                                    <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
-                                    <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
+                                    <a t-if="record.priority.raw_value == 1" type="object" string="Priority" name="set_normal_priority" class="oe_e oe_star_on">7</a>
+                                    <a t-if="record.priority.raw_value != 1" type="object" string="Priority" name="set_high_priority" class="oe_e oe_star_off">7</a>
                                     <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left">
-                                    <span>
+                                    <span groups="project.group_time_work_estimation_tasks">
                                         <span class="oe_e">N</span>
                                         <t t-esc="Math.round(record.remaining_hours.raw_value)"/>
                                     </span>
@@ -691,7 +695,15 @@
             <field name="view_id" eval="False"/>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="help">Tasks allow you to organize your work into a project. Click on button "Create" to create a new task.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new task.
+              </p><p>
+                OpenERP's project management allows you to manage the pipeline
+                of tasks in order to get things done efficiently. You can
+                track progress, discuss on tasks, attach documents, etc.
+              </p>
+            </field>
         </record>
         <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
@@ -786,7 +798,16 @@
             <field name="res_model">project.task.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="task_type_tree"/>
-            <field name="help">Define the steps that will be used in the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress in solving a task or an issue.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a stage in the task pipeline.
+              </p><p>
+                Define the steps that will be used in the project from the
+                creation of the task, up to the closing of the task or issue.
+                You will use these stages in order to track the progress in
+                solving a task or an issue.
+              </p>
+            </field>
         </record>
 
         <menuitem id="menu_tasks_config" name="GTD" parent="base.menu_definitions" sequence="1"/>

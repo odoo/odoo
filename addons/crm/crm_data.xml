@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_crm_menu" model="ir.actions.client">
+            <field name="name">Open Sale Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.menu_base_partner')}"/>
+        </record>
+        <record id="todo_open_crm_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_crm_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+
         <record model="crm.case.channel">
             <field name="name">website</field>
         </record>
@@ -18,26 +31,36 @@
             <field name="code">Sales</field>
         </record>
 
+        <!-- Payment Mode -->
+
+        <record model="crm.payment.mode" id="payment_mode_1">
+            <field name="name">Cash</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_2">
+            <field name="name">Cheque</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_3">
+            <field name="name">Credit Card</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_4">
+            <field name="name">Demand Draft</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
         <!-- notify all employees of module installation -->
         <function model="mail.group" name="message_append_note">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
             <value>Module CRM has been installed</value>
-            <value>From the top menu Sales, manage your sales pipeline: leads,
-                opportunities, meetings, phone calls, and customers.  OpenERP
-                ensures that all cases are successfully tracked by all parties.
-                It can automatically send reminders, escalate requests, trigger
-                specific methods and lots of other actions based on your own
-                enterprise rules.
+            <value>From the top menu Sales, you can: trace leads and opportunities, get accurate forecast on your sales pipeline, plan meetings and phonecalls, get realtime statistics and efficiently organize the communication with your prospects.
 
-                In the Sales settings, you can configure an email gateway to
-                automatically create leads from messages sent on a particular
-                email address.
-
-                To manage quotations and sale orders, install the module "Sales
-                Management".  With this module, you will be able to create
-                quotations directly from opportunities.
-            </value>
+To manage quotations and sale orders, install the module "Sales Management".</value>
         </function>
     </data>
 </openerp>

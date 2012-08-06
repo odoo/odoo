@@ -28,7 +28,7 @@ class sale_advance_payment_inv(osv.osv_memory):
 
     _columns = {
         'advance_payment_method':fields.selection(
-            [('all', 'All'), ('percentage','Percentage'), ('fixed','Fixed Price'),
+            [('all', 'Invoice all the Sale Order'), ('percentage','Percentage'), ('fixed','Fixed Price'),
                 ('lines', 'Some Order Lines')],
             'Type', required=True,
             help="""Use All to create the final invoice.

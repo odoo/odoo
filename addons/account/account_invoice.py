@@ -306,7 +306,7 @@ class account_invoice(osv.osv):
             if view_type == 'form':
                 if partner['supplier'] and not partner['customer']:
                     view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.supplier.form')])
-                else:
+                elif partner['customer'] and not partner['supplier']:
                     view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.form')])
         if view_id and isinstance(view_id, (list, tuple)):
             view_id = view_id[0]

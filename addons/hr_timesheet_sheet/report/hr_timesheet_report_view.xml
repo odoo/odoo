@@ -69,7 +69,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_group_user_id':1,'group_by_no_leaf':1,'group_by':[]}</field>
-            <field name="help">This report performs analysis on timesheets created by your human resources in the system. It allows you to have a full overview of  entries done by your employees. You can group them by specific selection criteria thanks to the search tool.</field>
+            <field name="help" type="html">
+              <p>
+                This report performs analysis on timesheets created by your
+                human resources in the system. It allows you to have a full
+                overview of  entries done by your employees. You can group them
+                by specific selection criteria thanks to the search tool.
+              </p>
+            </field>
         </record>
         <menuitem
             action="action_hr_timesheet_report_stat_all"
