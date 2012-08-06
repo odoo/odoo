@@ -12,12 +12,22 @@ def valid_page_in_book(arch):
 
 def valid_field_in_graph(arch):
     """A `field` node must be below a `graph` node."""
-    return not arch.xpath('//graph[not ((field) and (@string))]')
+    if arch.xpath('//graph[not (@string)]'):
+        return False
+    for child in arch.xpath('/graph/child::*'):
+        if child.tag != 'field':
+            return False
+    return True
 
 
 def valid_field_in_tree(arch):
     """A `field` and `button` node must be below a `tree` node. And tree must have `string` attribute."""
-    return not arch.xpath('//tree[not((field) or (button)) and (@string)]')
+    if arch.xpath('//tree[not (@string)]'):
+        return False
+    for child in arch.xpath('/tree/child::*'):
+        if child.tag not in ('field', 'button'):
+            return False
+    return True
 
 
 def valid_att_in_field(arch):
@@ -57,20 +67,18 @@ def valid_type_in_col(arch):
 
 def valid_view(arch):
     if arch.tag == 'form':
-        for pred in [valid_page_in_book,valid_att_in_form,valid_type_in_colspan,\
-                      valid_type_in_col,valid_att_in_field,valid_att_in_label]:
+        for pred in [valid_page_in_book, valid_att_in_form, valid_type_in_colspan,\
+                      valid_type_in_col, valid_att_in_field, valid_att_in_label]:
             if not pred(arch):
                 _logger.error('Invalid XML: %s', pred.__doc__)
                 return False
     elif arch.tag == 'graph':
-        for pred in [valid_field_in_graph,valid_type_in_colspan,valid_type_in_col,\
-                      valid_att_in_field,valid_att_in_label]:
+        for pred in [valid_field_in_graph, valid_att_in_field]:
             if not pred(arch):
                 _logger.error('Invalid XML: %s', pred.__doc__)
                 return False
     elif arch.tag == 'tree':
-        for pred in [valid_field_in_tree,valid_type_in_colspan,valid_type_in_col,\
-                     valid_att_in_field,valid_att_in_label]:
+        for pred in [valid_field_in_tree, valid_att_in_field]:
             if not pred(arch):
                 _logger.error('Invalid XML: %s', pred.__doc__)
                 return False

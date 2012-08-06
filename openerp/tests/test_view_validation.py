@@ -52,12 +52,13 @@ valid_form = etree.parse(StringIO('''\
 
 invalid_graph = etree.parse(StringIO('''\
 <graph>
-      <group>
+    <label/>
+    <group>
         <div>
-          <field></field>
-          <field></field>
+            <field></field>
+            <field></field>
         </div>
-      </group>
+    </group>
 </graph>
 ''')).getroot()
 
@@ -81,12 +82,10 @@ invalid_tree = etree.parse(StringIO('''\
 
 valid_tree= etree.parse(StringIO('''\
 <tree string="">
-    <button></button>
-    <label string=""></label>
     <field name=""></field>
     <field name=""></field>
+    <button/>
     <field name=""></field>
-    <button></button>
 </tree>
 ''')).getroot()
 
