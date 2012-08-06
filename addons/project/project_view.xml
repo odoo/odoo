@@ -550,7 +550,7 @@
                                     <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left">
-                                    <span groups="project.group_time_work_estimation_tasks">
+                                    <span groups="project.group_time_work_estimation_tasks" title="Remaining hours">
                                         <span class="oe_e">N</span>
                                         <t t-esc="Math.round(record.remaining_hours.raw_value)"/>
                                     </span>
