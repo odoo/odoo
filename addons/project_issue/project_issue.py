@@ -591,4 +591,10 @@ class account_analytic_account(osv.osv):
 
 account_analytic_account()
 
+class project_project(osv.osv):
+    _inherit = 'project.project'
+    _defaults = {
+        'use_issues': True
+    }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
