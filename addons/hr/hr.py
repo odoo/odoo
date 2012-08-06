@@ -160,9 +160,6 @@ class hr_employee(osv.osv):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
     
-    def onchange_image(self, cr, uid, ids, value, context=None):
-        return {'value': {'image_medium': tools.resize_image_big(value), 'image_small': tools.resize_image_big(value)}}
-    
     _columns = {
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),

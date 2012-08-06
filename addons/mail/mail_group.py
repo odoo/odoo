@@ -65,9 +65,6 @@ class mail_group(osv.osv):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
     
-    def onchange_image(self, cr, uid, ids, value, context=None):
-        return {'value': tools.get_resized_images(value)}
-    
     def get_member_ids(self, cr, uid, ids, field_names, args, context=None):
         if context is None:
             context = {}
@@ -125,7 +122,7 @@ class mail_group(osv.osv):
                  "resized as a 180x180px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized photo", type="binary", multi="_get_image",
+            string="Small-sized photo", type="binary", multi="_get_image",
             store = {
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },

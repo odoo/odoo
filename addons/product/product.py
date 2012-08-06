@@ -503,9 +503,6 @@ class product_product(osv.osv):
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
-    
-    def onchange_image(self, cr, uid, ids, value, context=None):
-        return {'value': tools.get_resized_images(value)}
 
     _defaults = {
         'active': lambda *a: 1,
