@@ -79,14 +79,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Inventory">
-                    <group>
-                        <field name="name" string="Inventory Reference"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Inventory Reference"/>
+                    <field name="date"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
@@ -125,10 +120,8 @@
                 <sheet>
                     <div>
                         <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. Annual inventory" class="oe_inline"/> -
-                            <field name="date" class="oe_inline"/>
-                        </h1>
+                        <field name="name" placeholder="e.g. Annual inventory" class="oe_inline"/> -
+                        <field name="date" class="oe_inline"/>
                     </div>
                     <group>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -137,7 +130,7 @@
                     <page string="General Informations">
                         <field name="inventory_line_id">
                             <tree string="Products" editable="bottom">
-                                <field domain="[('usage','=','internal')]" name="location_id"/>
+                                <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
                                 <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom" groups="product.group_uom"/>
@@ -207,7 +200,16 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_inventory_tree"/>
             <field name="search_view_id" ref="view_inventory_filter"/>
-            <field name="help">Periodical Inventories are used to count the number of products available per location. You can use it once a year when you do the general inventory or whenever you need it, to correct the current stock level of a product.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start an inventory. 
+              </p><p>
+                Periodical Inventories are used to count the number of products
+                available per location. You can use it once a year when you do
+                the general inventory or whenever you need it, to adapt the
+                current inventory level of a product.
+              </p>
+            </field>
         </record>
         <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="30"/>
 
@@ -262,7 +264,15 @@
             <field name="res_model">stock.tracking</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_tracking_tree"/>
-            <field name="help">This is the list of all your packs. When you select a Pack, you can get the upstream or downstream traceability of the products contained in the pack.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a tracking number.
+              </p><p>
+                This is the list of all your packs. When you select a Pack, you
+                can get the upstream or downstream traceability of the products
+                contained in the pack.
+              </p>
+            </field>
         </record>
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="3"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
@@ -290,13 +300,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Pack Search">
-                    <group>
-                        <field name="name" string="Pack" filter_domain="['|',('name','ilike',self),('serial','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <field name="active"/>
-                    </group>
+                    <field name="name" string="Pack" filter_domain="['|',('name','ilike',self),('serial','ilike',self)]"/>
+                    <field name="date"/>
+                    <field name="active"/>
                 </search>
             </field>
         </record>
@@ -405,16 +411,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product Lots Filter">
-                    <group>
-                        <field name="name" string="Product Lots" filter_domain="['|','|',('name','ilike',self),('prefix','ilike',self),('ref','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" name="available" string="Available" domain="[('stock_available', '&gt;', 0)]" help="Available Product Lots"/>
-                        <separator orientation="vertical"/>
-                        <field name="product_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Product Lots" filter_domain="['|','|',('name','ilike',self),('prefix','ilike',self),('ref','ilike',self)]"/>
+                    <field name="date"/>
+                    <filter icon="terp-check" name="available" string="Available" domain="[('stock_available', '&gt;', 0)]" help="Available Product Lots"/>
+                    <field name="product_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                     </group>
@@ -430,7 +430,19 @@
             <field name="view_id" ref="view_production_lot_tree"/>
             <field name="search_view_id" ref="search_product_lot_filter"/>
             <field name="context">{}</field>
-            <field name="help">This is the list of all the production lots (serial numbers) you recorded. When you select a lot, you can get the upstream or downstream traceability of the products contained in lot. By default, the list is filtred on the serial numbers that are available in your warehouse but you can uncheck the 'Available' button to get all the lots you produced, received or delivered to customers.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a serial number.
+              </p><p>
+                This is the list of all the production lots you recorded. When
+                you select a lot, you can get the upstream or downstream
+                traceability of the products contained in lot. By default, the
+                list is filtred on the serial numbers that are available in
+                your warehouse but you can uncheck the 'Available' button to
+                get all the lots you produced, received or delivered to
+                customers.
+              </p>
+            </field>
         </record>
         <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
             parent="menu_traceability" groups="stock.group_production_lot"
@@ -569,14 +581,9 @@
             <field name="arch" type="xml">
                 <search string="Stock Locations">
                     <field name="name" string="Stock Locations"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-go-home" name="in_location"
-                        string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
-                    <filter icon="terp-personal" name="customer"
-                        string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
-                    <filter icon="terp-personal" name="supplier"
-                        string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations"/>
-                    <separator orientation="vertical"/>
+                    <filter icon="terp-go-home" name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
+                    <filter icon="terp-personal" name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
+                    <filter icon="terp-personal" name="supplier" string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations"/>
                     <field name="location_id" string="Parent Location"/>
                 </search>
             </field>
@@ -606,7 +613,24 @@
             <field name="view_id" ref="view_location_tree2"/>
             <field name="search_view_id" ref="view_location_search"/>
             <field name="context">{'search_default_in_location':1}</field>
-            <field name="help">Define your locations to reflect your warehouse structure and organization. OpenERP is able to manage physical locations (warehouses, shelves, bin, etc), partner locations (customers, suppliers) and virtual locations which are the counterpart of the stock operations like the manufacturing orders consumptions, inventories, etc. Every stock operation in OpenERP moves the products from one location to another one. For instance, if you receive products from a supplier, OpenERP will move products from the Supplier location to the Stock location. Each report can be performed on physical, partner or virtual locations.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a location.
+              </p><p>
+                Define your locations to reflect your warehouse structure and
+                organization. OpenERP is able to manage physical locations
+                (warehouses, shelves, bin, etc), partner locations (customers,
+                suppliers) and virtual locations which are the counterpart of
+                the stock operations like the manufacturing orders
+                consumptions, inventories, etc.
+              </p><p>  
+                Every stock operation in OpenERP moves the products from one
+                location to another one.  For instance, if you receive products
+                from a supplier, OpenERP will move products from the Supplier
+                location to the Stock location. Each report can be performed on
+                physical, partner or virtual locations.
+              </p>
+            </field>
         </record>
         <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
             parent="menu_stock_configuration" sequence="5"/>
@@ -629,7 +653,16 @@
             <field name="domain">[('location_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_location_tree"/>
-            <field name="help">This is the structure of your company's warehouses and locations. You can click on a location to get the list of the products and their stock level in this particular location and all its children.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a location.
+              </p><p>
+                This is the structure of your company's warehouses and
+                locations. You can click on a location to get the list of the
+                products and their stock level in this particular location and
+                all its children.
+              </p>
+            </field>
         </record>
         <menuitem action="action_location_tree"
             id="menu_action_location_tree"
@@ -678,19 +711,18 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_tree"/>
-            <field name="help">Create and manage your warehouses and assign them a location from here</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new warehouse.
+              </p>
+            </field>
         </record>
         <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" groups="stock.group_locations"
             parent="menu_stock_configuration" sequence="1"/>
 
-<!--
-              STOCK PICKING
--->
-
         <!--
-        #
-        # Defaults and Internal Pickings
-        #
+            Stock picking
+            Defaults and Internal Pickings
         -->
 
         <record model="ir.ui.view" id="stock_picking_calendar">
@@ -733,14 +765,16 @@
             <field name="arch" type="xml">
                 <form string="Internal Picking List" version="7.0">
                 <header>
-                    <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_highlight"/>
-                    <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" class="oe_highlight"/>
-                    <!-- <button name="action_assign" states="confirmed" string="Check Availability" type="object"/> -->
-                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight"/>
-                    <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" class="oe_highlight"/>
-                    <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel"/>
+                    <span groups="base.group_user">
+                        <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                        <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" class="oe_highlight"/>
+                        <!-- <button name="action_assign" states="confirmed" string="Check Availability" type="object"/> -->
+                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight"/>
+                        <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+                        <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice/Refund"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" class="oe_highlight"/>
+                        <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action"/>
+                        <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel"/>
+                    </span>
                     <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
@@ -776,7 +810,8 @@
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned"/>
+                                        states="draft,waiting,confirmed,assigned"
+                                        groups="base.group_user"/>
                                     <field name="scrapped" invisible="1"/>
                                     <field name="prodlot_id" groups="stock.group_production_lot"/>
                                     <button
@@ -800,9 +835,11 @@
                                 </tree>
                                 <form string="Stock Moves" version="7.0">
                                     <header>
-                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
+                                        <span groups="base.group_user">
+                                            <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+                                            <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+                                            <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
+                                        </span>
                                         <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
                                     </header>
                                     <group>
@@ -816,7 +853,8 @@
                                                 <button name="%(stock.move_scrap)d"
                                                         string="Scrap" type="action"
                                                         icon="gtk-convert" context="{'scrap': True}"
-                                                        states="draft,waiting,confirmed,assigned"/>
+                                                        states="draft,waiting,confirmed,assigned"
+                                                        groups="base.group_user"/>
                                             </div>
                                             <label for="product_uos_qty" groups="product.group_uos"/>
                                             <div groups="product.group_uos">
@@ -866,8 +904,8 @@
                             <group>
                                 <group>
                                     <field name="move_type"/>
-                                    <field name="type"/>
-                                    <field name="auto_picking"/>
+                                    <field name="type" groups="base.group_user"/>
+                                    <field name="auto_picking" groups="base.group_user"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -890,26 +928,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Internal Picking List">
-                    <group>
-                        <field name="name" string="Internal Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
-                        <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves"/>
-                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id"/>
-                        <field name="product_id"/>
-                        <field name="stock_journal_id" widget="selection"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Internal Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
+                    <filter icon="terp-check" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
+                    <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves"/>
+                    <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="stock_journal_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"/>
                     </group>
                 </search>
@@ -925,7 +955,15 @@
             <field name="domain">[('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help">Internal Moves display all inventory operations you have to perform in your warehouse. All operations can be categorized into stock journals, so that each worker has his own list of operations to perform in his own journal. Most operations are prepared automatically by OpenERP according to your preconfigured logistics rules, but you can also record manual stock operations.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an internal move request. 
+              </p><p>
+                Most operations are prepared automatically by OpenERP according
+                to your preconfigured logistics rules, but you can also record
+                manual stock movements.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_picking_tree6_tree_view">
@@ -941,11 +979,7 @@
             <field name="act_window_id" ref="action_picking_tree6"/>
         </record>
 
-        <!--
-        #
-        # Sending Products
-        #
-        -->
+        <!-- Sending Products -->
         <record id="view_picking_out_tree" model="ir.ui.view">
             <field name="name">stock.picking.out.tree</field>
             <field name="model">stock.picking</field>
@@ -971,18 +1005,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="/form/header/button[@name='%(act_stock_return_picking)d']" position="replace">
+                    <xpath expr="/form/header//button[@name='%(act_stock_return_picking)d']" position="replace">
                         <button name="%(report_picking_list_out)d" string="Print Delivery Slip" type="action" states="done" class="oe_highlight"/>
                         <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action"/>
                     </xpath>
-                    <xpath expr="/form/header/button[@name='draft_validate']" position="replace">
+                    <xpath expr="/form/header//button[@name='draft_validate']" position="replace">
                         <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" class="oe_highlight"/>
                         <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight"/>
                     </xpath>
-                    <xpath expr="/form/header/button[@name='action_process']" position="replace">
+                    <xpath expr="/form/header//button[@name='action_process']" position="replace">
                         <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward" class="oe_highlight"/>
                     </xpath>
-                    <xpath expr="/form/header/field[@name='state']" position="replace">
+                    <xpath expr="/form/header//field[@name='state']" position="replace">
                         <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                     </xpath>
                     <xpath expr="//field[@name='partner_id']" position="replace">
@@ -1003,26 +1037,20 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Picking list">
-                    <group>
-                        <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Delivery Orders"/>
-                        <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Delivery Orders"/>
-                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Delivery orders already processed"/>
-                        <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
-                        <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Delivery orders to invoice"/>
-                        <separator orientation="vertical"/>
-                        <field name="stock_journal_id" widget="selection"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                   </group>
-                    <newline/>
+                    <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
+                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Delivery Orders"/>
+                    <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Delivery Orders"/>
+                    <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Delivery orders already processed"/>
+                    <separator/>
+                    <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
+                    <separator/>
+                    <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Delivery orders to invoice"/>
+                    <field name="stock_journal_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
-                        <separator orientation="vertical"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"/>
                     </group>
                 </search>
@@ -1038,7 +1066,15 @@
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="view_picking_out_search"/>
-            <field name="help">This is the list of all delivery orders that have to be prepared, according to your different sales orders and your logistics rules.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a delivery order. 
+              </p><p>
+                This is the list of all delivery orders that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
         </record>
         <record id="action_picking_tree_out_view1_waiting" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -1059,11 +1095,7 @@
         </record>
         <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_warehouse_mgmt" sequence="3"/>
 
-        <!--
-        #
-        # Incomming Shipments
-        #
-        -->
+        <!-- Incomming Shipments -->
         <record id="view_picking_in_tree" model="ir.ui.view">
             <field name="name">stock.picking.in.tree</field>
             <field name="model">stock.picking.in</field>
@@ -1089,7 +1121,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//button[@name='%(act_stock_return_picking)d']" position="replace">
+                    <xpath expr="/form/header//button[@name='%(act_stock_return_picking)d']" position="replace">
                         <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action"/>
                     </xpath>
                     <xpath expr="//button[@name='draft_validate']" position="replace">
@@ -1115,25 +1147,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Incoming Shipments">
-                    <group>
-                        <field name="name" string="Incoming Shipments" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" name="available" string="Ready to Process" domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
-                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
-                        <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
-                        <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]"/>
-                        <separator orientation="vertical"/>
-                        <field name="stock_journal_id" widget="selection"/>
-                        <field name="product_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Incoming Shipments" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
+                    <filter icon="terp-check" name="available" string="Ready to Process" domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
+                    <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
+                    <separator/>
+                    <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
+                    <separator/>
+                    <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]"/>
+                    <field name="stock_journal_id"/>
+                    <field name="product_id"/>
                     <group expand="0" string="Group By...">
-                        <separator orientation="vertical"/>
                         <filter icon="terp-stock_effects-object-colorize" name="state" string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"/>
                     </group>
                 </search>
@@ -1150,7 +1176,16 @@
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{'contact_display': 'partner_address', 'default_type': 'in'}</field>
             <field name="search_view_id" ref="view_picking_in_search"/>
-            <field name="help">The Incoming Shipments is the list of all orders you will receive from your suppliers. An incoming shipment contains a list of products to be received according to the original purchase order. You can validate the shipment totally or partially.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an incoming shipment. 
+              </p><p>
+                The Incoming Shipments is the list of all orders you will
+                receive from your suppliers. An incoming shipment contains a
+                list of products to be received according to the original
+                purchase order.
+              </p>
+            </field>
         </record>
         <record id="action_invoice_tree5_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -1191,8 +1226,7 @@
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="gtk-convert" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"
-                      />
+                        states="draft,waiting,confirmed,assigned"/>
                     <field name="prodlot_id" groups="stock.group_production_lot"/>
                     <button name="%(track_line)d" string="Split in Serial Numbers" type="action"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
@@ -1216,8 +1250,6 @@
                 </tree>
             </field>
         </record>
-
-<!--        <menuitem id="menu_traceability_low" name="Low Level" parent="menu_traceability"/> -->
 
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">stock.move.form</field>
@@ -1266,27 +1298,28 @@
                         </group>
                         <group name="destination_grp" string="Destination">
                             <field name="location_dest_id" groups="stock.group_locations"/>
-                            <field name="partner_id" context="{'contact_display':'partner'}"/>
+                            <field name="partner_id" context="{'contact_display':'partner'}"
+                                groups="stock.group_locations"/>
                             <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                             <field name="date" groups="base.group_no_one"/>
                         </group>
-                        <group string="Tracability">
-                            <label for="tracking_id"/>
-                            <div>
-                                <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
+                        <group string="Tracability"
+                            groups="stock.group_tracking_lot,stock.group_production_lot">
+                            <label for="tracking_id" groups="stock.group_tracking_lot"/>
+                            <div groups="stock.group_tracking_lot">
+                                <field name="tracking_id" class="oe_inline"/>
                                 <button name="%(split_into)d" string="New Pack" type="action"
                                       groups="product.group_stock_packaging"
                                       icon="terp-stock_effects-object-colorize"
                                       states="draft,assigned,confirmed"/>
                             </div>
-                            <label for="prodlot_id"/>
-                            <div>
-                                <field name="prodlot_id" groups="stock.group_production_lot"
+                            <label for="prodlot_id" groups="stock.group_production_lot"/>
+                            <div groups="stock.group_production_lot">
+                                <field name="prodlot_id"
                                     context="{'location_id':location_id, 'product_id':product_id}"
                                     domain="[('product_id','=?',product_id)]" class="oe_inline"
                                     on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)"/>
                                 <button name="%(track_line)d"
-                                    groups="stock.group_tracking_lot"
                                     states="draft,waiting,confirmed,assigned"
                                     string="Split" type="action" icon="terp-stock_effects-object-colorize"/>
                             </div>
@@ -1304,33 +1337,25 @@
             <field eval="3" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <group>
-                        <field name="origin" string="Stock Moves"/>
-                        <separator orientation="vertical" groups="base.group_no_one"/>
-                        <field name="date" groups="base.group_no_one"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
-                        <filter icon="terp-stock" string="Future" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
-                        <filter icon="terp-dialog-close" string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
-                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
-                        <separator orientation="vertical"/>
-                        <field name="product_id"/>
-                        <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
-                        <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','ilike',self)]"/>
-                        <field name="prodlot_id"/>
-                    </group>
-                    <newline/>
+                    <field name="origin" string="Stock Moves"/>
+                    <field name="date" groups="base.group_no_one"/>
+                    <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
+                    <filter icon="terp-stock" string="Future" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
+                    <filter icon="terp-dialog-close" string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
+                    <separator/>
+                    <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
+                    <field name="product_id"/>
+                    <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
+                    <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','ilike',self)]"/>
+                    <field name="prodlot_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" name="by_product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Picking" name="groupby_picking_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'picking_id'}"/>
                         <filter string="Lot" name="groupby_prodlot_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'prodlot_id'}"/>
                         <filter string="Pack" name="groupby_tracking_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'tracking_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Source" name="groupby_location_id" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'location_id'}"/>
                         <filter string="Destination" name="groupby_dest_location_id" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'location_dest_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-stock_effects-object-colorize" string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Creation" name="groupby_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                         <filter string="Expected" name="groupby_date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
@@ -1346,17 +1371,22 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
             <field name="context">{}</field>
-            <field name="help">This menu gives you the full traceability of inventory operations on a specific product. You can filter on the product to see all the past or future movements for the product.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a stock movement.
+              </p><p>
+                This menu gives you the full traceability of inventory
+                operations on a specific product. You can filter on the product
+                to see all the past or future movements for the product.
+              </p>
+            </field>
         </record>
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3"/>
 
-        ====================================
-        Reception Picking (By Stock Move)
-        ====================================
-            <!--  from stock_partial_move_view -->
-
-
-
+        <!--
+            Reception Picking (By Stock Move)
+            From stock_partial_move_view
+        -->
         <record id="view_move_tree_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.tree2</field>
             <field name="model">stock.move</field>
@@ -1376,7 +1406,7 @@
                     <field name="prodlot_id" groups="stock.group_production_lot"/>
                     <button name="%(track_line)d" string="Split in Serial Numbers" type="action"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
-                       states="draft,waiting,confirmed,assigned,done"
+                        states="draft,waiting,confirmed,assigned,done"
                         groups="stock.group_tracking_lot"/>
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                     <button name="setlast_tracking" string="Put in current pack" type="object"
@@ -1393,8 +1423,9 @@
                 </tree>
             </field>
         </record>
+
         <!-- test -->
-          <record id="view_move_tree_reception_picking_board" model="ir.ui.view">
+        <record id="view_move_tree_reception_picking_board" model="ir.ui.view">
             <field name="name">stock.move.tree3</field>
             <field name="model">stock.move</field>
             <field name="type">tree</field>
@@ -1417,24 +1448,18 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <group>
-                        <field name="origin" string="Stock Moves"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting " domain="[('state','in',('confirmed','assigned'))]" help="Stock to be receive"/>
-                        <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
-                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state', '=', 'done')]"/>
-                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
-                        <separator orientation="vertical"/>
-                        <field name="product_id"/>
-                        <field name="prodlot_id"/>
-                    </group>
-                    <newline/>
+                    <field name="origin" string="Stock Moves"/>
+                    <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting " domain="[('state','in',('confirmed','assigned'))]" help="Stock to be receive"/>
+                    <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
+                    <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state', '=', 'done')]"/>
+                    <separator/>
+                    <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
+                    <field name="product_id"/>
+                    <field name="prodlot_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical" groups="base.group_no_one"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" groups="base.group_no_one"/>
                     </group>
                 </search>
@@ -1448,24 +1473,18 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <group>
-                        <field name="origin" string="Stock Moves"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (Available or not)"/>
-                        <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
-                        <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
-                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
-                        <separator orientation="vertical"/>
-                        <field name="product_id"/>
-                        <field name="prodlot_id"/>
-                    </group>
-                    <newline/>
+                    <field name="origin" string="Stock Moves"/>
+                    <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (Available or not)"/>
+                    <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
+                    <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
+                    <separator/>
+                    <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
+                    <field name="product_id"/>
+                    <field name="prodlot_id"/>
                     <group expand="0" string="Group By...">
-                        <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical" groups="base.group_no_one"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" groups="base.group_no_one"/>
                     </group>
                 </search>
@@ -1482,7 +1501,18 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
-            <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
+            <field name="help" type="html">
+              <p>
+                Click to register a product reception. 
+              </p><p>
+                Here you can receive individual products, no matter what
+                purchase order or picking order they come from. You will find
+                the list of all products you are waiting for. Once you receive
+                an order, you can filter based on the name of the supplier or
+                the purchase order reference. Then you can confirm all products
+                received using the buttons on the right of each line.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_move_reception_picking_tree">
@@ -1498,9 +1528,7 @@
             <field name="act_window_id" ref="action_reception_picking_move"/>
         </record>
 
-        # -------------------------------------------------------------
-        # Stock incoterms
-        # -------------------------------------------------------------
+        <!-- Stock incoterms -->
         <record id="view_incoterms_tree" model="ir.ui.view">
             <field name="name">stock.incoterms.tree</field>
             <field name="model">stock.incoterms</field>
@@ -1611,7 +1639,15 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
-            <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
+            <field name="help" type="html">
+              <p>
+                You will find in this list all products you have to deliver to
+                your customers. You can process the deliveries directly from
+                this list using the buttons on the right of each line. You can
+                filter the products to deliver by customer, products or sale
+                order (using the Origin field).
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_move_out_picking_tree">
@@ -1638,7 +1674,6 @@
             <field name="arch" type="xml">
                 <search string="Stock Journal">
                     <field name="name" string="Stock Journal"/>
-                    <separator orientation="vertical"/>
                     <field name="user_id"/>
                 </search>
             </field>
@@ -1672,16 +1707,22 @@
             <field name="res_model">stock.journal</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="help">The stock journal system allows you to assign each stock operation to a specific journal according to the type of operation to perform or the worker/team that should perform the operation. Examples of stock journals may be: quality control, pick lists, packing, etc.</field>
+            <field name="help" type="html">
+              <p>
+                Click to create a new journal. 
+              </p><p>
+                The stock journal system allows you to assign each stock
+                operation to a specific journal according to the type of
+                operation to perform or the worker/team that should perform the
+                operation. Examples of stock journals may be: quality control,
+                pick lists, packing, etc.
+              </p>
+            </field>
         </record>
         <menuitem
             action="action_stock_journal_form"
             id="menu_action_stock_journal_form"
             parent="menu_warehouse_config" sequence="1"/>
-
-        <record model="ir.actions.todo.category" id="category_stock_management_config">
-            <field name="name">Stock Management</field>
-        </record>
 
     </data>
 </openerp>

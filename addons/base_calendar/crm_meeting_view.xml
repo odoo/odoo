@@ -58,7 +58,6 @@
         <field name="res_model">crm.meeting.type</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_crm_meeting_type_tree"/>
-        <field name="help">Create different meeting categories to better organize and classify your meetings.</field>
     </record>
 
     <menuitem id="menu_crm_meeting_type" parent="base.menu_calendar_configuration" sequence="1"
@@ -73,7 +72,7 @@
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
                 <header>
-                    <button name="case_open" string="Confirm" type="object" class="oe_highlight"
+                    <button name="case_open" string="Confirm" type="object"
                             states="draft"/>
                     <button name="case_close" string="Done" type="object"
                             states="open"/>
@@ -302,18 +301,12 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Meetings">
-                <group>
-                    <field name="name" string="Meeting"
-                        filter_domain="[('name','ilike',self)]"/>
-                    <filter string="Inbox" help="Unread messages" icon="terp-mail-message-new"
-                        name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
-                    <separator orientation="vertical"/>
-                    <filter string="My Meetings" help="My Meetings" icon="terp-personal"
-                        domain="[('user_id','=',uid)]"/>
-                    <separator orientation="vertical"/>
-                    <field name="user_id"/>
-                    <field name="partner_ids"/>
-                </group>
+                <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>
+                <filter string="Inbox" help="Unread messages" icon="terp-mail-message-new" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                <separator/>
+                <filter string="My Meetings" help="My Meetings" icon="terp-personal" domain="[('user_id','=',uid)]"/>
+                <field name="user_id"/>
+                <field name="partner_ids"/>
             </search>
         </field>
     </record>
@@ -327,10 +320,14 @@
         <field name="view_id" ref="view_crm_meeting_calendar"/>
         <field name="search_view_id" ref="view_crm_meeting_search"/>
         <field name="context">{"calendar_default_user_id": uid}</field>
-        <field name="help">
-            The meeting calendar is shared between the sales teams and fully integrated with other applications
-            such as the employee holidays or the business opportunities.
-            You can also synchronize meetings with your mobile phone using the caldav interface.
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to schedule a new meeting. 
+          </p><p>
+            The agenda is shared between employees and fully integrated with
+            other applications such as the employee holidays or the business
+            opportunities.
+          </p>
         </field>
     </record>
     <record model="ir.actions.act_window.view" id="action_view_crm_meeting_calendar">

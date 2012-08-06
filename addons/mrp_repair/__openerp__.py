@@ -25,9 +25,10 @@
     'version': '1.0',
     'category': 'Manufacturing',
     'description': """
-The aim is to have a complete module to manage all products repairs. The following topics should be covered by this module:
-===========================================================================================================================
+The aim is to have a complete module to manage all products repairs.
+====================================================================
 
+The following topics should be covered by this module:
     * Add/remove products in the reparation
     * Impact for stocks
     * Invoicing (products and/or services)

@@ -64,6 +64,7 @@
                                 <newline/>
                                 <group colspan="4" col="4">
                                     <field name="description" colspan="4" nolabel="1"/>
+                                    <field name="group_ids" colspan="4" widget="many2many_tags" class="oe_edit_only"/>
                                 </group>
                                 <group colspan="2" col="2" class="oe_edit_only">
                                     <field name="responsible_id" colspan="2"/>
@@ -103,7 +104,6 @@
             <field name="arch" type="xml">
                 <search string="Search Groups">
                     <field name="name" string="Group"/>
-                    <separator orientation="vertical"/>
                     <field name="responsible_id"/>
                 </search>
             </field>

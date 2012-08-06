@@ -5,7 +5,7 @@
 #  pyftpdlib is released under the MIT license, reproduced below:
 #  ======================================================================
 #  Copyright (C) 2007 Giampaolo Rodola' <g.rodola@gmail.com>
-#  Hacked by Fabien Pinckaers (C) 2008 <fp@tinyerp.com>
+#  Hacked by Fabien Pinckaers (C) 2008 <fp@openerp.com>
 #
 #                         All Rights Reserved
 #

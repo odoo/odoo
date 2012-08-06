@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="email_compose_message_wizard_inherit_form">
+            <field name="name">mail.compose.message.form</field>
+            <field name="model">mail.compose.message</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//form/footer/button" position="before">
+                        <field name="use_template" invisible="1"/>
+                        <button icon="gtk-paste" type="object" name="template_toggle"
+                                string="" help="Use a message template" />
+                        <button icon="gtk-save" type="object" name="save_as_template"
+                                string="" help="Save as a new template"/>
+                    </xpath>
+                    <xpath expr="//form/notebook" position="after">
+                        <group attrs="{'invisible':[('use_template','=',False)]}" colspan="4" col="4">
+                            <field name="template_id" colspan="3"
+                                   on_change="on_change_template(use_template, template_id, email_from, email_to, context)"/>
+                        </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="email_compose_message_wizard_inherit_form_chatter">
+            <field name="name">mail.compose.message.form</field>
+            <field name="model">mail.compose.message</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form_chatter"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='dest_partner_ids']" position="after">
+                        <field name="use_template" colspan="2" nolabel="1" invisible="1"
+                            on_change="onchange_use_template(use_template, context)"/>
+                        <field name="template_id" colspan="2" nolabel="1"
+                            attrs="{'invisible':[('use_template','=',False)]}"
+                            on_change="on_change_template(use_template, template_id, False, False, context)"/>
+                    </xpath>
+                    <xpath expr="//a[@class='oe_mail_compose_message_checklist']" position="before">
+                        <button icon="/email_template/static/src/img/email_template.png"
+                            type="object" name="template_toggle" string=""
+                            help="Use a message template"/>
+                        <button icon="/email_template/static/src/img/email_template_save.png"
+                            type="object" name="save_as_template" string=""
+                            help="Save as a new template"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>

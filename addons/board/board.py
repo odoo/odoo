@@ -38,50 +38,14 @@ class board_board(osv.osv):
         @param ids: List of Board's IDs
         @return: arch of xml view.
         """
-        board = self.pool.get('board.board').browse(cr, uid, ids, context=context)
-        left = []
-        right = []
-        #start Loop
-        for line in board.line_ids:
-            linestr = '<action string="%s" name="%d"' % (line.name, line.action_id.id)
-            linestr += '/>'
-            if line.position == 'left':
-                left.append(linestr)
-            else:
-                right.append(linestr)
-        #End Loop
         arch = """<?xml version="1.0"?>
-            <form string="My Board">
+            <form string="My Board" version="7.0">
             <board style="1-1">
-                <column>
-                    %s
-                </column>
-                <column>
-                    %s
-                </column>
+                <column/>
+                <column/>
             </board>
-            </form>""" % ('\n'.join(left), '\n'.join(right))
-
+            </form>"""
         return arch
-
-    def write(self, cr, uid, ids, vals, context=None):
-
-        """
-        Writes values in one or several fields.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Board's IDs
-        @param vals: dictionary with values to update.
-                     dictionary must be with the form: {‘name_of_the_field’: value, ...}.
-        @return: True
-        """
-        result = super(board_board, self).write(cr, uid, ids, vals, context=context)
-
-        board = self.pool.get('board.board').browse(cr, uid, ids[0], context=context)
-        view = self.create_view(cr, uid, ids[0], context=context)
-        id = board.view_id.id
-        cr.execute("update ir_ui_view set arch=%s where id=%s", (view, id))
-        return result
 
     def create(self, cr, user, vals, context=None):
         """
@@ -106,7 +70,6 @@ class board_board(osv.osv):
         })
 
         super(board_board, self).write(cr, user, [id], {'view_id': view_id}, context)
-
         return id
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None,\
@@ -131,7 +94,6 @@ class board_board(osv.osv):
         res['toolbar'] = {'print': [], 'action': [], 'relate': []}
         return res
 
-
     def _arch_preprocessing(self, cr, user, arch, context=None):
         from lxml import etree
         def remove_unauthorized_children(node):
@@ -150,40 +112,14 @@ class board_board(osv.osv):
         archnode = etree.fromstring(encode(arch))
         return etree.tostring(remove_unauthorized_children(archnode),pretty_print=True)
 
-
-
-
     _columns = {
         'name': fields.char('Dashboard', size=64, required=True),
         'view_id': fields.many2one('ir.ui.view', 'Board View'),
-        'line_ids': fields.one2many('board.board.line', 'board_id', 'Action Views')
     }
 
     # the following lines added to let the button on dashboard work.
     _defaults = {
         'name':lambda *args:  'Dashboard'
-    }
-
-class board_line(osv.osv):
-    """
-    Board Line
-    """
-    _name = 'board.board.line'
-    _description = "Board Line"
-    _order = 'position,sequence'
-    _columns = {
-        'name': fields.char('Title', size=64, required=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order\
-                         when displaying a list of board lines.", select=True),
-        'height': fields.integer('Height'),
-        'width': fields.integer('Width'),
-        'board_id': fields.many2one('board.board', 'Dashboard', required=True, ondelete='cascade'),
-        'action_id': fields.many2one('ir.actions.act_window', 'Action', required=True),
-        'position': fields.selection([('left','Left'),
-                                      ('right','Right')], 'Position', required=True, select=True)
-    }
-    _defaults = {
-        'position': lambda *args: 'left'
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

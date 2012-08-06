@@ -36,12 +36,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Treasury Analysis">
-                <group>
-                    <field name="fiscalyear_id"/>
-                    <field name="period_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </group>
-                <newline/>
+                <field name="fiscalyear_id"/>
+                <field name="period_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </search>
         </field>
     </record>

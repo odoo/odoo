@@ -25,9 +25,7 @@
     'version': '1.0',
     'category': 'Hidden/Dependency',
     'description': """
-The common interface for pugin.
-=====================================================
-
+The common interface for plug-in.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

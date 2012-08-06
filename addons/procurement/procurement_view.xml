@@ -117,22 +117,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
-                    <group>
-                       <field name="origin" string="Procurement"/>
-                       <separator orientation="vertical"/>
-                       <field name="date_planned"/>
-                       <separator orientation="vertical"/>
-                       <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
-                       <filter icon="terp-emblem-important" string="To Fix" name="perm_exceptions" domain="[('state','=','exception'),('message', '!=', '')]" help="Permanent Procurement Exceptions"/>
-                       <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
-                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                           domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
-                           help="Procurement started late" />
-                       <separator orientation="vertical"/>
-                       <field name="product_id" />
-                       <field name="state" />
-                    </group>
-                    <newline/>
+                    <field name="origin" string="Procurement"/>
+                    <field name="date_planned"/>
+                    <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
+                    <separator/>
+                    <filter icon="terp-emblem-important" string="To Fix" name="perm_exceptions" domain="[('state','=','exception'),('message', '!=', '')]" help="Permanent Procurement Exceptions"/>
+                    <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
+                    <separator/>
+                    <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]" help="Procurement started late" />
+                    <field name="product_id" />
+                    <field name="state" />
                     <group expand="0" string="Group By">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Reason" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'name'}"/>
@@ -151,7 +145,20 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="context">{'search_default_current':1}</field>
-            <field name="help">A procurement order is used to record a need for a specific product at a specific location. A procurement order is usually created automatically from sales orders, a Pull Logistics rule or Minimum Stock Rules. When the procurement order is confirmed, it automatically creates the necessary operations to fullfil the need: purchase order proposition, manufacturing order, etc.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a procurement order. 
+              </p><p>
+                A procurement order is used to record a need for a specific
+                product at a specific location.  Procurement orders are usually
+                created automatically from sales orders, pull logistic rules or
+                minimum stock rules.
+              </p><p>
+                When the procurement order is confirmed, it automatically
+                creates the necessary operations to fullfil the need: purchase
+                order proposition, manufacturing order, etc.
+              </p>
+            </field>
         </record>
 
         <record id="procurement_exceptions" model="ir.actions.act_window">
@@ -182,10 +189,10 @@
             <field name="arch" type="xml">
                 <tree string="Reordering Rules">
                     <field name="name"/>
-                    <field name="warehouse_id"/>
+                    <field name="warehouse_id" groups="stock.group_locations"/>
                     <field name="location_id" groups="stock.group_locations"/>
                     <field name="product_id"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                     <field name="product_min_qty"/>
                     <field name="product_max_qty"/>
                 </tree>
@@ -198,15 +205,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Reordering Rules Search">
-                    <group>
-                        <field name="name" string="Reordering Rules"/>
-                        <separator orientation="vertical"/>
-                        <field name="warehouse_id" widget="selection"/>
-                        <field name="location_id" groups="stock.group_locations"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="product_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Reordering Rules"/>
+                    <field name="warehouse_id"/>
+                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="product_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Warehouse" icon="terp-go-home" domain="[]"  context="{'group_by':'warehouse_id'}"/>
                         <filter string="Location" icon="terp-go-home" domain="[]" context="{'group_by':'location_id'}"/>
@@ -228,8 +231,8 @@
                                 <field name="product_id" on_change="onchange_product_id(product_id)"/>
                             </group>
                             <group>
-                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                                <field name="product_uom"/>
+                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
+                                <field name="product_uom" groups="product.group_uom"/>
                                 <field name="location_id" groups="stock.group_locations"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
