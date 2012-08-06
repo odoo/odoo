@@ -133,10 +133,10 @@
                                 <field name="street2"/>
                                 <div class="address_format">
                                     <field name="city" placeholder="City" style="width: 40%%"/>
-                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%" options='{"no_open": true}'/>
                                     <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                 </div>
-                                <field name="country_id" placeholder="Country" class="oe_no_button"/>
+                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": true}'/>
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
                         </group>
@@ -210,7 +210,7 @@
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
                             <group>
                                 <group>
-                                    <field name="user_id" />
+                                    <field name="user_id" options='{"no_open": true}'/>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 </group>
                                 <group>
