@@ -6,7 +6,8 @@ openerp.testing = (function () {
     var doc = xhr.responseXML;
 
     var dependencies = {
-        corelib: [],
+        pyeval: [],
+        corelib: ['pyeval'],
         coresetup: ['corelib'],
         data: ['corelib', 'coresetup'],
         dates: [],
