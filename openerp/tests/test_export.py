@@ -577,6 +577,7 @@ class test_m2m(CreatorCase):
         self.assertEqual(
             self.export(self.commands, fields=['const', 'value']),
             [[ # FIXME: hardcoded comma, import uses config.csv_internal_sep
+               # resolution: remove configurable csv_internal_sep
                 u'4', u','.join(self.names)
             ]])
 
