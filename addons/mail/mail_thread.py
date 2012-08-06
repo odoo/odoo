@@ -585,32 +585,29 @@ class mail_thread(osv.Model):
             else raise Exception so that mailgate script will reject the mail and
             send notification mail sender that this mailbox does not exist so your mail have been rejected.
         """
-        
-        alias_pool = self.pool.get('mail.alias')
-        user_pool = self.pool.get('res.users')
-        mail_compose_pool = self.pool.get('mail.compose.message')
-        mail_message_pool = self.pool.get('mail.message')
+        mail_alias = self.pool.get('mail.alias')
+        mail_message = self.pool.get('mail.message')
         if isinstance(message, xmlrpclib.Binary):
             message = str(message.data)
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-        msg = mail_message_pool.parse_message(msg_txt)
-        alias_name = msg.get('to').split("@")[0]
-        alias_ids = alias_pool.search(cr, uid, [('alias_name','=',alias_name)])
-        #if alias found then call message_process method.
+        msg = mail_message.parse_message(msg_txt)
+        alias_name = msg.get('to').split("@")[0] # @@@@
+        alias_ids = mail_alias.search(cr, uid, [('alias_name','=',alias_name)])
+        #if alias found then call message_process method. # @@@@
         if alias_ids:
-            alias_id = alias_pool.browse(cr, uid, alias_ids[0], context)
+            alias_id = mail_alias.browse(cr, uid, alias_ids[0], context)
             user_id = self._get_user( cr, uid, alias_id, context)
             alias_defaults = dict(eval(alias_id.alias_defaults or {}))
             self.message_process(cr, user_id, alias_id.alias_model_id.model, message, 
-                                custom_values = alias_defaults, 
-                                thread_id = alias_id.alias_force_thread_id or False,
+                                 custom_values=alias_defaults, 
+                                 thread_id=alias_id.alias_force_thread_id or False,
                                  context=context)
         else:
             #if Mail box for the intended Mail Alias then give logger warning
             _logger.warning("No Mail Alias Found for the name '%s'."%(alias_name))
-            raise
+            raise # @@@@
         return True
 
     #------------------------------------------------------

@@ -82,9 +82,7 @@
                         <field name="name" string="Project Name"/>
                     </h1>
                     <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <label for="alias_name" class="oe_edit_only"/>
-                        <field name="alias_name" required="0" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/>
-                        <field name="alias_model" invisible="1" class="oe_inline oe_edit_only"/>
+                        <field name="alias_name" class="oe_inline" attrs="{'required': [('id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
                     </div>
                     <group>
                         <group>

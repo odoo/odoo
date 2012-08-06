@@ -166,10 +166,10 @@ class crm_case_section(osv.osv):
         if not vals.get('alias_id'):
             name = vals.get('alias_name') or vals['name']
             alias_id = alias_pool.create_unique_alias(cr, uid, 
-                    {'alias_name': "sales_team_"+name, 
-                    'alias_model_id': "crm.lead"}, context=context)
-            alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
-            vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
+                    {'alias_name': name},
+                    model_name="crm.lead",
+                    context=context)
+            vals['alias_id'] = alias_id
         res = super(crm_case_section, self).create(cr, uid, vals, context)
         alias_pool.write(cr, uid, [vals['alias_id']],{'alias_defaults':{'section_id': res,'type':'lead'}},context)
         return res

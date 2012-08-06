@@ -167,10 +167,9 @@ class mail_group(osv.osv):
         if not vals.get('alias_id'):
             name = vals.get('alias_name') or vals['name']
             alias_id = alias_pool.create_unique_alias(cr, uid, 
-                    {'alias_name': "mail_group_"+name, 
-                    'alias_model_id': self._name}, context=context)
-            alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
-            vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
+                    {'alias_name': "group_"+name}, 
+                    model_name=self._name, context=context)
+            vals['alias_id'] = alias_id
         mail_group_id = super(mail_group, self).create(cr, uid, vals, context)
         alias_pool.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
        

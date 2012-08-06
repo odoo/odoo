@@ -87,20 +87,13 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Team">
-                            <group col="4">
-                                <group>
-                                    <field name="reply_to"/>
-                                </group>
-                                <group>
-                                    <field name="change_responsible"/>
-                                    <field name="allow_unlink"/>
-                                </group>
-                            </group>
-                            <group attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <div name="alias_box">
-                                    <label for="alias_name"/>
-                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/>
-                                </div>
+                            <div name="alias_box" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <label for="alias_name"/>
+                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/>
+                            </div>
+                            <group>
+                                <field name="change_responsible"/>
+                                <field name="allow_unlink"/>
                             </group>
                             <separator string="Team Members"/>
                             <field name="member_ids"/>

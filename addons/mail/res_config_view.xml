@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="base_setup.view_general_configuration"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/sheet/group[@string='Others']" position='inside'>
+                <xpath expr="//separator[@string='Others']" position='after'>
                     <field name="alias_domain" placeholder="mycompany.my.openerp.com"/>
                 </xpath>
             </field>

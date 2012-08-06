@@ -2,12 +2,11 @@
 <openerp>
     <data>
 
-        <!-- Alias Form View !-->
+        <!-- Alias Form View -->
         <record  model="ir.ui.view" id="view_mail_alias_form">
             <field name="name">mail.alias.form</field>
             <field name="model">mail.alias</field>
             <field name="type">form</field>
-            <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Alias" version="7.0">
                     <sheet>
@@ -18,7 +17,7 @@
                             <field name="alias_user_id" readonly="1"/>
                             <field name="alias_force_thread_id" readonly="1"/>
                             <newline/>
-                            <separator string="Alias Mailbox Default Values" colspan="4"/>
+                            <separator string="Default Values" colspan="4"/>
                             <field name="alias_defaults" colspan="4" nolabel="1" readonly="1"/>
                         </group>
                     </sheet>
@@ -26,7 +25,7 @@
             </field>
         </record>
 
-        <!-- Alias List View !-->
+        <!-- Alias List View -->
         <record  model="ir.ui.view" id="view_mail_alias_tree">
             <field name="name">mail.alias.tree</field>
             <field name="model">mail.alias</field>
@@ -41,7 +40,7 @@
             </field>
         </record>
 
-        <!-- Alias Search View !-->
+        <!-- Alias Search View -->
         <record  model="ir.ui.view" id="view_mail_alias_search">
             <field name="name">mail.alias.search</field>
             <field name="model">mail.alias</field>
@@ -59,11 +58,8 @@
         </record>
 
         <record id="action_view_mail_alias" model="ir.actions.act_window">
-            <field name="name">Mail Alias</field>
+            <field name="name">Aliases</field>
             <field name="res_model">mail.alias</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_mail_alias_search"/>
         </record>
 
         <menuitem id="mail_alias_menu"

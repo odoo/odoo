@@ -88,20 +88,10 @@ Check the file in attachment for more information !  (third comment)]]></field>
             <field name="attachment_ids" eval="[(4,ref('message_blogpost0_comment2_attachment0'))]"/>
         </record>
 
+        <record model="ir.config_parameter" id="user_mail_alias">
+            <field name="key">mail.catchall.domain</field>
+            <field name="value">demo.openerp.com</field>
+        </record>
+
     </data>
-
-    <data noupdate="1">
-        <record id="mail_alias_demo_user" model="mail.alias">
-            <field name="alias_name">demo</field>
-            <field name="alias_model_id" ref="model_res_users"/>
-            <field name="alias_user_id" ref="base.user_root"/>
-            <field name="alias_force_thread_id" ref="base.user_demo"/>
-            <field name="alias_defaults">{}</field>
-        </record>
-
-        <record model="res.users" id="base.user_demo">
-            <field name="alias_id" ref="mail_alias_demo_user"/>
-        </record>
-     
-     </data>
 </openerp>

@@ -12,18 +12,5 @@
             <field eval="'process_email_queue'" name="function"/>
             <field eval="'()'" name="args"/>
         </record>
-		   
-        <record id="mail_alias_root_user" model="mail.alias">
-            <field name="alias_name">admin</field>
-            <field name="alias_model_id" ref="model_res_users"/>
-            <field name="alias_user_id" ref="base.user_root"/>
-            <field name="alias_force_thread_id" ref="base.user_root"/>
-            <field name="alias_defaults">{}</field>
-        </record>
-
-        <record model="res.users" id="base.user_root">
-            <field name="alias_id" ref="mail_alias_root_user"/>
-        </record>
-        
     </data>
 </openerp>

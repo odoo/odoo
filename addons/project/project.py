@@ -52,10 +52,20 @@ class project_task_type(osv.osv):
     }
     _order = 'sequence'
 
+
+def short_name(name):
+        """Keep first word(s) of name to make it small enough
+           but distinctive"""
+        if not name: return name
+        # keep 7 chars + end of the last word
+        hardcut_tokens = name[:7].split()
+        return ' '.join(name.split()[:len(hardcut_tokens)])
+
 class project(osv.osv):
     _name = "project.project"
     _description = "Project"
-    _inherits = {'account.analytic.account': "analytic_account_id","mail.alias":"alias_id"}
+    _inherits = {'account.analytic.account': "analytic_account_id",
+                 "mail.alias": "alias_id"}
     _inherit = ['ir.needaction_mixin', 'mail.thread']
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -230,10 +240,10 @@ class project(osv.osv):
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
-                                    help="The email address associated with this project. New emails received will automatically "
-                                         "create project tasks (optionally project issues if the Project Issue module is installed)."),
+                                    help="Internal email associated with this project. Incoming emails are automatically synchronized"
+                                         "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True, 
-                                        help="The kind of document created when an email is received by this project's email alias"),
+                                        help="The kind of document created when an email is received on this project's email alias"),
         'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
@@ -512,18 +522,18 @@ def Project():
         return user_ids
 
     def create(self, cr, uid, vals, context=None):
-        alias_pool = self.pool.get('mail.alias')
+        mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            name = vals.get('alias_name') or vals['name']
-            alias_id = alias_pool.create_unique_alias(cr, uid, 
-                    {'alias_name': "project_"+name, 
-                     'alias_model_id': vals.get('alias_model', 'project.task')}, context=context)
-            alias = alias_pool.read(cr, uid, alias_id, ['alias_name'],context)
-            vals.update({'alias_id': alias_id, 'alias_name': alias['alias_name']})
-        res = super( project, self).create(cr, uid, vals, context)
-        alias_pool.write(cr, uid, [vals['alias_id']], {'alias_defaults':{'project_id': res}}, context)
-        self.create_send_note(cr, uid, [res], context=context)
-        return res
+            name = vals.pop('alias_name', None) or vals['name']
+            alias_id = mail_alias.create_unique_alias(cr, uid, 
+                    {'alias_name': "project_"+short_name(name)},
+                    model_name=vals.get('alias_model', 'project.task'),
+                    context=context)
+            vals['alias_id'] = alias_id
+        project_id = super(project, self).create(cr, uid, vals, context)
+        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)
+        self.create_send_note(cr, uid, [project_id], context=context)
+        return project_id
 
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Project has been <b>created</b>."), context=context)
@@ -545,10 +555,9 @@ def Project():
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        model_pool = self.pool.get('ir.model')
-        # if alias_model has been changed, update alias_model_id of alias accordingly
+        # if alias_model has been changed, update alias_model_id accordingly
         if vals.get('alias_model'):
-            model_ids = model_pool.search(cr, uid, [('model', '=', vals.get('alias_model','project.task'))])
+            model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', vals.get('alias_model', 'project.task'))])
             vals.update(alias_model_id=model_ids[0])
         return super(project, self).write(cr, uid, ids, vals, context=context)
 
