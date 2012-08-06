@@ -19,20 +19,19 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
+
 
 class ir_translation(osv.Model):
     _name = "ir.translation"
-    _description="Translation"
-    _inherit="ir.translation"
+    _inherit = "ir.translation"
     _columns = {
-        'gengo_comment':fields.text("Comments"),
-        'gengo_translation':fields.boolean("Translation", help='This term has to be translated by Gengo automatically'),
-        'gengo_control':fields.boolean('Active'),
-        'job_id':fields.char('Gengo Job Id',size=32),
-    }
-        
-    _defaults = {
-        'gengo_control':False,
+        'gengo_comment': fields.text("Comments"),
+        'gengo_translation': fields.boolean("Translation", help='This term has to be translated by Gengo automatically'),
+        'gengo_control': fields.boolean('Active'),
+        'job_id': fields.char('Gengo Job Id', size=32),
     }
 
+    _defaults = {
+        'gengo_control': False,
+    }

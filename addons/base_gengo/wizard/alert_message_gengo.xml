@@ -7,16 +7,16 @@
             <field name="model">base.update.translations</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='Synchronize Translation']" position="inside">
+                <xpath expr="//group" position="inside">
                         <group colspan="4">
                             <field name="state" invisible="1"/>
                             <label string="Your Request has been Successfully Send to Gengo" states="done" colspan="4"/>
                         </group>
                         <group colspan="4">
                             <label string="This language is select as Active All Translation Request will be sent by System Automatically" states="inprogress" colspan="4"/>
-                        </group>                        
+                        </group>
                 </xpath>
             </field>
-        </record>    
+        </record>
     </data>
 </openerp>

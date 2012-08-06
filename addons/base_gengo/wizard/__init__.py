@@ -22,5 +22,3 @@
 import gengo_update_translation
 import wrap_object
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-

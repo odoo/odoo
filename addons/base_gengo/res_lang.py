@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
+
 
 class res_company(osv.Model):
     _name = "res.lang"
-    _description = "Languages"
     _inherit = "res.lang"
 
     _columns = {
-        'gengo_sync':fields.boolean('Active', help='Synchronize Translation Periodically')
+        'gengo_sync': fields.boolean('Active', help='Synchronize Translation Periodically')
     }
-    

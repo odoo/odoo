@@ -6,12 +6,12 @@
             <field name="name" >Run Gengo Response Scheduler</field>
             <field eval="True" name="active"/>
             <field name="interval_number">1</field>
-            <field name="interval_type">minutes</field>
+            <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field eval="'base.update.translations'" name="model"></field>
             <field eval="'scheduler_get_gengo_response'" name="function"/>
         </record>
-        
+
         <!--Schedular Sync Request-->
         <record id="gengo_sync_request_scheduler" model="ir.cron">
             <field name="name" >Run Gengo Sync Request Scheduler</field>
