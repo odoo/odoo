@@ -444,10 +444,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 id: '_group', tag: '', string: _t("Group"), meta: true,
                 modifiers_for: function () { return {}; },
                 modifiers: {}
-            }, {
-                id: '_count', tag: '', string: '#', meta: true,
-                modifiers_for: function () { return {}; },
-                modifiers: {}
             });
         }
 
@@ -1342,15 +1338,19 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                         _t("Grouping on field '%s' is not possible because that field does not appear in the list view."),
                         group.grouped_on));
                 }
+                var group_label;
                 try {
-                    $group_column.html(instance.web.format_cell(
+                    group_label = instance.web.format_cell(
                         row_data, group_column, {
                             value_if_empty: _t("Undefined"),
                             process_modifiers: false
-                    }));
+                    });
                 } catch (e) {
-                    $group_column.html(row_data[group_column.id].value);
+                    group_label = row_data[group_column.id].value;
                 }
+                $group_column.text(_.str.sprintf("%s (%d)",
+                    group_label, group.length));
+
                 if (group.length && group.openable) {
                     // Make openable if not terminal group & group_by_no_leaf
                     $group_column.prepend('<span class="ui-icon ui-icon-triangle-1-e" style="float: left;">');
@@ -1362,8 +1362,6 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 }
             }
             self.indent($group_column, group.level);
-            // count column
-            $('<td>').text(group.length).appendTo($row);
 
             if (self.options.selectable) {
                 $row.append('<td>');
