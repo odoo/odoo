@@ -2698,6 +2698,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.on("change:value", this, function() {
             this.floating = false;
             this.render_value();
+            this.$('.oe_m2o_cm_button').css({'visibility': this.is_false() ? 'hidden' : 'visible'});
         });
     },
     initialize_content: function() {
