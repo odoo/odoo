@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_move_reconciliation_followup_form" model="ir.ui.view">
+            <field name="name">account.move.reconciliation.followup</field>
+            <field name="model">account.move.reconciliation</field>
+            <field name="inherit_id" ref="account.view_account_move_reconciliation_form_view"/>
+            <field name="arch" type="xml">
+                <field name="reconciliation_progress" position="after">
+                    <label for="followup_date"/>
+                    <field name="followup_date"/>
+                    <field name="max_followup_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
