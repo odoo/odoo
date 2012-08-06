@@ -9,7 +9,6 @@
         <field name="arch" type="xml">
             <search string="Dashboard">
                 <field name="name" string="Dashboard"/>
-                <field name="line_ids"/>
             </search>
         </field>
     </record>
@@ -33,28 +32,16 @@
         <field name="type">form</field>
         <field eval="1" name="priority"/>
         <field name="arch" type="xml">
-            <form string="Dashboard">
-                <group col="6" colspan="4">
-                    <field name="name"/>
-                    <field name="view_id"/>
-                    <button colspan="2" name="%(action_board_menu_create)d" string="Create Menu" type="action" icon="gtk-justify-fill" />
-                </group>
-                <field colspan="4" name="line_ids" nolabel="1">
-                    <tree string="Dashboard View">
+            <form string="Dashboard" version="7.0">
+                <header>
+                    <button name="%(action_board_menu_create)d" string="Create Menu" type="action" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
                         <field name="name"/>
-                        <field name="sequence"/>
-                        <field name="action_id"/>
-                        <field name="position"/>
-                    </tree>
-                    <form string="Dashboard View">
-                        <field name="name"/>
-                        <field name="sequence"/>
-                        <field name="width"/>
-                        <field name="height"/>
-                        <field name="action_id" domain="[('view_type','!=','tree')]" />
-                        <field name="position"/>
-                    </form>
-                </field>
+                        <field name="view_id" invisible="1"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -70,8 +57,8 @@
 
     <menuitem action="action_view_board_list_form"
         id="menu_view_board_form" parent="base.menu_reporting_config"
-    groups="base.group_no_one"
-    sequence="2"/>
+        groups="base.group_no_one"
+        sequence="2"/>
 
 </data>
 </openerp>

@@ -65,7 +65,7 @@ class mail_thread(osv.Model):
     def _get_message_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
         for id in ids:
-            message_ids = self.message_load_ids(cr, uid, [id], context=context)
+            message_ids = self.message_search(cr, uid, [id], context=context)
             subscriber_ids = self.message_get_subscribers(cr, uid, [id], context=context)
             res[id] = {
                 'message_ids': message_ids,
@@ -130,7 +130,7 @@ class mail_thread(osv.Model):
         # delete subscriptions
         subscr_to_del_ids = subscr_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         subscr_obj.unlink(cr, uid, subscr_to_del_ids, context=context)
-        # delete notifications
+        # delete messages and notifications
         msg_to_del_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
         msg_obj.unlink(cr, uid, msg_to_del_ids, context=context)
 
@@ -150,39 +150,13 @@ class mail_thread(osv.Model):
             context = {}
         
         message_obj = self.pool.get('mail.message')
-        subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
-        res_users_obj = self.pool.get('res.users')
-        body = vals.get('body_html', '') if vals.get('subtype', 'plain') == 'html' else vals.get('body_text', '')
-
+        body = vals.get('body_html', '') if vals.get('content_subtype') == 'html' else vals.get('body_text', '')
+        
         # automatically subscribe the writer of the message
         if vals['user_id']:
             self.message_subscribe(cr, uid, [thread_id], [vals['user_id']], context=context)
-
-        # get users that will get a notification pushed
-        user_to_push_ids = self.message_create_get_notification_user_ids(cr, uid, [thread_id], vals, context=context)
-        user_to_push_from_parse_ids = self.message_parse_users(cr, uid, [thread_id], body, context=context)
-
-        # set email_from and email_to for comments and notifications
-        if vals.get('type', False) and vals['type'] == 'comment' or vals['type'] == 'notification':
-            current_user = res_users_obj.browse(cr, uid, [uid], context=context)[0]
-            if not vals.get('email_from', False):
-                vals['email_from'] = current_user.user_email
-            if not vals.get('email_to', False):
-                email_to = ''
-                for user in res_users_obj.browse(cr, uid, user_to_push_ids, context=context):
-                    if not user.notification_email_pref == 'all' and \
-                        not (user.notification_email_pref == 'comments' and vals['type'] == 'comment') and \
-                        not (user.notification_email_pref == 'to_me' and user.id in user_to_push_from_parse_ids):
-                        continue
-                    if not user.user_email:
-                        continue
-                    email_to = '%s, %s' % (email_to, user.user_email)
-                email_to = email_to.lstrip(', ')
-                if email_to:
-                    vals['email_to'] = email_to
-                    vals['state'] = 'outgoing'
-
+        
         # create message
         msg_id = message_obj.create(cr, uid, vals, context=context)
         
@@ -191,43 +165,50 @@ class mail_thread(osv.Model):
         
         # special: if install mode, do not push demo data
         if context.get('install_mode', False):
-            return True
-
-        # push to users
+            return msg_id
+        
+        # get users that will get a notification pushed
+        user_to_push_ids = self.message_get_user_ids_to_notify(cr, uid, [thread_id], vals, context=context)
         for id in user_to_push_ids:
             notification_obj.create(cr, uid, {'user_id': id, 'message_id': msg_id}, context=context)
-
+        
+        # create the email to send
+        email_id = self.message_create_notify_by_email(cr, uid, vals, user_to_push_ids, context=context)
+        
         return msg_id
-
-    def message_create_get_notification_user_ids(self, cr, uid, thread_ids, new_msg_vals, context=None):
-        if context is None:
-            context = {}
-
-        notif_user_ids = []
-        body = new_msg_vals.get('body_html', '') if new_msg_vals.get('subtype', 'plain') == 'html' else new_msg_vals.get('body_text', '')
-        for thread_id in thread_ids:
-            # add subscribers
-            notif_user_ids += self.message_get_subscribers(cr, uid, [thread_id], context=context)
-            # add users requested via parsing message (@login)
-            notif_user_ids += self.message_parse_users(cr, uid, [thread_id], body, context=context)
-            # add users requested to perform an action (need_action mechanism)
-            if hasattr(self, 'get_needaction_user_ids'):
-                notif_user_ids += self.get_needaction_user_ids(cr, uid, [thread_id], context=context)[thread_id]
-            # add users notified of the parent messages (because: if parent message contains @login, login must receive the replies)
-            if new_msg_vals.get('parent_id'):
-                notif_obj = self.pool.get('mail.notification')
-                parent_notif_ids = notif_obj.search(cr, uid, [('message_id', '=', new_msg_vals.get('parent_id'))], context=context)
-                parent_notifs = notif_obj.read(cr, uid, parent_notif_ids, context=context)
-                notif_user_ids += [parent_notif['user_id'][0] for parent_notif in parent_notifs]
+    
+    def message_get_user_ids_to_notify(self, cr, uid, thread_ids, new_msg_vals, context=None):
+        subscription_obj = self.pool.get('mail.subscription')
+        # get body
+        body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
+        
+        # get subscribers
+        notif_user_ids = self.message_get_subscribers(cr, uid, thread_ids, context=context)
+        
+        # add users requested via parsing message (@login)
+        notif_user_ids += self.message_parse_users(cr, uid, body, context=context)
+        
+        # add users requested to perform an action (need_action mechanism)
+        if hasattr(self, 'get_needaction_user_ids'):
+            user_ids_dict = self.get_needaction_user_ids(cr, uid, thread_ids, context=context)
+            for id, user_ids in user_ids_dict.iteritems():
+                notif_user_ids += user_ids
+        
+        # add users notified of the parent messages (because: if parent message contains @login, login must receive the replies)
+        if new_msg_vals.get('parent_id'):
+            notif_obj = self.pool.get('mail.notification')
+            parent_notif_ids = notif_obj.search(cr, uid, [('message_id', '=', new_msg_vals.get('parent_id'))], context=context)
+            parent_notifs = notif_obj.read(cr, uid, parent_notif_ids, context=context)
+            notif_user_ids += [parent_notif['user_id'][0] for parent_notif in parent_notifs]
 
         # remove duplicate entries
         notif_user_ids = list(set(notif_user_ids))
         return notif_user_ids
 
-    def message_parse_users(self, cr, uid, ids, string, context=None):
+    def message_parse_users(self, cr, uid, string, context=None):
         """Parse message content
            - if find @login -(^|\s)@((\w|@|\.)*)-: returns the related ids
-             this supports login that are emails (such as @admin@lapin.net)
+             this supports login that are emails (such as @raoul@grobedon.net)
         """
         regex = re.compile('(^|\s)@((\w|@|\.)*)')
         login_lst = [item[1] for item in regex.findall(string)]
@@ -248,46 +229,61 @@ class mail_thread(osv.Model):
         return ret_dict
 
     def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
-                        parent_id=False, type='email', subtype='plain', state='received',
-                        email_to=False, email_from=False, email_cc=None, email_bcc=None,
-                        reply_to=None, email_date=None, message_id=False, references=None,
-                        attachments=None, headers=None, original=None, context=None):
-        """Creates a new mail.message attached to the current mail.thread,
-           containing all the details passed as parameters.  All attachments
-           will be attached to the thread record as well as to the actual
-           message.
-           If ``email_from`` is not set or ``type`` not set as 'email',
-           a note message is created, without the usual envelope
-           attributes (sender, recipients, etc.).
-           The creation of the message is done by calling ``message_create``
-           method, that will manage automatic pushing of notifications.
+                        type='email', email_date=None, parent_id=False,
+                        content_subtype='plain', state=None,
+                        partner_ids=None, email_from=False, email_to=False,
+                        email_cc=None, email_bcc=None, reply_to=None,
+                        headers=None, message_id=False, references=None,
+                        attachments=None, original=None, context=None):
+        """ Creates a new mail.message through message_create. The new message
+            is attached to the current mail.thread, containing all the details 
+            passed as parameters. All attachments will be attached to the 
+            thread record as well as to the actual message.
+           
+            This method calls message_create that will handle management of
+            subscription and notifications, and effectively create the message.
+           
+            If ``email_from`` is not set or ``type`` not set as 'email',
+            a note message is created (comment or system notification), 
+            without the usual envelope attributes (sender, recipients, etc.).
 
-        :param threads: list of thread ids, or list of browse_records representing
-                        threads to which a new message should be attached
-        :param subject: subject of the message, or description of the event if this
-                        is an *event log* entry.
-        :param body_text: plaintext contents of the mail or log message
-        :param body_html: html contents of the mail or log message
-        :param parent_id: id of the parent message (threaded messaging model)
-        :param type: optional type of message: 'email', 'comment', 'notification'
-        :param subtype: optional subtype of message: 'plain' or 'html', corresponding to the main
-                        body contents (body_text or body_html).
-        :param state: optional state of message; 'received' by default
-        :param email_to: Email-To / Recipient address
-        :param email_from: Email From / Sender address if any
-        :param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
-        :param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To addresses if any
-        :param reply_to: reply_to header
-        :param email_date: email date string if different from now, in server timezone
-        :param message_id: optional email identifier
-        :param references: optional email references
-        :param headers: mail headers to store
-        :param dict attachments: map of attachment filenames to binary contents, if any.
-        :param str original: optional full source of the RFC2822 email, for reference
-        :param dict context: if a ``thread_model`` value is present
-                             in the context, its value will be used
-                             to determine the model of the thread to
-                             update (instead of the current model).
+            :param threads: list of thread ids, or list of browse_records
+                representing threads to which a new message should be attached
+            :param subject: subject of the message, or description of the event;
+                this is totally optional as subjects are not important except
+                for specific messages (blog post, job offers) or for emails
+            :param body_text: plaintext contents of the mail or log message
+            :param body_html: html contents of the mail or log message
+            :param type: type of message: 'email', 'comment', 'notification';
+                email by default
+            :param email_date: email date string if different from now, in
+                server timezone
+            :param parent_id: id of the parent message (threaded messaging model)
+            :param content_subtype: optional content_subtype of message: 'plain'
+                or 'html', corresponding to the main body contents (body_text or
+                body_html).
+            :param state: state of message
+            :param partner_ids: destination partners of the message, in addition
+                to the now fully optional email_to; this method is supposed to
+                received a list of ids is not None. The specific many2many
+                instruction will be generated by this method.
+            :param email_from: Email From / Sender address if any
+            :param email_to: Email-To / Recipient address
+            :param email_cc: Comma-Separated list of Carbon Copy Emails To
+                addresses if any
+            :param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To
+                addresses if any
+            :param reply_to: reply_to header
+            :param headers: mail headers to store
+            :param message_id: optional email identifier
+            :param references: optional email references
+            :param dict attachments: map of attachment filenames to binary
+                contents, if any.
+            :param str original: optional full source of the RFC2822 email, for
+                reference
+            :param dict context: if a ``thread_model`` value is present in the
+                context, its value will be used to determine the model of the
+                thread to update (instead of the current model).
         """
         if context is None:
             context = {}
@@ -323,10 +319,15 @@ class mail_thread(osv.Model):
                     'res_id': thread.id,
                 }
                 to_attach.append(ir_attachment.create(cr, uid, data_attach, context=context))
-
+            # find related partner: partner_id column in thread object, or self is res.partner model
             partner_id = ('partner_id' in thread._columns.keys()) and (thread.partner_id and thread.partner_id.id or False) or False
             if not partner_id and thread._name == 'res.partner':
                 partner_id = thread.id
+            # destination partners
+            if partner_ids is None:
+                partner_ids = []
+            mail_partner_ids = [(6, 0, partner_ids)]
+
             data = {
                 'subject': subject,
                 'body_text': body_text or (hasattr(thread, 'description') and thread.description or ''),
@@ -334,9 +335,10 @@ class mail_thread(osv.Model):
                 'parent_id': parent_id,
                 'date': email_date or fields.datetime.now(),
                 'type': type,
-                'subtype': subtype,
+                'content_subtype': content_subtype,
                 'state': state,
                 'message_id': message_id,
+                'partner_ids': mail_partner_ids,
                 'attachment_ids': [(6, 0, to_attach)],
                 'user_id': uid,
                 'model' : thread._name,
@@ -349,7 +351,6 @@ class mail_thread(osv.Model):
                     if isinstance(param, list):
                         param = ", ".join(param)
                 data.update({
-                    'subject': subject or _('History'),
                     'email_to': email_to,
                     'email_from': email_from or \
                         (hasattr(thread, 'user_id') and thread.user_id and thread.user_id.user_email),
@@ -385,8 +386,9 @@ class mail_thread(osv.Model):
                             body_html= msg_dict.get('body_html'),
                             parent_id = msg_dict.get('parent_id', False),
                             type = msg_dict.get('type', 'email'),
-                            subtype = msg_dict.get('subtype', 'plain'),
-                            state = msg_dict.get('state', 'received'),
+                            content_subtype = msg_dict.get('content_subtype'),
+                            state = msg_dict.get('state'),
+                            partner_ids = msg_dict.get('partner_ids'),
                             email_from = msg_dict.get('from', msg_dict.get('email_from')),
                             email_to = msg_dict.get('to', msg_dict.get('email_to')),
                             email_cc = msg_dict.get('cc', msg_dict.get('email_cc')),
@@ -401,59 +403,109 @@ class mail_thread(osv.Model):
                             original = msg_dict.get('original'),
                             context = context)
 
-    def _message_add_ancestor_ids(self, cr, uid, ids, child_ids, root_ids, context=None):
-        """ Given message child_ids
-            Find their ancestors until root ids"""
-        if context is None:
-            context = {}
-        msg_obj = self.pool.get('mail.message')
-        tmp_msgs = msg_obj.read(cr, uid, child_ids, ['id', 'parent_id'], context=context)
-        parent_ids = [msg['parent_id'][0] for msg in tmp_msgs if msg['parent_id'] and msg['parent_id'][0] not in root_ids and msg['parent_id'][0] not in child_ids]
+    #------------------------------------------------------
+    # Message loading
+    #------------------------------------------------------
+
+    def _message_search_ancestor_ids(self, cr, uid, ids, child_ids, ancestor_ids, context=None):
+        """ Given message child_ids ids, find their ancestors until ancestor_ids
+            using their parent_id relationship.
+
+            :param child_ids: the first nodes of the search
+            :param ancestor_ids: list of ancestors. When the search reach an
+                                 ancestor, it stops.
+        """
+        def _get_parent_ids(message_list, ancestor_ids, child_ids):
+            """ Tool function: return the list of parent_ids of messages
+                contained in message_list. Parents that are in ancestor_ids
+                or in child_ids are not returned. """
+            return [message['parent_id'][0] for message in message_list
+                        if message['parent_id']
+                        and message['parent_id'][0] not in ancestor_ids
+                        and message['parent_id'][0] not in child_ids
+                    ]
+
+        message_obj = self.pool.get('mail.message')
+        messages_temp = message_obj.read(cr, uid, child_ids, ['id', 'parent_id'], context=context)
+        parent_ids = _get_parent_ids(messages_temp, ancestor_ids, child_ids)
         child_ids += parent_ids
         cur_iter = 0; max_iter = 100; # avoid infinite loop
         while (parent_ids and (cur_iter < max_iter)):
             cur_iter += 1
-            tmp_msgs = msg_obj.read(cr, uid, parent_ids, ['id', 'parent_id'], context=context)
-            parent_ids = [msg['parent_id'][0] for msg in tmp_msgs if msg['parent_id'] and msg['parent_id'][0] not in root_ids and msg['parent_id'][0] not in child_ids]
+            messages_temp = message_obj.read(cr, uid, parent_ids, ['id', 'parent_id'], context=context)
+            parent_ids = _get_parent_ids(messages_temp, ancestor_ids, child_ids)
             child_ids += parent_ids
         if (cur_iter > max_iter):
-            _logger.warning("Possible infinite loop in _message_add_ancestor_ids. Note that this algorithm is intended to check for cycle in message graph.")
+            _logger.warning("Possible infinite loop in _message_search_ancestor_ids. "\
+                "Note that this algorithm is intended to check for cycle in "\
+                "message graph, leading to a curious error. Have fun.")
         return child_ids
 
-    def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[], context=None):
-        """ OpenChatter feature: return thread messages ids. It searches in
-            mail.messages where res_id = ids, (res_)model = current model.
-            :param domain: domain to add to the search; especially child_of
-                           is interesting when dealing with threaded display
-            :param ascent: performs an ascended search; will add to fetched msgs
-                           all their parents until root_ids
-            :param root_ids: for ascent search
-            :param root_ids: root_ids when performing an ascended search
+    def message_search_get_domain(self, cr, uid, ids, context=None):
+        """ OpenChatter feature: get the domain to search the messages related
+            to a document. mail.thread defines the default behavior as
+            being messages with model = self._name, id in ids.
+            This method should be overridden if a model has to implement a
+            particular behavior.
         """
-        if context is None:
-            context = {}
-        msg_obj = self.pool.get('mail.message')
-        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)] + domain,
-            limit=limit, offset=offset, context=context)
-        if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
-        return msg_ids
+        return ['&', ('res_id', 'in', ids), ('model', '=', self._name)]
 
-    def message_load(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[], context=None):
-        """ OpenChatter feature: return thread messages
+    def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, domain=None, count=False, context=None):
+        """ OpenChatter feature: return thread messages ids according to the
+            search domain given by ``message_search_get_domain``.
+            
+            It is possible to add in the search the parent of messages by
+            setting the fetch_ancestors flag to True. In that case, using
+            the parent_id relationship, the method returns the id list according
+            to the search domain, but then calls ``_message_search_ancestor_ids``
+            that will add to the list the ancestors ids. The search is limited
+            to parent messages having an id in ancestor_ids or having
+            parent_id set to False.
+            
+            If ``count==True``, the number of ids is returned instead of the
+            id list. The count is done by hand instead of passing it as an 
+            argument to the search call because we might want to perform
+            a research including parent messages until some ancestor_ids.
+            
+            :param fetch_ancestors: performs an ascended search; will add 
+                                    to fetched msgs all their parents until
+                                    ancestor_ids
+            :param ancestor_ids: used when fetching ancestors
+            :param domain: domain to add to the search; especially child_of
+                           is interesting when dealing with threaded display.
+                           Note that the added domain is anded with the 
+                           default domain.
+            :param limit, offset, count, context: as usual
         """
-        msg_ids = self.message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
-        msgs = self.pool.get('mail.message').read(cr, uid, msg_ids, [], context=context)
-        
-        # Set as read
-        self.message_check_and_set_read(cr, uid, ids, context=context)
-        
+        search_domain = self.message_search_get_domain(cr, uid, ids, context=context)
+        if domain:
+            search_domain += domain
+        message_obj = self.pool.get('mail.message')
+        message_res = message_obj.search(cr, uid, search_domain, limit=limit, offset=offset, count=count, context=context)
+        if not count and fetch_ancestors:
+            message_res += self._message_search_ancestor_ids(cr, uid, ids, message_res, ancestor_ids, context=context) 
+        return message_res
+
+    def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, domain=None, context=None):
+        """ OpenChatter feature: read the messages related to some threads.
+            This method is used mainly the Chatter widget, to directly have
+            read result instead of searching then reading.
+
+            Please see message_search for more information about the parameters.
+        """
+        message_ids = self.message_search(cr, uid, ids, fetch_ancestors, ancestor_ids,
+            limit, offset, domain, context=context)
+        messages = self.pool.get('mail.message').read(cr, uid, message_ids, context=context)
+
         """ Retrieve all attachments names """
+        map_id_to_name = dict((attachment_id, '') for message in messages for attachment_id in message['attachment_ids'])
         map_id_to_name = {}
-        
-        for msg in msgs:
+        for msg in messages:
             for attach_id in msg["attachment_ids"]:
                 map_id_to_name[attach_id] = '' # use empty string as a placeholder
-        
+
         ids = map_id_to_name.keys()
         names = self.pool.get('ir.attachment').name_get(cr, uid, ids, context=context)
         
@@ -462,26 +514,34 @@ class mail_thread(osv.Model):
             map_id_to_name[name[0]] = name[1]
         
         # give corresponding ids and names to each message
-        for msg in msgs:
+        for msg in messages:
             msg["attachments"] = []
             
             for attach_id in msg["attachment_ids"]:
                 msg["attachments"].append({'id': attach_id, 'name': map_id_to_name[attach_id]})
         
-        """ Sort and return messages """
-        msgs = sorted(msgs, key=lambda d: (-d['id']))
-        return msgs
+        # Set the threads as read
+        self.message_check_and_set_read(cr, uid, ids, context=context)
+        # Sort and return the messages
+        messages = sorted(messages, key=lambda d: (-d['id']))
+        return messages
 
-    def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, msg_search_domain=[], ascent=False, root_ids=[], context=None):
-        """ OpenChatter: wall: get messages to display (=pushed notifications)
+    def message_get_pushed_messages(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None,
+                            limit=100, offset=0, msg_search_domain=[], context=None):
+        """ OpenChatter: wall: get the pushed notifications and used them
+            to fetch messages to display on the wall.
+            
+            :param fetch_ancestors: performs an ascended search; will add
+                                    to fetched msgs all their parents until
+                                    ancestor_ids
+            :param ancestor_ids: used when fetching ancestors
             :param domain: domain to add to the search; especially child_of
                            is interesting when dealing with threaded display
             :param ascent: performs an ascended search; will add to fetched msgs
                            all their parents until root_ids
             :param root_ids: for ascent search
-            :return list of mail.messages sorted by date
+            :return: list of mail.messages sorted by date
         """
-        if context is None: context = {}
         notification_obj = self.pool.get('mail.notification')
         msg_obj = self.pool.get('mail.message')
         # update message search
@@ -496,7 +556,7 @@ class mail_thread(osv.Model):
         msg_ids = [notification.message_id.id for notification in notifications]
         # get messages
         msg_ids = msg_obj.search(cr, uid, [('id', 'in', msg_ids)], context=context)
-        if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
+        if (fetch_ancestors): msg_ids = self._message_search_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
 
@@ -524,9 +584,9 @@ class mail_thread(osv.Model):
                                     record needs to be created. Ignored
                                     if the thread record already exists.
            :param bool save_original: whether to keep a copy of the original
-               email source attached to the message after it is imported.
+                email source attached to the message after it is imported.
            :param bool strip_attachments: whether to strip all attachments
-               before processing the message, in order to save some space.
+                before processing the message, in order to save some space.
         """
         # extract message bytes - we are forced to pass the message as binary because
         # we don't know its encoding until we parse its headers and hence can't
@@ -540,7 +600,6 @@ class mail_thread(osv.Model):
             context.update({'thread_model': model})
 
         mail_message = self.pool.get('mail.message')
-        res_id = False
 
         # Parse Message
         # Warning: message_from_string doesn't always work correctly on unicode,
@@ -548,8 +607,11 @@ class mail_thread(osv.Model):
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-        msg = mail_message.parse_message(msg_txt, save_original=save_original)
+        msg = mail_message.parse_message(msg_txt, save_original=save_original, context=context)
 
+        # update state
+        msg['state'] = 'received'
+        
         if strip_attachments and 'attachments' in msg:
             del msg['attachments']
 
@@ -587,6 +649,8 @@ class mail_thread(osv.Model):
             res_id = create_record(msg)
         # To forward the email to other followers
         self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
+        # Set as Unread
+        model_pool.message_mark_as_unread(cr, uid, [res_id], context=context)
         return res_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
@@ -652,9 +716,9 @@ class mail_thread(osv.Model):
         return self.message_append_dict(cr, uid, ids, msg_dict, context=context)
 
     def message_thread_followers(self, cr, uid, ids, context=None):
-        """Returns a list of email addresses of the people following
-           this thread, including the sender of each mail, and the
-           people who were in CC of the messages, if any.
+        """ Returns a list of email addresses of the people following
+            this thread, including the sender of each mail, and the
+            people who were in CC of the messages, if any.
         """
         res = {}
         if isinstance(ids, (str, int, long)):
@@ -748,45 +812,25 @@ class mail_thread(osv.Model):
     # Note specific
     #------------------------------------------------------
 
-    def message_broadcast(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', subtype='html', context=None):
-        if context is None:
-            context = {}
-        notification_obj = self.pool.get('mail.notification')
-        # write message
-        msg_ids = self.message_append_note(cr, uid, ids, subject=subject, body=body, parent_id=parent_id, type=type, subtype=subtype, context=context)
-        # escape if in install mode or note writing was not successfull
-        if 'install_mode' in context:
-            return True
-        if not isinstance(msg_ids, (list)):
-            return True
-        # get already existing notigications
-        notification_ids = notification_obj.search(cr, uid, [('message_id', 'in', msg_ids)], context=context)
-        already_pushed_user_ids = map(itemgetter('user_id'), notification_obj.read(cr, uid, notification_ids, context=context))
-        # get base.group_user group
-        res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user') or False
-        group_id = res and res[1] or False
-        if not group_id: return True
-        group = self.pool.get('res.groups').browse(cr, uid, [group_id], context=context)[0]
-        for user in group.users:
-            if user.id in already_pushed_user_ids: continue
-            for msg_id in msg_ids:
-                notification_obj.create(cr, uid, {'user_id': user.id, 'message_id': msg_id}, context=context)
-        return True
-
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
+        _logger.warning("log() is deprecated. As this module inherit from \
+                        mail.thread, the message will be managed by this \
+                        module instead of by the res.log mechanism. Please \
+                        use the mail.thread OpenChatter API instead of the \
+                        now deprecated res.log.")
         self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
 
-    def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False, type='notification', subtype='html', context=None):
-        if type in ['notification', 'reply']:
-            subject = None
-        if subtype == 'html':
+    def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False,
+                            type='notification', content_subtype='html', context=None):
+        if content_subtype == 'html':
             body_html = body
             body_text = body
         else:
             body_html = body
             body_text = body
-        return self.message_append(cr, uid, ids, subject, body_html=body_html, body_text=body_text, parent_id=parent_id, type=type, subtype=subtype, context=context)
+        return self.message_append(cr, uid, ids, subject, body_html, body_text,
+                                    type, parent_id=parent_id,
+                                    content_subtype=content_subtype, context=context)
 
     #------------------------------------------------------
     # Subscription mechanism
@@ -796,9 +840,9 @@ class mail_thread(osv.Model):
         """ Returns the current document followers. Basically this method
             checks in mail.subscription for entries with matching res_model,
             res_id.
-        
-            :param get_ids: if set to True, return the ids of users; if set
-                            to False, returns the result of a read in res.users
+            This method can be overriden to add implicit subscribers, such
+            as project managers, by adding their user_id to the list of
+            ids returned by this method.
         """
         subscr_obj = self.pool.get('mail.subscription')
         subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
@@ -849,18 +893,96 @@ class mail_thread(osv.Model):
         # Trying to unsubscribe somebody not in subscribers: returns False
         # if special management is needed; allows to know that an automatically
         # subscribed user tries to unsubscribe and allows to warn him
-        mail_thread_model = self.pool.get('mail.thread')
-        if not user_ids and not uid in mail_thread_model.message_get_subscribers(cr, uid, ids, context=context):
-            return False
-        subscription_obj = self.pool.get('mail.subscription')
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
+        subscription_obj = self.pool.get('mail.subscription')
         to_delete_sub_ids = subscription_obj.search(cr, uid,
                         ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', 'in', to_unsubscribe_uids)], context=context)
+        if not to_delete_sub_ids:
+            return False
         return subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
 
     #------------------------------------------------------
     # Notification API
     #------------------------------------------------------
+
+    def message_create_notify_by_email(self, cr, uid, new_msg_values, user_to_notify_ids, context=None):
+        """ When creating a new message and pushing notifications, emails
+            must be send if users have chosen to receive notifications
+            by email via the notification_email_pref field.
+            
+            ``notification_email_pref`` can have 3 values :
+            - all: receive all notification by email (for example for shared
+              users)
+            - to_me: messages send directly to me (@login, messages on res.users)
+            - never: never receive notifications
+            Note that an user should never receive notifications for messages
+            he has created.
+            
+            :param new_msg_values: dictionary of message values, those that
+                                   are given to the create method
+            :param user_to_notify_ids: list of user_ids, user that will
+                                       receive a notification on their Wall
+        """
+        message_obj = self.pool.get('mail.message')
+        res_users_obj = self.pool.get('res.users')
+        body = new_msg_values.get('body_html', '') if new_msg_values.get('content_subtype') == 'html' else new_msg_values.get('body_text', '')
+        
+        # remove message writer
+        if user_to_notify_ids.count(new_msg_values.get('user_id')) > 0:
+            user_to_notify_ids.remove(new_msg_values.get('user_id'))
+        
+        # get user_ids directly asked
+        user_to_push_from_parse_ids = self.message_parse_users(cr, uid, body, context=context)
+        
+        # try to find an email_to
+        email_to = ''
+        for user in res_users_obj.browse(cr, uid, user_to_notify_ids, context=context):
+            if not user.notification_email_pref == 'all' and \
+                not (user.notification_email_pref == 'to_me' and user.id in user_to_push_from_parse_ids):
+                continue
+            if not user.user_email:
+                continue
+            email_to = '%s, %s' % (email_to, user.user_email)
+            email_to = email_to.lstrip(', ')
+        
+        # did not find any email address: not necessary to create an email
+        if not email_to:
+            return
+        
+        # try to find an email_from
+        current_user = res_users_obj.browse(cr, uid, [uid], context=context)[0]
+        email_from = new_msg_values.get('email_from')
+        if not email_from:
+            email_from = current_user.user_email
+        
+        # get email content, create it (with mail_message.create)
+        email_values = self.message_create_notify_get_email_dict(cr, uid, new_msg_values, email_from, email_to, context)
+        email_id = message_obj.create(cr, uid, email_values, context=context)
+        return email_id
+    
+    def message_create_notify_get_email_dict(self, cr, uid, new_msg_values, email_from, email_to, context=None):
+        values = dict(new_msg_values)
+        
+        body_html = new_msg_values.get('body_html', '')
+        if body_html:
+            body_html += '\n\n----------\nThis email was send automatically by OpenERP, because you have subscribed to a document.'
+        body_text = new_msg_values.get('body_text', '')
+        if body_text:
+            body_text += '\n\n----------\nThis email was send automatically by OpenERP, because you have subscribed to a document.'
+        values.update({
+            'type': 'email',
+            'state': 'outgoing',
+            'email_from': email_from,
+            'email_to': email_to,
+            'subject': 'New message',
+            'content_subtype': new_msg_values.get('content_subtype', 'plain'),
+            'body_html': body_html,
+            'body_text': body_text,
+            'auto_delete': True,
+            'res_model': '',
+            'res_id': False,
+        })
+        return values
 
     def message_remove_pushed_notifications(self, cr, uid, ids, msg_ids, remove_childs=True, context=None):
         notif_obj = self.pool.get('mail.notification')

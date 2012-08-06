@@ -156,7 +156,7 @@ class hr_evaluation(osv.osv):
             ('2','Meet expectations'),
             ('3','Exceeds expectations'),
             ('4','Significantly exceeds expectations'),
-        ], "Appreciation", help="This is the appreciation on that summarize the evaluation"),
+        ], "Appreciation", help="This is the appreciation on which the evaluation is summarized."),
         'survey_request_ids': fields.one2many('hr.evaluation.interview','evaluation_id','Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([

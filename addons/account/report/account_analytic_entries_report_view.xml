@@ -34,31 +34,21 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Analytic Entries Analysis">
-                <group>
-                    <field name="day" string="Day"/>
-                    <separator orientation="vertical"/>
-                    <field name="date"/>
-                    <separator orientation="vertical"/>
-                    <filter string="My Entries" icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
-                    <separator orientation="vertical"/>
-                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="product_id" />
-                    <field name="user_id"/>
-                </group>
-                <newline/>
+                <field name="day" string="Day"/>
+                <field name="date"/>
+                <filter string="My Entries" icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
+                <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                <field name="product_id" />
+                <field name="user_id"/>
                 <group expand="0" string="Group By...">
                     <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
                     <filter string="General Account" icon="terp-folder-orange" context="{'group_by':'general_account_id'}"/>
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <filter string="Product Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
-                    <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" name="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>

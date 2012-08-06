@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:36+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-07-14 06:05+0000\n"
+"X-Generator: Launchpad (build 15614)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -23,18 +23,21 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"Välj ett företag som kommer att använda objektkonto angivna i objektstandard "
+"(t.ex. skapa nya kundfakturor eller kundorder för om vi väljer det här "
+"företaget tar det automatiskt detta som ett objektkonto)"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
-msgstr ""
+msgstr "Objektregler"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,analytic_id:0
 msgid "Analytical Account"
-msgstr ""
+msgstr "Objektkonto"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -49,7 +52,7 @@ msgstr "Gruppera"
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
 msgid "Default end date for this Analytical Account"
-msgstr ""
+msgstr "Standardslutdaturm för detta objektkonto"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
@@ -68,11 +71,14 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
+"Välj ett bolag som kommer att använda objektkonto angivna i objektstandard "
+"(t.ex. skapa nya kundfakturor eller kundorder för om vi väljer det här "
+"bolaget tar det automatiskt detta som ett objektkonto)"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
-msgstr ""
+msgstr "Standardstartdatum för detta objektkonto"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -83,7 +89,7 @@ msgstr "Produkt"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Objektdistribution"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -111,24 +117,25 @@ msgstr "Slutdatum"
 #: help:account.analytic.default,user_id:0
 msgid ""
 "select a user which will use analytical account specified in analytic default"
-msgstr ""
+msgstr "välj en användare som kommer använda standardobjektkontot"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 msgid "Analytic Defaults"
-msgstr ""
+msgstr "Standard objektkonto"
 
 #. module: account_analytic_default
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Referensen måste vara unik per bolag!"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Analytical defaults whose end date is greater than today or None"
 msgstr ""
+"Standard objektkonto vars slutdatum är större än idag eller utelämnat"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -137,6 +144,9 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"välj en produkt som använder standard objektkonto (eg nya registerade "
+"kundfakturor eller kundorder med denna produkt kommer automatiskt att välja "
+"detta konto som objektkonto.)"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -174,12 +184,12 @@ msgstr "Startdatum"
 #: help:account.analytic.default,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr ""
+msgstr "Ger löpnummerordning när objektfördelningen listas"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Orderrad"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

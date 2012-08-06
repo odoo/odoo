@@ -159,15 +159,15 @@
             <field name="arch" type="xml">
                 <search string="Calendars">
                     <field name="name" string="Calendar"/>
-                    <separator orientation="vertical"/>
                     <filter string="WebCal" icon="terp-calendar" domain="[('has_webcal', '=', True)]" help="Webcal Calendar"/>
+                    <separator/>
                     <filter string="Event" icon="terp-calendar" domain="[('type', '=', 'vevent')]"/>
                     <filter string="Todo" icon="terp-calendar" domain="[('type', '=', 'vtodo')]"/>
+                    <separator/>
                     <filter string="My Calendar(s)" icon="terp-personal" domain="[('user_id', '=', uid)]" help="My Calendar(s)"/>
-                    <separator orientation="vertical"/>
-                    <field name="user_id" widget="selection"/>
-                    <field name="collection_id"/>
                     <field name="type"/>
+                    <field name="user_id"/>
+                    <field name="collection_id"/>
                 </search>
             </field>
         </record>
@@ -178,7 +178,6 @@
             <field name="res_model">basic.calendar</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">"Calendars" allow you to Customize calendar event and todo attribute with any of OpenERP model.Caledars provide iCal Import/Export functionality.Webdav server that provides remote access to calendar.Help You to synchronize Meeting with Calendars client.You can access Calendars using CalDAV clients, like sunbird, Calendar Evaluation, Mobile.</field>
         </record>
 
         <record id="action_caldav_view1" model="ir.actions.act_window.view">

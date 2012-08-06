@@ -201,14 +201,13 @@ class crm_lead(base_stage, osv.osv):
         'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+        'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Categories', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
             domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
-        'opt_in': fields.boolean('Opt-In', oldname='optin', help="If opt-in is checked, this contact has accepted to receive emails."),
         'opt_out': fields.boolean('Opt-Out', oldname='optout', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
@@ -246,7 +245,7 @@ class crm_lead(base_stage, osv.osv):
         'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
-        
+
         # Fields for address, due to separation from crm and res.partner
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),
@@ -279,19 +278,21 @@ class crm_lead(base_stage, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
     
-    def on_change_opt_in(self, cr, uid, ids, opt_in):
-        return {'value':{'opt_in':opt_in,'opt_out':False}}
-
-    def on_change_opt_out(self, cr, uid, ids, opt_out):
-        return {'value':{'opt_out':opt_out,'opt_in':False}}
-
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value':{}}
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
+
+    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
+        result = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            result = {'partner_name' : partner.name}
+        return {'value' : result}
+
 
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.
@@ -772,6 +773,7 @@ class crm_lead(base_stage, osv.osv):
         res['context'] = {
             'default_opportunity_id': opportunity.id,
             'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
+            'default_partner_ids' : opportunity.partner_id and [opportunity.partner_id.id] or False,
             'default_user_id': uid,
             'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
             'default_email_from': opportunity.email_from,

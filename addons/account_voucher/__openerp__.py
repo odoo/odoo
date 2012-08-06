@@ -23,20 +23,24 @@
     "name" : "eInvoicing & Payments",
     "version" : "1.0",
     "author" : 'OpenERP SA',
+    "summary": 'Send Invoices and Track Payments',
     "description": """
-Account Voucher module includes all the basic requirements of Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc.
-====================================================================================================================================
+eInvoicing & Payments module manage all Voucher Entries such as "Reconciliation Entries", "Adjustment Entries", "Closing or Opening Entries" for Sales, Purchase, Bank, Cash, Expense, Contra.
+==============================================================================================================================================================================================
 
     * Voucher Entry
-    * Voucher Receipt
+    * Voucher Receipt [Sales & Purchase]
+    * Voucher Payment [Customer & Supplier]
     * Cheque Register
     """,
     "category": 'Accounting & Finance',
     "sequence": 4,
-    "website" : "http://tinyerp.com",
+    "website" : "http://openerp.com",
     "images" : ["images/customer_payment.jpeg","images/journal_voucher.jpeg","images/sales_receipt.jpeg","images/supplier_voucher.jpeg"],
     "depends" : ["account"],
-    "init_xml" : [],
+    "init_xml" : [
+        'account_voucher_data.xml',
+    ],
 
     "demo_xml" : [],
 

@@ -122,9 +122,9 @@
                         </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
                 </form>
             </field>
         </record>
@@ -136,27 +136,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Expense">
-                    <group>
-                      <field name="name" string="Expenses"/>
-                      <separator orientation="vertical"/>
-                      <field name="date"/>
-                      <separator orientation="vertical"/>
-                      <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
-                      <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" help="Confirmed Expense"/>
-                      <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay" help="Expenses to Invoice"/>
-                      <separator orientation="vertical"/>
-                      <field name="employee_id"/>
-                      <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}"/>
-                      <field name="user_id"  string="User"/>
-                </group>
-                <newline />
-                <group expand="0" string="Group By...">
-                    <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
-                </group>
+                    <field name="name" string="Expenses"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
+                    <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" help="Confirmed Expense"/>
+                    <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay" help="Expenses to Invoice"/>
+                    <field name="employee_id"/>
+                    <field name="department_id" string="Department" context="{'invisible_department': False}"/>
+                    <field name="user_id"  string="User"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -167,7 +159,16 @@
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="view_id" ref="view_expenses_tree"/>
-            <field name="help">The OpenERP expenses management module allows you to track the full flow. Every month, the employees record their expenses. At the end of the month, their managers validates the expenses sheets which creates costs on projects/analytic accounts. The accountant validates the proposed entries and the employee can be reimbursed. You can also reinvoice the customer at the end of the flow.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register new expenses. 
+              </p><p>
+                OpenERP will ensure the whole process is followed; the expense
+                sheet is validated by manager(s), the employee is reimbursed
+                from his expenses, some expenses must be re-invoiced to the
+                customers.
+              </p>
+            </field>
         </record>
 
         <menuitem id="next_id_49" name="Expenses" sequence="15" parent="hr.menu_hr_root"/>

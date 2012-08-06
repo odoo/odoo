@@ -8,18 +8,17 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
-           <xpath expr="//field[@name='workcenter_lines']/form//field[@name='hour']" position="after">
-               <group colspan="8" col="8">
-                   <separator colspan="8"/>
-                   <field name="state"/>
-                   <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
-                   <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
-                   <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
-                   <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
-                   <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
-                   <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
-               </group>
-           </xpath>
+            <xpath expr="//field[@name='workcenter_lines']/form//field[@name='name']" position="before">
+                <header colspan="8">
+                    <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
+                    <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
+                    <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
+                    <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
+                    <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
+                    <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+            </xpath>
         </field>
     </record>
 
@@ -80,7 +79,7 @@
             <sheet string="Work Orders">
                 <group col="4">
                     <field colspan="4" name="name"/>
-                    <field name="workcenter_id" widget="selection"/>
+                    <field name="workcenter_id"/>
                     <field name="production_id"/>
                     <field name="production_state"/>
                     <field name="sequence"/>
@@ -111,49 +110,38 @@
                 </page>
                 </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
             </form>
         </field>
     </record>
 
     <record id="view_mrp_production_workcenter_form_view_filter" model="ir.ui.view">
-            <field name="name">mrp.production.workcenter.line.select</field>
-            <field name="model">mrp.production.workcenter.line</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Work Orders">
-                    <group>
-                        <field name="name" string="Work Orders"/>
-                        <separator orientation="vertical"/>
-                        <field name="date_planned"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="Draft"
-                            domain="[('state','=','draft')]"/>
-                        <filter icon="terp-check" string="In Progress" name="Current"
-                            domain="[('state','=','startworking')]"/>
-                        <filter icon="terp-gtk-media-pause" string="Pending"
-                            domain="[('state','=','pause')]"/>
-                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                            domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
-                            help="Production started late"/>
-                        <separator orientation="vertical"/>
-                        <field name="workcenter_id" widget="selection"/>
-                        <field name="production_id"/>
-                        <field name="state"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
-                        <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
-                    </group>
-               </search>
-            </field>
+        <field name="name">mrp.production.workcenter.line.select</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Work Orders">
+                <field name="name" string="Work Orders"/>
+                <field name="date_planned"/>
+                <field name="state"/>
+                <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
+                <filter icon="terp-check" string="In Progress" name="Current" domain="[('state','=','startworking')]"/>
+                <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pause')]"/>
+                <separator/>
+                <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                    help="Production started late"/>
+                <field name="workcenter_id"/>
+                <field name="production_id"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
+                    <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
+                </group>
+             </search>
+        </field>
     </record>
 
     <record id="workcenter_line_calendar" model="ir.ui.view">
@@ -189,7 +177,18 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,gantt,calendar,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
-        <field name="help">Work Orders is the list of operations to be performed for each manufacturing order. Once you start the first work order of a manufacturing order, the manufacturing order is automatically marked as started. Once you finish the latest operation of a manufacturing order, the MO is automatically done and the related products are produced.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to start a new work order. 
+          </p><p>
+            Work Orders is the list of operations to be performed for each
+            manufacturing order. Once you start the first work order of a
+            manufacturing order, the manufacturing order is automatically
+            marked as started. Once you finish the latest operation of a
+            manufacturing order, the MO is automatically done and the related
+            products are produced.
+          </p>
+        </field>
     </record>
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action_planning">
@@ -199,7 +198,17 @@
         <field name="view_type">form</field>
         <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
         <field name="view_mode">gantt,tree,form,graph,calendar</field>
-        <field name="help">To manufacture or assemble products, and use raw materials and finished products you must also handle manufacturing operations. Manufacturing operations are often called Work Orders. The various operations will have different impacts on the costs of manufacturing and planning depending on the available workload.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to start a new work order.
+          </p><p>
+            To manufacture or assemble products, and use raw materials and
+            finished products you must also handle manufacturing operations.
+            Manufacturing operations are often called Work Orders. The various
+            operations will have different impacts on the costs of
+            manufacturing and planning depending on the available workload.
+          </p>
+        </field>
     </record>
 
 
@@ -351,7 +360,7 @@
         <field name="model">mrp.production</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <field name="priority" position="after">
+            <field name="date_finished" position="after">
                 <field name="allow_reorder"/>
             </field>
         </field>

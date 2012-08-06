@@ -47,12 +47,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Payment Mode">
-                    <field name="name"
-                        string="Payment Mode"/>
-                    <separator orientation="vertical"/>
-                    <field name="journal" widget='selection'/>
-                    <field name="company_id" widget='selection' groups="base.group_multi_company"/>
-                    <newline/>
+                    <field name="name" string="Payment Mode"/>
+                    <field name="journal"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal'}"/>
                     </group>
@@ -112,16 +109,25 @@
                     <button name="cancel" states="draft,open" string="Cancel"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </header>
-                <sheet string="Payment order" >
-                    <group col="4">
-                      <field name="reference"/>
-                      <field name="mode" widget='selection'/>
-                      <field name="user_id"/>
-                      <field name="date_prefered"/>
-                      <field name="date_scheduled" attrs="{'readonly':[('date_prefered','!=','fixed')]}" />
-                      <field name="company_id" widget='selection' groups="base.group_multi_company"/>
-                      <button name="%(action_create_payment_order)d" string="Select Invoices to Pay"
-                          type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
+                <sheet string="Payment order">
+                    <div class="oe_button_box">
+                        <button name="%(action_create_payment_order)d" string="Select Invoices to Pay"
+                               type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="reference" class="oe_edit_only"/>
+                        <h1><field name="reference"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="mode"/>
+                        </group>
+                        <group>
+                            <field name="date_prefered"/>
+                            <field name="date_scheduled" attrs="{'readonly':[('date_prefered','!=','fixed')]}"/>
+                            <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                        </group>
                     </group>
                     <field name="line_ids" context="{'order_id': active_id or False}" >
                         <form string="Payment Line" version="7.0">
@@ -177,8 +183,6 @@
                             <field name="amount" sum="Total in Company Currency" invisible="1"/>
                         </tree>
                     </field>
-                    <field name="date_created"/>
-                    <field name="date_done"/>
                     </sheet>
                 </form>
             </field>
@@ -209,20 +213,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payment Orders">
-                    <group>
-                        <field name="reference"
-                            string="Payment Order"/>
-                        <separator orientation="vertical"/>
-                        <field name="date_done"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
-                        <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
-                        <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>
-                        <separator orientation="vertical"/>
-                        <field name="mode" widget='selection'/>
-                        <field name="state"/>
-                    </group>
-                    <newline/>
+                    <field name="reference" string="Payment Order"/>
+                    <field name="date_done"/>
+                    <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                    <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
+                    <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>
+                    <field name="mode"/>
+                    <field name="state"/>
                     <group expand="0" string="Group By...">
                         <filter string="Payment Mode" context="{'group_by': 'mode'}" icon="terp-dolar"/>
                         <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
@@ -237,7 +234,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_payment_order_search"/>
-            <field name="help">A payment order is a payment request from your company to pay a supplier invoice or a customer credit note. Here you can register all payment orders that should be done, keep track of all payment orders and mention the invoice reference and the partner the payment should be done for.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a payment order.
+              </p><p>
+                A payment order is a payment request from your company to pay a
+                supplier invoice or a customer refund.
+              </p>
+            </field>
         </record>
 
         <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="menu_main_payment" sequence="3"/>
@@ -330,9 +334,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <field name="journal_id" position="after">
-                    <button name="%(action_account_populate_statement_confirm)d" attrs="{'invisible':[('state','=','confirm')]}" string="Import payment lines" type="action" icon="gtk-execute"/>
-                </field>
+	            <xpath expr="//div[@name='import_buttons']" position="inside">
+	                <button name="%(action_account_populate_statement_confirm)d" attrs="{'invisible':[('state','=','confirm')]}" string="Import Payment Lines" type="action" icon="gtk-execute"/>
+	            </xpath>
             </field>
         </record>
 

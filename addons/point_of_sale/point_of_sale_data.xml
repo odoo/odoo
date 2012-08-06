@@ -1,18 +1,34 @@
 <?xml version="1.0" ?>
 <openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_pos_menu" model="ir.actions.client">
+            <field name="name">Open POS Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_point_root')}"/>
+        </record>
+        <record id="todo_open_pos_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_pos_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
     <data>
+        <record model="pos.config" id="pos_config_main">
+            <field name="name">Main PoS</field>
+        </record>
+    </data>
 
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Point of Sale has been installed</value>
+            <value>Encode sale orders, register payments, compute money to return, create invoices, and manage refunds of former sales through a specific, web-based, touch-screen user interface.
 
-        <menuitem
-            id="stock.next_id_61"
-            name="Reporting"
-            parent="stock.menu_stock_root" groups="base.group_user"/>
-
-        <menuitem action="stock.action_picking_tree" id="stock.menu_action_picking_tree"
-            parent="stock.menu_stock_root" sequence="19" groups="res_groups_posuser0"/>
-        <menuitem parent="stock.next_id_61" action="stock.action_stock_line_date"
-            id="stock.menu_report_stock_line_date" groups="base.group_user"/>
-
+If you install the PoS proxy, you will be able to interface OpenERP with retail materials; barcode scanners, printers, cash registers, weighing machine, credit card payments.</value>
+        </function>
     </data>
 </openerp>
 
