@@ -11,9 +11,6 @@
                 <field name="property_product_pricelist" position="after">
                     <field name="property_product_pricelist_purchase" />
                 </field>
-                <field name="supplier" position="replace">
-                    <field name="supplier"/>
-                </field>
             </field>
         </record>
         
@@ -76,9 +73,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button name="%(purchase.act_res_partner_2_purchase_order)d" type="action"
-                        string="RFQs and Purchases"
+                        string="Purchase Orders"
+                        attrs="{'invisible': [('supplier', '=', False)]}"
                         groups="purchase.group_purchase_user"/>
                     <button name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
+                        attrs="{'invisible': [('supplier', '=', False)]}"
                         string="Supplier Invoices"/>
                 </xpath>
             </field>
