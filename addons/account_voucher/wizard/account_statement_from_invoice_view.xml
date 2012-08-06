@@ -38,7 +38,7 @@
                 <form string="Import Entries">
                     <group colspan="4" expand="1">
                         <separator string="Payable and Receivables" colspan="4"/>
-                        <field height="300" width="700" name="line_ids" colspan="4" nolabel="1" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False), ('journal_id.type','in',['sale','purchase']), ('state', '=', 'valid')]"/>
+                        <field height="300" width="700" name="line_ids" colspan="4" nolabel="1" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False),('state', '=', 'valid')]"/>
                     </group>
                     <group colspan="4" col="6">
                         <label string ="" colspan="2"/>
