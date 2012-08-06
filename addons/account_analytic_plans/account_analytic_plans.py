@@ -218,7 +218,7 @@ class account_analytic_plan_instance(osv.osv):
 
             pids = ana_plan_instance_obj.search(cr, uid, [('name','=',vals['name']), ('code','=',vals['code']), ('plan_id','<>',False)], context=context)
             if pids:
-                raise osv.except_osv(_('Error!'), _('A model having this name and code already exists !'))
+                raise osv.except_osv(_('Error!'), _('A model with this name and code already exists.'))
 
             res = acct_anal_plan_line_obj.search(cr, uid, [('plan_id','=',journal.plan_id.id)], context=context)
             for i in res:

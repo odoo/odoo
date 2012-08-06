@@ -36,7 +36,7 @@ class validate_account_move(osv.osv_memory):
         data = self.browse(cr, uid, ids, context=context)[0]
         ids_move = obj_move.search(cr, uid, [('state','=','draft'),('journal_id','=',data.journal_id.id),('period_id','=',data.period_id.id)])
         if not ids_move:
-            raise osv.except_osv(_('Warning!'), _('Specified Journal does not have any account move entries in draft state for this period.'))
+            raise osv.except_osv(_('Warning!'), _('Specified journal does not have any account move entries in draft state for this period.'))
         obj_move.button_validate(cr, uid, ids_move, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -58,7 +58,7 @@ class validate_account_move_lines(osv.osv_memory):
                 move_ids.append(line.move_id.id)
         move_ids = list(set(move_ids))
         if not move_ids:
-            raise osv.except_osv(_('Warning'), _('Selected Entry Lines does not have any account move enties in draft state'))
+            raise osv.except_osv(_('Warning'), _('Selected Entry Lines does not have any account move enties in draft state.'))
         obj_move.button_validate(cr, uid, move_ids, context)
         return {'type': 'ir.actions.act_window_close'}
 validate_account_move_lines()

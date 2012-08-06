@@ -319,7 +319,7 @@ class account_invoice(osv.osv):
                 res['fields'][field]['selection'] = journal_select
 
         doc = etree.XML(res['arch'])
-        
+
         if context.get('type', False):
             for node in doc.xpath("//field[@name='partner_bank_id']"):
                 if context['type'] == 'in_refund':
@@ -327,7 +327,7 @@ class account_invoice(osv.osv):
                 elif context['type'] == 'out_refund':
                     node.set('domain', "[('partner_id', '=', partner_id)]")
             res['arch'] = etree.tostring(doc)
-                
+
         if view_type == 'search':
             if context.get('type', 'in_invoice') in ('out_invoice', 'out_refund'):
                 for node in doc.xpath("//group[@name='extended filter']"):
@@ -364,7 +364,7 @@ class account_invoice(osv.osv):
         except Exception, e:
             if '"journal_id" viol' in e.args[0]:
                 raise orm.except_orm(_('Configuration Error!'),
-                     _('No Sale/Purchase Journal(s) is defined!'))
+                     _('There is no Sale/Purchase Journal(s) defined.'))
             else:
                 raise orm.except_orm(_('Unknown Error!'), str(e))
 
@@ -425,7 +425,7 @@ class account_invoice(osv.osv):
             if t['state'] in ('draft', 'cancel') and t['internal_number']== False:
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('You cannot delete an invoice which is open or paid. We suggest you to refund it instead.'))
+                raise osv.except_osv(_('Invalid action !'), _('You cannot delete an invoice which is open or paid. You should refund it instead.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -577,7 +577,7 @@ class account_invoice(osv.osv):
                         obj_l = account_obj.browse(cr, uid, inv_line[2]['account_id'])
                         if obj_l.company_id.id != company_id:
                             raise osv.except_osv(_('Configuration Error !'),
-                                _('Company of invoice line account and the company of invoice does not match.'))
+                                _('Invoice line account\'s company and invoice\'s compnay does not match.'))
                         else:
                             continue
         if company_id and type:
@@ -840,7 +840,7 @@ class account_invoice(osv.osv):
                 raise osv.except_osv(_('No Invoice Lines !'), _('Please create some invoice lines.'))
             if inv.move_id:
                 continue
-            
+
             ctx = context.copy()
             ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
@@ -866,7 +866,7 @@ class account_invoice(osv.osv):
                         total_percent += line.value_amount
                 total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
-                    raise osv.except_osv(_('Error !'), _("Cannot create the invoice !\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. The latest line of your payment term must be of type 'balance' to avoid rounding issues."))
+                    raise osv.except_osv(_('Error !'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
@@ -979,7 +979,7 @@ class account_invoice(osv.osv):
             move_obj.post(cr, uid, [move_id], context=ctx)
         self._log_event(cr, uid, ids)
         return True
-    
+
     def invoice_validate(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         return True
@@ -1061,7 +1061,7 @@ class account_invoice(osv.osv):
                 pay_ids = account_move_line_obj.browse(cr, uid, i['payment_ids'])
                 for move_line in pay_ids:
                     if move_line.reconcile_partial_id and move_line.reconcile_partial_id.line_partial_ids:
-                        raise osv.except_osv(_('Error !'), _('You cannot cancel an invoice which is partially paid! You need to unreconcile related payment entries first!'))
+                        raise osv.except_osv(_('Error !'), _('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
 
         # First, set the invoices as cancelled and detach the move ids
         self.write(cr, uid, ids, {'state':'cancel', 'move_id':False})
@@ -1281,11 +1281,11 @@ class account_invoice(osv.osv):
         # Update the stored value (fields.function), so we write to trigger recompute
         self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
-    
+
     # -----------------------------------------
     # OpenChatter notifications and need_action
     # -----------------------------------------
-    
+
     def _get_document_type(self, type):
         type_dict = {
                 'out_invoice': 'Customer invoice',
@@ -1294,19 +1294,19 @@ class account_invoice(osv.osv):
                 'in_refund': 'Supplier Refund',
         }
         return type_dict.get(type, 'Invoice')
-    
+
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
-            
+
     def confirm_paid_send_note(self, cr, uid, ids, context=None):
          for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (self._get_document_type(obj.type)), context=context)
-    
+
     def invoice_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
-        
+
 account_invoice()
 
 class account_invoice_line(osv.osv):
@@ -1475,7 +1475,7 @@ class account_invoice_line(osv.osv):
             if prod.uom_id.category_id.id != prod_uom.category_id.id:
                  warning = {
                     'title': _('Warning!'),
-                    'message': _('Selected Unit of Measure is not compatible with the Unit of Measure of the product.')
+                    'message': _('The selected unit of measure is not compatible with the unit of measure of the product.')
             }
             return {'value': res['value'], 'warning': warning}
         return res

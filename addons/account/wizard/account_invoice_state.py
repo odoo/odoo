@@ -41,7 +41,7 @@ class account_invoice_confirm(osv.osv_memory):
 
         for record in data_inv:
             if record['state'] not in ('draft','proforma','proforma2'):
-                raise osv.except_osv(_('Warning!'), _("Selected Invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-Forma' state!"))
+                raise osv.except_osv(_('Warning!'), _("Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-Forma' state."))
             wf_service.trg_validate(uid, 'account.invoice', record['id'], 'invoice_open', cr)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -65,7 +65,7 @@ class account_invoice_cancel(osv.osv_memory):
 
         for record in data_inv:
             if record['state'] in ('cancel','paid'):
-                raise osv.except_osv(_('Warning!'), _("Selected Invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state!"))
+                raise osv.except_osv(_('Warning!'), _("Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state."))
             wf_service.trg_validate(uid, 'account.invoice', record['id'], 'invoice_cancel', cr)
         return {'type': 'ir.actions.act_window_close'}
 

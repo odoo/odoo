@@ -150,7 +150,7 @@ class account_common_report(osv.osv_memory):
         return result
 
     def _print_report(self, cr, uid, ids, data, context=None):
-        raise (_('Error!'), _('Not implemented!'))
+        raise (_('Error!'), _('Not implemented.'))
 
     def check_report(self, cr, uid, ids, context=None):
         if context is None:

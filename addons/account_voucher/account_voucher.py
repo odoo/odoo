@@ -822,7 +822,7 @@ class account_voucher(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for t in self.read(cr, uid, ids, ['state'], context=context):
             if t['state'] not in ('draft', 'cancel'):
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Voucher(s) which are already opened or paid.'))
+                raise osv.except_osv(_('Invalid Action !'), _('Cannot delete voucher(s) which are already opened or paid.'))
         return super(account_voucher, self).unlink(cr, uid, ids, context=context)
 
     def onchange_payment(self, cr, uid, ids, pay_now, journal_id, partner_id, ttype='sale'):
@@ -952,11 +952,11 @@ class account_voucher(osv.osv):
         if amount_residual > 0:
             account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning!'),_("First configure the 'Income Currency Rate' on the company,after that create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Income Currency Rate' on the company, then create accounting entry for currency rate difference."))
         else:
             account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning!'),_("First configure the 'Expense Currency Rate' on the company,after that create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Expense Currency Rate' on the company, then create accounting entry for currency rate difference."))
         # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
         # the receivable/payable account may have a secondary currency, which render this field mandatory
         account_currency_id = company_currency <> current_currency and current_currency or False

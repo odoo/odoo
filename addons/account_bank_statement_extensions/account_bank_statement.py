@@ -34,7 +34,7 @@ class account_bank_statement(osv.osv):
         # bypass obsolete statement line resequencing
         if vals.get('line_ids', False) or context.get('ebanking_import', False):
             res = super(osv.osv, self).write(cr, uid, ids, vals, context=context)
-        else: 
+        else:
             res = super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
         return res
 
@@ -70,7 +70,7 @@ class account_bank_statement_line_global(osv.osv):
         'type': fields.selection([
             ('iso20022', 'ISO 20022'),
             ('coda', 'CODA'),
-            ('manual', 'Manual'), 
+            ('manual', 'Manual'),
             ], 'Type', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'bank_statement_line_ids': fields.one2many('account.bank.statement.line', 'globalisation_id', 'Bank Statement Lines'),
@@ -108,12 +108,12 @@ class account_bank_statement_line(osv.osv):
         'date': fields.date('Entry Date', required=True, states={'confirm': [('readonly', True)]}),
         'val_date': fields.date('Valuta Date', states={'confirm': [('readonly', True)]}),
         'globalisation_id': fields.many2one('account.bank.statement.line.global', 'Globalisation ID',
-            states={'confirm': [('readonly', True)]}, 
+            states={'confirm': [('readonly', True)]},
             help="Code to identify transactions belonging to the same globalisation level within a batch payment"),
         'globalisation_amount': fields.related('globalisation_id', 'amount', type='float',
             relation='account.bank.statement.line.global', string='Glob. Amount', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')],
-            'Status', required=True, readonly=True),    
+            'Status', required=True, readonly=True),
         'counterparty_name': fields.char('Counterparty Name', size=35),
         'counterparty_bic': fields.char('Counterparty BIC', size=11),
         'counterparty_number': fields.char('Counterparty Number', size=34),
@@ -127,7 +127,7 @@ class account_bank_statement_line(osv.osv):
         if context is None:
             context = {}
         if context.get('block_statement_line_delete', False):
-            raise osv.except_osv(_('Warning!'), _('Delete operation not allowed ! \
+            raise osv.except_osv(_('Warning!'), _('Delete operation not allowed. \
             Please go to the associated bank statement in order to delete and/or modify bank statement line.'))
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 

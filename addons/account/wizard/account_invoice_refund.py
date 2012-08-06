@@ -108,7 +108,7 @@ class account_invoice_refund(osv.osv_memory):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
                     raise osv.except_osv(_('Error !'), _('Cannot %s draft/proforma/cancel invoice.') % (mode))
                 if inv.reconciled and mode in ('cancel', 'modify'):
-                    raise osv.except_osv(_('Error !'), _('Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only Refund this invoice.') % (mode))
+                    raise osv.except_osv(_('Error !'), _('Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.') % (mode))
                 if form.period.id:
                     period = form.period.id
                 else:
@@ -144,7 +144,7 @@ class account_invoice_refund(osv.osv_memory):
 
                 if not period:
                     raise osv.except_osv(_('Data Insufficient !'), \
-                                            _('No Period is found on Invoice!'))
+                                            _('No period found on the invoice.'))
 
                 refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description, journal_id)
                 refund = inv_obj.browse(cr, uid, refund_id[0], context=context)

@@ -89,7 +89,7 @@ class common_report_header(object):
         return ''
 
     def _get_sortby(self, data):
-        raise (_('Error!'), _('Not implemented!'))
+        raise (_('Error!'), _('Not implemented.'))
 
     def _get_filter(self, data):
         if data.get('form', False) and data['form'].get('filter', False):

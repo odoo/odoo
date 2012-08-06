@@ -88,7 +88,7 @@ class account_analytic_line(osv.osv):
                 a = prod.categ_id.property_account_expense_categ.id
             if not a:
                 raise osv.except_osv(_('Error !'),
-                        _('No expense account is defined ' \
+                        _('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod.id,))
         else:
@@ -97,7 +97,7 @@ class account_analytic_line(osv.osv):
                 a = prod.categ_id.property_account_income_categ.id
             if not a:
                 raise osv.except_osv(_('Error !'),
-                        _('No income account is  defined ' \
+                        _('There is no income account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod_id,))
 
