@@ -7,41 +7,23 @@
             <field name="model">base.module.import</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Import module">
-                    <group col="8">
-                        <group colspan="3" col="1">
-                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
-                            <newline/>
-                            <label width="220" string='This wizard helps you to import a new module to your OpenERP system.
-After importing a new module you can install it by clicking on the button "Install" from the form view.'/>
-                            <label width="220"/>
-                            <label width="220" string="Please be patient, this operation may take a few minutes..."/>
-                            <field name="state" invisible="1"/>
-                        </group>
-                        <separator orientation="vertical" rowspan="5"/>
-                        <group colspan="4">
-                            <separator string="Module Import" colspan="4"/>
-                            <group states="init" col="4">
-                                <label string="Select module package to import (.zip file):" colspan="4"/>
-                                <field name="module_file" colspan="4"/>
-                            </group>
-                            <group states="done" col="4">
-                                <label string="Module file successfully imported!" colspan="4"/>
-                            </group>
-                        </group>
-                        <group colspan="8" col="8" states="init">
-                            <separator string="" colspan="8"/>
-                            <label colspan="6" width="220"/>
-                            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                            <button name="importzip" string="Import module" type="object" icon="gtk-apply"/>
-                        </group>
-                        <group colspan="8" col="8" states="done">
-                            <separator string="" colspan="8"/>
-                            <label colspan="6" width="220"/>
-                            <button special="cancel" string="Close" icon="gtk-ok"/>
-                            <button name="action_module_open" string="Open Modules" type="object" icon="gtk-go-forward"/>
-                        </group>
+                <form string="Import module" version="7.0">
+                    <field name="state" invisible="1"/>
+                    <separator string="Module Import" colspan="4"/>
+                    <group states="init" col="4">
+                        <label string="Select module package to import (.zip file):" colspan="4"/>
+                        <field name="module_file" colspan="4"/>
                     </group>
+                    <group states="done" col="4">
+                        <label string="Module file successfully imported!" colspan="4"/>
+                    </group>
+                    <footer>
+                        <button name="importzip" string="Import module" type="object" states="init" class="oe_highlight"/>
+                        <label string="or" states="init"/>
+                        <button name="action_module_open" string="Open Modules" type="object" states="done" class="oe_highlight"/>
+                        <label string="or" states="done"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

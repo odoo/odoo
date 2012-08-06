@@ -16,7 +16,7 @@ def valid_field_in_graph(arch):
 
 
 def valid_field_in_tree(arch):
-    """A `field` and `button` node must be below a `tree` node."""
+    """A `field` and `button` node must be below a `tree` node. And tree must have `string` attribute."""
     return not arch.xpath('//tree[not((field) or (button)) and (@string)]')
 
 
@@ -26,12 +26,12 @@ def valid_att_in_field(arch):
 
 
 def valid_att_in_label(arch):
-    """A `for` and `string` attribute must be in a `label` node."""
+    """A `for` and `string` attribute must be on a `label` node."""
     return not arch.xpath('//label[not ((@for) or (@string))]')
 
 
 def valid_att_in_form(arch):
-    """A `string` attribute must be in a `form` node."""
+    """A `string` attribute must be on a `form` node."""
     return not arch.xpath('//form[not (@string)]')
 
 

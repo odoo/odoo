@@ -12,6 +12,7 @@ import test_expression
 import test_ir_sequence
 import test_orm
 import test_view_validation
+import test_uninstall
 
 fast_suite = [
     test_ir_sequence,

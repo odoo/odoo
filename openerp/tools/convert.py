@@ -142,18 +142,20 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
             except Exception:
                 _logger.warning('could not eval(%s) for %s in %s' % (a_eval, node.get('name'), context), exc_info=True)
                 return ""
+        def _process(s, idref):
+            m = re.findall('[^%]%\((.*?)\)[ds]', s)
+            for id in m:
+                if not id in idref:
+                    idref[id]=self.id_get(cr, id)
+            return s % idref
         if t == 'xml':
-            def _process(s, idref):
-                m = re.findall('[^%]%\((.*?)\)[ds]', s)
-                for id in m:
-                    if not id in idref:
-                        idref[id]=self.id_get(cr, id)
-                return s % idref
             _fix_multiple_roots(node)
             return '<?xml version="1.0"?>\n'\
                 +_process("".join([etree.tostring(n, encoding='utf-8')
-                                   for n in node]),
-                          idref)
+                                   for n in node]), idref)
+        if t == 'html':
+            return _process("".join([etree.tostring(n, encoding='utf-8')
+                                   for n in node]), idref)
         if t in ('char', 'int', 'float'):
             d = node.text
             if t == 'int':

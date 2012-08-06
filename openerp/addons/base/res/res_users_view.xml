@@ -2,6 +2,16 @@
 <openerp>
     <data>
         <!-- res.groups -->
+        <record id="view_groups_search" model="ir.ui.view">
+            <field name="name">res.groups.search</field>
+            <field name="model">res.groups</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Groups">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
+                </search>
+            </field>
+        </record>
         <record id="view_groups_form" model="ir.ui.view">
             <field name="name">res.groups.form</field>
             <field name="model">res.groups</field>
@@ -58,7 +68,7 @@
                             <field name="comment"/>
                         </page>
                     </notebook>
-                  </sheet>  
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -81,19 +91,17 @@
                 <form string="Users" version="7.0">
                     <field name="id" invisible="1"/>
                     <sheet>
-                        <div class="oe_right">
-                            <field name="avatar" widget='image' nolabel="1" on_change="onchange_avatar(avatar)" class="oe_form_avatar"/>
-                        </div>
-                        <div class="oe_form_title">
-                            <label for="name" class="oe_form_readonly_hidden"/>
+                        <field name="avatar" widget='image' on_change="onchange_avatar(avatar)" class="oe_avatar oe_left"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
-                            <label for="company_id" class="oe_form_readonly_hidden"/>
-                            <h2><field name="company_id" context="{'user_preference': 0}"/></h2>
+                            <label for="login" class="oe_edit_only"/>
+                            <h2><field name="login"/></h2>
                         </div>
                         <group>
                             <group>
-                                <field name="login"/>
                                 <field name="new_password" password="True" attrs="{'required': [('id','=',False)]}"/>
+                                <field name="company_id" context="{'user_preference': 0}"/>
                             </group>
                             <group>
                                 <field name="active"/>
@@ -106,7 +114,6 @@
                                     <group name="preferences">
                                         <field name="context_lang"/>
                                         <field name="context_tz"/>
-                                        <field name="menu_tips"/>
                                     </group>
                                     <group groups="base.group_no_one">
                                         <field name="action_id"/>
@@ -119,12 +126,12 @@
                                 </group>
                             </page>
                             <page string="Access Rights">
-                                <group col="4">
-                                <field name="groups_id"/>
+                                <group string="Allowed Companies" groups="base.group_multi_company">
+                                    <field name="company_ids" nolabel="1" widget="many2many_tags"/>
                                 </group>
-                            </page>
-                            <page string="Allowed Companies" groups="base.group_multi_company">
-                                <field name="company_ids"/>
+                                <group col="4">
+                                    <field name="groups_id"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
@@ -150,8 +157,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Users">
-                    <field name="name"/>
-                    <field name="login"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('login','ilike',self)]" string="User"/>
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                 </search>
             </field>
@@ -196,23 +202,20 @@
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
                    <sheet>
-                    <div class="oe_right oe_form_avatar">
+                    <div class="oe_right oe_avatar">
                         <field name="avatar" widget='image' on_change="onchange_avatar(avatar)"/>
                     </div>
-                    <div class="oe_form_title">
-                        <h1>
-                            <field name="name" readonly="1" class="oe_form_readonly_hidden"/>
-                            (<field name="login" readonly="1" class="oe_form_readonly_hidden"/>)
-                        </h1>
-                        <label for="company_id" class="oe_form_readonly_hidden"/>
-                        <h2>
-                            <field name="company_id" widget="selection" readonly="0"
-                                groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
-                        </h2>
-                    </div>
-                    <group col="4" string="Preferences">
+                    <h1>
+                        <field name="name" readonly="1" class="oe_inline"/>
+                        (<field name="login" readonly="1" class="oe_inline"/>)
+                    </h1>
+                    <group name="preferences" col="4">
                         <field name="context_lang" readonly="0"/>
+                        <field name="company_id" readonly="0"
+                            groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
                         <field name="context_tz" readonly="0"/>
+                        <field name="company_id" widget="selection" readonly="0"
+                            groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
                     </group>
                     <group string="Email Preferences">
                         <field name="user_email" widget="email" readonly="0"/>
