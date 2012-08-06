@@ -98,11 +98,12 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Team">
-                            <div name="alias_box" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <label for="alias_name"/>
-                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/>
-                            </div>
-                            <group>
+                           <group>
+                                <field name="alias_id" invisible="1"/>
+                                <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                                 </div>
                                 <field name="change_responsible"/>
                                 <field name="allow_unlink"/>
                             </group>

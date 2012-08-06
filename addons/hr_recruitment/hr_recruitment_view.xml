@@ -350,9 +350,9 @@
             </field>
             <xpath expr="/form/sheet/h1" version="7.0" position="after">
                 <div colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                    <field name="id" invisible="1"/>
+                    <field name="alias_id" invisible="1"/>
                     <label for="alias_name" class="oe_edit_only"/>
-                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
                 </div>
             </xpath>
         </field>
