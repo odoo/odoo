@@ -74,10 +74,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
             return false;
         }
         var title = last.get_title();
-        if (title.length > 1) {
+        if (_.isArray(title) && title.length > 1) {
             return this.select_breadcrumb(this.breadcrumbs.length - 1, title.length - 2);
+        } else if (this.breadcrumbs.length === 1) {
+            // Only one single titled item in breadcrumb, most of the time you want to trigger back to home
+            return false;
         } else {
-            return this.select_breadcrumb(this.breadcrumbs.length - 2);
+            var prev = this.breadcrumbs[this.breadcrumbs.length - 2];
+            title = prev.get_title();
+            return this.select_breadcrumb(this.breadcrumbs.length - 2, _.isArray(title) ? title.length - 1 : undefined);
         }
     },
     on_breadcrumb_clicked: function(ev) {
@@ -100,11 +105,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
         }
         var item = this.breadcrumbs[index];
-        if (!item) {
-            // TODO fme: this will probably happens when an action contains only one form view (does not impact wizards)
-            console.warn("Could not select breadcrumb at index", index);
-            return false;
-        }
         item.show(subindex);
         this.inner_widget = item.widget;
         return true;
