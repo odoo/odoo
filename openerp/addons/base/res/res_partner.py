@@ -145,9 +145,6 @@ class res_partner(osv.osv):
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
-    
-    def onchange_image(self, cr, uid, ids, value, context=None):
-        return {'value': tools.get_resized_images(value)}
 
     _order = "name"
     _columns = {
@@ -250,7 +247,7 @@ class res_partner(osv.osv):
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
         # get value as for an onchange on the image
-        value = self.onchange_image(cr, uid, ids, self._get_default_image(cr, uid, is_company, context), context=context)['value']
+        value = tools.get_resized_images(self._get_default_image(cr, uid, is_company, context))
         value['title'] = False
         if is_company:
             value['parent_id'] = False
@@ -318,7 +315,7 @@ class res_partner(osv.osv):
             self.update_address(cr, uid, update_ids, vals, context)
         if 'image' not in vals :
             image_value = self._get_default_image(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
-            vals.update(self.onchange_image(cr, uid, [], image_value, context=context)['value'])
+            vals.update(tools.get_resized_images(image_value))
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
