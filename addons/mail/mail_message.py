@@ -275,6 +275,7 @@ class mail_message(osv.Model):
     def create(self, cr, uid, values, context=None):
         self.check(cr, uid, [], mode='create', context=context, values=values)
         return super(mail_message, self).create(cr, uid, values, context)
+       
 
     def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
         self.check(cr, uid, ids, 'read', context=context)
@@ -392,7 +393,7 @@ class mail_message(osv.Model):
 
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
-
+   
     def process_email_queue(self, cr, uid, ids=None, context=None):
         """Send immediately queued messages, committing after each
            message is sent - this is not transactional and should

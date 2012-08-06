@@ -176,7 +176,7 @@ class mail_thread(osv.Model):
         email_id = self.message_create_notify_by_email(cr, uid, vals, user_to_push_ids, context=context)
         
         return msg_id
-    
+     #TODO :in message creation: in push method: push only if user is subscriber (current case) and if user is sucscribed to the subtype (to add)
     def message_get_user_ids_to_notify(self, cr, uid, thread_ids, new_msg_vals, context=None):
         subscription_obj = self.pool.get('mail.subscription')
         # get body
@@ -327,7 +327,7 @@ class mail_thread(osv.Model):
             if partner_ids is None:
                 partner_ids = []
             mail_partner_ids = [(6, 0, partner_ids)]
-
+            
             data = {
                 'subject': subject,
                 'body_text': body_text or (hasattr(thread, 'description') and thread.description or ''),
@@ -363,7 +363,6 @@ class mail_thread(osv.Model):
 
             new_msg_ids.append(self.message_create(cr, uid, thread.id, data, context=context))
         return new_msg_ids
-
     def message_append_dict(self, cr, uid, ids, msg_dict, context=None):
         """Creates a new mail.message attached to the given threads (``ids``),
            with the contents of ``msg_dict``, by calling ``message_append``
@@ -874,6 +873,10 @@ class mail_thread(osv.Model):
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
         """
+        # TODO:Update Massage Subscribe and add paramenter subtype_ids 
+        # if subtype_ids is False: add default ones (res_model = self._name, default = True)
+        #  in method: if user_id already subscriber, update its subscription with subtype_ids
+
         subscription_obj = self.pool.get('mail.subscription')
         to_subscribe_uids = [uid] if user_ids is None else user_ids
         create_ids = []
@@ -883,7 +886,8 @@ class mail_thread(osv.Model):
                 if user_id in already_subscribed_user_ids: continue
                 create_ids.append(subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context))
         return create_ids
-
+    #TODO : Add method : add message_subscribe_udpate_subtypes(..., user_id, subtype_ids):
+   
     def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
         """ Unsubscribe the user (or user_ids) from the current document.
             
@@ -900,7 +904,8 @@ class mail_thread(osv.Model):
         if not to_delete_sub_ids:
             return False
         return subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
-
+    #TODO : Add Method : add message_subscribeption_remove_subtype(..., user_id, subtype_id):    
+    #TODO : Add method : add message_subscription_remove_subtype_name(.., user_id, subtype_name)
     #------------------------------------------------------
     # Notification API
     #------------------------------------------------------
