@@ -13,7 +13,15 @@
         <field name="view_id" eval="False"/>
         <field name="domain" eval=""/>
         <field name="search_view_id" ref="view_project_issue_filter"/>
-        <field name="help">Issues such as system bugs, customer complaints, and material breakdowns are collected here. You can define the stages assigned when solving the project issue (analysis, development, done). With the mailgateway module, issues can be integrated through an email address (example: support@mycompany.com)</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to report a new issue.
+          </p><p>
+            The OpenERP issues tacker allows you to efficiantly manage things
+            like internal requests, software development bugs, customer
+            complaints, project troubles, material breakdowns, etc.
+          </p>
+        </field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view0">

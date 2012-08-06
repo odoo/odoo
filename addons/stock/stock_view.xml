@@ -200,7 +200,16 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_inventory_tree"/>
             <field name="search_view_id" ref="view_inventory_filter"/>
-            <field name="help">Periodical Inventories are used to count the number of products available per location. You can use it once a year when you do the general inventory or whenever you need it, to correct the current stock level of a product.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start an inventory. 
+              </p><p>
+                Periodical Inventories are used to count the number of products
+                available per location. You can use it once a year when you do
+                the general inventory or whenever you need it, to adapt the
+                current inventory level of a product.
+              </p>
+            </field>
         </record>
         <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="30"/>
 
@@ -255,7 +264,15 @@
             <field name="res_model">stock.tracking</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_tracking_tree"/>
-            <field name="help">This is the list of all your packs. When you select a Pack, you can get the upstream or downstream traceability of the products contained in the pack.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a tracking number.
+              </p><p>
+                This is the list of all your packs. When you select a Pack, you
+                can get the upstream or downstream traceability of the products
+                contained in the pack.
+              </p>
+            </field>
         </record>
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="3"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
@@ -413,7 +430,19 @@
             <field name="view_id" ref="view_production_lot_tree"/>
             <field name="search_view_id" ref="search_product_lot_filter"/>
             <field name="context">{}</field>
-            <field name="help">This is the list of all the production lots (serial numbers) you recorded. When you select a lot, you can get the upstream or downstream traceability of the products contained in lot. By default, the list is filtred on the serial numbers that are available in your warehouse but you can uncheck the 'Available' button to get all the lots you produced, received or delivered to customers.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a serial number.
+              </p><p>
+                This is the list of all the production lots you recorded. When
+                you select a lot, you can get the upstream or downstream
+                traceability of the products contained in lot. By default, the
+                list is filtred on the serial numbers that are available in
+                your warehouse but you can uncheck the 'Available' button to
+                get all the lots you produced, received or delivered to
+                customers.
+              </p>
+            </field>
         </record>
         <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
             parent="menu_traceability" groups="stock.group_production_lot"
@@ -584,7 +613,24 @@
             <field name="view_id" ref="view_location_tree2"/>
             <field name="search_view_id" ref="view_location_search"/>
             <field name="context">{'search_default_in_location':1}</field>
-            <field name="help">Define your locations to reflect your warehouse structure and organization. OpenERP is able to manage physical locations (warehouses, shelves, bin, etc), partner locations (customers, suppliers) and virtual locations which are the counterpart of the stock operations like the manufacturing orders consumptions, inventories, etc. Every stock operation in OpenERP moves the products from one location to another one. For instance, if you receive products from a supplier, OpenERP will move products from the Supplier location to the Stock location. Each report can be performed on physical, partner or virtual locations.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a location.
+              </p><p>
+                Define your locations to reflect your warehouse structure and
+                organization. OpenERP is able to manage physical locations
+                (warehouses, shelves, bin, etc), partner locations (customers,
+                suppliers) and virtual locations which are the counterpart of
+                the stock operations like the manufacturing orders
+                consumptions, inventories, etc.
+              </p><p>  
+                Every stock operation in OpenERP moves the products from one
+                location to another one.  For instance, if you receive products
+                from a supplier, OpenERP will move products from the Supplier
+                location to the Stock location. Each report can be performed on
+                physical, partner or virtual locations.
+              </p>
+            </field>
         </record>
         <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
             parent="menu_stock_configuration" sequence="5"/>
@@ -607,11 +653,21 @@
             <field name="domain">[('location_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_location_tree"/>
-            <field name="help">This is the structure of your company's warehouses and locations. You can click on a location to get the list of the products and their stock level in this particular location and all its children.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a location.
+              </p><p>
+                This is the structure of your company's warehouses and
+                locations. You can click on a location to get the list of the
+                products and their stock level in this particular location and
+                all its children.
+              </p>
+            </field>
         </record>
         <menuitem action="action_location_tree"
             id="menu_action_location_tree"
             parent="menu_stock_inventory_control"
+            groups="stock.group_locations"
             sequence="20"/>
 
         <record id="view_warehouse" model="ir.ui.view">
@@ -656,7 +712,11 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_tree"/>
-            <field name="help">Create and manage your warehouses and assign them a location from here</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new warehouse.
+              </p>
+            </field>
         </record>
         <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" groups="stock.group_locations"
             parent="menu_stock_configuration" sequence="1"/>
@@ -896,7 +956,15 @@
             <field name="domain">[('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help">Internal Moves display all inventory operations you have to perform in your warehouse. All operations can be categorized into stock journals, so that each worker has his own list of operations to perform in his own journal. Most operations are prepared automatically by OpenERP according to your preconfigured logistics rules, but you can also record manual stock operations.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an internal move request. 
+              </p><p>
+                Most operations are prepared automatically by OpenERP according
+                to your preconfigured logistics rules, but you can also record
+                manual stock movements.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_picking_tree6_tree_view">
@@ -913,6 +981,20 @@
         </record>
 
         <!-- Sending Products -->
+        <record model="ir.ui.view" id="stock_picking_out_calendar">
+            <field name="name">stock.picking.out.calendar</field>
+            <field name="model">stock.picking.out</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
+                    <field name="origin"/>
+                    <field name="type"/>
+                    <field name="partner_id"/>
+                </calendar>
+            </field>
+        </record>
+        
         <record id="view_picking_out_tree" model="ir.ui.view">
             <field name="name">stock.picking.out.tree</field>
             <field name="model">stock.picking</field>
@@ -999,7 +1081,15 @@
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="view_picking_out_search"/>
-            <field name="help">This is the list of all delivery orders that have to be prepared, according to your different sales orders and your logistics rules.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a delivery order. 
+              </p><p>
+                This is the list of all delivery orders that have to be
+                prepared, according to your different sales orders and your
+                logistics rules.
+              </p>
+            </field>
         </record>
         <record id="action_picking_tree_out_view1_waiting" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -1016,11 +1106,26 @@
         <record id="action_picking_tree_out_view2_waiting_cal" model="ir.actions.act_window.view">
             <field eval="3" name="sequence"/>
             <field name="view_mode">calendar</field>
+            <field name="view_id" ref="stock_picking_out_calendar"/>
             <field name="act_window_id" ref="action_picking_tree"/>
         </record>
         <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_warehouse_mgmt" sequence="3"/>
 
         <!-- Incomming Shipments -->
+        <record model="ir.ui.view" id="stock_picking_in_calendar">
+            <field name="name">stock.picking.in.calendar</field>
+            <field name="model">stock.picking.in</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
+                    <field name="origin"/>
+                    <field name="type"/>
+                    <field name="partner_id"/>
+                </calendar>
+            </field>
+        </record>
+
         <record id="view_picking_in_tree" model="ir.ui.view">
             <field name="name">stock.picking.in.tree</field>
             <field name="model">stock.picking.in</field>
@@ -1101,7 +1206,16 @@
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{'contact_display': 'partner_address', 'default_type': 'in'}</field>
             <field name="search_view_id" ref="view_picking_in_search"/>
-            <field name="help">The Incoming Shipments is the list of all orders you will receive from your suppliers. An incoming shipment contains a list of products to be received according to the original purchase order. You can validate the shipment totally or partially.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an incoming shipment. 
+              </p><p>
+                The Incoming Shipments is the list of all orders you will
+                receive from your suppliers. An incoming shipment contains a
+                list of products to be received according to the original
+                purchase order.
+              </p>
+            </field>
         </record>
         <record id="action_invoice_tree5_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -1118,6 +1232,7 @@
         <record id="action_invoice_tree5_view2_cal" model="ir.actions.act_window.view">
             <field eval="3" name="sequence"/>
             <field name="view_mode">calendar</field>
+            <field name="view_id" ref="stock_picking_in_calendar"/>
             <field name="act_window_id" ref="action_picking_tree4"/>
         </record>
         <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_warehouse_mgmt" sequence="1"/>
@@ -1220,7 +1335,7 @@
                             <field name="date" groups="base.group_no_one"/>
                         </group>
                         <group string="Tracability"
-                            groups="stock.group_tracking_lot,stock.group_production_lot">
+                            groups="stock.group_tracking_lot">
                             <label for="tracking_id" groups="stock.group_tracking_lot"/>
                             <div groups="stock.group_tracking_lot">
                                 <field name="tracking_id" class="oe_inline"/>
@@ -1287,7 +1402,15 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
             <field name="context">{}</field>
-            <field name="help">This menu gives you the full traceability of inventory operations on a specific product. You can filter on the product to see all the past or future movements for the product.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a stock movement.
+              </p><p>
+                This menu gives you the full traceability of inventory
+                operations on a specific product. You can filter on the product
+                to see all the past or future movements for the product.
+              </p>
+            </field>
         </record>
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3"/>
 
@@ -1409,7 +1532,18 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
-            <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
+            <field name="help" type="html">
+              <p>
+                Click to register a product reception. 
+              </p><p>
+                Here you can receive individual products, no matter what
+                purchase order or picking order they come from. You will find
+                the list of all products you are waiting for. Once you receive
+                an order, you can filter based on the name of the supplier or
+                the purchase order reference. Then you can confirm all products
+                received using the buttons on the right of each line.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_move_reception_picking_tree">
@@ -1536,7 +1670,15 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
-            <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
+            <field name="help" type="html">
+              <p>
+                You will find in this list all products you have to deliver to
+                your customers. You can process the deliveries directly from
+                this list using the buttons on the right of each line. You can
+                filter the products to deliver by customer, products or sale
+                order (using the Origin field).
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_move_out_picking_tree">
@@ -1596,16 +1738,22 @@
             <field name="res_model">stock.journal</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="help">The stock journal system allows you to assign each stock operation to a specific journal according to the type of operation to perform or the worker/team that should perform the operation. Examples of stock journals may be: quality control, pick lists, packing, etc.</field>
+            <field name="help" type="html">
+              <p>
+                Click to create a new journal. 
+              </p><p>
+                The stock journal system allows you to assign each stock
+                operation to a specific journal according to the type of
+                operation to perform or the worker/team that should perform the
+                operation. Examples of stock journals may be: quality control,
+                pick lists, packing, etc.
+              </p>
+            </field>
         </record>
         <menuitem
             action="action_stock_journal_form"
             id="menu_action_stock_journal_form"
             parent="menu_warehouse_config" sequence="1"/>
-
-        <record model="ir.actions.todo.category" id="category_stock_management_config">
-            <field name="name">Stock Management</field>
-        </record>
 
     </data>
 </openerp>

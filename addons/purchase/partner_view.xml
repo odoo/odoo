@@ -16,6 +16,73 @@
                 </field>
             </field>
         </record>
+        
+    <record id="act_res_partner_2_purchase_order" model="ir.actions.act_window">
+            <field name="name">RFQs and Purchases</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{'search_default_partner_id': active_id}</field>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+            <field name="help">
+                This supplier has no RFQ or Purchase Order. Click here to create a new RFQ.
+                &lt;p&gt;
+                The "Quotation" is the first step of the Purchases flow. Manage your purchases from quotation to invoice.
+                &lt;p&gt;
+                You will be able to buy products (manage receptions) as well as services (create projects).
+            </field>
+        </record>
+
+        <!-- Partner kanban view inherited -->
+        <record model="ir.ui.view" id="purchase_partner_kanban_view">
+            <field name="name">res.partner.kanban.purchaseorder.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="mobile" position="after">
+                    <field name="purchase_order_count"/>
+                </field>
+                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                    <a name="%(purchase.act_res_partner_2_purchase_order)d" type="action" t-if="record.purchase_order_count.value>0">
+                        <t t-esc="record.purchase_order_count.value"/> Purchases
+                    </a>
+                </xpath>
+            </field>
+        </record>
+        
+    <record id="act_res_partner_2_supplier_invoices" model="ir.actions.act_window">
+            <field name="name">Supplier Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="domain">[('type','=','in_invoice')]</field>
+            <field name="context">{'search_default_partner_id': active_id, 'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
+            <field name="help">
+                Click here to create Supplier invoice.
+                &lt;p&gt;
+                You can control the invoice from your supplier according to what you purchased or received.
+                &lt;p&gt;
+                OpenERP can also generate draft invoices automatically from purchase orders or receipts.
+            </field>
+        </record>
+
+        <record id="res_partner_view_purchase_buttons" model="ir.ui.view">
+            <field name="name">res.partner.view.purchase.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button name="%(purchase.act_res_partner_2_purchase_order)d" type="action"
+                        string="RFQs and Purchases"
+                        groups="purchase.group_purchase_user"/>
+                    <button name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
+                        string="Supplier Invoices"/>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>

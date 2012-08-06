@@ -234,7 +234,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_payment_order_search"/>
-            <field name="help">A payment order is a payment request from your company to pay a supplier invoice or a customer credit note. Here you can register all payment orders that should be done, keep track of all payment orders and mention the invoice reference and the partner the payment should be done for.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a payment order.
+              </p><p>
+                A payment order is a payment request from your company to pay a
+                supplier invoice or a customer refund.
+              </p>
+            </field>
         </record>
 
         <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="menu_main_payment" sequence="3"/>
