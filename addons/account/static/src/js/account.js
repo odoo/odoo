@@ -208,29 +208,5 @@ instance.account.list_button = instance.web.form.WidgetButton.extend({
         });
    }
 })
-instance.account.set_selection = instance.web.ListView.include({
-     default_selection: function(){
-        var self = this
-        selection_method = this.fields_view.arch.attrs.default_selection;
-        if(selection_method){
-            this.dataset.call(selection_method, [this.dataset.ids], this.context).then(_.bind(self.set_selection, self));
-        }
-     },
-     
-     set_selection : function(ids){
-         this.$element.find('th.oe_list_record_selector input')
-                .closest('tr').each(function () {
-            if(_.include(ids, $(this).data('id'))){
-                $(this).find('th.oe_list_record_selector input').prop('checked', true)
-                }
-            }
-        );
-     },
-     reload_content: function() {
-         var reloaded =this._super()
-         var self = this
-         reloaded.done(_.bind(self.default_selection, self))
-     },
-})
-
+ 
 }
