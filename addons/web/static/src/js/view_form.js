@@ -4702,7 +4702,8 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             _.each(elemts, function(element){
                 $item = $(element);
                 if ($item.attr("data-id") != self.selected_value) {
-                    $item.attr("style", "cursor: pointer;");
+                    $item.attr("style", "cursor: pointer; background: #ba3d37;");
+                    $item.parent().attr("style", "background: #ba3d37;");
                     $item.click(function(event){
                         var data_id = parseInt($(this).attr("data-id"))
                         self.view.dataset.call('stage_set', [[self.view.datarecord.id],data_id]).then(function() {
@@ -4710,14 +4711,15 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                         });
                     });
                 } else {
-                   $item.addClass('oe_highlight');
+                    $item.attr("style", "background: #8a89ba;");
+                    $item.parent().attr("style", "background: #8a89ba;");
                 }
             });
         }
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
         if (color) {            
-            var elem = this.$element.find("li.oe_form_steps_active button");
+            var elem = this.$element.find("li.oe_form_steps_active span");
             elem.css("color", color);            
         }
     },
