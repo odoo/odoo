@@ -2,16 +2,82 @@
 <openerp>
     <data>
 
+        <record id="portal_project_issue_kanban_view" model="ir.ui.view">
+            <field name="name">Project Issue Kanban</field>
+            <field name="model">project.issue</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban version="7.0" class="oe_portal_project_issue">
+                    <field name="priority"/>
+                    <field name="user_email"/>
+                    <field name="user_id"/>
+                    <field name="date_deadline"/>
+                    <field name="create_date"/>
+                    <field name="categ_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div>
+                                        <h1><a type="edit"><field name="name"/></a></h1>
+                                        <field name="partner_id"/> <br/>
+                                        <field name="version_id"/>
+                                    </div>
+                                    <div class="oe_kanban_footer_left">
+                                        <div class="oe_left oe_tags">
+                                            <t t-foreach="record.categ_ids.raw_value" t-as="categ_id">
+                                                <span class="oe_tag" t-att-data-categ_id="categ_id"></span>
+                                            </t>
+                                        </div>
+                                        <div class="oe_right">
+                                            Creation: <field name="create_date"/>
+                                            <span class="oe_kanban_highlight">
+                                                <t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                                                <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
+                                                   <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                                                </a>
+                                                <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
+                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                                </a>
+                                                <a type="object" name="set_priority" args="['2']" title="High Priority">
+                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                                </a>
+                                                <a type="object" name="set_priority" args="['1']" title="Highest Priority">
+                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                                </a>
+                                            </span>
+                                            <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
+                                                <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
+                                            </t>
+                                            <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="project_issue_categ_act0" model="ir.actions.act_window">
             <field name="name">Issues</field>
             <field name="res_model">project.issue</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,calendar</field>
-            <field name="view_id" eval="False"/>
+            <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="portal_project_issue_kanban_view"/>
             <field name="domain" eval=""/>
             <field name="context">{"search_default_user_id":'', "search_default_draft":'', "search_default_todo":''}</field>
             <field name="search_view_id" ref="project_issue.view_project_issue_filter"/>
-            <field name="help">Issues such as system bugs, customer complaints, and material breakdowns are collected here. You can define the stages assigned when solving the project issue (analysis, development, done). With the mailgateway module, issues can be integrated through an email address (example: support@mycompany.com)</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an issue.
+              </p><p>
+                OpenERP's kanban view will help you track easily your current 
+                pipeline of issues to fix.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Issues" id="portal_after_sales_issues" parent="portal.portal_projects"

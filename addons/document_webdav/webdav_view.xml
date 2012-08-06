@@ -38,10 +38,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document properties">
-                    <field name="name"
-                    filter_domain="['|', ('name','ilike',self), ('namespace','ilike',self)]"
-                    string="Document property"/>
-                    <newline/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('namespace','ilike',self)]" string="Document property"/>
                     <group expand="0" string="Group By..." groups="base.group_no_one">
                         <filter string="Dir" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'dir_id'}"/>
                         <filter string="Namespace" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'namespace'}"/>
@@ -140,10 +137,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document properties">
-                    <field name="name"
-                    filter_domain="['|', ('name','ilike',self), ('namespace','ilike',self)]"
-                    string="Document Property"/>
-                    <newline/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('namespace','ilike',self)]" string="Document Property"/>
                     <group expand="0" string="Group By..." groups="base.group_no_one">
                         <filter string="Document" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'file_id'}"/>
                         <filter string="Namespace" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'namespace'}"/>

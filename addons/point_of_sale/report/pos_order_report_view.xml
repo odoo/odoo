@@ -34,41 +34,24 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Point of Sale Analysis">
-                    <group>
-                        <filter icon="terp-go-year" string="Year" name="year"
-                            domain="[('year','=',time.strftime('%%Y'))]"
-                            help="POS ordered created during current year"/>
-                        <filter icon="terp-go-today"
-                             string="Today"
-                             name="today"
-                             domain="[('date','=', time.strftime('%%Y-%%m-%%d'))]"
-                             help="POS ordered created by today"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-dolar"
-                            string="Invoiced"
-                            domain="[('state','=',('invoiced'))]"/>
-                        <filter icon="terp-dolar"
-                            string="Not Invoiced"
-                            domain="[('state','=',('paid'))]"/>
-			            <separator orientation="vertical"/>
-			            <field name="partner_id"/>
-			            <field name="date"/>
-			            <field name="user_id" widget="selection" /> 
-                        <filter icon="terp-personal"
-                            string="My Sales"
-                            help="My Sales"
-                            domain="[('user_id','=',uid)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id"/>
-                        <field name="user_id" widget="selection"/>
-                    </group>
-                    <newline/>
+                    <field name="date"/>
+                    <filter icon="terp-dolar" string="Invoiced" domain="[('state','=',('invoiced'))]"/>
+                    <filter icon="terp-dolar" string="Not Invoiced" domain="[('state','=',('paid'))]"/>
+                    <separator/>
+                    <filter icon="terp-go-year" string="Year" name="year" domain="[('year','=',time.strftime('%%Y'))]" help="POS ordered created during current year"/>
+                    <separator/>
+                    <filter icon="terp-go-today" string="Today" name="today" domain="[('date','=', time.strftime('%%Y-%%m-%%d'))]"
+                         help="POS ordered created by today"/>
+                    <separator/>
+                    <filter icon="terp-personal" string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
                     <group expand="1" string="Group By...">
                         <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                         <filter string="Customer" icon="terp-personal" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Day of order date"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Month of order date"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Year of order date"/>

@@ -189,30 +189,23 @@
           <field name="type">search</field>
           <field name="arch" type="xml">
               <search string="Search Reair Orders">
-                  <group>
-                       <field name="name" string="Reair Orders"/>
-                       <separator orientation="vertical"/>
-                       <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
-                       <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" name="current" />
-                       <filter icon="terp-emblem-important" string="Ready To Repair" domain="[('state','=','ready')]"/>
-                       <filter icon="terp-dolar" string="Invoiced" domain="[('invoiced','=',True)]"/>
-                       <separator orientation="vertical"/>
-                       <field name="product_id"/>
-                       <field name="partner_id"/>
-                       <field name="state"/>
-                  </group>
-                  <newline/>
+                  <field name="name" string="Reair Orders"/>
+                  <field name="state"/>
+                  <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
+                  <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" name="current" />
+                  <filter icon="terp-emblem-important" string="Ready To Repair" domain="[('state','=','ready')]"/>
+                  <separator/>
+                  <filter icon="terp-dolar" string="Invoiced" domain="[('invoiced','=',True)]"/>
+                  <field name="product_id"/>
+                  <field name="partner_id"/>
                   <group expand="0" string="Group By...">
                       <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                      <separator orientation="vertical"/>
                       <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                       <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                      <separator orientation="vertical"/>
                       <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'guarantee_limit'}" help="Guarantee limit"/>
-                      <separator orientation="vertical" groups="base.group_multi_company"/>
                       <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                   </group>
-             </search>
+              </search>
           </field>
     </record>
 
@@ -225,7 +218,19 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
-            <field name="help">Repair orders allow you to organize your product repairs. In a repair order, you can detail the components you remove, add or replace and record the time you spent on the different operations. The repair order uses the warranty date on the Serial Number in order to know if whether the repair should be invoiced to the customer or not.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a reparation order. 
+              </p><p>
+                In a repair order, you can detail the components you remove,
+                add or replace and record the time you spent on the different
+                operations.
+              </p><p>
+                The repair order uses the warranty date on the Serial Number in
+                order to know if whether the repair should be invoiced to the
+                customer or not.
+              </p>
+            </field>
         </record>
 
         <menuitem action="action_repair_order_tree" id="menu_repair_order" parent="mrp.menu_mrp_manufacturing" groups="mrp.group_mrp_user" name="Repair Orders" sequence="50"/>

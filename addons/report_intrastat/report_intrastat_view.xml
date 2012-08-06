@@ -99,12 +99,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Intrastat Data">
-                    <group>
-                        <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Intrastat Data"/>
-                        <field name="intrastat_id"/>
-                        <field name="month"/>
-                        <field name="type"/>
-                    </group>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Intrastat Data"/>
+                    <field name="month"/>
+                    <field name="type"/>
+                    <field name="intrastat_id"/>
                 </search>
             </field>
         </record>

@@ -373,7 +373,8 @@ openerp.mail = function(session) {
                 action_buttons: false,
                 pager: false,
                 initial_mode: 'edit',
-                });
+                disable_autofocus: true,
+            });
             // add the form, bind events, activate the form
             var msg_node = this.$element.find('div.oe_mail_msg_content');
             return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
@@ -521,7 +522,7 @@ openerp.mail = function(session) {
             this.params.parent_id = this.params.parent_id || false;
             this.params.thread_level = this.params.thread_level || 0;
             this.params.is_wall = this.params.is_wall || (this.params.records != undefined) || false;
-            this.params.msg_more_limit = this.params.msg_more_limit || 150;
+            this.params.msg_more_limit = this.params.msg_more_limit || 250;
             this.params.limit = this.params.limit || 100;
             // this.params.limit = 3; // tmp for testing
             this.params.offset = this.params.offset || 0;
@@ -736,7 +737,7 @@ openerp.mail = function(session) {
 
         /** Displays a record, performs text/link formatting */
         display_comment: function (record) {
-            record.body = mail.ChatterUtils.do_text_nl2br(record.body, true);
+            record.body = mail.ChatterUtils.do_text_nl2br($.trim(record.body), true);
             // if (record.type == 'email' && record.state == 'received') {
             if (record.type == 'email') {
                 record.mini_url = ('/mail/static/src/img/email_icon.png');
@@ -754,15 +755,15 @@ openerp.mail = function(session) {
             record.is_author = mail.ChatterUtils.is_author(this, record.user_id[0]);
             // render
             var rendered = session.web.qweb.render('mail.thread.message', {'record': record, 'thread': this, 'params': this.params, 'display': this.display});
-            $(rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
             // expand feature
-            this.$element.find('div.oe_mail_msg_body:last').expander({
+            $(rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
+            this.$element.find('div.oe_mail_msg_record_body').expander({
                 slicePoint: this.params.msg_more_limit,
-                expandText: 'see more',
-                userCollapseText: 'see less',
+                expandText: 'read more',
+                userCollapseText: '[^]',
                 detailClass: 'oe_mail_msg_tail',
                 moreClass: 'oe_mail_expand',
-                lesClass: 'oe_mail_reduce',
+                lessClass: 'oe_mail_reduce',
                 });
         },
 
