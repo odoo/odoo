@@ -4706,7 +4706,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             _.each(elemts, function(element){
                 $item = $(element);
                 if ($item.attr("data-id") != self.selected_value) {
-                    $item.attr("style", "cursor: pointer; background: #ba3d37;");
+                    $item.attr("style", "cursor: pointer; background: #ba3d37; position: relative; left: 5px;");
                     $item.parent().attr("style", "background: #ba3d37;");
                     $item.click(function(event){
                         var data_id = parseInt($(this).attr("data-id"))
@@ -4715,7 +4715,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                         });
                     });
                 } else {
-                    $item.attr("style", "background: #8a89ba;");
+                    $item.attr("style", "background: #8a89ba; position: relative; left: 5px;");
                     $item.parent().attr("style", "background: #8a89ba;");
                 }
             });
