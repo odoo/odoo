@@ -26,23 +26,23 @@ class hr_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_hr_timesheet_sheet': fields.boolean('Timesheet Validation by Manager',
+        'module_hr_timesheet_sheet': fields.boolean('allow timesheets validation by managers',
             help ="""This installs the module hr_timesheet_sheet."""),
-        'module_hr_attendance': fields.boolean('Track Attendances',
+        'module_hr_attendance': fields.boolean('track attendances',
             help ="""This installs the module hr_attendance."""),
-        'module_hr_timesheet': fields.boolean('Manage Timesheets',
+        'module_hr_timesheet': fields.boolean('manage timesheets',
             help ="""This installs the module hr_timesheet."""),
-        'module_hr_holidays': fields.boolean('Leaves & Holidays',
+        'module_hr_holidays': fields.boolean('manage leaves and allocation requests',
             help ="""This installs the module hr_holidays."""),
-        'module_hr_expense': fields.boolean('Expenses',
+        'module_hr_expense': fields.boolean('manage employees expenses',
             help ="""This installs the module hr_expense."""),
-        'module_hr_recruitment': fields.boolean('Recruitment',
+        'module_hr_recruitment': fields.boolean('manage the recruitment pipe',
             help ="""This installs the module hr_recruitment."""),
-        'module_hr_contract': fields.boolean('Employees Contracts',
+        'module_hr_contract': fields.boolean('manage contract per employee',
             help ="""This installs the module hr_contract."""),
-        'module_hr_evaluation': fields.boolean('Periodic Appraisals',
+        'module_hr_evaluation': fields.boolean('manage employees periodic evaluation',
             help ="""This installs the module hr_evaluation."""),
-        'module_hr_payroll': fields.boolean('Payroll',
+        'module_hr_payroll': fields.boolean('manage payroll',
             help ="""This installs the module hr_payroll."""),
     }
 

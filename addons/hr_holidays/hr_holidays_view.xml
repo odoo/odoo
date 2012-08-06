@@ -301,7 +301,16 @@
             <field name="context">{}</field>
             <field name="domain">[('type','=','remove')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
-            <field name="help">Leave requests can be recorded by employees and validated by their managers. Once a leave request is validated, it appears automatically in the agenda of the employee. You can define several allowance types (paid holidays, sickness, etc.) and manage allowances per type.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new leave request. 
+              </p><p>
+                Once you have recorded your leave request, it will be sent
+                to a manager for validation. Be sure to set the right leave
+                type (recuperation, legal holidays, sickness) and the exact
+                number of open days related to your leave.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_open_ask_holidays_tree">
@@ -521,7 +530,12 @@
            <field name="view_type">form</field>
            <field name="view_mode">tree,form</field>
            <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
-           <field name="help">You can assign remaining Legal Leaves for each employee, OpenERP will automatically create and validate allocation requests.</field>
+           <field name="help" type="html">
+             <p>
+               You can assign remaining Legal Leaves for each employee, OpenERP
+               will automatically create and validate allocation requests.
+             </p>
+           </field>
        </record>
 
         <!-- Hr employee inherit Legal Leaves -->
