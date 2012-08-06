@@ -684,8 +684,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_button_cancel: function(event) {
         if (this.can_be_discarded()) {
-            this.to_view_mode();
-            this.on_record_loaded(this.datarecord);
+            if (this.get('actual_mode') === 'create') {
+                this.trigger('history_back');
+            } else {
+                this.to_view_mode();
+                this.on_record_loaded(this.datarecord);
+            }
         }
         return false;
     },
