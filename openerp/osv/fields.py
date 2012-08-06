@@ -49,7 +49,7 @@ import simplejson
 _logger = logging.getLogger(__name__)
 
 def _symbol_set(symb):
-    if symb == None or symb == False:
+    if symb is None or symb == False:
         return None
     elif isinstance(symb, unicode):
         return symb.encode('utf-8')
@@ -127,6 +127,23 @@ class _column(object):
         res = obj.read(cr, uid, ids, [name], context=context)
         return [x[name] for x in res]
 
+    def as_display_name(self, cr, uid, obj, value, context=None):
+        """Converts a field value to a suitable string representation for a record,
+           e.g. when this field is used as ``rec_name``.
+
+           :param obj: the ``BaseModel`` instance this column belongs to 
+           :param value: a proper value as returned by :py:meth:`~openerp.orm.osv.BaseModel.read`
+                         for this column
+        """
+        # delegated to class method, so a column type A can delegate
+        # to a column type B. 
+        return self._as_display_name(self, cr, uid, obj, value, context=None)
+
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        # This needs to be a class method, in case a column type A as to delegate
+        # to a column type B.
+        return tools.ustr(value)
 
 # ---------------------------------------------------------
 # Simple fields
@@ -178,11 +195,22 @@ class reference(_column):
                     result[value['id']] = False
         return result
 
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        if value:
+            # reference fields have a 'model,id'-like value, that we need to convert
+            # to a real name
+            model_name, res_id = value.split(',')
+            model = obj.pool.get(model_name)
+            if model and res_id:
+                return model.name_get(cr, uid, [int(res_id)], context=context)[0][1]
+        return tools.ustr(value)
+
 class char(_column):
     _type = 'char'
 
-    def __init__(self, string, size, **args):
-        _column.__init__(self, string=string, size=size, **args)
+    def __init__(self, string="unknown", size=None, **args):
+        _column.__init__(self, string=string, size=size or None, **args)
         self._symbol_set = (self._symbol_c, self._symbol_set_char)
 
     # takes a string (encoded in utf8) and returns a string (encoded in utf8)
@@ -191,7 +219,7 @@ class char(_column):
         # * we need to remove the "symb==False" from the next line BUT
         #   for now too many things rely on this broken behavior
         # * the symb==None test should be common to all data types
-        if symb == None or symb == False:
+        if symb is None or symb == False:
             return None
 
         # we need to convert the string to a unicode object to be able
@@ -453,6 +481,11 @@ class many2one(_column):
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
         return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
 
+    
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        return value[1] if isinstance(value, tuple) else tools.ustr(value) 
+
 
 class one2many(_column):
     _classic_read = False
@@ -543,6 +576,10 @@ class one2many(_column):
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, operator, context=context,limit=limit)
 
+    
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        raise NotImplementedError('One2Many columns should not be used as record name (_rec_name)') 
 
 #
 # Values: (0, 0,  { fields })    create
@@ -724,6 +761,10 @@ class many2many(_column):
     #
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit, context=context)
+
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        raise NotImplementedError('Many2Many columns should not be used as record name (_rec_name)') 
 
 
 def get_nice_size(value):
@@ -1078,6 +1119,12 @@ class function(_column):
         if self._fnct_inv:
             self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
 
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        # Function fields are supposed to emulate a basic field type,
+        # so they can delegate to the basic type for record name rendering
+        return globals()[field._type]._as_display_name(field, cr, uid, obj, value, context=context)
+
 # ---------------------------------------------------------
 # Related fields
 # ---------------------------------------------------------
@@ -1210,7 +1257,6 @@ class related(function):
                 obj_name = f['relation']
                 result[-1]['relation'] = f['relation']
         self._relations = result
-
 
 class sparse(function):   
 

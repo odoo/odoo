@@ -20,7 +20,6 @@ class TestO2MSerialization(common.TransactionCase):
     def setUp(self):
         super(TestO2MSerialization, self).setUp()
         self.partner = self.registry('res.partner')
-        self.address = self.registry('res.partner.address')
 
     def test_no_command(self):
         " empty list of commands yields an empty list of records "
@@ -43,9 +42,9 @@ class TestO2MSerialization(common.TransactionCase):
     def test_LINK_TO_command(self):
         " reads the records from the database, records are returned with their ids. "
         ids = [
-            self.address.create(self.cr, UID, {'name': 'foo'}),
-            self.address.create(self.cr, UID, {'name': 'bar'}),
-            self.address.create(self.cr, UID, {'name': 'baz'})
+            self.partner.create(self.cr, UID, {'name': 'foo'}),
+            self.partner.create(self.cr, UID, {'name': 'bar'}),
+            self.partner.create(self.cr, UID, {'name': 'baz'})
         ]
         commands = map(LINK_TO, ids)
 
@@ -61,9 +60,9 @@ class TestO2MSerialization(common.TransactionCase):
     def test_bare_ids_command(self):
         " same as the equivalent LINK_TO commands "
         ids = [
-            self.address.create(self.cr, UID, {'name': 'foo'}),
-            self.address.create(self.cr, UID, {'name': 'bar'}),
-            self.address.create(self.cr, UID, {'name': 'baz'})
+            self.partner.create(self.cr, UID, {'name': 'foo'}),
+            self.partner.create(self.cr, UID, {'name': 'bar'}),
+            self.partner.create(self.cr, UID, {'name': 'baz'})
         ]
 
         results = self.partner.resolve_o2m_commands_to_record_dicts(
@@ -77,9 +76,9 @@ class TestO2MSerialization(common.TransactionCase):
 
     def test_UPDATE_command(self):
         " take the in-db records and merge the provided information in "
-        id_foo = self.address.create(self.cr, UID, {'name': 'foo'})
-        id_bar = self.address.create(self.cr, UID, {'name': 'bar'})
-        id_baz = self.address.create(self.cr, UID, {'name': 'baz', 'city': 'tag'})
+        id_foo = self.partner.create(self.cr, UID, {'name': 'foo'})
+        id_bar = self.partner.create(self.cr, UID, {'name': 'bar'})
+        id_baz = self.partner.create(self.cr, UID, {'name': 'baz', 'city': 'tag'})
 
         results = self.partner.resolve_o2m_commands_to_record_dicts(
             self.cr, UID, 'address', [
@@ -96,7 +95,7 @@ class TestO2MSerialization(common.TransactionCase):
 
     def test_mixed_commands(self):
         ids = [
-            self.address.create(self.cr, UID, {'name': name})
+            self.partner.create(self.cr, UID, {'name': name})
             for name in ['NObar', 'baz', 'qux', 'NOquux', 'NOcorge', 'garply']
         ]
 
@@ -126,9 +125,9 @@ class TestO2MSerialization(common.TransactionCase):
     def test_LINK_TO_pairs(self):
         "LINK_TO commands can be written as pairs, instead of triplets"
         ids = [
-            self.address.create(self.cr, UID, {'name': 'foo'}),
-            self.address.create(self.cr, UID, {'name': 'bar'}),
-            self.address.create(self.cr, UID, {'name': 'baz'})
+            self.partner.create(self.cr, UID, {'name': 'foo'}),
+            self.partner.create(self.cr, UID, {'name': 'bar'}),
+            self.partner.create(self.cr, UID, {'name': 'baz'})
         ]
         commands = map(lambda id: (4, id), ids)
 

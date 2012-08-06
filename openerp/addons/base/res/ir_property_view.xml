@@ -8,13 +8,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Parameters">
+                    <field name="name" string="Name"/>
                     <filter icon="terp-project"
                         string="Generic"
                         help="Parameters that are used by all resources."
                         domain="[('res_id','=',False)]"/>
-                    <separator orientation="vertical"/>
-                    <field name="fields_id" />
-                    <field name="name"/>
+                    <field name="fields_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
@@ -65,7 +64,6 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_property_view_tree"/>
         </record>
-        <menuitem id="menu_ir_property" name="Parameters" parent="menu_custom" groups="base.group_no_one" sequence="24"/>
         <menuitem id="menu_ir_property_form_all" parent="menu_ir_property" action="ir_property_form"/>
     </data>
 </openerp>
