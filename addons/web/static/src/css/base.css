@@ -509,6 +509,14 @@
 .openerp .oe_avatar + div {
   margin-left: 5px;
 }
+.openerp .oe_image_small > img {
+  max-width: 50px;
+  max-height: 50px;
+}
+.openerp .oe_image_medium > img {
+  max-width: 180px;
+  max-height: 180px;
+}
 .openerp .oe_button.oe_link {
   border: none;
   padding: 0;
@@ -2274,14 +2282,6 @@
 }
 .openerp .oe_form .oe_form_field_image:hover .oe_form_field_image_controls {
   display: block;
-}
-.openerp .oe_form .oe_form_field_image_small img {
-  max-width: 50px;
-  max-height: 50px;
-}
-.openerp .oe_form .oe_form_field_image_medium img {
-  max-width: 180px;
-  max-height: 180px;
 }
 .openerp .oe_form_field_many2one td:first-child {
   position: relative;
