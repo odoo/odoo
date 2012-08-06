@@ -75,7 +75,13 @@
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_asset_asset_report_search"/>
         <field name="context">{'search_default_year':1,'search_default_this_month':1,'search_default_asset_category':1, 'search_default_posted':1, 'group_by':[], 'group_by_no_leaf':1}</field>
-        <field name="help">From this report, you can have an overview on all depreciation. The tool search can also be used to personalise your Assets reports and so, match this analysis to your needs;</field>
+        <field name="help" type="html">
+          <p>
+            From this report, you can have an overview on all depreciation. The
+            tool search can also be used to personalise your Assets reports and
+            so, match this analysis to your needs;
+          </p>
+        </field>
     </record>
     
     <menuitem action="action_asset_asset_report"

@@ -218,7 +218,20 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="crossovered_budget_view_tree"/>
             <field name="search_view_id" ref="view_crossovered_budget_search"/>
-            <field name="help">A budget is a forecast of your company's income and expenses expected for a period in the future. With a budget, a company is able to carefully look at how much money they are taking in during a given period, and figure out the best way to divide it among various categories. By keeping track of where your money goes, you may be less likely to overspend, and more likely to meet your financial goals. Forecast a budget by detailing the expected revenue per analytic account and monitor its evolution based on the actuals realised during that period.</field>
+            <field name="help" type="html">
+              <p>
+                A budget is a forecast of your company's income and/or expenses
+                expected for a period in the future. A budget is defined on some
+                financial accounts and/or analytic accounts (that may represent
+                projects, departments, categories of products, etc.)
+              </p><p>
+                By keeping track of where your money goes, you may be less
+                likely to overspend, and more likely to meet your financial
+                goals. Forecast a budget by detailing the expected revenue per
+                analytic account and monitor its evolution based on the actuals
+                realised during that period.
+              </p>
+            </field>
         </record>
         <menuitem parent="next_id_31"
             id="menu_act_crossovered_budget_view"

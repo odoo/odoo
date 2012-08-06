@@ -85,7 +85,7 @@
 -
   !python {model: create.dta.wizard}: |
     import base64
-    wiz_id = self.create(cr,uid,[])
+    wiz_id = self.create(cr, uid, {})
     wiz = self.browse(cr, uid, wiz_id)
     pay_order_id =  ref("dta_payment_order")
     #set the payment order as the active id
@@ -146,7 +146,7 @@
 #  I import the payment line
 #-
 #  !python {model: account.payment.populate.statement}: |
-#    wiz_id = self.create(cr,uid,[])
+#    wiz_id = self.create(cr, uid, {})
 #    wiz = self.browse(cr, uid, wiz_id)
 #    
 #    line_obj = self.pool.get('payment.line')

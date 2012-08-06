@@ -83,7 +83,16 @@
             <field name="res_model">account_followup.followup</field>
             <field name="search_view_id" ref="view_account_followup_filter"/>
             <field name="view_type">form</field>
-            <field name="help">Define follow-up levels and their related messages and delay. For each step, specify the message and the day of delay. Use the legend to know the using code to adapt the email content to the good context (good name, good date) and you can manage the multi language of messages.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define follow-up levels and their related messages.
+              </p><p>
+                For each step, specify the message and the day of delay. Use
+                the legend to know the using code to adapt the email content to
+                the good context (good name, good date) and you can manage the
+                multi language of messages.
+              </p>
+            </field>
         </record>
         <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_configuration_misc"/>
 
