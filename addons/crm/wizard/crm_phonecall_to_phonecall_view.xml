@@ -15,7 +15,7 @@
                         <field name="name"/>
                         <field name="date" string="Planned Date" attrs="{'invisible': [('action','=','log')]}"/>
                         <field name="partner_id" readonly="True"/>
-                        <field name="user_id" />
+                        <field name="user_id" options='{"no_open": true}'/>
                         <field name="section_id"/>
                     </group>
                     <footer>

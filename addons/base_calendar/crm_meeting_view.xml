@@ -99,7 +99,7 @@
                     <page string="Meeting Detail">
                         <group>
                             <group>
-                                <field name="user_id" />
+                                <field name="user_id" options='{"no_open": true}'/>
                                 <field name="categ_ids" widget="many2many_tags"/>
                                 <field name="location"/>
                                 <field name="organizer" groups="base.group_no_one"/>
@@ -232,7 +232,7 @@
                                         <field name="role" />
                                     </group>
                                     <group>
-                                        <field name="user_id"/>
+                                        <field name="user_id" options='{"no_open": true}'/>
                                     </group>
                                 </group>
                             </form>
@@ -277,7 +277,7 @@
         <field name="arch" type="xml">
             <calendar string="Meetings" date_start="date" color="user_id" date_stop="date_deadline" date_delay="duration">
                 <field name="name"/>
-                <field name="user_id"/>
+                <field name="user_id" options='{"no_open": true}'/>
             </calendar>
         </field>
     </record>

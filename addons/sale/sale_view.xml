@@ -317,7 +317,7 @@
                                     <field name="invoice_quantity" invisible="True"/>
                                 </group>
                                 <group groups="base.group_user">
-                                    <field name="user_id"/>
+                                    <field name="user_id" options='{"no_open": true}'/>
                                     <field groups="base.group_no_one" name="origin"/>
                                 </group>
                                 <group name="sale_pay">

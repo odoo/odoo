@@ -100,7 +100,7 @@
                 <form string="Timesheet by user">
                     <field name="name"/>
                     <field name="month"/>
-                    <field name="user_id"/>
+                    <field name="user_id" options='{"no_open": true}'/>
                 </form>
             </field>
         </record>
@@ -177,7 +177,7 @@
                 <form string="Timesheet by invoice">
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="manager_id"/>
-                    <field name="user_id"/>
+                    <field name="user_id" options='{"no_open": true}'/>
                 </form>
             </field>
         </record>
@@ -256,7 +256,7 @@
                     <field name="name"/>
                     <field name="month"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="user_id"/>
+                    <field name="user_id" options='{"no_open": true}'/>
                     <field name="quantity"/>
                 </form>
             </field>
@@ -322,7 +322,7 @@
                     <field name="name"/>
                     <field name="month"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="user_id"/>
+                    <field name="user_id" options='{"no_open": true}'/>
                     <field name="quantity"/>
                 </form>
             </field>

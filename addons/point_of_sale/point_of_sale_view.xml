@@ -84,7 +84,7 @@
                             <group string="General Information">
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="shop_id" widget="selection"/>
-                                <field name="user_id"/>
+                                <field name="user_id" options='{"no_open": true}'/>
                                 <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
                                 <field name="picking_id" readonly="1"/>
                             </group>
@@ -260,7 +260,7 @@
             <field name="arch" type="xml">
                 <form string="POS " version="7.0">
                     <group col="4">
-                        <field name="user_id"/>
+                        <field name="user_id" options='{"no_open": true}'/>
                         <field name="journal_id"/>
                         <field name="jl_id"/>
                         <field name="date_create" widget="date"/>
@@ -356,7 +356,7 @@
                         <field name="date_order" widget="date"/>
                         <field name="qty"/>
                         <field name="amount"/>
-                        <field name="user_id"/>
+                        <field name="user_id" options='{"no_open": true}'/>
                     </group>
                 </form>
             </field>
@@ -424,7 +424,7 @@
                         <field name="date_order" widget="date"/>
                         <field name="qty"/>
                         <field name="amount"/>
-                        <field name="user_id"/>
+                        <field name="user_id" options='{"no_open": true}'/>
                     </group>
                 </form>
             </field>
@@ -489,7 +489,7 @@
             <field name="arch" type="xml">
                 <form string="POS " version="7.0">
                     <group col="4">
-                        <field name="user_id"/>
+                        <field name="user_id" options='{"no_open": true}'/>
                         <field name="product_name"/>
                         <field name="date_order" widget="date"/>
                         <field name="qty"/>
@@ -558,7 +558,7 @@
             <field name="arch" type="xml">
                 <form string="POS " version="7.0">
                     <group col="4">
-                        <field name="user_id"/>
+                        <field name="user_id" options='{"no_open": true}'/>
                         <field name="product_name"/>
                         <field name="date_order" widget="date"/>
                         <field name="qty"/>
@@ -916,7 +916,7 @@
                             <button name="open_frontend_cb" type="object" string="Open Point Of Sale" states="opened" />
             			</group>
                         <newline/>
-                        <field name="user_id" />
+                        <field name="user_id" options='{"no_open": true}'/>
                         <field name="name" />
                         <newline/>
                         <field name="start_at" attrs="{'insivible' : [('state', '=', 'opening_control')]}"/>

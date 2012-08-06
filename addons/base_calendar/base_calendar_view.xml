@@ -34,7 +34,7 @@
                         <group>
                             <group>
                                 <field name="sent_by_uid" string="Invitation From" />
-                                <field name="user_id" string="Invited User"/>
+                                <field name="user_id" string="Invited User" options='{"no_open": true}'/>
                                 <field name="partner_id" string="Contact" />
                             </group>
                             <group>
@@ -222,7 +222,7 @@
                     <page string="Event">
                         <group col="6" colspan="4">
                              <separator colspan="6" string="Visibility"/>
-                             <field name="user_id" string="Responsible User" />
+                             <field name="user_id" string="Responsible User" options='{"no_open": true}'/>
                              <field name="show_as" string="Show Time as"/>
                              <field name="class" string="Privacy"/>
                              <field name="recurrent_id" invisible="1" />

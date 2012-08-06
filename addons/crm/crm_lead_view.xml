@@ -166,15 +166,15 @@
                                     <field name="zip" class="oe_inline" placeholder="ZIP"/>
                                     <field name="city" class="oe_inline" placeholder="City"/>
                                 </div>
-                                <field name="state_id" placeholder="State"/>
-                                <field name="country_id" placeholder="Country"/>
+                                <field name="state_id" placeholder="State" options='{"no_open": true}'/>
+                                <field name="country_id" placeholder="Country" options='{"no_open": true}'/>
                             </div>
                         </group>
                         <group>
                             <label for="contact_name" />
                             <div>
                                 <field name="contact_name" class="oe_inline"/>,
-                                <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline"/>
+                                <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline" options='{"no_open": true}'/>
                             </div>
                             <field name="email_from" widget="email"/>
                             <field name="function" />
@@ -189,7 +189,7 @@
                             -->
                         </group>
                         <group>
-                            <field name="user_id" />
+                            <field name="user_id" options='{"no_open": true}'/>
                             <field name="section_id"/>
                             <field name="type" invisible="1"/>
                         </group>
@@ -496,7 +496,7 @@
                         </group>
 
                         <group>
-                            <field name="user_id"/>
+                            <field name="user_id" options='{"no_open": true}'/>
                             <field name="section_id" colspan="1" widget="selection"/>
                         </group>
                         <group>
@@ -526,10 +526,10 @@
                                     <field name="street2"/>
                                     <div class="address_format">
                                         <field name="city" placeholder="City" style="width: 40%%"/>
-                                        <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                        <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%" options='{"no_open": true}'/>
                                         <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                     </div>
-                                    <field name="country_id" placeholder="Country"/>
+                                    <field name="country_id" placeholder="Country" options='{"no_open": true}'/>
                                 </div>
                             </group>
 
@@ -537,7 +537,7 @@
                                 <label for="contact_name" />
                                 <div>
                                     <field name="contact_name" class="oe_inline"/>
-                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline oe_no_button"/>
+                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline oe_no_button" options='{"no_open": true}'/>
                                 </div>
                                 <field name="function" />
                                 <field name="mobile"/>

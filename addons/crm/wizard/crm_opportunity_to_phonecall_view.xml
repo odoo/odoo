@@ -23,7 +23,7 @@
                             domain="[('object_id.model', '=', 'crm.phonecall')]"
                             groups="base.group_no_one"/>
                             <field name="phone"/>
-                            <field name="user_id" attrs="{'invisible': [('action','=','log')]}"/>
+                            <field name="user_id" attrs="{'invisible': [('action','=','log')]}" options='{"no_open": true}'/>
                             <field name="section_id" widget="selection" attrs="{'invisible': [('action','=','log')]}"/>
                         </group>
                     </group>

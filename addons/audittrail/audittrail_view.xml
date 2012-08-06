@@ -30,7 +30,7 @@
                         <field name="log_action"/>
                         <field name="log_workflow"/>
                         <separator string="Users (if User is not added then it will applicable for all users)"  colspan="4" />
-                        <field name="user_id" colspan="4" nolabel="1" />
+                        <field name="user_id" colspan="4" nolabel="1" options='{"no_open": true}'/>
                         <field name="action_id" colspan="4" readonly="1" groups="base.group_no_one"/>
                     </group>
                    </sheet>  
@@ -97,7 +97,7 @@
                  <sheet>
                     <group col="4">
                         <field name="timestamp" required="1" readonly="1"/>
-                        <field name="user_id" readonly="1"/>
+                        <field name="user_id" readonly="1" options='{"no_open": true}'/>
                         <field name="method" readonly="1"/>
                         <field name="name" readonly="1"/>
                         <field name="res_id" readonly="1"/>

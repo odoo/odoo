@@ -249,7 +249,7 @@
                             <group>
                                 <group>
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
-                                    <field name="user_id"/>
+                                    <field name="user_id" options='{"no_open": true}'/>
                                     <field name="name" invisible="1"/>
                                     <field name="payment_term" widget="selection"/>
                                 </group>
@@ -385,7 +385,7 @@
                             <group col="4">
                                 <group>
                                     <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
-                                    <field name="user_id" groups="base.group_user"/>
+                                    <field name="user_id" groups="base.group_user" options='{"no_open": true}'/>
                                     <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"/>
                                     <field name="period_id" domain="[('state', '=', 'draft')]"
                                         groups="account.group_account_manager"

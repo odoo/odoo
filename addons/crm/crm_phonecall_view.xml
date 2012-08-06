@@ -141,7 +141,7 @@
                   </div>
                  <group col="4">
                     <field name="date" />
-                    <field name="user_id" />
+                    <field name="user_id" options='{"no_open": true}'/>
                     <field name="duration" widget="float_time" />
                     <field name="section_id" colspan="1" widget="selection" />
                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
