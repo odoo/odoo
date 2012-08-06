@@ -7,6 +7,7 @@
             id="base.menu_purchase_root"
             groups="group_purchase_manager,group_purchase_user"
             sequence="40"/>
+
         <menuitem id="menu_procurement_management" name="Purchase"
             parent="base.menu_purchase_root" sequence="1" />
 
@@ -54,12 +55,12 @@
             action="base.action_partner_category_form" id="menu_partner_categories_in_form" name="Partner Categories"
             parent="purchase.menu_purchase_partner_cat" groups="base.group_no_one"/>
 
-    <!--supplier menu-->
+    <!--Supplier menu-->
     <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
         parent="menu_procurement_management"
         action="base.action_partner_supplier_form" sequence="15"/>
 
-          <!--Inventory control-->
+      <!--Inventory control-->
       <menuitem id="menu_procurement_management_inventory" name="Receive Products"
             parent="base.menu_purchase_root" sequence="4"/>
       <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_inventory"
@@ -80,11 +81,18 @@
         <field name="domain">[('type','=','in_invoice')]</field>
         <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-            <field name="help">
-                Use this menu to control the invoices to be received from your supplier.
-                OpenERP generates draft invoices from your purchase orders or receptions, according to your settings.
-                Once you receive a supplier invoice, you can match it with the draft invoice and validate it.
-            </field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a draft invoice.
+          </p><p>
+            Use this menu to control the invoices to be received from your
+            supplier. OpenERP generates draft invoices from your purchase
+            orders or receptions, according to your settings.
+          </p><p>
+            Once you receive a supplier invoice, you can match it with the
+            draft invoice and validate it.
+          </p>
+        </field>
     </record>
 
      <menuitem name="Based on Draft Invoices"
@@ -93,7 +101,7 @@
           parent="menu_procurement_management_invoice"
           sequence="13"/>
 
-      <!--product menu-->
+      <!-- Product menu-->
       <menuitem id="menu_procurement_management_product" name="Products"
           parent="base.menu_purchase_root" sequence="8"/>
 
@@ -140,7 +148,7 @@
             <field name="key2">client_action_multi</field>
         </record>
 
-       <record model="ir.ui.view" id="purchase_order_calendar">
+        <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>
             <field name="model">purchase.order</field>
             <field name="type">calendar</field>
@@ -245,7 +253,7 @@
                                     <field name="invoice_method"/>
                                     <field name="invoiced"/>
                                     <field name="fiscal_position"/>
-                    <!-- we do not need these fields anymore, the information is in open chatter -->
+                                    <!-- We do not need these fields anymore, the information is in open chatter -->
                                     <field name="validator" groups="base.group_no_one"/>
                                     <field name="date_approve" groups="base.group_no_one"/>
                                 </group>
@@ -256,7 +264,7 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                   <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -268,29 +276,23 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                 <group>
                     <field name="name" string="Reference"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" help="Purchase order which are in draft state"/>
                     <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]" help="Approved purchase order"/>
-                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase order which are in the exception state"/>
-                    <separator orientation="vertical"/>
+                    <separator/>
+                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Group By...">
-                    <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
-                    <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
-                </group>
-              </search>
+                    <group expand="0" string="Group By...">
+                        <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -300,34 +302,25 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                 <group>
                     <field name="name" string="Reference"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-mail-message-new"
-                        string="Inbox" help="Unread messages"
-                        name="needaction_pending"
-                        domain="[('needaction_pending','=',True)]"/>
-                    <separator orientation="vertical"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <separator/>
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" help="Purchase orders which are in draft state"/>
                     <filter icon="terp-check" name="approved" string="Purchase Orders" domain="[('state','not in',('draft','cancel'))]" help="Approved purchase orders"/>
-                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
-                    <separator orientation="vertical"/>
+                    <separator/>
+                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Group By...">
-                    <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
-                    <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
-                </group>
-              </search>
+                    <group expand="0" string="Group By...">
+                        <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -360,14 +353,17 @@
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
-            <field name="help">
-                Create a request for quotation when you want to buy products from a supplier.
-                You can also use this menu to review requests for quotation created automatically
-                (based on logistic rules, like minimum stock, MTO, etc.)
-                &lt;p&gt;
-                Once confirmed, a request for quotation becomes a purchase order.
-                In the Purchase Settings, you can select the way to control supplier invoicing:
-                based on the order, based on receptions, or manual.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a request for quotation.
+              </p><p>
+                The quotation contains the history of the discussion/negociation
+                you had with your supplier. Once confirmed, a request for
+                quotation is converted into a purchase order.
+              </p><p>
+                Most propositions of purchase orders are created automatically
+                by OpenERP based on inventory needs.
+              </p>
             </field>
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq"
@@ -381,7 +377,16 @@
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="context">{'search_default_approved': 1}</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
-            <field name="help">Use this menu to search within your purchase orders by references, supplier, products, etc. For each purchase order, you can track the products received, and control the supplier invoices.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that will be converted into a purchase order. 
+              </p><p>
+                Use this menu to search within your purchase orders by
+                references, supplier, products, etc. For each purchase order,
+                you can track the related discussion with the supplier, control
+                the products received and control the supplier invoices.
+              </p>
+            </field>
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management" sequence="6"/>
 
@@ -492,31 +497,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                    <group>
-                        <field name="order_id"/>
-                        <field name="product_id"/>
-                        <field name="partner_id" string="Supplier"/>
-                    </group>
-                    <newline/>
+                    <field name="order_id"/>
+                    <field name="product_id"/>
+                    <field name="partner_id" string="Supplier"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by' : 'partner_id'}" />
-                        <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
                     </group>
-               </search>
+                </search>
             </field>
         </record>
-
-        <act_window
-            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
-            id="act_res_partner_2_purchase_order"
-            name="RFQs and Purchases"
-            groups="purchase.group_purchase_user"
-            res_model="purchase.order"
-            src_model="res.partner"/>
 
         <act_window
             context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
@@ -535,10 +527,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="purchase_order_line_search"/>
-            <field name="help">
-                Here you can track all the lines of purchase orders where the invoicing is "Based on Purchase Order Lines",
-                and for which you have not received a supplier invoice yet.
-                You can generate a draft supplier invoice based on the lines from this list.
+            <field name="help" type="html">
+              <p>
+                Here you can track all the lines of purchase orders where the
+                invoicing is "Based on Purchase Order Lines", and for which you
+                have not received a supplier invoice yet. You can generate a
+                draft supplier invoice based on the lines from this list.
+              </p>
             </field>
         </record>
         <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">
@@ -559,9 +554,7 @@
             parent="menu_procurement_management_invoice"
             sequence="72"/>
 
-        <!--
-            Procurements
-        -->
+        <!-- Procurements -->
 
         <record id="view_procurement_form_inherit" model="ir.ui.view">
             <field name="name">procurement.order.form.inherit</field>
@@ -574,6 +567,5 @@
                 </xpath>
             </field>
         </record>
-
     </data>
 </openerp>

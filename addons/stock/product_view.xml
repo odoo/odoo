@@ -9,8 +9,8 @@
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <field name="pricelist_id" position="before">
-                    <field name="location_id" widget="selection" context="{'location': self}"/>
-                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
+                    <field name="location_id" context="{'location': self}"/>
+                    <field name="warehouse_id" context="{'warehouse': self}"/>
                 </field>
             </field>
         </record>
@@ -105,15 +105,15 @@
                 <group name="status" position="before" version="7.0">
                     <group string="Stock and Expected Variations">
                         <field name="qty_available"/>
-                        <field name="incoming_qty"/>
-                        <label for="virtual_available"/>
-                        <div>
+                        <field name="incoming_qty" groups="base.group_user"/>
+                        <label for="virtual_available" groups="base.group_user"/>
+                        <div groups="base.group_user">
                             <field name="virtual_available" class="oe_inline"/>
 
                             <button name="%(action_view_change_product_quantity)d" string="Update" attrs="{'invisible': [('type', '=', 'service')]}"
                                 type="action" icon="gtk-execute" groups="stock.group_stock_manager,stock.group_stock_user" class="oe_inline"/>
                         </div>
-                        <field name="outgoing_qty"/>
+                        <field name="outgoing_qty" groups="base.group_user"/>
                     </group>
                     <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
                         <field name="track_production" groups="stock.group_production_lot"/>
@@ -123,9 +123,9 @@
                 </group>
             </field>
         </record>
-        
+
         <record id="action_receive_move" model="ir.actions.act_window">
-            <field name="name">Receive Products</field>
+            <field name="name">Receptions</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -134,11 +134,19 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
-            <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a reception for this product. 
+              </p><p>
+                Here you will find the history of all receptions related to
+                this product, as well as all future receptions you are waiting
+                from your suppliers.
+              </p>
+            </field>
         </record>
-       
+
         <record id="action_deliver_move" model="ir.actions.act_window">
-            <field name="name">Receive Products</field>
+            <field name="name">Deliveries</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -147,7 +155,15 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
-            <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a delivery order for this product.
+              </p><p>
+                Here you will find the history of all past deliveries related to
+                this product, as well as all the products you must deliver to
+                customers.
+              </p>
+            </field>
         </record>
 
         <record model="ir.ui.view" id="product.product_kanban_view">
@@ -214,18 +230,6 @@
                 </group>
             </field>
         </record>
-
-<!--        <record id="view_product_valuation_form" model="ir.ui.view">
-            <field name="name">product.valuation.stock.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <field name="cost_method" position="after">
-                    <field name="valuation"/>
-                </field>
-            </field>
-        </record>-->
 
     </data>
 </openerp>
