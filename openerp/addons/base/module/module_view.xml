@@ -41,8 +41,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search modules">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Module"/>
-                    <field name="description" string="Keywords" filter_domain="['|', '|', ('description', 'ilike', self), ('summary', 'ilike', self), ('shortdesc', 'ilike', self)]"/>
+                    <field name="name" filter_domain="['|', '|', '|', ('description', 'ilike', self), ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
+                        'ilike', self)]"/>
                     <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
                     <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
                     <separator/>
@@ -188,7 +188,10 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_app':1}</field>
             <field name="search_view_id" ref="view_module_filter"/>
-            <field name="help">You can install new modules in order to activate new features, menu, reports or data in your OpenERP instance. To install some modules, click on the button "Install" from the form view and then click on "Start Upgrade".</field>
+            <field name="help" type="html">
+              <p><b>No module found!</b></p>
+              <p>You should try others search criteria.</p>
+            </field>
         </record>
         <menuitem id="menu_module_tree" parent="base.menu_management" name="Modules"
             sequence="1" action="open_module_tree"/>
