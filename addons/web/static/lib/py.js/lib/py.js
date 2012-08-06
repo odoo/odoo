@@ -433,7 +433,8 @@ var py = {};
             if (this._hash) {
                 return this._hash;
             }
-            return this._hash = hash_counter++;
+            // tagged counter, to avoid collisions with e.g. number hashes
+            return this._hash = '\0\0\0' + String(hash_counter++);
         },
         __eq__: function (other) {
             return (this === other) ? py.True : py.False;
@@ -597,6 +598,9 @@ var py = {};
         throw new Error('TypeError: __str__ returned non-string (type ' +
                         v.constructor.name + ')');
     }, py.object, {
+        __hash__: function () {
+            return '\1\0\1' + this._value;
+        },
         __eq__: function (other) {
             if (other instanceof py.str && this._value === other._value) {
                 return py.True;
@@ -654,11 +658,32 @@ var py = {};
         }
     });
     py.list = py.tuple;
-    py.dict = py.type(function dict() {
+    py.dict = py.type(function dict(d) {
         this._store = {};
+        for (var k in (d || {})) {
+            if (!d.hasOwnProperty(k)) { continue; }
+            var py_k = new py.str(k);
+            var val = PY_ensurepy(d[k]);
+            this._store[py_k.__hash__()] = [py_k, val];
+        }
     }, py.object, {
+        __getitem__: function (key) {
+            var h = key.__hash__();
+            if (!(h in this._store)) {
+                throw new Error("KeyError: '" + key.toJSON() + "'");
+            }
+            return this._store[h][1];
+        },
         __setitem__: function (key, value) {
             this._store[key.__hash__()] = [key, value];
+        },
+        get: function (args) {
+            var h = args[0].__hash__();
+            var def = args.length > 1 ? args[1] : py.None;
+            if (!(h in this._store)) {
+                return def;
+            }
+            return this._store[h][1];
         },
         toJSON: function () {
             var out = {};
@@ -700,6 +725,7 @@ var py = {};
     var PY_operators = {
         '==': ['eq', 'eq', function (a, b) { return a === b; }],
         '!=': ['ne', 'ne', function (a, b) { return a !== b; }],
+        '<>': ['ne', 'ne', function (a, b) { return a !== b; }],
         '<': ['lt', 'gt', function (a, b) {return a.constructor.name < b.constructor.name;}],
         '<=': ['le', 'ge', function (a, b) {return a.constructor.name <= b.constructor.name;}],
         '>': ['gt', 'lt', function (a, b) {return a.constructor.name > b.constructor.name;}],
@@ -782,7 +808,7 @@ var py = {};
             return b.__contains__(a);
         case 'not in':
             return b.__contains__(a) === py.True ? py.False : py.True;
-        case '==': case '!=':
+        case '==': case '!=': case '<>':
         case '<': case '<=':
         case '>': case '>=':
             return PY_op(a, b, operator);

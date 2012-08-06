@@ -117,6 +117,11 @@ describe('Comparisons', function () {
             expect(py.eval('foo != bar', {foo: 'qux', bar: 'quux'}))
                 .to.be(true);
         });
+        it('should accept deprecated form', function () {
+            expect(py.eval('1 <> 2')).to.be(true);
+            expect(py.eval('"foo" <> "foo"')).to.be(false);
+            expect(py.eval('"foo" <> "bar"')).to.be(true);
+        });
     });
     describe('rich comparisons', function () {
         it('should work with numbers', function () {
@@ -375,6 +380,29 @@ describe('numerical protocols', function () {
                 expect(py.eval('"foo" + "bar"')).to.be('foobar');
             });
         });
+    });
+});
+describe('dicts', function () {
+    it('should be possible to retrieve their value', function () {
+        var d = new py.dict({foo: 3, bar: 4, baz: 5});
+        expect(py.eval('d["foo"]', {d: d})).to.be(3);
+        expect(py.eval('d["baz"]', {d: d})).to.be(5);
+    });
+    it('should raise KeyError if a key is missing', function () {
+        var d = new py.dict();
+        expect(function () {
+            py.eval('d["foo"]', {d: d});
+        }).to.throwException(/^KeyError/);
+    });
+    it('should have a method to provide a default value', function () {
+        var d = new py.dict({foo: 3});
+        expect(py.eval('d.get("foo")', {d: d})).to.be(3);
+        expect(py.eval('d.get("bar")', {d: d})).to.be(null);
+        expect(py.eval('d.get("bar", 42)', {d: d})).to.be(42);
+
+        var e = new py.dict({foo: null});
+        expect(py.eval('d.get("foo")', {d: e})).to.be(null);
+        expect(py.eval('d.get("bar")', {d: e})).to.be(null);
     });
 });
 describe('Type converter', function () {
