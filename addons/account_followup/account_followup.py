@@ -76,31 +76,6 @@ class account_move_line(osv.osv):
 
 account_move_line()
 
-class account_move_partner_info(osv.osv):
-    _inherit = 'account.move.partner.info'
-    _columns = {
-                'followup_date': fields.date('Latest Follow-up'),
-                'max_followup_id':fields.many2one('account_followup.followup.line',
-                                    'Max Follow Up Level' )
-    }
-    
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'account_move_partner_info')
-        cr.execute("""
-          create or replace view account_move_partner_info as (
-                SELECT  p.id, p.id as partner_id, 
-                max(p.last_reconciliation_date) as last_reconciliation_date,
-                max(l.date) as latest_date, 
-                count(l.id)  as move_lines_count,
-                max(p.partner_move_count) as partner_move_count,
-                max(l.followup_date) as followup_date,
-                max(l.followup_line_id) as max_followup_id
-                FROM account_move_line as l INNER JOIN res_partner AS p ON (l.partner_id = p.id)
-                group by p.id
-                )
-        """)
-account_move_partner_info()
-
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {

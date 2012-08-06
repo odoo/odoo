@@ -22,5 +22,6 @@
 import account_followup
 import wizard
 import report
+import account_move_reconciliation
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

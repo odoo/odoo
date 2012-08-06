@@ -1087,7 +1087,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:reconcile_id > 0" string="Journal Items" editable="top" on_write="on_create_write" default_selection="get_selection_ids">
+                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" editable="top" on_write="on_create_write" default_selection="get_unreconcile_entry">
                     <field name="date"/>
                     <field name="period_id"  invisible="1"/>
                     <field name="move_id"/>
@@ -1589,7 +1589,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field eval="False" name="auto_search"/>
-            <field name="extended_form_view_id" ref="view_move_line_extended_form_view"/>
+            <field name="extended_form_view_id" ref="view_account_move_reconciliation_form_view"/>
             <field name="context">{'view_mode':True}</field>
         </record>
         
@@ -1599,7 +1599,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field eval="False" name="auto_search"/>
-            <field name="extended_form_view_id" ref="view_move_line_extended_form_view"/>
+            <field name="extended_form_view_id" ref="view_account_move_reconciliation_form_view"/>
             <field name="domain">[('partner_id.customer','=',True)]</field>
             <field name="context">{'view_mode':True}</field>
         </record>
@@ -1610,7 +1610,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field eval="False" name="auto_search"/>
-            <field name="extended_form_view_id" ref="view_move_line_extended_form_view"/>
+            <field name="extended_form_view_id" ref="view_account_move_reconciliation_form_view"/>
             <field name="domain">[('partner_id.supplier','=',True)]</field>
             <field name="context">{'view_mode':True}</field>
         </record>

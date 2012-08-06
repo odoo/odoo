@@ -50,8 +50,8 @@ class account_move_line(osv.osv):
 account_move_line();
 
 
-class account_move_partner_info(osv.osv):
-    _name = "account.move.partner.info"
+class account_move_reconciliation(osv.osv):
+    _name = "account.move.reconciliation"
     _description = "All partner info related account move line"
     _auto = False
     
@@ -72,7 +72,7 @@ class account_move_partner_info(osv.osv):
         return res_all
     
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        ids = super(account_move_partner_info, self).search(cr, uid, args, offset, limit, order, context, count)
+        ids = super(account_move_reconciliation, self).search(cr, uid, args, offset, limit, order, context, count)
         res = []
         for l in self.browse(cr, uid, ids, context=context):
             if (not  l.partner_move_count) or (l.move_lines_count >l.partner_move_count):
@@ -93,17 +93,17 @@ class account_move_partner_info(osv.osv):
             res_partner.write(cr, uid, [line.id] ,{'partner_move_count':line.move_lines_count})
             
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'account_move_partner_info')
+        tools.drop_view_if_exists(cr, 'account_move_reconciliation')
         cr.execute("""
-            create or replace view account_move_partner_info as (
+            CREATE or REPLACE VIEW account_move_reconciliation as (
                 SELECT  p.id, p.id as partner_id, 
-                max(p.last_reconciliation_date) as last_reconciliation_date,
-                max(l.date) as latest_date, 
-                count(l.id)  as move_lines_count,
-                max(p.partner_move_count) as partner_move_count    
+                MAX(p.last_reconciliation_date) as last_reconciliation_date,
+                MAX(l.date) as latest_date, 
+                COUNT(l.id)  as move_lines_count,
+                MAX(p.partner_move_count) as partner_move_count    
                 FROM account_move_line as l INNER JOIN res_partner AS p ON (l.partner_id = p.id)
-                group by p.id
+                GROUP by p.id
                 )
         """)
-account_move_partner_info()
+account_move_reconciliation()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

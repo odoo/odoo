@@ -55,7 +55,7 @@ instance.account.extend_viewmanager = instance.web.ViewManagerAction.extend({
     init: function(parent, action) {
         this._super.apply(this, arguments);
         //Fix me: pass hard coded model name, find the way to fetch it from server
-        this.dataset_form = new instance.web.DataSetSearch(this, 'account.move.partner.info', action.context, action.domain);
+        this.dataset_form = new instance.web.DataSetSearch(this, 'account.move.reconciliation', action.context, action.domain);
     },
     start : function(){
         this._super()

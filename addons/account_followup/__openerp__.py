@@ -58,6 +58,7 @@ entry, you can do from in the menu:
         'report/account_followup_report.xml',
         'account_followup_demo.xml',   # Defined by default
         'account_followup_view.xml',
+        'account_move_reconciliation.xml',
         'account_followup_data.xml',
     ],
     'demo_xml': [],
