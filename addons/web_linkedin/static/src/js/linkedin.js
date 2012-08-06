@@ -88,25 +88,30 @@ openerp.web_linkedin = function(instance) {
             if (entity.__type === "company") {
                 to_change.is_company = true;
                 to_change.name = entity.name;
+                to_change.photo = false;
                 if (entity.logoUrl) {
                     defs.push(self.rpc('/web_linkedin/binary/url2binary',
                                        {'url': entity.logoUrl}).pipe(function(data){
                         to_change.photo = data;
                     }));
                 }
+                to_change.website = entity.websiteUrl;
+                to_change.phone = false;
+                _.each(entity.locations.values || [], function(el) {
+                    to_change.phone = el.contactInfo.phone1;
+                });
                 /* TODO
                 to_change.linkedinUrl = _.str.sprintf("http://www.linkedin.com/company/%d", entity.id);
                 */
             } else { // people
                 to_change.is_company = false;
                 to_change.name = entity.formattedName;
+                to_change.photo = false;
                 if (entity.pictureUrl) {
                     defs.push(self.rpc('/web_linkedin/binary/url2binary',
                                        {'url': entity.pictureUrl}).pipe(function(data){
                         to_change.photo = data;
                     }));
-                } else {
-                    to_change.photo = false;
                 }
                 to_change.mobile = false;
                 to_change.phone = false;
@@ -150,7 +155,8 @@ openerp.web_linkedin = function(instance) {
             cdef = $.Deferred();
             pdef = $.Deferred();
             IN.API.Raw(_.str.sprintf(
-                    "company-search:(companies:(id,name,logo-url))?keywords=%s&count=%d",
+                    "company-search:(companies:" +
+                    "(id,name,logo-url,description,industry,website-url,locations))?keywords=%s&count=%d",
                     encodeURI(this.text), this.limit)).result(function (result) {
                 cdef.resolve(result);
             });
