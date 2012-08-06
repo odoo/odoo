@@ -8,11 +8,14 @@
  'installable': True,
  'depends': ['auth_anonymous', 'base_setup'],
  'data': [
-    'auth_signup.xml',
-    'res_config.xml',
+     'auth_signup.xml',
+     'res_config.xml',
  ],
  'js': [
-    'static/src/js/auth_signup.js',
+     'static/src/js/auth_signup.js',
+ ],
+ 'css': [
+     'static/src/css/auth_signup.css',
  ],
  'qweb': [
      'static/src/xml/auth_signup.xml',

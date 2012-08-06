@@ -54,4 +54,3 @@ class signup_signup(osv.TransientModel):
         if pw != cpw:
             return {'value': {'state': 'missmatch'}}
         return {'value': {'state': 'draft'}}
-
