@@ -530,7 +530,7 @@ class hr_job(osv.osv):
                                                                          'alias_force_id': job_data['id']},
                                                       model_name=self._name)
             hr_job.write(cr, SUPERUSER_ID, job_data['id'], {'alias_id': alias_id})
-            _logger.info('Mail alias created for hr.job %s (uid %s)', job_data['login'], job_data['id'])
+            _logger.info('Mail alias created for hr.job %s (uid %s)', job_data['name'], job_data['id'])
 
         # Finally attempt to reinstate the missing constraint
         try:
