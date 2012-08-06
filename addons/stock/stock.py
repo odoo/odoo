@@ -1547,6 +1547,7 @@ class stock_move(osv.osv):
         cr.execute('select id from stock_tracking where create_uid=%s order by id desc limit 1', (uid,))
         res = cr.fetchone()
         return (res and res[0]) or False
+
     _name = "stock.move"
     _description = "Stock Move"
     _order = 'date_expected desc, id'

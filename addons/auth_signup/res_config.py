@@ -4,7 +4,7 @@ class base_config_settings(osv.TransientModel):
     _inherit = 'base.config.settings'
 
     _columns = {
-        'auth_signup_template_user_id': fields.many2one('res.users', 'Template user for signup')
+        'auth_signup_template_user_id': fields.many2one('res.users', 'Template user for new users created through signup')
     }
 
     def get_default_signup(self, cr, uid, fields, context=None):

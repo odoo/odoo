@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+
         <record id="signup_form_view" model="ir.ui.view">
             <field name="name">auth.signup.form</field>
             <field name="model">auth.signup</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Signup" version="7.0">
-                    <field name="state" invisible="1"/> 
+                    <field name="state" invisible="1"/>
                     <group colspan="4" states="draft,missmatch">
                         <field name="name" required="1"/>
                         <field name="email" required="1"/>
