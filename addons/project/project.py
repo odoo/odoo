@@ -155,7 +155,7 @@ class project(osv.osv):
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
-                raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks.  You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
+                raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
 
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
