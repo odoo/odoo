@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-Today OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2012-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,8 +25,8 @@ class project_configuration(osv.TransientModel):
     _inherit = 'base.config.settings'
 
     _columns = {
-        'alias_domain' : fields.char('Alias Domain', size=None,
-                                     help="If you have setup a catch-all mail domain redirected to "
+        'alias_domain' : fields.char('Alias Domain',
+                                     help="If you have setup a catch-all email domain redirected to "
                                           "the OpenERP server, enter the domain name here."),
     }
 

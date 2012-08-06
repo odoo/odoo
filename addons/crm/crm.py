@@ -164,7 +164,7 @@ class crm_case_section(osv.osv):
     def create(self, cr, uid, vals, context=None):
         alias_pool = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            name = vals.get('alias_name') or vals['name']
+            name = vals.pop('alias_name', None) or vals['name']
             alias_id = alias_pool.create_unique_alias(cr, uid, 
                     {'alias_name': name},
                     model_name="crm.lead",

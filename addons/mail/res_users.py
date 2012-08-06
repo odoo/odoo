@@ -73,13 +73,13 @@ class res_users(osv.osv):
         mail_alias = registry.get('mail.alias')
         res_users = registry.get('res.users')
         users_no_alias = res_users.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
-        # User read() not browse(), to avoid prefetching uninitialized inherited fields
+        # Use read() not browse(), to avoid prefetching uninitialized inherited fields
         for user_data in res_users.read(cr, SUPERUSER_ID, users_no_alias, ['login']):
             alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, {'alias_name': user_data['login'],
-                                                                         'alias_model_id': self._name,
-                                                                         'alias_force_id': user_data['id']})
+                                                                         'alias_force_id': user_data['id']},
+                                                      model_name=self._name)
             res_users.write(cr, SUPERUSER_ID, user_data['id'], {'alias_id': alias_id})
-            _logger.info('Mail alias created for user_data %s (uid %s)', user_data['login'], user_data['id'])
+            _logger.info('Mail alias created for user %s (uid %s)', user_data['login'], user_data['id'])
 
         # Finally attempt to reinstate the missing constraint
         try:

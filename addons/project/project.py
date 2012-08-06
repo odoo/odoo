@@ -58,8 +58,8 @@ def short_name(name):
            but distinctive"""
         if not name: return name
         # keep 7 chars + end of the last word
-        hardcut_tokens = name[:7].split()
-        return ' '.join(name.split()[:len(hardcut_tokens)])
+        keep_words = name[:7].strip().split()
+        return ' '.join(name.split()[:len(keep_words)])
 
 class project(osv.osv):
     _name = "project.project"

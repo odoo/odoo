@@ -19,15 +19,18 @@
 #
 ##############################################################################
 
-from base_status.base_stage import base_stage
+import logging
 import time
-from datetime import datetime, timedelta
-from lxml import etree
-from osv import fields, osv
+from datetime import datetime
+
 import tools
-import collections
-import binascii
+from osv import fields, osv
+from openerp.modules.registry import RegistryManager
+from openerp import SUPERUSER_ID
+from base_status.base_stage import base_stage
 from tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
@@ -511,14 +514,34 @@ class hr_job(osv.osv):
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
-                                    help="The email address associated with this job position. New emails received will automatically "
-                                         "create new applicants for this job."),
+                                    help="Email alias for this job position. New emails will automatically "
+                                         "create new applicants for this job position."),
     }
+
+    def init(self, cr):
+        # Installation hook to create aliases for all jobs, right after _auto_init
+        registry = RegistryManager.get(cr.dbname)
+        mail_alias = registry.get('mail.alias')
+        hr_job = registry.get('hr.job')
+        jobs_no_alias = hr_job.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
+        # Use read() not browse(), to avoid prefetching uninitialized inherited fields
+        for job_data in hr_job.read(cr, SUPERUSER_ID, jobs_no_alias, ['name']):
+            alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, {'alias_name': 'job_'+job_data['name'],
+                                                                         'alias_force_id': job_data['id']},
+                                                      model_name=self._name)
+            hr_job.write(cr, SUPERUSER_ID, job_data['id'], {'alias_id': alias_id})
+            _logger.info('Mail alias created for hr.job %s (uid %s)', job_data['login'], job_data['id'])
+
+        # Finally attempt to reinstate the missing constraint
+        try:
+            cr.execute('ALTER TABLE hr_job ALTER COLUMN alias_id SET NOT NULL')
+        except Exception:
+            pass
     
     def create(self, cr, uid, vals, context=None):
         alias_pool = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            name = vals.get('alias_name') or vals['name']
+            name = vals.pop('alias_name', None) or vals['name']
             alias_id = alias_pool.create_unique_alias(cr, uid, 
                           {'alias_name': "job_"+name},
                           model_name="hr.applicant",
