@@ -93,7 +93,7 @@ openerp.web_linkedin = function(instance) {
                         to_change.photo = data;
                     }));
                 }
-                /*
+                /* TODO
                 to_change.linkedinUrl = _.str.sprintf("http://www.linkedin.com/company/%d", entity.id);
                 */
             } else { // people
@@ -104,7 +104,7 @@ openerp.web_linkedin = function(instance) {
                         to_change.photo = data;
                     }));
                 }
-                /*
+                /* TODO
                 to_change.linkedinUrl = entity.publicProfileUrl;
                 */
             }
