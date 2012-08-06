@@ -3481,6 +3481,16 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         // the current row *anyway*, then create a new one/edit the next one)
         this.__ignore_blur = true;
         this._super.apply(this, arguments);
+    },
+    do_delete: function (ids) {
+        // wheeee
+        var confirm = window.confirm;
+        window.confirm = function () { return true; };
+        try {
+            return this._super(ids);
+        } finally {
+            window.confirm = confirm;
+        }
     }
 });
 instance.web.form.One2ManyList = instance.web.ListView.List.extend({
