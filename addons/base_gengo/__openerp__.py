@@ -31,7 +31,10 @@ Automated Translations through Gengo API
     'init_xml': [],
     'update_xml': [
         'ir_translation.xml',
-        'res_company_view.xml'
+        'res_company_view.xml',
+        'res_lang_view.xml',
+        'wizard/gengo_response_scheduler.xml',
+        'wizard/alert_message_gengo.xml',
            ],
     'demo_xml': [],
     'test': [],

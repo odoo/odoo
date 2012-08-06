@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -11,7 +11,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
@@ -19,20 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+import gengo_update_translation
+import wrap_object
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
-class ir_translation(osv.Model):
-    _name = "ir.translation"
-    _description="Translation"
-    _inherit="ir.translation"
-    _columns = {
-        'gengo_comment':fields.text("Comments"),
-        'gengo_translation':fields.boolean("Translation", help='This term has to be translated by Gengo automatically'),
-        'gengo_control':fields.boolean('Active'),
-        'job_id':fields.char('Gengo Job Id',size=32),
-    }
-        
-    _defaults = {
-        'gengo_control':False,
-    }
 

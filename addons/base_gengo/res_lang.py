@@ -11,7 +11,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
@@ -21,18 +21,12 @@
 
 from osv import fields,osv
 
-class ir_translation(osv.Model):
-    _name = "ir.translation"
-    _description="Translation"
-    _inherit="ir.translation"
-    _columns = {
-        'gengo_comment':fields.text("Comments"),
-        'gengo_translation':fields.boolean("Translation", help='This term has to be translated by Gengo automatically'),
-        'gengo_control':fields.boolean('Active'),
-        'job_id':fields.char('Gengo Job Id',size=32),
-    }
-        
-    _defaults = {
-        'gengo_control':False,
-    }
+class res_company(osv.Model):
+    _name = "res.lang"
+    _description = "Languages"
+    _inherit = "res.lang"
 
+    _columns = {
+        'gengo_sync':fields.boolean('Active', help='Synchronize Translation Periodically')
+    }
+    
