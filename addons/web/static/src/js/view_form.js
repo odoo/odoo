@@ -3501,25 +3501,26 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
         var $cell = $('<td>', {
             colspan: columns,
             'class': 'oe_form_field_one2many_list_row_add'
-        }).text(_t("Add a row"))
-            .mousedown(function () {
-                // FIXME: needs to be an official API somehow
-                if (self.view.editor.is_editing()) {
-                    self.view.__ignore_blur = true;
-                }
-            })
-            .click(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                // FIXME: there should also be an API for that one
-                if (self.view.editor.form.__blur_timeout) {
-                    clearTimeout(self.view.editor.form.__blur_timeout);
-                    self.view.editor.form.__blur_timeout = false;
-                }
-                self.view.ensure_saved().then(function () {
-                    self.view.do_add_record();
-                });
-            });
+        }).append(
+            $('<a>', {href: '#'}).text(_t("Add a row"))
+                .mousedown(function () {
+                    // FIXME: needs to be an official API somehow
+                    if (self.view.editor.is_editing()) {
+                        self.view.__ignore_blur = true;
+                    }
+                })
+                .click(function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // FIXME: there should also be an API for that one
+                    if (self.view.editor.form.__blur_timeout) {
+                        clearTimeout(self.view.editor.form.__blur_timeout);
+                        self.view.editor.form.__blur_timeout = false;
+                    }
+                    self.view.ensure_saved().then(function () {
+                        self.view.do_add_record();
+                    });
+                }));
 
         var $padding = this.$current.find('tr:not([data-id]):first');
         var $newrow = $('<tr>').append($cell);
