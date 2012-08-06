@@ -177,7 +177,18 @@
             <field name="view_id" eval="False"/>
             <field name="context">{'search_default_my_timesheet':1}</field>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
-            <field name="help">Check your timesheets for a specific period. You can also encode time spent on a project (i.e. an analytic account) thus generating costs in the analytic account concerned.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to go to your timesheet. 
+              </p><p>
+                You must record timesheets every day and confirm at the end
+                of the week. Once the timesheet is confirmed, it his sent to
+                the manager for validation.
+              </p><p>
+                Timesheets can also be invoiced to customers, depending on the
+                configuration of the project.
+              </p>
+            </field>
         </record>
 
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"

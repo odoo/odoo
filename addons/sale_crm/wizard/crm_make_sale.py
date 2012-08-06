@@ -143,7 +143,7 @@ class crm_make_sale(osv.osv_memory):
     _columns = {
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
         'partner_id': fields.many2one('res.partner', 'Customer', required=True, domain=[('customer','=',True)]),
-        'close': fields.boolean('Close Opportunity', help='Check this to close the opportunity after having created the sale order.'),
+        'close': fields.boolean('Mark Won', help='Check this to close the opportunity after having created the sale order.'),
     }
     _defaults = {
         'shop_id': _get_shop_id,

@@ -110,17 +110,27 @@
 
 <!-- Action Rule Action -->
 
-           <record id="base_action_rule_act" model="ir.actions.act_window">
+        <record id="base_action_rule_act" model="ir.actions.act_window">
             <field name="name">Automated Actions</field>
             <field name="res_model">base.action.rule</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_base_action_rule_tree"/>
-            <field name="help">Use automated actions to automatically trigger actions for various screens. Example: a lead created by a specific user may be automatically set to a specific sales team, or an opportunity which still has status pending after 14 days might trigger an automatic reminder email.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to setup a new automated action rule. 
+              </p><p>
+                Use automated actions to automatically trigger actions for
+                various screens. Example: a lead created by a specific user may
+                be automatically set to a specific sales team, or an
+                opportunity which still has status pending after 14 days might
+                trigger an automatic reminder email.
+              </p>
+            </field>
         </record>
 
-           <menuitem id="menu_base_action_rule_form"
-               parent="base.menu_base_action_rule_admin" action="base_action_rule_act" sequence="1"/>
+        <menuitem id="menu_base_action_rule_form"
+            parent="base.menu_base_action_rule_admin" action="base_action_rule_act" sequence="1"/>
 
 
     </data>

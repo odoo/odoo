@@ -69,7 +69,14 @@
             <field name="name">Versions</field>
             <field name="res_model">project.issue.version</field>
             <field name="view_type">form</field>
-            <field name="help">You can use the issues tracker in OpenERP to handle bugs in the software development project, to handle claims in after-sales services, etc. Define here the different versions of your products on which you can work on issues.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new version.
+              </p><p>
+                Define here the different versions of your products on which
+                you can work on issues.
+              </p>
+            </field>
         </record>
         <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" groups="base.group_no_one"/>
 
