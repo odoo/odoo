@@ -56,14 +56,14 @@ class mysocket:
         while totalsent < size:
             sent = self.sock.send(msg[totalsent:])
             if sent == 0:
-                raise RuntimeError, "Socket connection broken!"
+                raise RuntimeError, "Socket connection broken."
             totalsent = totalsent + sent
     def myreceive(self):
         buf=''
         while len(buf) < 8:
             chunk = self.sock.recv(8 - len(buf))
             if chunk == '':
-                raise RuntimeError, "Socket connection broken!"
+                raise RuntimeError, "Socket connection broken."
             buf += chunk
         size = int(buf)
         buf = self.sock.recv(1)
@@ -75,7 +75,7 @@ class mysocket:
         while len(msg) < size:
             chunk = self.sock.recv(size-len(msg))
             if chunk == '':
-                raise RuntimeError, "Socket connection broken!"
+                raise RuntimeError, "Socket connection broken."
             msg = msg + chunk
         msgio = cStringIO.StringIO(msg)
         unpickler = cPickle.Unpickler(msgio)
@@ -88,8 +88,6 @@ class mysocket:
             raise res[0]
         else:
             return res[0]
-
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -3,31 +3,31 @@
 # Portions of this file are under the following copyright and license:
 #
 #
-#   Copyright (c) 2003-2004 Danny Brewer 
-#   d29583@groovegarden.com 
-# 
-#   This library is free software; you can redistribute it and/or 
-#   modify it under the terms of the GNU Lesser General Public 
-#   License as published by the Free Software Foundation; either 
-#   version 2.1 of the License, or (at your option) any later version. 
-# 
-#   This library is distributed in the hope that it will be useful, 
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of 
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
-#   Lesser General Public License for more details. 
-# 
-#   You should have received a copy of the GNU Lesser General Public 
-#   License along with this library; if not, write to the Free Software 
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA 
-# 
-#   See:  http://www.gnu.org/licenses/lgpl.html 
+#   Copyright (c) 2003-2004 Danny Brewer
+#   d29583@groovegarden.com
 #
-# 
+#   This library is free software; you can redistribute it and/or
+#   modify it under the terms of the GNU Lesser General Public
+#   License as published by the Free Software Foundation; either
+#   version 2.1 of the License, or (at your option) any later version.
+#
+#   This library is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#   Lesser General Public License for more details.
+#
+#   You should have received a copy of the GNU Lesser General Public
+#   License along with this library; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+#   See:  http://www.gnu.org/licenses/lgpl.html
+#
+#
 # and other portions are under the following copyright and license:
 #
 #
 #    OpenERP, Open Source Management Solution>..
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>). 
+#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -64,7 +64,6 @@ if __name__<>'package':
     database="test"
     uid = 3
 
-#
 class ModifyExistingReport(unohelper.Base, XJobExecutor):
     def __init__(self,ctx):
         self.ctx     = ctx
@@ -167,11 +166,11 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
                 if oDoc2.hasLocation() and not oDoc2.isReadonly():
                     oDoc2.store()
 
-            ErrorDialog("Download is Completed.","Your file has been placed here :\n ."+ fp_name,"Download Message !")
+            ErrorDialog("Download is completed.","Your file has been placed here :\n ."+ fp_name,"Download Message !")
             obj=Logger()
             obj.log_write('Modify Existing Report',LOG_INFO, ':successful download report  %s  using database %s' % (self.report_with_id[selectedItemPos][2], database))
         except Exception, e:
-            ErrorDialog("Report has not been downloaded.", "Report: %s\nDetails: %s" % ( fp_name, str(e) ),"Download Message !")
+            ErrorDialog("The report could not be downloaded.", "Report: %s\nDetails: %s" % ( fp_name, str(e) ),"Download Message !")
             import traceback,sys
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ModifyExistingReport', LOG_ERROR, info)
@@ -193,15 +192,15 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
          str_value='ir.actions.report.xml,'+str(id)
          ids = self.sock.execute(database, uid, self.password, 'ir.values' ,  'search',[('value','=',str_value)])
          if ids:
-              rec = self.sock.execute(database, uid, self.password, 'ir.values', 'unlink', ids,)
+            rec = self.sock.execute(database, uid, self.password, 'ir.values', 'unlink', ids,)
          else :
             pass
          if temp:
-              ErrorDialog("Report","Report has been Delete:\n ."+name,"Message !")
-              self.logobj.log_write('Delete Report',LOG_INFO, ':successful delete report  %s  using database %s' % (name, database))
+            ErrorDialog("Report", "The report could not be deleted:\n"+name+".", "Message !")
+            self.logobj.log_write('Delete Report', LOG_INFO, ': report %s successfully deleted using database %s.' % (name, database))
 
          else:
-             ErrorDialog("Report","Report has not Delete:\n ."+name," Message !")
+            ErrorDialog("Report", "The report could not be deleted:\n"+name+".", "Message !")
          self.win.endExecute()
 
 

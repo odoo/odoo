@@ -3,31 +3,31 @@
 # Portions of this file are under the following copyright and license:
 #
 #
-#   Copyright (c) 2003-2004 Danny Brewer 
-#   d29583@groovegarden.com 
-# 
-#   This library is free software; you can redistribute it and/or 
-#   modify it under the terms of the GNU Lesser General Public 
-#   License as published by the Free Software Foundation; either 
-#   version 2.1 of the License, or (at your option) any later version. 
-# 
-#   This library is distributed in the hope that it will be useful, 
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of 
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
-#   Lesser General Public License for more details. 
-# 
-#   You should have received a copy of the GNU Lesser General Public 
-#   License along with this library; if not, write to the Free Software 
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA 
-# 
-#   See:  http://www.gnu.org/licenses/lgpl.html 
+#   Copyright (c) 2003-2004 Danny Brewer
+#   d29583@groovegarden.com
 #
-# 
+#   This library is free software; you can redistribute it and/or
+#   modify it under the terms of the GNU Lesser General Public
+#   License as published by the Free Software Foundation; either
+#   version 2.1 of the License, or (at your option) any later version.
+#
+#   This library is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#   Lesser General Public License for more details.
+#
+#   You should have received a copy of the GNU Lesser General Public
+#   License along with this library; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+#   See:  http://www.gnu.org/licenses/lgpl.html
+#
+#
 # and other portions are under the following copyright and license:
 #
 #
 #    OpenERP, Open Source Management Solution>..
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>). 
+#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -100,8 +100,7 @@ class modify(unohelper.Base, XJobExecutor ):
 		    RepeatIn( start_group1, group2, stop_group1, item, True )
             else:
                 ErrorDialog(
-		    "Please place your cursor at begaining of field \n"
-		    "which you want to modify.",""
+            "Please place your cursor at beginning of field that you want to modify.",""
 		)
 
         else:

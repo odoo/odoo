@@ -48,18 +48,18 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
     def todate(date):
         val = parser.parse(''.join((re.compile('\d')).findall(date)))
         return val
-    
+
     if not startdate:
         startdate = datetime.now()
-        
+
     if not exdate:
         exdate = []
-        
+
     rset1 = rrule.rrulestr(str(rrulestring), dtstart=startdate, forceset=True)
     for date in exdate:
         datetime_obj = todate(date)
         rset1._exdate.append(datetime_obj)
-    
+
     if exrule:
         rset1.exrule(rrule.rrulestr(str(exrule), dtstart=startdate))
 
@@ -413,7 +413,7 @@ property or property parameter."),
         cal = vobject.iCalendar()
         event = cal.add('vevent')
         if not event_obj.date_deadline or not event_obj.date:
-            raise osv.except_osv(_('Warning !'),_("First specified the date for Invitation."))
+            raise osv.except_osv(_('Warning !'),_("First you have to specify the date of the invitation."))
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
         event.add('dtend').value = ics_datetime(event_obj.date_deadline)
@@ -995,11 +995,11 @@ class calendar_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: dictionary of rrule value.
         """
-        
+
         result = {}
         if not isinstance(ids, list):
             ids = [ids]
-            
+
         for datas in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
             event = datas['id']
             if datas.get('interval', 0) < 0:
@@ -1092,7 +1092,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
          true, it will allow you to hide the event alarm information without removing it."),
         'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),
     }
-    
+
     def default_organizer(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
         user = user_pool.browse(cr, uid, uid, context=context)
@@ -1189,23 +1189,23 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
                 if byday:
                     return ';BYDAY=' + ','.join(byday)
-            return ''  
-        
+            return ''
+
         def get_month_string(freq, datas):
             if freq == 'monthly':
                 if datas.get('select1')=='date' and (datas.get('day') < 1 or datas.get('day') > 31):
-                    raise osv.except_osv(_('Error!'), ("Please select proper Day of month."))
-                
+                    raise osv.except_osv(_('Error!'), ("Please select a proper day of the month."))
+
                 if datas.get('select1')=='day':
                     return ';BYDAY=' + datas.get('byday') + datas.get('week_list')
                 elif datas.get('select1')=='date':
                     return ';BYMONTHDAY=' + str(datas.get('day'))
             return ''
-        
+
         def get_end_date(datas):
             if datas.get('end_date'):
                 datas['end_date_new'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + 'T235959Z'
-            
+
             return (datas.get('end_type') == 'count' and (';COUNT=' + str(datas.get('count'))) or '') +\
                              ((datas.get('end_date_new') and datas.get('end_type') == 'end_date' and (';UNTIL=' + datas.get('end_date_new'))) or '')
 
@@ -1216,32 +1216,32 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
 
         return 'FREQ=' + freq.upper() + get_week_string(freq, datas) + interval_srting + get_end_date(datas) + get_month_string(freq, datas)
-    
+
     def _get_empty_rrule_data(self):
         return  {
             'byday' : False,
             'recurrency' : False,
-            'end_date' : False, 
-            'rrule_type' : False, 
-            'select1' : False, 
-            'interval' : 0, 
-            'count' : False, 
-            'end_type' : False, 
-            'mo' : False, 
-            'tu' : False, 
-            'we' : False, 
-            'th' : False, 
-            'fr' : False, 
-            'sa' : False, 
-            'su' : False, 
-            'exrule' : False, 
-            'day' : False, 
+            'end_date' : False,
+            'rrule_type' : False,
+            'select1' : False,
+            'interval' : 0,
+            'count' : False,
+            'end_type' : False,
+            'mo' : False,
+            'tu' : False,
+            'we' : False,
+            'th' : False,
+            'fr' : False,
+            'sa' : False,
+            'su' : False,
+            'exrule' : False,
+            'day' : False,
             'week_list' : False
         }
 
     #def _write_rrule(self, cr, uid, ids, field_value, rule_date=False, context=None):
     #    data = self._get_empty_rrule_data()
-    #    
+    #
     #    if field_value:
     #        data['recurrency'] = True
     #        for event in self.browse(cr, uid, ids, context=context):
@@ -1250,16 +1250,16 @@ rule or repeating pattern of time to exclude from the recurring rule."),
     #            data.update(update_data)
     #            #parse_rrule
     #            self.write(cr, uid, event.id, data, context=context)
-        
+
 
     def _parse_rrule(self, rule, data, date_start):
         day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         rrule_type = ['yearly', 'monthly', 'weekly', 'daily']
         r = rrule.rrulestr(rule, dtstart=datetime.strptime(date_start, "%Y-%m-%d %H:%M:%S"))
-        
+
         if r._freq > 0 and r._freq < 4:
             data['rrule_type'] = rrule_type[r._freq]
-            
+
         data['count'] = r._count
         data['interval'] = r._interval
         data['end_date'] = r._until and r._until.strftime("%Y-%m-%d %H:%M:%S")
@@ -1270,36 +1270,36 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     data[day_list[i]] = True
             data['rrule_type'] = 'weekly'
         #repeat monthly bynweekday ((weekday, weeknumber), )
-        if r._bynweekday: 
+        if r._bynweekday:
             data['week_list'] = day_list[r._bynweekday[0][0]].upper()
             data['byday'] = r._bynweekday[0][1]
             data['select1'] = 'day'
-            data['rrule_type'] = 'monthly' 
-           
+            data['rrule_type'] = 'monthly'
+
         if r._bymonthday:
             data['day'] = r._bymonthday[0]
             data['select1'] = 'date'
             data['rrule_type'] = 'monthly'
-            
+
         #yearly but for openerp it's monthly, take same information as monthly but interval is 12 times
         if r._bymonth:
             data['interval'] = data['interval'] * 12
-            
+
         #FIXEME handle forever case
-        #end of recurrence    
+        #end of recurrence
         #in case of repeat for ever that we do not support right now
         if not (data.get('count') or data.get('end_date')):
             data['count'] = 100
         if data.get('count'):
             data['end_type'] = 'count'
         else:
-            data['end_type'] = 'end_date'  
-        return data  
+            data['end_type'] = 'end_date'
+        return data
 
     def remove_virtual_id(self, ids):
         if isinstance(ids, (str, int, long)):
             return base_calendar_id2real_id(ids)
-            
+
         if isinstance(ids, (list, tuple)):
             res = []
             for id in ids:
@@ -1345,7 +1345,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
     def need_to_update(self, event_id, vals):
         split_id = str(event_id).split("-")
         if len(split_id) < 2:
-            return False 
+            return False
         else:
             date_start = vals.get('date', '')
             try:
@@ -1409,7 +1409,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         if not context:
             context = {}
-            
+
         if 'date' in groupby:
             raise osv.except_osv(_('Warning !'), _('Group by date is not supported, use the calendar view instead.'))
         virtual_id = context.get('virtual_id', True)
@@ -1479,7 +1479,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}
-            
+
         res = super(calendar_event, self).copy(cr, uid, base_calendar_id2real_id(id), default, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
