@@ -81,6 +81,7 @@ class crm_phonecall(base_state, osv.osv):
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'state':  _get_default_state,
         'user_id': lambda self,cr,uid,ctx: uid,
+        'active': 1
     }
 
     def create(self, cr, uid, vals, context=None):
