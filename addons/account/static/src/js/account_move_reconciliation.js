@@ -155,27 +155,6 @@ instance.account.btn_extend = instance.web.form.WidgetButton.extend({
        viewmanager = this.view.getParent().getParent()
        viewmanager.inner_widget.list_view.controller.reload_content();
     },
-    on_confirmed: function() {
-        var self = this;
-
-        var context = this.node.attrs.context;
-        if (context && context.__ref) {
-            context = new instance.web.CompoundContext(context);
-            context.set_eval_context(this._build_eval_context());
-        }
-
-        return this.view.do_execute_action(
-            _.extend({}, this.node.attrs, {context: context}),
-            this.view.dataset, this.view.datarecord.id, function () {
-                $.when(self.view.dataset.read_slice()).then(function() {
-                     if (!_.isEmpty(self.view.dataset.ids)){
-                        self.view.reload();
-                        //reload list view
-                        self.view.on_pager_action()
-                     }
-                })
-            });
-    },
 })
 
 instance.account.list_button = instance.web.form.WidgetButton.extend({
@@ -195,15 +174,15 @@ instance.account.list_button = instance.web.form.WidgetButton.extend({
         self.rpc("/web/action/load", {
             action_id: py.eval(this.node.attrs.name),
             context: additional_context
-        }, function(result) {
-            result.result.context = _.extend(result.result.context || {},
-                additional_context);
-            result.result.flags = result.result.flags || {};
-            result.result.flags.new_window = true;
-            self.do_action(result.result, function () {
-                // reload view
-                list_view.reload();
-                self.getParent().reload()
+            }, function(result) {
+                result.result.context = _.extend(result.result.context || {},
+                    additional_context);
+                result.result.flags = result.result.flags || {};
+                result.result.flags.new_window = true;
+                self.do_action(result.result, function () {
+                    // reload view
+                    list_view.reload();
+                    self.getParent().reload()
             });
         });
    }
