@@ -1745,13 +1745,6 @@ class stock_move(osv.osv):
         'date_expected': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
-    def create(self, cr, uid, vals, context=None):
-        # TODO
-        # the create_date is passed in the vals dict, and the ORM has a problem with that !
-        # make a real patch and remove this workaround
-        vals.pop('create_date', False)
-        return super(stock_move, self).create(cr, uid, vals, context=context)
-
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]

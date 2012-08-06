@@ -423,5 +423,51 @@
         <!-- menu for the working time -->
         <menuitem action="resource.action_resource_calendar_form" id="menu_action_resource_calendar_form" parent="resource.menu_resource_config" sequence="1"/>
 
+        <!-- Payment Mode Tree View -->
+
+        <record model="ir.ui.view" id="view_crm_payment_mode_tree">
+            <field name="name">crm.payment.mode.tree</field>
+            <field name="model">crm.payment.mode</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Mode">
+                    <field name="name"/>
+                    <field name="section_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Payment Mode Form View -->
+
+        <record model="ir.ui.view" id="view_crm_payment_mode_form">
+            <field name="name">crm.payment.mode.form</field>
+            <field name="model">crm.payment.mode</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Payment Mode" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="section_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Payment Mode Action -->
+
+        <record id="action_crm_payment_mode" model="ir.actions.act_window">
+            <field name="name">Payment Mode</field>
+            <field name="res_model">crm.payment.mode</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem id="menu_crm_payment_mode" name="Fund Raising"
+            parent="base.menu_base_config" sequence="85" groups="crm.group_fund_raising"/>
+            
+        <menuitem action="action_crm_payment_mode"
+            id="menu_crm_payment_mode_act"
+            name="Payment Modes"
+            parent="menu_crm_payment_mode" />
     </data>
 </openerp>
