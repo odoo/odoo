@@ -103,6 +103,39 @@
                             </div>
                         </div>
                     </group>
+                    <separator string="Accounting &amp; Finance"/>
+                    <group>
+                        <label for="id" string="Options"/>
+                        <div name="account_config">
+                            <div>
+                                <label for="currency_id"/>
+                                <field name="currency_id" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="decimal_precision"/>
+                                <field name="decimal_precision" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="tax_calculation_rounding_method"/>
+                                <field name="tax_calculation_rounding_method" class="oe_inline"/>
+                            </div>
+                        </div>
+                        <label for="id" string="Features"/>
+                        <div>
+                            <div>
+                                <field name="module_account_accountant" class="oe_inline"/>
+                                <label for="module_account_accountant"/>
+                            </div>
+                            <div>
+                                <field name="module_account_asset" class="oe_inline"/>
+                                <label for="module_account_asset"/>
+                            </div>
+                            <div>
+                                <field name="module_account_budget" class="oe_inline"/>
+                                <label for="module_account_budget"/>
+                            </div>
+                        </div>
+                    </group>
                     <separator string="eInvoicing &amp; Payments"/>
                     <group>
                         <label for="id" string="Customer"/>
@@ -187,52 +220,17 @@
                         <label for="id" string="Configuration"/>
                         <div>
                             <div>
-                                <label string="Configure your bank accounts"/>
                                 <button name="%(action_bank_tree)d"
-                                    string="Configure"
+                                    string="Configure your bank accounts"
                                     icon="gtk-go-forward"
                                     type="action"
                                     class="oe_inline oe_link"/>
+                                <label for="company_footer"/>
+                                <field name="company_footer"/>
                             </div>
-                            <p>
-                                <label for="company_footer"/>: <field name="company_footer" class="oe_inline"/>
-                            </p>
                             <div>
                                 <label for="paypal_account"/>
                                 <field name="paypal_account" placeholder="e.g. sales@openerp.com" class="oe_inline"/>
-                            </div>
-                        </div>
-                    </group>
-                    <separator string="Accounting &amp; Finance"/>
-                    <group>
-                        <label for="id" string="Options"/>
-                        <div name="account_config">
-                            <div>
-                                <label for="currency_id"/>
-                                <field name="currency_id" class="oe_inline"/>
-                            </div>
-                            <div>
-                                <label for="decimal_precision"/>
-                                <field name="decimal_precision" class="oe_inline"/>
-                            </div>
-                            <div>
-                                <label for="tax_calculation_rounding_method"/>
-                                <field name="tax_calculation_rounding_method" class="oe_inline"/>
-                            </div>
-                        </div>
-                        <label for="id" string="Features"/>
-                        <div>
-                            <div>
-                                <field name="module_account_accountant" class="oe_inline"/>
-                                <label for="module_account_accountant"/>
-                            </div>
-                            <div>
-                                <field name="module_account_asset" class="oe_inline"/>
-                                <label for="module_account_asset"/>
-                            </div>
-                            <div>
-                                <field name="module_account_budget" class="oe_inline"/>
-                                <label for="module_account_budget"/>
                             </div>
                         </div>
                     </group>
