@@ -17,7 +17,7 @@ def valid_field_in_graph(arch):
 
 def valid_field_in_tree(arch):
     """A `field` and `button` node must be below a `tree` node."""
-    return not arch.xpath('//tree[not((field) and (button) and (@string))]')
+    return not arch.xpath('//tree[not((field) or (button)) and (@string)]')
 
 
 def valid_att_in_field(arch):
