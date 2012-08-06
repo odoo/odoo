@@ -14,6 +14,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog = null;
         this.dialog_widget = null;
         this.breadcrumbs = [];
+        this.on('history_back', this, function() {
+            return this.history_back();
+        });
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -65,21 +68,46 @@ instance.web.ActionManager = instance.web.Widget.extend({
         item.id = _.uniqueId('breadcrumb_');
         this.breadcrumbs.push(item);
     },
+    history_back: function() {
+        var last = this.breadcrumbs.slice(-1)[0];
+        if (!last) {
+            return false;
+        }
+        var title = last.get_title();
+        if (_.isArray(title) && title.length > 1) {
+            return this.select_breadcrumb(this.breadcrumbs.length - 1, title.length - 2);
+        } else if (this.breadcrumbs.length === 1) {
+            // Only one single titled item in breadcrumb, most of the time you want to trigger back to home
+            return false;
+        } else {
+            var prev = this.breadcrumbs[this.breadcrumbs.length - 2];
+            title = prev.get_title();
+            return this.select_breadcrumb(this.breadcrumbs.length - 2, _.isArray(title) ? title.length - 1 : undefined);
+        }
+    },
     on_breadcrumb_clicked: function(ev) {
         var $e = $(ev.target);
         var id = $e.data('id');
-        var item;
+        var index;
         for (var i = this.breadcrumbs.length - 1; i >= 0; i--) {
-            var it = this.breadcrumbs[i];
-            if (it.id == id) {
-                item = it;
+            if (this.breadcrumbs[i].id == id) {
+                index = i;
                 break;
             }
-            this.remove_breadcrumb(i);
         }
-        var index = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
-        item.show(index, $e);
+        var subindex = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
+        this.select_breadcrumb(index, subindex);
+    },
+    select_breadcrumb: function(index, subindex) {
+        for (var i = this.breadcrumbs.length - 1; i >= 0; i--) {
+            if (i > index) {
+                this.remove_breadcrumb(i);
+            }
+        }
+        var item = this.breadcrumbs[index];
+        item.show(subindex);
         this.inner_widget = item.widget;
+        return true;
     },
     clear_breadcrumbs: function() {
         while (this.breadcrumbs.length) {
@@ -166,6 +194,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             var action = state.client_action;
             if(_.isString(action)) {
                 action = {
+                    type: 'ir.actions.client',
                     tag: action,
                     params: state,
                 };
@@ -462,6 +491,13 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         var controller = new controllerclass(this, this.dataset, view.view_id, options);
 
+        controller.on('history_back', this, function() {
+            var am = self.getParent();
+            if (am && am.trigger) {
+                return am.trigger('history_back');
+            }
+        });
+
         controller.on("change:title", this, function() {
             if (self.active_view === view_type) {
                 self.set_title(controller.get('title'));
@@ -505,7 +541,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.getParent().push_breadcrumb({
             widget: this,
             action: this.action,
-            show: function(index, $e) {
+            show: function(index) {
                 var view_to_select = views[index];
                 self.$element.show();
                 if (self.active_view !== view_to_select) {

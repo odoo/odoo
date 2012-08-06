@@ -140,6 +140,14 @@ $sheet-max-width: 860px
     font-size: 13px
     background: white
     // }}}
+    //Placeholder style{{{
+    \:-moz-placeholder
+        color: $facets-border !important
+        font-style: italic !important
+    \::-webkit-input-placeholder
+        color: $facets-border !important
+        font-style: italic !important
+    //}}}
     // Tag reset {{{
     a
         text-decoration: none
@@ -150,7 +158,7 @@ $sheet-max-width: 860px
         font-weight: bold
         background-color: #f0f0f0
         th
-            border-right: 1px dotted #afafb6
+            border-right: 1px dotted $facets-border
             &:last-child
                 border-right: none
     th, td
@@ -524,7 +532,7 @@ $sheet-max-width: 860px
         top: 26px
         left: 0
         z-index: 1
-        border: 1px solid #afafb6
+        border: 1px solid $facets-border
         background: white
         padding: 4px 0
         min-width: 140px
@@ -804,7 +812,7 @@ $sheet-max-width: 860px
         display: none
         width: 220px
         background: #f0eeee
-        border-right: 1px solid #afafb6
+        border-right: 1px solid $facets-border
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
     a.oe_logo
@@ -1245,7 +1253,7 @@ $sheet-max-width: 860px
             background-color: white
             min-width: 100%
             display: none
-            border: 1px solid #afafb6
+            border: 1px solid $facets-border
             text-align: left
             @include radius(4px)
             @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
@@ -1400,15 +1408,26 @@ $sheet-max-width: 860px
     // }}}
     // Views Common {{{
     .oe_view_nocontent
-        > img
-            float: left
-            margin: 1.5em
-        > div
-            // don't encroach on my arrow
-            overflow: hidden
-            padding: 35px 0px 0px 0px
-            max-width: 700px
-            font-size: 125%
+        padding: 15px
+        margin-top: 0
+        color: #777777
+        font-size: 125%
+        max-width: 700px
+        .oe_view_nocontent_create
+            background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 7px 0
+            margin-top: 0
+            padding-top: 35px
+            min-height: 28px
+            color: #4c4c4c
+        > p
+            padding-left: 95px
+        .oe_empty_custom_dashboard
+            background: transparent url(/web/static/src/img/graph_background.png) no-repeat 0 0
+            margin-top: -15px
+            padding: 100px 0 0 137px
+            min-height: 327px
+            margin-left: -15px
+
     // }}}
     // FormView.base and dynamic tags {{{
     .oe_formview
@@ -1462,6 +1481,14 @@ $sheet-max-width: 860px
             min-width: 650px
             max-width: $sheet-max-width
             margin: 0 auto
+        div.oe_form_configuration
+            div.oe_horizontal_separator 
+                margin: 25px 0 10px 0
+            p
+                color: #aaa
+                max-width: 650px
+            label
+                min-width: 150px
     ul.oe_form_steps
         height: 30px
         padding: 0
@@ -1524,7 +1551,7 @@ $sheet-max-width: 860px
             background: white
             min-height: 330px
             padding: 16px
-            border: 1px solid #afafb6
+            border: 1px solid $facets-border
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
             .ui-tabs
                 margin: 0 -16px
@@ -1537,7 +1564,7 @@ $sheet-max-width: 860px
             margin: 2px
         td.oe_form_group_cell_label
             border-right: 1px solid #ddd
-            padding: 2px 0px 2px 0px
+            padding: 4px 0px 4px 0px
             label
                 line-height: 18px
                 display: block
@@ -1546,7 +1573,7 @@ $sheet-max-width: 860px
             padding-left: 6px
         .oe_form_group
             width: 100%
-            margin: 6px 0 6px 0
+            margin: 9px 0 9px 0
             .oe_form_group_cell.oe_group_right
                 padding-left: 20px
     // }}}
@@ -1571,7 +1598,7 @@ $sheet-max-width: 860px
         font-weight: bold
         font-size: 20px
         margin: 8px 0px 8px 0px
-        color: #aab
+        color: #53637e
     .oe_horizontal_separator:empty
         height: 5px
     .oe_vertical_separator
@@ -1905,7 +1932,7 @@ $sheet-max-width: 860px
             border-bottom: 2px solid #cacaca
         .treeview-tr, .treeview-td
             cursor: pointer
-            border-right: 1px dotted #afafb6
+            border-right: 1px dotted $facets-border
             vertical-align: top
             text-align: left
             border-bottom: 1px solid #cfcccc

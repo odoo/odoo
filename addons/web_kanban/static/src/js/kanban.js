@@ -219,7 +219,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             group.destroy();
         });
         this.groups = [];
-        this.$element.find('.oe_kanban_groups_headers, .oe_kanban_groups_records').empty();
     },
     do_add_groups: function(groups) {
         var self = this;
@@ -227,7 +226,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.groups[group.undefined_title ? 'unshift' : 'push'](group);
         });
         var groups_started = _.map(this.groups, function(group) {
-            return group.appendTo(self.$element.find('.oe_kanban_groups_headers'));
+            return group.prependTo(self.$element.find('.oe_kanban_groups_headers'));
         });
         return $.when.apply(null, groups_started).then(function () {
             self.on_groups_started();
@@ -294,11 +293,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         _.each(this.groups, function(group) {
             if (!group.state.folded) {
                 if (182*unfolded>=self.$element.width()) {
-                    group.$element.css('width', "170px");
+                    group.$element.children(':first').css('width', "170px");
                 } else if (262*unfolded<self.$element.width()) {
-                    group.$element.css('width', "250px");
+                    group.$element.children(':first').css('width', "250px");
                 } else {
-                    group.$element.css('width', Math.floor(self.$element.width()/unfolded) + 'px');
+		    // -12 because of padding 6 between cards
+		    // -1 because of the border of the latest dummy column
+                    group.$element.children(':first').css('width', Math.floor((self.$element.width()-1)/unfolded)-12 + 'px');
                 }
             }
         });
@@ -332,9 +333,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         }
         this.$element.find('.oe_view_nocontent').remove();
         this.$element.prepend(
-            $('<div class="oe_view_nocontent">')
-                .append($('<img>', { src: '/web/static/src/img/view_empty_arrow.png' }))
-                .append($('<div>').html(this.options.action.help))
+            $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
     }
 });
@@ -401,7 +400,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             self.quick.replace($(".oe_kanban_no_group_qc_placeholder"));
         }
         this.$records = $(QWeb.render('KanbanView.group_records_container', { widget : this}));
-        this.$records.appendTo(this.view.$element.find('.oe_kanban_groups_records'));
+        this.$records.prependTo(this.view.$element.find('.oe_kanban_groups_records'));
         this.$element.find(".oe_kanban_fold_icon").click(function() {
             self.do_toggle_fold();
             self.view.compute_groups_width();
