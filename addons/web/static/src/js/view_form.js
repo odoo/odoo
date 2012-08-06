@@ -2711,10 +2711,20 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
 
         self.$input.tipsy({
             title: function() {
-                return "No element was selected, you should create or select one from the dropdown list.";
+                return QWeb.render('Tipsy.alert', {
+                    message: "No element was selected, you should create or select one from the dropdown list."
+                });
             },
             trigger:'manual',
             fade: true,
+            gravity: 's',
+            html: true,
+            opacity: 1,
+            offset: 4,
+        });
+
+        self.$input.on('focus', function() {
+            self.$input.tipsy("hide");
         });
 
         this.$drop_down = this.$element.find(".oe_m2o_drop_down_button");
@@ -2768,7 +2778,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var tip_def = $.Deferred();
         var untip_def = $.Deferred();
         var tip_delay = 200;
-        var tip_duration = 3000;
+        var tip_duration = 15000;
         var anyoneLoosesFocus = function() {
             var used = false;
             if (self.floating) {
