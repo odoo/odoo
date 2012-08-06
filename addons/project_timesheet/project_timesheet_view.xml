@@ -96,10 +96,14 @@
             <field name="domain">[]</field>
             <field name="context">{'search_default_to_invoice': 1}</field>
             <field name="view_id" ref="view_account_analytic_line_tree_inherit_account_id"/>
-            <field name="help">You will find here all works made on tasks that you can invoice.
-In order to invoice the time spent on a project, you must define the
-pricelist and the field 'Invoice Task Work' on the tab 'Billing' of
-the project form.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a work to invoice.
+              </p><p>
+                You will find here all works made on tasks that you can
+                invoice.   
+              </p>
+            </field>
         </record>
         <menuitem action="hr_timesheet.action_hr_timesheet_sign_in"
             id="menu_hr_timesheet_sign_in"
@@ -124,7 +128,14 @@ the project form.</field>
             <field name="context">{}</field>
             <field name="domain">[('type','=','normal')]</field>
             <field name="search_view_id" ref="account_analytic_analysis.view_account_analytic_account_overdue_search"/>
-            <field name="help">You will find here the contracts related to your customer projects in order to track the invoicing progress.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a customer contract.
+              </p><p>
+                You will find here the contracts related to your customer
+                projects in order to track the invoicing progress.
+              </p>
+            </field>
         </record>
         <menuitem id="menu_invoicing_contracts" parent="menu_project_billing" sequence="4"
             action="account_analytic_analysis.action_account_analytic_overdue"/>

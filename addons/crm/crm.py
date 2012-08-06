@@ -194,4 +194,13 @@ def _links_get(self, cr, uid, context=None):
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
 
+class crm_payment_mode(osv.osv):
+    """ Payment Mode for Fund """
+    _name = "crm.payment.mode"
+    _description = "CRM Payment Mode"
+    _columns = {
+        'name': fields.char('Name', size=64, required=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
