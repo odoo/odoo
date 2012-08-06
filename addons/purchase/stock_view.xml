@@ -101,10 +101,13 @@
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_to_invoice": 1}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
-            <field name="help">
-                Here you can track all the product receptions of purchase orders where the invoicing is "Based on Incoming Shipments",
+            <field name="help" type="html">
+              <p>
+                Here you can track all the product receptions of purchase
+                orders where the invoicing is "Based on Incoming Shipments",
                 and for which you have not received a supplier invoice yet.
                 You can generate a supplier invoice based on those receptions.
+              </p>
             </field>
        </record>
 

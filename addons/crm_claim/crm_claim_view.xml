@@ -15,7 +15,15 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
             <field name="context" eval="{'object_id': ref('model_crm_claim')}"/>
-            <field name="help">Create claim categories to better manage and classify your claims. Some example of claims can be: preventive action, corrective action.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a claim category.
+              </p><p>
+                Create claim categories to better manage and classify your
+                claims. Some example of claims can be: preventive action,
+                corrective action.
+              </p>
+            </field>
         </record>
 
         <menuitem action="crm_claim_categ_action" name="Categories"
@@ -57,7 +65,15 @@
             <field name="res_model">crm.claim.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_claim_stage_tree"/>
-            <field name="help">You can create claim stages to categorize the status of every claim entered in the system. The stages define all the steps required for the resolution of a claim.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to setup a new stage in the processing of the claims. 
+              </p><p>
+                You can create claim stages to categorize the status of every
+                claim entered in the system. The stages define all the steps
+                required for the resolution of a claim.
+              </p>
+            </field>
         </record>
 
         <!-- Claims    -->
