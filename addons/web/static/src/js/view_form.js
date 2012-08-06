@@ -151,7 +151,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.sidebar.add_items('other', [
                 { label: _t('Delete'), callback: self.on_button_delete },
                 { label: _t('Duplicate'), callback: self.on_button_duplicate },
-                { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } },
+                { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } }
             ]);
         }
 

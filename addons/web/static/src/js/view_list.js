@@ -354,7 +354,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_items('other', [
                 { label: _t("Import"), callback: this.on_sidebar_import },
                 { label: _t("Export"), callback: this.on_sidebar_export },
-                { label: _t('Delete'), callback: this.do_delete_selected },
+                { label: _t('Delete'), callback: this.do_delete_selected }
             ]);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$element.hide();
