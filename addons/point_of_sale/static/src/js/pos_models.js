@@ -74,6 +74,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.weightable_categories = [];                    // a flat list of all categories that directly contain weightable products
             this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
             this.proxy = new module.ProxyDevice();             // used to communicate to the hardware devices via a local proxy
+            this.db = new module.PosDB();   // a database used to store the products and product images
 
             // pos settings
             this.use_scale              = false;

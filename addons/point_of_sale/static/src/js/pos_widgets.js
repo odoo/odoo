@@ -968,12 +968,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
         },
         close: function() {
+            var self = this;
             this.pos.barcode_reader.disconnect();
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                     var action = result.result;
                     action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'reload'}});
+                    //self.destroy();
                     this.do_action(action);
                 }, this));
             }, this));
