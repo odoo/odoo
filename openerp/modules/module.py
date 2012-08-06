@@ -341,6 +341,7 @@ def load_information_from_description_file(module):
                 'web': False,
                 'website': '',
                 'sequence': 100,
+                'summary': '',
             }
             info.update(itertools.izip(
                 'depends data demo test init_xml update_xml demo_xml'.split(),
@@ -493,7 +494,7 @@ def get_test_modules(module, submodule, explode):
                 # It seems the module has no `tests` sub-module, no problem.
                 pass
             else:
-                print 'Can not `import %s`.' % module
+                _logger.exception('Can not `import %s`.', module)
             return []
 
     # Discover available test sub-modules.
@@ -554,6 +555,7 @@ def run_unit_tests(module_name):
     """
     import unittest2
     ms = get_test_modules(module_name, '__fast_suite__', explode=False)
+    # TODO: No need to try again if the above call failed because of e.g. a syntax error.
     ms.extend(get_test_modules(module_name, '__sanity_checks__', explode=False))
     suite = unittest2.TestSuite()
     for m in ms:

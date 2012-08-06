@@ -70,10 +70,14 @@ class res_config_configurable(osv.osv_memory):
             res = next.action_launch(context=context)
             res['nodestroy'] = False
             return res
-        #if there is no next action and if html is in the context: reload instead of closing
-        if context and 'html' in context:
-            return {'type' : 'ir.actions.reload'}
-        return {'type' : 'ir.actions.act_window_close'}
+        # reload the client; open the first available root menu
+        menu_obj = self.pool.get('ir.ui.menu')
+        menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+            'params': {'menu_id': menu_ids and menu_ids[0] or False},
+        }
 
     def start(self, cr, uid, ids, context=None):
         return self.next(cr, uid, ids, context)
@@ -496,15 +500,6 @@ class res_config_settings(osv.osv_memory):
 
         return res
 
-    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
-        # overridden to make fields of installed modules readonly
-        res = super(res_config_settings, self).fields_get(cr, uid, allfields, context, write_access)
-        classified = self._get_classified_fields(cr, uid, context)
-        for name, module in classified['module']:
-            if name in res and module.state in ('installed', 'to install', 'to upgrade'):
-                res[name]['readonly'] = True
-        return res
-
     def execute(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
         ir_model_data = self.pool.get('ir.model.data')
@@ -531,18 +526,31 @@ class res_config_settings(osv.osv_memory):
             if method.startswith('set_'):
                 getattr(self, method)(cr, uid, ids, context)
 
-        # module fields: install immediately the selected modules
+        # module fields: install/uninstall the selected modules
         to_install_ids = []
+        to_uninstall_ids = []
         for name, module in classified['module']:
-            if config[name] and module.state == 'uninstalled':
-                to_install_ids.append(module.id)
-        if to_install_ids:
-            ir_module.button_immediate_install(cr, uid, to_install_ids, context)
+            if config[name]:
+                if module.state == 'uninstalled': to_install_ids.append(module.id)
+            else:
+                if module.state in ('installed','upgrade'): to_uninstall_ids.append(module.id)
+
+        if to_install_ids or to_uninstall_ids:
+            ir_module.button_uninstall(cr, uid, to_uninstall_ids, context=context)
+            ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
 
         # force client-side reload (update user menu and current view)
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
         }
+
+    def cancel(self, cr, uid, ids, context=None):
+        # ignore the current record, and send the action to reopen the view
+        act_window = self.pool.get('ir.actions.act_window')
+        action_ids = act_window.search(cr, uid, [('res_model', '=', self._name)])
+        if action_ids:
+            return act_window.read(cr, uid, action_ids[0], [], context=context)
+        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

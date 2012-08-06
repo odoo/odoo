@@ -286,6 +286,7 @@ CREATE TABLE ir_module_module (
     write_date timestamp without time zone,
     write_uid integer references res_users on delete set null,
     website character varying(256),
+    summary character varying(256),
     name character varying(128) NOT NULL,
     author character varying(128),
     url character varying(128),
@@ -345,6 +346,39 @@ CREATE TABLE ir_model_data (
     module character varying(64) NOT NULL,
     model character varying(64) NOT NULL,
     res_id integer, primary key(id)
+);
+
+-- Records foreign keys and constraints installed by a module (so they can be
+-- removed when the module is uninstalled):
+--   - for a foreign key: type is 'f',
+--   - for a constraint: type is 'u' (this is the convention PostgreSQL uses).
+CREATE TABLE ir_model_constraint (
+    id serial NOT NULL,
+    create_uid integer,
+    create_date timestamp without time zone,
+    write_date timestamp without time zone,
+    write_uid integer,
+    date_init timestamp without time zone,
+    date_update timestamp without time zone,
+    module integer NOT NULL references ir_module_module on delete restrict,
+    model integer NOT NULL references ir_model on delete restrict,
+    type character varying(1) NOT NULL,
+    name character varying(128) NOT NULL
+);
+
+-- Records relation tables (i.e. implementing many2many) installed by a module
+-- (so they can be removed when the module is uninstalled).
+CREATE TABLE ir_model_relation (
+    id serial NOT NULL,
+    create_uid integer,
+    create_date timestamp without time zone,
+    write_date timestamp without time zone,
+    write_uid integer,
+    date_init timestamp without time zone,
+    date_update timestamp without time zone,
+    module integer NOT NULL references ir_module_module on delete restrict,
+    model integer NOT NULL references ir_model on delete restrict,
+    name character varying(128) NOT NULL
 );
 
 ---------------------------------

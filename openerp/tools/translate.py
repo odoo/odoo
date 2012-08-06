@@ -501,6 +501,10 @@ def trans_parse_rml(de):
 
 def trans_parse_view(de):
     res = []
+    if de.text and de.text.strip():
+        res.append(de.text.strip().encode("utf8"))
+    if de.tail and de.tail.strip():
+        res.append(de.tail.strip().encode("utf8"))
     if de.tag == 'attribute' and de.get("name") == 'string':
         if de.text:
             res.append(de.text.encode("utf8"))

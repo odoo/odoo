@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem id="menu_reporting" name="Reporting" sequence="90"/>
+
+        <!-- Top menu item -->
+        <menuitem name="Reporting"
+            id="menu_reporting"
+            groups="base.group_user"
+            sequence="170"/>
             <menuitem id="menu_reporting_dashboard" name="Dashboards" parent="menu_reporting" sequence="0"/>
             <menuitem id="menu_reporting_config" name="Configuration" parent="menu_reporting" sequence="100" groups="base.group_system"/>
-        <menuitem id="menu_administration" name="Settings" sequence="100" icon="terp-administration"/>
+
+        <!-- Top menu item -->
+        <menuitem name="Settings"
+            id="menu_administration"
+            sequence="500"/>
             <menuitem id="menu_management" name="Modules" parent="menu_administration" sequence="0"/>
             <menuitem id="menu_config" name="Configuration" parent="menu_administration" sequence="1"/>
             <menuitem id="menu_administration_shortcut" parent="menu_administration" name="Custom Shortcuts" sequence="50"/>
             <menuitem id="menu_users" name="Users" parent="menu_administration" sequence="4"/>
             <menuitem id="menu_translation" name="Translations" parent="menu_administration" sequence="7"/>
                 <menuitem id="menu_translation_app" name="Application Terms" parent="menu_translation" sequence="4" groups="base.group_no_one"/>
-                <menuitem id="menu_translation_export" name="Import / Export" groups="base.group_no_one" parent="menu_translation" sequence="3"/>
-	    <menuitem id="menu_custom" name="Technical" parent="menu_administration" sequence="110" groups="base.group_no_one"/> 
-	        <menuitem id="next_id_2" name="User Interface" parent="menu_custom"/>
+                <menuitem id="menu_translation_export" name="Import / Export" parent="menu_translation" sequence="3" groups="base.group_no_one"/>
+
+            <menuitem id="menu_custom" name="Technical" parent="menu_administration" sequence="110" groups="base.group_no_one"/>
+                <menuitem id="next_id_2" name="User Interface" parent="menu_custom"/>
                 <menuitem id="menu_email" name="Email" parent="menu_custom" sequence="1"/>
                 <menuitem id="menu_security" name="Security" parent="menu_custom" sequence="25"/>
+                <menuitem id="menu_ir_property" name="Parameters" parent="menu_custom" sequence="24"/>
                 <menuitem id="next_id_4" name="Low Level Objects" parent="menu_custom" sequence="30"/>
-                    <menuitem id="menu_low_workflow" name="Workflows" parent="next_id_4"/>
 
     </data>
 </openerp>

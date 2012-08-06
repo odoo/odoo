@@ -8,7 +8,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Currencies">
-                    <field name="name"/>
+                    <field name="name" string="Currency"/>
                     <field name="active"/>
                 </search>
             </field>
@@ -78,7 +78,7 @@
             <field name="search_view_id" ref="view_currency_search"/>
         </record>
 
-        <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3"/>
+        <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3" groups="base.group_multi_currency"/>
 
         <!-- 
             Currency Rate Type
@@ -109,7 +109,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Currency Rate Type">
-                    <field name="name"/>
+                    <field name="name" string="Name"/>
                 </search>
             </field>
         </record>
