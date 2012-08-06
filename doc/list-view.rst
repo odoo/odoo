@@ -160,10 +160,13 @@ Interaction Methods
               updated) and ``record`` the reloaded record having been
               edited.
 
-.. js:function:: openerp.web.ListView.cancel_edition
+.. js:function:: openerp.web.ListView.cancel_edition([force=false])
 
     Cancels pending edition, cleans up the list view in case of
     creation (removes the empty record being created).
+
+    :param Boolean force: doesn't check if the user has added any
+                          data, discards the edition unconditionally
 
 Utility Methods
 +++++++++++++++
@@ -345,11 +348,14 @@ formview, delegating instead to its
                   from when it was passed in, aside from the ``id``
                   attribute.
 
-    .. js:function:: openerp.web.list.Editor.cancel
+    .. js:function:: openerp.web.list.Editor.cancel([force=false])
 
         Attemps to cancel the edition of the internal form, then hide
         the form
 
+        :param Boolean force: unconditionally cancels the edition of
+                              the internal form, even if the user has
+                              already entered data in it.
         :returns: delegate to the record under edition
 
 .. js:class:: EditorOptions

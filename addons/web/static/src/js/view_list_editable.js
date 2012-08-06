@@ -281,16 +281,17 @@ openerp.web.list_editable = function (instance) {
             });
         },
         /**
+         * @param {Boolean} [force=false] discards the data even if the form has been edited
          * @return {jQuery.Deferred}
          */
-        cancel_edition: function () {
+        cancel_edition: function (force) {
             var self = this;
             return this.with_event('cancel', {
                 editor: this.editor,
                 form: this.editor.form,
                 cancel: false
             }, function () {
-                return this.editor.cancel().pipe(function (attrs) {
+                return this.editor.cancel(force).pipe(function (attrs) {
                     if (attrs.id) {
                         var record = self.records.get(attrs.id);
                         if (!record) {
@@ -717,13 +718,13 @@ openerp.web.list_editable = function (instance) {
                     return self.cancel();
                 });
         },
-        cancel: function () {
-            var record = this.record;
-            this.record = null;
-            if (!this.form.can_be_discarded()) {
+        cancel: function (force) {
+            if (!(force || this.form.can_be_discarded())) {
                 return $.Deferred().reject({
                     message: "The form's data can not be discarded"}).promise();
             }
+            var record = this.record;
+            this.record = null;
             this.form.do_hide();
             return $.when(record);
         }
