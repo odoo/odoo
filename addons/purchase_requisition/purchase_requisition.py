@@ -199,19 +199,19 @@ class mail_message(osv.osv):
     
     def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None,
                              email_bcc=None, reply_to=False, attachments=None, message_id=False, references=False,
-                             res_id=False, subtype='plain', headers=None, mail_server_id=False, auto_delete=False,
+                             res_id=False, content_subtype='plain', headers=None, mail_server_id=False, auto_delete=False,
                              context=None):
         result = super(mail_message, self).schedule_with_attach(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc,
             email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
-            res_id=res_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
+            res_id=res_id, content_subtype=content_subtype, headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
             context=context)
         # check model is purchase.order
         if model and model == 'purchase.order' and res_id:
             requisition_id = self.pool.get('purchase.order').browse(cr, uid, res_id, context=context).requisition_id
             if requisition_id:
-                result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, 'purchase.requisition', email_cc=email_cc,
+                result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, model='purchase.requisition', email_cc=email_cc,
                     email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
-                    res_id=requisition_id.id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
+                    res_id=requisition_id.id, content_subtype=content_subtype, headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
                     context=context)
         return result
 
