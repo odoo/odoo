@@ -6,18 +6,20 @@
             <field name="model">account.voucher</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries">
-                    <field name="date"/>
-                    <field name="number"/>
-                    <field name="reference"/>
-                    <field name="partner_id"/>
-                    <field name="journal_id" groups="account.group_account_user"/>
-                    <field name="period_id" invisible="context.get('visible', True)"/>
-                    <field name="type" invisible="context.get('visible', True)"/>
-                    <field name="amount" sum="Total Amount"/>
-                    <field name="audit" invisible="1"/>
-                    <field name="state"/>
-                </tree>
+                <form string="Accounting Vouchers" version="7.0">
+                    <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries">
+                        <field name="date"/>
+                        <field name="number"/>
+                        <field name="reference"/>
+                        <field name="partner_id"/>
+                        <field name="journal_id" groups="account.group_account_user"/>
+                        <field name="period_id" invisible="context.get('visible', True)"/>
+                        <field name="type" invisible="context.get('visible', True)"/>
+                        <field name="amount" sum="Total Amount"/>
+                        <field name="audit" invisible="1"/>
+                        <field name="state"/>
+                    </tree>
+                </form>
             </field>
         </record>
         <record model="ir.ui.view" id="view_voucher_line_form">
@@ -41,7 +43,7 @@
             <field name="model">account.voucher</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Accounting Voucher" version="7.0">
                   <header>
                       <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
                       <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>

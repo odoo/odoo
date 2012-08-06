@@ -15,7 +15,7 @@
             <field name="model">stock.partial.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Stock partial Picking" version="7.0">
                     <field name="hide_tracking" invisible="1"/>
                     <separator string="Transfer Products" name="product_separator"/>
                     <field name="move_ids" context="{'hide_tracking': hide_tracking}">
@@ -63,7 +63,7 @@
             <field name="model">stock.partial.picking.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Stock Picking Line" version="7.0">
                     <group col="4">
                         <field name="product_id" />
                         <field name="quantity" />
