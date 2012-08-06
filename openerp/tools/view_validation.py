@@ -1,5 +1,9 @@
 """ View validation code (using assertions, not the RNG schema). """
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 def valid_page_in_book(arch):
     """A `page` node must be below a `book` node."""
@@ -56,15 +60,18 @@ def valid_view(arch):
         for pred in [valid_page_in_book,valid_att_in_form,valid_type_in_colspan,\
                       valid_type_in_col,valid_att_in_field,valid_att_in_label]:
             if not pred(arch):
+                _logger.error('Invalid XML: %s', pred.__doc__)
                 return False
     elif arch.tag == 'graph':
         for pred in [valid_field_in_graph,valid_type_in_colspan,valid_type_in_col,\
                       valid_att_in_field,valid_att_in_label]:
             if not pred(arch):
+                _logger.error('Invalid XML: %s', pred.__doc__)
                 return False
     elif arch.tag == 'tree':
         for pred in [valid_field_in_tree,valid_type_in_colspan,valid_type_in_col,\
                      valid_att_in_field,valid_att_in_label]:
             if not pred(arch):
+                _logger.error('Invalid XML: %s', pred.__doc__)
                 return False
     return True
