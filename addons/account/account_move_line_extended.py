@@ -29,6 +29,20 @@ class res_partner(osv.osv):
     }
 res_partner()
 
+class account_move_line(osv.osv):
+    _inherit = "account.move.line"
+    
+    def get_selection_ids(self, cr, uid, ids, context=None):
+        records = self.read(cr, uid, ids, ['reconcile_id'])
+        res = []
+        for record in records:
+            if not record.get('reconcile_id'):
+                res.append(record['id'])
+        return res
+
+account_move_line();
+
+
 class account_move_partner_info(osv.osv):
     _name = "account.move.partner.info"
     _description = "All partner info related account move line"

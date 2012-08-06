@@ -107,15 +107,7 @@ class account_move_line(osv.osv):
 
         query += company_clause
         return query
-    
-    def get_selection_ids(self, cr, uid, ids, context=None):
-        records = self.read(cr, uid, ids, ['reconcile_id'])
-        res = []
-        for record in records:
-            if not record.get('reconcile_id'):
-                res.append(record['id'])
-        return res
-        
+
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
         """
            This function returns the residual amount on a receivable or payable account.move.line.
@@ -526,7 +518,7 @@ class account_move_line(osv.osv):
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
     def _get_date(self, cr, uid, context=None):
@@ -717,26 +709,8 @@ class account_move_line(osv.osv):
             if not partner:
                 return []
             args.append(('partner_id', '=', partner[0]))
-        ids = super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
-        if context.get('extended_from'):
-            return self.get_move_by_unique_partner(cr, uid, offset, context)
-        return ids
+        return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
 
-    def get_move_by_unique_partner(self, cr, uid, offset=0, context=None):
-        cr.execute(
-             """
-             SELECT l.id ,l.partner_id AS partner_id  
-                FROM account_move_line l
-                LEFT JOIN account_account a ON (a.id = l.account_id)
-                    
-                    WHERE a.reconcile IS TRUE
-                    AND l.reconcile_id IS NULL
-
-                    AND l.state <> 'draft'
-                    GROUP BY l.id, l.partner_id OFFSET %s""", (offset, )
-            )
-        return  dict(cr.fetchall()).keys()
-        
     def get_next_partner_only(self, cr, uid, offset=0, context=None):
         cr.execute(
              """
