@@ -129,12 +129,12 @@ financial year and for preparation of vouchers there is a module named account_v
         "account_pre_install.yml"
     ],
     'js': [
-        'static/src/js/account.js',
+        'static/src/js/account_move_reconciliation.js',
     ],
     'qweb' : [
-        "static/src/xml/account.xml",
+        "static/src/xml/account_move_reconciliation.xml",
     ],
-    'css':['static/src/css/account.css'
+    'css':['static/src/css/account_move_reconciliation.css'
     ],
     'demo_xml': [
         'demo/account_demo.xml',
