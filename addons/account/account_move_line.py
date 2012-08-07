@@ -1090,7 +1090,7 @@ class account_move_line(osv.osv):
         res = cr.fetchone()
         if res:
             if res[1] != 'draft':
-                raise osv.except_osv(_('UserError!'),
+                raise osv.except_osv(_('User Error!'),
                        _('The account move (%s) for centralisation ' \
                                 'has been confirmed.') % res[2])
         return res
@@ -1141,7 +1141,7 @@ class account_move_line(osv.osv):
         if vals.get('account_tax_id', False):
             raise osv.except_osv(_('Unable to change tax!'), _('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
-            raise osv.except_osv(_('Bad account!'), _('You cannot use an inactive account.'))
+            raise osv.except_osv(_('Bad Account!'), _('You cannot use an inactive account.'))
         if update_check:
             if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
                 self._update_check(cr, uid, ids, context)
@@ -1224,7 +1224,7 @@ class account_move_line(osv.osv):
             if company_id:
                 vals['company_id'] = company_id[0]
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
-            raise osv.except_osv(_('Bad account!'), _('You cannot use an inactive account.'))
+            raise osv.except_osv(_('Bad Account!'), _('You cannot use an inactive account.'))
         if 'journal_id' in vals:
             context['journal_id'] = vals['journal_id']
         if 'period_id' in vals:
@@ -1237,7 +1237,7 @@ class account_move_line(osv.osv):
         if 'period_id' not in context or not isinstance(context.get('period_id', ''), (int, long)):
             period_candidate_ids = self.pool.get('account.period').name_search(cr, uid, name=context.get('period_id',''))
             if len(period_candidate_ids) != 1:
-                raise osv.except_osv(_('Encoding error!'), _('No period found or more than one period found for the given date.'))
+                raise osv.except_osv(_('Error!'), _('No period found or more than one period found for the given date.'))
             context['period_id'] = period_candidate_ids[0][0]
         if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
@@ -1288,7 +1288,7 @@ class account_move_line(osv.osv):
                 vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id,
                     account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
         if not ok:
-            raise osv.except_osv(_('Bad account !'), _('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
+            raise osv.except_osv(_('Bad Account!'), _('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
         if vals.get('analytic_account_id',False):
             if journal.analytic_journal_id:

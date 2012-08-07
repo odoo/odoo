@@ -60,7 +60,7 @@ class account_move_journal(osv.osv_memory):
         if context.get('journal_type', False):
             jids = journal_pool.search(cr, uid, [('type','=', context.get('journal_type'))])
             if not jids:
-                raise osv.except_osv(_('Configuration Error !'), _('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration/Journals/Journals.') % context.get('journal_type'))
+                raise osv.except_osv(_('Configuration Error!'), _('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration/Journals/Journals.') % context.get('journal_type'))
             journal_id = jids[0]
 
         return journal_id
@@ -158,7 +158,7 @@ class account_move_journal(osv.osv_memory):
                 state = period.state
 
                 if state == 'done':
-                    raise osv.except_osv(_('UserError!'), _('This period is already closed.'))
+                    raise osv.except_osv(_('User Error!'), _('This period is already closed.'))
 
                 company = period.company_id.id
                 res = {

@@ -605,7 +605,7 @@ class stock_picking(osv.osv):
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
         return res
-    
+
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
             seq_obj_name =  'stock.picking.' + vals['type']
@@ -1322,7 +1322,7 @@ class stock_picking(osv.osv):
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
             res[pick.id] = {'delivered_picking': delivered_pack.id or False}
-            
+
         return res
 
     def log_picking(self, cr, uid, ids, context=None):
@@ -1364,11 +1364,11 @@ class stock_picking(osv.osv):
             context.update({'view_id': res and res[1] or False})
             message += state_list[pick.state]
         return True
-    
+
     # -----------------------------------------
     # OpenChatter methods and notifications
     # -----------------------------------------
-    
+
     def _get_document_type(self, type):
         type_dict = {
                 'out': 'Delivery order',
@@ -1376,17 +1376,17 @@ class stock_picking(osv.osv):
                 'internal': 'Internal picking',
         }
         return type_dict.get(type, 'Stock picking')
-    
+
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
-    
+
     def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
         return self.message_append_note(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
-    
+
     def back_order_send_note(self, cr, uid, ids, back_name, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_name), context=context)
-    
+
     def ship_done_send_note(self, cr, uid, ids, context=None):
         type_dict = {
                 'out': 'delivered',
@@ -1395,11 +1395,11 @@ class stock_picking(osv.osv):
         }
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
-    
+
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
-            
+
 
 stock_picking()
 
@@ -1727,7 +1727,7 @@ class stock_move(osv.osv):
             if location_xml_id:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
         return location_id
-    
+
     def _default_destination_address(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id.partner_id.id
@@ -2367,7 +2367,7 @@ class stock_move(osv.osv):
         ctx = context.copy()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state != 'draft' and not ctx.get('call_unlink',False):
-                raise osv.except_osv(_('UserError!'),
+                raise osv.except_osv(_('User Error!'),
                         _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(
             cr, uid, ids, context=ctx)
@@ -2537,7 +2537,7 @@ class stock_move(osv.osv):
                         'location_id': location_id or move.location_id.id,
                 }
                 self.write(cr, uid, [move.id], update_val)
-        
+
         product_obj = self.pool.get('product.product')
         for new_move in self.browse(cr, uid, res, context=context):
             message = _("Product has been consumed with '%s' quantity.") % (new_move.product_qty)
@@ -2779,7 +2779,7 @@ class stock_inventory(osv.osv):
                      account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'], context=context)
                      for account_move in account_move_data_l:
                          if account_move['state'] == 'posted':
-                             raise osv.except_osv(_('UserError!'),
+                             raise osv.except_osv(_('User Error!'),
                                                   _('In order to cancel this inventory, you must first unpost related journal entries.'))
                          account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
@@ -2869,8 +2869,8 @@ class stock_picking_in(osv.osv):
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Receive'),
             ('done', 'Received'),
-            ('cancel', 'Cancelled'),], 
-            'State', readonly=True, select=True, 
+            ('cancel', 'Cancelled'),],
+            'State', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                  * Waiting Availability: still waiting for the availability of products\n
@@ -2908,8 +2908,8 @@ class stock_picking_out(osv.osv):
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Deliver'),
             ('done', 'Delivered'),
-            ('cancel', 'Cancelled'),], 
-            'State', readonly=True, select=True, 
+            ('cancel', 'Cancelled'),],
+            'State', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                  * Waiting Availability: still waiting for the availability of products\n

@@ -114,12 +114,12 @@ class sale_advance_payment_inv(osv.osv_memory):
                 prop_id = prop and prop.id or False
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, sale.fiscal_position.id or False, prop_id)
                 if not account_id:
-                    raise osv.except_osv(_('Configuration Error !'),
+                    raise osv.except_osv(_('Configuration Error!'),
                             _('There is no income account defined as global property.'))
                 res['account_id'] = account_id
             if not res.get('account_id'):
-                raise osv.except_osv(_('Configuration Error !'),
-                        _('There is no income account defined for this product: "%s" (id:%d)') % \
+                raise osv.except_osv(_('Configuration Error!'),
+                        _('There is no income account defined for this product: "%s" (id:%d).') % \
                             (wizard.product_id.name, wizard.product_id.id,))
 
             # determine invoice amount

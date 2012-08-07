@@ -404,7 +404,7 @@ class account_account(osv.osv):
         journal_obj = self.pool.get('account.journal')
         jids = journal_obj.search(cr, uid, [('type','=','situation'),('centralisation','=',1),('company_id','=',account.company_id.id)], context=context)
         if not jids:
-            raise osv.except_osv(_('Error!'),_("You need an Opening journal with centralisation checked to set the initial balance!"))
+            raise osv.except_osv(_('Error!'),_("You need an Opening journal with centralisation checked to set the initial balance."))
 
         period_obj = self.pool.get('account.period')
         pids = period_obj.search(cr, uid, [('special','=',True),('company_id','=',account.company_id.id)], context=context)
@@ -426,7 +426,7 @@ class account_account(osv.osv):
             }, context=context)
         else:
             if diff<0.0:
-                raise osv.except_osv(_('Error!'),_("Unable to adapt the initial balance (negative value)!"))
+                raise osv.except_osv(_('Error!'),_("Unable to adapt the initial balance (negative value)."))
             nameinv = (name=='credit' and 'debit') or 'credit'
             move_id = move_obj.create(cr, uid, {
                 'name': _('Opening Balance'),
@@ -541,9 +541,9 @@ class account_account(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive accounts.', ['parent_id']),
-        (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
-        (_check_account_type, 'Configuration Error! \nYou cannot select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable"! ', ['user_type','type']),
+        (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id']),
+        (_check_type, 'Configuration Error!\nYou cannot define children to an account with internal type different of "View".', ['type']),
+        (_check_account_type, 'Configuration Error!\nYou cannot select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable".', ['user_type','type']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -619,9 +619,9 @@ class account_account(osv.osv):
 
         if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
             if method == 'write':
-                raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains journal items.'))
+                raise osv.except_osv(_('Error!'), _('You cannot deactivate an account that contains journal items.'))
             elif method == 'unlink':
-                raise osv.except_osv(_('Error !'), _('You cannot remove an account that contains journal items.'))
+                raise osv.except_osv(_('Error!'), _('You cannot remove an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
         value = 'account.account,' + str(ids[0])
         partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','=',value)], context=context)
@@ -768,7 +768,7 @@ class account_journal(osv.osv):
         return True
 
     _constraints = [
-        (_check_currency, 'Configuration error! The currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
+        (_check_currency, 'Configuration error!\nThe currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
     ]
 
     def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
@@ -915,7 +915,7 @@ class account_fiscalyear(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'Error! The start date of a fiscal year must precede its end date.', ['date_start','date_stop'])
+        (_check_duration, 'Error!\nThe start date of a fiscal year must precede its end date.', ['date_start','date_stop'])
     ]
 
     def create_period3(self, cr, uid, ids, context=None):
@@ -966,7 +966,7 @@ class account_fiscalyear(osv.osv):
         ids = self.search(cr, uid, args, context=context)
         if not ids:
             if exception:
-                raise osv.except_osv(_('Error !'), _('There is no fiscal year defined for this date.\nPlease create one from the configuration of the accounting menu.'))
+                raise osv.except_osv(_('Error!'), _('There is no fiscal year defined for this date.\nPlease create one from the configuration of the accounting menu.'))
             else:
                 return []
         return ids
@@ -1032,8 +1032,8 @@ class account_period(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'Error ! The duration of the Period(s) is/are invalid. ', ['date_stop']),
-        (_check_year_limit, 'Error ! The period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.', ['date_stop'])
+        (_check_duration, 'Error!\nThe duration of the Period(s) is/are invalid.', ['date_stop']),
+        (_check_year_limit, 'Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.', ['date_stop'])
     ]
 
     def next(self, cr, uid, period, step, context=None):
@@ -1055,7 +1055,7 @@ class account_period(osv.osv):
             args.append(('company_id', '=', company_id))
         ids = self.search(cr, uid, args, context=context)
         if not ids:
-            raise osv.except_osv(_('Error !'), _('There is no period defined for this date: %s.\nPlease create one.')%dt)
+            raise osv.except_osv(_('Error!'), _('There is no period defined for this date: %s.\nPlease create one.')%dt)
         return ids
 
     def action_draft(self, cr, uid, ids, *args):
@@ -1134,7 +1134,7 @@ class account_journal_period(osv.osv):
             cr.execute('select * from account_move_line where journal_id=%s and period_id=%s limit 1', (obj.journal_id.id, obj.period_id.id))
             res = cr.fetchall()
             if res:
-                raise osv.except_osv(_('Error !'), _('You cannot modify/delete a journal with entries for this period.'))
+                raise osv.except_osv(_('Error!'), _('You cannot modify/delete a journal with entries for this period.'))
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1314,7 +1314,7 @@ class account_move(osv.osv):
         valid_moves = self.validate(cr, uid, ids, context)
 
         if not valid_moves:
-            raise osv.except_osv(_('Integrity Error !'), _('You cannot validate a non-balanced entry.\nMake sure you have configured payment terms properly.\nThe latest payment term line should be of the "Balance" type.'))
+            raise osv.except_osv(_('Error!'), _('You cannot validate a non-balanced entry.\nMake sure you have configured payment terms properly.\nThe latest payment term line should be of the "Balance" type.'))
         obj_sequence = self.pool.get('ir.sequence')
         for move in self.browse(cr, uid, valid_moves, context=context):
             if move.name =='/':
@@ -1328,7 +1328,7 @@ class account_move(osv.osv):
                         c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
                         new_name = obj_sequence.next_by_id(cr, uid, journal.sequence_id.id, c)
                     else:
-                        raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal.'))
+                        raise osv.except_osv(_('Error!'), _('Please define a sequence on the journal.'))
 
                 if new_name:
                     self.write(cr, uid, [move.id], {'name':new_name})
@@ -1351,14 +1351,14 @@ class account_move(osv.osv):
                 if not top_common:
                     top_common = top_account
                 elif top_account.id != top_common.id:
-                    raise osv.except_osv(_('Error !'),
-                                         _('You cannot validate this journal entry because account "%s" does not belong to chart of accounts "%s"!') % (account.name, top_common.name))
+                    raise osv.except_osv(_('Error!'),
+                                         _('You cannot validate this journal entry because account "%s" does not belong to chart of accounts "%s".') % (account.name, top_common.name))
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if not line.journal_id.update_posted:
-                raise osv.except_osv(_('Error !'), _('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
+                raise osv.except_osv(_('Error!'), _('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
         if ids:
             cr.execute('UPDATE account_move '\
                        'SET state=%s '\
@@ -1445,7 +1445,7 @@ class account_move(osv.osv):
         obj_move_line = self.pool.get('account.move.line')
         for move in self.browse(cr, uid, ids, context=context):
             if move['state'] != 'draft':
-                raise osv.except_osv(_('UserError!'),
+                raise osv.except_osv(_('User Error!'),
                         _('You cannot delete a posted journal entry "%s".') % \
                                 move['name'])
             line_ids = map(lambda x: x.id, move.line_id)
@@ -1474,14 +1474,14 @@ class account_move(osv.osv):
             account_id = move.journal_id.default_debit_account_id.id
             mode2 = 'debit'
             if not account_id:
-                raise osv.except_osv(_('UserError'),
+                raise osv.except_osv(_('User Error!'),
                         _('There is no default debit account defined \n' \
                                 'on journal "%s".') % move.journal_id.name)
         else:
             account_id = move.journal_id.default_credit_account_id.id
             mode2 = 'credit'
             if not account_id:
-                raise osv.except_osv(_('UserError'),
+                raise osv.except_osv(_('User Error!'),
                         _('There is no default credit account defined \n' \
                                 'on journal "%s".') % move.journal_id.name)
 
@@ -1833,7 +1833,7 @@ class account_tax_code(osv.osv):
 
     _check_recursion = check_cycle
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive accounts.', ['parent_id'])
+        (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id'])
     ]
     _order = 'code'
 
@@ -2307,7 +2307,7 @@ class account_model(osv.osv):
                 date_maturity = context.get('date',time.strftime('%Y-%m-%d'))
                 if line.date_maturity == 'partner':
                     if not line.partner_id:
-                        raise osv.except_osv(_('Error !'), _("Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term!" \
+                        raise osv.except_osv(_('Error!'), _("Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term!" \
                                                                 "\nPlease define partner on it!")%(line.name, model.name))
                     if line.partner_id.property_payment_term:
                         payment_term_id = line.partner_id.property_payment_term.id
@@ -2521,8 +2521,8 @@ class account_account_template(osv.osv):
 
     _check_recursion = check_cycle
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive account templates.', ['parent_id']),
-        (_check_type, 'Configuration Error!\nYou cannot define children to an account that has internal type other than  "View"!', ['type']),
+        (_check_recursion, 'Error!\nYou cannot create recursive account templates.', ['parent_id']),
+        (_check_type, 'Configuration Error!\nYou cannot define children to an account that has internal type other than  "View".', ['type']),
 
     ]
 
@@ -2623,7 +2623,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
         ptids = tmpl_obj.read(cr, uid, [tids[0]['parent_id'][0]], ['code'])
         res = None
         if not ptids or not ptids[0]['code']:
-            raise osv.except_osv(_('Error !'), _('There is no parent code for the template account.'))
+            raise osv.except_osv(_('Error!'), _('There is no parent code for the template account.'))
             res = acc_obj.search(cr, uid, [('code','=',ptids[0]['code'])])
         return res and res[0] or False
 
@@ -2729,7 +2729,7 @@ class account_tax_code_template(osv.osv):
 
     _check_recursion = check_cycle
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Tax Codes.', ['parent_id'])
+        (_check_recursion, 'Error!\nYou cannot create recursive Tax Codes.', ['parent_id'])
     ]
     _order = 'code,name'
 account_tax_code_template()
@@ -3464,7 +3464,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 journal_data.append(vals)
         ref_acc_bank = obj_wizard.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
-            raise osv.except_osv(_('Configuration Error !'), _('You have to set a code for the bank account defined on the selected chart of accounts.'))
+            raise osv.except_osv(_('Configuration Error!'), _('You have to set a code for the bank account defined on the selected chart of accounts.'))
 
         current_num = 1
         for line in journal_data:

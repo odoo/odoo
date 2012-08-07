@@ -85,7 +85,7 @@ class account_fiscalyear_close(osv.osv_memory):
         fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
         if not fy_period_set or not fy2_period_set:
-            raise osv.except_osv(_('UserError!'), _('The periods to generate opening entries cannot be found.'))
+            raise osv.except_osv(_('User Error!'), _('The periods to generate opening entries cannot be found.'))
 
         period = obj_acc_period.browse(cr, uid, data[0].period_id.id, context=context)
         new_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0].fy2_id.id, context=context)
@@ -96,10 +96,10 @@ class account_fiscalyear_close(osv.osv_memory):
         company_id = new_journal.company_id.id
 
         if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
-            raise osv.except_osv(_('UserError!'),
+            raise osv.except_osv(_('User Error!'),
                     _('The journal must have default credit and debit account.'))
         if (not new_journal.centralisation) or new_journal.entry_posted:
-            raise osv.except_osv(_('UserError!'),
+            raise osv.except_osv(_('User Error!'),
                     _('The journal must have centralized counterpart without the Skipping draft state option checked.'))
 
         #delete existing move and move lines if any

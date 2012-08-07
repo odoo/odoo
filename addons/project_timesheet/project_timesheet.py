@@ -116,7 +116,7 @@ class project_work(osv.osv):
             vals_line['product_id'] = result['product_id']
             vals_line['date'] = vals['date'][:10]
 
-            #calculate quantity based on employee's product's uom 
+            #calculate quantity based on employee's product's uom
             vals_line['unit_amount'] = vals['hours']
 
             default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
@@ -254,7 +254,7 @@ class res_partner(osv.osv):
     def unlink(self, cursor, user, ids, context=None):
         parnter_id=self.pool.get('project.project').search(cursor, user, [('partner_id', 'in', ids)])
         if parnter_id:
-            raise osv.except_osv(_('Invalid action !'), _('You cannot delete a partner which is assigned to project, we suggest you to uncheck the active box!'))
+            raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a partner which is assigned to project, but you can uncheck the active box.'))
         return super(res_partner,self).unlink(cursor, user, ids,
                 context=context)
 res_partner()
@@ -271,6 +271,6 @@ class account_analytic_line(osv.osv):
        res['value']['to_invoice'] = st or False
        if acc.state == 'close' or acc.state == 'cancelled':
            raise osv.except_osv(_('Invalid Analytic Account !'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
-       return res  
+       return res
 account_analytic_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -71,9 +71,9 @@ def _import(self, cursor, user, data, context=None):
     statement_obj = self.pool.get('account.bank.statement')
     property_obj = self.pool.get('ir.property')
     file = data['form']['file']
-    if not file: 
-        raise osv.except_osv(_('UserError'),
-                             _('Please select a file first!'))
+    if not file:
+        raise osv.except_osv(_('User Error!'),
+                             _('Please select a file first.'))
     statement_id = data['id']
     records = []
     total_amount = 0
@@ -90,12 +90,12 @@ def _import(self, cursor, user, data, context=None):
 
             if line[0:3] in ('999', '995'):
                 if find_total:
-                    raise osv.except_osv(_('Error'),
-                            _('Too much total record found!'))
+                    raise osv.except_osv(_('Error!'),
+                            _('Too much total record found.'))
                 find_total = True
                 if lines:
-                    raise osv.except_osv(_('Error'),
-                            _('Record found after total record!'))
+                    raise osv.except_osv(_('Error!'),
+                            _('Record found after total record.'))
                 amount = float(line[39:49]) + (float(line[49:51]) / 100)
                 cost = float(line[69:76]) + (float(line[76:78]) / 100)
                 if line[2] == '5':
@@ -104,11 +104,11 @@ def _import(self, cursor, user, data, context=None):
 
                 if round(amount - total_amount, 2) >= 0.01 \
                         or round(cost - total_cost, 2) >= 0.01:
-                    raise osv.except_osv(_('Error'),
-                            _('Total record different from the computed!'))
+                    raise osv.except_osv(_('Error!'),
+                            _('Total record different from the computed.'))
                 if int(line[51:63]) != len(records):
-                    raise osv.except_osv(_('Error'),
-                            _('Number record different from the computed!'))
+                    raise osv.except_osv(_('Error!'),
+                            _('Number record different from the computed.'))
             else:
                 record = {
                     'reference': line[12:39],
@@ -119,8 +119,8 @@ def _import(self, cursor, user, data, context=None):
                 }
 
                 if record['reference'] != mod10r(record['reference'][:-1]):
-                    raise osv.except_osv(_('Error'),
-                            _('Recursive mod10 is invalid for reference: %s') % \
+                    raise osv.except_osv(_('Error!'),
+                            _('Recursive mod10 is invalid for reference: %s.') % \
                                     record['reference'])
 
                 if line[2] == '5':
@@ -221,10 +221,10 @@ def _import(self, cursor, user, data, context=None):
                 if value :
                     account_id = int(value.split(',')[1])
             else :
-                raise osv.except_osv(_('Error'),
+                raise osv.except_osv(_('Error!'),
                     _('The properties account payable and account receivable are not set.'))
         if not account_id and line_ids:
-            raise osv.except_osv(_('Error'),
+            raise osv.except_osv(_('Error!'),
                 _('The properties account payable and account receivable are not set.'))
         values['account_id'] = account_id
         values['partner_id'] = partner_id

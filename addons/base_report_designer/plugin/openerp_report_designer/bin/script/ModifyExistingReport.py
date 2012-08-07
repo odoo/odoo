@@ -92,7 +92,7 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
 
         ids = self.sock.execute(database, uid, self.password, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
         if not len(ids):
-            ErrorDialog("Please install base_report_designer module.", "", "Module Uninstalled Error !")
+            ErrorDialog("Please install base_report_designer module.", "", "Module Uninstalled Error!")
             exit(1)
 
         ids = self.sock.execute(database, uid, self.password, 'ir.actions.report.xml', 'search', [('report_xsl', '=', False),('report_xml', '=', False)])

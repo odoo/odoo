@@ -50,7 +50,7 @@ class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
     _description = "Sales Order"
-    
+
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -295,7 +295,7 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('In order to delete a confirmed sales order, you must cancel it! To cancel a sale order, you must first cancel related picking for delivery orders.'))
+                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it.\nTo do so, you must first cancel related picking for delivery orders.'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -481,7 +481,7 @@ class sale_order(osv.osv):
                  'form': self.read(cr, uid, ids[0], context=context),
         }
         return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
-    
+
     def manual_invoice(self, cr, uid, ids, context=None):
         """ create invoices for the given sale orders (ids), and open the form
             view of one of the newly created invoices
@@ -547,7 +547,7 @@ class sale_order(osv.osv):
         result.update(view_id = res and res[1] or False)
         return result
 
-    
+
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''
         This function returns an action that display existing delivery orders of given sale order ids. It can either be a in a list or in a form view, if there is only one delivery order to show.
@@ -1021,27 +1021,27 @@ class sale_order(osv.osv):
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
-    
+
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if (obj.state == 'manual' or obj.state == 'progress'):
                 result[obj.id].append(obj.user_id.id)
         return result
- 
+
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
             self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
-        
+
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
-    
+
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
-        
+
     def delivery_send_note(self, cr, uid, ids, picking_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for picking in (pck for pck in order.picking_ids if pck.id == picking_id):
@@ -1050,22 +1050,22 @@ class sale_order(osv.osv):
                 picking_datetime = fields.DT.datetime.strptime(picking.min_date, DEFAULT_SERVER_DATETIME_FORMAT)
                 picking_date_str = fields.datetime.context_timestamp(cr, uid, picking_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
                 self.message_append_note(cr, uid, [order.id], body=_("Delivery Order <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
-    
+
     def delivery_end_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, body=_("Order <b>delivered</b>."), context=context)
-     
+
     def invoice_paid_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
-        
+
     def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
                 self.message_append_note(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
-    
+
     def action_cancel_draft_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body='Sale order has been set in draft.', context=context)
-            
-        
+
+
 sale_order()
 
 # TODO add a field price_unit_uos
@@ -1249,7 +1249,7 @@ class sale_order_line(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
-                raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced!'))
+                raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sale order line that has already been invoiced.'))
             for move_line in line.move_ids:
                 if move_line.state != 'cancel':
                     raise osv.except_osv(
@@ -1333,7 +1333,7 @@ class sale_order_line(osv.osv):
                                     (qty, ean, qty_pack, type_ul.name)
                     warning_msgs += _("Picking Information ! : ") + warn_msg + "\n\n"
                 warning = {
-                       'title': _('Configuration Error !'),
+                       'title': _('Configuration Error!'),
                        'message': warning_msgs
                 }
             result['product_uom_qty'] = qty
@@ -1453,7 +1453,7 @@ class sale_order_line(osv.osv):
                 result.update({'price_unit': price})
         if warning_msgs:
             warning = {
-                       'title': _('Configuration Error !'),
+                       'title': _('Configuration Error!'),
                        'message' : warning_msgs
                     }
         return {'value': result, 'domain': domain, 'warning': warning}
@@ -1479,18 +1479,18 @@ class sale_order_line(osv.osv):
         """Allows to delete sales order lines in draft,cancel states"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel']:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sales order line which is in state \'%s\'!') %(rec.state,))
+                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
 sale_order_line()
 
 class mail_message(osv.osv):
     _inherit = 'mail.message'
-    
+
     def _postprocess_sent_message(self, cr, uid, message, context=None):
         if message.model == 'sale.order':
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'sale.order', message.res_id, 'quotation_sent', cr) 
+            wf_service.trg_validate(uid, 'sale.order', message.res_id, 'quotation_sent', cr)
         return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
 
 mail_message()

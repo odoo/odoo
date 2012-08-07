@@ -293,10 +293,10 @@ class coda_bank_statement(osv.osv):
         # unlink CODA banks statements as well as associated bank statements and CODA files
         for coda_statement in self.browse(cr, uid, new_ids, context=context):
             if coda_statement.statement_id.state == 'confirm':
-                raise osv.except_osv(_('Invalid action !'),
-                    _("Cannot delete CODA Bank Statement '%s' of Journal '%s'." \
-                      "\nThe associated Bank Statement has already been confirmed !" \
-                      "\nPlease undo this action first!") \
+                raise osv.except_osv(_('Invalid Action!'),
+                    _("Cannot delete CODA Bank Statement '%s' of journal '%s'." \
+                      "\nThe associated Bank Statement has already been confirmed." \
+                      "\nPlease undo this action first.") \
                       % (coda_statement.name, coda_statement.journal_id.name))
             else:
                 if not context.get('coda_unlink', False):

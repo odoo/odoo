@@ -145,7 +145,7 @@ class account_automatic_reconcile(osv.osv_memory):
         allow_write_off = form.allow_write_off
         reconciled = unreconciled = 0
         if not form.account_ids:
-            raise osv.except_osv(_('UserError!'), _('You must select accounts to reconcile.'))
+            raise osv.except_osv(_('User Error!'), _('You must select accounts to reconcile.'))
         for account_id in form.account_ids:
             params = (account_id.id,)
             if not allow_write_off:

@@ -133,7 +133,7 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
           #  self.win.endExecute()
         ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
         if not len(ids_module):
-            ErrorDialog("Please install base_report_designer module.", "", "Module Uninstalled Error !")
+            ErrorDialog("Please install base_report_designer module.", "", "Module Uninstalled Error!")
             self.logobj.log_write('Module not found.',LOG_WARNING, ': base_report_designer not installed in database %s.' % (sDatabase))
             #self.win.endExecute()
         else:
