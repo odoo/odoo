@@ -168,7 +168,7 @@
                             <button name="print_quotation" string="Send by Post" type="object" states="sent"/>
                             <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
-                            <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
+                            <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
                             <button name="action_view_delivery" string="View Delivery Order" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
