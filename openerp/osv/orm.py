@@ -657,7 +657,7 @@ class BaseModel(object):
     _columns = {}
     _constraints = []
     _defaults = {}
-    _rec_name = 'name'
+    _rec_name = None
     _parent_name = 'parent_id'
     _parent_store = False
     _parent_order = False
@@ -1053,6 +1053,13 @@ class BaseModel(object):
             self._transient_max_hours = config.get('osv_memory_age_limit')
             assert self._log_access, "TransientModels must have log_access turned on, "\
                                      "in order to implement their access rights policy"
+
+        # Validate rec_name
+        if self._rec_name is not None:
+            assert self._rec_name in self._columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
+        else:
+            self._rec_name = 'name'
+
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -1567,6 +1574,12 @@ class BaseModel(object):
             res.extend(self.pool.get(parent).fields_get_keys(cr, user, context))
         return res
 
+    def _rec_name_fallback(self, cr, uid, context=None):
+        rec_name = self._rec_name
+        if rec_name not in self._columns:
+            rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
+        return rec_name
+
     #
     # Overload this method if you need a window title which depends on the context
     #
@@ -1859,8 +1872,7 @@ class BaseModel(object):
         return view
 
     def _get_default_search_view(self, cr, user, context=None):
-        """ Generates a single-field tree view, using _rec_name if
-        it's one of the columns or the first column it finds otherwise
+        """ Generates a single-field search view, based on _rec_name.
 
         :param cr: database cursor
         :param int user: user id
@@ -1868,17 +1880,12 @@ class BaseModel(object):
         :returns: a tree view as an lxml document
         :rtype: etree._Element
         """
-        _rec_name = self._rec_name
-        if _rec_name not in self._columns:
-            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
-
         view = etree.Element('search', string=self._description)
-        etree.SubElement(view, 'field', name=_rec_name)
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
         return view
 
     def _get_default_tree_view(self, cr, user, context=None):
-        """ Generates a single-field tree view, using _rec_name if
-        it's one of the columns or the first column it finds otherwise
+        """ Generates a single-field tree view, based on _rec_name.
 
         :param cr: database cursor
         :param int user: user id
@@ -1886,12 +1893,8 @@ class BaseModel(object):
         :returns: a tree view as an lxml document
         :rtype: etree._Element
         """
-        _rec_name = self._rec_name
-        if _rec_name not in self._columns:
-            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
-
         view = etree.Element('tree', string=self._description)
-        etree.SubElement(view, 'field', name=_rec_name)
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
         return view
 
     def _get_default_calendar_view(self, cr, user, context=None):
@@ -1918,7 +1921,7 @@ class BaseModel(object):
             return False
 
         view = etree.Element('calendar', string=self._description)
-        etree.SubElement(view, 'field', name=self._rec_name)
+        etree.SubElement(view, 'field', self._rec_name_fallback(cr, user, context))
 
         if (self._date_name not in self._columns):
             date_found = False
@@ -2276,8 +2279,13 @@ class BaseModel(object):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
-            [self._rec_name], context, load='_classic_write')]
+
+        if self._rec_name in self._all_columns:
+            rec_name_column = self._all_columns[self._rec_name].column
+            return [(r['id'], rec_name_column.as_display_name(cr, user, self, r[self._rec_name], context=context))
+                        for r in self.read(cr, user, ids, [self._rec_name],
+                                       load='_classic_write', context=context)]
+        return [(id, "%s,%s" % (self._name, id)) for id in ids]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         """Search for records that have a display name matching the given ``name`` pattern if compared
@@ -4152,6 +4160,12 @@ class BaseModel(object):
 
         self.check_create(cr, user)
 
+        if self._log_access:
+            for f in LOG_ACCESS_COLUMNS:
+                if vals.pop(f, None) is not None:
+                    _logger.warning(
+                        'Field `%s` is not allowed when creating the model `%s`.',
+                        f, self._name)
         vals = self._add_missing_default_values(cr, user, vals, context)
 
         tocreate = {}

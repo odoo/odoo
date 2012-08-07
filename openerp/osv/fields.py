@@ -127,6 +127,23 @@ class _column(object):
         res = obj.read(cr, uid, ids, [name], context=context)
         return [x[name] for x in res]
 
+    def as_display_name(self, cr, uid, obj, value, context=None):
+        """Converts a field value to a suitable string representation for a record,
+           e.g. when this field is used as ``rec_name``.
+
+           :param obj: the ``BaseModel`` instance this column belongs to 
+           :param value: a proper value as returned by :py:meth:`~openerp.orm.osv.BaseModel.read`
+                         for this column
+        """
+        # delegated to class method, so a column type A can delegate
+        # to a column type B. 
+        return self._as_display_name(self, cr, uid, obj, value, context=None)
+
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        # This needs to be a class method, in case a column type A as to delegate
+        # to a column type B.
+        return tools.ustr(value)
 
 # ---------------------------------------------------------
 # Simple fields
@@ -154,11 +171,6 @@ class integer(_column):
 
     def __init__(self, string='unknown', required=False, **args):
         super(integer, self).__init__(string=string, required=required, **args)
-        if required:
-            _logger.debug(
-                "required=True is deprecated: making an integer field"
-                " `required` has no effect, as NULL values are "
-                "automatically turned into 0.")
 
 class reference(_column):
     _type = 'reference'
@@ -177,6 +189,17 @@ class reference(_column):
                 if not obj.pool.get(model).exists(cr, uid, [int(res_id)], context=context):
                     result[value['id']] = False
         return result
+
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        if value:
+            # reference fields have a 'model,id'-like value, that we need to convert
+            # to a real name
+            model_name, res_id = value.split(',')
+            model = obj.pool.get(model_name)
+            if model and res_id:
+                return model.name_get(cr, uid, [int(res_id)], context=context)[0][1]
+        return tools.ustr(value)
 
 class char(_column):
     _type = 'char'
@@ -218,11 +241,6 @@ class float(_column):
         self.digits = digits
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
-        if required:
-            _logger.debug(
-                "required=True is deprecated: making a float field"
-                " `required` has no effect, as NULL values are "
-                "automatically turned into 0.0.")
 
     def digits_change(self, cr):
         if self.digits_compute:
@@ -453,6 +471,11 @@ class many2one(_column):
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
         return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
 
+    
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        return value[1] if isinstance(value, tuple) else tools.ustr(value) 
+
 
 class one2many(_column):
     _classic_read = False
@@ -543,6 +566,10 @@ class one2many(_column):
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, operator, context=context,limit=limit)
 
+    
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        raise NotImplementedError('One2Many columns should not be used as record name (_rec_name)') 
 
 #
 # Values: (0, 0,  { fields })    create
@@ -724,6 +751,10 @@ class many2many(_column):
     #
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit, context=context)
+
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        raise NotImplementedError('Many2Many columns should not be used as record name (_rec_name)') 
 
 
 def get_nice_size(value):
@@ -1078,6 +1109,12 @@ class function(_column):
         if self._fnct_inv:
             self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
 
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        # Function fields are supposed to emulate a basic field type,
+        # so they can delegate to the basic type for record name rendering
+        return globals()[field._type]._as_display_name(field, cr, uid, obj, value, context=context)
+
 # ---------------------------------------------------------
 # Related fields
 # ---------------------------------------------------------
@@ -1210,7 +1247,6 @@ class related(function):
                 obj_name = f['relation']
                 result[-1]['relation'] = f['relation']
         self._relations = result
-
 
 class sparse(function):   
 
