@@ -22,8 +22,8 @@
                             <field name="latest_date"/>
                         </div>
                         <div>
-                            <button string="Reconcile" name="%(action_view_account_move_line_reconcile)d" widget="list_button" type="action"/>
-                            <button string="Nothing to Reconcile" name="skip_partner" widget="btn_extend" type="object"/> 
+                            <a type="button" class="oe_reconcile" name="%(action_view_account_move_line_reconcile)d">Reconcile</a>
+                            <button string="Nothing to Reconcile" name="skip_partner"   type="object"/> 
                             <field name="reconciliation_progress" widget="progressbar"/>
                         </div>         
                         <div name="div4">
