@@ -2477,6 +2477,19 @@
 .openerp .oe_list_content .numeric input {
   text-align: right;
 }
+.openerp .oe_list_content .oe_list_field_handle {
+  width: 1em;
+}
+.openerp .oe_list_content .oe_list_field_handle .oe_list_handle {
+  font-size: 1px;
+  letter-spacing: -1px;
+  color: transparent;
+}
+.openerp .oe_list_content .oe_list_field_handle .oe_list_handle:before {
+  font: 21px "mnmliconsRegular";
+  content: "ö";
+  color: #404040;
+}
 .openerp .tree_header {
   background-color: #f0f0f0;
   border-bottom: 1px solid #cacaca;

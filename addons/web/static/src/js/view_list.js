@@ -1468,18 +1468,31 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     },
     setup_resequence_rows: function (list, dataset) {
         // drag and drop enabled if list is not sorted and there is a
-        // "sequence" column in the view.
+        // visible column with @widget=handle or "sequence" column in the view.
         if ((dataset.sort && dataset.sort())
             || !_(this.columns).any(function (column) {
-                    return column.name === 'sequence'; })) {
+                    return column.widget === 'handle'
+                        || column.name === 'sequence'; })) {
             return;
         }
+        var sequence_field = _(this.columns).find(function (c) {
+            return c.widget === 'handle';
+        });
+        var seqname = sequence_field ? sequence_field.name : 'sequence';
+
         // ondrop, move relevant record & fix sequences
         list.$current.sortable({
             axis: 'y',
             items: '> tr[data-id]',
-            containment: 'parent',
-            helper: 'clone',
+            helper: 'clone'
+        });
+        if (sequence_field) {
+            list.$current.sortable('option', 'handle', '.oe_list_field_handle');
+        }
+        list.$current.sortable('option', {
+            start: function (e, ui) {
+                ui.placeholder.height(ui.item.height());
+            },
             stop: function (event, ui) {
                 var to_move = list.records.get(ui.item.data('id')),
                     target_id = ui.item.prev().data('id'),
@@ -1497,7 +1510,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 var record, index = to,
                     // if drag to 1st row (to = 0), start sequencing from 0
                     // (exclusive lower bound)
-                    seq = to ? list.records.at(to - 1).get('sequence') : 0;
+                    seq = to ? list.records.at(to - 1).get(seqname) : 0;
                 while (++seq, record = list.records.at(index++)) {
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
@@ -1507,10 +1520,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     //        when synchronous (without setTimeout)
                     (function (dataset, id, seq) {
                         $.async_when().then(function () {
-                            dataset.write(id, {sequence: seq});
+                            var attrs = {};
+                            attrs[seqname] = seq;
+                            dataset.write(id, attrs);
                         });
                     }(dataset, record.get('id'), seq));
-                    record.set('sequence', seq);
+                    record.set(seqname, seq);
                 }
             }
         });

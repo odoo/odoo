@@ -343,6 +343,8 @@ instance.web.format_cell = function (row_data, column, options) {
             '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
                 value: _.str.sprintf("%.0f", row_data[column.id].value || 0)
             });
+    case 'handle':
+        return '<div class="oe_list_handle">';
     }
 
     return _.escape(instance.web.format_value(
