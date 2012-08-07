@@ -209,6 +209,9 @@
                                 </kanban>
                             </field>
                         </page>
+                        <page string="Internal Notes">
+                            <field name="comment" placeholder="Internal notes about this customer..."/>
+                        </page>
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
                             <group>
                                 <group>
@@ -231,9 +234,6 @@
                         </page>
                         <!-- The History page becomes visible as soon as there is something to display inside -->
                         <page string="History" name="page_history" invisible="True">
-                        </page>
-                        <page string="Internal Notes">
-                            <field name="comment" placeholder="Internal notes about this customer..."/>
                         </page>
                     </notebook>
                 </sheet>
