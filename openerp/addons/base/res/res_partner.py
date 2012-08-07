@@ -137,7 +137,6 @@ class res_partner(osv.osv):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
-            print result[obj.id]
         return result
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
