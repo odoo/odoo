@@ -77,6 +77,7 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         self.total = 0.00
 
         lines = []
+        flag = False
         lines = self.cal_monthly_amt(form, obj.id)
         if lines:
             for line in lines:
@@ -93,11 +94,14 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
                             self.deduct_list.remove(line[0])
                 if line:
                     if line[0][0]  == "Gross":
+                        flag = True
                         gross = line[0]
                     if line[0][0]  == "Net":
+                        flag = True
                         net = line[0]
-            self.allow_list.append(gross)
-            self.deduct_list.append(net)
+            if flag:
+                self.allow_list.append(gross)
+                self.deduct_list.append(net)
         return None
 
     def cal_monthly_amt(self, form, emp_id):
