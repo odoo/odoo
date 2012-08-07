@@ -631,7 +631,7 @@ instance.web.qweb.preprocess_node = function() {
             break;
         case 1:
             // Element
-            var attr, attrs = ['label', 'title', 'alt', 'placeholder'];
+            var attr, attrs = ['label', 'title', 'alt', 'placeholder', 'accesskey'];
             while (attr = attrs.pop()) {
                 if (this.attributes[attr]) {
                     this.attributes[attr] = instance.web._t(this.attributes[attr]);
