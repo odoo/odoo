@@ -893,7 +893,7 @@ class mail_thread(osv.Model):
         subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         return [sub['user_id'][0] for sub in subscr_obj.read(cr, uid, subscr_ids, ['user_id'], context=context)]
 
-    def message_read_subscribers(self, cr, uid, ids, fields=['id', 'name', 'avatar'], context=None):
+    def message_read_subscribers(self, cr, uid, ids, fields=['id', 'name', 'image_small'], context=None):
         """ Returns the current document followers as a read result. Used
             mainly for Chatter having only one method to call to have
             details about users.

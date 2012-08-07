@@ -174,7 +174,7 @@
                 <kanban>
                     <field name="color"/>
                     <field name="type"/>
-                    <field name="product_image"/>
+                    <field name="image_medium"/>
                     <field name="list_price"/>
                     <field name="reception_count"/>
                     <field name="delivery_count"/>
@@ -182,7 +182,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_product_vignette">
                                 <div class="oe_product_img">
-                                <a type="edit"><img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" class="oe_product_photo"/></a>
+                                <a type="edit"><img t-att-src="kanban_image('product.product', 'image_medium', record.id.value)" class="oe_product_photo"/></a>
                                 </div>
                                 <div class="oe_product_desc">
                                     <h4><a type="edit"><field name="name"></field></a></h4>
