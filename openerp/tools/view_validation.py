@@ -11,7 +11,7 @@ def valid_page_in_book(arch):
 
 
 def valid_field_in_graph(arch):
-    """A `field` node must be below a `graph` node."""
+    """A `graph` must have `string` attribute and an immediate node of `graph` view must be `field`."""
     if arch.xpath('//graph[not (@string)]'):
         return False
     for child in arch.xpath('/graph/child::*'):
@@ -21,7 +21,7 @@ def valid_field_in_graph(arch):
 
 
 def valid_field_in_tree(arch):
-    """A `field` and `button` node must be below a `tree` node. And tree must have `string` attribute."""
+    """A `tree` must have `string` attribute and an immediate node of `tree` view must be `field` or `button`."""
     if arch.xpath('//tree[not (@string)]'):
         return False
     for child in arch.xpath('/tree/child::*'):
