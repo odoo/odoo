@@ -2469,6 +2469,7 @@ class stock_move(osv.osv):
                     'location_id': location_id or move.location_id.id,
                 }
                 current_move = self.copy(cr, uid, move.id, default_val)
+                self.write(cr, uid, current_move, {'move_dest_id': False})                
                 res += [current_move]
                 update_val = {}
                 update_val['product_qty'] = quantity_rest
