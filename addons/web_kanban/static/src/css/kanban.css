@@ -1,7 +1,9 @@
 @charset "utf-8";
 .openerp .oe_kanban_view {
-  background: url(/web/static/src/img/form_sheetbg.png);
   height: inherit;
+}
+.openerp .oe_kanban_view.oe_kanban_grouped .oe_kanban_dummy_cell {
+  background: url(/web/static/src/img/form_sheetbg.png);
 }
 .openerp .oe_kanban_view .ui-sortable-placeholder {
   border: 1px dotted black;
@@ -72,8 +74,9 @@
   background: #f0eeee;
   border-left: 1px solid #f0f8f8;
   border-right: 1px solid #b9b9b9;
-  min-width: 170px;
-  max-width: 250px;
+}
+.openerp .oe_kanban_view.oe_kanban_grouped .oe_kanban_group_header {
+  width: 1%;
 }
 .openerp .oe_kanban_view .oe_form .oe_kanban_column {
   padding: 0px;
@@ -331,7 +334,6 @@
 .openerp .oe_kanban_view .oe_kanban_card {
   position: relative;
   display: block;
-  min-height: 50px;
   background: white;
   border: 1px solid #d8d8d8;
   border-bottom-color: #b9b9b9;

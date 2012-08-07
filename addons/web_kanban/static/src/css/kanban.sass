@@ -31,8 +31,9 @@
 .openerp .oe_kanban_view
     // KanbanView {{{
     //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
-    background: url(/web/static/src/img/form_sheetbg.png)
     height: inherit
+    &.oe_kanban_grouped .oe_kanban_dummy_cell
+        background: url(/web/static/src/img/form_sheetbg.png)
     .ui-sortable-placeholder
         border: 1px dotted black
         visibility: visible !important
@@ -92,8 +93,9 @@
         background: #f0eeee
         border-left: 1px solid #f0f8f8
         border-right: 1px solid #b9b9b9
-        min-width: 170px
-        max-width: 250px
+    &.oe_kanban_grouped 
+        .oe_kanban_group_header
+            width: 1%
 
     .oe_form
         .oe_kanban_column
@@ -297,7 +299,6 @@
     .oe_kanban_card
         position: relative
         display: block
-        min-height: 50px
         background: white
         border: 1px solid #d8d8d8
         border-bottom-color: #b9b9b9

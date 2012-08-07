@@ -672,32 +672,6 @@ instance.connection.on('module_loaded', this, function () {
  */
 instance.web.client_actions = new instance.web.Registry();
 
-/**
- * Client action to reload the whole interface.
- * If params has an entry 'menu_id', it opens the given menu entry.
- */
-instance.web.Reload = instance.web.Widget.extend({
-    init: function(parent, params) {
-        this._super(parent);
-        this.menu_id = (params && params.menu_id) || false;
-    },
-    start: function() {
-        var l = window.location;
-        var timestamp = new Date().getTime();
-        var search = "?ts=" + timestamp;
-        if (l.search) {
-            search = l.search + "&ts=" + timestamp;
-        } 
-        var hash = l.hash;
-        if (this.menu_id) {
-            hash = "#menu_id=" + this.menu_id;
-        }
-        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
-        window.location = url;
-    }
-});
-instance.web.client_actions.add("reload", "instance.web.Reload");
-
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

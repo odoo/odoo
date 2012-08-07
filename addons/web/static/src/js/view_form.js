@@ -151,7 +151,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.sidebar.add_items('other', [
                 { label: _t('Delete'), callback: self.on_button_delete },
                 { label: _t('Duplicate'), callback: self.on_button_duplicate },
-                { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } },
+                { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } }
             ]);
         }
 
@@ -684,8 +684,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_button_cancel: function(event) {
         if (this.can_be_discarded()) {
-            this.to_view_mode();
-            this.on_record_loaded(this.datarecord);
+            if (this.get('actual_mode') === 'create') {
+                this.trigger('history_back');
+            } else {
+                this.to_view_mode();
+                this.on_record_loaded(this.datarecord);
+            }
         }
         return false;
     },
@@ -2707,10 +2711,20 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
 
         self.$input.tipsy({
             title: function() {
-                return "No element was selected, you should create or select one from the dropdown list.";
+                return QWeb.render('Tipsy.alert', {
+                    message: "No element was selected, you should create or select one from the dropdown list."
+                });
             },
             trigger:'manual',
             fade: true,
+            gravity: 's',
+            html: true,
+            opacity: 1,
+            offset: 4,
+        });
+
+        self.$input.on('focus', function() {
+            self.$input.tipsy("hide");
         });
 
         this.$drop_down = this.$element.find(".oe_m2o_drop_down_button");
@@ -2764,7 +2778,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var tip_def = $.Deferred();
         var untip_def = $.Deferred();
         var tip_delay = 200;
-        var tip_duration = 3000;
+        var tip_duration = 15000;
         var anyoneLoosesFocus = function() {
             var used = false;
             if (self.floating) {
@@ -2874,6 +2888,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         if (!this.get("effective_readonly")) {
             this.$input.val(str.split("\n")[0]);
             this.current_display = this.$input.val();
+            this.$('.oe_m2o_cm_button').css({'visibility': this.is_false() ? 'hidden' : 'visible'});
         } else {
             var lines = _.escape(str).split("\n");
             var link = "";
@@ -3334,6 +3349,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             ListType: instance.web.form.One2ManyList
         }));
         this.on('edit:before', this, this.proxy('_before_edit'));
+        this.on('edit:after', this, this.proxy('_after_edit'));
         this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
 
         this.records
@@ -3444,6 +3460,12 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this.__ignore_blur = false;
         this.editor.form.on('blurred', this, this._on_form_blur);
     },
+    _after_edit: function () {
+        // The form's blur thing may be jiggered during the edition setup,
+        // potentially leading to the o2m instasaving the row. Cancel any
+        // blurring triggered the edition startup here
+        this.editor.form.widgetFocused();
+    },
     _before_unedit: function () {
         this.editor.form.off('blurred', this, this._on_form_blur);
     },
@@ -3477,6 +3499,28 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         // the current row *anyway*, then create a new one/edit the next one)
         this.__ignore_blur = true;
         this._super.apply(this, arguments);
+    },
+    do_delete: function (ids) {
+        var self = this;
+        var next = $.when();
+        var _super = this._super;
+        // handle deletion of an item which does not exist
+        // TODO: better handle that in the editable list?
+        var false_id_index = _(ids).indexOf(false);
+        if (false_id_index !== -1) {
+            ids.splice(false_id_index, 1);
+            next = this.cancel_edition(true);
+        }
+        return next.pipe(function () {
+            // wheeee
+            var confirm = window.confirm;
+            window.confirm = function () { return true; };
+            try {
+                return _super.call(self, ids);
+            } finally {
+                window.confirm = confirm;
+            }
+        });
     }
 });
 instance.web.form.One2ManyList = instance.web.ListView.List.extend({
@@ -3497,27 +3541,34 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
         var $cell = $('<td>', {
             colspan: columns,
             'class': 'oe_form_field_one2many_list_row_add'
-        }).text(_t("Add a row"))
-            .mousedown(function () {
-                // FIXME: needs to be an official API somehow
-                if (self.view.editor.is_editing()) {
-                    self.view.__ignore_blur = true;
-                }
-            })
-            .click(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                // FIXME: there should also be an API for that one
-                if (self.view.editor.form.__blur_timeout) {
-                    clearTimeout(self.view.editor.form.__blur_timeout);
-                    self.view.editor.form.__blur_timeout = false;
-                }
-                self.view.ensure_saved().then(function () {
-                    self.view.do_add_record();
-                });
-            });
-        this.$current.append(
-            $('<tr>').append($cell))
+        }).append(
+            $('<a>', {href: '#'}).text(_t("Add a row"))
+                .mousedown(function () {
+                    // FIXME: needs to be an official API somehow
+                    if (self.view.editor.is_editing()) {
+                        self.view.__ignore_blur = true;
+                    }
+                })
+                .click(function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // FIXME: there should also be an API for that one
+                    if (self.view.editor.form.__blur_timeout) {
+                        clearTimeout(self.view.editor.form.__blur_timeout);
+                        self.view.editor.form.__blur_timeout = false;
+                    }
+                    self.view.ensure_saved().then(function () {
+                        self.view.do_add_record();
+                    });
+                }));
+
+        var $padding = this.$current.find('tr:not([data-id]):first');
+        var $newrow = $('<tr>').append($cell);
+        if ($padding.length) {
+            $padding.before($newrow);
+        } else {
+            this.$current.append($newrow)
+        }
     }
 });
 
@@ -3625,7 +3676,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         $("textarea", this.$element).focusout(function() {
             self.$text.trigger("setInputData", "");
         }).keydown(function(e) {
-            if (event.keyCode === 9 && self._drop_shown) {
+            if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
                 self.$text.textext()[0].autocomplete().selectFromDropdown();
             }
         });
