@@ -5,74 +5,27 @@ instance.web.views.add('form_clone', 'instance.account.extend_form_view');
 instance.web.form.tags.add('list_button','instance.account.list_button')
 instance.web.form.tags.add('btn_extend','instance.account.btn_extend')
 instance.web.form.widgets.add('many2one_pager','instance.account.many2one_pager')
-instance.account.extend_actionmanager = instance.web.ActionManager.include({
-    ir_actions_act_window: function (action, on_close) {
-        var self = this;
-        if (_(['base.module.upgrade', 'base.setup.installer'])
-                .contains(action.res_model)) {
-            var old_close = on_close;
-            on_close = function () {
-                instance.webclient.do_reload().then(old_close);
-            };
-        }
-        if (action.target === 'new') {
-            if (this.dialog === null) {
-                // These buttons will be overwrited by <footer> if any
-                this.dialog = new instance.web.Dialog(this, {
-                    buttons: { "Close": function() { $(this).dialog("close"); }},
-            dialogClass: 'oe_act_window'
-                });
-                if(on_close)
-                    this.dialog.on_close.add(on_close);
-            } else {
-                this.dialog_widget.destroy();
-            }
-            this.dialog.dialog_title = action.name;
-            this.dialog_widget = new instance.web.ViewManagerAction(this, action);
-            this.dialog_widget.appendTo(this.dialog.$element);
-            this.dialog.open();
-        } else  {
-            this.dialog_stop();
-            if(action.menu_id) {
-                return this.getParent().do_action(action, function () {
-                    instance.webclient.menu.open_menu(action.menu_id);
-                });
-            }
-            this.inner_action = action;
-            if (action.extended_form_view_id){
-                var inner_widget = this.inner_widget = new instance.account.extend_viewmanager(this, action);
-            }else{
-                var inner_widget = this.inner_widget = new instance.web.ViewManagerAction(this, action);
-            }
-            inner_widget.add_breadcrumb();
-            this.inner_widget.appendTo(this.$element);
-        }
-    }
-    })
-    
-    
-instance.account.extend_viewmanager = instance.web.ViewManagerAction.extend({
-    init: function(parent, action) {
-        this._super.apply(this, arguments);
-        //Fix me: pass hard coded model name, find the way to fetch it from server
-        this.dataset_form = new instance.web.DataSetSearch(this, 'account.move.reconciliation', action.context, action.domain);
-    },
+ 
+instance.account.extend_viewmanager = instance.web.ViewManagerAction.include({
     start : function(){
         this._super()
-        this.setup_exended_form_view(this)
+        if(this.action.context && this.action.context.extended_form_view_id)
+            this.setup_exended_form_view(this)
     }, 
     on_mode_switch: function (view_type, no_store, options) {
         self = this
         self.list_loaded = $.when(this._super.apply(this, arguments)).then(function () {
-            self.list_view = self.views['list']
+            if(self.action.context && self.action.context.extended_form_view_id)
+                self.list_view = self.views['list']
         })
     },
     setup_exended_form_view: function(parent){
         var self = this,
             from_view,
             obj_from_view;
-        view_id = this.action.extended_form_view_id[0]
+        view_id = this.action.context.extended_form_view_id
         from_view = this.registry.get_object('form_clone');
+        this.dataset_form = new instance.web.DataSetSearch(this, 'account.move.reconciliation', this.action.context, this.action.domain);
         this.dataset_loaded  = this.dataset_form.read_slice()
         obj_from_view = new from_view(self, this.dataset_form, view_id, options={});
         obj_from_view.template = 'ExtendedFormView' 
