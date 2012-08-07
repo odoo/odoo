@@ -560,79 +560,109 @@ class mail_thread(osv.Model):
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
 
-
-    def _get_user(self, cr, uid, alias, context):
-        """
-            param alias: browse record of alias.
-            return: int user_id.
-        """
-
-        user_obj = self.pool.get('res.user')
-        user_id = 1
-        if alias.alias_user_id:
-            user_id = alias.alias_user_id.id
-        #if user_id not defined in the alias then search related user using name of Email sender
-        else:
-            from_email = msg.get('from')
-            user_ids = user_obj.search(cr, uid, [('name','=',from_email)], context)
-            if user_ids:
-                user_id = user_obj.browse(cr, uid, user_ids[0], context).id
-        return user_id
-
-    def message_catchall(self, cr, uid, message, context=None):
-        """
-            Process incoming mail and call messsage_process using details of the mail.alias model
-            else raise Exception so that mailgate script will reject the mail and
-            send notification mail sender that this mailbox does not exist so your mail have been rejected.
-        """
-        mail_alias = self.pool.get('mail.alias')
-        mail_message = self.pool.get('mail.message')
-        if isinstance(message, xmlrpclib.Binary):
-            message = str(message.data)
-        if isinstance(message, unicode):
-            message = message.encode('utf-8')
-        msg_txt = email.message_from_string(message)
-        msg = mail_message.parse_message(msg_txt)
-        alias_name = msg.get('to').split("@")[0] # @@@@
-        alias_ids = mail_alias.search(cr, uid, [('alias_name','=',alias_name)])
-        #if alias found then call message_process method. # @@@@
-        if alias_ids:
-            alias_id = mail_alias.browse(cr, uid, alias_ids[0], context)
-            user_id = self._get_user( cr, uid, alias_id, context)
-            alias_defaults = dict(eval(alias_id.alias_defaults or {}))
-            self.message_process(cr, user_id, alias_id.alias_model_id.model, message, 
-                                 custom_values=alias_defaults, 
-                                 thread_id=alias_id.alias_force_thread_id or False,
-                                 context=context)
-        else:
-            #if Mail box for the intended Mail Alias then give logger warning
-            _logger.warning("No Mail Alias Found for the name '%s'."%(alias_name))
-            raise # @@@@
-        return True
+    def _message_find_user_id(self, cr, uid, message, context=None):
+        from_local_part = to_email(decode(message.get('From')))[0]
+        user_ids = self.pool.get('res.users').search(cr, uid, [('login', '=', from_local_part)], context=context)
+        return user_ids[0] if user_ids else uid
 
     #------------------------------------------------------
     # Mail gateway
     #------------------------------------------------------
     # message_process will call either message_new or message_update.
 
+    def message_route(self, cr, uid, message, model=None, thread_id=None,
+                      custom_values=None, context=None):
+        """Attempt to figure out the correct target model, thread_id,
+        custom_values and user_id to use for an incoming message.
+
+        The following heuristics are used, in this order: 
+             1. If the message replies to an existing thread_id, and
+                properly contains the thread model in the 'In-Reply-To'
+                header, use this model/thread_id pair, and ignore
+                custom_value (not needed as no creation will take place) 
+             2. Look for a mail.alias entry matching the message
+                recipient, and use the corresponding model, thread_id,
+                custom_values and user_id.
+             3. Fallback to the ``model``, ``thread_id`` and ``custom_values``
+                provided.
+             4. If all the above fails, raise an exception.
+
+           :param string message: an email.message instance
+           :param string model: the fallback model to use if the message
+               does not match any of the currently configured mail aliases
+               (may be None if a matching alias is supposed to be present)
+           :type dict custom_values: optional dictionary of default field values
+                to pass to ``message_new`` if a new record needs to be created.
+                Ignored if the thread record already exists, and also if a
+                matching mail.alias was found (aliases define their own defaults)
+           :param int thread_id: optional ID of the record/thread from ``model``
+               to which this mail should be attached. Only used if the message
+               does not reply to an existing thread and does not match any mail alias.
+           :return: model, thread_id, custom_values, user_id
+        """
+        assert isinstance(message, email.Message), 'message must be an email.Message at this point'
+        
+        # 1. Verify if this is a reply to an existing thread
+        references = message.get('References') or message.get('In-Reply-To')
+        ref_match = tools.reference_re.search(references)
+        if ref_match:
+            thread_id = int(ref_match.group(1))
+            model = ref_match.group(2) or model
+            model_pool = self.pool.get(model)
+            if thread_id and model and model_pool and model_pool.exists(cr, uid, thread_id) \
+                and hasattr(model_pool, 'message_update'):
+                return model, thread_id, custom_values, uid
+        
+        # 2. Look for a matching mail.alias entry
+        # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
+        # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
+        rcpt_to = message.get_all('Delivered-To', []) or (message.get_all('To', []) + message.get_all('Cc', []))
+        local_parts = [e.split('@')[0] for e in to_email(u','.join(decode(rcpt_to)))]
+        if local_parts:
+            mail_alias = self.pool.get('mail.alias')
+            alias_ids = mail_alias.search(cr, uid, [('alias_name', 'in', local_parts)])
+            if len(alias_ids) > 1:
+                _logger.warning('Multiple mail.aliases match for mail with Message-Id %s, keeping first one only: %s',
+                                message.get('Message-Id'), alias_ids)
+            alias = mail_alias.browse(cr, uid, alias_ids[0], context=context)
+            user_id = alias.alias_user_id.id
+            if not user_id:
+                user_id = self._message_find_user_id(cr, uid, message, context=context)
+            return alias.alias_model_id.model, alias.alias_model_id.alias_force_thread_id, \
+                    alias.alias_defaults, user_id
+        
+        # 3. Fallback to the provided parameters, if they work
+        model_pool = self.pool.get(model)
+        assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
+            "No possible route found for incoming message with Message-Id %s. " \
+            "Create an appropriate mail.alias or force the destination model."
+        return model, thread_id, custom_values, uid
+
+
+        
+
     def message_process(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
                         thread_id=None, context=None):
-        """Process an incoming RFC2822 email message related to the
-           given thread model, relying on ``mail.message.parse()``
-           for the parsing operation, and then calling ``message_new``
-           (if the thread record did not exist) or ``message_update``
-           (if it did), then calling ``message_forward`` to automatically
-           notify other people that should receive this message.
+        """Process an incoming RFC2822 email message, relying on
+           ``mail.message.parse()`` for the parsing operation,
+           and ``message_route()`` to figure out the target model. 
+           
+           Once the target model is known, its ``message_new`` method
+           is called with the new message (if the thread record did not exist)
+            or its ``message_update`` method (if it did). Finally,
+           ``message_forward`` is called to automatically notify other
+           people that should receive this message.
 
-           :param string model: the thread model for which a new message
-                                must be processed
-           :param message: source of the RFC2822 mail
+           :param string model: the fallback model to use if the message
+               does not match any of the currently configured mail aliases
+               (may be None if a matching alias is supposed to be present)
+           :param message: source of the RFC2822 message
            :type message: string or xmlrpclib.Binary
            :type dict custom_values: optional dictionary of field values
-                                    to pass to ``message_new`` if a new
-                                    record needs to be created. Ignored
-                                    if the thread record already exists.
+                to pass to ``message_new`` if a new record needs to be created.
+                Ignored if the thread record already exists, and also if a
+                matching mail.alias was found (aliases define their own defaults)
            :param bool save_original: whether to keep a copy of the original
                 email source attached to the message after it is imported.
            :param bool strip_attachments: whether to strip all attachments
@@ -642,64 +672,39 @@ class mail_thread(osv.Model):
                overrides the automatic detection based on the message
                headers.
         """
+        if context is None: context = {}
+
         # extract message bytes - we are forced to pass the message as binary because
         # we don't know its encoding until we parse its headers and hence can't
         # convert it to utf-8 for transport between the mailgate script and here.
         if isinstance(message, xmlrpclib.Binary):
             message = str(message.data)
-
-        if context is None: context = {}
-
-        mail_message = self.pool.get('mail.message')
-        model_pool = self.pool.get(model)
-        if self._name != model:
-            context.update({'thread_model': model})
-
-        # Parse Message
         # Warning: message_from_string doesn't always work correctly on unicode,
         # we must use utf-8 strings here :-(
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-        msg = mail_message.parse_message(msg_txt, save_original=save_original, context=context)
-
-        # update state
-        msg['state'] = 'received'
-        
+        model, thread_id, custom_values, user_id = self.message_route(cr, uid, msg_txt, model,
+                                                                      thread_id, custom_values,
+                                                                      context=context)
+        if self._name != model:
+            context.update({'thread_model': model})
+        msg = self.pool.get('mail.message').parse_message(msg_txt, save_original=save_original, context=context)
+        msg['state'] = 'received'     
         if strip_attachments and 'attachments' in msg:
             del msg['attachments']
 
-        # Create New Record into particular model
-        def create_record(msg):
-            if hasattr(model_pool, 'message_new'):
-                return model_pool.message_new(cr, uid, msg,
-                                              custom_values,
-                                              context=context)
-        if not thread_id and (msg.get('references') or msg.get('in-reply-to')):
-            references = msg.get('references') or msg.get('in-reply-to')
-            if '\r\n' in references:
-                references = references.split('\r\n')
-            else:
-                references = references.split(' ')
-            for ref in references:
-                ref = ref.strip()
-                thread_id = tools.reference_re.search(ref)
-                if not thread_id:
-                    thread_id = tools.res_re.search(msg['subject'])
-                if thread_id:
-                    thread_id = int(thread_id.group(1))
-                    if not model_pool.exists(cr, uid, thread_id) or \
-                        not hasattr(model_pool, 'message_update'):
-                            # referenced thread not found or not updatable,
-                            # -> create a new one
-                            thread_id = False
-        if not thread_id:
-            thread_id = create_record(msg)
+        model_pool = self.pool.get(model)
+        assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
+            "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
+                (msg['message-id'], model)
+        if thread_id and hasattr(model_pool, 'message_update'):
+            model_pool.message_update(cr, user_id, [thread_id], msg, {}, context=context)
         else:
-            model_pool.message_update(cr, uid, [thread_id], msg, {}, context=context)
-        # To forward the email to other followers
+            thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
+
+        # Forward the email to other followers
         self.message_forward(cr, uid, model, [thread_id], msg_txt, context=context)
-        # Set as Unread
         model_pool.message_mark_as_unread(cr, uid, [thread_id], context=context)
         return thread_id
 

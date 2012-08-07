@@ -20,9 +20,19 @@
 ##############################################################################
 
 import re
+import unicodedata
 
 from openerp.osv import fields, osv
+from openerp.tools import ustr
 
+# Inspired by http://stackoverflow.com/questions/517923
+def remove_accents(input_str):
+    """Suboptimal-but-better-than-nothing way to replace accented
+    latin letters by an ASCII equivalent. Will obviously change the
+    meaning of input_str and work only for some cases"""
+    input_str = ustr(input_str)
+    nkfd_form = unicodedata.normalize('NFKD', input_str)
+    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
 
 class mail_alias(osv.Model):
     """A Mail Alias is a mapping of an email address with a given OpenERP Document
@@ -40,6 +50,7 @@ class mail_alias(osv.Model):
     _name = 'mail.alias'
     _description = "Email Aliases"
     _rec_name = 'alias_name'
+    _order = 'alias_model_id, alias_name'
 
     def _get_alias_domain(self, cr, uid, ids, name, args, context=None):
         ir_config_parameter = self.pool.get("ir.config_parameter")
@@ -55,10 +66,9 @@ class mail_alias(osv.Model):
                                                "corresponds. Any incoming email that does not reply to an "
                                                "existing record will cause the creation of a new record "
                                                "of this model (e.g. a Project Task)",
-                                          # only allow selecting mail_thread models!
-                                          #TODO kept doamin temporarily in comment, need to redefine domain
-                                          #domain="[('field_id', 'in', 'message_ids')]"
-                                          ),
+                                          # hack to only allow selecting mail_thread models (we might
+                                          # (have a few false positives, though)
+                                          domain="[('field_id.name', '=', 'message_ids')]"),
         'alias_user_id': fields.many2one('res.users', 'Owner',
                                            help="The owner of records created upon receiving emails on this alias. "
                                                 "If this field is not set the system will attempt to find the right owner "
@@ -76,7 +86,10 @@ class mail_alias(osv.Model):
 
     _defaults = {
         'alias_defaults': '{}',
-        'alias_user_id': lambda self,cr,uid, context: uid
+        'alias_user_id': lambda self,cr,uid,context: uid,
+        
+        # looks better when creating new aliases - even if the field is informative only
+        'alias_domain': lambda self,cr,uid,context: self._get_alias_domain(cr,1,[1],None,None)[1]
     }
 
     _sql_constraints = [
@@ -122,12 +135,10 @@ class mail_alias(osv.Model):
         make it unique, and the ``alias_model_id`` value will set to the
         model ID of the ``model_name`` value, if provided, 
         """
-        alias_name = re.sub(r'\W+', '_', vals['alias_name']).lower()
+        alias_name = re.sub(r'[^\w+]', '_', remove_accents(vals['alias_name'])).lower()
         alias_name = self._find_unique(cr, uid, alias_name, context=context)
         vals['alias_name'] = alias_name
         if model_name:
             model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model_name)], context=context)[0]
             vals['alias_model_id'] = model_id
         return self.create(cr, uid, vals, context=context)
-
-

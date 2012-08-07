@@ -189,14 +189,11 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
-                        if server.object_id:
-                            res_id = mail_thread.message_process(cr, uid, server.object_id.model, 
-                                                                 data[0][1],
-                                                                 save_original=server.original,
-                                                                 strip_attachments=(not server.attach),
-                                                                 context=context)
-                        else:
-                            res_id = mail_thread.message_catchall(cr, uid, data[0][1])
+                        res_id = mail_thread.message_process(cr, uid, server.object_id.model, 
+                                                             data[0][1],
+                                                             save_original=server.original,
+                                                             strip_attachments=(not server.attach),
+                                                             context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
                             imap_server.store(num, '+FLAGS', '\\Seen')
@@ -217,14 +214,11 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
-                        if server.object_id:
-                            res_id = mail_thread.message_process(cr, uid, server.object_id.model,
-                                                                 msg,
-                                                                 save_original=server.original,
-                                                                 strip_attachments=(not server.attach),
-                                                                 context=context)
-                        else:
-                            res_id = mail_thread.message_catchall(cr, uid, data[0][1])
+                        res_id = mail_thread.message_process(cr, uid, server.object_id.model,
+                                                             msg,
+                                                             save_original=server.original,
+                                                             strip_attachments=(not server.attach),
+                                                             context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
                         pop_server.dele(num)
