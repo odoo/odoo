@@ -359,12 +359,13 @@ class res_partner(osv.osv):
             email = contact_regex_res[0][1]
             rec_id = self.create(cr, uid, {self._rec_name: name, 'email': email}, context);
             return self.name_get(cr, uid, [rec_id], context)[0]
-        elif email_regex:
+        elif email_regex_res:
             email = '%s' % (email_regex_res[0])
             rec_id = self.create(cr, uid, {self._rec_name: email, 'email': email}, context);
             return self.name_get(cr, uid, [rec_id], context)[0]
         else:
-            return super(res_partner, self).create(cr, uid, name, context)
+            rec_id = super(res_partner, self).create(cr, uid, {self._rec_name: name}, context)
+            return self.name_get(cr, uid, [rec_id], context)[0]
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
