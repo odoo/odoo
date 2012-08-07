@@ -430,7 +430,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 return;
             }
             self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
-            self.start();
+            self.unblockUI();
         });
     },
     do_backup: function(form) {
