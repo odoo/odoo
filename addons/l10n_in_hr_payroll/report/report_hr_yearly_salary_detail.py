@@ -69,43 +69,35 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         return [mnth_name]
 
     def get_employee(self, form):
-        result = []
-        emp_obj = self.pool.get('hr.employee')
-        emp_ids = form.get('employee_ids', [])
-        result = emp_obj.browse(self.cr,self.uid, emp_ids, context=self.context)
-        return result
+        return self.pool.get('hr.employee').browse(self.cr,self.uid, form.get('employee_ids', []), context=self.context)
 
     def get_employee_detail(self, form, obj):
         self.allow_list = []
         self.deduct_list = []
         self.total = 0.00
 
-        #for Basic Salary
-        res = self.cal_monthly_amt(form, obj.id)
-        basic = res[0]
-        if basic:
-            self.total += basic[0][len(basic[0])-1]
-            self.allow_list.append(basic[0])
-
-        #for allowance
-        allow = res[1]
-        gross = res[3]
-        for i in range(1, len(allow)+1):
-            self.allow_list.append(allow[i-1])
-            self.total += allow[i-1][len(allow[i-1])-1]
-        if gross:
-            self.total += gross[0][len(gross[0])-1]
-            self.allow_list.append(gross[0])
-
-        #for Deduction
-        deduct = res[2] 
-        net = res[4]
-        for i in range(1, len(deduct)+1):
-            self.deduct_list.append(deduct[i-1])
-            self.total -= deduct[i-1][len(deduct[i-1])-1]
-        if net:
-            self.total += net[0][len(net[0])-1]
-            self.deduct_list.append(net[0])
+        lines = []
+        lines = self.cal_monthly_amt(form, obj.id)
+        if lines:
+            for line in lines:
+                for line[0] in line:
+                    if line[0][13] > 0.0 and line[0][0] != "Net":
+                        self.total += line[0][len(line[0])-1]
+                        self.allow_list.append(line[0])
+                        if line[0][0]  == "Gross":
+                            self.allow_list.remove(line[0])
+                    if line[0][0] == "Net" or line[0][13] < 0.0:
+                        self.total += line[0][len(line[0])-1]
+                        self.deduct_list.append(line[0])
+                        if line[0][0]  == "Net":
+                            self.deduct_list.remove(line[0])
+                if line:
+                    if line[0][0]  == "Gross":
+                        gross = line[0]
+                    if line[0][0]  == "Net":
+                        net = line[0]
+            self.allow_list.append(gross)
+            self.deduct_list.append(net)
         return None
 
     def cal_monthly_amt(self, form, emp_id):
@@ -121,22 +113,22 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
                 GROUP BY rc.parent_id, pl.sequence, pl.id, pl.category_id,pl.name,p.date_to,rc.code \
                 ORDER BY pl.sequence, rc.parent_id''',([emp_id]))
         salary = self.cr.fetchall()
-
         for category in salary:
             if category[0] not in salaries:
-                salaries[category[0]] = {}
+                salaries.setdefault(category[0], {})
                 salaries[category[0]].update({category[1]: {category[3]: category[2]}})
             elif category[1] not in salaries[category[0]]:
-                salaries[category[0]][category[1]] = {}
+                salaries[category[0]].setdefault(category[1], {})
                 salaries[category[0]][category[1]].update({category[3]: category[2]})
             else:
                 salaries[category[0]][category[1]].update({category[3]: category[2]})
 
-        for code in ['BASIC', 'ALW', 'DED', 'GROSS', 'NET']:
-            if code in salaries:
-                res = self.salary_list(salaries[code])
-            else:
-                res = []
+        category_obj = self.pool.get('hr.salary.rule.category')
+        category_ids = category_obj.search(self.cr,self.uid, [], context=self.context)
+        res = []
+        for code in category_obj.read(self.cr,self.uid, category_ids, context=self.context):
+            if code['code'] in salaries:
+                res = self.salary_list(salaries[code['code']])
             result.append(res)
         return result
 
