@@ -289,6 +289,7 @@ instance.web.Loading = instance.web.Widget.extend({
         }
     }
 });
+
 instance.web.DatabaseManager = instance.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
@@ -299,6 +300,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
+        $('.oe_secondary_menus_container,.oe_user_menu_placeholder').empty();
         var fetch_db = this.rpc("/web/database/get_list", {}).pipe(
             function(result) {
                 self.db_list = result.db_list;
@@ -430,7 +432,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 return;
             }
             self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
-            self.unblockUI();
+            self.start();
         });
     },
     do_backup: function(form) {
@@ -498,7 +500,6 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     },
     do_exit: function () {
         this.$element.remove();
-        $('.oe_secondary_menus_container,.oe_user_menu_placeholder').empty();
         $('.oe_topbar,.oe_leftbar').hide();
         this.do_action('login');
     }
