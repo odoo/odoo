@@ -3338,6 +3338,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             ListType: instance.web.form.One2ManyList
         }));
         this.on('edit:before', this, this.proxy('_before_edit'));
+        this.on('edit:after', this, this.proxy('_after_edit'));
         this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
 
         this.records
@@ -3447,6 +3448,12 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
     _before_edit: function () {
         this.__ignore_blur = false;
         this.editor.form.on('blurred', this, this._on_form_blur);
+    },
+    _after_edit: function () {
+        // The form's blur thing may be jiggered during the edition setup,
+        // potentially leading to the o2m instasaving the row. Cancel any
+        // blurring triggered the edition startup here
+        this.editor.form.widgetFocused();
     },
     _before_unedit: function () {
         this.editor.form.off('blurred', this, this._on_form_blur);
