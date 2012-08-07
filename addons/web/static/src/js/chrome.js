@@ -292,7 +292,6 @@ instance.web.Loading = instance.web.Widget.extend({
 instance.web.DatabaseManager = instance.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
-        self.$('.oe_topbar,.oe_leftbar').show();
         this.unblockUIFunction = instance.web.unblockUI;
         $.validator.addMethod('matches', function (s, _, re) {
             return new RegExp(re).test(s);
@@ -315,9 +314,10 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     },
     do_render: function() {
         var self = this;
+        $('.oe_topbar,.oe_leftbar').show();
         self.$element.html(QWeb.render("DatabaseManager",{ widget : self }));
-        $('.oe_secondary_menus_container').replaceWith($('.datamanager_menu'));
-        $('.oe_user_menu_placeholder').replaceWith($('.oe_user_menu'));
+        $('.oe_secondary_menus_container').append($('.datamanager_menu'));
+        $('.oe_user_menu_placeholder').append($('.oe_user_menu'));
         $('ul.oe_secondary_submenu > li').bind('click', function (event) {
             $(this).addClass('oe_active').siblings().removeClass('oe_active');
             var $new = $(this);
@@ -496,8 +496,10 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         });
     },
     do_exit: function () {
-        this.do_action('reload');
-        //this.do_action('login');
+        this.$element.remove();
+        $('.oe_secondary_menus_container,.oe_user_menu_placeholder').empty();
+        $('.oe_topbar,.oe_leftbar').hide();
+        this.do_action('login');
     }
 });
 instance.web.client_actions.add("database_manager", "instance.web.DatabaseManager");
