@@ -136,15 +136,12 @@ class res_partner(osv.osv):
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            resized_image_dict = tools.get_resized_images(obj.image)
-            result[obj.id] = {
-                'image_medium': resized_image_dict['image_medium'],
-                'image_small': resized_image_dict['image_small'],
-                }
+            result[obj.id] = tools.image_get_resized_images(obj.image)
+            print result[obj.id]
         return result
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _order = "name"
     _columns = {
@@ -224,7 +221,7 @@ class res_partner(osv.osv):
             image_path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'company_icon.png')
         else:
             image_path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png')
-        return tools.resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'active': True,
@@ -247,7 +244,7 @@ class res_partner(osv.osv):
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
         # get value as for an onchange on the image
-        value = tools.get_resized_images(self._get_default_image(cr, uid, is_company, context))
+        value = tools.image_get_resized_images(self._get_default_image(cr, uid, is_company, context), return_big=True)
         value['title'] = False
         if is_company:
             value['parent_id'] = False
@@ -315,7 +312,7 @@ class res_partner(osv.osv):
             self.update_address(cr, uid, update_ids, vals, context)
         if 'image' not in vals :
             image_value = self._get_default_image(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
-            vals.update(tools.get_resized_images(image_value))
+            vals.update(tools.image_get_resized_images(image_value, return_big=True))
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):

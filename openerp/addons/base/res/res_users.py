@@ -168,15 +168,11 @@ class users(osv.osv):
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            resized_image_dict = tools.get_resized_images(obj.image)
-            result[obj.id] = {
-                'image_medium': resized_image_dict['image_medium'],
-                'image_small': resized_image_dict['image_small'],
-                }
+            result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
     
     _columns = {
         'id': fields.integer('ID'),
@@ -322,7 +318,7 @@ class users(osv.osv):
     def _get_default_image(self, cr, uid, context=None):
         # default image file name: avatar0 -> avatar6.png, choose randomly
         image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
-        return tools.resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'password' : '',
