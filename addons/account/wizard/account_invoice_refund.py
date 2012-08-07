@@ -143,7 +143,7 @@ class account_invoice_refund(osv.osv_memory):
                     description = inv.name
 
                 if not period:
-                    raise osv.except_osv(_('Data Insufficient !'), \
+                    raise osv.except_osv(_('Insufficient Data!'), \
                                             _('No period found on the invoice.'))
 
                 refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description, journal_id)

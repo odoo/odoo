@@ -521,7 +521,7 @@ class account_invoice(osv.osv):
             pterm_list.sort()
             res = {'value':{'date_due': pterm_list[-1]}}
         else:
-             raise osv.except_osv(_('Data Insufficient !'), _('The payment term of supplier does not have a payment term line!'))
+             raise osv.except_osv(_('Insufficient Data!'), _('The payment term of supplier does not have a payment term line.'))
         return res
 
     def onchange_invoice_line(self, cr, uid, ids, lines):
