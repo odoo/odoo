@@ -63,7 +63,7 @@ class crm_meeting(base_state, osv.Model):
                             'event_id', 'attendee_id', 'Attendees', states={'done': [('readonly', True)]}),
     }
     _defaults = {
-        'state': 'draft',
+        'state': 'open',
     }
 
     # ----------------------------------------
