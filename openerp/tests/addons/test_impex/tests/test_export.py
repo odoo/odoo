@@ -6,9 +6,6 @@ import openerp
 from openerp.tests import common
 
 
-def setUpModule():
-    openerp.tools.config['update'] = {'base': 1}
-
 class CreatorCase(common.TransactionCase):
     model_name = False
 

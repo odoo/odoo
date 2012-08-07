@@ -26,9 +26,6 @@ def error(row, message, record=None, **kwargs):
 def values(seq, field='value'):
     return [item[field] for item in seq]
 
-def setupModule():
-    openerp.tools.config['update'] = {'base': 1}
-
 class ImporterCase(common.TransactionCase):
     model_name = False
 
