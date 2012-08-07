@@ -54,7 +54,7 @@
                                             <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
                                             <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                         </div>
-                                        <field name="country_id" placeholder="Country" class="oe_no_button"/>
+                                        <field name="country_id" placeholder="Country" class="oe_no_button" on_change="on_change_country(country_id)"/>
                                     </div>
                                     <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
                                 </group>

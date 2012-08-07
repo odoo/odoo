@@ -145,7 +145,14 @@ class res_company(osv.osv):
         if vat: val.append(_('VAT: ')+vat)
         if reg: val.append(_('Reg: ')+reg)
         return {'value': {'rml_footer1':' | '.join(val)}}
-
+    
+    def on_change_country(self, cr, uid, ids, country_id, context=None):
+        res_country_obj = self.pool.get('res.country')
+        if not country_id:
+            default_currency_id = self._get_euro(cr, uid, context=context)
+            return {'value': {'currency_id': default_currency_id}}
+        currency_id = res_country_obj.browse(cr, uid, country_id, context=context).currency_id.id
+        return {'value': {'currency_id': currency_id}}
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
