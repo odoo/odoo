@@ -122,153 +122,297 @@
 </t>
 
 <t t-name="DatabaseManager">
-    <div class="oe_database_manager">
-        <div class="oe_database_manager_menu">
-            <ul class="oe_notebook">
-                <li><a href="#db_create">Create</a></li>
-                <li><a href="#db_drop">Drop</a></li>
-                <li><a href="#db_backup">Backup</a></li>
-                <li><a href="#db_restore">Restore</a></li>
-                <li><a href="#db_change_password">Password</a></li>
-                <li><a id="back_to_login" href="#">Back to Login</a></li>
-            </ul>
-            <form id="db_create" name="create_db_form" method="POST">
-                <table align="center" class="db_option_table">
-                    <tr>
-                        <th colspan="2" class="option_string"> CREATE DATABASE </th>
-                    </tr>
-                    <tr>
-                        <td><label for="super_admin_pwd">Master password:</label></td>
-                        <td><input type="password" name="super_admin_pwd" class="required" value="admin"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="db_name">New database name:</label></td>
-                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$" autofocus="true"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="demo_data">Load Demonstration data:</label></td>
-                        <td><input type="checkbox" name="demo_data"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="db_lang">Default language:</label></td>
-                        <td>
-                            <select name="db_lang" t-if="widget.lang_list">
-                                <t t-foreach="widget.lang_list" t-as="lang">
-                                    <option t-att-value="lang[0]" t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined"><t t-esc="lang[1]"/></option>
-                                </t>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="create_admin_pwd">Admin password:</label></td>
-                        <td><input type="password" name="create_admin_pwd" class="required"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="create_confirm_pwd">Confirm password:</label></td>
-                        <td><input type="password" name="create_confirm_pwd" class="required" equalTo="input[name=create_admin_pwd]"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="right"><button class="oe_button">Create</button></td>
-                    </tr>
-                </table>
-            </form>
-            <form id="db_drop" name="drop_db_form" method="POST">
-                <table align="center" class="db_option_table">
-                    <tr>
-                        <th colspan="2" class="option_string"> DROP DATABASE </th>
-                    </tr>
-                    <tr>
-                        <td><label for="drop_db">Database:</label></td>
-                        <td>
-                            <select t-if="widget.db_list" name="drop_db" autofocus="autofocus">
-                                <t t-foreach="widget.db_list" t-as="db">
-                                    <option t-att-value="db"><t t-esc="db"/></option>
-                                </t>
-                            </select>
-                            <input t-if="!widget.db_list" name="drop_db" class="required" type="text" autofocus="autofocus"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="drop_password">Master Password:</label></td>
-                        <td><input type="password" name="drop_pwd" class="required"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="right"><button class="oe_button">Drop</button></td>
-                    </tr>
-                </table>
-            </form>
-            <form id="db_backup" name="backup_db_form" method="POST" target="backup-target" action="/web/database/backup">
-                <input type="hidden" name="token"/>
-                <table align="center" class="db_option_table">
-                    <tr>
-                        <th colspan="2" class="option_string"> BACKUP DATABASE </th>
-                    </tr>
-                    <tr>
-                        <td><label for="backup_db">Database:</label></td>
-                        <td>
-                            <select t-if="widget.db_list" name="backup_db" autofocus="autofocus">
-                                <t t-foreach="widget.db_list" t-as="db">
-                                    <option t-att-value="db"><t t-esc="db"/></option>
-                                </t>
-                            </select>
-                            <input t-if="!widget.db_list" name="backup_db" class="required" type="text" autofocus="autofocus"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="backup_pwd">Master Password:</label></td>
-                        <td><input type="password" name="backup_pwd" class="required"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="right"><button class="oe_button">Backup</button></td>
-                    </tr>
-                </table>
-            </form>
-            <form id="db_restore" name="restore_db_form" method="POST">
-                <table align="center" class="db_option_table">
-                    <tr>
-                        <th colspan="2" class="option_string"> RESTORE DATABASE </th>
-                    </tr>
-                    <tr>
-                        <td><label for="restore_db">File:</label></td>
-                        <td><input type="file" name="db_file" class="required" autofocus="autofocus"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="restore_pwd">Master Password:</label></td>
-                        <td><input type="password" name="restore_pwd" class="required"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="new_db">New database name:</label></td>
-                        <td><input type="text" name="new_db" class="required"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="right"><button class="oe_button">Restore</button></td>
-                    </tr>
-                </table>
-            </form>
-            <form id="db_change_password" name="change_pwd_form" method="POST">
-                <table align="center" class="db_option_table">
-                    <tr>
-                        <th colspan="2" class="option_string"> CHANGE MASTER PASSWORD </th>
-                    </tr>
-                    <tr>
-                        <td><label for="old_pwd">Master password:</label></td>
-                        <td><input type="password" name="old_pwd" class="required" minlength="1" autofocus="autofocus"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="new_pwd">New master password:</label></td>
-                        <td><input type="password" name="new_pwd" class="required" minlength="1"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="confirm_pwd">Confirm new master password:</label></td>
-                        <td><input type="password" name="confirm_pwd" class="required" equalTo="input[name=new_pwd]" minlength="1"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
-                    </tr>
-                </table>
-            </form>
-        </div>
+   <div>
+    <div class ="oe_user_menu">
+            <span class="oe_right">
+                 <a id="back-to-login" href="#"><span class="oe_topbar_item oe_topbar_name">Back to Login</span></a>
+            </span>
     </div>
+    <div class="datamanager_menu">
+        <div class="oe_secondary_menu_section">Database Management</div>
+                        <ul class="oe_secondary_submenu">
+                            <li id="db-create" class="oe_active"><a href="#db_create">Create</a></li>
+                            <li id="db-drop"> <a href="#db_drop">Drop</a></li>
+                            <li id="db-backup"><a href="#db_backup">Backup</a></li>
+                            <li id="db-restore"> <a href="#db_restore">Restore</a></li>
+                            <li id="db-change-password"><a href="#db_change_password">Password</a></li>
+                        </ul>
+            </div>
+                <div class="oe_view_manager_view_form">
+                    <div class="oe_form">
+                        <form id="db_create" name="create_db_form" style="display: block; ">
+                            <div class="oe_view_manager oe_view_manager_current">
+                                <table class=" oe_view_manager_header">
+                                    <tr class="oe_header_row oe_header_row_top">
+                                        <td colspan="4">
+                                            <h2 class="oe_view_title">
+                                                <span class="oe_view_title_text oe_breadcrumb_title">CREATE DATABASE</span>
+                                            </h2>
+                                        </td>
+                                    </tr>
+                                    <tr class="oe_header_row">
+                                        <td colspan="4">
+                                            <div class="oe_view_manager_buttons">
+                                                <button type="submit" class="oe_button oe_highlight db_create" style="float:left">Create</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <table align="center" class="db_option_table">
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="super_admin_pwd">Master password:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="password" name="super_admin_pwd" class="required" value="admin"
+                                        />
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="db_name">New database name:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$"
+                                        autofocus="true" />
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="demo_data">Load Demonstration data:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell">
+                                        <span class="oe_form_field oe_form_field_boolean">
+                                            <input type="checkbox" name="demo_data" />
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="db_lang">Default language:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_field oe_form_field_selection ">
+                                        <select name="db_lang" t-if="widget.lang_list">
+                                            <t t-foreach="widget.lang_list" t-as="lang">
+                                                <option t-att-value="lang[0]" t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined">
+                                                    <t t-esc="lang[1]" />
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="create_admin_pwd">Admin password:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="password" name="create_admin_pwd" class="required" />
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="create_confirm_pwd">Confirm password:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="password" name="create_confirm_pwd" class="required" equalTo="input[name=create_admin_pwd]"
+                                        />
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                        <form id="db_drop" name="drop_db_form" style="display: none; ">
+                            <div class="oe_view_manager oe_view_manager_current">
+                                <table class=" oe_view_manager_header">
+                                    <tr class="oe_header_row oe_header_row_top">
+                                        <td colspan="4">
+                                            <h2 class="oe_view_title">
+                                                <span class="oe_view_title_text oe_breadcrumb_title">DROP DATABASE</span>
+                                            </h2>
+                                        </td>
+                                    </tr>
+                                    <tr class="oe_header_row">
+                                        <td colspan="4">
+                                            <div class="oe_view_manager_buttons">
+                                                <button type="submit" class="oe_button oe_highlight db_drop" style="float:left">Drop</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <table align="center" class="db_option_table">
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="drop_db">Database:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_field oe_form_field_selection">
+                                        <select t-if="widget.db_list" name="drop_db" autofocus="autofocus">
+                                            <t t-foreach="widget.db_list" t-as="db">
+                                                <option t-att-value="db">
+                                                    <t t-esc="db" />
+                                                </option>
+                                            </t>
+                                        </select>
+                                        <input t-if="!widget.db_list" name="drop_db" class="required" type="text"
+                                        autofocus="autofocus" />
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="drop_password">Master Password:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="password" name="drop_pwd" class="required" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                        <form id="db_backup" name="backup_db_form" target="backup-target" action="/web/database/backup" style="display: none; ">
+                            <div class="oe_view_manager oe_view_manager_current">
+                                <table class=" oe_view_manager_header">
+                                    <tr class="oe_header_row oe_header_row_top">
+                                        <td colspan="4">
+                                            <h2 class="oe_view_title">
+                                                <span class="oe_view_title_text oe_breadcrumb_title">BACKUP DATABASE</span>
+                                            </h2>
+                                        </td>
+                                    </tr>
+                                    <tr class="oe_header_row">
+                                        <td colspan="4">
+                                            <div class="oe_view_manager_buttons">
+                                                <button type="submit" class="oe_button oe_highlight db_backup" style="float:left">Backup</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <input type="hidden" name="token" />
+                            <table align="center" class="db_option_table">
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="backup_db">Database:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_field oe_form_field_selection ">
+                                        <select t-if="widget.db_list" name="backup_db" autofocus="autofocus">
+                                            <t t-foreach="widget.db_list" t-as="db">
+                                                <option t-att-value="db">
+                                                    <t t-esc="db" />
+                                                </option>
+                                            </t>
+                                        </select>
+                                        <input t-if="!widget.db_list" name="backup_db" class="required" type="text"
+                                        autofocus="autofocus" />
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="backup_pwd">Master Password:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="password" name="backup_pwd" class="required" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                        <form id="db_restore" name="restore_db_form" style="display: none; ">
+                            <div class="oe_view_manager oe_view_manager_current">
+                                <table class=" oe_view_manager_header">
+                                    <tr class="oe_header_row oe_header_row_top">
+                                        <td colspan="4">
+                                            <h2 class="oe_view_title">
+                                                <span class="oe_view_title_text oe_breadcrumb_title">RESTORE DATABASE</span>
+                                            </h2>
+                                        </td>
+                                    </tr>
+                                    <tr class="oe_header_row">
+                                        <td colspan="4">
+                                            <div class="oe_view_manager_buttons">
+                                                <button type="submit" class="oe_button oe_highlight db_restore" style="float:left">Restore</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <table align="center" class="db_option_table">
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="restore_db">File:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="file" name="db_file" class="required" autofocus="autofocus"
+                                        />
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="restore_pwd">Master Password:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="password" name="restore_pwd" class="required" />
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="new_db">New database name:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="text" name="new_db" class="required" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                        <form id="db_change_password" name="change_pwd_form" style="display: none;">
+                            <div class="oe_view_manager oe_view_manager_current">
+                                <table class=" oe_view_manager_header">
+                                    <tr class="oe_header_row oe_header_row_top">
+                                        <td colspan="4">
+                                            <h2 class="oe_view_title">
+                                                <span class="oe_view_title_text oe_breadcrumb_title">CHANGE MASTER PASSWORD</span>
+                                            </h2>
+                                        </td>
+                                    </tr>
+                                    <tr class="oe_header_row">
+                                        <td colspan="4">
+                                            <div class="oe_view_manager_buttons">
+                                                <button type="submit" class="oe_button oe_highlight db-change-password"
+                                                style="float:left">Change Password</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <table align="center" class="db_option_table">
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="old_pwd">Master password:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="password" name="old_pwd" class="required" minlength="1" autofocus="autofocus"
+                                        />
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="new_pwd">New master password:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="password" name="new_pwd" class="required" minlength="1" />
+                                    </td>
+                                </tr>
+                                <tr class="oe_form_group_row">
+                                    <td class="oe_form_group_cell oe_form_group_cell_label">
+                                        <label for="confirm_pwd">Confirm new master password:</label>
+                                    </td>
+                                    <td class="oe_form_group_cell oe_form_required">
+                                        <input type="password" name="confirm_pwd" class="required" equalTo="input[name=new_pwd]"
+                                        minlength="1" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+        </div>
 </t>
 
 <t t-name="Menu">
