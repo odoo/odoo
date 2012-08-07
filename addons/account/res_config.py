@@ -79,10 +79,10 @@ class account_config_settings(osv.osv_memory):
         'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier credit note sequence'),
         'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier credit note number'),
 
-        'module_account_check_writing': fields.boolean('pay your supplier by check',
+        'module_account_check_writing': fields.boolean('pay your suppliers by check',
             help="""This allows you to check writing and printing.
                 This installs the module account_check_writing."""),
-        'module_account_accountant': fields.boolean('accountant features',
+        'module_account_accountant': fields.boolean('full accounting features: journals, legal statements, chart of accounts, etc.',
             help="""If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of  Accounts, ...)"""),
         'module_account_asset': fields.boolean('assets management',
             help="""This allows you to manage the assets owned by a company or a person.
@@ -99,7 +99,7 @@ class account_config_settings(osv.osv_memory):
                     * serve as base for an easy plug-in of various automated payment mechanisms, and
                     * provide a more efficient way to manage invoice payments.
                 This installs the module account_payment."""),
-        'module_account_voucher': fields.boolean('anage customer payments',
+        'module_account_voucher': fields.boolean('manage customer payments',
             help="""This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.
                 This installs the module account_voucher."""),
         'module_account_followup': fields.boolean('manage customer payment follow-ups',

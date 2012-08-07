@@ -1327,6 +1327,12 @@ class account_analytic_account(osv.osv):
             raise osv.except_osv(_('Warning !'), _('Please delete the project linked with this account first.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
 
+class project_project(osv.osv):
+    _inherit = 'project.project'
+    _defaults = {
+        'use_tasks': True
+    }
+
 
 #
 # Tasks History, used for cumulative flow charts (Lean/Agile)
