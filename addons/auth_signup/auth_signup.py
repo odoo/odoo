@@ -9,22 +9,17 @@ class res_users(osv.Model):
 
 class signup_signup(osv.TransientModel):
     _name = 'auth.signup'
+
+    # TODO add captcha
     _columns = {
         'name': fields.char('Name', size=64),
         'email': fields.char('Email', size=64),
         'password': fields.char('Password', size=64),
-        'password_confirmation': fields.char('Confirm Password', size=64),
-        'state': fields.selection([(x, x) for x in 'draft done missmatch'.split()], required=True),
-    }
-    _defaults = {
-        'state': 'draft',
     }
 
     def create(self, cr, uid, values, context=None):
         # NOTE here, invalid values raises exceptions to avoid storing
         # sensitive data into the database (which then are available to anyone)
-        if values['password'] != values['password_confirmation']:
-            raise osv.except_osv('Error', 'Passwords missmatch')
 
         new_user = {
             'name': values['name'],
@@ -40,17 +35,5 @@ class signup_signup(osv.TransientModel):
         else:
             self.pool.get('res.users').create(cr, 1, new_user, context=context)
 
-        # Dont store the password
-        values = {'state': 'done'}
-        return super(signup_signup, self).create(cr, uid, values, context)
-
-    def signup(self, cr, uid, ids, context=None):
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'login',
-        }
-
-    def onchange_pw(self, cr, uid, ids, pw, cpw, context=None):
-        if pw != cpw:
-            return {'value': {'state': 'missmatch'}}
-        return {'value': {'state': 'draft'}}
+        # Dont store anything
+        return 0

@@ -8,7 +8,6 @@
  'installable': True,
  'depends': ['auth_anonymous', 'base_setup'],
  'data': [
-     'auth_signup.xml',
      'res_config.xml',
  ],
  'js': [

@@ -4,7 +4,7 @@ openerp.auth_signup = function(instance) {
     instance.web.Login.include({
         start: function() {
             var self = this;
-            
+
             this.$('a.oe_signup').click(function() {
                 var db = self.$("form [name=db]").val();
                 if (!db) {
@@ -32,17 +32,74 @@ openerp.auth_signup = function(instance) {
 
         _signup: function() {
             this.do_action({
-                type:'ir.actions.act_window',
-                res_model: 'auth.signup',
-                views: [[false, 'form']],
+                type: 'ir.actions.client',
+                tag: 'auth_signup.signup',
                 target: 'new',
-                name: 'Sign Up'
-            }, function() {
-                // mmh, no way to have access to dialog befor close...
-                // TODO autolog user
-                console.log('onclose', this, arguments);
+                name: 'Sign up'
             });
         }
     });
+
+
+    instance.auth_signup = instance.auth_signup || {};
+    instance.auth_signup.Signup = instance.web.Widget.extend({
+        template: 'auth_signup.signup',
+        init: function() {
+            this._super.apply(this, arguments);
+            this.dataset = new instance.web.DataSet(this, 'auth.signup');
+        },
+        start: function() {
+            var self = this;
+            this.$('input[type=password]').change(function() {
+                var v = $(this).val();
+                var e = !_.isEmpty(v);
+                if (e) {
+                    e =_.all(self.$('input[type=password]'), function(i) {
+                        return $(i).val() === v;
+                    });
+                }
+                var $b = self.$('button');
+                if (e) {
+                    $b.removeAttr('disabled');
+                } else {
+                    $b.attr('disabled', 'disabled');
+                }
+            });
+
+            this.$('form').submit(function(ev) {
+                if(ev) {
+                    ev.preventDefault();
+                }
+                var name = self.$('input[name=name]').val();
+                var email = self.$('input[name=email]').val();
+                var password = self.$('input[name=password]').val();
+
+                self.dataset.create({
+                    name: name,
+                    email: email,
+                    password: password
+                }, function() {
+                    self.do_action({
+                        type: 'ir.actions.client',
+                        tag: 'login',
+                        params: {
+                            db: instance.connection.db,
+                            login: email,
+                            password: password,
+                            login_successful: function() {
+                                self.do_action('home');
+                            }
+                        }
+                    });
+                });
+                return false;
+
+            });
+            return $.when(this._super());
+        }
+
+    });
+    instance.web.client_actions.add("auth_signup.signup", "instance.auth_signup.Signup");
+
 
 };
