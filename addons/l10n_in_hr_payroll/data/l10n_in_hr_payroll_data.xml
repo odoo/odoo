@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Contribution Register -->
+
+        <record id="hr_houserent_allowance_register" model="hr.contribution.register">
+            <field name="name">House Rent Allowance Register for Metro and Non Metro city</field>
+        </record>
+
+        <record id="hr_provident_fund_employee_register" model="hr.contribution.register">
+            <field name="name">Employee's Provident Fund Register</field>
+        </record>
+
+        <record id="hr_provident_fund_employer_register" model="hr.contribution.register">
+            <field name="name">Employer's Provident Fund Register</field>
+        </record>
+
+        <record id="hr_professional_tax_deduction_register" model="hr.contribution.register">
+            <field name="name">Professional Tax Deduction Register</field>
+        </record>
+
+        <record id="hr_food_coupen_register" model="hr.contribution.register">
+            <field name="name">Food Coupen Register</field>
+        </record>
+
         <!-- Hr Salary Rules for allowance-->
 
         <record id="hr_salary_rule_da" model="hr.salary.rule">
@@ -19,6 +41,7 @@
             <field name="amount_python_compute">result=payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.50) or (contract.wage * 0.50) if (contract.city_type=='metro') else payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.40) or (contract.wage * 0.40) if (contract.city_type=='non-metro') else 0.00</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance for metro and nonmetro city</field>
+            <field name="register_id" ref="hr_houserent_allowance_register"/>
             <field name="sequence" eval="51"/>
         </record>
 
@@ -170,6 +193,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="code">FC</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Food Coupons Allowance</field>
+            <field name="register_id" ref="hr_food_coupen_register"/>
             <field name="sequence" eval="33"/>
          </record>
 
@@ -268,6 +292,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="condition_python">result = contract.wage &gt;= 3000 </field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = -200 if contract.wage &gt;= 12000 else -150 if ((contract.wage &gt;= 9000) and (contract.wage &lt;= 11999)) else -80 if ((contract.wage &gt;= 6000) and (contract.wage &lt;= 8999)) else -20 if  ((contract.wage &gt;= 3000) and (contract.wage &lt;= 5999)) else -0</field>
+            <field name="register_id" ref="hr_professional_tax_deduction_register"/>
             <field eval="145" name="sequence"/>
         </record>
 
@@ -278,6 +303,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 8.33 / 100) or - (contract.wage * 8.33 / 100)</field>
             <field name= "note">Employer contribution does not become part of employee’s income and hence income tax is not payable on this part.</field>
+            <field name="register_id" ref="hr_provident_fund_employee_register"/>
             <field name="sequence" eval="150"/>
         </record>
 
@@ -390,6 +416,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) or - (contract.wage * 0.12)</field>
             <field name="sequence" eval="195"/>
+            <field name="register_id" ref="hr_provident_fund_employer_register"/>
             <field name="note">Both the employees and employer contribute to the fund at the rate of 12% of the basic wages, dearness allowance and retaining allowance, if any, payable to employees per month.</field>
         </record>
 
