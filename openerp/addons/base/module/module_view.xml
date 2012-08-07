@@ -41,21 +41,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search modules">
-                    <group col='10' colspan='4'>
-                        <field name="name" filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]" string="Module"/>
-                        <field name="description" string="Keywords" filter_domain="['|', ('description', 'ilike', self), ('summary', 'ilike', self)]"/>
-                        <separator orientation="vertical"/>
-                        <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
-                        <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
-                        <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
-                        <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
-                        <separator orientation="vertical"/>
-                        <field name="category_id"/>
-                        <newline/>
-                        <group expand="0" string="Group By...">
-                            <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
-                            <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
-                        </group>
+                    <field name="name" filter_domain="['|', '|', '|', ('description', 'ilike', self), ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
+                        'ilike', self)]"/>
+                    <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
+                    <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
+                    <separator/>
+                    <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
+                    <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
+                    <field name="category_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
                     </group>
                </search>
             </field>
@@ -120,7 +116,7 @@
                     <div class="oe_title">
                         <h1><field name="shortdesc"/></h1>
                         <h2 class="oe_fade"><field name="summary"/></h2>
-                        <button name="button_install" states="uninstalled" string="Install" type="object" class="oe_highlight"/>
+                        <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight"/>
                         <button name="button_upgrade" states="installed" string="Upgrade" type="object" class="oe_highlight"/>
                         <button name="button_uninstall" states="installed" string="Uninstall" type="object"
                             confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
@@ -131,7 +127,7 @@
                     <group>
                         <group>
                             <field name="author"/>
-                            <field name="website" widget="url"/>
+                            <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
                             <field name="category_id" widget="selection"/>
                         </group>
                         <group>
@@ -144,12 +140,14 @@
                         <page string="Description">
                             <field name="description"/>
                         </page>
-                        <page string="Technical Data">
+                        <page string="Technical Data" groups="base.group_no_one">
                             <group col="4">
                                 <field name="demo"/>
                                 <field name="application"/>
                                 <field name="state"/>
                             </group>
+                            <label for="views_by_module" string="Created Views"/>
+                            <field name="views_by_module"/>
                             <label for="dependencies_id"/>
                             <field name="dependencies_id">
                                 <tree string="Dependencies">
@@ -161,8 +159,6 @@
                         <page string="Features" attrs="{'invisible':[('state','!=','installed')]}">
                             <label for="menus_by_module" string="Created Menus"/>
                             <field name="menus_by_module"/>
-                            <label for="views_by_module" string="Created Views"/>
-                            <field name="views_by_module"/>
                             <label for="reports_by_module" string="Defined Reports"/>
                             <field name="reports_by_module"/>
                         </page>
@@ -192,7 +188,10 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_app':1}</field>
             <field name="search_view_id" ref="view_module_filter"/>
-            <field name="help">You can install new modules in order to activate new features, menu, reports or data in your OpenERP instance. To install some modules, click on the button "Install" from the form view and then click on "Start Upgrade".</field>
+            <field name="help" type="html">
+              <p><b>No module found!</b></p>
+              <p>You should try others search criteria.</p>
+            </field>
         </record>
         <menuitem id="menu_module_tree" parent="base.menu_management" name="Modules"
             sequence="1" action="open_module_tree"/>

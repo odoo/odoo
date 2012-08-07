@@ -2,6 +2,16 @@
 <openerp>
     <data>
         <!-- res.groups -->
+        <record id="view_groups_search" model="ir.ui.view">
+            <field name="name">res.groups.search</field>
+            <field name="model">res.groups</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Groups">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
+                </search>
+            </field>
+        </record>
         <record id="view_groups_form" model="ir.ui.view">
             <field name="name">res.groups.form</field>
             <field name="model">res.groups</field>
@@ -81,7 +91,7 @@
                 <form string="Users" version="7.0">
                     <field name="id" invisible="1"/>
                     <sheet>
-                        <field name="avatar" widget='image' on_change="onchange_avatar(avatar)" class="oe_avatar oe_left"/>
+                        <field name="image_medium" widget='image' class="oe_avatar oe_left"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
@@ -193,7 +203,7 @@
                 <form string="Users" version="7.0">
                    <sheet>
                     <div class="oe_right oe_avatar">
-                        <field name="avatar" widget='image' on_change="onchange_avatar(avatar)"/>
+                        <field name="image_small" widget='image' class="oe_image_small"/>
                     </div>
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
