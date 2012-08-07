@@ -207,6 +207,19 @@
                                         </t>
                                     </templates>
                                 </kanban>
+                                <form string="Contact" version="7.0">
+                                    <field name="image_small" widget='image' class="oe_avatar oe_left"/>
+                                    <div class="oe_title">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                                            <field name="function" placeholder="e.g. Sales Director"/>
+                                            <field name="email"/>
+                                            <field name="phone"/>
+                                            <field name="mobile"/>
+                                        </group>
+                                    </div>
+                                </form>
                             </field>
                         </page>
                         <page string="Internal Notes">
