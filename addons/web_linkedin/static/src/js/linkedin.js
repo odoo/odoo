@@ -8,7 +8,6 @@ openerp.web_linkedin = function(instance) {
     
     instance.web_linkedin.LinkedinTester = instance.web.Class.extend({
         init: function() {
-            this.api_key = "cxnr0l53n73x";
             this.linkedin_added = false;
             this.linkedin_def = $.Deferred();
             this.auth_def = $.Deferred();
@@ -34,11 +33,12 @@ openerp.web_linkedin = function(instance) {
             });
         },
         test_api_key: function() {
+            var self = this;
             if (this.api_key) {
                 return $.when();
             }
             return new instance.web.Model("ir.config_parameter").call("get_param", ["web.linkedin.apikey"]).pipe(function(a) {
-                if (a !== false) {
+                if (!!a) {
                     self.api_key = a;
                     return true;
                 } else {
@@ -79,7 +79,19 @@ openerp.web_linkedin = function(instance) {
                 pop.on("selected", this, function(entity) {
                     self.selected_entity(entity);
                 });
-            });
+            }, _.bind(this.linkedin_disabled, this));
+        },
+        linkedin_disabled: function() {
+            if (instance.connection.uid !== 1) {
+                instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning")), {
+                    title: _t("LinkedIn is not enabled"),
+                    buttons: [
+                        {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+                    ]
+                });
+            } else {
+                new instance.web_linkedin.KeyWizard(this).open();
+            }
         },
         selected_entity: function(entity) {
             var self = this;
@@ -237,7 +249,7 @@ openerp.web_linkedin = function(instance) {
     });
     
     instance.web_linkedin.EntityWidget = instance.web.Widget.extend({
-        template: "EntityWidget",
+        template: "Linkedin.EntityWidget",
         init: function(parent, data) {
             this._super(parent);
             this.data = data;
@@ -254,6 +266,14 @@ openerp.web_linkedin = function(instance) {
                 this.$("h3").text(this.data.formattedName);
                 self.$("img").attr("src", this.data.pictureUrl);
             }
+        },
+    });
+    
+    
+    instance.web_linkedin.KeyWizard = instance.web.Dialog.extend({
+        template: "LinkedIn.KeyWizard",
+        init: function(parent, text) {
+            this._super(parent, {title:_t("LinkedIn API Key")});
         },
     });
 };
