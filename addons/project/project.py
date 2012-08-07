@@ -524,11 +524,13 @@ def Project():
     def create(self, cr, uid, vals, context=None):
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            name = vals.pop('alias_name', None) or vals['name']
+            vals.pop('alias_name', None) # prevent errors during copy()
             alias_id = mail_alias.create_unique_alias(cr, uid, 
-                    {'alias_name': "project_"+short_name(name)},
-                    model_name=vals.get('alias_model', 'project.task'),
-                    context=context)
+                          # Using '+' allows using subaddressing for those who don't
+                          # have a catchall domain setup.
+                          {'alias_name': "project+"+vals['name']},
+                          model_name=vals.get('alias_model', 'project.task'),
+                          context=context)
             vals['alias_id'] = alias_id
         project_id = super(project, self).create(cr, uid, vals, context)
         mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)

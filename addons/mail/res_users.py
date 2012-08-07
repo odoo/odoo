@@ -86,13 +86,13 @@ class res_users(osv.osv):
             cr.execute('ALTER TABLE res_users ALTER COLUMN alias_id SET NOT NULL')
         except Exception:
             pass
-            
-    
+
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
         mail_alias = self.pool.get('mail.alias')
         alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
         data['alias_id'] = alias_id
+        data.pop('alias_name', None) # prevent errors during copy()
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
 

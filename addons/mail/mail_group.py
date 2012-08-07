@@ -163,15 +163,17 @@ class mail_group(osv.osv):
         return self.message_subscribe(cr, uid, ids, user_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        alias_pool = self.pool.get('mail.alias')
+        mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            name = vals.get('alias_name') or vals['name']
-            alias_id = alias_pool.create_unique_alias(cr, uid, 
-                    {'alias_name': "group_"+name}, 
-                    model_name=self._name, context=context)
+            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_id = mail_alias.create_unique_alias(cr, uid, 
+                          # Using '+' allows using subaddressing for those who don't
+                          # have a catchall domain setup.
+                          {'alias_name': "group+"+vals['name']},
+                          model_name=self._name, context=context)
             vals['alias_id'] = alias_id
         mail_group_id = super(mail_group, self).create(cr, uid, vals, context)
-        alias_pool.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
+        mail_alias.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
        
         if vals.get('group_ids'):
             self._subscribe_user_with_group_m2m_command(cr, uid, [mail_group_id], vals.get('group_ids'), context=context)

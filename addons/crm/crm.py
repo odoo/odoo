@@ -162,16 +162,16 @@ class crm_case_section(osv.osv):
         return res
     
     def create(self, cr, uid, vals, context=None):
-        alias_pool = self.pool.get('mail.alias')
+        mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            name = vals.pop('alias_name', None) or vals['name']
-            alias_id = alias_pool.create_unique_alias(cr, uid, 
-                    {'alias_name': name},
+            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_id = mail_alias.create_unique_alias(cr, uid, 
+                    {'alias_name': vals['name']},
                     model_name="crm.lead",
                     context=context)
             vals['alias_id'] = alias_id
         res = super(crm_case_section, self).create(cr, uid, vals, context)
-        alias_pool.write(cr, uid, [vals['alias_id']],{'alias_defaults':{'section_id': res,'type':'lead'}},context)
+        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'section_id': res, 'type':'lead'}}, context)
         return res
         
     def unlink(self, cr, uid, ids, context=None):
