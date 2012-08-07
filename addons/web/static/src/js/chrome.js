@@ -492,6 +492,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.display_error(result);
                 return;
             }
+            self.unblockUI();
             self.do_notify("Changed Password", "Password has been changed successfully");
         });
     },
