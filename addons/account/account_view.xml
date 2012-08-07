@@ -1589,7 +1589,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field eval="False" name="auto_search"/>
-            <field name="extended_form_view_id" ref="view_account_move_reconciliation_form_view"/>
             <field name="context">{'view_mode':True}</field>
         </record>
         
@@ -1599,7 +1598,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field eval="False" name="auto_search"/>
-            <field name="extended_form_view_id" ref="view_account_move_reconciliation_form_view"/>
             <field name="domain">[('partner_id.customer','=',True)]</field>
             <field name="context" eval="{'view_mode':True, 'extended_form_view_id': ref('view_account_move_reconciliation_form_view')}"></field>
         </record>

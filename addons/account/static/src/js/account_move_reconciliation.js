@@ -4,7 +4,6 @@ var _t = instance.web._t,
 instance.web.views.add('form_clone', 'instance.account.extend_form_view');
 instance.web.form.tags.add('list_button','instance.account.list_button')
 instance.web.form.tags.add('btn_extend','instance.account.btn_extend')
-instance.web.form.widgets.add('many2one_pager','instance.account.many2one_pager')
  
 instance.account.extend_viewmanager = instance.web.ViewManagerAction.include({
     start : function(){
