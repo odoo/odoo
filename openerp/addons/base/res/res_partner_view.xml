@@ -16,7 +16,6 @@
         <record id="view_partner_title_tree" model="ir.ui.view">
             <field name="name">res.partner.title.tree</field>
             <field name="model">res.partner.title</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Partner Titles">
                     <field name="name"/>
@@ -27,7 +26,6 @@
         <record id="view_partner_title_form" model="ir.ui.view">
             <field name="name">res.partner.title.form</field>
             <field name="model">res.partner.title</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner Titles" version="7.0">
                     <group col="4">
@@ -76,7 +74,6 @@
         <record id="view_partner_tree" model="ir.ui.view">
             <field name="name">res.partner.tree</field>
             <field name="model">res.partner</field>
-            <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Contacts">
@@ -95,7 +92,6 @@
         <record id="view_partner_form" model="ir.ui.view">
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partners" version="7.0">
                 <sheet>
@@ -242,7 +238,6 @@
        <record id="view_res_partner_filter" model="ir.ui.view">
             <field name="name">res.partner.select</field>
             <field name="model">res.partner</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <field name="name"
@@ -271,7 +266,6 @@
         <record model="ir.ui.view" id="res_partner_kanban_view">
             <field name="name">res.partner.kanban</field>
             <field name="model">res.partner</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="color"/>
@@ -421,7 +415,6 @@
         <record id="view_payterm_form" model="ir.ui.view">
             <field name="name">res.payterm</field>
             <field name="model">res.payterm</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Payment Term" version="7.0">
                     <group>
@@ -442,7 +435,6 @@
         <record id="view_partner_category_form" model="ir.ui.view">
             <field name="name">Partner Categories</field>
             <field name="model">res.partner.category</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner Category" version="7.0">
                     <group col="4">
@@ -456,7 +448,6 @@
         <record id="view_partner_category_list" model="ir.ui.view">
             <field name="name">Partner Categories</field>
             <field name="model">res.partner.category</field>
-            <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Partner Categories">
@@ -467,7 +458,6 @@
         <record id="view_partner_category_tree" model="ir.ui.view">
             <field name="name">res.partner.category.tree</field>
             <field name="model">res.partner.category</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree toolbar="1" string="Partner Categories">

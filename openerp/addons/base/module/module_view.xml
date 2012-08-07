@@ -7,7 +7,6 @@
         <record id="view_module_category_form" model="ir.ui.view">
             <field name="name">ir.module.category.form</field>
             <field name="model">ir.module.category</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Category" version="7.0">
                     <group col="4">
@@ -23,7 +22,6 @@
         <record id="view_module_category_tree" model="ir.ui.view">
             <field name="name">ir.module.category.tree</field>
             <field name="model">ir.module.category</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Module Category">
@@ -38,7 +36,6 @@
         <record id="view_module_filter" model="ir.ui.view">
             <field name="name">ir.module.module.list.select</field>
             <field name="model">ir.module.module</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search modules">
                     <field name="name" filter_domain="['|', '|', '|', ('description', 'ilike', self), ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
@@ -60,7 +57,6 @@
         <record model="ir.ui.view" id="module_view_kanban">
             <field name="name">Modules Kanban</field>
             <field name="model">ir.module.module</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban create="false">
                   <field name="icon"/>
@@ -108,7 +104,6 @@
         <record id="module_form" model="ir.ui.view">
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module" version="7.0">
                 <sheet>
@@ -170,7 +165,6 @@
         <record id="module_tree" model="ir.ui.view">
             <field name="name">ir.module.module.tree</field>
             <field name="model">ir.module.module</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state=='to upgrade' or state=='to install';red:state=='uninstalled';grey:state=='uninstallable';black:state=='installed'" string="Modules">
                     <field name="shortdesc"/>

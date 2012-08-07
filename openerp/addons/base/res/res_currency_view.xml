@@ -5,7 +5,6 @@
         <record id="view_currency_search" model="ir.ui.view">
             <field name="name">res.currency.search</field>
             <field name="model">res.currency</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Currencies">
                     <field name="name" string="Currency"/>
@@ -17,7 +16,6 @@
         <record id="view_currency_tree" model="ir.ui.view">
             <field name="name">res.currency.tree</field>
             <field name="model">res.currency</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Currencies">
                     <field name="name"/>
@@ -86,7 +84,6 @@
         <record id="view_currency_rate_type_form" model="ir.ui.view">
             <field name="name">res.currency.rate.type.form</field>
             <field name="model">res.currency.rate.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Currency Rate Type" version="7.0">
                     <group>
@@ -106,7 +103,6 @@
         <record id="view_currency_rate_type_search" model="ir.ui.view">
             <field name="name">res.currency.rate.type.search</field>
             <field name="model">res.currency.rate.type</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Currency Rate Type">
                     <field name="name" string="Name"/>
