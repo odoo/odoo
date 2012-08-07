@@ -295,7 +295,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_holiday_new"/>
             <field name="context">{}</field>
-            <field name="domain">[('type','=','remove')]</field>
+            <field name="domain">[('type','=','remove'),('employee_id.user_id','=', uid)]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -329,7 +329,7 @@
             <field name="view_id" ref="view_holiday_new_calendar"/>
             <field name="act_window_id" ref="open_ask_holidays"/>
         </record>
-
+        
         <menuitem name="My Leave Requests" parent="menu_open_ask_holidays" id="menu_open_ask_holidays_new" action="open_ask_holidays"/>
 
         <record model="ir.actions.act_window" id="request_approve_holidays">
