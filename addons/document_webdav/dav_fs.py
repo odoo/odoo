@@ -755,7 +755,7 @@ class openerp_dav_handler(dav_interface):
         res = self._try_function(node.rm, (cr,), "rm %s"  % uri, cr=cr)
         if not res:
             if cr: cr.close()
-            raise OSError(1, 'Operation not permitted.')
+            raise OSError(1, 'Invalid Action!')
         cr.commit()
         cr.close()
         return 204

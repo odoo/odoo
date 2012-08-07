@@ -31,6 +31,10 @@
                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                     </div>
                 </xpath>
+                <field name="user_email" position="after">
+                    <field name="alias_domain" invisible="1"/>
+                    <field name="alias_id" readonly="1" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                </field>
             </data>
             </field>
         </record>

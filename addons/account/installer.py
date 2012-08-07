@@ -119,6 +119,15 @@ class account_installer(osv.osv_memory):
         self.execute_simple(cr, uid, ids, context)
         super(account_installer, self).execute(cr, uid, ids, context=context)
 
+    def action_next(self, cr, uid, ids, context=None):
+        next = self.execute(cr, uid, ids, context=context)
+        for installer in self.browse(cr, uid, ids, context=context):
+            if installer.charts == 'l10n_be':
+                return {'type': 'ir.actions.act_window_close'}
+            else :
+                if next : return next
+                return self.next(cr, uid, ids, context=context)
+
     def execute_simple(self, cr, uid, ids, context=None):
         if context is None:
             context = {}

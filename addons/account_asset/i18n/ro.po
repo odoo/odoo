@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:27+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:38+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -36,7 +36,7 @@ msgstr "Valoare Reziduala"
 #. module: account_asset
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
-msgstr "Deval. Cont de cheltuieli"
+msgstr "Cont de cheltuieli amortizare"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
@@ -46,7 +46,7 @@ msgstr "Calculeaza Activele"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Group By..."
-msgstr "Grupeaza dupa..."
+msgstr "Grupează după..."
 
 #. module: account_asset
 #: field:asset.asset.report,gross_value:0
@@ -68,7 +68,7 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
 msgstr ""
-"Indica faptul ca prima inregistrare a devalorizarii acestor active trebuie "
+"Indica faptul ca prima inregistrare a amortizarii acestor active trebuie "
 "efectuata de la data cumpararii si nu de la intai ianuarie"
 
 #. module: account_asset
@@ -86,18 +86,18 @@ msgstr "Companie"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "Modify"
-msgstr "Modifica"
+msgstr "Modifică"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
-msgstr "In executie"
+msgstr "În derulare"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Depreciation Amount"
-msgstr "Suma devalorizata"
+msgstr "Suma de amortizat"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -130,21 +130,21 @@ msgid ""
 "This wizard will post the depreciation lines of running assets that belong "
 "to the selected period."
 msgstr ""
-"Acest wizard va afisa liniile deprecierii activelor in executie care apartin "
-"perioadei selectate."
+"Acest wizard va afisa liniile amortizarilor activelor in executie care "
+"apartin perioadei selectate."
 
 #. module: account_asset
 #: field:account.asset.asset,account_move_line_ids:0
 #: field:account.move.line,entry_ids:0
 #: model:ir.actions.act_window,name:account_asset.act_entries_open
 msgid "Entries"
-msgstr "Inregistrari"
+msgstr "Înregistrări"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 #: field:account.asset.asset,depreciation_line_ids:0
 msgid "Depreciation Lines"
-msgstr "Linii devalorizare"
+msgstr "Linii amortizare"
 
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
@@ -155,7 +155,7 @@ msgstr "Este suma pe care planuiti sa o aveti pe care nu o puteti amortiza."
 #: field:account.asset.depreciation.line,depreciation_date:0
 #: view:asset.asset.report:0 field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
-msgstr "Data devalorizare"
+msgstr "Data amortizare"
 
 #. module: account_asset
 #: field:account.asset.category,account_asset_id:0
@@ -179,7 +179,7 @@ msgstr "Active"
 #. module: account_asset
 #: field:account.asset.category,account_depreciation_id:0
 msgid "Depreciation Account"
-msgstr "Cont devalorizare"
+msgstr "Cont amortizare"
 
 #. module: account_asset
 #: view:account.asset.asset:0 view:account.asset.category:0
@@ -190,7 +190,7 @@ msgstr "Note"
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
-msgstr "Inregistrare devalorizare"
+msgstr "Inregistrare amortizare"
 
 #. module: account_asset
 #: sql_constraint:account.move.line:0
@@ -201,7 +201,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
-msgstr "# Linii devalorizare"
+msgstr "# Linii Amortizare"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -224,7 +224,7 @@ msgstr "Referinta"
 #. module: account_asset
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr "Comunicare Structurata BBA Nevalida !"
+msgstr "Comunicare Structurata BBA Invalida !"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -240,7 +240,7 @@ msgstr "Calculeaza activele"
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
 msgid "Sequence of the depreciation"
-msgstr "Secventa devalorizarii"
+msgstr "Secventa amortizarii"
 
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
@@ -264,7 +264,7 @@ msgstr "Data achizitiei activelor"
 #. module: account_asset
 #: help:account.asset.asset,method_number:0
 msgid "Calculates Depreciation within specified interval"
-msgstr "Calculeaza Devalorizarea in intervalul specificat"
+msgstr "Calculeaza Amortizarea in intervalul specificat"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -284,7 +284,7 @@ msgstr "Metoda de calcul"
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "State here the time during 2 depreciations, in months"
-msgstr "Introduceti durata dintre 2 devalorizari, in luni"
+msgstr "Introduceti durata dintre 2 amortizari, in luni"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
@@ -293,7 +293,7 @@ msgid ""
 "depreciations\"."
 msgstr ""
 "Prorata temporis poate fi aplicata doar pentru metoda timp \"numarul "
-"devalorizarilor\"."
+"amortizarilor\""
 
 #. module: account_asset
 #: help:account.asset.history,method_time:0
@@ -305,11 +305,11 @@ msgid ""
 "depreciations won't go beyond."
 msgstr ""
 "Metoda care va fi folosita pentru calcularea datelor si numarul liniilor "
-"devalorizarii.\n"
-"Numarul de devalorizari: Fixati numarul liniilor devalorizarii si perioada "
-"dintre 2 devalorizari.\n"
-"Data de sfarsit: Alegeti perioada dintre 2 devalorizari si data pe care "
-"devalorizarile nu o vor depasi."
+"amortizarii.\n"
+"Numarul de amortizari: Fixati numarul liniilor amortizarii si perioada "
+"dintre 2 amortizari.\n"
+"Data de sfarsit: Alegeti perioada dintre 2 amortizari si data pe care "
+"amortizarile nu o vor depasi."
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -324,7 +324,7 @@ msgstr "Eroare! Nu puteti crea active recursive."
 #. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
-msgstr "Perioada in luni dintre doua devalorizari."
+msgstr "Perioada in luni dintre doua amortizari."
 
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,name:0
@@ -346,7 +346,7 @@ msgstr "Alte informatii"
 #. module: account_asset
 #: field:account.asset.asset,salvage_value:0
 msgid "Salvage Value"
-msgstr "Valoare recuperata"
+msgstr "Valoarea deja amortizata"
 
 #. module: account_asset
 #: field:account.invoice.line,asset_category_id:0 view:asset.asset.report:0
@@ -376,7 +376,7 @@ msgstr "Active in starea inchis"
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
-msgstr "Active principale"
+msgstr "Parinte activ"
 
 #. module: account_asset
 #: view:account.asset.history:0
@@ -418,7 +418,7 @@ msgstr "Luna"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Depreciation Board"
-msgstr "Panou devalorizare"
+msgstr "Panou amortizare"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move_line
@@ -470,9 +470,9 @@ msgid ""
 "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
 msgstr ""
 "Alegeti metoda care va fi folosita pentru calculul suma liniilor "
-"devalorizarii.\n"
-"  * Lineara: Calculata pe baza: Valoarea Bruta / Numarul de Devalorizari\n"
-"  * Degresiva: Calculat pe baza: Valoarea ramasa * Factorul Degresiv"
+"amortizarii.\n"
+"* Lineara: Calculata pe baza: Valoarea Bruta / Numarul de Amortizari\n"
+"* Degresiva: Calculat pe baza: Valoarea ramasa * Factorul Degresiv"
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -495,7 +495,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in running state"
-msgstr "Active in starea de executare"
+msgstr "Active in executie"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -511,12 +511,12 @@ msgstr "Partener"
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
-msgstr "Suma Liniilor devalorizarii"
+msgstr "Suma Liniilor amortizarii"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Posted depreciation lines"
-msgstr "Linii afisate ale devalorizarii"
+msgstr "Linii afisate ale amortizarii"
 
 #. module: account_asset
 #: constraint:account.move.line:0
@@ -526,12 +526,12 @@ msgstr "Compania trebuie sa fie aceeasi pentru contul si perioada asociata."
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
 msgid "Children Assets"
-msgstr "Active secundare"
+msgstr "Active subordonate"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Date of depreciation"
-msgstr "Data devalorizarii"
+msgstr "Data amortizarii"
 
 #. module: account_asset
 #: field:account.asset.history,user_id:0
@@ -592,7 +592,7 @@ msgstr "Starea Activelor"
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
 msgid "Depreciation Name"
-msgstr "Numele devalorizarii"
+msgstr "Numele amortizarii"
 
 #. module: account_asset
 #: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
@@ -637,23 +637,23 @@ msgstr "Verificati Categoriile de Active"
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
 msgid "Cancel"
-msgstr "Anuleaza"
+msgstr "Anulare"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
-msgstr "Inchideti"
+msgstr "Închide"
 
 #. module: account_asset
 #: view:account.asset.asset:0 view:account.asset.category:0
 msgid "Depreciation Method"
-msgstr "Metoda devalorizarii"
+msgstr "Metoda amortizarii"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
 #: field:asset.asset.report,purchase_date:0
 msgid "Purchase Date"
-msgstr "Data achizitiei"
+msgstr "Data achiziţionării"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -667,7 +667,7 @@ msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
 msgstr ""
-"Alegeti perioada pentru care doriti sa afisati automat liniile devalorizarii "
+"Alegeti perioada pentru care doriti sa afisati automat liniile amortizarii "
 "activelor in executie"
 
 #. module: account_asset
@@ -678,7 +678,7 @@ msgstr "Actual(a)"
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Amount to Depreciate"
-msgstr "Suma care va fi devalorizata"
+msgstr "Suma de amortizat"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -689,12 +689,12 @@ msgstr "Omiteti Starea Ciorna"
 #: view:account.asset.asset:0 view:account.asset.category:0
 #: view:account.asset.history:0
 msgid "Depreciation Dates"
-msgstr "Datele devalorizarii"
+msgstr "Datele amortizarii"
 
 #. module: account_asset
 #: field:account.asset.asset,currency_id:0
 msgid "Currency"
-msgstr "Moneda"
+msgstr "Monedă"
 
 #. module: account_asset
 #: field:account.asset.category,journal_id:0
@@ -704,7 +704,7 @@ msgstr "Jurnal"
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
 msgid "Amount Already Depreciated"
-msgstr "Suma deja Devalorizata"
+msgstr "Suma deja amortizata"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -723,10 +723,9 @@ msgid ""
 msgstr ""
 "Atunci cand sunt create activele, starea este 'Ciorna'.\n"
 "Daca activele sunt confirmate, starea devine 'In executie', iar liniile "
-"devalorizarii pot fi afisate in cont.\n"
-"Puteti inchide manual activele atunci cand devalorizarea ia sfarsit. Daca "
-"este afisata ultima linie a devalorizarii, activele intra automat in acea "
-"stare."
+"amortizarii pot fi afisate in cont.\n"
+"Puteti inchide manual activele atunci cand amortizarea ia sfarsit. Daca este "
+"afisata ultima linie a amortizarii, activele intra automat in acea stare."
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -745,13 +744,13 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Set to Draft"
-msgstr "Seteaza ca Ciorna"
+msgstr "Schimbă în ciornă"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Linear"
-msgstr "Linear"
+msgstr "Liniar"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -761,7 +760,7 @@ msgstr "Luna-1"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr "Linia devalorizarii activelor"
+msgstr "Linia amortizarii activului"
 
 #. module: account_asset
 #: field:account.asset.asset,category_id:0 view:account.asset.category:0
@@ -794,14 +793,14 @@ msgid ""
 "this analysis to your needs;"
 msgstr ""
 "Din acest raport puteti avea o vedere de ansamblu asupra tuturor "
-"devalorizarilor. Unealta de cautare poate fi utilizata pentru a personaliza "
+"amortizarilor. Unealta de cautare poate fi utilizata pentru a personaliza "
 "Rapoartele Activelor d-voastra si astfel aceasta analiza sa se potriveasca "
 "cu nevoile dumneavoastra;"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0
 msgid "State here the time between 2 depreciations, in months"
-msgstr "Aici introduceti perioada dintre 2 devalorizari, in luni"
+msgstr "Aici introduceti perioada dintre 2 amortizari, in luni"
 
 #. module: account_asset
 #: field:account.asset.asset,method_number:0
@@ -812,7 +811,7 @@ msgstr "Aici introduceti perioada dintre 2 devalorizari, in luni"
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
-msgstr "Numarul devalorizarilor"
+msgstr "Numarul amortizarilor"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -822,7 +821,7 @@ msgstr "Creati Miscarea"
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
 msgid "Post Depreciation Lines"
-msgstr "Afisati Liniile de Devalorizare"
+msgstr "Afisati Liniile Amortizarii"
 
 #. module: account_asset
 #: view:account.asset.asset:0

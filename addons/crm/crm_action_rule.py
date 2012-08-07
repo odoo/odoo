@@ -54,8 +54,8 @@ class base_action_rule(osv.osv):
 
         name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
         emailfrom = tools.ustr(emailfrom)
-        if hasattr(obj, 'section_id') and obj.section_id and obj.section_id.reply_to:
-            reply_to = obj.section_id.reply_to
+        if hasattr(obj, 'section_id') and obj.section_id and obj.section_id.alias_id:
+            reply_to = obj.section_id.alias_id.name_get()[0][1]
         else:
             reply_to = emailfrom
         if not emailfrom:

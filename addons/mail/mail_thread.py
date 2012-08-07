@@ -79,7 +79,7 @@ class mail_thread(osv.Model):
         return [('id', 'in', msg_ids)]
 
     _columns = {
-        'message_ids': fields.function(_get_message_ids, method=True,
+        'message_ids': fields.function(_get_message_ids,
 			fnct_search=_search_message_ids,
             type='one2many', obj='mail.message', _fields_id = 'res_id',
             string='Temp messages', multi="_get_message_ids",
@@ -560,6 +560,56 @@ class mail_thread(osv.Model):
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
 
+
+    def _get_user(self, cr, uid, alias, context):
+        """
+            param alias: browse record of alias.
+            return: int user_id.
+        """
+
+        user_obj = self.pool.get('res.user')
+        user_id = 1
+        if alias.alias_user_id:
+            user_id = alias.alias_user_id.id
+        #if user_id not defined in the alias then search related user using name of Email sender
+        else:
+            from_email = msg.get('from')
+            user_ids = user_obj.search(cr, uid, [('name','=',from_email)], context)
+            if user_ids:
+                user_id = user_obj.browse(cr, uid, user_ids[0], context).id
+        return user_id
+
+    def message_catchall(self, cr, uid, message, context=None):
+        """
+            Process incoming mail and call messsage_process using details of the mail.alias model
+            else raise Exception so that mailgate script will reject the mail and
+            send notification mail sender that this mailbox does not exist so your mail have been rejected.
+        """
+        mail_alias = self.pool.get('mail.alias')
+        mail_message = self.pool.get('mail.message')
+        if isinstance(message, xmlrpclib.Binary):
+            message = str(message.data)
+        if isinstance(message, unicode):
+            message = message.encode('utf-8')
+        msg_txt = email.message_from_string(message)
+        msg = mail_message.parse_message(msg_txt)
+        alias_name = msg.get('to').split("@")[0] # @@@@
+        alias_ids = mail_alias.search(cr, uid, [('alias_name','=',alias_name)])
+        #if alias found then call message_process method. # @@@@
+        if alias_ids:
+            alias_id = mail_alias.browse(cr, uid, alias_ids[0], context)
+            user_id = self._get_user( cr, uid, alias_id, context)
+            alias_defaults = dict(eval(alias_id.alias_defaults or {}))
+            self.message_process(cr, user_id, alias_id.alias_model_id.model, message, 
+                                 custom_values=alias_defaults, 
+                                 thread_id=alias_id.alias_force_thread_id or False,
+                                 context=context)
+        else:
+            #if Mail box for the intended Mail Alias then give logger warning
+            _logger.warning("No Mail Alias Found for the name '%s'."%(alias_name))
+            raise # @@@@
+        return True
+
     #------------------------------------------------------
     # Mail gateway
     #------------------------------------------------------
@@ -567,7 +617,7 @@ class mail_thread(osv.Model):
 
     def message_process(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
-                        context=None):
+                        thread_id=None, context=None):
         """Process an incoming RFC2822 email message related to the
            given thread model, relying on ``mail.message.parse()``
            for the parsing operation, and then calling ``message_new``
@@ -587,6 +637,10 @@ class mail_thread(osv.Model):
                 email source attached to the message after it is imported.
            :param bool strip_attachments: whether to strip all attachments
                 before processing the message, in order to save some space.
+           :param int thread_id: optional ID of the record/thread from ``model``
+               to which this mail should be attached. When provided, this
+               overrides the automatic detection based on the message
+               headers.
         """
         # extract message bytes - we are forced to pass the message as binary because
         # we don't know its encoding until we parse its headers and hence can't
@@ -594,12 +648,12 @@ class mail_thread(osv.Model):
         if isinstance(message, xmlrpclib.Binary):
             message = str(message.data)
 
-        model_pool = self.pool.get(model)
-        if self._name != model:
-            if context is None: context = {}
-            context.update({'thread_model': model})
+        if context is None: context = {}
 
         mail_message = self.pool.get('mail.message')
+        model_pool = self.pool.get(model)
+        if self._name != model:
+            context.update({'thread_model': model})
 
         # Parse Message
         # Warning: message_from_string doesn't always work correctly on unicode,
@@ -621,8 +675,7 @@ class mail_thread(osv.Model):
                 return model_pool.message_new(cr, uid, msg,
                                               custom_values,
                                               context=context)
-        res_id = False
-        if msg.get('references') or msg.get('in-reply-to'):
+        if not thread_id and (msg.get('references') or msg.get('in-reply-to')):
             references = msg.get('references') or msg.get('in-reply-to')
             if '\r\n' in references:
                 references = references.split('\r\n')
@@ -630,28 +683,25 @@ class mail_thread(osv.Model):
                 references = references.split(' ')
             for ref in references:
                 ref = ref.strip()
-                res_id = tools.reference_re.search(ref)
-                if res_id:
-                    res_id = res_id.group(1)
-                else:
-                    res_id = tools.res_re.search(msg['subject'])
-                    if res_id:
-                        res_id = res_id.group(1)
-                if res_id:
-                    res_id = res_id
-                    if model_pool.exists(cr, uid, res_id):
-                        if hasattr(model_pool, 'message_update'):
-                            model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
-                    else:
-                        # referenced thread was not found, we'll have to create a new one
-                        res_id = False
-        if not res_id:
-            res_id = create_record(msg)
+                thread_id = tools.reference_re.search(ref)
+                if not thread_id:
+                    thread_id = tools.res_re.search(msg['subject'])
+                if thread_id:
+                    thread_id = int(thread_id.group(1))
+                    if not model_pool.exists(cr, uid, thread_id) or \
+                        not hasattr(model_pool, 'message_update'):
+                            # referenced thread not found or not updatable,
+                            # -> create a new one
+                            thread_id = False
+        if not thread_id:
+            thread_id = create_record(msg)
+        else:
+            model_pool.message_update(cr, uid, [thread_id], msg, {}, context=context)
         # To forward the email to other followers
-        self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
+        self.message_forward(cr, uid, model, [thread_id], msg_txt, context=context)
         # Set as Unread
-        model_pool.message_mark_as_unread(cr, uid, [res_id], context=context)
-        return res_id
+        model_pool.message_mark_as_unread(cr, uid, [thread_id], context=context)
+        return thread_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Called by ``message_process`` when a new message is received
@@ -693,23 +743,18 @@ class mail_thread(osv.Model):
         return res_id
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
-        """ Called by ``message_process`` when a new message is received
-            for an existing thread. The default behavior is to create a
-            new mail.message in the given thread (by calling
-            ``message_append_dict``)
-            Additional behavior may be implemented by overriding this
-            method.
-
-            :param dict msg_dict: a map containing the email details and
-                                attachments. See ``message_process`` and
-                                ``mail.message.parse()`` for details.
-            :param dict vals: a dict containing values to update records
+        """Called by ``message_process`` when a new message is received
+           for an existing thread. The default behavior is to create a
+           new mail.message in the given thread (by calling
+           ``message_append_dict``)
+           Additional behavior may be implemented by overriding this
+           method.
+           :param dict msg_dict: a map containing the email details and
+                               attachments. See ``message_process`` and
+                               ``mail.message.parse()`` for details.
+           :param dict update_vals: a dict containing values to update records
                               given their ids; if the dict is None or is
                               void, no write operation is performed.
-            :param dict context: if a ``thread_model`` value is present
-                                in the context, its value will be used
-                                to determine the model of the thread to
-                                update (instead of the current model).
         """
         if update_vals:
             self.write(cr, uid, ids, update_vals, context=context)
