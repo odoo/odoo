@@ -35,7 +35,7 @@ class hr_timesheet_current_open(osv.osv_memory):
 
         user_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
         if not len(user_ids):
-            raise osv.except_osv(_('Error !'), _('Please define employee for your user!'))
+            raise osv.except_osv(_('Error!'), _('Please define employee for your user!'))
         ids = ts.search(cr, uid, [('user_id','=',uid),('state','=','draft'),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))], context=context)
 
         if len(ids) > 1:

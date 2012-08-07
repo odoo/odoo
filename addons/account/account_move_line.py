@@ -577,14 +577,14 @@ class account_move_line(osv.osv):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'view':
-                raise osv.except_osv(_('Error !'), _('You cannot create journal items on “View” type account %s %s.') % (l.account_id.code, l.account_id.name))
+                raise osv.except_osv(_('Error!'), _('You cannot create journal items on “View” type account %s %s.') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_no_closed(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'closed':
-                raise osv.except_osv(_('Error !'), _('You cannot create journal items on a closed account %s %s.') % (l.account_id.code, l.account_id.name))
+                raise osv.except_osv(_('Error!'), _('You cannot create journal items on a closed account %s %s.') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_company_id(self, cr, uid, ids, context=None):
@@ -800,7 +800,7 @@ class account_move_line(osv.osv):
             company_list.append(line.company_id.id)
         for line in unrec_lines:
             if line.state <> 'valid':
-                raise osv.except_osv(_('Error'),
+                raise osv.except_osv(_('Error!'),
                         _('Entry "%s" is not valid !') % line.name)
             credit += line['credit']
             debit += line['debit']
@@ -823,10 +823,10 @@ class account_move_line(osv.osv):
         r = cr.fetchall()
         #TODO: move this check to a constraint in the account_move_reconcile object
         if not unrec_lines:
-            raise osv.except_osv(_('Error !'), _('Entry is already reconciled.'))
+            raise osv.except_osv(_('Error!'), _('Entry is already reconciled.'))
         account = account_obj.browse(cr, uid, account_id, context=context)
         if r[0][1] != None:
-            raise osv.except_osv(_('Error !'), _('Some entries are already reconciled.'))
+            raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
 
         if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
@@ -1186,7 +1186,7 @@ class account_move_line(osv.osv):
         result = cr.fetchall()
         for (state,) in result:
             if state == 'done':
-                raise osv.except_osv(_('Error !'), _('You cannot add/modify entries in a closed journal.'))
+                raise osv.except_osv(_('Error!'), _('You cannot add/modify entries in a closed journal.'))
         if not result:
             journal = journal_obj.browse(cr, uid, journal_id, context=context)
             period = period_obj.browse(cr, uid, period_id, context=context)
@@ -1202,9 +1202,9 @@ class account_move_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
             if line.move_id.state <> 'draft' and (not line.journal_id.entry_posted):
-                raise osv.except_osv(_('Error !'), _('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
+                raise osv.except_osv(_('Error!'), _('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
             if line.reconcile_id:
-                raise osv.except_osv(_('Error !'), _('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
+                raise osv.except_osv(_('Error!'), _('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
             t = (line.journal_id.id, line.period_id.id)
             if t not in done:
                 self._update_journal_check(cr, uid, line.journal_id.id, line.period_id.id, context)

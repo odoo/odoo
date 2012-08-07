@@ -127,13 +127,13 @@ class synchronize_google(osv.osv_memory):
         gmail_pwd = user_obj.gmail_password
         google = self.pool.get('google.login')
         if not gmail_user or not gmail_pwd:
-            raise osv.except_osv(_('Error'), _("Invalid login detail !\nPlease specify correct username and password."))
+            raise osv.except_osv(_('Error!'), _("Invalid login detail !\nPlease specify correct username and password."))
         
         if context.get('contact'):
             msg = "  Your contacts are being imported in background, an email to %s will be sent when the process is over." % (user_obj.gmail_user)
             gd_client = google.google_login(gmail_user, gmail_pwd, type='contact')
             if not gd_client:
-                raise osv.except_osv(_('Error'), _("Please specify correct username and password!"))        
+                raise osv.except_osv(_('Error!'), _("Please specify correct username and password!"))        
             if obj.group_name not in ['all']:
                 context.update({ 'group_name': obj.group_name})
             tables.append('Contact')

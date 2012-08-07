@@ -106,7 +106,7 @@ class purchase_line_invoice(osv.osv_memory):
                         if not a:
                             a = line.product_id.categ_id.property_account_expense_categ.id
                         if not a:
-                            raise osv.except_osv(_('Error !'),
+                            raise osv.except_osv(_('Error!'),
                                     _('Define expense account for this product: "%s" (id:%d).') % \
                                             (line.product_id.name, line.product_id.id,))
                     else:

@@ -57,7 +57,7 @@ def login(username, password, url):
     try:
         response = portType.login(request)
     except:
-        raise osv.except_osv(_('Error !'), _('Authentication error!\nBad username or password or bad SugarSoap Api url!'))
+        raise osv.except_osv(_('Error!'), _('Authentication error!\nBad username or password or bad SugarSoap Api url!'))
     if -1 == response._return._id:
         raise LoginError(response._return._error._description)
     

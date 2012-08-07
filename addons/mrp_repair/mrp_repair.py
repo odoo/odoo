@@ -330,7 +330,7 @@ class mrp_repair(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'confirmed'})
                 if not o.operations:
-                    raise osv.except_osv(_('Error !'),_('You cannot confirm a repair order which has no line.'))
+                    raise osv.except_osv(_('Error!'),_('You cannot confirm a repair order which has no line.'))
                 for line in o.operations:
                     if line.product_id.track_production and not line.prodlot_id:
                         raise osv.except_osv(_('Warning'), _("Serial number is required for operation line with product '%s'") % (line.product_id.name))
@@ -380,7 +380,7 @@ class mrp_repair(osv.osv):
                     inv_obj.write(cr, uid, [inv_id], invoice_vals, context=context)
                 else:
                     if not repair.partner_id.property_account_receivable:
-                        raise osv.except_osv(_('Error !'), _('No account defined for partner "%s".') % repair.partner_id.name )
+                        raise osv.except_osv(_('Error!'), _('No account defined for partner "%s".') % repair.partner_id.name )
                     account_id = repair.partner_id.property_account_receivable.id
                     inv = {
                         'name': repair.name,
@@ -408,7 +408,7 @@ class mrp_repair(osv.osv):
                         elif operation.product_id.categ_id.property_account_income_categ:
                             account_id = operation.product_id.categ_id.property_account_income_categ.id
                         else:
-                            raise osv.except_osv(_('Error !'), _('No account defined for product "%s".') % operation.product_id.name )
+                            raise osv.except_osv(_('Error!'), _('No account defined for product "%s".') % operation.product_id.name )
 
                         invoice_line_id = inv_line_obj.create(cr, uid, {
                             'invoice_id': inv_id,
@@ -437,7 +437,7 @@ class mrp_repair(osv.osv):
                         elif fee.product_id.categ_id.property_account_income_categ:
                             account_id = fee.product_id.categ_id.property_account_income_categ.id
                         else:
-                            raise osv.except_osv(_('Error !'), _('No account defined for product "%s".') % fee.product_id.name)
+                            raise osv.except_osv(_('Error!'), _('No account defined for product "%s".') % fee.product_id.name)
 
                         invoice_fee_id = inv_line_obj.create(cr, uid, {
                             'invoice_id': inv_id,

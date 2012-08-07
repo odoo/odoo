@@ -171,7 +171,7 @@ class hr_expense_expense(osv.osv):
                 else:
                     acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company_id})
                     if not acc:
-                        raise osv.except_osv(_('Error !'), _('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
+                        raise osv.except_osv(_('Error!'), _('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
                 lines.append((0, False, {
                     'name': l.name,
                     'account_id': acc.id,
@@ -183,7 +183,7 @@ class hr_expense_expense(osv.osv):
                     'account_analytic_id': l.analytic_account.id,
                 }))
             if not exp.employee_id.address_home_id:
-                raise osv.except_osv(_('Error !'), _('The employee must have a home address.'))
+                raise osv.except_osv(_('Error!'), _('The employee must have a home address.'))
             acc = exp.employee_id.address_home_id.property_account_payable.id
             payment_term_id = exp.employee_id.address_home_id.property_payment_term.id
             inv = {

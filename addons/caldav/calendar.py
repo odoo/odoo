@@ -1290,7 +1290,7 @@ class Attendee(CalDAV, osv.osv_memory):
                         attendee_add.params['CN'] = cn_val
             if not attendee['email']:
                 attendee_add.value = 'MAILTO:'
-                #raise osv.except_osv(_('Error !'), _('Attendee must have an Email Id'))
+                #raise osv.except_osv(_('Error!'), _('Attendee must have an Email Id'))
             elif attendee['email']:
                 attendee_add.value = 'MAILTO:' + attendee['email']
         return vevent

@@ -99,7 +99,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
             if sale.order_policy == 'postpaid':
                 raise osv.except_osv(
-                    _('Error'),
+                    _('Error!'),
                     _("You cannot make an advance on a sales order \
                          that is defined as 'Automatic Invoice after delivery'."))
 

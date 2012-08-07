@@ -473,7 +473,7 @@ class account_voucher(osv.osv):
             tr_type = 'purchase'
         else:
             if not journal.default_credit_account_id or not journal.default_debit_account_id:
-                raise osv.except_osv(_('Error !'), _('Please define default credit/debit accounts on the journal "%s".') % (journal.name))
+                raise osv.except_osv(_('Error!'), _('Please define default credit/debit accounts on the journal "%s".') % (journal.name))
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
             tr_type = 'receipt'
 
@@ -919,7 +919,7 @@ class account_voucher(osv.osv):
         elif voucher_brw.journal_id.sequence_id:
             name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id, context=context)
         else:
-            raise osv.except_osv(_('Error !'),
+            raise osv.except_osv(_('Error!'),
                         _('Please define a sequence on the journal.'))
         if not voucher_brw.reference:
             ref = name.replace('/','')

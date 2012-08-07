@@ -43,7 +43,7 @@ def get_journal(self, cr, uid, context=None):
     res = statement_obj.read(cr, uid, obj_ids, ['journal_id'], context=context)
     res = [(r['journal_id']) for r in res]
     if not len(res) and context:
-        raise osv.except_osv(_('Error !'), _('You do not have any open cash register. You must create a payment method or open a cash register.'))
+        raise osv.except_osv(_('Error!'), _('You do not have any open cash register. You must create a payment method or open a cash register.'))
     return res
 
 class pos_box_entries(osv.osv_memory):
@@ -115,12 +115,12 @@ class pos_box_entries(osv.osv_memory):
             curr_company = res_obj.browse(cr, uid, uid, context=context).company_id.id
             statement_id = statement_obj.search(cr, uid, [('journal_id', '=', int(data['journal_id'])), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')], context=context)
             if not statement_id:
-                raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox.'))
+                raise osv.except_osv(_('Error!'), _('You have to open at least one cashbox.'))
 
             product = product_obj.browse(cr, uid, int(data['product_id']))
             acc_id = product.property_account_income or product.categ_id.property_account_income_categ
             if not acc_id:
-                raise osv.except_osv(_('Error !'), _('Please check that income account is set to %s.')%(product_obj.browse(cr, uid, data['product_id']).name))
+                raise osv.except_osv(_('Error!'), _('Please check that income account is set to %s.')%(product_obj.browse(cr, uid, data['product_id']).name))
             if statement_id:
                 statement_id = statement_id[0]
             if not statement_id:

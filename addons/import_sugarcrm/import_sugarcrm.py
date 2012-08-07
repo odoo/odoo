@@ -76,7 +76,7 @@ class sugar_import(import_framework):
         #login
         PortType,sessionid = sugar.login(self.context.get('username',''), self.context.get('password',''), self.context.get('url',''))
         if sessionid == '-1':
-            raise osv.except_osv(_('Error !'), _('Authentication error!\nBad username or password or bad SugarSoap Api url!'))
+            raise osv.except_osv(_('Error!'), _('Authentication error!\nBad username or password or bad SugarSoap Api url!'))
         self.context['port'] = PortType
         self.context['session_id'] = sessionid
         

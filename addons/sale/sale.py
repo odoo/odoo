@@ -418,7 +418,7 @@ class sale_order(osv.osv):
             [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
             limit=1)
         if not journal_ids:
-            raise osv.except_osv(_('Error !'),
+            raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
 
         invoice_vals = {
@@ -600,7 +600,7 @@ class sale_order(osv.osv):
             currency_id = o.pricelist_id.currency_id.id
             if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
                 raise osv.except_osv(
-                    _('Error !'),
+                    _('Error!'),
                     _('You cannot group sales having different currencies for the same partner.'))
 
             partner_currency[o.partner_id.id] = currency_id
@@ -750,7 +750,7 @@ class sale_order(osv.osv):
     def action_wait(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
-                raise osv.except_osv(_('Error !'),_('You cannot confirm a sale order which has no line.'))
+                raise osv.except_osv(_('Error!'),_('You cannot confirm a sale order which has no line.'))
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             else:
@@ -1192,7 +1192,7 @@ class sale_order_line(osv.osv):
                     if not account_id:
                         account_id = line.product_id.categ_id.property_account_income_categ.id
                     if not account_id:
-                        raise osv.except_osv(_('Error !'),
+                        raise osv.except_osv(_('Error!'),
                                 _('Please define income account for this product: "%s" (id:%d).') % \
                                     (line.product_id.name, line.product_id.id,))
                 else:
@@ -1209,7 +1209,7 @@ class sale_order_line(osv.osv):
             fpos = line.order_id.fiscal_position or False
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
             if not account_id:
-                raise osv.except_osv(_('Error !'),
+                raise osv.except_osv(_('Error!'),
                             _('There is no Fiscal Position defined or Income category account defined for default properties of Product categories.'))
             return {
                 'name': line.name,

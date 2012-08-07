@@ -86,9 +86,9 @@ class pos_box_out(osv.osv_memory):
             product = product_obj.browse(cr, uid, data['product_id'], context=context)
             acc_id = product.property_account_expense or product.categ_id.property_account_expense_categ
             if not acc_id:
-                raise osv.except_osv(_('Error !'), _('please check that account is set to %s.')%(product.name))
+                raise osv.except_osv(_('Error!'), _('please check that account is set to %s.')%(product.name))
             if not statement_ids:
-                raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox.'))
+                raise osv.except_osv(_('Error!'), _('You have to open at least one cashbox.'))
             vals['statement_id'] = statement_ids[0]
             vals['journal_id'] = data['journal_id']
             vals['account_id'] = acc_id.id

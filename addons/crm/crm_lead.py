@@ -788,7 +788,7 @@ class crm_lead(base_stage, osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context):
             if (not lead.section_id.allow_unlink) and (lead.state != 'draft'):
-                raise osv.except_osv(_('Error'),
+                raise osv.except_osv(_('Error!'),
                     _("You cannot delete lead '%s' because it is not in 'Draft' state. " \
                       "You can still cancel it, instead of deleting it.") % lead.name)
         return super(crm_lead, self).unlink(cr, uid, ids, context)

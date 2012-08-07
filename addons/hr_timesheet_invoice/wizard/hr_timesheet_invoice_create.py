@@ -101,7 +101,7 @@ class account_analytic_line(osv.osv):
                      product_id = data['product'][0]
                 product = product_obj.browse(cr, uid, product_id, context=context2)
                 if not product:
-                    raise osv.except_osv(_('Error'), _('There is no product defined for the line %s. Please select one or force the product through the wizard.') % (line_name))
+                    raise osv.except_osv(_('Error!'), _('There is no product defined for the line %s. Please select one or force the product through the wizard.') % (line_name))
                 factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
                 factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
                 if factor.customer_name:

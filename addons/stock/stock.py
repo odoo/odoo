@@ -516,7 +516,7 @@ class stock_tracking(osv.osv):
         return res
 
     def unlink(self, cr, uid, ids, context=None):
-        raise osv.except_osv(_('Error'), _('You cannot remove a lot line.'))
+        raise osv.except_osv(_('Error!'), _('You cannot remove a lot line.'))
 
     def action_traceability(self, cr, uid, ids, context={}):
         """ It traces the information of a product
@@ -762,7 +762,7 @@ class stock_picking(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             if not pick.move_lines:
-                raise osv.except_osv(_('Error !'),_('You cannot process picking without stock moves.'))
+                raise osv.except_osv(_('Error!'),_('You cannot process picking without stock moves.'))
             wf_service.trg_validate(uid, 'stock.picking', pick.id,
                 'button_confirm', cr)
         return True
@@ -1154,7 +1154,7 @@ class stock_picking(osv.osv):
                 return True
             for move in pick.move_lines:
                 if move.state == 'done':
-                    raise osv.except_osv(_('Error'), _('You cannot cancel picking because stock move is in done state!'))
+                    raise osv.except_osv(_('Error!'), _('You cannot cancel picking because stock move is in done state!'))
         return True
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
@@ -1162,7 +1162,7 @@ class stock_picking(osv.osv):
             context = {}
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
-                raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state!')%(pick.state,))
+                raise osv.except_osv(_('Error!'), _('You cannot remove the picking which is in %s state!')%(pick.state,))
             else:
                 ids2 = [move.id for move in pick.move_lines]
                 ctx = context.copy()

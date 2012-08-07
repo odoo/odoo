@@ -366,7 +366,7 @@ class pos_session(osv.osv):
                 if abs(st.difference) > st.journal_id.amount_authorized_diff:
                     # The pos manager can close statements with maximums.
                     if not self.pool.get('ir.model.access').check_groups(cr, uid, "point_of_sale.group_pos_manager"):
-                        raise osv.except_osv( _('Error !'),
+                        raise osv.except_osv( _('Error!'),
                             _("Your ending balance is too different from the theorical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if st.difference:
                     if st.difference > 0.0:
@@ -376,7 +376,7 @@ class pos_session(osv.osv):
                         account_id = st.journal_id.loss_account_id.id
                         name= _('Point of Sale Loss')
                     if not account_id:
-                        raise osv.except_osv( _('Error !'),
+                        raise osv.except_osv( _('Error!'),
                         _("Please set your profit and loss accounts on your payment method '%s'.") % (st.journal_id.name,))
                     bsl.create(cr, uid, {
                         'statement_id': st.id,
@@ -403,7 +403,7 @@ class pos_session(osv.osv):
             for order in session.order_ids:
                 if order.state != 'paid':
                     raise osv.except_osv(
-                        _('Error !'),
+                        _('Error!'),
                         _("You cannot confirm all orders of this session, because they have not the 'paid' status"))
                 else:
                     wf_service.trg_validate(uid, 'pos.order', order.id, 'done', cr)
@@ -693,7 +693,7 @@ class pos_order(osv.osv):
                 break
 
         if not statement_id:
-            raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox.'))
+            raise osv.except_osv(_('Error!'), _('You have to open at least one cashbox.'))
 
         args.update({
             'statement_id' : statement_id,

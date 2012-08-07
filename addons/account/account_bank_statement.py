@@ -364,7 +364,7 @@ class account_bank_statement(osv.osv):
                     context=context).line_id],
                 context=context):
             if line.state <> 'valid':
-                raise osv.except_osv(_('Error !'),
+                raise osv.except_osv(_('Error!'),
                         _('Journal item "%s" is not valid.') % line.name)
 
         # Bank statements will not consider boolean on journal entry_posted
@@ -377,7 +377,7 @@ class account_bank_statement(osv.osv):
     def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
         st = self.browse(cr, uid, st_id, context=context)
         if not ((abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001) or (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001)):
-            raise osv.except_osv(_('Error !'),
+            raise osv.except_osv(_('Error!'),
                     _('The statement balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
         return True
 
@@ -415,7 +415,7 @@ class account_bank_statement(osv.osv):
 
             for line in st.move_line_ids:
                 if line.state <> 'valid':
-                    raise osv.except_osv(_('Error !'),
+                    raise osv.except_osv(_('Error!'),
                             _('The account entries lines are not in valid state.'))
             for st_line in st.line_ids:
                 if st_line.analytic_account_id:

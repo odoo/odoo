@@ -202,7 +202,7 @@ class base_stage(object):
                     if case.section_id.parent_id.user_id:
                         data['user_id'] = case.section_id.parent_id.user_id.id
             else:
-                raise osv.except_osv(_('Error !'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
+                raise osv.except_osv(_('Error!'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
             self.write(cr, uid, [case.id], data, context=context)
             case.case_escalate_send_note(case.section_id.parent_id, context=context)
         cases = self.browse(cr, uid, ids, context=context)
