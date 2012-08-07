@@ -529,7 +529,15 @@
             <field name="name">Contribution Registers</field>
             <field name="res_model">hr.contribution.register</field>
             <field name="view_type">form</field>
-            <field name="help">A contribution register is a third party involved in the salary payment of the employees. It can be the social security, the estate or anyone that collect or inject money on payslips.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new contribution register.
+              </p><p>
+                A contribution register is a third party involved in the salary
+                payment of the employees. It can be the social security, the
+                estate or anyone that collect or inject money on payslips.
+              </p>
+            </field>
             <field name="view_id" ref="hr_contribution_register_tree"/>
         </record>
         <menuitem
