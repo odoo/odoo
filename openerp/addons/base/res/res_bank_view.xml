@@ -97,7 +97,6 @@
                         <field name="state"/>
                         <field name="acc_number"/>
                         <field name="company_id" on_change="onchange_company_id(company_id)" invisible="context.get('company_hide', True)" widget="selection"/>
-                        <field name="footer" attrs="{'invisible': [('company_id','=',False)]}"/>
                     </group>
                     <group>
                         <group name="owner" string="Bank Account Owner">
@@ -134,7 +133,6 @@
                     <field name="acc_number"/>
                     <field name="bank_name"/>
                     <field name="company_id" invisible="context.get('company_hide', True)"/>
-                    <field name="footer" invisible="context.get('company_hide', True)"/>
                     <field name="partner_id"/>
                 </tree>
             </field>
@@ -157,7 +155,7 @@
             <field name="res_model">res.partner.bank</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Configure your company's bank accounts and select those that must appear on the report footer. You can reorder bank accounts from the list view. If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.</field>
+            <field name="help">Configure your company's bank accounts. You can reorder bank accounts from the list view. If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.</field>
         </record>
         <menuitem action="action_res_partner_bank_account_form"
             id="menu_action_res_partner_bank_form"
