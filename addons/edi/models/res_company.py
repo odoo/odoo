@@ -47,13 +47,6 @@ class res_company(osv.osv):
             result['logo'] = company.logo # already base64-encoded
         if company.paypal_account:
             result['paypal_account'] = company.paypal_account
-        # bank info: include only bank account supposed to be displayed in document footers
-        res_partner_bank = self.pool.get('res.partner.bank')
-        bank_ids = res_partner_bank.search(cr, uid, [('company_id','=',company.id)], context=context)
-        if bank_ids:
-            result['bank_ids'] = res_partner.edi_m2m(cr, uid,
-                                                             res_partner_bank.browse(cr, uid, bank_ids, context=context),
-                                                             context=context)
         return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
