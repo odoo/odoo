@@ -101,18 +101,19 @@
                 <sheet>
                     <field name="image_small" widget='image' class="oe_avatar oe_left"/>
                     <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="name"/> (
+                            <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)
+                        </div>
                         <h1>
                             <field name="name" default_focus="1" placeholder="Name" />
                         </h1>
                         <field name="parent_id"
-                            string="Work for Company"
+                            placeholder="Company"
                             domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                             attrs="{'invisible': [('is_company','=', True)]}"
                             on_change="onchange_address(use_parent_address, parent_id)"/>
-                        <div class="oe_edit_only">
-                            <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Company?"/>
-                            <field name="category_id" widget="many2many_tags" placeholder="Select Tags"/>
-                        </div>
+                        <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons"> </div>
 
@@ -133,10 +134,10 @@
                                 <field name="street2"/>
                                 <div class="address_format">
                                     <field name="city" placeholder="City" style="width: 40%%"/>
-                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                    <field name="state_id" options='{"no_open": true}' placeholder="State" style="width: 24%%"/>
                                     <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                 </div>
-                                <field name="country_id" placeholder="Country" class="oe_no_button"/>
+                                <field name="country_id" placeholder="Country" options='{"no_open": true}'/>
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
                         </group>
@@ -148,6 +149,7 @@
                             <field name="fax"/>
                             <field name="email" widget="email"/>
                             <field name="title" domain="[('domain', '=', 'contact')]"
+                                groups="base.group_no_one"
                                 options='{"no_open": true}' attrs="{'invisible': [('is_company','=', True)]}" />
                         </group>
                     </group>
@@ -215,7 +217,7 @@
                                 </group>
                                 <group>
                                     <field name="customer"/>
-                                    <field name="supplier" invisible="1"/>
+                                    <field name="supplier" invisible="not context.get('default_supplier')"/>
                                 </group>
                                 <group>
                                     <field name="ref"/>
