@@ -137,7 +137,7 @@ class hr_employee(osv.osv):
             warning_sign = "Sign Out"
         for emp in self.read(cr, uid, ids, ['id'], context=context):
             if not self._action_check(cr, uid, emp['id'], dt, context):
-                raise osv.except_osv(_('Warning !'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
+                raise osv.except_osv(_('Warning!'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
 
             res = {'action': type, 'employee_id': emp['id']}
             if dt:

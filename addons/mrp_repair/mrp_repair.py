@@ -333,7 +333,7 @@ class mrp_repair(osv.osv):
                     raise osv.except_osv(_('Error!'),_('You cannot confirm a repair order which has no line.'))
                 for line in o.operations:
                     if line.product_id.track_production and not line.prodlot_id:
-                        raise osv.except_osv(_('Warning'), _("Serial number is required for operation line with product '%s'") % (line.product_id.name))
+                        raise osv.except_osv(_('Warning!'), _("Serial number is required for operation line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
         return True
 
@@ -430,7 +430,7 @@ class mrp_repair(osv.osv):
                         else:
                             name = fee.name
                         if not fee.product_id:
-                            raise osv.except_osv(_('Warning !'), _('No product defined on Fees!'))
+                            raise osv.except_osv(_('Warning!'), _('No product defined on Fees!'))
 
                         if fee.product_id.property_account_income:
                             account_id = fee.product_id.property_account_income.id

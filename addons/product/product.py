@@ -172,7 +172,7 @@ class product_uom(osv.osv):
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
                 if uom.category_id.id != vals['category_id']:
-                    raise osv.except_osv(_('Warning'),_("Cannot change the category of existing Unit of Measure '%s'.") % (uom.name,))
+                    raise osv.except_osv(_('Warning!'),_("Cannot change the category of existing Unit of Measure '%s'.") % (uom.name,))
         return super(product_uom, self).write(cr, uid, ids, vals, context=context)
 
 product_uom()

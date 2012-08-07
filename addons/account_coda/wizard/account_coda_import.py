@@ -141,7 +141,7 @@ class account_coda_import(osv.osv_memory):
                     err_code = 'W0001'
                     if batch:
                         return (err_code, err_string)
-                    raise osv.except_osv(_('Warning !'), err_string)
+                    raise osv.except_osv(_('Warning!'), err_string)
 
             elif line[0] == '1':
                 if coda_version == '1':

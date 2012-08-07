@@ -530,7 +530,7 @@ class crm_lead(base_stage, osv.osv):
         lead_ids = context and context.get('lead_ids', []) or []
 
         if len(ids) <= 1:
-            raise osv.except_osv(_('Warning !'),_('Please select more than one opportunity from the list view.'))
+            raise osv.except_osv(_('Warning!'),_('Please select more than one opportunity from the list view.'))
 
         ctx_opportunities = self.browse(cr, uid, lead_ids, context=context)
         opportunities = self.browse(cr, uid, ids, context=context)

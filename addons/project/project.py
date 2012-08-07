@@ -386,7 +386,7 @@ class project(osv.osv):
 
         for project in projects:
             if (not project.members) and force_members:
-                raise osv.except_osv(_('Warning !'),_("You must assign members on the project '%s' !") % (project.name,))
+                raise osv.except_osv(_('Warning!'),_("You must assign members on the project '%s' !") % (project.name,))
 
         resource_pool = self.pool.get('resource.resource')
 
@@ -1087,7 +1087,7 @@ class task(base_stage, osv.osv):
                 #TO FIX:Kanban view doesn't raise warning
                 #stages = [stage.id for stage in t.project_id.type_ids]
                 #if new_stage not in stages:
-                    #raise osv.except_osv(_('Warning !'), _('Stage is not defined in the project.'))
+                    #raise osv.except_osv(_('Warning!'), _('Stage is not defined in the project.'))
                 write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
                 super(task,self).write(cr, uid, [t.id], write_vals, context=context)
                 self.stage_set_send_note(cr, uid, [t.id], new_stage, context=context)
@@ -1276,7 +1276,7 @@ class account_analytic_account(osv.osv):
         project_obj = self.pool.get('project.project')
         analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
         if analytic_ids:
-            raise osv.except_osv(_('Warning !'), _('Please delete the project linked with this account first.'))
+            raise osv.except_osv(_('Warning!'), _('Please delete the project linked with this account first.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
 
 

@@ -413,7 +413,7 @@ property or property parameter."),
         cal = vobject.iCalendar()
         event = cal.add('vevent')
         if not event_obj.date_deadline or not event_obj.date:
-            raise osv.except_osv(_('Warning !'),_("First you have to specify the date of the invitation."))
+            raise osv.except_osv(_('Warning!'),_("First you have to specify the date of the invitation."))
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
         event.add('dtend').value = ics_datetime(event_obj.date_deadline)
@@ -1411,7 +1411,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context = {}
 
         if 'date' in groupby:
-            raise osv.except_osv(_('Warning !'), _('Group by date is not supported, use the calendar view instead.'))
+            raise osv.except_osv(_('Warning!'), _('Group by date is not supported, use the calendar view instead.'))
         virtual_id = context.get('virtual_id', True)
         context.update({'virtual_id': False})
         res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)

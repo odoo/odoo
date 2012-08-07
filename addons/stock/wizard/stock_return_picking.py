@@ -103,7 +103,7 @@ class stock_return_picking(osv.osv_memory):
                 if m.product_qty * m.product_uom.factor > return_history[m.id]:
                         valid_lines += 1
             if not valid_lines:
-                raise osv.except_osv(_('Warning !'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
+                raise osv.except_osv(_('Warning!'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
         return res
     
     def get_return_history(self, cr, uid, pick_id, context=None):
@@ -195,7 +195,7 @@ class stock_return_picking(osv.osv_memory):
                 })
                 move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]}, context=context)
         if not returned_lines:
-            raise osv.except_osv(_('Warning !'), _("Please specify at least one non-zero quantity."))
+            raise osv.except_osv(_('Warning!'), _("Please specify at least one non-zero quantity."))
 
         if set_invoice_state_to_none:
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'}, context=context)

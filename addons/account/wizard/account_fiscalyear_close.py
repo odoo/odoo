@@ -59,7 +59,7 @@ class account_fiscalyear_close(osv.osv_memory):
             #check that the reconcilation concern journal entries from only one company
             cr.execute('select distinct(company_id) from account_move_line where id in %s',(tuple(ids),))
             if len(cr.fetchall()) > 1:
-                raise osv.except_osv(_('Warning !'), _('The entries to reconcile should belong to the same company.'))
+                raise osv.except_osv(_('Warning!'), _('The entries to reconcile should belong to the same company.'))
             r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto'})
             cr.execute('update account_move_line set reconcile_id = %s where id in %s',(r_id, tuple(ids),))
             return r_id

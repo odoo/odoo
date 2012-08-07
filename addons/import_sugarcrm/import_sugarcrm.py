@@ -1094,7 +1094,7 @@ class import_sugarcrm(osv.osv):
     def import_from_scheduler_all(self, cr, uid, ids, context=None):
         keys, module_list = self.get_key(cr, uid, ids, context)
         if not keys:
-            raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
+            raise osv.except_osv(_('Warning!'), _('Select Module to Import.'))
         key_list = module_list.keys()
         for module in key_list :
             module = module_list[module]
@@ -1120,7 +1120,7 @@ class import_sugarcrm(osv.osv):
 #        """Import all sugarcrm data into openerp module"""
         keys, module_list = self.get_key(cr, uid, ids, context)
         if not keys:
-            raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
+            raise osv.except_osv(_('Warning!'), _('Select Module to Import.'))
         key_list = module_list.keys()
         for module in key_list :
             module = module_list[module]

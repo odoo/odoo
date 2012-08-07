@@ -196,7 +196,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         data = context and context.get('active_ids', [])
         for analytic in analytic_obj.browse(cr, uid, data, context=context):
             if analytic.invoice_id:
-                     raise osv.except_osv(_('Warning !'), _("Invoice is already linked to some of the analytic line(s)!"))
+                     raise osv.except_osv(_('Warning!'), _("Invoice is already linked to some of the analytic line(s)!"))
 
     def do_create(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]
