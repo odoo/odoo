@@ -674,6 +674,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * Base handling of buttons, can be called when overriding do_button_action
      * in order to bypass parent overrides.
      *
+     * The callback will be provided with the ``id`` as its parameter, in case
+     * handle_button's caller had to alter the ``id`` (or even create one)
+     * while not being ``callback``'s creator.
+     *
      * This method should not be overridden.
      *
      * @param {String} name action name
@@ -699,7 +703,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             c.add(action.context);
         }
         action.context = c;
-        this.do_execute_action(action, this.dataset, id, callback);
+        this.do_execute_action(
+            action, this.dataset, id, _.bind(callback, null, id));
     },
     /**
      * Handles the activation of a record (clicking on it)
@@ -991,8 +996,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 // of digits, nice when storing actual numbers, not nice when
                 // storing strings composed only of digits. Force the action
                 // name to be a string
-                $(self).trigger('action', [field.toString(), record_id, function () {
-                    return self.reload_record(self.records.get(record_id));
+                $(self).trigger('action', [field.toString(), record_id, function (id) {
+                    return self.reload_record(self.records.get(id));
                 }]);
             })
             .delegate('a', 'click', function (e) {

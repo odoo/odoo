@@ -135,10 +135,13 @@ openerp.web.list_editable = function (instance) {
         make_editor: function () {
             return new instance.web.list.Editor(this);
         },
-        do_button_action: function () {
+        do_button_action: function (name, id, callback) {
             var self = this, args = arguments;
-            this.ensure_saved().then(function () {
-                self.handle_button.apply(self, args);
+            this.ensure_saved().then(function (done) {
+                if (!id && done.created) {
+                    id = done.record.get('id');
+                }
+                self.handle_button.call(self, name, id, callback);
             });
         },
         /**
