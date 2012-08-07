@@ -99,7 +99,7 @@
             <field name="arch" type="xml">
                 <form string="Partners" version="7.0">
                 <sheet>
-                    <field name="photo" widget='image' class="oe_avatar oe_left"/>
+                    <field name="image_small" widget='image' class="oe_avatar oe_left"/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
                             <label for="name"/> (
@@ -168,7 +168,7 @@
                                     <field name="phone"/>
                                     <field name="street"/>
                                     <field name="street2"/>
-                                    <field name="photo"/>
+                                    <field name="image_small"/>
                                     <field name="zip"/>
                                     <field name="city"/>
                                     <field name="country_id"/>
@@ -181,7 +181,7 @@
                                                 <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
                                                 <div class="oe_module_vignette">
                                                 <a type="edit">
-                                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_avatar oe_kanban_avatar_toto"/>
+                                                    <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
                                                 </a>
                                                     <div class="oe_module_desc">
                                                         <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
@@ -286,7 +286,7 @@
                     <field name="phone"/>
                     <field name="street"/>
                     <field name="street2"/>
-                    <field name="photo"/>
+                    <field name="image_small"/>
                     <field name="zip"/>
                     <field name="city"/>
                     <field name="country_id"/>
@@ -297,7 +297,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette">
                                 <a type="edit">
-                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_kanban_image"/>
+                                    <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)" class="oe_kanban_image"/>
                                 </a>
                                 <div class="oe_kanban_details">
                                     <h4 class="oe_partner_heading"><a type="edit"><field name="name"/></a></h4>

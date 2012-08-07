@@ -133,6 +133,15 @@ class res_partner(osv.osv):
             res[partner.id] =self._display_address(cr, uid, partner, context=context)
         return res
 
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image)
+        return result
+    
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+
     _order = "name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
@@ -174,7 +183,26 @@ class res_partner(osv.osv):
         'birthdate': fields.char('Birthdate', size=64),
         'is_company': fields.boolean('Company', help="Check if the contact is a company, otherwise it is a person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
-        'photo': fields.binary('Photo'),
+        'image': fields.binary("Image",
+            help="This field holds the image used as avatar for the "\
+                 "partner. The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 1024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized image", type="binary", multi="_get_image",
+            store = {
+                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized image of the partner. It is automatically "\
+                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Small-sized image", type="binary", multi="_get_image",
+            store = {
+                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized image of the partner. It is automatically "\
+                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
@@ -187,12 +215,12 @@ class res_partner(osv.osv):
             return [context['category_id']]
         return False
 
-    def _get_photo(self, cr, uid, is_company, context=None):
+    def _get_default_image(self, cr, uid, is_company, context=None):
         if is_company:
-            path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'company_icon.png')
+            image_path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'company_icon.png')
         else:
-            path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png')
-        return open(path, 'rb').read().encode('base64')
+            image_path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'active': True,
@@ -203,7 +231,7 @@ class res_partner(osv.osv):
         'is_company': False,
         'type': 'default',
         'use_parent_address': True,
-        'photo': lambda self, cr, uid, context: self._get_photo(cr, uid, False, context),
+        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -214,8 +242,9 @@ class res_partner(osv.osv):
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
-        value = {'title': False,
-                 'photo': self._get_photo(cr, uid, is_company, context)}
+        # get value as for an onchange on the image
+        value = tools.image_get_resized_images(self._get_default_image(cr, uid, is_company, context), return_big=True)
+        value['title'] = False
         if is_company:
             value['parent_id'] = False
             domain = {'title': [('domain', '=', 'partner')]}
@@ -280,8 +309,9 @@ class res_partner(osv.osv):
             domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
             update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
             self.update_address(cr, uid, update_ids, vals, context)
-        if 'photo' not in vals  :
-            vals['photo'] = self._get_photo(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
+        if 'image' not in vals :
+            image_value = self._get_default_image(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
+            vals.update(tools.image_get_resized_images(image_value, return_big=True))
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
