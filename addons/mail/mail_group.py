@@ -48,12 +48,6 @@ class mail_group(osv.osv):
     _inherit = ['mail.thread']
     _inherits = {'mail.alias': 'alias_id'}
 
-    def action_group_join(self, cr, uid, ids, context={}):
-        return self.message_subscribe(cr, uid, ids, context=context);
-    
-    def action_group_leave(self, cr, uid, ids, context={}):
-        return self.message_unsubscribe(cr, uid, ids, context=context);
-
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
