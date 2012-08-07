@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"PO-Revision-Date: 2012-08-05 20:32+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 05:29+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-08-06 05:18+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -43,6 +43,8 @@ msgstr "İzleme"
 msgid ""
 "Check if you want to print followups without changing followups level."
 msgstr ""
+"İzleme seviyelerini değiştirmeden izlemeleri yazdırmak istiyorsanız "
+"işaretleyin"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -67,6 +69,25 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Sayın %(partner_name)s,\n"
+"\n"
+"Bir anımsatma göndermemize karşın hesabınızın ciddi olarak gecikmesi bizi "
+"üzmüştür.\n"
+"\n"
+"İvedi olarak bir ödeme yapmanız çok önemlidir, aksi durumda hesabınız "
+"durdurulacak olup bundan sonra firmanıza (ürün/hizmet) veremeyeceğimizi "
+"bilmenizi isteriz.\n"
+"Lütfen önümüzdeki 8 gün içinde bu ödemenin yapılması için uygun önlemleri "
+"alın.\n"
+"\n"
+"Bu faturanın ödenmesiyle ilgili bilmediğimiz bir sorun varsa,  bu sorunu "
+"hızlı bir şekilde çözebilmemiz için (+32).10.68.94.39. numaralı telefondan "
+"muhasebe bölümümüzle iletişime geçmekte tereddüt etmeyin.\n"
+"\n"
+"Geciken ödemenizle ilgili ayrıntılar aşağıdadır.\n"
+"\n"
+"Saygılarımızla,\n"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -102,7 +123,7 @@ msgstr "Açıklama"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr ""
+msgstr "Geçerli yılın dönemindeki İzleme Girişleri"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -146,6 +167,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Günlük Girişinizin tarihi tanımlanan dönem içinde değil! Tarihi "
+"değiştirmelisiniz ya da günlükten bu kıstlamayı kaldırmalısınız."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -279,6 +302,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Sayın %(partner_name)s,\n"
+"\n"
+"Bizim bir hatamızın olması istisnası kabul edilmek üzere, aşağıdaki tutar "
+"ödenmemiş durumdadır. Lütfen önümüzdeki 8 gün içinde bu ödemenin yapılması "
+"için uygun önlemleri alın.\n"
+"\n"
+"Eğer ödemeyi bu iletimizin gönderilmesinde sonra yapmışsanız, lütfen bu "
+"mesajımızı dikkate almayın. (+32).10.68.94.39. numaralı telefondan muhasebe "
+"bölümümüzle iletişime geçmekte tereddüt etmeyin.\n"
+"\n"
+"Saygılarımızla,\n"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -323,6 +358,8 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
+"Açıklamanız geçerli değil, sağ göstergeyi kullanın ya da %% yüzde karakteri "
+"kullanmak istiyorsanız."
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -331,6 +368,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Günlük Girişlerinize ait seçilmiş hesap ikincil bir para biriminin "
+"sağlanmasına zorluyor. Hesaptan ikincil para birimini kaldırmanız ya da "
+"çoklu-para birimli bir günlük seçmelisiniz."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -418,7 +458,7 @@ msgstr "Yevmiye Kalemleri"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Görünüm tipindeki hesaplarda günlük girişi oluşturamazsınız."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -508,7 +548,7 @@ msgstr "İzleme Raporu"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "İzleme Adımları"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -540,12 +580,12 @@ msgstr "En Üst İzleme Seviyesi"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr ""
+msgstr "Faturalama İzlemelerini Gözden geçir"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "İlişkili hesap ve dönem için firma aynı olmalı."
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -555,6 +595,10 @@ msgid ""
 "code to adapt the email content to the good context (good name, good date) "
 "and you can manage the multi language of messages."
 msgstr ""
+"İzleme seviyelerini ve ilgili mesajlarını ve gecikmeleri tanımlayın. Her "
+"adım için, mesajı ve gecikme gününü belirleyin.  Göstergeyi kullanarak "
+"eposta içeriğini iyi içeriğe uyarlamak için kullanılan kodu öğrenin (iyi ad, "
+"iyi tarih) ve çok-dilli mesajları yönetebilirsiniz"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -587,7 +631,7 @@ msgstr "%(tarih)ler: Geçerli Tarih"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Davalı olarak işaretli günlük girişlerini içerir"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -603,7 +647,7 @@ msgstr "Açıklama"
 #. module: account_followup
 #: constraint:account_followup.followup:0
 msgid "Only One Followup by Company."
-msgstr ""
+msgstr "Firmaya göre yalnızca bir İzleme var"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -697,11 +741,27 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Sayın %(partner_name)s,\n"
+"\n"
+"Birçok anımsatmaya rağmen hesabınız halen düzeltilmemiştir.\n"
+"\n"
+"Önümüzdeki sekiz günde ödemenin tamamının yapılmaması durumunda, yeniden "
+"anımsatma yapmadan, borcun ödenmesi için yasal işlemler başlatılacaktır.\n"
+"\n"
+"Bu işlemin gereksiz olacağından eminiz, geciken ödemelerinizin ayrıntıları "
+"aşağıda yazılıdır.\n"
+"\n"
+"Bu konuyla ilgili herhangi bir sorunuz olması durumunda, (+32).10.68.94.39. "
+"numaralı telefondan muhasebe bölümümüzle iletişime geçmekte tereddüt "
+"etmeyin.\n"
+"\n"
+"Saygılarımızla,\n"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Kapalı hesapta günlük girişi maddeleri oluşturamazsınız."
 
 #. module: account_followup
 #: view:account.followup.print.all:0

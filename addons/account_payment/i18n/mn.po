@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-08-05 04:45+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 05:29+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-08-06 05:18+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -62,6 +62,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"Захиалга үүсгэгдсэн дараагаараа 'Ноорог' төлөвтэй байдаг.\n"
+" Банк баталгаажуулсан дараа төлөв нь 'Батлагдсан' төлөвтэй болдог.\n"
+" Дараа нь төлөлгдсөн дараа төлөв нь 'Хийгдсэн' болдог."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -87,7 +90,7 @@ msgstr "Төлбөрийн огноо"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Санхүү / Төлбөрүүд"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -181,6 +184,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Журналын бичилтийн огноо нь тодорхойлогдсон хугацааны мужид биш байна! Та "
+"огноогоо солих юмуу журналаас энэ шаардамжийг арилгах хэрэгтэй."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -359,6 +364,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Журналийн бичилтэд таны сонгосон данс нь хоёрдогч валютыг хүчээр тулгаж "
+"байна. Та хоёрдогч валютийг данс дээрээсээ хасах юм уу журнал дээрээ олон "
+"валютын харагдацыг сонгох хэрэгтэй."
 
 #. module: account_payment
 #: report:payment.order:0
@@ -396,7 +404,7 @@ msgstr "Төлбөрийн горим"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "Үнэлгээний Огноо"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -463,7 +471,7 @@ msgstr "Журналын бичилт"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Харагдац төрлийн данс дээр журналын зүйлийг үүсгэх боломжгүй."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -536,7 +544,7 @@ msgstr "Нэхэмжлэл Лав."
 #. module: account_payment
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Компаний хэмжээнд нэхэмжлэлийн дугаар үл давхцах ёстой!"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -581,7 +589,7 @@ msgstr "Цуцлах"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Очих Банкны Данс"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -593,6 +601,7 @@ msgstr "Мэдээлэл"
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
 msgstr ""
+"Үүний холбогдох хугацааны муж болон дансанд компани нь ижил байх ёстой."
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -602,6 +611,9 @@ msgid ""
 "that should be done, keep track of all payment orders and mention the "
 "invoice reference and the partner the payment should be done for."
 msgstr ""
+"Төлбөрийн захиалга гэдэг нь манай компаниас төлбөр төлөхийг шаардсан "
+"нийлүүлэгчийн нэхэмжлэл эсвэл захиалагчийн өгсөн зээлийг хэлнэ. Энд та "
+"өөрийн төлөх ёстой бүх төлбөрийг бүртгэнэ."
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -705,7 +717,7 @@ msgstr "Даалгавар"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Хаагдсан данс дээр журналын бичилтийг үүсгэх боломжгүй."
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -726,7 +738,7 @@ msgstr "Төлбөрийн горим"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr ""
+msgstr "Төлбөрийг нутагшуулах"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0

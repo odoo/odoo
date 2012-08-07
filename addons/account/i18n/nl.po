@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-08-02 15:00+0000\n"
+"PO-Revision-Date: 2012-08-06 11:33+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-03 06:20+0000\n"
-"X-Generator: Launchpad (build 15734)\n"
+"X-Launchpad-Export-Date: 2012-08-07 06:31+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -585,7 +585,7 @@ msgstr "Niet afgeletterde transacties"
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
 msgid "Counterpart"
-msgstr "Tegenboeking"
+msgstr "Tegenrekening"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -1660,7 +1660,7 @@ msgstr "Crediteur"
 #: field:account.tax,account_paid_id:0
 #: field:account.tax.template,account_paid_id:0
 msgid "Refund Tax Account"
-msgstr "Rekening terugontvangen belasting"
+msgstr "Rekening te vorderen belasting"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2509,7 +2509,7 @@ msgid ""
 msgstr ""
 "Kan geen dagboek van het type %s vinden voor dit bedrijf.\n"
 "U kunt een dagboek aanmaken in het menu:\n"
-"Instellingen\\ Financiële administratie\\Overige dagboeken"
+"Instellingen\\ Financiële administratie\\Dagboeken"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -2684,7 +2684,7 @@ msgstr "Kostenplaatsen"
 #: model:ir.ui.menu,name:account.menu_action_account_form
 #: model:ir.ui.menu,name:account.menu_analytic
 msgid "Accounts"
-msgstr "Rekeningen"
+msgstr "Grootboekrekeningen"
 
 #. module: account
 #: code:addons/account/account_invoice.py:369
@@ -3354,7 +3354,7 @@ msgstr "Laat leeg om de kostenrekening te gebruiken"
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
 msgid "Journals"
-msgstr "Overige dagboeken"
+msgstr "Dagboeken"
 
 #. module: account
 #: field:account.partner.reconcile.process,to_reconcile:0
@@ -3630,7 +3630,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralised counterpart"
-msgstr "Samengevoegde tegenboeking"
+msgstr "Centrale tegenrekening"
 
 #. module: account
 #: code:addons/account/account_move_line.py:584
@@ -3887,7 +3887,7 @@ msgid ""
 "menu."
 msgstr ""
 "U kunt geen factuur aanmaken in een gecentraliseerd dagboek. Zet de optie "
-"'Gecentraliseerde tegenboekingen' uit in de instellingen van het dagboek."
+"'Centrale tegenrekening' uit in de instellingen van het dagboek."
 
 #. module: account
 #: field:account.account,name:0
@@ -4015,7 +4015,7 @@ msgstr ""
 "Aangeraden wordt om een apart dagboek te gebruiken voor het maken van de "
 "openingsboekingen van de fiscale jaren. Merk op dat de juiste instellingen "
 "hiervoor zijn: de standaard debet- en creditrekeningen, type 'situatie' en "
-"met gecentraliseerde tegenboekingen."
+"met gecentraliseerde tegenrekeningen."
 
 #. module: account
 #: view:account.installer:0
@@ -6010,7 +6010,7 @@ msgstr "Huidige valuta is niet correct geconfigureerd!"
 #: field:account.tax,account_collected_id:0
 #: field:account.tax.template,account_collected_id:0
 msgid "Invoice Tax Account"
-msgstr "Rekening ontvangen belastig"
+msgstr "Rekening af te dragen belasting"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_journal
@@ -6260,6 +6260,10 @@ msgid ""
 "choice assumes that the set of tax defined for the chosen template is "
 "complete"
 msgstr ""
+"Deze optie helpt u bij het kiezen of u de gebruiker de verkoop- en "
+"inkoopkoers wil laten invoeren of de gebruikelijke keuzevelden te gebruiken. "
+"Bij de laatste keuze neemt het systeem aan dat de belastingen voor het "
+"gekozen sjabloon compleet zijn."
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -7780,6 +7784,12 @@ msgid ""
 "few new accounts (You don't need to define the whole structure that is "
 "common to both several times)."
 msgstr ""
+"Dit optionele veld geeft u de mogelijkheid om een rekeningsjabloon te "
+"koppelen aan een specifiek rekeningsjabloon, welke anders mag zijn dan de "
+"bovenliggende sjablonen. Dit geeft u de mogelijkheid om een rekeningsjabloon "
+"te definiëren welke een uitbreiding is op de andere, met een aantal extra "
+"nieuwe rekeningen (U hoeft niet de gehele structuur te definiëren voor het "
+"gedeelte wat gelijk is)."
 
 #. module: account
 #: view:account.move:0
@@ -8237,6 +8247,12 @@ msgid ""
 "Most of the OpenERP operations (invoices, timesheets, expenses, etc) "
 "generate analytic entries on the related account."
 msgstr ""
+"Het normale grootboekschema heeft een structuur volgens de wettelijke "
+"richtlijnen voor boekhouden. De kostenplaats rekeningen kunt u vrij "
+"inrichten naar uw behoeften. Kostenplaatsen worden normaliter gebruikt bij "
+"contracten, projecten en/of afdelingen. De meeste acties uitgevoerd door "
+"OpenERP (facturen, urenstaten, declaraties, etc.) genereren "
+"kostenplaatsboekingen."
 
 #. module: account
 #: field:account.account.type,close_method:0

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-08-02 13:58+0000\n"
+"PO-Revision-Date: 2012-08-06 15:07+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-03 06:21+0000\n"
-"X-Generator: Launchpad (build 15734)\n"
+"X-Launchpad-Export-Date: 2012-08-07 06:31+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -44,7 +44,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_location_id:0
 msgid "Chained Location If Fixed"
-msgstr "Vastgelegde locatie"
+msgstr "Gekoppelde locatie"
 
 #. module: stock
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
@@ -331,7 +331,7 @@ msgstr "Waarschuwing!"
 #. module: stock
 #: field:stock.invoice.onshipping,group:0
 msgid "Group by partner"
-msgstr "Sorteer op relatie"
+msgstr "Samenvoegen op één factuur"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner view:report.stock.inventory:0
@@ -356,7 +356,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "No invoicing"
-msgstr "Geen facturatie"
+msgstr "Geen credit factuur"
 
 #. module: stock
 #: view:stock.move:0
@@ -864,7 +864,7 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
 msgid "Location Input"
-msgstr "Locatie binnenkomst"
+msgstr "Locatie inkomend"
 
 #. module: stock
 #: help:stock.picking,date:0
@@ -1184,7 +1184,7 @@ msgstr "Leveringsbon"
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Manual Operation"
-msgstr "Handmatige werking"
+msgstr "Handmatige verwerking"
 
 #. module: stock
 #: view:stock.location:0 view:stock.move:0
@@ -1321,10 +1321,10 @@ msgid ""
 "location is replaced in the original move."
 msgstr ""
 "Dit wordt alleen gebruikt indien u een gekoppelde locatiesoort kiest.\n"
-"De 'Automatische mutatie' waarde zal een voorraadmutatie maken na de huidige "
-"mutatie, welke direct wordt goedgekeurd. Bij 'Handmatige verwerking' moet de "
-"voorraadmutatie worden goedgekeurd door werknemer. Bij 'Automatisch, geen "
-"stap toegevoegd' wordt de locatie vervangen in de originele mutatie"
+"De 'Automatische verwerking' waarde zal een voorraadmutatie maken na de "
+"huidige mutatie, welke direct wordt goedgekeurd. Bij 'Handmatige verwerking' "
+"moet de voorraadmutatie worden goedgekeurd door werknemer. Bij 'Automatisch, "
+"geen stap toegevoegd' wordt de locatie vervangen in de originele mutatie."
 
 #. module: stock
 #: view:stock.tracking:0
@@ -1386,7 +1386,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "To be refunded/invoiced"
-msgstr "Terug te betalen/gefactureerd"
+msgstr "Terug te betalen (Credit factuur)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
@@ -1546,7 +1546,7 @@ msgstr "Verpakking"
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Bestemmingslocatie"
+msgstr "Klant locatie"
 
 #. module: stock
 #: code:addons/stock/stock.py:2312
@@ -1609,7 +1609,7 @@ msgstr "Orderdatum"
 #: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
 msgid "INV: %s"
-msgstr "VRD: %s"
+msgstr "TEL: %s"
 
 #. module: stock
 #: view:stock.location:0 field:stock.location,location_id:0
@@ -1693,7 +1693,7 @@ msgstr ""
 #: field:res.partner,property_stock_supplier:0
 #: selection:stock.location,usage:0
 msgid "Supplier Location"
-msgstr "Toeleverlocatie"
+msgstr "Leveranciers locatie"
 
 #. module: stock
 #: code:addons/stock/stock.py:2358
@@ -2223,7 +2223,7 @@ msgstr "Deellevering"
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
-msgstr "Automatisch"
+msgstr "Automatisch, geen stap toegevoegd"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2249,7 +2249,7 @@ msgstr "Groepeer op..."
 #. module: stock
 #: view:stock.location:0
 msgid "Chained Locations"
-msgstr "Vastgelegde locaties"
+msgstr "Gekoppelde locaties"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
@@ -3180,12 +3180,13 @@ msgid ""
 "preconfigured logistics rules, but you can also record manual stock "
 "operations."
 msgstr ""
-"Interne leveringen geeft alle leveringsopdrachten weer, welke moeten worden "
-"uitgevoerd in het magazijn. Alle opdrachten  kunnen worden gecatalogiseerd "
-"in voorraad journaalposten, zodat iedere werknemer zijn eigen lijst met uit "
-"te voeren opdrachten heeft in zijn eigen dagboek. De meeste opdrachten "
-"worden door OpenERP automatisch voorbereid, volgens de voorgedefinieerde "
-"regels, maar het kunnen ook handmatige voorraadverwerkingen zijn."
+"Interne leveringen geeft alle voorraadmutatie opdrachten weer, welke moeten "
+"worden uitgevoerd in het magazijn. Alle opdrachten  kunnen worden "
+"gecatalogiseerd in voorraad journaalposten, zodat iedere werknemer zijn "
+"eigen lijst met uit te voeren opdrachten heeft in zijn eigen dagboek. De "
+"meeste opdrachten worden door OpenERP automatisch voorbereid, volgens de "
+"voorgedefinieerde regels, maar het kunnen ook handmatige "
+"voorraadverwerkingen zijn."
 
 #. module: stock
 #: view:stock.move:0
@@ -3475,9 +3476,9 @@ msgstr ""
 "zou direct moeten gaan naar de gekoppelde locatie. De gekoppelde locatie "
 "wordt bepaald volgens het soort:\n"
 "* Geen: Geen enkele koppeling\n"
-"* Klant: De gekoppelde locatie van het klantlocatie veld in het relatie "
-"bestand, van de relatie gespecificeerd in de verzamellijst van de inkomende "
-"producten, wordt gebruikt.\n"
+"* Klant: Voor de gekoppelde locatie wordt het locatieveld (in het "
+"relatiebestand)  van de relatie welke is ingevoerd in de inkomende of "
+"uitgaande levering.\n"
 "* Vaste locatie: De gekoppelde locatie wordt gebruikt van het volgende veld: "
 "Gekoppelde locatie is vast."
 
@@ -3959,7 +3960,7 @@ msgstr "Mutatiehistorie (bovenliggende mutaties)"
 #: code:addons/stock/product.py:423
 #, python-format
 msgid "Future Stock"
-msgstr "Voorraad in de tijd"
+msgstr "Virtuele voorraad"
 
 #. module: stock
 #: code:addons/stock/stock.py:513 code:addons/stock/stock.py:1149
@@ -4170,7 +4171,7 @@ msgstr "Voorraadafname rekening"
 #. module: stock
 #: field:stock.location,chained_location_type:0
 msgid "Chained Location Type"
-msgstr "Vastgezette locatiesoort"
+msgstr "Gekoppelde locatiesoort"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots

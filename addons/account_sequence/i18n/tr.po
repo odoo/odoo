@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"PO-Revision-Date: 2012-08-05 12:41+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-17 05:30+0000\n"
-"X-Generator: Launchpad (build 15259)\n"
+"X-Launchpad-Export-Date: 2012-08-06 05:18+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -28,11 +28,12 @@ msgstr "Hesap Dizisi Uygulama Yapılandırması"
 msgid ""
 "You can not create more than one move per period on centralized journal"
 msgstr ""
+"Merkezi günlük üzerinde her dönem için birden fazla hareket oluşturmazsınız"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "İlişkili hesap ve dönem için aynı firma olmalı."
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -107,7 +108,7 @@ msgstr "İç Sayı"
 #. module: account_sequence
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Görünüm tipindeki hesaplarda günlük girişi oluşturamazsınız."
 
 #. module: account_sequence
 #: help:account.sequence.installer,padding:0
@@ -126,7 +127,7 @@ msgstr "Ad"
 #. module: account_sequence
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Kapalı hesapta günlük girişi maddeleri oluşturamazsınız."
 
 #. module: account_sequence
 #: constraint:account.journal:0
@@ -134,6 +135,7 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"Yapılandırma hatası! Seçilen para birimi öntanımlı hesaplarla aynı olmalı."
 
 #. module: account_sequence
 #: sql_constraint:account.move.line:0
@@ -182,6 +184,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Günlük Girişlerinize ait seçilmiş hesap ikincil bir para biriminin "
+"sağlanmasına zorluyor. Hesaptan ikincil para birimini kaldırmanız ya da "
+"çoklu-para birimli bir günlük seçmelisiniz."
 
 #. module: account_sequence
 #: constraint:account.move.line:0
@@ -189,6 +194,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Günlük Girişinizin tarihi tanımlanan dönem içinde değil! Tarihi "
+"değiştirmelisiniz ya da günlükten bu kıstlamayı kaldırmalısınız."
 
 #. module: account_sequence
 #: field:account.sequence.installer,prefix:0
