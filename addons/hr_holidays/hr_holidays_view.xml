@@ -102,11 +102,8 @@
                 </header>
                 <sheet string="Leave Request">
                     <group>
-                    	<group col="3">
-                    		<field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                    	</group>
-                        <newline></newline>
                         <group>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                             <field name="holiday_status_id" on_change="onchange_status_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
                             <label for="number_of_days_temp" string="Duration"/>
                             <div>
@@ -160,11 +157,8 @@
                 </header>
                 <sheet>
                     <group>
-	                    <group>
-	                    	<field name="name" required="1" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-	                    </group>
-	                    <newline/>
                         <group>
+                            <field name="name" required="1" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                             <field name="holiday_status_id" on_change="onchange_status_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
                             <field name="number_of_days_temp"/>
                         </group>
