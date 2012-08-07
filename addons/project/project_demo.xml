@@ -66,6 +66,7 @@
                     ref('base.user_vad')])]"/>
             <field name="user_id" ref="base.user_al"/>
             <field name="name">Integrate a Sale and Warehouse Management.</field>
+            <field name="alias_model">project.task</field>
         </record>
 
         <!-- Categories -->
@@ -288,6 +289,7 @@
             <field name="name">OpenERP Integration</field>
             <field name="parent_id" ref="all_projects_account"/>
             <field name="user_id" ref="base.user_root"/>
+            <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_merge')])]"/>
         </record>
         <record id="project_project_21" model="project.project">
@@ -295,6 +297,7 @@
             <field name="parent_id" ref="all_projects_account"/>
             <field name="name">Study + Prototype</field>
             <field name="user_id" ref="base.user_root"/>
+            <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development')])]"/>
             <field name="members" eval="[(6, 0, [ref('base.user_root'),ref('base.user_demo')])]"/>
         </record>
@@ -303,6 +306,7 @@
             <field name="parent_id" ref="all_projects_account"/>
             <field name="name">Specific Developments</field>
             <field name="user_id" ref="base.user_root"/>
+            <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_specification'), ref('project_tt_development')])]"/>
             <field name="members" eval="[(6, 0, [ref('base.user_root'),ref('base.user_demo')])]"/>
         </record>
@@ -310,6 +314,7 @@
             <field name="priority">30</field>
             <field name="parent_id" ref="all_projects_account"/>
             <field name="name">Install, data import, configuration</field>
+            <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_development')])]"/>
             <field name="members" eval="[(6, 0, [ref('base.user_root'),ref('base.user_demo')])]"/>
         </record>

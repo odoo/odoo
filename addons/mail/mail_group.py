@@ -27,6 +27,7 @@ from osv import osv
 from osv import fields
 import tools
 from tools.translate import _
+from lxml import etree
 
 class mail_group(osv.osv):
     """
@@ -45,6 +46,7 @@ class mail_group(osv.osv):
     _description = 'Discussion group'
     _name = 'mail.group'
     _inherit = ['mail.thread']
+    _inherits = {'mail.alias': 'alias_id'}
 
     def action_group_join(self, cr, uid, ids, context={}):
         return self.message_subscribe(cr, uid, ids, context=context);
@@ -137,6 +139,9 @@ class mail_group(osv.osv):
             string='Joined', multi='get_member_ids'),
         'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer',
             string='Messages count for last month'),
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+                                    help="The email address associated with this group. New emails received will automatically "
+                                         "create new topics."),
     }
 
     _defaults = {
@@ -158,10 +163,28 @@ class mail_group(osv.osv):
         return self.message_subscribe(cr, uid, ids, user_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        mail_group_id = super(mail_group, self).create(cr, uid, vals, context=context)
+        alias_pool = self.pool.get('mail.alias')
+        if not vals.get('alias_id'):
+            name = vals.get('alias_name') or vals['name']
+            alias_id = alias_pool.create_unique_alias(cr, uid, 
+                    {'alias_name': "group_"+name}, 
+                    model_name=self._name, context=context)
+            vals['alias_id'] = alias_id
+        mail_group_id = super(mail_group, self).create(cr, uid, vals, context)
+        alias_pool.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
+       
         if vals.get('group_ids'):
             self._subscribe_user_with_group_m2m_command(cr, uid, [mail_group_id], vals.get('group_ids'), context=context)
+
         return mail_group_id
+
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade-delete mail aliases as well, as they should not exist without the mail group.
+        mail_alias = self.pool.get('mail.alias')
+        alias_ids = [group.alias_id.id for group in self.browse(cr, uid, ids, context=context) if group.alias_id]
+        res = super(mail_group, self).unlink(cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
+        return res
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('group_ids'):
@@ -170,6 +193,6 @@ class mail_group(osv.osv):
 
     def action_group_join(self, cr, uid, ids, context=None):
         return self.message_subscribe(cr, uid, ids, context=context)
-    
+
     def action_group_leave(self, cr, uid, ids, context=None):
         return self.message_unsubscribe(cr, uid, ids, context=context)
