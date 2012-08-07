@@ -256,7 +256,7 @@
                    <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
                    <separator/>
                    <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-                   <field name="category_id"/>
+                   <field name="category_id" string="Category" filter_domain="[('category_id','ilike', self)]"/>
                    <field name="user_id"/>
                    <field name="parent_id" filter_domain="[('parent_id','child_of',[self])]"/>
                    <group expand="0" string="Group By...">
