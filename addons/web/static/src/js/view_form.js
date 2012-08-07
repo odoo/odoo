@@ -4706,8 +4706,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             _.each(elemts, function(element){
                 $item = $(element);
                 if ($item.attr("data-id") != self.selected_value) {
-                    $item.attr("style", "cursor: pointer; background: #ba3d37; position: relative; left: 5px; top: -3px;");
-                    $item.parent().attr("style", "background: #ba3d37; height: 24px; margin-top: 3px;");
+                    $item.attr("style", "cursor: pointer;");
                     $item.click(function(event){
                         var data_id = parseInt($(this).attr("data-id"))
                         self.view.dataset.call('stage_set', [[self.view.datarecord.id],data_id]).then(function() {
@@ -4715,8 +4714,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                         });
                     });
                 } else {
-                    $item.attr("style", "background: #8a89ba; position: relative; left: 5px; top: -3px;");
-                    $item.parent().attr("style", "background: #8a89ba; height: 24px; margin-top: 3px;");
                 }
             });
         }

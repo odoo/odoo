@@ -1945,6 +1945,8 @@
   padding: 0;
   margin: 0;
   text-shadow: 0 1px 1px white;
+  /*background: #dfdfdf;*/
+  overflow: hidden;
 }
 .openerp ul.oe_form_steps img {
   vertical-align: top;
@@ -1960,22 +1962,89 @@
   padding: 0 0 0 12px;
 }
 .openerp ul.oe_form_steps li:first-child {
+  padding-left: 12px;
   border-left: 1px solid #cacaca;
 }
 .openerp ul.oe_form_steps li:last-child {
   margin-right: 12px;
-  padding-right: 12px;
+  /*padding-right: 12px;*/
   border-right: 1px solid #cacaca;
 }
-.openerp ul.oe_form_steps li a {
+.openerp ul.oe_form_steps li {
   color: #4c4c4c;
+  text-decoration: none;
+  padding: 0 0 0 30px;  
+  position: relative;
+  display: block;
+  float: left;
+  height: 30px;
+  background-color: #8a89ba;
+  color: white;
+}
+.openerp ul.oe_form_steps li span {
+  display:block;
+  margin-left: 10px;
 }
 .openerp ul.oe_form_steps li a:hover {
   color: black;
 }
-.openerp ul.oe_form_steps .oe_form_steps_active {
+.openerp ul.oe_form_steps li:after {
+  content: " ";
+  display: :block;
+  width: 0;
+  height: 0;
+  border-top: 50px solid transparent;
+  border-bottom: 50px solid transparent;
+  border-left: 30px solid #8a89ba;
+  position: absolute;
+  top: 50%;
+  margin-top: -50px;
+  left: 100%;
+  z-index: 2;
+}
+.openerp ul.oe_form_steps li:before {
+  content: " ";
+  display: :block;
+  width: 0;
+  height: 0;
+  border-top: 50px solid transparent;
+  border-bottom: 50px solid transparent;
+  border-left: 30px solid #eeeeee;
+  position: absolute;
+  top: 50%;
+  margin-top: -50px;
+  margin-left: 2px;
+  left: 100%;
+  z-index: 1;
+}
+.openerp ul.oe_form_steps li:hover {
+  background: #807fb4;
+}
+.openerp ul.oe_form_steps li:hover:after {
+  border-left-color: #807fb4;
+}
+.openerp ul.oe_form_steps li.oe_form_steps_active {
   font-weight: bold;
-  color: #b33630;
+  /*color: #b33630;*/
+  text-shadow: 0 1px 1px #999999;
+  /*background-color: #dc5f59;*/
+  background-color: #b33630;
+  color: white;
+}
+.openerp ul.oe_form_steps li.oe_form_steps_active:after {
+  content: " ";
+  display: :block;
+  width: 0;
+  height: 0;
+  border-top: 50px solid transparent;
+  border-bottom: 50px solid transparent;
+  /*border-left: 30px solid #dc5f59;*/
+  border-left: 30px solid #b33630;  
+  position: absolute;
+  top: 50%;
+  margin-top: -50px;
+  left: 100%;
+  z-index: 2;
 }
 .openerp .oe_form .oe_subtotal_footer {
   width: 1% !important;
