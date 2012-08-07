@@ -2698,7 +2698,6 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.on("change:value", this, function() {
             this.floating = false;
             this.render_value();
-            this.$('.oe_m2o_cm_button').css({'visibility': this.is_false() ? 'hidden' : 'visible'});
         });
     },
     initialize_content: function() {
@@ -2889,6 +2888,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         if (!this.get("effective_readonly")) {
             this.$input.val(str.split("\n")[0]);
             this.current_display = this.$input.val();
+            this.$('.oe_m2o_cm_button').css({'visibility': this.is_false() ? 'hidden' : 'visible'});
         } else {
             var lines = _.escape(str).split("\n");
             var link = "";
@@ -2929,6 +2929,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             value_ = value_[0];
         }
         value_ = value_ || false;
+        this.$('.oe_m2o_cm_button').css({'visibility': this.is_false() ? 'hidden' : 'visible'});
         this.inhibit_on_change = true;
         this._super(value_);
         this.inhibit_on_change = false;
