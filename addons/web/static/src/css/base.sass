@@ -1831,11 +1831,16 @@ $sheet-max-width: 860px
 
     .oe_list
         position: relative
-        .oe_form .oe_form_field
-            width: auto
-            position: absolute
-            margin: 0 !important // dammit
-            padding: 0
+        .oe_form
+            .oe_form_nosheet
+                margin: 0 // FIXME: either class or border should not be by default
+                padding: 0
+                border: none
+            .oe_form_field
+                width: auto
+                position: absolute
+                margin: 0 !important // dammit
+                padding: 0
 
     .oe_list_content
         width: 100%
