@@ -122,6 +122,7 @@ class payroll_advice(osv.osv):
         'neft': fields.boolean('NEFT Transaction', help="Check this box if your company use online transfer for salary"),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),
+        'batch_id': fields.many2one('hr.payslip.run', 'Batch', readonly=True)
     }
 
     _defaults = {
@@ -238,6 +239,7 @@ class hr_payslip_run(osv.osv):
             if run.available_advice:
                 raise osv.except_osv(_('Error !'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") %(run.name))
             advice_data = {
+                        'batch_id': run.id,
                         'company_id': users[0].company_id.id,
                         'name': run.name,
                         'date': run.date_end,
