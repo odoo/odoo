@@ -200,7 +200,6 @@ class hr_employee(osv.osv):
             help="Small-sized photo of the employee. It is automatically "\
                  "resized as a 50x50 px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'active': fields.boolean('Active'),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
