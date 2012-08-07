@@ -109,7 +109,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         } else if (val.slice(-1) == "%") {
             return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
         } else {
-            return parseInt(val, 10);        
+            return parseInt(val, 10);
         }
     },
     renderElement: function() {
@@ -123,7 +123,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (! this.dialog_inited)
             this.init_dialog();
         var o = this.get_options(options);
-        instance.web.dialog(this.$element, o).dialog('open');     
+        instance.web.dialog(this.$element, o).dialog('open');
         if (o.height === 'auto' && o.max_height) {
             this.$element.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
@@ -627,7 +627,7 @@ instance.web.Reload = instance.web.Widget.extend({
         var search = "?ts=" + timestamp;
         if (l.search) {
             search = l.search + "&ts=" + timestamp;
-        } 
+        }
         var hash = l.hash;
         if (this.menu_id) {
             hash = "#menu_id=" + this.menu_id;
@@ -855,7 +855,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             modal: true,
             title: error.title,
             buttons: [
-                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
+                {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
             ]
         }).html(error.error);
     },
