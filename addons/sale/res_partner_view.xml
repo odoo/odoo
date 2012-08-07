@@ -8,13 +8,18 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="context">{'search_default_partner_id': active_id}</field>
             <field name="groups_id" eval="[(4, ref('base.group_sale_salesman'))]"/>
-            <field name="help">
-                This customer has no quotation or sale order.
-                Click here to create a new quotation.
-                &lt;p&gt;
-                The "Quotation" is the first step of the Sales flow.  Manage your sales from quotation to invoice.
-                &lt;p&gt;
-                You will be able to sell products (manage deliveries) as well as services (create projects).
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation or sale order for this customer.
+              </p><p>
+                OpenERP will help you efficiently handle the complete sale flow:
+                quotation, sale order, delivery, invoicing and
+                payment.
+              </p><p>
+                The social feature helps you organize discussions on each sale
+                order, and allow your customer to keep track of the evolution
+                of the sale order.
+              </p>
             </field>
         </record>
 

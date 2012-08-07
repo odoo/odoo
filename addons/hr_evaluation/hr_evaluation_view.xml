@@ -8,12 +8,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Appraisal Plan">
-                   <group>
-                       <field name="name" string="Appraisal Plans"/>
-                       <separator orientation="vertical"/>
-                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                   </group>
-                   <newline/>
+                   <field name="name" string="Appraisal Plans"/>
+                   <field name="company_id" groups="base.group_multi_company"/>
                    <group expand="0" string="Group By..." groups="base.group_multi_company">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
@@ -234,22 +230,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
-                   <group>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Appraisal that are in Plan In Progress state"/>
-                        <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Appraisal that are in waiting appreciation state"/>
-                        <separator orientation="vertical"/>
-                        <field name="employee_id" />
-                        <field name="plan_id" widget="selection" />
-                    </group>
-                    <newline/>
+                    <field name="date"/>
+                    <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Appraisal that are in Plan In Progress state"/>
+                    <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Appraisal that are in waiting appreciation state"/>
+                    <field name="employee_id" />
+                    <field name="plan_id"/>
                     <group expand='0' string='Group by...'>
                         <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by' : 'employee_id'}" />
-                        <separator orientation="vertical"/>
                         <filter string='Plan' icon="terp-stock_align_left_24" domain="[]" context="{'group_by' : 'plan_id'}" />
                         <filter string='Status' icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
-                        <separator orientation="vertical"/>
                         <filter string='Date' icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
                    </group>
                </search>
@@ -263,7 +252,18 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
              <field name="context">{"search_default_next_month":1}</field>
-            <field name="help">Each employee may be assigned an Appraisal Plan. Such a plan defines the frequency and the way you manage your periodic personnel evaluation. You will be able to define steps and attach interviews to each step. OpenERP manages all kind of evaluations: bottom-up, top-down, self-evaluation and final evaluation by the manager.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new appraisal.
+              </p><p>
+                Each employee may be assigned an Appraisal Plan. Such a plan
+                defines the frequency and the way you manage your periodic
+                personnel evaluation. You will be able to define steps and
+                attach interviews to each step. OpenERP manages all kind of
+                evaluations: bottom-up, top-down, self-evaluation and final
+                evaluation by the manager.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Appraisals" parent="menu_eval_hr" id="menu_open_view_hr_evaluation_tree"
@@ -329,20 +329,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
-                   <group>
-                        <field name="date_deadline"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
-                        <separator orientation="vertical"/>
-                        <field name="user_to_review_id"/>
-                        <field name="user_id" string="Interviewer"/>
-                   </group>
-                   <newline/>
+                    <field name="date_deadline"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
+                    <field name="user_to_review_id"/>
+                    <field name="user_id" string="Interviewer"/>
                     <group expand="0" string="Group By...">
                         <filter string="Interviewer" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'survey_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                </search>
@@ -368,7 +361,16 @@
             <field name="domain">[('is_evaluation' ,'=', True)]</field>
             <field name="context">{'default_is_evaluation': True, "search_default_todo":1,"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
-            <field name="help">Interview Requests are generated automatically by OpenERP according to an employee's Appraisal Plan. Each user receives automatic emails and requests to evaluate their colleagues periodically.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new interview request related to a personnal evaluation. 
+              </p><p>
+                Interview requests are usually generated automatically by
+                OpenERP according to an employee's appraisal plan. Each user
+                receives automatic emails and requests to evaluate their
+                colleagues periodically.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="hr_evaluation_interview_tree">

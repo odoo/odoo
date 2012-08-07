@@ -46,35 +46,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Picking to Invoice">
-                    <group col="8" colspan="4">
-                        <field name="name" string="Picking to Invoice" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" name="available" string="Available"
-                            domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
-                        <filter icon="terp-dialog-close" name="done" string="Received"
-                            domain="[('state','=','done')]" help="Incoming Shipments already Received"/>
-                        <filter icon="terp-accessories-archiver-minus" string="Back Orders"
-                            domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
-                        <filter string="To Invoice" name="to_invoice" icon="terp-dolar"
-                            domain="[('invoice_state', '=', '2binvoiced')]"/>
-                        <separator orientation="vertical"/>
-                        <field name="stock_journal_id" widget="selection"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="purchase_id" />
-                    </group>
-                    <newline/>
+                    <field name="name" string="Picking to Invoice" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
+                    <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
+                    <filter icon="terp-dialog-close" name="done" string="Received" domain="[('state','=','done')]" help="Incoming Shipments already Received"/>
+                    <separator/>
+                    <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
+                    <separator/>
+                    <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]"/>
+                    <field name="stock_journal_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="purchase_id" />
                     <group expand="0" string="Group By..." colspan="4" col="8">
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-stock_effects-object-colorize" name="Status" string="Status"
-                            domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Order Date" icon="terp-go-month"
-                            domain="[]"  context="{'group_by':'date'}"/>
-                        <filter string="Scheduled Date" icon="terp-go-month"
-                            domain="[]"  context="{'group_by':'min_date'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Journal" icon="terp-folder-orange"
-                            domain="[]" context="{'group_by':'stock_journal_id'}"/>
+                        <filter icon="terp-stock_effects-object-colorize" name="Status" string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
+                        <filter string="Scheduled Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"/>
                     </group>
                 </search>
             </field>
@@ -88,6 +74,27 @@
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{'search_default_purchase_id': active_id,'default_type': 'in'}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
+        </record>
+        
+        <record id="act_purchase_order_2_stock_picking_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="stock.view_picking_in_tree"/>
+            <field name="act_window_id" ref="act_purchase_order_2_stock_picking"/>
+        </record>
+        
+        <record id="act_purchase_order_2_stock_picking_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_in_form"/>
+            <field name="act_window_id" ref="act_purchase_order_2_stock_picking"/>
+        </record>
+        
+        <record id="act_purchase_order_2_stock_picking_calendar" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="stock.stock_picking_in_calendar"/>
+            <field name="act_window_id" ref="act_purchase_order_2_stock_picking"/>
         </record>
 
         <record id="purchase_order_2_stock_picking" model="ir.ui.view">
@@ -115,10 +122,13 @@
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_to_invoice": 1}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
-            <field name="help">
-                Here you can track all the product receptions of purchase orders where the invoicing is "Based on Incoming Shipments",
+            <field name="help" type="html">
+              <p>
+                Here you can track all the product receptions of purchase
+                orders where the invoicing is "Based on Incoming Shipments",
                 and for which you have not received a supplier invoice yet.
                 You can generate a supplier invoice based on those receptions.
+              </p>
             </field>
        </record>
 

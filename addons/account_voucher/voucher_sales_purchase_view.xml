@@ -7,21 +7,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group>
-                        <field name="number" string="Voucher"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id" string="Supplier"/>
-                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
-                        <field name="period_id"/>
-                    </group>
-                    <newline/>
+                    <field name="number" string="Voucher"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <field name="partner_id" string="Supplier"/>
+                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
+                    <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -38,21 +30,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group>
-                        <field name="number" string="Voucher"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id" string="Customer"/>
-                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
-                        <field name="period_id"/>
-                    </group>
-                    <newline/>
+                    <field name="number" string="Voucher"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <field name="partner_id" string="Customer"/>
+                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
+                    <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -119,7 +103,7 @@
                                     <field name="tax_id" 
                                         on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
                                         widget="selection" nolabel="1"
-					placeholder="select tax..."
+					placeholder="Select tax..."
                                         domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
                                     <field name="tax_amount" nolabel="1"/>
                                     <div class="oe_subtotal_footer_separator">
@@ -181,10 +165,13 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
-            <field name="help">
-                Click here to create a sale receipt.
-                &lt;p&gt;
-                When the sales receipt is confirmed, you can record the customer payment related to this sales receipt.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale receipt.
+              </p><p>
+                When the sale receipt is confirmed, you can record the customer
+                payment related to this sales receipt.
+              </p>
             </field>
         </record>
         <record id="action_sale_receipt_tree" model="ir.actions.act_window.view">
@@ -278,7 +265,7 @@
                                     <field name="tax_id" 
                                         on_change="onchange_price(line_dr_ids, tax_id, partner_id)"
                                         widget="selection" nolabel="1"
-					placeholder="select tax..."
+					placeholder="Select tax..."
 
                                         domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"
                                         />
@@ -331,10 +318,13 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>
-            <field name="help">
-                Click here to create a purchase receipt.
-                &lt;p&gt;
-                When the purchase receipt is confirmed, you can record the supplier payment related to this purchase receipt.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a purchase receipt. 
+              </p><p>
+                When the purchase receipt is confirmed, you can record the
+                supplier payment related to this purchase receipt.
+              </p>
             </field>
         </record>
         <record id="action_purchase_receipt_tree" model="ir.actions.act_window.view">
