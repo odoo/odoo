@@ -49,7 +49,7 @@ class res_company(osv.osv):
             result['paypal_account'] = company.paypal_account
         # bank info: include only bank account supposed to be displayed in document footers
         res_partner_bank = self.pool.get('res.partner.bank')
-        bank_ids = res_partner_bank.search(cr, uid, [('company_id','=',company.id),('footer','=',True)], context=context)
+        bank_ids = res_partner_bank.search(cr, uid, [('company_id','=',company.id)], context=context)
         if bank_ids:
             result['bank_ids'] = res_partner.edi_m2m(cr, uid,
                                                              res_partner_bank.browse(cr, uid, bank_ids, context=context),
