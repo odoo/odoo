@@ -256,7 +256,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 scroll: false
             });
         } else {
-            this.$element.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle').removeClass('oe_kanban_card');
+            this.$element.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle');
         }
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
@@ -320,7 +320,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     open_record: function(id, editable) {
         if (this.dataset.select_id(id)) {
-            this.do_switch_view('form', null);
+            this.do_switch_view('form', null, { editable: editable });
         } else {
             this.do_warn("Kanban: could not find id#" + id);
         }
@@ -606,7 +606,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
 
         // If no draghandle is found, make the whole card as draghandle
         if (!this.$element.find('.oe_kanban_draghandle').length) {
-            this.$element.children(':first').addClass('oe_kanban_draghandle').addClass('oe_kanban_card');
+            this.$element.children(':first').addClass('oe_kanban_draghandle');
         }
 
         this.$element.find('.oe_kanban_action').click(function() {

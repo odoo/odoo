@@ -400,6 +400,9 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'db': form_obj['db_name'],
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
+                    'login_successful': function() {
+                        instance.webclient.show_application();
+                    },
                 },
             };
             self.do_action(client_action);
@@ -979,6 +982,7 @@ instance.web.Client = instance.web.Widget.extend({
             }, 0);
         });
         instance.web.bus.on('click', this, function(ev) {
+            $.fn.tipsy.clear();
             if (!$(ev.target).is('input[type=file]')) {
                 self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
             }
