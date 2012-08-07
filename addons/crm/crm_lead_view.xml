@@ -489,7 +489,7 @@
                             <label for="title_action"/>
                             <div>
                                 <field name="date_action" nolabel="1"/> <label string="-" attrs="{'invisible': ['|', ('date_action', '=', False), ('title_action', '=', False)]}"/>
-                                <field name="title_action" class="oe_inline" nolabel="1" placeholder="Call for proposal"/>
+                                <field name="title_action" class="oe_inline" nolabel="1" placeholder="e.g. Call for proposal"/>
                             </div>
                             <field name="date_deadline"/>
                             <field name="priority"/>
@@ -526,7 +526,7 @@
                                     <field name="street2"/>
                                     <div class="address_format">
                                         <field name="city" placeholder="City" style="width: 40%%"/>
-                                        <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                        <field name="state_id" options='{"no_open": true}' placeholder="State" style="width: 24%%"/>
                                         <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                     </div>
                                     <field name="country_id" placeholder="Country"/>
@@ -537,7 +537,7 @@
                                 <label for="contact_name" />
                                 <div>
                                     <field name="contact_name" class="oe_inline"/>
-                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline oe_no_button"/>
+                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" options='{"no_open": true}' class="oe_inline"/>
                                 </div>
                                 <field name="function" />
                                 <field name="mobile"/>
@@ -563,6 +563,12 @@
                                 <field name="ref"/>
                                 <field name="ref2"/>
                             </group>
+                        </group>
+                    </page>
+                    <page string="Fund Raising" groups="crm.group_fund_raising">
+                        <group>
+                            <field name="payment_mode" widget="selection"/>
+                            <field name="planned_cost"/>
                         </group>
                     </page>
                     </notebook>
