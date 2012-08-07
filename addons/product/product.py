@@ -494,15 +494,11 @@ class product_product(osv.osv):
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            resized_image_dict = tools.get_resized_images(obj.image)
-            result[obj.id] = {
-                'image_medium': resized_image_dict['image_medium'],
-                'image_small': resized_image_dict['image_small'],
-                }
+            result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _defaults = {
         'active': lambda *a: 1,

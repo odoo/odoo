@@ -1177,15 +1177,11 @@ class pos_category(osv.osv):
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            resized_image_dict = tools.get_resized_images(obj.image)
-            result[obj.id] = {
-                'image_medium': resized_image_dict['image_medium'],
-                'image_small': resized_image_dict['image_small'],
-                }
+            result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.resize_image_big(value)}, context=context)
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
@@ -1217,7 +1213,7 @@ class pos_category(osv.osv):
 
     def _get_default_image(self, cr, uid, context=None):
         image_path = openerp.modules.get_module_resource('point_of_sale', 'images', 'default_category_photo.png')
-        return tools.resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'image': _get_default_image,
