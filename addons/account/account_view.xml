@@ -11,7 +11,7 @@
             <field name="model">account.fiscalyear</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Fiscal year" version="7.0">
                 <header>
                     <button name="create_period" states="draft" string="Create Monthly Periods" type="object" class="oe_highlight"/>
                     <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" class="oe_highlight"/>
@@ -104,7 +104,7 @@
             <field name="model">account.period</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Account Period" version="7.0">
 	                <header>
 	                    <button name="action_draft" states="done" string="Set to Draft" type="object" groups="account.group_account_manager"/>
 	                    <field name="state" widget="statusbar" nolabel="1"/>
@@ -1368,7 +1368,7 @@
             <field name="model">account.move</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Account Entry" version="7.0">
                 <header>
                     <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight"/>
                     <button name="button_cancel" states="posted" string="Cancel" type="object"/>
@@ -2625,7 +2625,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
             <field name="model">account.bank.statement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Statement" version="7.0">
                 <header>
                     <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
                     <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_highlight"/>
