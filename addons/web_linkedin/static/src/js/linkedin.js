@@ -230,6 +230,9 @@ openerp.web_linkedin = function(instance) {
                 });
                 i++;
             });
+            if (self.result.length === 0) {
+                self.$(">div").text(_t("No results found"));
+            }
         },
     });
     
