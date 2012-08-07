@@ -340,6 +340,7 @@
             <field name="name">Université de Liège</field>
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="is_company">1</field>
+            <field name="type">default</field>
             <field name="street">Place du 20Août</field>
 	        <field name="city">Liège</field>
             <field name="zip">4000</field>
@@ -560,6 +561,7 @@
             <field name="zip">5478</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">71 rue de Chimay</field>
+            <field name="type">delivery</field>
             <field name="email">p.l@agrolait.be</field>
             <field name="phone">003281588557</field>
             <field name="use_parent_address" eval="0"/>
@@ -572,6 +574,7 @@
             <field name="zip">5478</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">69 rue de Chimay</field>
+            <field name="type">invoice</field>
             <field name="email">serge.l@agrolait.be</field>
             <field name="phone">003281588556</field>
             <field name="use_parent_address" eval="0"/>
@@ -628,11 +631,13 @@
             <field name="parent_id" ref="res_partner_3"/>
         </record>
         <record id="res_partner_address_12" model="res.partner">
+            <field name="type">default</field>
             <field name="city">Grenoble</field>
             <field name="name">Loïc Dupont</field>
             <field name="zip">38100</field>
             <field model="res.country" name="country_id" search="[('name','=','China')]"/>
             <field name="street">Rue Lavoisier 145</field>
+            <field name="type">default</field>
             <field name="email">l.dupont@tecsas.fr</field>
             <field name="phone">+33-658-256545</field>
             <field name="use_parent_address" eval="0"/>
@@ -660,6 +665,7 @@
             <field name="parent_id" ref="res_partner_15"/>
         </record>
         <record id="res_partner_address_15" model="res.partner">
+            <field name="type">default</field>
             <field name="name">Marine Leclerc</field>
             <field name="street">rue Grande</field>
             <field name="city">Brest</field>
@@ -670,6 +676,7 @@
             <field name="parent_id" ref="res_partner_11"/>
         </record>
         <record id="res_partner_address_16" model="res.partner">
+            <field name="type">invoice</field>
             <field name="name">Claude Leclerc</field>
             <field name="street">rue Grande</field>
             <field name="city">Brest</field>
@@ -698,6 +705,7 @@
             <field name="phone">+41 21 619 10 04</field>
             <field model="res.country" name="country_id" search="[('name','=','Switzerland')]"/>
             <field name="street">PSE-A, EPFL </field>
+            <field name="type">default</field>
             <field name="use_parent_address" eval="0"/>
             <field name="parent_id" ref="res_partner_c2c"/>
         </record>
