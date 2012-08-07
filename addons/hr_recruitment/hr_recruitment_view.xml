@@ -158,7 +158,7 @@
                         <label for="title_action"/>
                         <div>
                             <field name="date_action"/> -
-                            <field name="title_action" class="oe_inline" placeholder="Call for proposal"/>
+                            <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
                         </div>
                         <field name="priority"/>
                         <field name="state" invisible="1"/>
@@ -348,6 +348,13 @@
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
+            <xpath expr="/form/sheet/h1" version="7.0" position="after">
+                <div colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <field name="alias_id" invisible="1"/>
+                    <label for="alias_name" class="oe_edit_only"/>
+                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                </div>
+            </xpath>
         </field>
     </record>
 

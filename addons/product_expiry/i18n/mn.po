@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:16+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:28+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -29,7 +29,7 @@ msgstr ""
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_lait_product_template
 msgid "Cow milk"
-msgstr ""
+msgstr "Үхрийн сүү"
 
 #. module: product_expiry
 #: field:product.product,life_time:0
@@ -41,6 +41,7 @@ msgstr "Дуусах хугацаа"
 msgid ""
 "The date on which the lot starts deteriorating without becoming dangerous."
 msgstr ""
+"Цувралын дугаарын хувьд бараа аюул учруулахгүй боловч муудаж эхлэх огноо"
 
 #. module: product_expiry
 #: field:product.product,use_time:0
@@ -51,17 +52,17 @@ msgstr "Хэрэглэх хугацаа"
 #: sql_constraint:stock.production.lot:0
 msgid ""
 "The combination of serial number and internal reference must be unique !"
-msgstr ""
+msgstr "Серийн дугаар болон дотоод кодын хослол нь үл давхцах байх ёстой !"
 
 #. module: product_expiry
 #: help:stock.production.lot,removal_date:0
 msgid "The date on which the lot should be removed."
-msgstr ""
+msgstr "Цувралын дугаарын хувьд устгах огноо"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_product
 msgid "Product"
-msgstr "Бүтээгдэхүүн"
+msgstr "Бараа"
 
 #. module: product_expiry
 #: help:product.product,alert_time:0
@@ -69,6 +70,7 @@ msgid ""
 "The number of days after which an alert should be notified about the "
 "production lot."
 msgstr ""
+"Барааны цувралын хувьд анхааруулга хэдэн өдөрийн дараа өгөх өдрийн тоо"
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
@@ -84,12 +86,12 @@ msgstr "Устгах огноо"
 #: help:stock.production.lot,life_date:0
 msgid ""
 "The date on which the lot may become dangerous and should not be consumed."
-msgstr ""
+msgstr "Цувралын хувьд хангамж хийгдэж болохгүй буюу аюултай болох огноо"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_pain_product_template
 msgid "Bread"
-msgstr ""
+msgstr "Талх"
 
 #. module: product_expiry
 #: model:product.uom,name:product_expiry.product_uom_ltr
@@ -111,7 +113,7 @@ msgstr "Дуусах огноо"
 #. module: product_expiry
 #: field:stock.production.lot,use_date:0
 msgid "Best before Date"
-msgstr ""
+msgstr "Өмнө нь зохимжтой байх огноо"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
@@ -121,7 +123,7 @@ msgstr ""
 #. module: product_expiry
 #: help:product.product,removal_time:0
 msgid "The number of days before a production lot should be removed."
-msgstr ""
+msgstr "Үйлдвэрлэлийн цувралын хэдэн өдрийн өмнө утсгах өдрийн тоо."
 
 #. module: product_expiry
 #: field:stock.production.lot,alert_date:0
@@ -134,11 +136,13 @@ msgid ""
 "The number of days before a production lot starts deteriorating without "
 "becoming dangerous."
 msgstr ""
+"Үйлдвэрлэлийн цувралын хувьд хэдэн өдрийн өмнөөс аюулгүй боловч муудаж эхлэх "
+"өдрийн тоо."
 
 #. module: product_expiry
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Алдаа: EAN код буруу"
 
 #. module: product_expiry
 #: help:product.product,life_time:0
@@ -146,12 +150,14 @@ msgid ""
 "The number of days before a production lot may become dangerous and should "
 "not be consumed."
 msgstr ""
+"Үйлдвэрлэлийн цувралын хувьд хэдэн өдрийн өмнөөс аюултай болж хангагдаж "
+"болохгүй болох өдрийн тоо."
 
 #. module: product_expiry
 #: help:stock.production.lot,alert_date:0
 msgid ""
 "The date on which an alert should be notified about the production lot."
-msgstr ""
+msgstr "Үйлдвэрлэлийн цувралын хувьд сануулга хэлэх огноо."
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
