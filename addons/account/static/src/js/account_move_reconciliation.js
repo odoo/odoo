@@ -68,30 +68,7 @@ instance.account.extend_form_view = instance.web.FormView.extend({
         })
     },
   })
-instance.account.many2one_pager = instance.web.form.FieldMany2One.extend({
-    template: "FieldMany2One_Pager",
-    display_string: function(str) {
-        var self = this;
-        if (!this.get("effective_readonly")) {
-            this.$input.val(str);
-        } else {
-            this.$element.find('a.oe_form_uri')
-                 .unbind('click')
-                 .text(str)
-                 .click(function () {
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: self.field.relation,
-                        res_id: self.get("value"),
-                        context: self.build_context(),
-                        views: [[false, 'form']],
-                        target: 'current'
-                    });
-                    return false;
-                 });
-        }
-    },
-})
+
 instance.account.btn_extend = instance.web.form.WidgetButton.extend({
     on_click: function() {
         var self = this;
