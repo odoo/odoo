@@ -34,7 +34,6 @@ models = [
 for name, field in models:
     attrs = {
         '_name': 'export.%s' % name,
-        '_module': 'base',
         '_columns': {
             'const': fields.integer(),
             'value': field
@@ -57,7 +56,6 @@ for name, field in models:
 
 class One2ManyChild(orm.Model):
     _name = 'export.one2many.child'
-    _module = 'base'
     # FIXME: orm.py:1161, fix to name_get on m2o field
     _rec_name = 'value'
 
@@ -72,7 +70,6 @@ class One2ManyChild(orm.Model):
 
 class One2ManyMultiple(orm.Model):
     _name = 'export.one2many.multiple'
-    _module = 'base'
 
     _columns = {
         'const': fields.integer(),
@@ -83,7 +80,6 @@ class One2ManyMultiple(orm.Model):
 
 class One2ManyChildMultiple(orm.Model):
     _name = 'export.one2many.multiple.child'
-    _module = 'base'
     # FIXME: orm.py:1161, fix to name_get on m2o field
     _rec_name = 'value'
 
@@ -97,16 +93,13 @@ class One2ManyChildMultiple(orm.Model):
             for record in self.browse(cr, uid, ids, context=context)]
 class One2ManyChild1(orm.Model):
     _name = 'export.one2many.child.1'
-    _module = 'base'
     _inherit = 'export.one2many.multiple.child'
 class One2ManyChild2(orm.Model):
     _name = 'export.one2many.child.2'
-    _module = 'base'
     _inherit = 'export.one2many.multiple.child'
 
 class Many2ManyChild(orm.Model):
     _name = 'export.many2many.other'
-    _module = 'base'
     # FIXME: orm.py:1161, fix to name_get on m2o field
     _rec_name = 'value'
 
