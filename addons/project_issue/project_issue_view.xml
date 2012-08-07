@@ -383,7 +383,9 @@
                 </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
-                    <field name="reply_to"/>
+                </field>
+                <field name="alias_domain" position="after">
+                    <label for="alias_model" class="oe_edit_only" string="creates"/><field name="alias_model" class="oe_edit_only oe_inline"/>
                 </field>
             </field>
        </record>

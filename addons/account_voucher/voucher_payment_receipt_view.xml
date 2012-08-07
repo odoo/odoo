@@ -152,8 +152,8 @@
                         </group>
                         <group>
                             <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                            <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
-                            <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
+                            <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="e.g. 003/10"/>
+                            <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="e.g. Invoice SAJ/0042"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -318,8 +318,8 @@
                         </group>
                         <group>
                             <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                            <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
-                            <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
+                            <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="e.g. 003/10"/>
+                            <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="e.g. Invoice SAJ/0042"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
 
                             <field name="account_id"
