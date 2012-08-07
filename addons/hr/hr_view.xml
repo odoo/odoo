@@ -29,10 +29,10 @@
                             </h1>
                             <label for="job_id" class="oe_edit_only"/>
                             <h2>
-                                <field name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                                <field name="job_id" options='{"no_open": true}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                             </h2>
                             <label for="category_ids" class="oe_edit_only"/>
-                            <h3><field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/></h3>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
                         </div>
                         <div class="oe_right oe_button_box" name="button_box">
                             <!-- Put here related buttons -->
