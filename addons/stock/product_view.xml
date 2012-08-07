@@ -63,9 +63,10 @@
                 <field name="standard_price" position="replace" version="7.0">
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
-                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/>
+                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/> - 
                         <button name="%(action_view_change_standard_price)d" string="Update"
-                            type="action" icon="gtk-execute" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"/>
+                            type="action" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"
+                            class="oe_link"/>
                     </div>
                 </field>
             </field>
