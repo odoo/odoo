@@ -421,13 +421,6 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         });
         // Add bounce effect on image '+' of kanban header when click on empty space of kanban grouped column.
         var add_btn = this.$element.find('.oe_kanban_add');
-        this.$records.click(function (ev) {
-            if (ev.target == ev.currentTarget) {
-                if (!self.state.folded) {
-                    add_btn.wrap('<div>').addClass('oe_bounce');
-                } 
-            }
-        });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
             this.do_toggle_fold();
@@ -436,6 +429,13 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.$records.data('widget', this);
         this.$has_been_started.resolve();
         this.compute_cards_auto_height();
+        this.$records.click(function (ev) {
+            if (ev.target == ev.currentTarget) {
+                if (!self.state.folded) {
+                    add_btn.effect('bounce', {distance: 18, times: 7}, 200)
+                } 
+            }
+        });
         return def;
     },
     compute_cards_auto_height: function() {

@@ -155,15 +155,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             ]);
         }
 
+        this.has_been_loaded.resolve();
+
         // Add bounce effect on button 'Edit' when click on readonly page view.
-        this.$element.find(".oe_form_field, .oe_form_group_cell").on('click', function (e) {
+        this.$element.find(".oe_form_field,label").on('click', function (e) {
             if(self.get("actual_mode") == "view") {
                 var $button = self.options.$buttons.find(".oe_form_button_edit");
-                $button.wrap('<div>').css('margin-right','4px').addClass('oe_left oe_bounce');
+                $button.effect('bounce', {distance: 18, times: 7}, 200)
             }
         });
 
-        this.has_been_loaded.resolve();
         return $.when();
     },
     extract_qweb_template: function(fvg) {
