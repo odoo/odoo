@@ -320,6 +320,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         self.$element.html(QWeb.render("DatabaseManager",{ widget : self }));
         $('.oe_secondary_menus_container').append($('.datamanager_menu'));
         $('.oe_user_menu_placeholder').append($('.oe_user_menu'));
+        $('ul.oe_secondary_submenu > li:first').addClass('oe_active')
         $('ul.oe_secondary_submenu > li').bind('click', function (event) {
             $(this).addClass('oe_active').siblings().removeClass('oe_active');
             var $new = $(this);

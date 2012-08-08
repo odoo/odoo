@@ -131,7 +131,7 @@
     <div class="datamanager_menu">
         <div class="oe_secondary_menu_section">Database Management</div>
                         <ul class="oe_secondary_submenu">
-                            <li class="oe_active"><a href="#db_create">Create</a></li>
+                            <li><a href="#db_create">Create</a></li>
                             <li><a href="#db_drop">Drop</a></li>
                             <li><a href="#db_backup">Backup</a></li>
                             <li><a href="#db_restore">Restore</a></li>
@@ -140,7 +140,7 @@
             </div>
                 <div class="oe_view_manager_view_form">
                     <div class="oe_form">
-                        <form id="db_create" name="create_db_form" style="display: block; ">
+                        <form id="db_create" name="create_db_form" style="display: block;">
                             <div class="oe_view_manager oe_view_manager_current">
                                 <table class=" oe_view_manager_header">
                                     <tr class="oe_header_row oe_header_row_top">
@@ -162,7 +162,7 @@
                             <table align="center" class="db_option_table">
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="super_admin_pwd">Master password:</label>
+                                        <label class= "oe_form_label oe_align_right" for="super_admin_pwd">Master password:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="password" name="super_admin_pwd" class="required" value="admin"
@@ -171,7 +171,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="db_name">New database name:</label>
+                                        <label class= "oe_form_label oe_align_right" for="db_name">New database name:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$"
@@ -180,7 +180,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="demo_data">Load Demonstration data:</label>
+                                        <label class= "oe_form_label oe_align_right" for="demo_data">Load Demonstration data:</label>
                                     </td>
                                     <td class="oe_form_group_cell">
                                         <span class="oe_form_field oe_form_field_boolean">
@@ -190,7 +190,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="db_lang">Default language:</label>
+                                        <label class= "oe_form_label oe_align_right" for="db_lang">Default language:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_field oe_form_field_selection ">
                                         <select name="db_lang" t-if="widget.lang_list">
@@ -204,7 +204,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="create_admin_pwd">Admin password:</label>
+                                        <label class= "oe_form_label oe_align_right" for="create_admin_pwd">Admin password:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="password" name="create_admin_pwd" class="required" />
@@ -212,7 +212,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="create_confirm_pwd">Confirm password:</label>
+                                        <label class= "oe_form_label oe_align_right" for="create_confirm_pwd">Confirm password:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="password" name="create_confirm_pwd" class="required" equalTo="input[name=create_admin_pwd]"
@@ -243,7 +243,7 @@
                             <table align="center" class="db_option_table">
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="drop_db">Database:</label>
+                                        <label class= "oe_form_label oe_align_right" for="drop_db">Database:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_field oe_form_field_selection">
                                         <select t-if="widget.db_list" name="drop_db" autofocus="autofocus">
@@ -259,7 +259,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="drop_password">Master Password:</label>
+                                        <label class= "oe_form_label oe_align_right" for="drop_password">Master Password:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="password" name="drop_pwd" class="required" />
@@ -290,7 +290,7 @@
                             <table align="center" class="db_option_table">
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="backup_db">Database:</label>
+                                        <label class= "oe_form_label oe_align_right" for="backup_db">Database:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_field oe_form_field_selection ">
                                         <select t-if="widget.db_list" name="backup_db" autofocus="autofocus">
@@ -306,7 +306,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="backup_pwd">Master Password:</label>
+                                        <label class= "oe_form_label oe_align_right" for="backup_pwd">Master Password:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="password" name="backup_pwd" class="required" />
@@ -336,7 +336,7 @@
                             <table align="center" class="db_option_table">
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="restore_db">File:</label>
+                                        <label class= "oe_form_label oe_align_right" for="restore_db">File:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="file" name="db_file" class="required" autofocus="autofocus"
@@ -345,7 +345,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="restore_pwd">Master Password:</label>
+                                        <label class= "oe_form_label oe_align_right" for="restore_pwd">Master Password:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="password" name="restore_pwd" class="required" />
@@ -353,7 +353,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="new_db">New database name:</label>
+                                        <label class= "oe_form_label oe_align_right" for="new_db">New database name:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="text" name="new_db" class="required" />
@@ -384,7 +384,7 @@
                             <table align="center" class="db_option_table">
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="old_pwd">Master password:</label>
+                                        <label class= "oe_form_label oe_align_right" for="old_pwd">Master password:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="password" name="old_pwd" class="required" minlength="1" autofocus="autofocus"
@@ -393,7 +393,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="new_pwd">New master password:</label>
+                                        <label class= "oe_form_label oe_align_right" for="new_pwd">New master password:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="password" name="new_pwd" class="required" minlength="1" />
@@ -401,7 +401,7 @@
                                 </tr>
                                 <tr class="oe_form_group_row">
                                     <td class="oe_form_group_cell oe_form_group_cell_label">
-                                        <label for="confirm_pwd">Confirm new master password:</label>
+                                        <label class= "oe_form_label oe_align_right" for="confirm_pwd">Confirm new master password:</label>
                                     </td>
                                     <td class="oe_form_group_cell oe_form_required">
                                         <input type="password" name="confirm_pwd" class="required" equalTo="input[name=new_pwd]"

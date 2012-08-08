@@ -1370,7 +1370,12 @@ class Binary(openerpweb.Controller):
                 res = Model.default_get([field], context).get(field)
                 image_data = base64.b64decode(res)
             else:
-                res = Model.read([int(id)], [last_update, field], context)[0]
+                try:
+                    id = int(id)
+                except (ValueError):
+                    # objects might use virtual ids as string
+                    pass
+                res = Model.read([id], [last_update, field], context)[0]
                 retag = hashlib.md5(res.get(last_update)).hexdigest()
                 image_data = base64.b64decode(res.get(field))
         except (TypeError, xmlrpclib.Fault):
