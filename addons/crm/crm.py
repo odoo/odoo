@@ -21,6 +21,7 @@
 
 import base64
 import time
+from lxml import etree
 from osv import fields
 from osv import osv
 import tools
@@ -97,6 +98,7 @@ class crm_case_stage(osv.osv):
 class crm_case_section(osv.osv):
     """ Model for sales teams. """
     _name = "crm.case.section"
+    _inherits = {'mail.alias': 'alias_id'}
     _description = "Sales Teams"
     _order = "complete_name"
 
@@ -120,6 +122,9 @@ class crm_case_section(osv.osv):
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16,2 )),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+                                    help="The email address associated with this team. New emails received will automatically "
+                                         "create new leads assigned to the team."),
     }
     
     def _get_stage_common(self, cr, uid, context):
@@ -154,6 +159,27 @@ class crm_case_section(osv.osv):
             if record['parent_id']:
                 name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
+        return res
+    
+    def create(self, cr, uid, vals, context=None):
+        alias_pool = self.pool.get('mail.alias')
+        if not vals.get('alias_id'):
+            name = vals.pop('alias_name', None) or vals['name']
+            alias_id = alias_pool.create_unique_alias(cr, uid, 
+                    {'alias_name': name},
+                    model_name="crm.lead",
+                    context=context)
+            vals['alias_id'] = alias_id
+        res = super(crm_case_section, self).create(cr, uid, vals, context)
+        alias_pool.write(cr, uid, [vals['alias_id']],{'alias_defaults':{'section_id': res,'type':'lead'}},context)
+        return res
+        
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade-delete mail aliases as well, as they should not exist without the sales team.
+        mail_alias = self.pool.get('mail.alias')
+        alias_ids = [team.alias_id.id for team in self.browse(cr, uid, ids, context=context) if team.alias_id ]
+        res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
 
 class crm_case_categ(osv.osv):
@@ -193,5 +219,14 @@ def _links_get(self, cr, uid, context=None):
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
+
+class crm_payment_mode(osv.osv):
+    """ Payment Mode for Fund """
+    _name = "crm.payment.mode"
+    _description = "CRM Payment Mode"
+    _columns = {
+        'name': fields.char('Name', size=64, required=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
