@@ -1,11 +1,11 @@
-openerp.anonymous = function(instance) {
+openerp.auth_anonymous = function(instance) {
 
     instance.web.Login.include({
         start: function() {
             var self = this;
             return $.when(this._super()).pipe(function() {
-                var dblist = self._db_list;
-                if (dblist && dblist.length === 1) {
+                var dblist = self._db_list || [];
+                if (!self.session.session_is_valid() && dblist.length === 1) {
                     self.remember_credentials = false;
                     // XXX get login/pass from server (via a rpc call) ?
                     return self.do_login(dblist[0], 'anonymous', 'anonymous')
@@ -19,7 +19,7 @@ openerp.anonymous = function(instance) {
         init: function(parent) {
             this._super(parent);
             if (this.session.username == 'anonymous') {
-                this.template = 'UserMenu.anonymous';
+                this.template = 'UserMenu.auth_anonymous';
                 this.do_update = function() {};     // avoid change of avatar
             }
         },
@@ -30,8 +30,16 @@ openerp.anonymous = function(instance) {
                 var p = self.getParent();
                 var am = p.action_manager;
                 p.$element.find('.oe_leftbar').hide();
-                am.do_action({type:'ir.actions.client', tag:'login', target: 'new'});
-                am.dialog_widget.on('login', p, p.restart);
+                am.do_action({
+                    type:'ir.actions.client',
+                    tag:'login',
+                    target: 'new',
+                    params: {
+                        login_successful: function() {
+                            am.do_action("reload");
+                        }
+                    }
+                });
             });
         }
     });
