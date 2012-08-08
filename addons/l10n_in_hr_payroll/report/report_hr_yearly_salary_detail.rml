@@ -288,7 +288,7 @@
           <para style="terp_tblheader_Details">Bank</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.bank_account_id and o.bank_account_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.bank_account_id.bank.name or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -320,7 +320,7 @@
           <para style="terp_tblheader_Details">Designation</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.contract_ids and o.contract_ids[0].job_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.job_id and o.job_id.name or '' ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Phone No.</para>
