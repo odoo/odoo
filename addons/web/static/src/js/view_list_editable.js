@@ -99,6 +99,7 @@ openerp.web.list_editable = function (instance) {
             // tree/@editable takes priority on everything else if present.
             var result = this._super(data, grouped);
             if (this.editable()) {
+                this.$element.addClass('oe_list_editable');
                 // FIXME: any hook available to ensure this is only done once?
                 this.$buttons
                     .off('click', '.oe_list_save')
@@ -123,6 +124,8 @@ openerp.web.list_editable = function (instance) {
                     .then(this.proxy('setup_events'));
 
                 return $.when(result, editor_ready);
+            } else {
+                this.$element.removeClass('oe_list_editable');
             }
 
             return result;
