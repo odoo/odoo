@@ -2753,7 +2753,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         });
 
         // some behavior for input
-        this.$input.keydown(function() {
+        var input_changed = function() {
             if (self.current_display !== self.$input.val()) {
                 self.current_display = self.$input.val();
                 if (self.$input.val() === "") {
@@ -2763,7 +2763,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     self.floating = true;
                 }
             }
-        });
+        };
+        this.$input.keydown(input_changed);
+        this.$input.change(input_changed);
         this.$drop_down.click(function() {
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");
@@ -2864,7 +2866,6 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         });
         this.setupFocus(this.$input.add(this.$follow_button));
     },
-
     render_value: function(no_recurse) {
         var self = this;
         if (! this.get("value")) {
