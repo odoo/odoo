@@ -276,19 +276,19 @@
           <para style="terp_tblheader_Details">Employee Code</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.ssnid ]]</para>
+          <para style="terp_default_9">[[ o.identification_id ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Department</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.company_id and o.company_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.department_id and o.department_id.name or '' ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Bank</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.otherid or '' ]]</para>
+          <para style="terp_default_9">[[ o.bank_account_id and o.bank_account_id.name or '' ]]</para>
         </td>
       </tr>
     </blockTable>
