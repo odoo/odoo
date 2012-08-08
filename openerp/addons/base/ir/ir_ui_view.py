@@ -52,6 +52,13 @@ class view(osv.osv):
     def _type_field(self, cr, uid, ids, name, args, context=None):
         records = self.browse(cr, uid, ids, context)
         result = dict((r.id, etree.fromstring(r.arch.encode('utf8')).tag) for r in records)
+        #NOTE: If we have inherited view the arch.tag will give us data and 
+        #      View mode will be undefined in case in hereit view we have view 
+        #      broken, Here for view which are inherited setting the parent view
+        #      type.
+        for record in records:
+            if record.inherit_id:
+                result[record.id] = record.inherit_id.type
         return result
 
     _columns = {
