@@ -20,14 +20,11 @@
 ##############################################################################
 
 import datetime as DT
-import io
 import openerp
 import openerp.tools as tools
 from operator import itemgetter
 from osv import osv
 from osv import fields
-from PIL import Image
-import StringIO
 import tools
 from tools.translate import _
 from lxml import etree
@@ -51,31 +48,14 @@ class mail_group(osv.osv):
     _inherit = ['mail.thread']
     _inherits = {'mail.alias': 'alias_id'}
 
-    def onchange_photo(self, cr, uid, ids, value, context=None):
-        if not value:
-            return {'value': {'avatar_big': value, 'avatar': value} }
-        return {'value': {'photo_big': value, 'photo': self._photo_resize(cr, uid, value) } }
-    
-    def _set_photo(self, cr, uid, id, name, value, args, context=None):
-        if value:
-            return self.write(cr, uid, [id], {'photo_big': value}, context=context)
-        else:
-            return self.write(cr, uid, [id], {'photo_big': value}, context=context)
-    
-    def _photo_resize(self, cr, uid, photo, width=128, height=128, context=None):
-        image_stream = io.BytesIO(photo.decode('base64'))
-        img = Image.open(image_stream)
-        img.thumbnail((width, height), Image.ANTIALIAS)
-        img_stream = StringIO.StringIO()
-        img.save(img_stream, "JPEG")
-        return img_stream.getvalue().encode('base64')
-        
-    def _get_photo(self, cr, uid, ids, name, args, context=None):
+    def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
-        for group in self.browse(cr, uid, ids, context=context):
-            if group.photo_big:
-                result[group.id] = self._photo_resize(cr, uid, group.photo_big, context=context)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
+    
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
     
     def get_member_ids(self, cr, uid, ids, field_names, args, context=None):
         if context is None:
@@ -104,9 +84,9 @@ class mail_group(osv.osv):
             result[id] = self.message_search(cr, uid, [id], limit=None, domain=[('date', '>=', lower_date)], count=True, context=context)
         return result
     
-    def _get_default_photo(self, cr, uid, context=None):
-        avatar_path = openerp.modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return self._photo_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'), context=context)
+    def _get_default_image(self, cr, uid, context=None):
+        image_path = openerp.modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
     
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -121,16 +101,26 @@ class mail_group(osv.osv):
             help="Members of those groups will automatically added as followers. "\
                     "Note that they will be able to manage their subscription manually "\
                     "if necessary."),
-        'photo_big': fields.binary('Full-size photo',
-            help='Field holding the full-sized PIL-supported and base64 encoded "\
-                    version of the group image. The photo field is used as an "\
-                    interface for this field.'),
-        'photo': fields.function(_get_photo, fnct_inv=_set_photo,
-            string='Photo', type="binary",
+        'image': fields.binary("Photo",
+            help="This field holds the image used as photo for the "\
+                 "user. The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 12024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
-                'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['photo_big'], 10),
+                'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help='Field holding the automatically resized (128x128) PIL-supported and base64 encoded version of the group image.'),
+            help="Medium-sized photo of the group. It is automatically "\
+                 "resized as a 180x180px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Small-sized photo", type="binary", multi="_get_image",
+            store = {
+                'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized photo of the group. It is automatically "\
+                 "resized as a 50x50px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
         'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids,
             type='many2many', relation='res.users', string='Group members', multi='get_member_ids'),
         'member_count': fields.function(get_member_ids, type='integer',
@@ -147,7 +137,7 @@ class mail_group(osv.osv):
     _defaults = {
         'public': True,
         'responsible_id': (lambda s, cr, uid, ctx: uid),
-        'photo': _get_default_photo,
+        'image': _get_default_image,
     }
 
     def _subscribe_user_with_group_m2m_command(self, cr, uid, ids, group_ids_command, context=None):
