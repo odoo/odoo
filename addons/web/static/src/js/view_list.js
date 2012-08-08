@@ -399,73 +399,23 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Boolean} [grouped] Should the grouping columns (group and count) be displayed
      */
     setup_columns: function (fields, grouped) {
-        var domain_computer = instance.web.form.compute_domain;
-
-        var noop = function () { return {}; };
-        var field_to_column = function (field) {
-            var name = field.attrs.name;
-            var column = _.extend({id: name, tag: field.tag},
-                    fields[name], field.attrs);
-            // modifiers computer
-            if (column.modifiers) {
-                var modifiers = JSON.parse(column.modifiers);
-                column.modifiers_for = function (fields) {
-                    var out = {};
-
-                    for (var attr in modifiers) {
-                        if (!modifiers.hasOwnProperty(attr)) { continue; }
-                        var modifier = modifiers[attr];
-                        out[attr] = _.isBoolean(modifier)
-                            ? modifier
-                            : domain_computer(modifier, fields);
-                    }
-
-                    return out;
-                };
-                if (modifiers['tree_invisible']) {
-                    column.invisible = '1';
-                } else {
-                    delete column.invisible;
-                }
-                column.modifiers = modifiers;
-            } else {
-                column.modifiers_for = noop;
-                column.modifiers = {};
-            }
-            return column;
-        };
-
+        var registry = instance.web.list.columns;
         this.columns.splice(0, this.columns.length);
-        this.columns.push.apply(
-                this.columns,
-                _(this.fields_view.arch.children).map(field_to_column));
+        this.columns.push.apply(this.columns,
+            _(this.fields_view.arch.children).map(function (field) {
+                var id = field.attrs.name;
+                return registry.for_(id, fields[id], field);
+        }));
         if (grouped) {
-            this.columns.unshift({
-                id: '_group', tag: '', string: _t("Group"), meta: true,
-                modifiers_for: function () { return {}; },
-                modifiers: {}
-            });
+            this.columns.unshift(
+                new instance.web.list.MetaColumn('_group', _t("Group")));
         }
 
         this.visible_columns = _.filter(this.columns, function (column) {
             return column.invisible !== '1';
         });
 
-        this.aggregate_columns = _(this.visible_columns)
-            .map(function (column) {
-                if (column.type !== 'integer' && column.type !== 'float') {
-                    return {};
-                }
-                var aggregation_func = column['group_operator'] || 'sum';
-                if (!(aggregation_func in column)) {
-                    return {};
-                }
-
-                return _.extend({}, column, {
-                    'function': aggregation_func,
-                    label: column[aggregation_func]
-                });
-            });
+        this.aggregate_columns = _(this.visible_columns).invoke('to_aggregate');
     },
     /**
      * Used to handle a click on a table row, if no other handler caught the
@@ -820,9 +770,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             }
 
             $footer_cells.filter(_.str.sprintf('[data-field=%s]', column.id))
-                .html(instance.web.format_cell(aggregation, column, {
-                    process_modifiers: false
-            }));
+                .html(column.format(aggregation, { process_modifiers: false }));
         });
     },
     get_selected_ids: function() {
@@ -1058,7 +1006,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 });
             }
         }
-        return instance.web.format_cell(record.toForm().data, column, {
+        return column.format(record.toForm().data, {
             model: this.dataset.model,
             id: record.get('id')
         });
@@ -1345,10 +1293,9 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 }
                 var group_label;
                 try {
-                    group_label = instance.web.format_cell(
-                        row_data, group_column, {
-                            value_if_empty: _t("Undefined"),
-                            process_modifiers: false
+                    group_label = group_column.format(row_data, {
+                        value_if_empty: _t("Undefined"),
+                        process_modifiers: false
                     });
                 } catch (e) {
                     group_label = row_data[group_column.id].value;
@@ -1372,7 +1319,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 $row.append('<td>');
             }
             _(self.columns).chain()
-                .filter(function (column) {return !column.invisible;})
+                .filter(function (column) { return column.invisible !== '1'; })
                 .each(function (column) {
                     if (column.meta) {
                         // do not do anything
@@ -1380,8 +1327,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                         var r = {};
                         r[column.id] = {value: group.aggregates[column.id]};
                         $('<td class="oe_number">')
-                            .html(instance.web.format_cell(
-                                r, column, {process_modifiers: false}))
+                            .html(column.format(r, {process_modifiers: false}))
                             .appendTo($row);
                     } else {
                         $row.append('<td>');
@@ -1979,6 +1925,204 @@ instance.web.list = {
     Events: Events,
     Record: Record,
     Collection: Collection
-}
+};
+/**
+ * Registry for column objects used to format table cells (and some other tasks
+ * e.g. aggregation computations).
+ *
+ * Maps a field or button to a Column type via its ``$tag.$widget``,
+ * ``$tag.$type`` or its ``$tag`` (alone).
+ *
+ * This specific registry has a dedicated utility method ``for_`` taking a
+ * field (from fields_get/fields_view_get.field) and a node (from a view) and
+ * returning the right object *already instantiated from the data provided*.
+ *
+ * @type {instance.web.Registry}
+ */
+instance.web.list.columns = new instance.web.Registry({
+    'field': 'instance.web.list.Column',
+    'field.boolean': 'instance.web.list.Boolean',
+    'field.binary': 'instance.web.list.Binary',
+    'field.progressbar': 'instance.web.list.ProgressBar',
+    'field.handle': 'instance.web.list.Handle',
+    'button': 'instance.web.list.Button',
+});
+instance.web.list.columns.for_ = function (id, field, node) {
+    var description = _.extend({tag: node.tag}, field, node.attrs);
+    var tag = description.tag;
+    var Type = this.get_any([
+        tag + '.' + description.widget,
+        tag + '.'+ description.type,
+        tag
+    ]);
+    return new Type(id, node.tag, description)
+};
+
+instance.web.list.Column = instance.web.Class.extend({
+    init: function (id, tag, attrs) {
+        _.extend(attrs, {
+            id: id,
+            tag: tag
+        });
+
+        this.modifiers = attrs.modifiers ? JSON.parse(attrs.modifiers) : {};
+        delete attrs.modifiers;
+        _.extend(this, attrs);
+
+        if (this.modifiers['tree_invisible']) {
+            this.invisible = '1';
+        } else { delete this.invisible; }
+    },
+    modifiers_for: function (fields) {
+        var out = {};
+        var domain_computer = instance.web.form.compute_domain;
+
+        for (var attr in this.modifiers) {
+            if (!this.modifiers.hasOwnProperty(attr)) { continue; }
+            var modifier = this.modifiers[attr];
+            out[attr] = _.isBoolean(modifier)
+                ? modifier
+                : domain_computer(modifier, fields);
+        }
+
+        return out;
+    },
+    to_aggregate: function () {
+        if (this.type !== 'integer' && this.type !== 'float') {
+            return {};
+        }
+        var aggregation_func = this['group_operator'] || 'sum';
+        if (!(aggregation_func in this)) {
+            return {};
+        }
+        var C = function (label, fn) {
+            this['function'] = fn;
+            this.label = label;
+        };
+        C.prototype = this;
+        return new C(aggregation_func, this[aggregation_func]);
+    },
+    /**
+     *
+     * @param row_data record whose values should be displayed in the cell
+     * @param {Object} [options]
+     * @param {String} [options.value_if_empty=''] what to display if the field's value is ``false``
+     * @param {Boolean} [options.process_modifiers=true] should the modifiers be computed ?
+     * @param {String} [options.model] current record's model
+     * @param {Number} [options.id] current record's id
+     * @return {String}
+     */
+    format: function (row_data, options) {
+        options = options || {};
+        var attrs = {};
+        if (options.process_modifiers !== false) {
+            attrs = this.modifiers_for(row_data);
+        }
+        if (attrs.invisible) { return ''; }
+
+        if (!row_data[this.id]) {
+            return options.value_if_empty === undefined
+                    ? ''
+                    : options.value_if_empty;
+        }
+        return this._format(row_data, options);
+    },
+    /**
+     * Method to override in order to provide alternative HTML content for the
+     * cell. Column._format will simply call ``instance.web.format_value`` and
+     * escape the output.
+     *
+     * The output of ``_format`` will *not* be escaped by ``format``, any
+     * escaping *must be done* by ``format``.
+     *
+     * @private
+     */
+    _format: function (row_data, options) {
+        return _.escape(instance.web.format_value(
+            row_data[this.id].value, this, options.value_if_empty));
+    }
+});
+instance.web.list.MetaColumn = instance.web.list.Column.extend({
+    meta: true,
+    init: function (id, string) {
+        this._super(id, '', {string: string});
+    }
+});
+instance.web.list.Button = instance.web.list.Column.extend({
+    /**
+     * Return an actual ``<button>`` tag
+     */
+    format: function (row_data, options) {
+        return _.template('<button type="button" title="<%-title%>" <%=additional_attributes%> >' +
+            '<img src="<%-prefix%>/web/static/src/img/icons/<%-icon%>.png" alt="<%-alt%>"/>' +
+            '</button>', {
+                title: this.string || '',
+                additional_attributes: isNaN(row_data["id"].value) && instance.web.BufferedDataSet.virtual_id_regex.test(row_data["id"].value) ?
+                    'disabled="disabled" class="oe_list_button_disabled"' : '',
+                prefix: instance.connection.prefix,
+                icon: this.icon,
+                alt: this.string || ''
+            });
+    }
+});
+instance.web.list.Boolean = instance.web.list.Column.extend({
+    /**
+     * Return a potentially disabled checkbox input
+     *
+     * @private
+     */
+    _format: function (row_data, options) {
+        return _.str.sprintf('<input type="checkbox" %s disabled="disabled"/>',
+                 row_data[this.id].value ? 'checked="checked"' : '');
+    }
+});
+instance.web.list.Binary = instance.web.list.Column.extend({
+    /**
+     * Return a link to the binary data as a file
+     *
+     * @private
+     */
+    _format: function (row_data, options) {
+        var text = _t("Download");
+        var download_url = _.str.sprintf(
+                '/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d',
+                instance.connection.session_id, options.model, this.id, options.id);
+        if (this.filename) {
+            download_url += '&filename_field=' + this.filename;
+            if (row_data[this.filename]) {
+                text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
+                        row_data[this.filename].value, {type: 'char'}));
+            }
+        }
+        return _.template('<a href="<%-href%>"><%-text%></a> (%<-size%>)', {
+            text: text,
+            href: download_url,
+            size: row_data[this.id].value
+        });
+    }
+});
+instance.web.list.ProgressBar = instance.web.list.Column.extend({
+    /**
+     * Return a formatted progress bar display
+     *
+     * @private
+     */
+    _format: function (row_data, options) {
+        return _.template(
+            '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
+                value: _.str.sprintf("%.0f", row_data[this.id].value || 0)
+            });
+    }
+});
+instance.web.list.Handle = instance.web.list.Column.extend({
+    /**
+     * Return styling hooks for a drag handle
+     *
+     * @private
+     */
+    _format: function (row_data, options) {
+        return '<div class="oe_list_handle">';
+    }
+});
 };
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

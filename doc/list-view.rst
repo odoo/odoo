@@ -60,6 +60,56 @@ various situations:
 
     Selector cells
 
+Columns display customization
++++++++++++++++++++++++++++++
+
+The list view provides a registry to
+:js:class:`openerp.web.list.Column` objects allowing for the
+customization of a column's display (e.g. so that a binary field is
+rendered as a link to the binary file directly in the list view).
+
+The registry is ``instance.web.list.columns``, the keys are of the
+form ``tag.type`` where ``tag`` can be ``field`` or ``button``, and
+``type`` can be either the field's type or the field's ``@widget`` (in
+the view).
+
+Most of the time, you'll want to define a ``tag.widget`` key
+(e.g. ``field.progressbar``).
+
+.. js:class:: openerp.web.list.Column(id, tag, attrs)
+
+    .. js:method:: openerp.web.list.Column.format(record_data, options)
+
+        Top-level formatting method, returns an empty string if the
+        column is invisible (unless the ``process_modifiers=false``
+        option is provided); returns ``options.value_if_empty`` or an
+        empty string if there is no value in the record for the
+        column.
+
+        Otherwise calls :js:func:`~openerp.web.list.Column._format`
+        and returns its result.
+
+        This method only needs to be overridden if the column has no
+        concept of values (and needs to bypass that check), for a
+        button for instance.
+
+        Otherwise, custom columns should generally override
+        :js:func:`~openerp.web.list.Column._format` instead.
+
+    .. js:method:: openerp,web.list.Column._format(record_data, options)
+
+        Never called directly, called if the column is visible and has
+        a value.
+
+        The default implementation calls
+        :js:func:`~openerp.web.format_value` and htmlescapes the
+        result (via ``_.escape``).
+
+        Note that the implementation of
+        :js:func:`~openerp.web.list.Column._format` *must* escape the
+        data provided to it, its output will *not* be escaped by
+        :js:func:`~openerp.web.list.Column.format`.
+
 Editable list view
 ++++++++++++++++++
 
