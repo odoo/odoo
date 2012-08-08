@@ -661,6 +661,37 @@ instance.web.Home = instance.web.Widget.extend({
 });
 instance.web.client_actions.add("home", "instance.web.Home");
 
+instance.web.ChangePassword =  instance.web.Widget.extend({
+    template: "ChangePassword",
+    start: function() {
+        var self = this;
+        self.$element.find("form[name=change_password_form]").validate({
+            submitHandler: function (form) {
+                self.rpc("/web/session/change_password",{
+                    'fields': $(form).serializeArray()
+                }, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
+                        return;
+                    } else {
+                        instance.webclient.on_logout();
+                    }
+                });
+            }
+        });
+    },
+    display_error: function (error) {
+        return instance.web.dialog($('<div>'), {
+            modal: true,
+            title: error.title,
+            buttons: [
+                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
+            ]
+        }).html(error.error);
+    },
+})
+instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
+
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
     init: function() {
@@ -827,37 +858,6 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 f($(this));
             }
         });
-    },
-    change_password :function() {
-        var self = this;
-        this.dialog = new instance.web.Dialog(this, {
-            title: _t("Change Password"),
-            width : 'auto'
-        }).open();
-        this.dialog.$element.html(QWeb.render("UserMenu.password", self));
-        this.dialog.$element.find("form[name=change_password_form]").validate({
-            submitHandler: function (form) {
-                self.rpc("/web/session/change_password",{
-                    'fields': $(form).serializeArray()
-                }, function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    } else {
-                        instance.webclient.on_logout();
-                    }
-                });
-            }
-        });
-    },
-    display_error: function (error) {
-        return instance.web.dialog($('<div>'), {
-            modal: true,
-            title: error.title,
-            buttons: [
-                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
-            ]
-        }).html(error.error);
     },
     do_update: function () {
         var self = this;
