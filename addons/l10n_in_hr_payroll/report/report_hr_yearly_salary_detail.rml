@@ -288,7 +288,7 @@
           <para style="terp_tblheader_Details">Bank</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.bank_account_id.bank.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.bank_account_id and o.bank_account_id.bank.name or '' ]]</para>
         </td>
       </tr>
     </blockTable>
