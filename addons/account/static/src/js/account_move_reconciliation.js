@@ -37,6 +37,7 @@ instance.account.extend_form_view = instance.web.FormView.extend({
          this._super.apply(this,arguments);
          var self = this
          this.$element.find(".oe_reconcile").on('click', this.do_reconcilation)
+         this.$element.find(".oe_nothing_to_reconcile").on('click', this.do_nothing_to_reconcile)
          this.$element.on('click','a[data-pager-action]',function() {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
@@ -68,8 +69,17 @@ instance.account.extend_form_view = instance.web.FormView.extend({
                     list_view.reload();
             });
         });
-
     },
+    
+    do_nothing_to_reconcile:function(event){
+        self = this
+        this.dataset.call(event.target.name, [[self.datarecord.id], self.dataset.context]).then(function() {
+              self.dataset.read_slice().done(function(){
+                    self.on_pager_action();
+              });
+        })
+    },
+    
     do_update_pager: function(hide_index) {
         var index = hide_index ? '-' : this.dataset.index + 1;
         this.$element.find('span.oe_pager_index_extend').html(index).end()

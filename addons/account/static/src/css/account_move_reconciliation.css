@@ -25,45 +25,46 @@
   padding: 0 5px 0 5px;
   margin: 0 2px 0 2px;
   float: left;
-  border-right: 1px solid #ababab;
+}
+
+.openerp .oe_reconcile_button {
+  float: left;
+  display: inline-block;
+  background-color: #EFEFEF;
+  background-image: -moz-linear-gradient(center top , #EFEFEF, #D8D8D8);
+  border: 1px solid #ABABAB;
+  border-radius: 3px 3px 3px 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+  color: #404040;
+  display: inline-block;
+  font-size: 13px;
+  margin: 0 3px 0 3px;
+  padding: 3px 12px;
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
 }
  
-.openerp .oe_pager_m2o li {
-  display: inline-block;
-  height: 24px;
-  line-height: 24px;
-  padding: 0;
-  float: left;
+.openerp .oe_reconcile_button:hover {
+  background-color: #E3E3E3;
+  background-image: -moz-linear-gradient(center top , #E3E3E3, #F6F6F6);
+  box-shadow: none;
 }
 
-.openerp .oe_pager_m2o a {
-  padding: 0 8px;
+.openerp .oe_reconcile_button a:hover {
+  text-decoration: none
 }
-
 .openerp .oe_extended_form_view .oe_form_field:empty {
   display: inline-block !important;
 }
 
 .openerp .oe_extended_form_view .oe_datepicker_root {
-    display: inline-block;
-    min-width: 100px;
+  display: inline-block;
+  min-width: 100px;
 }
 .openerp .oe_extended_form_view .oe_form_field {
-    width: auto;
-}
-.openerp .oe_extended_form_view button {
-    margin-right: 10px
-}
-
-.openerp .oe_extended_form_view .oe_button_container .oe_form_field{
   width: auto;
-  margin: 0px 10px 0px 10px;
 }
-.openerp .oe_extended_form_view .oe_button_container{
-  display: inline-block ;
-  width:100%;
-  margin: 10px;
-}  
+ 
 .openerp .oe_extended_form_view  .oe_form_field_progressbar.ui-progressbar {
   width: 200px !important;
 }
