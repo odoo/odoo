@@ -2826,7 +2826,21 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 tip_def.reject();
             }
         };
-        this.$input.focusout(anyoneLoosesFocus);
+        var ignore_blur = false;
+        this.$input.on({
+            focusout: anyoneLoosesFocus,
+            focus: function () { self.trigger('focused'); },
+            autocompleteopen: function () { ignore_blur = true; },
+            autocompleteclose: function () { ignore_blur = false; },
+            blur: function () {
+                // autocomplete open
+                if (ignore_blur) { return; }
+                if (_(self.getChildren()).any(function (child) {
+                    return child instanceof instance.web.form.AbstractFormPopup;
+                })) { return; }
+                self.trigger('blurred');
+            }
+        });
 
         var isSelecting = false;
         // autocomplete
@@ -2869,7 +2883,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             }
             isSelecting = false;
         });
-        this.setupFocus(this.$input.add(this.$follow_button));
+        this.setupFocus(this.$follow_button);
     },
     render_value: function(no_recurse) {
         var self = this;
