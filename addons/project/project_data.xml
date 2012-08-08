@@ -29,7 +29,7 @@
         <record id="project_tt_analysis" model="project.task.type">
             <field name="sequence">1</field>
             <field name="name">Analysis</field>
-            <field name="state">open</field>
+            <field name="state">draft</field>
             <field name="case_default" eval="False"/>
         </record>
         <record id="project_tt_specification" model="project.task.type">
@@ -39,9 +39,9 @@
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_design" model="project.task.type">
-            <field name="sequence">1</field>
+            <field name="sequence">2</field>
             <field name="name">Design</field>
-            <field name="state">draft</field>
+            <field name="state">open</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_negotiation" model="project.task.type">
