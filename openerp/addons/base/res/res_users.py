@@ -544,6 +544,7 @@ class users(osv.osv):
         return {
             'type': 'ir.actions.client',
             'tag': 'change_password',
+            'target': 'new',
         }
 
     def has_group(self, cr, uid, group_ext_id):
