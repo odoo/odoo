@@ -60,15 +60,30 @@
                         <field name="group_sale_pricelist" class="oe_inline"/>
                         <label for="group_sale_pricelist"/>
                     </div>
-                    <div>
-                        <field name="module_sale_journal" class="oe_inline"/>
-                        <label for="module_sale_journal"/>
-                    </div>
                     <div name="module_warning">
                         <field name="module_warning" class="oe_inline"/>
                         <label for="module_warning"/>
                     </div>
                 </div>
+                <group name="Sale" position="before">
+                    <group>
+                        <label for="id" string="Warehouse Features"/>
+                        <div>
+                            <div attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}">
+                                <field name="default_picking_policy" class="oe_inline"/>
+                                <label for="default_picking_policy"/>
+                            </div>
+                            <div>
+                                <field name="group_mrp_properties" class="oe_inline"/>
+                                <label for="group_mrp_properties"/>
+                            </div>
+                            <div>
+                                <field name="module_sale_journal" class="oe_inline"/>
+                                <label for="module_sale_journal"/>
+                            </div>
+                        </div>
+                    </group>
+                </group>
                 <group name="Sale" position="before">
                     <group>
                         <label for="id" string="Product Features"/>
@@ -82,10 +97,6 @@
                                 <label for="group_discount_per_so_line"/>
                             </div>
                             <div>
-                                <field name="group_mrp_properties" class="oe_inline"/>
-                                <label for="group_mrp_properties"/>
-                            </div>
-                            <div>
                                 <label for="decimal_precision"/>
                                 <field name="decimal_precision" class="oe_inline"/>
                             </div>
@@ -96,10 +107,6 @@
                     <div>
                         <field name="group_multiple_shops" class="oe_inline"/>
                         <label for="group_multiple_shops"/>
-                    </div>
-                    <div attrs="{'invisible':[('group_invoice_deli_orders','=',False)]}">
-                        <field name="default_picking_policy" class="oe_inline"/>
-                        <label for="default_picking_policy"/>
                     </div>
                     <div name="module_sale_margin">
                         <field name="module_sale_margin" class="oe_inline"/>

@@ -86,7 +86,7 @@ class share_wizard(osv.TransientModel):
         # NOTE: take _ids in parameter to allow usage through browse_record objects
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
         if base_url:
-            base_url += '/web/webclient/login?db=%(dbname)s&login=%(login)s&key=%(password)s'
+            base_url += '/login?db=%(dbname)s&login=%(login)s&key=%(password)s'
             extra = context and context.get('share_url_template_extra_arguments')
             if extra:
                 base_url += '&' + '&'.join('%s=%%(%s)s' % (x,x) for x in extra)
