@@ -407,18 +407,12 @@
                                     states="cancelled,done" context="{'button_reactivate':True}"/>
                             <button name="action_close" string="Done" type="object"
                                     states="draft,open,pending" class="oe_highlight"/>
-                            <button name="do_pending" string="Pending" type="object"
-                                    states="open"/>
                             <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
                                     states="pending,open,draft" groups="project.group_delegate_task"/>
                             <button name="do_cancel" string="Cancel" type="object"
                                     states="draft,open,pending"/>
-                            <button name="stage_previous" string="Previous Stage" type="object"
-                                    states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                            <button name="stage_next" string="Next Stage" type="object" class="oe_highlight"
-                                    states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
                         </span>
-                        <field name="stage_id" widget="statusbar"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet string="Task">
                     <label for="name" class="oe_edit_only"/>
