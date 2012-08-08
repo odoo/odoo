@@ -1098,15 +1098,15 @@ instance.web.WebClient = instance.web.Client.extend({
         $(window).bind('hashchange', this.on_hashchange);
 
         var state = $.bbq.getState(true);
-        if (! _.isEmpty(state)) {
-            $(window).trigger('hashchange');
-        } else {
+        if (_.isEmpty(state) || state.action == "login") {
             self.menu.has_been_loaded.then(function() {
                 var first_menu_id = self.menu.$element.find("a:first").data("menu");
                 if(first_menu_id) {
                     self.menu.menu_click(first_menu_id);
                 }
             });
+        } else {
+            $(window).trigger('hashchange');
         }
     },
     on_hashchange: function(event) {
