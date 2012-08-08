@@ -178,7 +178,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var remaining = groups.length - 1,
                 groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
-                var dataset = new instance.web.DataSetSearch(self, self.dataset.model, group.context, group.domain);
+                var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
+                    new instance.web.CompoundContext(self.dataset.get_context(), group.context), group.domain);
                 return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
                     .pipe(function(records) {
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
@@ -395,7 +396,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             def = this._super();
         if (! self.view.group_by) {
             self.$element.addClass("oe_kanban_no_group");
-            self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, self.getParent().search_context, false)
+            self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, {}, false)
                 .on('added', self, self.proxy('quick_created'));
             self.quick.replace($(".oe_kanban_no_group_qc_placeholder"));
         }
@@ -410,7 +411,6 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             if (self.quick) { return; }
             var ctx = {};
             ctx['default_' + self.view.group_by] = self.value;
-            ctx = new instance.web.CompoundContext(self.getParent().search_context, ctx);
             self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, ctx, true)
                 .on('added', self, self.proxy('quick_created'))
                 .on('close', self, function() {
