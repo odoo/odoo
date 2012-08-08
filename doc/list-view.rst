@@ -60,8 +60,33 @@ various situations:
 
     Selector cells
 
+Editable list view
+++++++++++++++++++
+
+The editable list view module adds a few supplementary style hook
+classes, for edition situations:
+
+``.oe_list_editable``
+
+    Added to the ``.oe_list`` when the list is editable (however that
+    was done). The class may be removed on-the-fly if the list becomes
+    non-editable.
+
+``.oe_editing``
+
+    Added to both ``.oe_list`` and ``.oe_list_button`` (as the
+    buttons may be outside of the list view) when a row of the list is
+    currently being edited.
+
+``tr.oe_edition``
+
+    Class set on the row being edited itself. Note that the edition
+    form is *not* contained within the row, this allows for styling or
+    modifying the row while it's being edited separately. Mostly for
+    fields which can not be edited (e.g. read-only fields).
+
 Columns display customization
-+++++++++++++++++++++++++++++
+-----------------------------
 
 The list view provides a registry to
 :js:class:`openerp.web.list.Column` objects allowing for the
@@ -78,7 +103,7 @@ Most of the time, you'll want to define a ``tag.widget`` key
 
 .. js:class:: openerp.web.list.Column(id, tag, attrs)
 
-    .. js:method:: openerp.web.list.Column.format(record_data, options)
+    .. js:function:: openerp.web.list.Column.format(record_data, options)
 
         Top-level formatting method, returns an empty string if the
         column is invisible (unless the ``process_modifiers=false``
@@ -96,7 +121,9 @@ Most of the time, you'll want to define a ``tag.widget`` key
         Otherwise, custom columns should generally override
         :js:func:`~openerp.web.list.Column._format` instead.
 
-    .. js:method:: openerp,web.list.Column._format(record_data, options)
+        :returns: String
+
+    .. js:function:: openerp,web.list.Column._format(record_data, options)
 
         Never called directly, called if the column is visible and has
         a value.
@@ -110,25 +137,7 @@ Most of the time, you'll want to define a ``tag.widget`` key
         data provided to it, its output will *not* be escaped by
         :js:func:`~openerp.web.list.Column.format`.
 
-Editable list view
-++++++++++++++++++
-
-The editable list view module adds a few supplementary style hook
-classes, for edition situations:
-
-``.oe_editing``
-
-    Added to both ``.oe_list`` and ``.oe_list_button`` (as the
-    buttons may be outside of the list view) when a row of the list is
-    currently being edited.
-
-``tr.oe_edition``
-
-    Class set on the row being edited itself. Note that the edition
-    form is *not* contained within the row, this allows for styling or
-    modifying the row while it's being edited separately. Mostly for
-    fields which can not be edited (e.g. read-only fields).
-
+        :returns: String
 
 Editable list view
 ------------------
