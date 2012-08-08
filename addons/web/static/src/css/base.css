@@ -2477,16 +2477,21 @@
 .openerp .oe_list_content .numeric input {
   text-align: right;
 }
-.openerp .oe_list_content .oe_list_field_handle {
+.openerp .oe_list_content th.oe_list_header_handle {
+  font-size: 1px;
+  overflow: hidden;
+  text-indent: -9001px;
+}
+.openerp .oe_list_content td.oe_list_field_handle {
   width: 1em;
   cursor: ns-resize;
 }
-.openerp .oe_list_content .oe_list_field_handle .oe_list_handle {
+.openerp .oe_list_content td.oe_list_field_handle .oe_list_handle {
   font-size: 1px;
   letter-spacing: -1px;
   color: transparent;
 }
-.openerp .oe_list_content .oe_list_field_handle .oe_list_handle:before {
+.openerp .oe_list_content td.oe_list_field_handle .oe_list_handle:before {
   font: 21px "mnmliconsRegular";
   content: "ö";
   color: #404040;
