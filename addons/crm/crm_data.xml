@@ -64,7 +64,7 @@
 To manage quotations and sale orders, install the module "Sales Management".</value>
         </function>
         
-        <record model="mail.group" name="default_sales_alias">
+        <record model="mail.alias" id="default_sales_alias">
             <field name="alias_name">sales</field>
             <field name="alias_model_id" ref="model_crm_lead"/>
             <field name="alias_user_id" ref="base.user_root"/>
