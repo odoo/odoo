@@ -81,6 +81,11 @@
                     <h1>
                         <field name="name" string="Project Name"/>
                     </h1>
+                    <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <field name="alias_id" invisible="1"/>
+                        <label for="alias_name" class="oe_edit_only "/>
+                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                    </div>
                     <group>
                         <group>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" options='{"no_open": true}'/>
@@ -223,6 +228,8 @@
                     <field name="date"/>
                     <field name="color"/>
                     <field name="task_count"/>
+                    <field name="alias_id"/>
+                    <field name="alias_domain"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height oe_kanban_global_click">
@@ -247,15 +254,16 @@
                                         <div>Deadline</div>
                                         <div><field name="date"/></div>
                                     </div>
-
                                     <div class="oe_kanban_project_fields oe_kanban_project_progress">
                                         <div>Progress</div>
                                         <div><t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></div>
                                     </div>
-
+                                    <div name="alias_box" t-if="record.alias_domain.raw_value" class="oe_kanban_ellipsis">
+                                        <a t-attf-href="mailto:#{record.alias_id.value}"><field name="alias_id"/></a>
+                                    </div>
                                     <div class="oe_kanban_project_avatars">
                                         <t t-foreach="record.members.raw_value" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'avatar', member)" t-att-data-member_id="member"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
                                 </div>
@@ -419,7 +427,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="project_id"  on_change="onchange_project(project_id)"/>
+                            <field name="project_id"  on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}" options='{"no_open": true}'/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
@@ -542,15 +550,15 @@
                                     <i><field name="date_deadline"/></i>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="" name="set_kanban_state_done" class="oe_kanban_status"> </a>
-                                    <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
+                                    <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="Ready to Pull" name="set_kanban_state_done" class="oe_kanban_status"> </a>
+                                    <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready to Pull" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
                                     <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
-                                    <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
-                                    <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
-                                    <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    <a t-if="record.priority.raw_value == 1" type="object" string="Priority" name="set_normal_priority" class="oe_e oe_star_on">7</a>
+                                    <a t-if="record.priority.raw_value != 1" type="object" string="Priority" name="set_high_priority" class="oe_e oe_star_off">7</a>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left">
-                                    <span>
+                                    <span groups="project.group_time_work_estimation_tasks" title="Remaining hours">
                                         <span class="oe_e">N</span>
                                         <t t-esc="Math.round(record.remaining_hours.raw_value)"/>
                                     </span>

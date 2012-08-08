@@ -89,6 +89,7 @@
                             <field name="parent_id"/>
                             <field name="code"/>
                         </group>
+                        
                         <group>
                             <field name="user_id" options='{"no_open": true}'/>
                             <field name="resource_calendar_id"/>
@@ -97,14 +98,14 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Team">
-                            <group col="4">
-                                <group>
-                                    <field name="reply_to"/>
-                                </group>
-                                <group>
-                                    <field name="change_responsible"/>
-                                    <field name="allow_unlink"/>
-                                </group>
+                           <group>
+                                <field name="alias_id" invisible="1"/>
+                                <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                                 </div>
+                                <field name="change_responsible"/>
+                                <field name="allow_unlink"/>
                             </group>
                             <separator string="Team Members"/>
                             <field name="member_ids"/>
