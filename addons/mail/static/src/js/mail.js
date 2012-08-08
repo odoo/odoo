@@ -16,7 +16,7 @@ openerp.mail = function(session) {
 
     session.web.FormView = session.web.FormView.extend({
         do_action: function(action, on_close) {
-            if (action.res_model == 'mail.compose.message' && this.fields && this.fields.message_ids) {
+            if (action.res_model == 'mail.compose.message' && this.fields && this.fields.message_ids && this.fields.message_ids.view.get("actual_mode") != 'create') {
                 var record_thread = this.fields.message_ids;
                 var thread = record_thread.thread;
                 thread.instantiate_composition_form('comment', true, false, 0, action.context);
