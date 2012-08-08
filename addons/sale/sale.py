@@ -1406,7 +1406,6 @@ class sale_order_line(osv.osv):
                         [('category_id', '=', product_obj.uom_id.category_id.id)],
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
-
         elif uos and not uom: # only happens if uom is False
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
             result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
@@ -1463,15 +1462,12 @@ class sale_order_line(osv.osv):
             lang=False, update_tax=True, date_order=False, context=None):
         context = context or {}
         lang = lang or ('lang' in context and context['lang'])
-        res = self.product_id_change(cursor, user, ids, pricelist, product,
+        if not uom:
+            return {'value': {'price_unit': 0.0, 'product_uom' : uom or False}}
+        return self.product_id_change(cursor, user, ids, pricelist, product,
                 qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
                 date_order=date_order, context=context)
-        if 'product_uom' in res['value']:
-            del res['value']['product_uom']
-        if not uom:
-            res['value']['price_unit'] = 0.0
-        return res
 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
