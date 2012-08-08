@@ -3,13 +3,8 @@ import itertools
 import openerp.modules.registry
 import openerp
 
-from . import common, export_models
+from openerp.tests import common
 
-
-def setUpModule():
-    openerp.tools.config['update'] = {'base': 1}
-    openerp.modules.registry.RegistryManager.new(
-        common.DB, update_module=True)
 
 class CreatorCase(common.TransactionCase):
     model_name = False

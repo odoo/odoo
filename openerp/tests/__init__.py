@@ -9,7 +9,7 @@ See the :ref:`test-framework` section in the :ref:`features` list.
 """
 
 from . import test_expression, test_ir_sequence, test_orm,\
-              test_uninstall, test_export, test_import
+              test_uninstall
 
 fast_suite = [
     test_ir_sequence,
@@ -18,8 +18,6 @@ fast_suite = [
 checks = [
     test_expression,
     test_orm,
-    test_export,
-    test_import,
 ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

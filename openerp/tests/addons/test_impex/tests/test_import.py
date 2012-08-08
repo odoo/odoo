@@ -2,7 +2,7 @@
 import openerp.modules.registry
 import openerp
 
-from . import common, export_models
+from openerp.tests import common
 
 def ok(n):
     """ Successful import of ``n`` records
@@ -25,11 +25,6 @@ def error(row, message, record=None, **kwargs):
 
 def values(seq, field='value'):
     return [item[field] for item in seq]
-
-def setupModule():
-    openerp.tools.config['update'] = {'base': 1}
-    openerp.modules.registry.RegistryManager.new(
-        common.DB, update_module=True)
 
 class ImporterCase(common.TransactionCase):
     model_name = False
