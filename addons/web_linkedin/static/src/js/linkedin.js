@@ -269,7 +269,7 @@ openerp.web_linkedin = function(instance) {
     
     
     instance.web_linkedin.KeyWizard = instance.web.Dialog.extend({
-        template: "LinkedIn.KeyWizard",
+        template: "LinkedIn.KeyWizard", 
         init: function(parent, text) {
             this._super(parent, {title:_t("LinkedIn API Key")});
         },
