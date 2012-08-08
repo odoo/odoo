@@ -886,44 +886,10 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     },
     on_menu_settings: function() {
         var self = this;
-        var action_manager = new instance.web.ActionManager(this);
-        var dataset = new instance.web.DataSet (this,'res.users',this.context);
-        dataset.call ('action_get','',function (result){
-            self.rpc('/web/action/load', {action_id:result}, function(result){
-                action_manager.do_action(_.extend(result['result'], {
-                    target: 'inline',
-                    res_id: self.session.uid,
-                    res_model: 'res.users',
-                    flags: {
-                        action_buttons: false,
-                        search_view: false,
-                        sidebar: false,
-                        views_switcher: false,
-                        pager: false
-                    }
-                }));
-            });
+        self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
+            result.result.res_id = instance.connection.uid;
+            self.getParent().action_manager.do_action(result.result);
         });
-        this.dialog = new instance.web.Dialog(this,{
-            title: _t("Preferences"),
-            width: '700px',
-            buttons: [
-                {text: _t("Change password"), click: function(){ self.change_password(); }},
-                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
-                {text: _t("Save"), click: function(){
-                        var inner_widget = action_manager.inner_widget;
-                        inner_widget.views[inner_widget.active_view].controller.do_save()
-                        .then(function() {
-                            self.dialog.destroy();
-                            // needs to refresh interface in case language changed
-                            window.location.reload();
-                        });
-                    }
-                }
-            ]
-        }).open();
-       action_manager.appendTo(this.dialog.$element);
-       action_manager.renderElement(this.dialog);
     },
     on_menu_about: function() {
         var self = this;
