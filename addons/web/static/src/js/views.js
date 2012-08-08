@@ -1079,14 +1079,15 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
         this['on_button_' + _t("Close")] = this.on_btn_close;
         this._super(view, {
             width: '80%',
-            height: '80%'
+            height: '80%',
+            destroy_on_close: false,
         });
         this.view = view;
         this.view_type = view.fields_view.type || '';
         this.$fields_form = null;
         this.$view_form = null;
         this.$sidebar_form = null;
-        this.translatable_fields_keys = _.map(this.view.translatable_fields || [], function(i) { return i.name });
+        this.translatable_fields_keys = _.map(this.view.translatable_fields || [], function(i) { return i.name; });
         this.languages = null;
         this.languages_loaded = $.Deferred();
         (new instance.web.DataSetSearch(this, 'res.lang', this.view.dataset.get_context(),
@@ -1117,7 +1118,8 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
             deffered.push(deff);
             var callback = function(values) {
                 _.each(self.translatable_fields_keys, function(f) {
-                    self.$fields_form.find('.oe_trad_field[name="' + lg.code + '-' + f + '"]').val(values[0][f] || '').attr('data-value', values[0][f] || '');
+                    var value = values[0][f] || '';
+                    self.$fields_form.find('.oe_trad_field[name="' + lg.code + '-' + f + '"]').val(value).attr('data-value', value);
                 });
                 deff.resolve();
             };
@@ -1128,31 +1130,24 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
                 });
                 callback([values]);
             } else {
-                self.rpc('/web/dataset/get', {
-                    model: self.view.dataset.model,
-                    ids: [self.view.datarecord.id],
-                    fields: self.translatable_fields_keys,
-                    context: self.view.dataset.get_context({
-                        'lang': lg.code
-                    })}, callback);
+                self.view.dataset.read_ids([self.view.datarecord.id], self.translatable_fields_keys, {
+                    context: { 'lang': lg.code }
+                }).then(callback);
             }
         });
         $.when.apply(null, deffered).then(callback);
     },
     open: function(field) {
-        var self = this,
-            sup = this._super;
+        var self = this;
+        this._super();
         $.when(this.languages_loaded).then(function() {
             if (self.view.translatable_fields && self.view.translatable_fields.length) {
                 self.do_load_fields_values(function() {
-                    sup.call(self);
-                    // desactivated because it created an exception, plus it does not seem very useful
-                    /*
                     if (field) {
                         var $field_input = self.$element.find('tr[data-field="' + field.name + '"] td:nth-child(2) *:first-child');
                         self.$element.scrollTo($field_input);
                         $field_input.focus();
-                    }*/
+                    }
                 });
             } else {
                 sup.call(self);
@@ -1241,7 +1236,7 @@ instance.web.View = instance.web.Widget.extend({
     },
     open_translate_dialog: function(field) {
         if (!this.translate_dialog) {
-            this.translate_dialog = new instance.web.TranslateDialog(this).start();
+            this.translate_dialog = new instance.web.TranslateDialog(this);
         }
         this.translate_dialog.open(field);
     },

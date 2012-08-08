@@ -408,6 +408,12 @@ $sheet-max-width: 860px
             border: none
     .oe_avatar + div
         margin-left: 5px
+    .oe_image_small > img
+        max-width: 50px
+        max-height: 50px
+    .oe_image_medium > img
+        max-width: 180px
+        max-height: 180px
     .oe_button.oe_link
         @include reset()
         img
@@ -429,9 +435,6 @@ $sheet-max-width: 860px
             text-decoration: none
         .oe_star_on
             color: gold
-    .oe_bounce
-        -moz-animation: bounce .40s linear
-        -webkit-animation: bounce .40s linear
     // }}}
     // Tags (for many2many tags, among others) {{{
     .oe_tag
@@ -469,6 +472,16 @@ $sheet-max-width: 860px
                 list-style: circle
         .oe_tooltip_technical_title
             font-weight: bold
+        .oe_tooltip_close
+            margin: -5px 0 0 2px
+            cursor: default
+            float: right
+            color: white
+            &:hover
+                color: #999
+                cursor: pointer
+        .oe_tooltip_message
+            max-width: 310px
     // }}}
     // Notebook {{{
     .oe_notebook
@@ -1645,7 +1658,7 @@ $sheet-max-width: 860px
             width: 100%
             display: inline-block
             padding: 2px 2px 2px 0px
-            line-height: 18px
+            line-height: 1em
             input
                 margin: 0px
         input[type="text"], input[type="password"], input[type="file"], select
@@ -1712,9 +1725,9 @@ $sheet-max-width: 860px
     .oe_form_editable
         .oe_form
             .oe_form_field_integer
-                width: 7em !important
+                width: 6em !important
             .oe_form_field_float
-                width: 8em !important
+                width: 7em !important
             .oe_form_field_date
                 width: 7.5em !important
             .oe_form_field_datetime
@@ -1831,11 +1844,16 @@ $sheet-max-width: 860px
 
     .oe_list
         position: relative
-        .oe_form .oe_form_field
-            width: auto
-            position: absolute
-            margin: 0 !important // dammit
-            padding: 0
+        .oe_form
+            .oe_form_nosheet
+                margin: 0 // FIXME: either class or border should not be by default
+                padding: 0
+                border: none
+            .oe_form_field
+                width: auto
+                position: absolute
+                margin: 0 !important // dammit
+                padding: 0
 
     .oe_list_content
         width: 100%
@@ -1908,6 +1926,16 @@ $sheet-max-width: 860px
             width: 82px
             input
                 text-align: right
+        th.oe_list_header_handle
+            font-size: 1px
+            overflow: hidden
+            text-indent: -9001px
+        td.oe_list_field_handle
+            width: 1em
+            cursor: ns-resize
+            .oe_list_handle
+                @include text-to-icon("ö")
+
     // }}}
     // Tree view {{{
     .tree_header

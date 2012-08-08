@@ -25,6 +25,13 @@
         </div>
     </div>
 </t>
+<t t-name="Tipsy.alert">
+    <a class="oe_tooltip_close oe_e">[</a>
+    <span style="float:left; margin:2px 5px 0 0;" class="ui-icon ui-icon-alert ui-state-error"></span>
+    <div class="oe_tooltip_message">
+        <t t-esc="message"/>
+    </div>
+</t>
 
 <t t-name="CrashManager.warning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
@@ -331,7 +338,7 @@
 <t t-name="UserMenu.about">
 
     <div class="oe_about">
-      <a class="oe_activate_debug_mode oe_right" href="?debug">Activate the developer mode</a>
+      <a class="oe_activate_debug_mode oe_right" href="?debug" style="background-color: white; padding:2px 6px; border-radius: 10px;">Activate the developer mode</a>
       <img class="oe_logo" src="/web/static/src/img/logo2.png"/>
       <h3>Version <t t-esc="version_info.version"/></h3>
 
@@ -607,7 +614,7 @@
             </th>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
-                    t-att-class="((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)">
+                    t-attf-class="oe_list_header_#{column.widget or column.type} #{((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)}">
                     <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
                 </th>
             </t>
@@ -701,7 +708,9 @@
 <div t-name="FormView.buttons" class="oe_form_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <span class="oe_form_buttons_view">
-            <button type="button" class="oe_button oe_form_button_edit">Edit</button>
+            <div style="display: inline-block;"> <!-- required for the bounce effect on button -->
+              <button type="button" class="oe_button oe_form_button_edit">Edit</button>
+            </div>
             <button type="button" class="oe_button oe_form_button_create">Create</button>
         </span>
         <span class="oe_form_buttons_edit">
@@ -921,9 +930,10 @@
             t-att-tabindex="widget.node.attrs.tabindex"
             t-att-autofocus="widget.node.attrs.autofocus"
             t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
-        ></textarea>
-        <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate"
-            t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+        ></textarea><img class="oe_field_translate oe_input_icon"
+                        t-if="widget.field.translate and !widget.get('effective_readonly')"
+                        t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
+        />
     </div>
 </t>
 <t t-name="web.datepicker">
@@ -1189,11 +1199,11 @@
     </tr>
     <tr t-foreach="widget.view.translatable_fields" t-as="field" t-att-data-field="field.name">
         <td class="oe_form_group_cell" width="1%" nowrap="nowrap">
-            <label class="oe_label"><t t-esc="field.node.attrs.string"/>:</label>
+            <label class="oe_label"><t t-esc="field.string"/>:</label>
         </td>
         <td t-foreach="widget.languages" t-as="lg" class="oe_form_group_cell">
-            <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
-            <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
+            <input t-if="field.field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
+            <textarea t-if="field.field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
         </td>
     </tr>
     </table>

@@ -400,6 +400,9 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'db': form_obj['db_name'],
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
+                    'login_successful': function() {
+                        instance.webclient.show_application();
+                    },
                 },
             };
             self.do_action(client_action);
@@ -871,7 +874,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$element.find('.oe_topbar_name').text(topbar_name);
-                var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=avatar&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
+                var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=image_small&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
                 $avatar.attr('src', avatar_src);
             });
         };
@@ -979,6 +982,7 @@ instance.web.Client = instance.web.Widget.extend({
             }, 0);
         });
         instance.web.bus.on('click', this, function(ev) {
+            $.fn.tipsy.clear();
             if (!$(ev.target).is('input[type=file]')) {
                 self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
             }

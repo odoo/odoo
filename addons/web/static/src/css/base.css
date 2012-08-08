@@ -78,7 +78,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */
+   */ */
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -509,6 +509,14 @@
 .openerp .oe_avatar + div {
   margin-left: 5px;
 }
+.openerp .oe_image_small > img {
+  max-width: 50px;
+  max-height: 50px;
+}
+.openerp .oe_image_medium > img {
+  max-width: 180px;
+  max-height: 180px;
+}
 .openerp .oe_button.oe_link {
   border: none;
   padding: 0;
@@ -601,6 +609,19 @@
 }
 .openerp.oe_tooltip .oe_tooltip_technical_title {
   font-weight: bold;
+}
+.openerp.oe_tooltip .oe_tooltip_close {
+  margin: -5px 0 0 2px;
+  cursor: default;
+  float: right;
+  color: white;
+}
+.openerp.oe_tooltip .oe_tooltip_close:hover {
+  color: #999999;
+  cursor: pointer;
+}
+.openerp.oe_tooltip .oe_tooltip_message {
+  max-width: 310px;
 }
 .openerp .oe_notebook {
   margin: 8px 0;
@@ -2238,7 +2259,7 @@
   width: 100%;
   display: inline-block;
   padding: 2px 2px 2px 0px;
-  line-height: 18px;
+  line-height: 1em;
 }
 .openerp .oe_form .oe_form_field input {
   margin: 0px;
@@ -2327,10 +2348,10 @@
   overflow: hidden;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_integer {
-  width: 7em !important;
+  width: 6em !important;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_float {
-  width: 8em !important;
+  width: 7em !important;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_date {
   width: 7.5em !important;
@@ -2449,6 +2470,11 @@
 .openerp .oe_list {
   position: relative;
 }
+.openerp .oe_list .oe_form .oe_form_nosheet {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
 .openerp .oe_list .oe_form .oe_form_field {
   width: auto;
   position: absolute;
@@ -2559,6 +2585,25 @@
 }
 .openerp .oe_list_content .numeric input {
   text-align: right;
+}
+.openerp .oe_list_content th.oe_list_header_handle {
+  font-size: 1px;
+  overflow: hidden;
+  text-indent: -9001px;
+}
+.openerp .oe_list_content td.oe_list_field_handle {
+  width: 1em;
+  cursor: ns-resize;
+}
+.openerp .oe_list_content td.oe_list_field_handle .oe_list_handle {
+  font-size: 1px;
+  letter-spacing: -1px;
+  color: transparent;
+}
+.openerp .oe_list_content td.oe_list_field_handle .oe_list_handle:before {
+  font: 21px "mnmliconsRegular";
+  content: "ö";
+  color: #404040;
 }
 .openerp .tree_header {
   background-color: #f0f0f0;

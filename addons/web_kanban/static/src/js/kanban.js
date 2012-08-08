@@ -256,7 +256,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 scroll: false
             });
         } else {
-            this.$element.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle').removeClass('oe_kanban_card');
+            this.$element.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle');
         }
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
@@ -320,7 +320,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     open_record: function(id, editable) {
         if (this.dataset.select_id(id)) {
-            this.do_switch_view('form', null);
+            this.do_switch_view('form', null, { editable: editable });
         } else {
             this.do_warn("Kanban: could not find id#" + id);
         }
@@ -421,13 +421,6 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         });
         // Add bounce effect on image '+' of kanban header when click on empty space of kanban grouped column.
         var add_btn = this.$element.find('.oe_kanban_add');
-        this.$records.click(function (ev) {
-            if (ev.target == ev.currentTarget) {
-                if (!self.state.folded) {
-                    add_btn.wrap('<div>').addClass('oe_bounce');
-                } 
-            }
-        });
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
             this.do_toggle_fold();
@@ -436,6 +429,13 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.$records.data('widget', this);
         this.$has_been_started.resolve();
         this.compute_cards_auto_height();
+        this.$records.click(function (ev) {
+            if (ev.target == ev.currentTarget) {
+                if (!self.state.folded) {
+                    add_btn.effect('bounce', {distance: 18, times: 7}, 200)
+                } 
+            }
+        });
         return def;
     },
     compute_cards_auto_height: function() {
@@ -606,7 +606,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
 
         // If no draghandle is found, make the whole card as draghandle
         if (!this.$element.find('.oe_kanban_draghandle').length) {
-            this.$element.children(':first').addClass('oe_kanban_draghandle').addClass('oe_kanban_card');
+            this.$element.children(':first').addClass('oe_kanban_draghandle');
         }
 
         this.$element.find('.oe_kanban_action').click(function() {
@@ -750,14 +750,17 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size + '&d=' + default_;
     },
     kanban_image: function(model, field, id, cache) {
-        id = id || '';
-        var url = instance.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
-        if (cache !== undefined) {
-            // Set the cache duration in seconds.
-            url += '&cache=' + parseInt(cache, 10);
-        }
+        var url;
         if (this.record[field] && this.record[field].value && ! /^\d+(\.\d*)? \w+$/.test(this.record[field].value)) {
             url = 'data:image/png;base64,' + this.record[field].value;
+        } else if (this.record[field] && ! this.record[field].value) {
+            url = "/web/static/src/img/placeholder.png";
+        } else {
+            url = instance.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+            if (cache !== undefined) {
+                // Set the cache duration in seconds.
+                url += '&cache=' + parseInt(cache, 10);
+            }
         }
         return url;
     },
