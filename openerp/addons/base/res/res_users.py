@@ -534,6 +534,18 @@ class users(osv.osv):
             return self.write(cr, uid, uid, {'password': new_passwd})
         raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
 
+    def preference_save(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+    def preference_change_password(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'change_password',
+        }
+
     def has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 
