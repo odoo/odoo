@@ -164,16 +164,13 @@
         <field name="arch" type="xml">
             <search string="Workflow Activity">
                 <field name="name" string="Workflow Activity"/>
-                <separator orientation="vertical"/>
                 <filter icon="terp-camera_test" string="Flow Start"
                 domain="[('flow_start', '=',True)]" />
                 <filter icon="terp-gtk-stop" string="Flow Stop"
                 domain="[('flow_stop', '=',True)]" />
-                <separator orientation="vertical"/>
                 <field name="wkf_id"/>
                 <field name="action_id"/>
                 <field name="kind"/>
-                <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Workflow" icon="terp-stage" domain="[]" context="{'group_by':'wkf_id'}"/>
                 </group>
@@ -242,7 +239,6 @@
         <field name="arch" type="xml">
             <search string="Transition">
                 <field name="signal" filter_domain="['|', ('signal','ilike',self), ('condition','ilike',self)]" string="Workflow Transition"/>
-                <separator orientation="vertical"/>
                 <field name="act_from"/>
                 <field name="act_to"/>
             </search>
@@ -301,10 +297,8 @@
         <field name="arch" type="xml">
             <search string="Workflow Instances">
                 <field name="res_type" string="Resource Object"/>
-                <separator orientation="vertical"/>
                 <filter icon="terp-camera_test" string="Active" domain="[('state','=','active')]" name="active"/>
-                <separator orientation="vertical"/>
-                <field name="wkf_id" widget="selection"/>
+                <field name="wkf_id"/>
                 <field name="res_id"/>
                 <field name="state"/>
         </search>
@@ -366,10 +360,8 @@
         <field name="arch" type="xml">
             <search string="Workflow Workitems">
                 <field name="state" string="State"/>
-                <separator orientation="vertical"/>
                 <filter icon="terp-camera_test" string="Active" name="active" domain="[('state','=','active')]"/>
-                <separator orientation="vertical"/>
-                <field name="wkf_id" widget="selection"/>
+                <field name="wkf_id"/>
                 <field name="act_id"/>
                 <field name="subflow_id"/>
                 <field name="inst_id"/>
