@@ -123,7 +123,7 @@ Most of the time, you'll want to define a ``tag.widget`` key
 
         :returns: String
 
-    .. js:function:: openerp,web.list.Column._format(record_data, options)
+    .. js:function:: openerp.web.list.Column._format(record_data, options)
 
         Never called directly, called if the column is visible and has
         a value.
