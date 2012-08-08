@@ -161,7 +161,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.$element.find(".oe_form_field,label").on('click', function (e) {
             if(self.get("actual_mode") == "view") {
                 var $button = self.options.$buttons.find(".oe_form_button_edit");
-                $button.effect('bounce', {distance: 18, times: 7}, 200)
+                $button.effect('bounce', {distance: 18, times: 5}, 150)
             }
         });
 
@@ -3015,7 +3015,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.addClass('oe_form_field_one2many');
+        this.$element.addClass('oe_form_field oe_form_field_one2many');
 
         var self = this;
 

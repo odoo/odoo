@@ -433,7 +433,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.$records.click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (!self.state.folded) {
-                    add_btn.effect('bounce', {distance: 18, times: 7}, 200)
+                    add_btn.effect('bounce', {distance: 18, times: 5}, 150)
                 } 
             }
         });

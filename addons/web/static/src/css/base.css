@@ -78,7 +78,7 @@
   background: white;
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */
+   */ */
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -2401,9 +2401,17 @@
 }
 .openerp .oe_form_field_many2one .oe_m2o_cm_button {
   line-height: 14px;
+  float: right;
+  padding-left: 2px;
 }
 .openerp .oe_form .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page {
   display: none;
+}
+.openerp .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page, .openerp .oe_form_field_many2many > .oe_view_manager .oe_list_pager_single_page {
+  display: none !important;
+}
+.openerp .oe_form_field_one2many .oe_form_field_one2many_list_row_add, .openerp .oe_form_field_many2many .oe_form_field_one2many_list_row_add {
+  font-weight: bold;
 }
 .openerp .oe_form_field_one2many .oe_list_content > thead, .openerp .oe_form_field_many2many .oe_list_content > thead {
   border-bottom: 1px;
@@ -2437,6 +2445,49 @@
 }
 .openerp .oe_form_field_one2many .oe_list_buttons.oe_editing .oe_list_save, .openerp .oe_form_field_many2many .oe_list_buttons.oe_editing .oe_list_save {
   visibility: hidden;
+}
+.openerp .oe_form_editable .oe_list_editable .oe_list_content td.oe_required {
+  background-color: #d2d2ff;
+}
+.openerp .oe_form_editable .oe_list_editable .oe_list_content td.oe_readonly {
+  background-color: #eeeeee;
+}
+.openerp .oe_list_editable .oe_list_content td.oe_list_field_cell {
+  padding: 4px 6px 3px 6px;
+}
+.openerp .oe_list.oe_list_editable td.oe_list_record_delete {
+  position: absolute;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_m2o_drop_down_button {
+  top: 5px;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_m2o_cm_button {
+  display: none;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input {
+  height: 27px;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea {
+  border: 1px solid #aaaaff;
+  border-radius: 0px;
+  margin: 0px;
+  -webkit-border-radius: 0px;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea {
+  height: 60px;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
+  text-align: right;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime > span, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date > span {
+  width: 100%;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime input.oe_datepicker_master, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date input.oe_datepicker_master {
+  width: 100% !important;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field .oe_form_field_float, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field .oe_form_view_integer, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date {
+  min-width: 0 !important;
+  max-width: none !important;
 }
 .openerp .oe_form .oe_form_field_many2many > .oe_list .oe_list_pager_single_page {
   display: none;
@@ -2555,15 +2606,6 @@
   border-bottom: 1px solid #cacaca;
   background: #eeeeee;
   font-weight: bold;
-}
-.openerp .oe_list_content > tbody tr:hover td, .openerp .oe_list_content tbody tr:hover th {
-  background-color: #eeeeee;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#dedede));
-  background-image: -webkit-linear-gradient(top, #eeeeee, #dedede);
-  background-image: -moz-linear-gradient(top, #eeeeee, #dedede);
-  background-image: -ms-linear-gradient(top, #eeeeee, #dedede);
-  background-image: -o-linear-gradient(top, #eeeeee, #dedede);
-  background-image: linear-gradient(to bottom, #eeeeee, #dedede);
 }
 .openerp .oe_list_content .numeric {
   text-align: right;

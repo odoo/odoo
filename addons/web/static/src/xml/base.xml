@@ -619,7 +619,7 @@
                     <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
                 </th>
             </t>
-            <th t-if="options.deletable" width="1"/>
+            <th t-if="options.deletable" width="13px"/>
         </tr>
     </thead>
     <tfoot>
@@ -671,11 +671,11 @@
         <t t-set="number" t-value="column.type === 'integer' or column.type == 'float'"/>
         <t t-set="modifiers" t-value="column.modifiers_for(asData)"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-attf-class="oe_list_field_cell oe_list_field_#{column.widget or column.type} #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''}"
+            t-attf-class="oe_list_field_cell oe_list_field_#{column.widget or column.type} #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''} #{modifiers.required ? 'oe_required' : ''}"
             t-att-data-field="column.id"
             ><t t-raw="render_cell(record, column)"/></td>
     </t>
-    <td t-if="options.deletable" class='oe_list_record_delete' width="1">
+    <td t-if="options.deletable" class='oe_list_record_delete' width="13px">
         <button type="button" name="delete" class="oe_i">d</button>
     </td>
 </tr>
@@ -977,7 +977,7 @@
         </t>
         <t t-if="!widget.get('effective_readonly')">
             <a t-if="! widget.get_definition_options().no_open" href="#" tabindex="-1"
-                class="oe_m2o_cm_button oe_e oe_right">/</a>
+                class="oe_m2o_cm_button oe_e">/</a>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"

@@ -1875,6 +1875,8 @@ $sheet-max-width: 860px
             right: 0px
         .oe_m2o_cm_button
             line-height: 14px
+            float: right
+            padding-left: 2px
     // }}}
     // FormView.one2many {{{
     .oe_form .oe_form_field_one2many > .oe_view_manager
@@ -1882,6 +1884,11 @@ $sheet-max-width: 860px
             display: none
     .oe_form_field_one2many,.oe_form_field_many2many
         // TODO: oe_form_field_one2many_list?
+        > .oe_view_manager
+            .oe_list_pager_single_page
+                display: none !important
+        .oe_form_field_one2many_list_row_add
+            font-weight: bold
         .oe_list_content
             > thead
                 border-bottom: 1px
@@ -1911,6 +1918,46 @@ $sheet-max-width: 860px
         .oe_list_buttons.oe_editing .oe_list_save
             // keep "save row" button hidden in o2m
             visibility: hidden
+    .oe_form_editable
+        .oe_list_editable
+            .oe_list_content
+                td.oe_required
+                    background-color: #d2d2ff
+                td.oe_readonly
+                    background-color: #eee
+    .oe_list_editable
+        .oe_list_content
+            td.oe_list_field_cell
+                padding: 4px 6px 3px 6px
+    .oe_list.oe_list_editable
+        td.oe_list_record_delete
+            position: absolute
+    .oe_list.oe_list_editable.oe_editing
+        .oe_m2o_drop_down_button
+            top: 5px
+        .oe_m2o_cm_button
+            display: none
+        .oe_form_field
+            input
+                height: 27px
+            input, textarea
+                border: 1px solid #aaf
+                border-radius: 0px
+                margin: 0px
+                -webkit-border-radius: 0px
+            textarea
+                height: 60px
+            &.oe_form_field_float,&.oe_form_view_integer
+                input
+                    text-align: right
+            &.oe_form_field_datetime,&.oe_form_field_date
+                > span
+                    width: 100%
+                input.oe_datepicker_master
+                    width: 100% !important
+            .oe_form_field_float,.oe_form_view_integer,&.oe_form_field_datetime,&.oe_form_field_date
+                min-width: 0 !important
+                max-width: none !important
     // }}}
     // FormView.many2many {{{
     .oe_form .oe_form_field_many2many > .oe_list
@@ -2005,8 +2052,6 @@ $sheet-max-width: 860px
             background: #eee
             font-weight: bold
 
-        > tbody tr:hover td, tbody tr:hover th
-            @include vertical-gradient(#eee, #dedede)
 
         .numeric
             text-align: right
