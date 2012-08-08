@@ -11,7 +11,7 @@
   margin: 2px;
 }
 
-.openerp .oe_pager_button{
+.openerp .oe_pager_button {
   float: left;
   height: 22px;
   line-height: 24px;
@@ -26,6 +26,9 @@
   margin: 0 2px 0 2px;
   float: left;
 }
+.openerp .oe_pager_button:hover{
+  text-decoration:none !important;
+}
 
 .openerp .oe_reconcile_button {
   float: left;
@@ -35,16 +38,18 @@
   border: 1px solid #ABABAB;
   border-radius: 3px 3px 3px 3px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-  color: #404040;
+  color: #4C4C4C !important;
   display: inline-block;
   font-size: 13px;
   margin: 0 3px 0 3px;
   padding: 3px 12px;
+  cursor: pointer;
   text-align: center;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
 }
  
 .openerp .oe_reconcile_button:hover {
+  text-decoration:none !important;
   background-color: #E3E3E3;
   background-image: -moz-linear-gradient(center top , #E3E3E3, #F6F6F6);
   box-shadow: none;
