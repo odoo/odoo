@@ -4590,9 +4590,11 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
 
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     template: "FieldStatus",
+    clickable: false,
     start: function() {
         this._super();
         this.selected_value = null;
+        this.clickable = !!this.node.attrs.clickable;
         if (this.$element.parent().is('header')) {
             this.$element.after('<div class="oe_clear"/>');
         }
@@ -4700,22 +4702,23 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var self = this;
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
-        clickable = this.node.attrs.clickable;
-        if (clickable != undefined && (clickable.toLowerCase() === 'true' || clickable === "1")) {            
-            var elemts = this.$element.find('.oe_form_steps_item')
+        if (this.clickable) {
+            this.$element.addClass("oe_form_steps_clickable");
+            $('.oe_form_steps_arrow').remove();
+            var elemts = this.$element.find('.oe_form_steps_button');
             _.each(elemts, function(element){
                 $item = $(element);
                 if ($item.attr("data-id") != self.selected_value) {
-                    $item.attr("style", "cursor: pointer;");
                     $item.click(function(event){
                         var data_id = parseInt($(this).attr("data-id"))
                         self.view.dataset.call('stage_set', [[self.view.datarecord.id],data_id]).then(function() {
                             return self.view.reload();
                         });
                     });
-                } else {
                 }
             });
+        } else {
+            this.$element.addClass("oe_form_steps");
         }
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
