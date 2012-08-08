@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Alias Form View -->
+        <record  model="ir.ui.view" id="view_mail_alias_form">
+            <field name="name">mail.alias.form</field>
+            <field name="model">mail.alias</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Alias" version="7.0">
+                    <sheet>
+                        <label for="alias_name" class="oe_edit_only"/>
+                        <h2><field name="alias_name"  class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
+                        <group colspan="4" col="4">
+                            <field name="alias_model_id" readonly="1"/>
+                            <field name="alias_user_id" readonly="1"/>
+                            <field name="alias_force_thread_id" readonly="1"/>
+                            <newline/>
+                            <separator string="Default Values" colspan="4"/>
+                            <field name="alias_defaults" colspan="4" nolabel="1" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Alias List View -->
+        <record  model="ir.ui.view" id="view_mail_alias_tree">
+            <field name="name">mail.alias.tree</field>
+            <field name="model">mail.alias</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Alias">
+                    <field name="alias_name"/>
+                    <field name="alias_model_id"/>
+                    <field name="alias_user_id"/>
+                    <field name="alias_defaults"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Alias Search View -->
+        <record  model="ir.ui.view" id="view_mail_alias_search">
+            <field name="name">mail.alias.search</field>
+            <field name="model">mail.alias</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Alias">
+                    <field name="alias_name"/>
+                    <field name="alias_model_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="User" name="User" icon="terp-personal" context="{'group_by':'alias_user_id'}"/>
+                        <filter string="Model" name="Model" context="{'group_by':'alias_model_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_mail_alias" model="ir.actions.act_window">
+            <field name="name">Aliases</field>
+            <field name="res_model">mail.alias</field>
+        </record>
+
+        <menuitem id="mail_alias_menu"
+                  parent="base.menu_email"
+                  action="action_view_mail_alias"
+                  sequence="50"
+                  groups="base.group_no_one"/>
+
+    </data>
+</openerp>

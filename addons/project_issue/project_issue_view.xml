@@ -69,7 +69,14 @@
             <field name="name">Versions</field>
             <field name="res_model">project.issue.version</field>
             <field name="view_type">form</field>
-            <field name="help">You can use the issues tracker in OpenERP to handle bugs in the software development project, to handle claims in after-sales services, etc. Define here the different versions of your products on which you can work on issues.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new version.
+              </p><p>
+                Define here the different versions of your products on which
+                you can work on issues.
+              </p>
+            </field>
         </record>
         <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" groups="base.group_no_one"/>
 
@@ -114,10 +121,10 @@
                         </group>
                         <group>
                             <field name="priority"/>
-                            <field name="project_id" required="True" on_change="on_change_project(project_id)"/>
+                            <field name="project_id" required="True" on_change="on_change_project(project_id)" context="{'default_use_issues':1}"/>
                             <label for="task_id"/>
                             <div>
-                                <field name="task_id" on_change="onchange_task_id(task_id)" class="oe_inline"/>
+                                <field name="task_id" on_change="onchange_task_id(task_id)" class="oe_inline" context="{'default_project_id':project_id}"/>
                                 <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}" class="oe_inline"/>
                             </div>
                             <field name="categ_ids" widget="many2many_tags"/>
@@ -291,7 +298,7 @@
                                             <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
                                                 <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
                                             </t>
-                                            <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
                                 </div>
@@ -364,7 +371,9 @@
                 </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
-                    <field name="reply_to"/>
+                </field>
+                <field name="alias_domain" position="after">
+                    <label for="alias_model" class="oe_edit_only" string="creates"/><field name="alias_model" class="oe_edit_only oe_inline"/>
                 </field>
             </field>
        </record>

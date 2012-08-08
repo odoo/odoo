@@ -50,5 +50,5 @@
         order =  self.pool.get('sale.order').browse(cr, uid,order_id)
         registration_ids = self.search(cr,uid,[('origin','=',order.name)])
         if registration_ids == []:
-           raise osv.except_osv(_('Error!'),_("The registration is not created"))
+           raise osv.except_osv(_('Error!'),_("The registration is not created."))
 

@@ -7,12 +7,23 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
-            <field name="help">Define all products that the employees can order for the lunch time. If you order lunch at several places, you can use the product categories to split by supplier. It will be easier for the lunch manager to filter lunch orders by categories.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new product that can be ordered for the lunch.
+              </p><p>
+                We suggest you to put the real price so that the exact due
+                amount is deduced from each employee's cash boxes when they
+                order.
+              </p><p>
+                If you order lunch at several places, you can use the product
+                categories to split by supplier. It will be easier to filter
+                lunch orders.
+              </p>
+            </field>
         </record>
 
         <record id="view_lunch_product_form_todo" model="ir.actions.todo">
             <field name="action_id" ref="view_lunch_product_form_installer"/>
-            <field name="category_id" ref="base.category_tools_customization_config"/>
             <field name="sequence">50</field>
         </record>
 
@@ -22,12 +33,19 @@
             <field name="res_model">lunch.cashbox</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">You can create on cashbox by employee if you want to keep track of the amount due by employee according to what have been ordered.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new cash box.
+              </p><p>
+                You can create on cash box by employee if you want to keep
+                track of the amount due by employee according to what have been
+                ordered.
+              </p>
+            </field>
         </record>
 
         <record id="action_create_cashbox_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_create_cashbox" />
-            <field name="category_id" ref="base.category_tools_customization_config" />
             <field name="sequence">51</field>
         </record>
     </data>
