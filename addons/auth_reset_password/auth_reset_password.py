@@ -56,7 +56,7 @@ class res_users(osv.osv):
             'uid': ids[0],
         }
         msg, sign = message_sign(msg_src, secret)
-        link = urlparse.urljoin(host, '/web/webclient/login?db=%s&login=anonymous&key=anonymous#client_action=reset_password&token=%s' % (cr.dbname, msg))
+        link = urlparse.urljoin(host, '/login?db=%s&login=anonymous&key=anonymous#action=reset_password&token=%s' % (cr.dbname, msg))
         return link
 
     def _auth_reset_password_check_token(self, cr, uid, token, context=None):
