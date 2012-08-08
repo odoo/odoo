@@ -21,24 +21,25 @@
 
 import time
 
-from osv import osv, fields
+from osv import fields, osv
 
-class hr_salary_employee_bymonth(osv.osv_memory):
+class yearly_salary_detail(osv.osv_memory):
 
-    _name = 'hr.salary.employee.month'
-    _description = 'Hr Salary Employee By Month Report'
-    _columns = {
-        'start_date': fields.date('Start Date', required=True),
-        'end_date': fields.date('End Date', required=True),
-        'employee_ids': fields.many2many('hr.employee', 'payroll_year_rel', 'payroll_year_id', 'employee_id', 'Employees', required=True),
+   _name ='yearly.salary.detail'
+   _description = 'Hr Salary Employee By Category Report'
+   _columns = {
+        'employee_ids': fields.many2many('hr.employee', 'payroll_emp_rel', 'payroll_id', 'employee_id', 'Employees', required=True),
+        'date_from': fields.date('Start Date', required=True),
+        'date_to': fields.date('End Date', required=True),
     }
 
-    _defaults = {
-         'start_date': lambda *a: time.strftime('%Y-01-01'),
-         'end_date': lambda *a: time.strftime('%Y-%m-%d'),
+   _defaults = {
+        'date_from': lambda *a: time.strftime('%Y-01-01'),
+        'date_to': lambda *a: time.strftime('%Y-%m-%d'),
+
     }
 
-    def print_report(self, cr, uid, ids, context=None):
+   def print_report(self, cr, uid, ids, context=None):
         """
          To get the date and print the report
          @param self: The object pointer.
@@ -51,15 +52,15 @@ class hr_salary_employee_bymonth(osv.osv_memory):
             context = {}
         datas = {'ids': context.get('active_ids', [])}
 
-        res = self.read(cr, uid, ids, ['employee_ids',  'start_date', 'end_date'], context=context)
+        res = self.read(cr, uid, ids, ['employee_ids', 'date_from', 'date_to'], context=context)
         res = res and res[0] or {}
         datas.update({'form': res})
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'salary.employee.bymonth',
+            'report_name': 'salary.detail.byyear',
             'datas': datas,
        }
 
-hr_salary_employee_bymonth()
+yearly_salary_detail()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
