@@ -21,39 +21,37 @@
             <field name="arch" type="xml">
                 <form string="Employee" version="7.0">
                     <sheet>
-                        <field name="photo" widget='image' class="oe_right" on_change="onchange_photo(photo)"/>
+                        <field name="image_small" widget='image' class="oe_right oe_image_small"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" class="oe_inline"/>
-                                <label class="oe_inline" string="," attrs="{'invisible': [('job_id', '=', False)]}"/>
-                                <field class="oe_inline" name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
-                                <label class="oe_inline" string="at" attrs="{'invisible': [('company_id', '=', False)]}" groups="base.group_multi_company"/>
-                                <field class="oe_inline" name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                                <field name="name"/>
                             </h1>
-                            <label for="department_id" class="oe_edit_only"/>
-                            <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
+                            <label for="job_id" class="oe_edit_only"/>
+                            <h2>
+                                <field name="job_id" options='{"no_open": true}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                            </h2>
                             <label for="category_ids" class="oe_edit_only"/>
-                            <h3><field name="category_ids" widget="many2many_tags"/></h3>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
                         </div>
                         <div class="oe_right oe_button_box" name="button_box">
                             <!-- Put here related buttons -->
                         </div>
-                        <group colspan="4" col="4">
-                            <field name="work_email" widget="email"/>
-                            <field name="work_phone"/>
-                            <field name="address_id" on_change="onchange_address_id(address_id)"/>
-                            <field name="mobile_phone"/>
-                        </group>
                         <notebook>
                             <page string="Information">
                                 <group>
                                     <group>
+                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
                                         <field name="user_id" on_change="onchange_user(user_id)"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
+                                        <field name="work_email" widget="email"/>
+                                        <field name="work_phone"/>
+                                        <field name="address_id" on_change="onchange_address_id(address_id)"/>
+                                        <field name="mobile_phone"/>
                                         <field name="identification_id" groups="base.group_hr_user"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="otherid" groups="base.group_hr_user"/>
@@ -136,7 +134,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
                             <div class="oe_employee_image">
-                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
+                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
                             </div>
                             <div class="oe_employee_details">
                                 <h4>
