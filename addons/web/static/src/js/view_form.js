@@ -684,7 +684,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         return this.do_save().then(function(result) {            
             self.to_view_mode();
-            self.fields.stage_id.render_list();
         });
     },
     on_button_cancel: function(event) {
@@ -708,7 +707,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
     },
     on_button_edit: function() {
-        this.fields.stage_id.render_list();
         return this.to_edit_mode();
     },
     on_button_create: function() {
@@ -2829,21 +2827,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 tip_def.reject();
             }
         };
-        var ignore_blur = false;
-        this.$input.on({
-            focusout: anyoneLoosesFocus,
-            focus: function () { self.trigger('focused'); },
-            autocompleteopen: function () { ignore_blur = true; },
-            autocompleteclose: function () { ignore_blur = false; },
-            blur: function () {
-                // autocomplete open
-                if (ignore_blur) { return; }
-                if (_(self.getChildren()).any(function (child) {
-                    return child instanceof instance.web.form.AbstractFormPopup;
-                })) { return; }
-                self.trigger('blurred');
-            }
-        });
+        this.$input.focusout(anyoneLoosesFocus);
 
         var isSelecting = false;
         // autocomplete
@@ -2886,7 +2870,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             }
             isSelecting = false;
         });
-        this.setupFocus(this.$follow_button);
+        this.setupFocus(this.$input.add(this.$follow_button));
     },
     render_value: function(no_recurse) {
         var self = this;
