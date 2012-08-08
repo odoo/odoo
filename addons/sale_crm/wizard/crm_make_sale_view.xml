@@ -11,7 +11,7 @@
             <form string="Convert to Quotation"  version="7.0">
                 <group col="4">
                     <field name="partner_id" required="1"/>
-                    <field name="shop_id" required="1" widget="selection"/>
+                    <field name="shop_id" required="1" widget="selection" groups="base.group_locations"/>
                     <field name="close"/>
                 </group>
                 <footer>
