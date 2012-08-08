@@ -106,6 +106,7 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
 
     def cal_monthly_amt(self, form, emp_id):
         result = []
+        res = []
         salaries = {}
         total = 0.0
         self.cr.execute('''SELECT rc.code, pl.name, sum(pl.total), \
@@ -129,7 +130,6 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
 
         category_obj = self.pool.get('hr.salary.rule.category')
         category_ids = category_obj.search(self.cr,self.uid, [], context=self.context)
-        res = []
         for code in category_obj.read(self.cr,self.uid, category_ids, context=self.context):
             if code['code'] in salaries:
                 res = self.salary_list(salaries[code['code']])
