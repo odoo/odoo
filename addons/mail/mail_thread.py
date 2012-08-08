@@ -62,33 +62,33 @@ class mail_thread(osv.Model):
     _name = 'mail.thread'
     _description = 'Email Thread'
 
-    def _get_message_ids(self, cr, uid, ids, name, args, context=None):
+    def _get_message_ids(self, cr, uid, ids, name, args, context = None):
         res = {}
         for id in ids:
-            message_ids = self.message_search(cr, uid, [id], context=context)
-            subscriber_ids = self.message_get_subscribers(cr, uid, [id], context=context)
+            message_ids = self.message_search(cr, uid, [id], context = context)
+            subscriber_ids = self.message_get_subscribers(cr, uid, [id], context = context)
             res[id] = {
                 'message_ids': message_ids,
                 'message_summary': "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(message_ids), len(subscriber_ids)),
             }
         return res
 
-    def _search_message_ids(self, cr, uid, obj, name, args, context=None):
+    def _search_message_ids(self, cr, uid, obj, name, args, context = None):
         msg_obj = self.pool.get('mail.message')
-        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', args[0][2]), ('model', '=', self._name)], context=context)
+        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', args[0][2]), ('model', '=', self._name)], context = context)
         return [('id', 'in', msg_ids)]
 
     _columns = {
-        'message_ids': fields.function(_get_message_ids, method=True,
-			fnct_search=_search_message_ids,
-            type='one2many', obj='mail.message', _fields_id = 'res_id',
-            string='Temp messages', multi="_get_message_ids",
-            help="Functional field holding messages related to the current document."),
+        'message_ids': fields.function(_get_message_ids, method = True,
+			fnct_search = _search_message_ids,
+            type = 'one2many', obj = 'mail.message', _fields_id = 'res_id',
+            string = 'Temp messages', multi = "_get_message_ids",
+            help = "Functional field holding messages related to the current document."),
         'message_state': fields.boolean('Read',
-            help="When checked, new messages require your attention."),
-        'message_summary': fields.function(_get_message_ids, method=True,
-            type='text', string='Summary', multi="_get_message_ids",
-            help="Holds the Chatter summary (number of messages, ...). "\
+            help = "When checked, new messages require your attention."),
+        'message_summary': fields.function(_get_message_ids, method = True,
+            type = 'text', string = 'Summary', multi = "_get_message_ids",
+            help = "Holds the Chatter summary (number of messages, ...). "\
                  "This summary is directly in html format in order to "\
                  "be inserted in kanban views."),
     }
@@ -101,23 +101,23 @@ class mail_thread(osv.Model):
     # Automatic subscription when creating/reading
     #------------------------------------------------------
 
-    def create(self, cr, uid, vals, context=None):
+    def create(self, cr, uid, vals, context = None):
         """Automatically subscribe the creator """
-        thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
+        thread_id = super(mail_thread, self).create(cr, uid, vals, context = context)
         if thread_id:
-            self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
+            self.message_subscribe(cr, uid, [thread_id], [uid], context = context)
         return thread_id
 
-    def write(self, cr, uid, ids, vals, context=None):
+    def write(self, cr, uid, ids, vals, context = None):
         """Automatically subscribe the writer"""
         if isinstance(ids, (int, long)):
             ids = [ids]
-        write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context);
+        write_res = super(mail_thread, self).write(cr, uid, ids, vals, context = context);
         if write_res:
-            self.message_subscribe(cr, uid, ids, [uid], context=context)
+            self.message_subscribe(cr, uid, ids, [uid], context = context)
         return write_res;
 
-    def unlink(self, cr, uid, ids, context=None):
+    def unlink(self, cr, uid, ids, context = None):
         """Override unlink, to automatically delete
            - subscriptions
            - messages
@@ -128,19 +128,19 @@ class mail_thread(osv.Model):
         subscr_obj = self.pool.get('mail.subscription')
         msg_obj = self.pool.get('mail.message')
         # delete subscriptions
-        subscr_to_del_ids = subscr_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        subscr_obj.unlink(cr, uid, subscr_to_del_ids, context=context)
+        subscr_to_del_ids = subscr_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context = context)
+        subscr_obj.unlink(cr, uid, subscr_to_del_ids, context = context)
         # delete messages and notifications
-        msg_to_del_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        msg_obj.unlink(cr, uid, msg_to_del_ids, context=context)
+        msg_to_del_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context = context)
+        msg_obj.unlink(cr, uid, msg_to_del_ids, context = context)
 
-        return super(mail_thread, self).unlink(cr, uid, ids, context=context)
+        return super(mail_thread, self).unlink(cr, uid, ids, context = context)
 
     #------------------------------------------------------
     # mail.message wrappers and tools
     #------------------------------------------------------
 
-    def message_create(self, cr, uid, thread_id, vals, context=None):
+    def message_create(self, cr, uid, thread_id, vals, context = None):
         """ OpenChatter: wrapper of mail.message create method
            - creates the mail.message
            - automatically subscribe the message writer
@@ -155,57 +155,58 @@ class mail_thread(osv.Model):
         
         # automatically subscribe the writer of the message
         if vals['user_id']:
-            self.message_subscribe(cr, uid, [thread_id], [vals['user_id']], context=context)
+            self.message_subscribe(cr, uid, [thread_id], [vals['user_id']], context = context)
         
         # create message
-        msg_id = message_obj.create(cr, uid, vals, context=context)
+        msg_id = message_obj.create(cr, uid, vals, context = context)
         
         # Set as unread if writer is not the document responsible
-        self.message_create_set_unread(cr, uid, [thread_id], context=context)
+        self.message_create_set_unread(cr, uid, [thread_id], context = context)
         
         # special: if install mode, do not push demo data
         if context.get('install_mode', False):
             return msg_id
         
         # get users that will get a notification pushed
-        user_to_push_ids = self.message_get_user_ids_to_notify(cr, uid, [thread_id], vals, context=context)
+        user_to_push_ids = self.message_get_user_ids_to_notify(cr, uid, [thread_id], vals, context = context)
         for id in user_to_push_ids:
-            notification_obj.create(cr, uid, {'user_id': id, 'message_id': msg_id}, context=context)
+            notification_obj.create(cr, uid, {'user_id': id, 'message_id': msg_id}, context = context)
         
         # create the email to send
-        email_id = self.message_create_notify_by_email(cr, uid, vals, user_to_push_ids, context=context)
+        email_id = self.message_create_notify_by_email(cr, uid, vals, user_to_push_ids, context = context)
         
         return msg_id
+
      #TODO :in message creation: in push method: push only if user is subscriber (current case) and if user is sucscribed to the subtype (to add)
-    def message_get_user_ids_to_notify(self, cr, uid, thread_ids, new_msg_vals, context=None):
+    def message_get_user_ids_to_notify(self, cr, uid, thread_ids, new_msg_vals, context = None):
         subscription_obj = self.pool.get('mail.subscription')
         # get body
         body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
         
         # get subscribers
-        notif_user_ids = self.message_get_subscribers(cr, uid, thread_ids, context=context)
+        notif_user_ids = self.message_get_subscribers(cr, uid, thread_ids, context = context)
         
         # add users requested via parsing message (@login)
-        notif_user_ids += self.message_parse_users(cr, uid, body, context=context)
+        notif_user_ids += self.message_parse_users(cr, uid, body, context = context)
         
         # add users requested to perform an action (need_action mechanism)
         if hasattr(self, 'get_needaction_user_ids'):
-            user_ids_dict = self.get_needaction_user_ids(cr, uid, thread_ids, context=context)
+            user_ids_dict = self.get_needaction_user_ids(cr, uid, thread_ids, context = context)
             for id, user_ids in user_ids_dict.iteritems():
                 notif_user_ids += user_ids
         
         # add users notified of the parent messages (because: if parent message contains @login, login must receive the replies)
         if new_msg_vals.get('parent_id'):
             notif_obj = self.pool.get('mail.notification')
-            parent_notif_ids = notif_obj.search(cr, uid, [('message_id', '=', new_msg_vals.get('parent_id'))], context=context)
-            parent_notifs = notif_obj.read(cr, uid, parent_notif_ids, context=context)
+            parent_notif_ids = notif_obj.search(cr, uid, [('message_id', '=', new_msg_vals.get('parent_id'))], context = context)
+            parent_notifs = notif_obj.read(cr, uid, parent_notif_ids, context = context)
             notif_user_ids += [parent_notif['user_id'][0] for parent_notif in parent_notifs]
 
         # remove duplicate entries
         notif_user_ids = list(set(notif_user_ids))
         return notif_user_ids
 
-    def message_parse_users(self, cr, uid, string, context=None):
+    def message_parse_users(self, cr, uid, string, context = None):
         """Parse message content
            - if find @login -(^|\s)@((\w|@|\.)*)-: returns the related ids
              this supports login that are emails (such as @raoul@grobedon.net)
@@ -213,14 +214,14 @@ class mail_thread(osv.Model):
         regex = re.compile('(^|\s)@((\w|@|\.)*)')
         login_lst = [item[1] for item in regex.findall(string)]
         if not login_lst: return []
-        user_ids = self.pool.get('res.users').search(cr, uid, [('login', 'in', login_lst)], context=context)
+        user_ids = self.pool.get('res.users').search(cr, uid, [('login', 'in', login_lst)], context = context)
         return user_ids
 
     #------------------------------------------------------
     # Generic message api
     #------------------------------------------------------
 
-    def message_capable_models(self, cr, uid, context=None):
+    def message_capable_models(self, cr, uid, context = None):
         ret_dict = {}
         for model_name in self.pool.obj_list():
             model = self.pool.get(model_name)
@@ -228,13 +229,13 @@ class mail_thread(osv.Model):
                 ret_dict[model_name] = model._description
         return ret_dict
 
-    def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
-                        type='email', email_date=None, parent_id=False,
-                        content_subtype='plain', state=None,
-                        partner_ids=None, email_from=False, email_to=False,
-                        email_cc=None, email_bcc=None, reply_to=None,
-                        headers=None, message_id=False, references=None,
-                        attachments=None, original=None, context=None):
+    def message_append(self, cr, uid, threads, subject, body_text = None, body_html = None,
+                        type = 'email', subtype_id = False, email_date = None, parent_id = False,
+                        content_subtype = 'plain', state = None,
+                        partner_ids = None, email_from = False, email_to = False,
+                        email_cc = None, email_bcc = None, reply_to = None,
+                        headers = None, message_id = False, references = None,
+                        attachments = None, original = None, context = None):
         """ Creates a new mail.message through message_create. The new message
             is attached to the current mail.thread, containing all the details 
             passed as parameters. All attachments will be attached to the 
@@ -298,7 +299,7 @@ class mail_thread(osv.Model):
         if all(isinstance(thread_id, (int, long)) for thread_id in threads):
             model = context.get('thread_model') or self._name
             model_pool = self.pool.get(model)
-            threads = model_pool.browse(cr, uid, threads, context=context)
+            threads = model_pool.browse(cr, uid, threads, context = context)
 
         ir_attachment = self.pool.get('ir.attachment')
         mail_message = self.pool.get('mail.message')
@@ -318,7 +319,7 @@ class mail_thread(osv.Model):
                     'res_model': thread._name,
                     'res_id': thread.id,
                 }
-                to_attach.append(ir_attachment.create(cr, uid, data_attach, context=context))
+                to_attach.append(ir_attachment.create(cr, uid, data_attach, context = context))
             # find related partner: partner_id column in thread object, or self is res.partner model
             partner_id = ('partner_id' in thread._columns.keys()) and (thread.partner_id and thread.partner_id.id or False) or False
             if not partner_id and thread._name == 'res.partner':
@@ -361,9 +362,10 @@ class mail_thread(osv.Model):
                     'reply_to': reply_to,
                     'original': original, })
 
-            new_msg_ids.append(self.message_create(cr, uid, thread.id, data, context=context))
+            new_msg_ids.append(self.message_create(cr, uid, thread.id, data, context = context))
         return new_msg_ids
-    def message_append_dict(self, cr, uid, ids, msg_dict, context=None):
+
+    def message_append_dict(self, cr, uid, ids, msg_dict, context = None):
         """Creates a new mail.message attached to the given threads (``ids``),
            with the contents of ``msg_dict``, by calling ``message_append``
            with the mail details. All attachments in msg_dict will be
@@ -382,9 +384,10 @@ class mail_thread(osv.Model):
         return self.message_append(cr, uid, ids,
                             subject = msg_dict.get('subject'),
                             body_text = msg_dict.get('body_text'),
-                            body_html= msg_dict.get('body_html'),
+                            body_html = msg_dict.get('body_html'),
                             parent_id = msg_dict.get('parent_id', False),
                             type = msg_dict.get('type', 'email'),
+                            subtype_id = msg_dict.get('subtype_id', False),
                             content_subtype = msg_dict.get('content_subtype'),
                             state = msg_dict.get('state'),
                             partner_ids = msg_dict.get('partner_ids'),
@@ -406,7 +409,7 @@ class mail_thread(osv.Model):
     # Message loading
     #------------------------------------------------------
 
-    def _message_search_ancestor_ids(self, cr, uid, ids, child_ids, ancestor_ids, context=None):
+    def _message_search_ancestor_ids(self, cr, uid, ids, child_ids, ancestor_ids, context = None):
         """ Given message child_ids ids, find their ancestors until ancestor_ids
             using their parent_id relationship.
 
@@ -425,13 +428,13 @@ class mail_thread(osv.Model):
                     ]
 
         message_obj = self.pool.get('mail.message')
-        messages_temp = message_obj.read(cr, uid, child_ids, ['id', 'parent_id'], context=context)
+        messages_temp = message_obj.read(cr, uid, child_ids, ['id', 'parent_id'], context = context)
         parent_ids = _get_parent_ids(messages_temp, ancestor_ids, child_ids)
         child_ids += parent_ids
         cur_iter = 0; max_iter = 100; # avoid infinite loop
         while (parent_ids and (cur_iter < max_iter)):
             cur_iter += 1
-            messages_temp = message_obj.read(cr, uid, parent_ids, ['id', 'parent_id'], context=context)
+            messages_temp = message_obj.read(cr, uid, parent_ids, ['id', 'parent_id'], context = context)
             parent_ids = _get_parent_ids(messages_temp, ancestor_ids, child_ids)
             child_ids += parent_ids
         if (cur_iter > max_iter):
@@ -440,7 +443,7 @@ class mail_thread(osv.Model):
                 "message graph, leading to a curious error. Have fun.")
         return child_ids
 
-    def message_search_get_domain(self, cr, uid, ids, context=None):
+    def message_search_get_domain(self, cr, uid, ids, context = None):
         """ OpenChatter feature: get the domain to search the messages related
             to a document. mail.thread defines the default behavior as
             being messages with model = self._name, id in ids.
@@ -449,8 +452,8 @@ class mail_thread(osv.Model):
         """
         return ['&', ('res_id', 'in', ids), ('model', '=', self._name)]
 
-    def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-                        limit=100, offset=0, domain=None, count=False, context=None):
+    def message_search(self, cr, uid, ids, fetch_ancestors = False, ancestor_ids = None,
+                        limit = 100, offset = 0, domain = None, count = False, context = None):
         """ OpenChatter feature: return thread messages ids according to the
             search domain given by ``message_search_get_domain``.
             
@@ -477,17 +480,17 @@ class mail_thread(osv.Model):
                            default domain.
             :param limit, offset, count, context: as usual
         """
-        search_domain = self.message_search_get_domain(cr, uid, ids, context=context)
+        search_domain = self.message_search_get_domain(cr, uid, ids, context = context)
         if domain:
             search_domain += domain
         message_obj = self.pool.get('mail.message')
-        message_res = message_obj.search(cr, uid, search_domain, limit=limit, offset=offset, count=count, context=context)
+        message_res = message_obj.search(cr, uid, search_domain, limit = limit, offset = offset, count = count, context = context)
         if not count and fetch_ancestors:
-            message_res += self._message_search_ancestor_ids(cr, uid, ids, message_res, ancestor_ids, context=context) 
+            message_res += self._message_search_ancestor_ids(cr, uid, ids, message_res, ancestor_ids, context = context) 
         return message_res
 
-    def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-                        limit=100, offset=0, domain=None, context=None):
+    def message_read(self, cr, uid, ids, fetch_ancestors = False, ancestor_ids = None,
+                        limit = 100, offset = 0, domain = None, context = None):
         """ OpenChatter feature: read the messages related to some threads.
             This method is used mainly the Chatter widget, to directly have
             read result instead of searching then reading.
@@ -495,8 +498,8 @@ class mail_thread(osv.Model):
             Please see message_search for more information about the parameters.
         """
         message_ids = self.message_search(cr, uid, ids, fetch_ancestors, ancestor_ids,
-            limit, offset, domain, context=context)
-        messages = self.pool.get('mail.message').read(cr, uid, message_ids, context=context)
+            limit, offset, domain, context = context)
+        messages = self.pool.get('mail.message').read(cr, uid, message_ids, context = context)
 
         """ Retrieve all attachments names """
         map_id_to_name = dict((attachment_id, '') for message in messages for attachment_id in message['attachment_ids'])
@@ -506,7 +509,7 @@ class mail_thread(osv.Model):
                 map_id_to_name[attach_id] = '' # use empty string as a placeholder
 
         ids = map_id_to_name.keys()
-        names = self.pool.get('ir.attachment').name_get(cr, uid, ids, context=context)
+        names = self.pool.get('ir.attachment').name_get(cr, uid, ids, context = context)
         
         # convert the list of tuples into a dictionnary
         for name in names: 
@@ -520,13 +523,13 @@ class mail_thread(osv.Model):
                 msg["attachments"].append({'id': attach_id, 'name': map_id_to_name[attach_id]})
         
         # Set the threads as read
-        self.message_check_and_set_read(cr, uid, ids, context=context)
+        self.message_check_and_set_read(cr, uid, ids, context = context)
         # Sort and return the messages
-        messages = sorted(messages, key=lambda d: (-d['id']))
+        messages = sorted(messages, key = lambda d: (-d['id']))
         return messages
 
-    def message_get_pushed_messages(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None,
-                            limit=100, offset=0, msg_search_domain=[], context=None):
+    def message_get_pushed_messages(self, cr, uid, ids, fetch_ancestors = False, ancestor_ids = None,
+                            limit = 100, offset = 0, msg_search_domain = [], context = None):
         """ OpenChatter: wall: get the pushed notifications and used them
             to fetch messages to display on the wall.
             
@@ -550,13 +553,13 @@ class mail_thread(osv.Model):
         # compose final domain
         domain = [('user_id', '=', uid)] + msg_search_domain
         # get notifications
-        notification_ids = notification_obj.search(cr, uid, domain, limit=limit, offset=offset, context=context)
-        notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
+        notification_ids = notification_obj.search(cr, uid, domain, limit = limit, offset = offset, context = context)
+        notifications = notification_obj.browse(cr, uid, notification_ids, context = context)
         msg_ids = [notification.message_id.id for notification in notifications]
         # get messages
-        msg_ids = msg_obj.search(cr, uid, [('id', 'in', msg_ids)], context=context)
-        if (fetch_ancestors): msg_ids = self._message_search_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
-        msgs = msg_obj.read(cr, uid, msg_ids, context=context)
+        msg_ids = msg_obj.search(cr, uid, [('id', 'in', msg_ids)], context = context)
+        if (fetch_ancestors): msg_ids = self._message_search_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context = context)
+        msgs = msg_obj.read(cr, uid, msg_ids, context = context)
         return msgs
 
     #------------------------------------------------------
@@ -564,9 +567,9 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
     # message_process will call either message_new or message_update.
 
-    def message_process(self, cr, uid, model, message, custom_values=None,
-                        save_original=False, strip_attachments=False,
-                        context=None):
+    def message_process(self, cr, uid, model, message, custom_values = None,
+                        save_original = False, strip_attachments = False,
+                        context = None):
         """Process an incoming RFC2822 email message related to the
            given thread model, relying on ``mail.message.parse()``
            for the parsing operation, and then calling ``message_new``
@@ -606,7 +609,7 @@ class mail_thread(osv.Model):
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-        msg = mail_message.parse_message(msg_txt, save_original=save_original, context=context)
+        msg = mail_message.parse_message(msg_txt, save_original = save_original, context = context)
 
         # update state
         msg['state'] = 'received'
@@ -619,7 +622,7 @@ class mail_thread(osv.Model):
             if hasattr(model_pool, 'message_new'):
                 return model_pool.message_new(cr, uid, msg,
                                               custom_values,
-                                              context=context)
+                                              context = context)
         res_id = False
         if msg.get('references') or msg.get('in-reply-to'):
             references = msg.get('references') or msg.get('in-reply-to')
@@ -640,19 +643,19 @@ class mail_thread(osv.Model):
                     res_id = res_id
                     if model_pool.exists(cr, uid, res_id):
                         if hasattr(model_pool, 'message_update'):
-                            model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
+                            model_pool.message_update(cr, uid, [res_id], msg, {}, context = context)
                     else:
                         # referenced thread was not found, we'll have to create a new one
                         res_id = False
         if not res_id:
             res_id = create_record(msg)
         # To forward the email to other followers
-        self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
+        self.message_forward(cr, uid, model, [res_id], msg_txt, context = context)
         # Set as Unread
-        model_pool.message_mark_as_unread(cr, uid, [res_id], context=context)
+        model_pool.message_mark_as_unread(cr, uid, [res_id], context = context)
         return res_id
 
-    def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
+    def message_new(self, cr, uid, msg_dict, custom_values = None, context = None):
         """Called by ``message_process`` when a new message is received
            for a given thread model, if the message did not belong to
            an existing thread.
@@ -681,17 +684,17 @@ class mail_thread(osv.Model):
             context = {}
         model = context.get('thread_model') or self._name
         model_pool = self.pool.get(model)
-        fields = model_pool.fields_get(cr, uid, context=context)
-        data = model_pool.default_get(cr, uid, fields, context=context)
+        fields = model_pool.fields_get(cr, uid, context = context)
+        data = model_pool.default_get(cr, uid, fields, context = context)
         if 'name' in fields and not data.get('name'):
             data['name'] = msg_dict.get('from', '')
         if custom_values and isinstance(custom_values, dict):
             data.update(custom_values)
-        res_id = model_pool.create(cr, uid, data, context=context)
-        self.message_append_dict(cr, uid, [res_id], msg_dict, context=context)
+        res_id = model_pool.create(cr, uid, data, context = context)
+        self.message_append_dict(cr, uid, [res_id], msg_dict, context = context)
         return res_id
 
-    def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
+    def message_update(self, cr, uid, ids, msg_dict, update_vals = None, context = None):
         """ Called by ``message_process`` when a new message is received
             for an existing thread. The default behavior is to create a
             new mail.message in the given thread (by calling
@@ -711,10 +714,10 @@ class mail_thread(osv.Model):
                                 update (instead of the current model).
         """
         if update_vals:
-            self.write(cr, uid, ids, update_vals, context=context)
-        return self.message_append_dict(cr, uid, ids, msg_dict, context=context)
+            self.write(cr, uid, ids, update_vals, context = context)
+        return self.message_append_dict(cr, uid, ids, msg_dict, context = context)
 
-    def message_thread_followers(self, cr, uid, ids, context=None):
+    def message_thread_followers(self, cr, uid, ids, context = None):
         """ Returns a list of email addresses of the people following
             this thread, including the sender of each mail, and the
             people who were in CC of the messages, if any.
@@ -722,7 +725,7 @@ class mail_thread(osv.Model):
         res = {}
         if isinstance(ids, (str, int, long)):
             ids = [long(ids)]
-        for thread in self.browse(cr, uid, ids, context=context):
+        for thread in self.browse(cr, uid, ids, context = context):
             l = set()
             for message in thread.message_ids:
                 l.add((message.user_id and message.user_id.user_email) or '')
@@ -731,7 +734,7 @@ class mail_thread(osv.Model):
             res[thread.id] = filter(None, l)
         return res
 
-    def message_forward(self, cr, uid, model, thread_ids, msg, email_error=False, context=None):
+    def message_forward(self, cr, uid, model, thread_ids, msg, email_error = False, context = None):
         """Sends an email to all people following the given threads.
            The emails are forwarded immediately, not queued for sending,
            and not archived.
@@ -746,7 +749,7 @@ class mail_thread(osv.Model):
         model_pool = self.pool.get(model)
         smtp_server_obj = self.pool.get('ir.mail_server')
         mail_message = self.pool.get('mail.message')
-        for res in model_pool.browse(cr, uid, thread_ids, context=context):
+        for res in model_pool.browse(cr, uid, thread_ids, context = context):
             if hasattr(model_pool, 'message_thread_followers'):
                 followers = model_pool.message_thread_followers(cr, uid, [res.id])[res.id]
             else:
@@ -765,7 +768,7 @@ class mail_thread(osv.Model):
 
                 smtp_from, = to_email(msg['from'])
                 msg['from'] = smtp_from
-                msg['to'] =  ", ".join(forward_to)
+                msg['to'] = ", ".join(forward_to)
                 msg['message-id'] = tools.generate_tracking_message_id(res.id)
                 if not smtp_server_obj.send_email(cr, uid, msg) and email_error:
                     subj = msg['subject']
@@ -775,7 +778,7 @@ class mail_thread(osv.Model):
                     smtp_server_obj.send_email(cr, uid, msg)
         return True
 
-    def message_partner_by_email(self, cr, uid, email, context=None):
+    def message_partner_by_email(self, cr, uid, email, context = None):
         """Attempts to return the id of a partner address matching
            the given ``email``, and the corresponding partner id.
            Can be used by classes using the ``mail.thread`` mixin
@@ -811,16 +814,16 @@ class mail_thread(osv.Model):
     # Note specific
     #------------------------------------------------------
 
-    def log(self, cr, uid, id, message, secondary=False, context=None):
+    def log(self, cr, uid, id, message, secondary = False, context = None):
         _logger.warning("log() is deprecated. As this module inherit from \
                         mail.thread, the message will be managed by this \
                         module instead of by the res.log mechanism. Please \
                         use the mail.thread OpenChatter API instead of the \
                         now deprecated res.log.")
-        self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
+        self.message_append_note(cr, uid, [id], 'res.log', message, context = context)
 
-    def message_append_note(self, cr, uid, ids, subject=None, body=None, parent_id=False,
-                            type='notification', content_subtype='html', context=None):
+    def message_append_note(self, cr, uid, ids, subject = None, body = None, parent_id = False,
+                            type = 'notification', subtype_id = False, content_subtype = 'html', context = None):
         if content_subtype == 'html':
             body_html = body
             body_text = body
@@ -828,14 +831,14 @@ class mail_thread(osv.Model):
             body_html = body
             body_text = body
         return self.message_append(cr, uid, ids, subject, body_html, body_text,
-                                    type, parent_id=parent_id,
-                                    content_subtype=content_subtype, context=context)
+                                    type, subtype_id = subtype_id, parent_id = parent_id,
+                                    content_subtype = content_subtype, context = context)
 
     #------------------------------------------------------
     # Subscription mechanism
     #------------------------------------------------------
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
+    def message_get_subscribers(self, cr, uid, ids, context = None):
         """ Returns the current document followers. Basically this method
             checks in mail.subscription for entries with matching res_model,
             res_id.
@@ -844,18 +847,18 @@ class mail_thread(osv.Model):
             ids returned by this method.
         """
         subscr_obj = self.pool.get('mail.subscription')
-        subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        return [sub['user_id'][0] for sub in subscr_obj.read(cr, uid, subscr_ids, ['user_id'], context=context)]
+        subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context = context)
+        return [sub['user_id'][0] for sub in subscr_obj.read(cr, uid, subscr_ids, ['user_id'], context = context)]
 
-    def message_read_subscribers(self, cr, uid, ids, fields=['id', 'name', 'avatar'], context=None):
+    def message_read_subscribers(self, cr, uid, ids, fields = ['id', 'name', 'avatar'], context = None):
         """ Returns the current document followers as a read result. Used
             mainly for Chatter having only one method to call to have
             details about users.
         """
-        user_ids = self.message_get_subscribers(cr, uid, ids, context=context)
-        return self.pool.get('res.users').read(cr, uid, user_ids, fields=fields, context=context)
+        user_ids = self.message_get_subscribers(cr, uid, ids, context = context)
+        return self.pool.get('res.users').read(cr, uid, user_ids, fields = fields, context = context)
 
-    def message_is_subscriber(self, cr, uid, ids, user_id = None, context=None):
+    def message_is_subscriber(self, cr, uid, ids, user_id = None, context = None):
         """ Check if uid or user_id (if set) is a subscriber to the current
             document.
             
@@ -863,16 +866,17 @@ class mail_thread(osv.Model):
                             check is done on uid
         """
         sub_user_id = uid if user_id is None else user_id
-        if sub_user_id in self.message_get_subscribers(cr, uid, ids, context=context):
+        if sub_user_id in self.message_get_subscribers(cr, uid, ids, context = context):
             return True
         return False
 
-    def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
+    def message_subscribe(self, cr, uid, ids, user_ids = None, subtype_ids = None, context = None):
         """ Subscribe the user (or user_ids) to the current document.
             
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
         """
+
         # TODO:Update Massage Subscribe and add paramenter subtype_ids 
         # if subtype_ids is False: add default ones (res_model = self._name, default = True)
         #  in method: if user_id already subscriber, update its subscription with subtype_ids
@@ -881,14 +885,20 @@ class mail_thread(osv.Model):
         to_subscribe_uids = [uid] if user_ids is None else user_ids
         create_ids = []
         for id in ids:
-            already_subscribed_user_ids = self.message_get_subscribers(cr, uid, [id], context=context)
+            already_subscribed_user_ids = self.message_get_subscribers(cr, uid, [id], context = context)
             for user_id in to_subscribe_uids:
-                if user_id in already_subscribed_user_ids: continue
-                create_ids.append(subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context))
+                res = {'res_model': self._name, 'res_id': id, 'user_id': user_id}
+                res['subtype_ids'] = [0, 0, {'res_model': self._name, 'default': True}]
+                if user_id in already_subscribed_user_ids:
+                    if subtype_ids:
+                        res['subtype_ids'] = [(6, 0, subtype_ids)]
+                    else: continue
+                create_ids.append(subscription_obj.create(cr, uid, res, context = context))
         return create_ids
+
     #TODO : Add method : add message_subscribe_udpate_subtypes(..., user_id, subtype_ids):
    
-    def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
+    def message_unsubscribe(self, cr, uid, ids, user_ids = None, context = None):
         """ Unsubscribe the user (or user_ids) from the current document.
             
             :param user_ids: a list of user_ids; if not set, subscribe
@@ -900,17 +910,19 @@ class mail_thread(osv.Model):
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
         subscription_obj = self.pool.get('mail.subscription')
         to_delete_sub_ids = subscription_obj.search(cr, uid,
-                        ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', 'in', to_unsubscribe_uids)], context=context)
+                        ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', 'in', to_unsubscribe_uids)], context = context)
         if not to_delete_sub_ids:
             return False
-        return subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
+
+        return subscription_obj.unlink(cr, uid, to_delete_sub_ids, context = context)
     #TODO : Add Method : add message_subscribeption_remove_subtype(..., user_id, subtype_id):    
     #TODO : Add method : add message_subscription_remove_subtype_name(.., user_id, subtype_name)
+
     #------------------------------------------------------
     # Notification API
     #------------------------------------------------------
 
-    def message_create_notify_by_email(self, cr, uid, new_msg_values, user_to_notify_ids, context=None):
+    def message_create_notify_by_email(self, cr, uid, new_msg_values, user_to_notify_ids, context = None):
         """ When creating a new message and pushing notifications, emails
             must be send if users have chosen to receive notifications
             by email via the notification_email_pref field.
@@ -937,11 +949,11 @@ class mail_thread(osv.Model):
             user_to_notify_ids.remove(new_msg_values.get('user_id'))
         
         # get user_ids directly asked
-        user_to_push_from_parse_ids = self.message_parse_users(cr, uid, body, context=context)
+        user_to_push_from_parse_ids = self.message_parse_users(cr, uid, body, context = context)
         
         # try to find an email_to
         email_to = ''
-        for user in res_users_obj.browse(cr, uid, user_to_notify_ids, context=context):
+        for user in res_users_obj.browse(cr, uid, user_to_notify_ids, context = context):
             if not user.notification_email_pref == 'all' and \
                 not (user.notification_email_pref == 'to_me' and user.id in user_to_push_from_parse_ids):
                 continue
@@ -955,17 +967,17 @@ class mail_thread(osv.Model):
             return
         
         # try to find an email_from
-        current_user = res_users_obj.browse(cr, uid, [uid], context=context)[0]
+        current_user = res_users_obj.browse(cr, uid, [uid], context = context)[0]
         email_from = new_msg_values.get('email_from')
         if not email_from:
             email_from = current_user.user_email
         
         # get email content, create it (with mail_message.create)
         email_values = self.message_create_notify_get_email_dict(cr, uid, new_msg_values, email_from, email_to, context)
-        email_id = message_obj.create(cr, uid, email_values, context=context)
+        email_id = message_obj.create(cr, uid, email_values, context = context)
         return email_id
     
-    def message_create_notify_get_email_dict(self, cr, uid, new_msg_values, email_from, email_to, context=None):
+    def message_create_notify_get_email_dict(self, cr, uid, new_msg_values, email_from, email_to, context = None):
         values = dict(new_msg_values)
         
         body_html = new_msg_values.get('body_html', '')
@@ -989,47 +1001,62 @@ class mail_thread(osv.Model):
         })
         return values
 
-    def message_remove_pushed_notifications(self, cr, uid, ids, msg_ids, remove_childs=True, context=None):
+    def message_remove_pushed_notifications(self, cr, uid, ids, msg_ids, remove_childs = True, context = None):
         notif_obj = self.pool.get('mail.notification')
         msg_obj = self.pool.get('mail.message')
         if remove_childs:
-            notif_msg_ids = msg_obj.search(cr, uid, [('id', 'child_of', msg_ids)], context=context)
+            notif_msg_ids = msg_obj.search(cr, uid, [('id', 'child_of', msg_ids)], context = context)
         else:
             notif_msg_ids = msg_ids
-        to_del_notif_ids = notif_obj.search(cr, uid, ['&', ('user_id', '=', uid), ('message_id', 'in', notif_msg_ids)], context=context)
-        return notif_obj.unlink(cr, uid, to_del_notif_ids, context=context)
+        to_del_notif_ids = notif_obj.search(cr, uid, ['&', ('user_id', '=', uid), ('message_id', 'in', notif_msg_ids)], context = context)
+        return notif_obj.unlink(cr, uid, to_del_notif_ids, context = context)
 
     #------------------------------------------------------
     # Thread_state
     #------------------------------------------------------
 
-    def message_create_set_unread(self, cr, uid, ids, context=None):
+    def message_create_set_unread(self, cr, uid, ids, context = None):
         """ When creating a new message, set as unread if uid is not the
             object responsible. """
-        for obj in self.browse(cr, uid, ids, context=context):
+        for obj in self.browse(cr, uid, ids, context = context):
             if obj.message_state and hasattr(obj, 'user_id') and (not obj.user_id or obj.user_id.id != uid):
-                self.message_mark_as_unread(cr, uid, [obj.id], context=context)
+                self.message_mark_as_unread(cr, uid, [obj.id], context = context)
 
-    def message_check_and_set_unread(self, cr, uid, ids, context=None):
+    def message_check_and_set_unread(self, cr, uid, ids, context = None):
         """ Set unread if uid is the object responsible or if the object has
             no responsible. """
-        for obj in self.browse(cr, uid, ids, context=context):
+        for obj in self.browse(cr, uid, ids, context = context):
             if obj.message_state and hasattr(obj, 'user_id') and (not obj.user_id or obj.user_id.id == uid):
-                self.message_mark_as_unread(cr, uid, [obj.id], context=context)
+                self.message_mark_as_unread(cr, uid, [obj.id], context = context)
 
-    def message_mark_as_unread(self, cr, uid, ids, context=None):
+    def message_mark_as_unread(self, cr, uid, ids, context = None):
         """ Set as unread. """
-        return self.write(cr, uid, ids, {'message_state': False}, context=context)
+        return self.write(cr, uid, ids, {'message_state': False}, context = context)
 
-    def message_check_and_set_read(self, cr, uid, ids, context=None):
+    def message_check_and_set_read(self, cr, uid, ids, context = None):
         """ Set read if uid is the object responsible. """
-        for obj in self.browse(cr, uid, ids, context=context):
+        for obj in self.browse(cr, uid, ids, context = context):
             if not obj.message_state and hasattr(obj, 'user_id') and obj.user_id and obj.user_id.id == uid:
-                self.message_mark_as_read(cr, uid, [obj.id], context=context)
+                self.message_mark_as_read(cr, uid, [obj.id], context = context)
     
-    def message_mark_as_read(self, cr, uid, ids, context=None):
+    def message_mark_as_read(self, cr, uid, ids, context = None):
         """ Set as read. """
-        return self.write(cr, uid, ids, {'message_state': True}, context=context)
+        return self.write(cr, uid, ids, {'message_state': True}, context = context)
 
-
+    def message_subscribe_udpate_subtypes(self, cr, uid, ids, user_id, subtype_ids):
+        subscription_obj = self.pool.get('mail.subscription')
+        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)])
+        return subscription_obj.write(cr, uid, subscription_ids, {'subtype_ids': [6, 0 , subtype_ids]}, context = context) #overright or add new one
+        
+    def message_subscription_remove_subtype(self, cr, uid, ids, user_id, subtype_id):
+        subscription_obj = self.pool.get('mail.subscription')
+        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)])
+        return subscription_obj.write(cr, uid, subscription_ids, {'subtype_ids': [3, subtype_id]}, context = context) # remove linl or record ?
+        
+    def message_subscription_remove_subtype_name(self, cr, uid, ids, user_id, subtype_name):
+        subtype_obj = self.pool.get('mail.message.subtype')
+        subtype_ids = subtype_obj.search(cr, uid, [('name', '=', subtype_name), ('model_ids', '=', self._name)])
+        if not subtype_ids:
+            return False
+        self.message_subscription_remove_subtype(cr, uid, ids, user_id, subtype_ids)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
