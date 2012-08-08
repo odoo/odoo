@@ -395,7 +395,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             def = this._super();
         if (! self.view.group_by) {
             self.$element.addClass("oe_kanban_no_group");
-            self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, {}, false)
+            self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, self.getParent().search_context, false)
                 .on('added', self, self.proxy('quick_created'));
             self.quick.replace($(".oe_kanban_no_group_qc_placeholder"));
         }
@@ -410,6 +410,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             if (self.quick) { return; }
             var ctx = {};
             ctx['default_' + self.view.group_by] = self.value;
+            ctx = new instance.web.CompoundContext(self.getParent().search_context, ctx);
             self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, ctx, true)
                 .on('added', self, self.proxy('quick_created'))
                 .on('close', self, function() {
