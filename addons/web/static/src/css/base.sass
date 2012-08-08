@@ -408,6 +408,12 @@ $sheet-max-width: 860px
             border: none
     .oe_avatar + div
         margin-left: 5px
+    .oe_image_small > img
+        max-width: 50px
+        max-height: 50px
+    .oe_image_medium > img
+        max-width: 180px
+        max-height: 180px
     .oe_button.oe_link
         @include reset()
         img
@@ -1655,7 +1661,7 @@ $sheet-max-width: 860px
             width: 100%
             display: inline-block
             padding: 2px 2px 2px 0px
-            line-height: 18px
+            line-height: 1em
             input
                 margin: 0px
         input[type="text"], input[type="password"], input[type="file"], select
@@ -1722,9 +1728,9 @@ $sheet-max-width: 860px
     .oe_form_editable
         .oe_form
             .oe_form_field_integer
-                width: 7em !important
+                width: 6em !important
             .oe_form_field_float
-                width: 8em !important
+                width: 7em !important
             .oe_form_field_date
                 width: 7.5em !important
             .oe_form_field_datetime
