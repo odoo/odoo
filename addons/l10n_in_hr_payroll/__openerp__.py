@@ -40,7 +40,7 @@ Indian Payroll Salary Rules.
     * Integrated with Holiday Management
     * Medical Allowance, Travel Allowance, Child Allowance, ...
     - Payroll Advice and Report
-    - Payroll Statement and Payroll Register Report
+    - Yearly Salary by Head and Yearly Salary by Employee Report
     """,
     'active': False,
     'update_xml': [
