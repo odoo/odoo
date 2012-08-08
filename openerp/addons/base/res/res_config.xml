@@ -4,7 +4,6 @@
         <record id="res_config_view_base" model="ir.ui.view">
             <field name="name">res.config.view.base</field>
             <field name="model">res.config</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configuration" version="7.0">
                     <group string="res_config_contents"/>
@@ -20,7 +19,6 @@
         <record id="view_config_wizard_form" model="ir.ui.view">
             <field name="name">Compabitiliby configuration wizard</field>
             <field name="model">ir.actions.configuration.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Next Configuration Step" version="7.0">
                     <group>
@@ -38,7 +36,6 @@
         <record id="res_config_installer" model="ir.ui.view">
             <field name="name">Inheritable view for installer objects</field>
             <field name="model">res.config.installer</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configuration Installer" version="7.0">
                     <separator string="title" colspan="4"/>
