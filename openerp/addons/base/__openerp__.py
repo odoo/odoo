@@ -56,6 +56,7 @@
         'module/wizard/base_module_configuration_view.xml',
         'module/wizard/base_export_language_view.xml',
         'module/wizard/base_update_translations_view.xml',
+        'module/wizard/base_module_immediate_install.xml',
         'res/res_company_view.xml',
         'res/res_request_view.xml',
         'res/res_lang_view.xml',
