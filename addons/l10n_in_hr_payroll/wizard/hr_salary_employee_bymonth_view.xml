@@ -6,7 +6,8 @@
             <field name="model">hr.salary.employee.month</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Print Hr monthly Employee Salary" version="7.0">
+            <form string="Employee Pay Head Breakup" version="7.0">
+                <label string="This wizard will print report which displays employees break-up of Net Head for a specified dates."/>
                 <footer>
                     <button name="print_report" string="Print" type="object" class="oe_highlight"/>
                         or
@@ -23,7 +24,7 @@
         </record>
 
         <record id="action_salary_employee_month" model="ir.actions.act_window">
-            <field name="name">Payroll Statement</field>
+            <field name="name">Yearly Salary by Head</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.salary.employee.month</field>
             <field name="view_type">form</field>
@@ -32,7 +33,7 @@
         </record>
 
         <menuitem
-            name="Payroll Statement"
+            name="Yearly Salary by Head"
             parent="hr.menu_hr_reporting_timesheet"
             sequence="200" icon="STOCK_PRINT"
             action="action_salary_employee_month"
