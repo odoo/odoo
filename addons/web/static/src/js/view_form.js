@@ -4606,7 +4606,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     },
     render_value: function() {
         var url;
-        if (this.get('value') && this.get('value').substr(0, 10).indexOf(' ') == -1) {
+        if (this.get('value') && ! /^\d+(\.\d*)? \w+$/.test(this.get('value'))) {
             url = 'data:image/png;base64,' + this.get('value');
         } else if (this.get('value')) {
             url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
