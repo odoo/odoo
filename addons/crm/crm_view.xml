@@ -33,7 +33,6 @@
         <record id="crm_case_channel_view_tree" model="ir.ui.view">
             <field name="name">crm.case.channel.tree</field>
             <field name="model">crm.case.channel</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Channels">
                     <field name="name"/>
@@ -44,7 +43,6 @@
         <record id="crm_case_channel_view_form" model="ir.ui.view">
             <field name="name">crm.case.channel.form</field>
             <field name="model">crm.case.channel</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Channel" version="7.0">
                     <group>
@@ -80,7 +78,6 @@
         <record id="crm_case_section_view_form" model="ir.ui.view">
             <field name="name">crm.case.section.form</field>
             <field name="model">crm.case.section</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Team" version="7.0">
                     <group>
@@ -127,7 +124,6 @@
         <record id="crm_case_section_view_tree" model="ir.ui.view">
             <field name="name">crm.case.section.tree</field>
             <field name="model">crm.case.section</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Sales Team">
@@ -166,7 +162,6 @@
         <record model="ir.ui.view" id="crm_case_stage_tree">
             <field name="name">crm.case.stage.tree</field>
             <field name="model">crm.case.stage</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Stages">
                     <field name="sequence"/>
@@ -183,7 +178,6 @@
         <record model="ir.ui.view" id="crm_case_stage_form">
             <field name="name">crm.case.stage.form</field>
             <field name="model">crm.case.stage</field>
-            <field name="type">form</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Stage" version="7.0">
@@ -219,7 +213,6 @@
         <record id="crm_case_categ-view" model="ir.ui.view">
             <field name="name">crm.case.categ.form</field>
             <field name="model">crm.case.categ</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Case Category" version="7.0">
                     <group>
@@ -236,7 +229,6 @@
         <record id="crm_case_categ_tree-view" model="ir.ui.view">
             <field name="name">crm.case.categ.tree</field>
             <field name="model">crm.case.categ</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Case Category">
                     <field name="name"/>
@@ -250,7 +242,6 @@
         <record model="ir.ui.view" id="crm_case_resource_type_tree">
             <field name="name">crm.case.resource.type.tree</field>
             <field name="model">crm.case.resource.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Campaign">
                     <field name="name"/>
@@ -264,7 +255,6 @@
         <record model="ir.ui.view" id="crm_case_resource_type_form">
             <field name="name">crm.case.resource.type.form</field>
             <field name="model">crm.case.resource.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Campaign" version="7.0">
                     <group>
@@ -302,7 +292,6 @@
         <record id="crm_segmentation_line_tree-view" model="ir.ui.view">
             <field name="name">crm.segmentation.line.tree</field>
             <field name="model">crm.segmentation.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Partner Segmentation Lines">
                     <field name="name"/>
@@ -319,7 +308,6 @@
         <record id="crm_segmentation_line-view" model="ir.ui.view">
             <field name="name">crm.segmentation.line.form</field>
             <field name="model">crm.segmentation.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner Segmentation Lines" version="7.0">
                     <group col="4">
@@ -340,7 +328,6 @@
         <record id="crm_segmentation-view" model="ir.ui.view">
             <field name="name">crm.segmentation.form</field>
             <field name="model">crm.segmentation</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner Segmentation" version="7.0">
                     <header>
@@ -382,7 +369,6 @@
         <record id="crm_segmentation_tree-view" model="ir.ui.view">
             <field name="name">crm.segmentation.tree</field>
             <field name="model">crm.segmentation</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Partner Segmentations">
                     <field name="name"/>
@@ -429,7 +415,6 @@
         <record model="ir.ui.view" id="view_crm_payment_mode_tree">
             <field name="name">crm.payment.mode.tree</field>
             <field name="model">crm.payment.mode</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Payment Mode">
                     <field name="name"/>
@@ -443,7 +428,6 @@
         <record model="ir.ui.view" id="view_crm_payment_mode_form">
             <field name="name">crm.payment.mode.form</field>
             <field name="model">crm.payment.mode</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Payment Mode" version="7.0">
                     <group>
