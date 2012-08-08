@@ -494,10 +494,6 @@ class Root(object):
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
         request.app = self
 
-        if request.path == '/mobile':   # FIXME move to web_mobile module
-            return werkzeug.utils.redirect(
-                '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
-
         handler = self.find_handler(*(request.path.split('/')[1:]))
 
         if not handler:
