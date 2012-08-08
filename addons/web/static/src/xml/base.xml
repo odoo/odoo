@@ -930,9 +930,10 @@
             t-att-tabindex="widget.node.attrs.tabindex"
             t-att-autofocus="widget.node.attrs.autofocus"
             t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
-        ></textarea>
-        <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate"
-            t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+        ></textarea><img class="oe_field_translate oe_input_icon"
+                        t-if="widget.field.translate and !widget.get('effective_readonly')"
+                        t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
+        />
     </div>
 </t>
 <t t-name="web.datepicker">
@@ -1193,11 +1194,11 @@
     </tr>
     <tr t-foreach="widget.view.translatable_fields" t-as="field" t-att-data-field="field.name">
         <td class="oe_form_group_cell" width="1%" nowrap="nowrap">
-            <label class="oe_label"><t t-esc="field.node.attrs.string"/>:</label>
+            <label class="oe_label"><t t-esc="field.string"/>:</label>
         </td>
         <td t-foreach="widget.languages" t-as="lg" class="oe_form_group_cell">
-            <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
-            <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
+            <input t-if="field.field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
+            <textarea t-if="field.field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
         </td>
     </tr>
     </table>
