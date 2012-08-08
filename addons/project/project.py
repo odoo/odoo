@@ -522,6 +522,9 @@ def Project():
         return user_ids
 
     def create(self, cr, uid, vals, context=None):
+        if context is None: context = {}
+        # Prevent double project creation when 'use_tasks' is checked!
+        context = dict(context, project_creation_in_progress=True)
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
             name = vals.pop('alias_name', None) or vals['name']
@@ -1285,7 +1288,8 @@ class account_analytic_account(osv.osv):
         '''
         This function is used to decide if a project needs to be automatically created or not when an analytic account is created. It returns True if it needs to be so, False otherwise.
         '''
-        return vals.get('use_tasks')
+        if context is None: context = {}
+        return vals.get('use_tasks') and not 'project_creation_in_progress' in context
 
     def project_create(self, cr, uid, analytic_account_id, vals, context=None):
         '''
