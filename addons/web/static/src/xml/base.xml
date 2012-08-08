@@ -310,7 +310,7 @@
     </ul>
 </t>
 <t t-name="Menu.secondary.link">
-    <a t-attf-href="#menu_id=#{menu.id}&amp;action_id=#{menu.action ? menu.action.split(',')[1] : ''}"
+    <a t-attf-href="#menu_id=#{menu.id}&amp;action=#{menu.action ? menu.action.split(',')[1] : ''}"
         t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
         t-att-data-menu="menu.id"
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"

@@ -145,6 +145,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         return titles.join(' <span class="oe_fade">/</span> ');
     },
     do_push_state: function(state) {
+        state = state || {};
         if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
                 state['title'] = this.inner_action.name;
@@ -152,7 +153,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     state['model'] = this.inner_action.res_model;
                 }
                 if (this.inner_action.id) {
-                    state['action_id'] = this.inner_action.id;
+                    state['action'] = this.inner_action.id;
+                } else if (this.inner_action.type == 'ir.actions.client') {
+                    state['action'] = this.inner_action.tag;
+                    //state = _.extend(this.inner_action.params || {}, state);
                 }
             }
             this.getParent().do_push_state(state);
@@ -161,14 +165,20 @@ instance.web.ActionManager = instance.web.Widget.extend({
     do_load_state: function(state, warm) {
         var self = this,
             action_loaded;
-        if (state.action_id) {
-            var run_action = (!this.inner_widget || !this.inner_widget.action) || this.inner_widget.action.id !== state.action_id;
-            if (run_action) {
+        if (state.action) {
+            if (_.isString(state.action) && instance.web.client_actions.contains(state.action)) {
+                var action_client = {type: "ir.actions.client", tag: state.action, params: state};
                 this.null_action();
-                action_loaded = this.do_action(state.action_id);
-                instance.webclient.menu.has_been_loaded.then(function() {
-                    instance.webclient.menu.open_action(state.action_id);
-                });
+                action_loaded = this.do_action(action_client);
+            } else {
+                var run_action = (!this.inner_widget || !this.inner_widget.action) || this.inner_widget.action.id !== state.action;
+                if (run_action) {
+                    this.null_action();
+                    action_loaded = this.do_action(state.action);
+                    instance.webclient.menu.has_been_loaded.then(function() {
+                        instance.webclient.menu.open_action(state.action);
+                    });
+                }
             }
         } else if (state.model && state.id) {
             // TODO handle context & domain ?
@@ -182,24 +192,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_loaded = this.do_action(action);
         } else if (state.sa) {
             // load session action
-            var self = this;
             this.null_action();
             action_loaded = this.rpc('/web/session/get_session_action',  {key: state.sa}).pipe(function(action) {
                 if (action) {
                     return self.do_action(action);
                 }
             });
-        } else if (state.client_action) {
-            this.null_action();
-            var action = state.client_action;
-            if(_.isString(action)) {
-                action = {
-                    type: 'ir.actions.client',
-                    tag: action,
-                    params: state,
-                };
-            }
-            this.ir_actions_client(action);
         }
 
         $.when(action_loaded || null).then(function() {
@@ -220,7 +218,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         if (!action.type) {
             console.error("No type for action", action);
-            return;
+            return null;
         }
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
@@ -235,7 +233,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }, action.flags || {});
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
-            return;
+            return null;
         }
         return this[type](action, on_close);
     },
@@ -245,21 +243,24 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
 
     do_ir_actions_common: function(action, on_close) {
-        var self = this, klass, widget, add_breadcrumb;
+        var self = this, klass, widget, post_process;
         if (action.type === 'ir.actions.client') {
             var ClientWidget = instance.web.client_actions.get_object(action.tag);
             widget = new ClientWidget(this, action.params);
             klass = 'oe_act_client';
-            add_breadcrumb = function() {
+            post_process = function() {
                 self.push_breadcrumb({
                     widget: widget,
                     title: action.name
                 });
-            }
+                if (action.tag !== 'reload') {
+                    self.do_push_state({});
+                }
+            };
         } else {
             widget = new instance.web.ViewManagerAction(this, action);
             klass = 'oe_act_window';
-            add_breadcrumb = widget.proxy('add_breadcrumb');
+            post_process = widget.proxy('add_breadcrumb');
         }
         if (action.target === 'new') {
             if (this.dialog === null) {
@@ -279,14 +280,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog.open();
         } else  {
             this.dialog_stop();
-            if(action.menu_id) {
-                return this.getParent().do_action(action, function () {
-                    instance.webclient.menu.open_menu(action.menu_id);
-                });
-            }
             this.inner_action = action;
             this.inner_widget = widget;
-            add_breadcrumb();
+            post_process();
             this.inner_widget.appendTo(this.$element);
         }
     },

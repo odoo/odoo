@@ -356,6 +356,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             if (record.id) {
                 self.do_push_state({id:record.id});
+            } else {
+                self.do_push_state({});
             }
             self.$element.add(self.$buttons).removeClass('oe_form_dirty');
             self.autofocus();
