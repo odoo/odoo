@@ -293,8 +293,15 @@ class crm_lead(base_stage, osv.osv):
         result = {}
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-            result = {'partner_name' : partner.name}
-        return {'value' : result}
+            values = {
+                'partner_name' : partner.name, 
+                'street' : partner.street,
+                'street2' : partner.street2,
+                'city' : partner.city,
+                'state_id' : partner.state_id and partner.state_id.id or False,
+                'country_id' : partner.country_id and partner.country_id.id or False,
+            }
+        return {'value' : values}
 
 
     def _check(self, cr, uid, ids=False, context=None):

@@ -18,8 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import pdb
-import io
 import openerp
 import addons
 
@@ -27,10 +27,10 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import logging
-from PIL import Image
 
 import netsvc
 from osv import fields, osv
+import tools
 from tools.translate import _
 from decimal import Decimal
 import decimal_precision as dp
@@ -1174,20 +1174,14 @@ class pos_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    def _get_small_image(self, cr, uid, ids, prop, unknow_none, context=None):
-        result = {}
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            if not obj.category_image:
-                result[obj.id] = False
-                continue
-
-            image_stream = io.BytesIO(obj.category_image.decode('base64'))
-            img = Image.open(image_stream)
-            img.thumbnail((120, 100), Image.ANTIALIAS)
-            img_stream = StringIO.StringIO()
-            img.save(img_stream, "JPEG")
-            result[obj.id] = img_stream.getvalue().encode('base64')
+            result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
+    
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
@@ -1195,20 +1189,34 @@ class pos_category(osv.osv):
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
         'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
-        'category_image': fields.binary('Image'),
-        'category_image_small': fields.function(_get_small_image, string='Small Image', type="binary",
+        'image': fields.binary("Image",
+            help="This field holds the image used for the category. "\
+                 "The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 1024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized image", type="binary", multi="_get_image",
             store = {
-                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['category_image'], 10),
-            }),
+                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized image of the category. It is automatically "\
+                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Smal-sized image", type="binary", multi="_get_image",
+            store = {
+                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized image of the category. It is automatically "\
+                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
     }
 
     def _get_default_image(self, cr, uid, context=None):
         image_path = openerp.modules.get_module_resource('point_of_sale', 'images', 'default_category_photo.png')
-        return open(image_path, 'rb').read().encode('base64')
-
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
-        'category_image': _get_default_image,
+        'image': _get_default_image,
     }
 
 pos_category()
@@ -1217,30 +1225,12 @@ import io, StringIO
 
 class product_product(osv.osv):
     _inherit = 'product.product'
-    def _get_small_image(self, cr, uid, ids, prop, unknow_none, context=None):
-        result = {}
-        for obj in self.browse(cr, uid, ids, context=context):
-            if not obj.product_image:
-                result[obj.id] = False
-                continue
-
-            image_stream = io.BytesIO(obj.product_image.decode('base64'))
-            img = Image.open(image_stream)
-            img.thumbnail((120, 100), Image.ANTIALIAS)
-            img_stream = StringIO.StringIO()
-            img.save(img_stream, "JPEG")
-            result[obj.id] = img_stream.getvalue().encode('base64')
-        return result
 
     _columns = {
         'income_pdt': fields.boolean('Point of Sale Cash In', help="This is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
             help="If you want to sell this product through the point of sale, select the category it belongs to."),
-        'product_image_small': fields.function(_get_small_image, string='Small Image', type="binary",
-            store = {
-                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['product_image'], 10),
-            }),
         'to_weight' : fields.boolean('To Weight', help="This category contains products that should be weighted, mainly used for the self-checkout interface"),
     }
     _defaults = {
