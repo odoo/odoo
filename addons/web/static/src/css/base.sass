@@ -1531,6 +1531,93 @@ $sheet-max-width: 860px
         .oe_form_steps_active
             font-weight: bold
             color: #b33630
+    ul.oe_form_steps_clickable
+        height: 30px
+        margin: 0
+        padding: 0
+        text-shadow: 0 1px 1px #cacaca
+        box-shadow: 0 0 1px rgba(0,0,0,0.5)
+        overflow: hidden
+        li
+            border-right: none
+            padding: 0 0 0 12px
+            position: relative
+            float: left
+            vertical-align: top
+            height: 30px
+            color: white
+            &:after
+                content: " "
+                width: 0
+                height: 0
+                border-top: 21px solid transparent
+                border-bottom: 21px solid transparent
+                border-left: 5px solid #807fb4
+                position: absolute
+                top: 50%
+                margin-top: -21px
+                left: 100%
+                z-index: 2
+            &:hover:after
+                border-left: 5px solid #807fb4
+            &:before
+                content: " "
+                width: 0
+                height: 0
+                border-top: 21px solid transparent
+                border-bottom: 21px solid transparent
+                border-left: 5px solid white
+                position: absolute
+                top: 50%
+                margin-top: -21px
+                margin-left: 2px
+                left: 100%
+                z-index: 2
+            &.oe_form_steps_active
+                font-weight: bold
+                text-shadow: 0 1px 1px #999999
+                box-shadow: inset 0 -1px 1px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.25)
+                background-color: #dc5f59
+                background: -webkit-linear-gradient(top, #dc5f59, #b33630)
+                color: white
+            &.oe_form_steps_inactive
+                cursor: pointer
+                box-shadow: inset 0 -1px 1px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.25)
+                background-color: #adadcf
+                background: -webkit-linear-gradient(top, #adadcf, #7c7ba7)
+                div
+                    padding: 0 30px 0 0
+            &.oe_form_steps_inactive:hover
+                background: -webkit-linear-gradient(top, #7c7ba7, #adadcf)
+            div
+                padding: 0 30px 0 0            
+            &.oe_form_steps_active:after
+                content: " "
+                display: block
+                width: 0
+                height: 0
+                border-top: 21px solid transparent
+                border-bottom: 21px solid transparent
+                border-left: 5px solid #b33630
+                position: absolute
+                top: 50%
+                margin-top: -21px
+                left: 100%
+                z-index: 2
+            &.oe_form_steps_active:before
+                content: " "
+                display: block
+                width: 0
+                height: 0
+                border-top: 21px solid transparent
+                border-bottom: 21px solid transparent
+                border-left: 5px solid white
+                position: absolute
+                top: 50%
+                margin-top: -21px
+                margin-left: 2px
+                left: 100%
+                z-index: 2
     .oe_form .oe_subtotal_footer
         width: 1% !important
         td.oe_form_group_cell
