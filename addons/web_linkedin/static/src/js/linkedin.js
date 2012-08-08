@@ -51,10 +51,6 @@ openerp.web_linkedin = function(instance) {
         },
     });
     
-                /*return new instance.web.Model("ir.config_parameter").call("set_param", ["web.linkedin.apikey", "cxnr0l53n73x"]).pipe(function() {
-                    return self.test_linkedin();
-                });*/
-    
     instance.web_linkedin.tester = new instance.web_linkedin.LinkedinTester();
     
     instance.web_linkedin.Linkedin = instance.web.form.FieldChar.extend({
@@ -274,6 +270,17 @@ openerp.web_linkedin = function(instance) {
         template: "LinkedIn.KeyWizard",
         init: function(parent, text) {
             this._super(parent, {title:_t("LinkedIn API Key")});
+        },
+        start: function() {
+            this._super();
+            var self = this;
+            this.$("button").click(function() {
+                var value = self.$("input").val();
+                debugger;
+                return new instance.web.Model("ir.config_parameter").call("set_param", ["web.linkedin.apikey", value]).pipe(function() {
+                    self.destroy();
+                });
+            });
         },
     });
 };

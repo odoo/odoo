@@ -31,7 +31,28 @@
     </t>
     <t t-name="LinkedIn.KeyWizard">
         <div>
-            Yoh!
+            <p>
+                Connect OpenERP with LinkedIn to synchronize partners and customers with LinkedIn contacts and
+                get their data automatically (photos, address, news). You just need to setup the API key once, and it will work
+                for all users of your system.
+            </p>
+            <ul>
+                <li>Go to this URL: 
+                    <a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a>.
+                </li>
+                <li>Log into LinkedIn.</li>
+                <li>Add New Application and fill the form,
+                    <ul>
+                        <li>JavaScript API Domain is Your domain name (e.g. https://yourcompany.my.openerp.com)</li>
+                        <li>You can give multiple domain (e.g. yourcompany.my.openerp.com)</li>
+                        <li>programming tools is Javascript</li>
+                    </ul>
+                </li>
+                <li>Copy the API key here:
+                    <input type="text"/>
+                    <button>Apply</button>
+                </li>
+            </ul>
         </div>
     </t>
 </templates>
