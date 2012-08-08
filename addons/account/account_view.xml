@@ -1582,16 +1582,6 @@
             <field name="act_window_id" ref="action_move_line_search"/>
         </record>
 
-        <record id="action_account_manual_reconcile" model="ir.actions.act_window">
-            <field name="name">Entries To Reconcile</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_line_tree"/>
-            <field eval="False" name="auto_search"/>
-            <field name="context">{'view_mode':True}</field>
-        </record>
-        
         <record id="action_account_receivable_manual_reconcile" model="ir.actions.act_window">
             <field name="name">Entries To Reconcile</field>
             <field name="res_model">account.move.line</field>
@@ -1599,7 +1589,7 @@
             <field name="view_mode">tree,form</field>
             <field eval="False" name="auto_search"/>
             <field name="domain">[('partner_id.customer','=',True)]</field>
-            <field name="context" eval="{'view_mode':True, 'extended_form_view_id': ref('view_account_move_reconciliation_form_view')}"></field>
+            <field name="context" eval="{'view_mode':True,'extended_form_view_id': ref('view_account_move_reconciliation_form_view')}"></field>
         </record>
         
         <record id="action_account_payable_manual_reconcile" model="ir.actions.act_window">
@@ -1609,7 +1599,7 @@
             <field name="view_mode">tree,form</field>
             <field eval="False" name="auto_search"/>
             <field name="domain">[('partner_id.supplier','=',True)]</field>
-            <field name="context" eval="{'view_mode':True, 'extended_form_view_id': ref('view_account_move_reconciliation_form_view')}"></field>
+            <field name="context" eval="{'view_mode':True,'extended_form_view_id': ref('view_account_move_reconciliation_form_view')}"></field>
         </record>
 
         <menuitem

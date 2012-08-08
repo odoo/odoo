@@ -21,6 +21,7 @@ instance.account.extend_viewmanager = instance.web.ViewManagerAction.include({
         obj_from_view.template = 'ExtendedFormView' 
         view_promise = obj_from_view.appendTo(this.$element.find('.oe_extended_form_view'))
         $.when(view_promise, this.dataset_loaded).then(function() {
+            self.action.context.active_ids = self.dataset_form.ids;
             if (!_.isEmpty(self.dataset_form.ids)) {
                 obj_from_view.on_pager_action('first')
             }
@@ -72,12 +73,10 @@ instance.account.extend_form_view = instance.web.FormView.extend({
     },
     
     do_nothing_to_reconcile:function(event){
-        self = this
-        this.dataset.call(event.target.name, [[self.datarecord.id], self.dataset.context]).then(function() {
-              self.dataset.read_slice().done(function(){
-                    self.on_pager_action();
-              });
-        })
+        viewmanager = this.getParent();
+        this.dataset.ids = _.without(this.dataset.ids, this.datarecord.id)
+        viewmanager.action.context.active_ids = viewmanager.dataset_form.ids;
+        this.on_pager_action();
     },
     
     do_update_pager: function(hide_index) {
