@@ -3,7 +3,8 @@
  *--------------------------------------------------------*/
 var console;
 if (!console) {
-    console = {log: function () {}};
+    console = {}
+    console.log = console.error = console.debug = console.info = console.warn = console.assert = console.clear = console.dir = console.dirxml = console.trace = console.group = console.groupCollapsed = console.groupEnd = console.time = console.timeEnd = console.profile = console.profileEnd = console.count = console.exception = console.table = function() {}
 }
 if (!console.debug) {
     console.debug = console.log;
