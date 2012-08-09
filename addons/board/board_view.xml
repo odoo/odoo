@@ -5,7 +5,6 @@
     <record id="view_board_search" model="ir.ui.view">
         <field name="name">board.board.search</field>
         <field name="model">board.board</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Dashboard">
                 <field name="name" string="Dashboard"/>
@@ -17,7 +16,6 @@
     <record id="view_board_tree" model="ir.ui.view">
         <field name="name">board.board.tree</field>
         <field name="model">board.board</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Dashboard">
                 <field name="name"/>
@@ -29,7 +27,6 @@
     <record id="view_board_form" model="ir.ui.view">
         <field name="name">board.board.form</field>
         <field name="model">board.board</field>
-        <field name="type">form</field>
         <field eval="1" name="priority"/>
         <field name="arch" type="xml">
             <form string="Dashboard" version="7.0">

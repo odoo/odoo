@@ -53,7 +53,6 @@
         <record model="ir.ui.view" id="view_lunch_order_tree">
             <field name="name">Order</field>
             <field name="model">lunch.order</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state == 'confirmed'" string="Order">
                     <field name="date"/>
@@ -72,7 +71,6 @@
         <record id="view_lunch_order_filter" model="ir.ui.view">
             <field name="name">lunch.order.list.select</field>
             <field name="model">lunch.order</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Lunch Order">
                     <field name="date"/>
@@ -119,7 +117,6 @@
         <record model="ir.ui.view" id="view_lunch_cashbox_tree">
             <field name="name">Cashboxes</field>
             <field name="model">lunch.cashbox</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Cashboxes" colors="red:sum_remain&lt;=0">
                     <field name="name"/>
@@ -167,7 +164,6 @@
         <record model="ir.ui.view" id="view_lunch_cashmove_tree">
             <field name="name">CashMove</field>
             <field name="model">lunch.cashmove</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="CashMove" editable="top">
                     <field name="create_date"/>
@@ -184,7 +180,6 @@
         <record id="view_lunch_cashmove_filter" model="ir.ui.view">
             <field name="name">lunch.cashmove.list.select</field>
             <field name="model">lunch.cashmove</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search CashMove">
                     <field name="create_date"/>
@@ -230,7 +225,6 @@
         <record model="ir.ui.view" id="view_lunch_category_tree">
             <field name="name">Category</field>
             <field name="model">lunch.category</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Order">
                     <field name="name"/>
@@ -249,7 +243,6 @@
 
         <record model="ir.ui.view" id="view_lunch_product_form">
             <field name="name">Products</field>
-            <field name="type">form</field>
             <field name="model">lunch.product</field>
             <field name="arch" type="xml">
                 <form string="Products" version="7.0">
@@ -275,7 +268,6 @@
         <record model="ir.ui.view" id="view_lunch_product_tree">
             <field name="name">Products</field>
             <field name="model">lunch.product</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Products">
                     <field name="name"/>
@@ -291,7 +283,6 @@
         <record model="ir.ui.view" id="view_lunch_product_search">
             <field name="name">Products</field>
             <field name="model">lunch.product</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Products">
                     <field name="name" string="Product"/>
@@ -328,7 +319,6 @@
         <record model="ir.ui.view" id="view_report_lunch_amount_tree">
             <field name="name">Lunch amount</field>
             <field name="model">report.lunch.amount</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Box Amount by User">
                     <field name="date" invisible="1"/>
@@ -347,7 +337,6 @@
         <record model="ir.ui.view" id="view_report_lunch_amount_form">
             <field name="name">Lunch amount</field>
             <field name="model">report.lunch.amount</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Box Amount by User" version="7.0">
                  <sheet>
@@ -366,7 +355,6 @@
         <record model="ir.ui.view" id="view_report_lunch_amount_search">
             <field name="name">Lunch amount</field>
             <field name="model">report.lunch.amount</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Box Amount by User">
                     <field name="date"/>

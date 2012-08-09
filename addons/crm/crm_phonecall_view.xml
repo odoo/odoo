@@ -65,7 +65,6 @@
     <record model="ir.ui.view" id="crm_case_phone_tree_view">
         <field name="name">CRM - Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree fonts="bold:needaction_pending==True" colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
                 <field name="needaction_pending" invisible="1"/>
@@ -104,7 +103,6 @@
     <record model="ir.ui.view" id="crm_case_phone_form_view">
         <field name="name">CRM - Phone Call Form</field>
         <field name="model">crm.phonecall</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Phone Call" version="7.0">
             <header>
@@ -166,7 +164,6 @@
     <record model="ir.ui.view" id="crm_case_inbound_phone_tree_view">
         <field name="name">CRM - Logged Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Phone Calls" fonts="bold:needaction_pending==True" editable="top">
                 <field name="date"/>
@@ -204,7 +201,6 @@
     <record model="ir.ui.view" id="crm_case_phone_calendar_view">
         <field name="name">CRM - Phone Calls Calendar</field>
         <field name="model">crm.phonecall</field>
-        <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Phone Calls" date_start="date" color="user_id" date_delay="duration">
@@ -218,7 +214,6 @@
     <record id="view_crm_case_phonecalls_filter" model="ir.ui.view">
         <field name="name">CRM - Phone Calls Search</field>
         <field name="model">crm.phonecall</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
                <field name="name" string="Phonecalls"/>

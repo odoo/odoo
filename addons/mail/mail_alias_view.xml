@@ -6,7 +6,6 @@
         <record  model="ir.ui.view" id="view_mail_alias_form">
             <field name="name">mail.alias.form</field>
             <field name="model">mail.alias</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Alias" version="7.0">
                     <sheet>
@@ -29,7 +28,6 @@
         <record  model="ir.ui.view" id="view_mail_alias_tree">
             <field name="name">mail.alias.tree</field>
             <field name="model">mail.alias</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Alias">
                     <field name="alias_name"/>
@@ -44,7 +42,6 @@
         <record  model="ir.ui.view" id="view_mail_alias_search">
             <field name="name">mail.alias.search</field>
             <field name="model">mail.alias</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Alias">
                     <field name="alias_name"/>

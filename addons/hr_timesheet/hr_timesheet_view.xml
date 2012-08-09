@@ -5,7 +5,6 @@
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Timesheet Lines">
                     <field name="date" on_change="on_change_date(date)"/>
@@ -24,7 +23,6 @@
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet Lines" version="7.0">
                     <sheet>
@@ -65,7 +63,6 @@
         <record id="hr_timesheet_line_search" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.search</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <field name="date"/>
@@ -84,7 +81,6 @@
         <record id="account_analytic_account_timesheet_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <xpath expr='//separator[@name="project_sep"]' position='replace'>

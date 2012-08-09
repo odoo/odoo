@@ -19,7 +19,6 @@
        <record model="ir.ui.view" id="wiki_group_tree">
             <field name="name">wiki.groups.tree</field>
             <field name="model">wiki.groups</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Wiki Groups">
                     <field name="name"/>
@@ -31,7 +30,6 @@
         <record model="ir.ui.view" id="wiki_group_form">
             <field name="name">wiki.groups.form</field>
             <field name="model">wiki.groups</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Wiki Groups" version="7.0">
                     <group col="4" colspan="3" >
@@ -92,7 +90,6 @@
         <record id="view_wiki_tree_children" model="ir.ui.view">
             <field name="name">wiki.wiki.tree.children</field>
             <field name="model">wiki.wiki</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="priority">100</field>
             <field name="arch" type="xml">
@@ -110,7 +107,6 @@
         <record model="ir.ui.view" id="view_wiki_tree">
             <field name="name">wiki.wiki.tree</field>
             <field name="model">wiki.wiki</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Wiki">
                     <field name="name"/>
@@ -128,7 +124,6 @@
         <record model="ir.ui.view" id="view_wiki_form">
             <field name="name">wiki.wiki.form</field>
             <field name="model">wiki.wiki</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Wiki" version="7.0">
                     <sheet>
@@ -170,7 +165,6 @@
         <record id="view_wiki_filter" model="ir.ui.view">
             <field name="name">wiki.wiki.search</field>
             <field name="model">wiki.wiki</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wiki">
                     <field name="name"
@@ -220,7 +214,6 @@
         <record model="ir.ui.view" id="view_wiki_history_tree">
             <field name="name">wiki.wiki.history.tree</field>
             <field name="model">wiki.wiki.history</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Wiki History">
                     <field name="create_date"/>
@@ -235,7 +228,6 @@
         <record model="ir.ui.view" id="wiki_history_form">
             <field name="name">wiki.wiki.history.form</field>
             <field name="model">wiki.wiki.history</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Wiki History" version="7.0">
                     <sheet>

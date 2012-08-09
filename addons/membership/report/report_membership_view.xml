@@ -7,7 +7,6 @@
         <record model="ir.ui.view" id="view_report_membership_tree1">
             <field name="name">report.membership.tree</field>
             <field name="model">report.membership</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:membership_state == 'draft';black:membership_state in ('open','free');gray:membership_state in ('done','cancel') " string="Membership">
                     <field name="partner_id"/>
@@ -32,7 +31,6 @@
         <record model="ir.ui.view" id="view_report_membership_search">
             <field name="name">report.membership.search</field>
             <field name="model">report.membership</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Membership">
                     <field name="date_from"/>
@@ -64,7 +62,6 @@
         <record model="ir.ui.view" id="view_report_membership_graph1">
             <field name="name">report.membership.graph1</field>
             <field name="model">report.membership</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Membership" type="bar">
                     <field name="year" />

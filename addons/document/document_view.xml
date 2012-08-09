@@ -5,7 +5,6 @@
     <record model="ir.ui.view" id="view_document_storage_form">
         <field name="name">document.storage</field>
         <field name="model">document.storage</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Storage Media">
                 <group col="4">
@@ -25,7 +24,6 @@
     <record model="ir.ui.view" id="view_document_storage_tree">
         <field name="name">document.storage</field>
         <field name="model">document.storage</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Storage Media" toolbar="1">
                 <field name="name"/>
@@ -37,7 +35,6 @@
     <record id="view_document_storage_filter" model="ir.ui.view">
             <field name="name">Search View: Document Storage</field>
             <field name="model">document.storage</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document Storage">
                     <field name="name" string="Document Storage"/>
@@ -66,7 +63,6 @@
     <record model="ir.ui.view" id="view_document_directory_form">
         <field name="name">document.directory</field>
         <field name="model">document.directory</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Directories" col="4" version="7.0">
                 <group col="4">
@@ -149,7 +145,6 @@
     <record model="ir.ui.view" id="view_document_directory_tree">
         <field name="name">document.directory</field>
         <field name="model">document.directory</field>
-        <field name="type">tree</field>
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
             <tree string="Directories" toolbar="1">
@@ -167,7 +162,6 @@
     <record id="view_document_directory_filter" model="ir.ui.view">
             <field name="name">Search View: Document Directory</field>
             <field name="model">document.directory</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document Directory">
                     <field name="name" string="Document Directory"/>
@@ -231,7 +225,6 @@
         <field name="name">ir.attachment</field>
         <field name="model">ir.attachment</field>
         <field name="priority" eval="1"/>
-        <field name="type">form</field>
         <field name="inherit_id" ref="base.view_attachment_form"/>
         <field name="arch" type="xml">
             <field name="url" position="after">
@@ -259,7 +252,6 @@
     <record id="view_attach_filter_inherit0" model="ir.ui.view">
             <field name="name">IR Attachment0</field>
             <field name="model">ir.attachment</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_documents_filter']" position="replace">
@@ -278,7 +270,6 @@
 
             <field name="name">IR Attachment2</field>
             <field name="model">ir.attachment</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
                 <filter string="Owner" position="replace">
@@ -293,7 +284,6 @@
     <record model="ir.ui.view" id="view_document_file_tree">
         <field name="name">ir.attachment</field>
         <field name="model">ir.attachment</field>
-        <field name="type">tree</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <tree colors="blue:type in ('url',)" string="Attachments">
@@ -360,8 +350,7 @@
     <record model="ir.ui.view" id="view_process_node_form_inherit1">
         <field name="name">process.node.form</field>
         <field name="model">process.node</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="process.view_process_node_form"/>
+        <field name="inherit_id" ref="process.view_process_node_form"/>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <field name="subflow_id" position="after">
@@ -374,8 +363,7 @@
     <record model="ir.ui.view" id="view_process_form_inherit1">
         <field name="name">process.process.form</field>
         <field name="model">process.process</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="process.view_process_form"/>
+        <field name="inherit_id" ref="process.view_process_form"/>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <field name="subflow_id" position="after">

@@ -5,7 +5,6 @@
         <record id="view_account_position_form" model="ir.ui.view">
             <field name="name">account.fiscal.position.form</field>
             <field name="model">account.fiscal.position</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
                     <group col="4">
@@ -42,7 +41,6 @@
         <record id="view_account_position_tree" model="ir.ui.view">
             <field name="name">account.fiscal.position.tree</field>
             <field name="model">account.fiscal.position</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Fiscal Position">
                     <field name="name"/>
@@ -70,7 +68,6 @@
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.property.form.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">

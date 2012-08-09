@@ -4,7 +4,6 @@
         <record id="view_voucher_filter_vendor" model="ir.ui.view">
             <field name="name">account.voucher.purchase.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
@@ -27,7 +26,6 @@
         <record id="view_voucher_filter_sale" model="ir.ui.view">
             <field name="name">account.voucher.sale.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
@@ -60,7 +58,6 @@
         <record model="ir.ui.view" id="view_sale_receipt_form">
             <field name="name">account.voucher.sale.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sale voucher" version="7.0">
                 <header>
@@ -204,7 +201,6 @@
         <record model="ir.ui.view" id="view_purchase_receipt_form">
             <field name="name">account.voucher.purchase.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Purchase Voucher" version="7.0">
                 <header>

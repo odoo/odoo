@@ -47,7 +47,6 @@
         <record id="crm_lead_stage_search" model="ir.ui.view">
             <field name="name">Stage - Search</field>
             <field name="model">crm.case.stage</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Stage Search">
                     <field name="name" string="Stage Name"/>
@@ -128,7 +127,6 @@
         <record model="ir.ui.view" id="crm_case_form_view_leads">
         <field name="name">CRM - Leads Form</field>
         <field name="model">crm.lead</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Leads Form" version="7.0">
                 <header>
@@ -233,7 +231,6 @@
         <record model="ir.ui.view" id="crm_case_graph_view_leads">
             <field name="name">Opportunities</field>
             <field name="model">crm.lead</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Opportunities" type="bar">
                     <field name="stage_id"/>
@@ -247,7 +244,6 @@
         <record model="ir.ui.view" id="crm_case_tree_view_leads">
             <field name="name">Leads</field>
             <field name="model">crm.lead</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Leads" fonts="bold:needaction_pending==True" colors="grey:state in ('cancel', 'done')">
                     <field name="date_deadline" invisible="1"/>
@@ -274,7 +270,6 @@
         <record model="ir.ui.view" id="crm_case_calendar_view_leads">
             <field name="name">CRM - Leads Calendar</field>
             <field name="model">crm.lead</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Leads Generation"
@@ -289,7 +284,6 @@
     <record model="ir.ui.view" id="crm_case_kanban_view_leads">
         <field name="name">CRM - Leads Kanban</field>
         <field name="model">crm.lead</field>
-        <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
                 <field name="state" groups="base.group_no_one"/>
@@ -374,7 +368,6 @@
     <record id="view_crm_case_leads_filter" model="ir.ui.view">
         <field name="name">CRM - Leads Search</field>
         <field name="model">crm.lead</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Leads">
                 <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
@@ -428,7 +421,6 @@
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">Opportunities</field>
         <field name="model">crm.lead</field>
-        <field name="type">form</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <form string="Opportunities" version="7.0">
@@ -584,7 +576,6 @@
         <record model="ir.ui.view" id="crm_case_tree_view_oppor">
             <field name="name">Opportunities Tree</field>
             <field name="model">crm.lead</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Opportunities" fonts="bold:needaction_pending==True" colors="gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
@@ -614,7 +605,6 @@
     <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
         <field name="name">CRM - Opportunities Search</field>
         <field name="model">crm.lead</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Opportunities">
                 <field name="name" string="Opportunity / Customer"
