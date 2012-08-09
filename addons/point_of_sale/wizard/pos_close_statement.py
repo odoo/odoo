@@ -52,8 +52,6 @@ class pos_close_statement(osv.osv_memory):
             statement_obj.write(cr, uid, [statement.id], {
                 'balance_end_real': statement.balance_end
             }, context=context)
-            if not statement.journal_id.check_dtls:
-                statement_obj.button_confirm_cash(cr, uid, [statement.id], context=context)
 
         tree_res = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_cash_statement_pos_tree')
         tree_id = tree_res and tree_res[1] or False
