@@ -442,32 +442,22 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                    <group>
-                        <field name="number"
-                            string="Invoice"
-                            filter_domain="['|', ('number','ilike',self),('origin','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
-                        <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
-                        <filter name="invoices" icon="terp-dolar" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
-                        <separator orientation="vertical"/>
-                        <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
-                        <separator orientation="vertical"/>
-                        <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id"/>
-                        <field name="user_id" widget="selection" string="Salesperson"/>
-                        <field name="journal_id" widget="selection"/>
-                        <field name="period_id" string="Period"/>
-                    </group>
-                    <newline/>
+                    <field name="number" string="Invoice" filter_domain="['|', ('number','ilike',self),('origin','ilike',self)]"/>
+                    <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
+                    <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
+                    <filter name="invoices" icon="terp-dolar" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
+                    <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
+                    <separator/>
+                    <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal"/>
+                    <field name="partner_id"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <field name="journal_id"/>
+                    <field name="period_id" string="Period"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
                         <filter string="Invoice Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date_invoice'}"/>
                         <filter string="Due Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date_due'}"/>
@@ -519,11 +509,18 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">
-                Click here to create a new Invoice.
-                &lt;p&gt;
-                An invoice can be generated automatically from a sale order or a delivery order.
-                The invoice can be send by email.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a customer invoice.
+              </p><p>
+                OpenERP's electronic invoicing allows to ease and fasten the
+                collection of customer payments. Your customer receives the
+                invoice by email and he can pay online and/or import it
+                in his own system.
+              </p><p>
+                The discussions with your customer are automatically displayed at
+                the bottom of each invoice.
+              </p>
             </field>
         </record>
 
@@ -552,11 +549,14 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">
-                Click here to create Supplier invoice.
-                &lt;p&gt;
-                You can control the invoice from your supplier according to what you purchased or received.
-                OpenERP can also generate draft invoices automatically from purchase orders or receipts.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to record a new supplier invoice.
+              </p><p>
+                You can control the invoice from your supplier according to
+                what you purchased or received. OpenERP can also generate
+                draft invoices automatically from purchase orders or receipts.
+              </p>
             </field>
         </record>
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables"/>
@@ -570,11 +570,16 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'default_type':'out_refund', 'type':'out_refund', 'journal_type': 'sale_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">
-                Click here to create a new customer refund.
-                &lt;p&gt;
-                A refund is a document that credits an invoice completely or partially.
-                You can also generate refunds and reconcile them directly from the invoice form.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a customer refund. 
+              </p><p>
+                A refund is a document that credits an invoice completely or
+                partially.
+              </p><p>
+                Instead of manually creating a customer refund, you
+                can generate it directly from the related customer invoice.
+              </p>
             </field>
         </record>
 
@@ -601,11 +606,13 @@
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">
-                Click here to create a new supplier refund.
-                &lt;p&gt;
-                Track refunds you receive from your suppliers.
-                You can also generate refunds and reconcile them directly from the invoice form.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a refund you received from a supplier.
+              </p><p>
+                Instead of creating the supplier refund manually, you can generate
+                refunds and reconcile them directly from the related supplier invoice.
+              </p>
             </field>
         </record>
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>

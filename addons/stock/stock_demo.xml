@@ -6,9 +6,9 @@
             <field eval="[(4, ref('group_stock_user'))]" name="groups_id"/>
         </record>
 
-        <!--
-    Resource: stock.location
-    -->
+
+        <!-- Resource: stock.location -->
+
         <record id="stock_location_3" model="stock.location">
             <field name="name">IT Suppliers</field>
             <field name="location_id" ref="stock_location_suppliers"/>
@@ -44,16 +44,14 @@
         </record>
 
 
-        <!--
-    Resource: stock.inventory
-    -->
+        <!-- Resource: stock.inventory -->
 
         <record id="stock_inventory_0" model="stock.inventory">
             <field name="name">Starting Inventory</field>
         </record>
-        <!--
-    Resource: stock.inventory.line
-    -->
+
+
+        <!-- Resource: stock.inventory.line -->
 
         <record id="stock_inventory_line_0" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_pc1"/>
@@ -185,10 +183,10 @@
             <field eval="0" name="supplier"/>
             <field name="is_company">1</field>
             <field eval="1" name="active"/>
-            <field eval="&quot;&quot;&quot;Shop 1&quot;&quot;&quot;" name="name"/>
+            <field name="name">Shop 1</field>
         </record>
         <record id="res_partner_address_fabien0" model="res.partner">
-            <field eval="&quot;&quot;&quot;Felix&quot;&quot;&quot;" name="name"/>
+            <field name="name">Felix</field>
             <field name="parent_id" ref="res_partner_tinyshop0"/>
             <field name="use_parent_address" eval="1"/>
             <field eval="1" name="active"/>
@@ -197,17 +195,17 @@
             <field name="currency_id" ref="base.EUR"/>
             <field name="partner_id" ref="res_partner_tinyshop0"/>
             <field name="parent_id" ref="base.main_company"/>
-            <field eval="&quot;&quot;&quot;Shop 1&quot;&quot;&quot;" name="name"/>
+            <field name="name">Shop 1</field>
         </record>
         <record id="res_partner_tinyshop1" model="res.partner">
             <field eval="1" name="customer"/>
             <field eval="0" name="supplier"/>
             <field eval="1" name="active"/>
             <field name="is_company">1</field>
-            <field eval="&quot;&quot;&quot;Shop 2&quot;&quot;&quot;" name="name"/>
+            <field name="name">Shop 2</field>
         </record>
         <record id="res_partner_address_eric0" model="res.partner">
-            <field eval="&quot;&quot;&quot;Edwin&quot;&quot;&quot;" name="name"/>
+            <field name="name">Edwin</field>
             <field name="parent_id" ref="res_partner_tinyshop1"/>
             <field name="use_parent_address" eval="1"/>
             <field eval="1" name="active"/>
@@ -216,36 +214,36 @@
             <field name="currency_id" ref="base.EUR"/>
             <field name="partner_id" ref="res_partner_tinyshop1"/>
             <field name="parent_id" ref="base.main_company"/>
-            <field eval="&quot;&quot;&quot;Shop 2&quot;&quot;&quot;" name="name"/>
+            <field name="name">Shop 2</field>
         </record>
         <record id="stock_location_shop0" model="stock.location">
             <field model="res.partner" name="partner_id" search="[('name','=','Fabien')]"/>
             <field name="location_id" ref="stock.stock_location_locations"/>
             <field name="company_id" ref="res_company_shop0"/>
-            <field eval="&quot;&quot;&quot;internal&quot;&quot;&quot;" name="usage"/>
-            <field eval="&quot;&quot;&quot;none&quot;&quot;&quot;" name="chained_location_type"/>
+            <field name="usage">internal</field>
+            <field name="chained_location_type">none</field>
             <field eval="1" name="active"/>
-            <field eval="&quot;&quot;&quot;Shop 1&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;manual&quot;&quot;&quot;" name="chained_auto_packing"/>
+            <field name="name">Shop 1</field>
+            <field name="chained_auto_packing">manual</field>
         </record>
         <record id="stock_location_shop1" model="stock.location">
             <field model="res.partner" name="partner_id" search="[('name','=','Eric')]"/>
             <field name="company_id" ref="res_company_tinyshop0"/>
             <field name="location_id" ref="stock.stock_location_locations"/>
-            <field eval="&quot;&quot;&quot;internal&quot;&quot;&quot;" name="usage"/>
+            <field name="usage">internal</field>
             <field eval="1" name="active"/>
-            <field eval="&quot;&quot;&quot;Shop 2&quot;&quot;&quot;" name="name"/>
+            <field name="name">Shop 2</field>
         </record>
         <record id="stock_location_intermediatelocation0" model="stock.location">
             <field name="partner_id" ref="base.main_partner"/>
             <field name="location_id" ref="stock.stock_location_locations_partner"/>
-            <field eval="&quot;&quot;&quot;procurement&quot;&quot;&quot;" name="usage"/>
-            <field eval="&quot;&quot;&quot;Internal Shippings&quot;&quot;&quot;" name="name"/>
+            <field name="usage">procurement</field>
+            <field name="name">Internal Shippings</field>
         </record>
 
         <record id="stock_warehouse_shop0" model="stock.warehouse">
             <field name="lot_output_id" ref="stock.stock_location_output"/>
-            <field eval="&quot;&quot;&quot;Shop 1&quot;&quot;&quot;" name="name"/>
+            <field name="name">Shop 1</field>
             <field name="lot_stock_id" ref="stock_location_shop0"/>
             <field name="partner_id" ref="res_partner_address_fabien0"/>
             <field name="company_id" ref="res_company_shop0"/>
@@ -266,5 +264,6 @@
             <field eval="'account.account,'+str(ref('account.stk'))" model="account.account" name="value"/>
              <field name="company_id" ref="base.main_company"/>
         </record>
+
     </data>
 </openerp>
