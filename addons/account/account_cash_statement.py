@@ -238,7 +238,7 @@ class account_cash_statement(osv.osv):
         for statement in statement_pool.browse(cr, uid, ids, context=context):
             vals = {}
             if not self._user_allow(cr, uid, statement.id, context=context):
-                raise osv.except_osv(_('Error !'), (_('You do not have rights to open this %s journal !') % (statement.journal_id.name, )))
+                raise osv.except_osv(_('Error!'), (_('You do not have rights to open this %s journal !') % (statement.journal_id.name, )))
 
             if statement.name and statement.name == '/':
                 c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
@@ -282,8 +282,8 @@ class account_cash_statement(osv.osv):
 
             for item_label, item_account in TALBES:
                 if getattr(obj.journal_id, item_account):
-                    raise osv.except_osv(_('Error !'), 
-                                         _('There is no %s Account on the Journal %s') % (item_label, obj.journal_id.name,))
+                    raise osv.except_osv(_('Error!'),
+                                         _('There is no %s Account on the journal %s.') % (item_label, obj.journal_id.name,))
 
             is_profit = obj.difference < 0.0
 

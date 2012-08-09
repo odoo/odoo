@@ -14,14 +14,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:17+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:56+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_select:0
 #: field:hr.salary.rule,condition_select:0
 msgid "Condition Based on"
-msgstr ""
+msgstr "Нөхцөлд тулгуурласан"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -32,14 +32,14 @@ msgstr "Сар тутмын"
 #: view:hr.payslip:0 field:hr.payslip,line_ids:0
 #: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
 msgid "Payslip Lines"
-msgstr ""
+msgstr "Цалингийн хуудсын мөрүүд"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
 #: report:paylip.details:0
 msgid "Salary Rule Category"
-msgstr ""
+msgstr "Цалингийн дүрмийн ангилал"
 
 #. module: hr_payroll
 #: help:hr.salary.rule.category,parent_id:0
@@ -47,6 +47,8 @@ msgid ""
 "Linking a salary category to its parent is used only for the reporting "
 "purpose."
 msgstr ""
+"Цалингийн ангилалыг эцэгтэй холбох нь зөвхөн тайлангийн зорилгоор л "
+"хэрэглэгддэг."
 
 #. module: hr_payroll
 #: view:hr.payslip:0 view:hr.payslip.line:0 view:hr.salary.rule:0
@@ -68,7 +70,7 @@ msgstr "Оролтууд"
 #: field:hr.payslip.line,parent_rule_id:0
 #: field:hr.salary.rule,parent_rule_id:0
 msgid "Parent Salary Rule"
-msgstr ""
+msgstr "Толгой цалингийн дүрэм"
 
 #. module: hr_payroll
 #: field:hr.employee,slip_ids:0 view:hr.payslip:0 view:hr.payslip.run:0
@@ -81,7 +83,7 @@ msgstr "Цалингийн хуудас"
 #: field:hr.payroll.structure,parent_id:0
 #: field:hr.salary.rule.category,parent_id:0
 msgid "Parent"
-msgstr "Эцэг"
+msgstr "Толгой"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -99,7 +101,7 @@ msgstr "Компани"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Done Slip"
-msgstr ""
+msgstr "Дууссан нэхэмжлэл"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -114,13 +116,13 @@ msgstr "Ноороглох"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule
 msgid "hr.salary.rule"
-msgstr ""
+msgstr "hr.salary.rule"
 
 #. module: hr_payroll
 #: field:hr.payslip,payslip_run_id:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Batches"
-msgstr ""
+msgstr "Цалингийн хуудас бөөнөөр"
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:0
@@ -128,19 +130,22 @@ msgid ""
 "This wizard will generate payslips for all selected employee(s) based on the "
 "dates and credit note specified on Payslips Run."
 msgstr ""
+"Энэ харилцах цонх нь сонгосон ажилтнуудын цалингийн хуудсыг огноо болон "
+"цагийн хуудас ажиллуулсан хугацаанд харгалзах зээлийн мэдэгдэлд үндэслэн "
+"үүсгэдэг."
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0 report:paylip.details:0
 #: report:payslip:0
 msgid "Quantity/Rate"
-msgstr ""
+msgstr "Тоо хэмжээ/Үзүүлэлт"
 
 #. module: hr_payroll
 #: field:hr.payslip.input,payslip_id:0 field:hr.payslip.line,slip_id:0
 #: field:hr.payslip.worked_days,payslip_id:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip report:payslip:0
 msgid "Pay Slip"
-msgstr ""
+msgstr "Цалингийн хуудас"
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:0
@@ -151,7 +156,7 @@ msgstr "Үүсгэх"
 #: help:hr.payslip.line,amount_percentage_base:0
 #: help:hr.salary.rule,amount_percentage_base:0
 msgid "result will be affected to a variable"
-msgstr ""
+msgstr "үр дүн нь хувьсагчид нөлөөлнө"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -161,7 +166,7 @@ msgstr "Бүгд:"
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
-msgstr ""
+msgstr "Бүх дэд дүрмүүд"
 
 #. module: hr_payroll
 #: view:hr.payslip:0 view:hr.salary.rule:0
@@ -171,7 +176,7 @@ msgstr "Оруулах өгөгдөл"
 #. module: hr_payroll
 #: constraint:hr.payslip:0
 msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr ""
+msgstr "'Эхлэх өдөр' нь 'Дуусах өдөр'-өөс өмнө байна."
 
 #. module: hr_payroll
 #: view:hr.payslip:0 view:hr.salary.rule.category:0
@@ -203,12 +208,12 @@ msgstr "Бусад мэдээлэл"
 #. module: hr_payroll
 #: help:hr.payslip.line,amount_select:0 help:hr.salary.rule,amount_select:0
 msgid "The computation method for the rule amount."
-msgstr ""
+msgstr "Дүрмийн дүнг тооцоолох арга."
 
 #. module: hr_payroll
 #: view:payslip.lines.contribution.register:0
 msgid "Contribution Register's Payslip Lines"
-msgstr ""
+msgstr "Хандивийн бүртгэлийн цалингийн хуудсын мөрүүд"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
@@ -219,7 +224,7 @@ msgstr "Анхаар !"
 #. module: hr_payroll
 #: report:paylip.details:0
 msgid "Details by Salary Rule Category:"
-msgstr ""
+msgstr "Цалингийн дүрмийн ангиллаарх дэлгэрэнгүй:"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -230,7 +235,7 @@ msgstr "Тэмдэглэл"
 #: field:hr.payroll.structure,code:0 field:hr.payslip,number:0
 #: report:paylip.details:0 report:payslip:0
 msgid "Reference"
-msgstr ""
+msgstr "Лавлах"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -241,13 +246,13 @@ msgstr "Ноорог хуудас"
 #: code:addons/hr_payroll/hr_payroll.py:422
 #, python-format
 msgid "Normal Working Days paid at 100%"
-msgstr ""
+msgstr "Энгийн ажлын өдөрүүд 100%-р төлөгдөнө"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_range_max:0
 #: field:hr.salary.rule,condition_range_max:0
 msgid "Maximum Range"
-msgstr ""
+msgstr "Дээд хязгаар"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -262,7 +267,7 @@ msgstr "Бүтэц"
 #. module: hr_payroll
 #: help:hr.employee,total_wage:0
 msgid "Sum of all current contract's wage of employee."
-msgstr ""
+msgstr "Одоогийн ажилтны гэрээний хөлсний бүх нийлбэр"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -275,6 +280,8 @@ msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
 msgstr ""
+"Цалингийн дүрмийн код нь өөр дүрмүүдийн тооцоололд сурвалж болж ашиглагдаж "
+"болно. Энэ тохиолдолд үсэгний том жижиг хамаатай."
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -284,12 +291,12 @@ msgstr "Долоо тутмын"
 #. module: hr_payroll
 #: field:hr.payslip.line,rate:0
 msgid "Rate (%)"
-msgstr ""
+msgstr "Үнэ (%)"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Confirm"
-msgstr ""
+msgstr "Батлах"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.payslip_report
@@ -300,7 +307,7 @@ msgstr "Ажилтны цалингийн хуудас"
 #: help:hr.payslip.line,condition_range_max:0
 #: help:hr.salary.rule,condition_range_max:0
 msgid "The maximum amount, applied for this rule."
-msgstr ""
+msgstr "Энэ дүрэмд хэрэглэгдсэн хамгийн их дүн."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_python:0
@@ -309,6 +316,8 @@ msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
 msgstr ""
+"Хэрэв нөхцөл үнэн бол энэ дүрэм тооцоололд хэрэглэгдэнэ. Нөхцлийг basic > "
+"1000 гэх мэтээр зааж өгч болно."
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:0
@@ -332,11 +341,14 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Хувь болон тогтмол дүнг тооцоолоход энэ нь хэрэглэгддэг. Тухайлбал: Хоолны "
+"ваучер нь ажилласан өдөр тутамд 1000 төгрөгийн тогтмол дүнтэй бол үүнийг "
+"worked_days.WORK100.number_of_days гэсэн илэрхийллээр илэрхийлж болно."
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
 msgid "Search Salary Rule"
-msgstr ""
+msgstr "Цалингийн дүрэм хайх"
 
 #. module: hr_payroll
 #: field:hr.payslip,employee_id:0 field:hr.payslip.line,employee_id:0
@@ -347,7 +359,7 @@ msgstr "Ажилтан"
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Semi-annually"
-msgstr ""
+msgstr "Хагас-тогтмол"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
@@ -362,29 +374,29 @@ msgstr "Э-мэйл"
 #. module: hr_payroll
 #: view:hr.payslip.run:0
 msgid "Search Payslip Batches"
-msgstr ""
+msgstr "Цалингийн хуудсын бөөнийг хайх"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_percentage_base:0
 #: field:hr.salary.rule,amount_percentage_base:0
 msgid "Percentage based on"
-msgstr ""
+msgstr "Хувийн үндэслэл нь"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,amount_percentage:0
 #: help:hr.salary.rule,amount_percentage:0
 msgid "For example, enter 50.0 to apply a percentage of 50%"
-msgstr ""
+msgstr "Жишээлбэл, 50.0 гэж оруулбал 50% байна"
 
 #. module: hr_payroll
 #: field:hr.payslip,paid:0
 msgid "Made Payment Order ? "
-msgstr ""
+msgstr "Төлбөрийн баримтыг хийсэн үү ? "
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
 msgid "PaySlip Lines by Contribution Register"
-msgstr ""
+msgstr "Цалингийн хуудас хандивийн бүртгэлээр"
 
 #. module: hr_payroll
 #: help:hr.payslip,state:0
@@ -395,6 +407,13 @@ msgid ""
 "* If the payslip is confirmed then state is set to 'Done'.            \n"
 "* When user cancel payslip the state is 'Rejected'."
 msgstr ""
+"* Цалингийн хуудас үүсгэгдсэн дараагаараа төлөв нь 'Ноорог' байдаг.          "
+"  \n"
+"* Цалингийн хуудас шалгагдаж байгаа бол 'Хүлээгдэж буй' төлөвтэй байдаг.     "
+"        \n"
+"* Хэрэв цалингийн хуудас батлагдсан бол 'Хийгдсэн' төлөвтэй болдог.          "
+"  \n"
+"* Хэрэв хэрэглэгч цалингийн хуудсыг цуцалбал 'Татгалзсан' төлөвтэй болдог."
 
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_days:0
@@ -412,18 +431,18 @@ msgstr "Буцаасан"
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
 msgid "Salary Rules"
-msgstr ""
+msgstr "Цалингийн дүрэм"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:337
 #, python-format
 msgid "Refund: "
-msgstr ""
+msgstr "Нөхөн төлөх "
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "PaySlip Lines by Contribution Registers"
-msgstr ""
+msgstr "Цалингийн мөрүүд хандивын бүртгэлээр"
 
 #. module: hr_payroll
 #: view:hr.payslip:0 selection:hr.payslip,state:0 view:hr.payslip.run:0
@@ -434,7 +453,7 @@ msgstr "Дууссан"
 #: field:hr.payslip.line,appears_on_payslip:0
 #: field:hr.salary.rule,appears_on_payslip:0
 msgid "Appears on Payslip"
-msgstr ""
+msgstr "Цалингийн хуудас дээр харагдана"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_fix:0
@@ -449,16 +468,18 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
 msgstr ""
+"Хэрэв идэвхтэй талбар худал буюу тэмдэглэгдээгүй бол цалингийн дүрмийг "
+"устгалгүйгээр нууна."
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Worked Days & Inputs"
-msgstr ""
+msgstr "Ажилласан өдөр & Оролтууд"
 
 #. module: hr_payroll
 #: field:hr.payslip,details_by_salary_rule_category:0
 msgid "Details by Salary Rule Category"
-msgstr ""
+msgstr "Дэлгэрэнгүй нь цалингийн дүрмийн ангилалаар"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
@@ -468,35 +489,35 @@ msgstr "Цалингийн хуудасны мөр"
 #. module: hr_payroll
 #: help:hr.payslip.line,register_id:0 help:hr.salary.rule,register_id:0
 msgid "Eventual third party involved in the salary payment of the employees."
-msgstr ""
+msgstr "Ажилтны цалангийн төлбөрт холбогдсон эцсийн гуравдагч этгээд"
 
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_hours:0
 msgid "Number of Hours"
-msgstr ""
+msgstr "Цагийн тоо"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "PaySlip Batch"
-msgstr ""
+msgstr "Цалингийн хуудас бөөнөөр"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_range_min:0
 #: field:hr.salary.rule,condition_range_min:0
 msgid "Minimum Range"
-msgstr ""
+msgstr "Доод хязгаар"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,child_ids:0 field:hr.salary.rule,child_ids:0
 msgid "Child Salary Rule"
-msgstr ""
+msgstr "Дэд цалингийн дүрэм"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0 field:hr.payslip,date_to:0
 #: field:hr.payslip.run,date_end:0 report:paylip.details:0 report:payslip:0
 #: field:payslip.lines.contribution.register,date_to:0
 msgid "Date To"
-msgstr ""
+msgstr "Дуусах өдөр"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
@@ -508,7 +529,7 @@ msgstr "Хязгаар"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
 msgid "Salary Structures Hierarchy"
-msgstr ""
+msgstr "Цалингийн бүтцийн шатлал"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -518,17 +539,17 @@ msgstr "Цалингийн хуудас"
 #. module: hr_payroll
 #: constraint:hr.contract:0
 msgid "Error! contract start-date must be lower then contract end-date."
-msgstr ""
+msgstr "Алдаа! Гэрээний эхлэх хугацаа дуусах хугацаанаас эрт байх ёстой."
 
 #. module: hr_payroll
 #: view:hr.contract:0
 msgid "Payslip Info"
-msgstr ""
+msgstr "Цалингийн хуудсын мэдээлэл"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
 msgid "Payslip Computation Details"
-msgstr ""
+msgstr "Цалингийн хуудсын тооцооллын дэлгэрэнгүй"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:872
@@ -539,20 +560,20 @@ msgstr "Цалингийн тогтоол %s (%s)-д буруу код зарл�
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
 msgid "Payslip Input"
-msgstr ""
+msgstr "Цалингийн хуудсын оролт"
 
 #. module: hr_payroll
 #: view:hr.salary.rule.category:0
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 msgid "Salary Rule Categories"
-msgstr ""
+msgstr "Цалингийн дүрмийн ангилалууд"
 
 #. module: hr_payroll
 #: help:hr.payslip.input,contract_id:0
 #: help:hr.payslip.worked_days,contract_id:0
 msgid "The contract for which applied this input"
-msgstr ""
+msgstr "Энэ оролт хэрэглэгдсэн гэрээ"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
@@ -566,6 +587,9 @@ msgid ""
 "basic salary for per product can defined in expression like result = "
 "inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
+"Энэ нь тооцоололд хэрэглэгддэг. Тухайлбал. Борлуулалтын дүрэмээр барааны "
+"үндсэн цалингийн 1% хураамжтай байхаар дүрэм байвал үүнийг result = "
+"inputs.SALEURO.amount * contract.wage*0.01 гэсэн илэрхийллээр илэрхийлнэ."
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0 field:hr.payslip.line,amount_select:0
@@ -585,6 +609,8 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
+"Хэрэв энэ тэмдэглэгдсэн бол эндээс үүсгэгдсэн бүх цалингийн хуудас нь нөхөн "
+"төлбөрийн цалингийн хуудсууд байна."
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
@@ -595,7 +621,7 @@ msgstr "Цалингийн бүтэц"
 #. module: hr_payroll
 #: view:hr.payslip.run:0
 msgid "Draft Payslip Batches"
-msgstr ""
+msgstr "Ноорог Цалингийн Хуудсын Багцууд"
 
 #. module: hr_payroll
 #: view:hr.payslip:0 selection:hr.payslip,state:0 view:hr.payslip.run:0
@@ -613,12 +639,12 @@ msgstr "Эхлэх өдөр"
 #. module: hr_payroll
 #: view:hr.payslip.run:0
 msgid "Done Payslip Batches"
-msgstr ""
+msgstr "Хийгдсэн Цалингийн Хуудсын Багцууд"
 
 #. module: hr_payroll
 #: report:paylip.details:0
 msgid "Payslip Lines by Contribution Register:"
-msgstr ""
+msgstr "Цалингийн хуудсын мөрүүд хандивын бүртгэлээр:"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
@@ -661,7 +687,7 @@ msgstr "Идэвхитэй"
 #. module: hr_payroll
 #: view:hr.salary.rule:0
 msgid "Child Rules"
-msgstr ""
+msgstr "Дэд дүрэм"
 
 #. module: hr_payroll
 #: constraint:hr.employee:0
@@ -677,13 +703,13 @@ msgstr "Цалингийн хуудасны дэлгэрэнгүй"
 #: help:hr.payslip.line,condition_range_min:0
 #: help:hr.salary.rule,condition_range_min:0
 msgid "The minimum amount, applied for this rule."
-msgstr ""
+msgstr "Энэ дүрэмд хэрэглэгдсэн хамгийн бага дүн."
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Python Expression"
-msgstr ""
+msgstr "Пайтон илэрхийлэл"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -700,7 +726,7 @@ msgstr "Цалингийн хуудсыг нь үүсгэх ажилчдыг с�
 #: code:addons/hr_payroll/hr_payroll.py:861
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)"
-msgstr ""
+msgstr "%s (%s) цалингийн дүрэмд буруу тоо хэмжээ тодорхойлогдсон байна"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -723,7 +749,7 @@ msgstr "Гэрээ"
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
 msgid "Credit"
-msgstr ""
+msgstr "Кредит"
 
 #. module: hr_payroll
 #: field:hr.contract,schedule_pay:0
@@ -738,13 +764,13 @@ msgstr "Товлосон төлбөр"
 #: code:addons/hr_payroll/hr_payroll.py:895
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Алдаа"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_python:0
 #: field:hr.salary.rule,condition_python:0
 msgid "Python Condition"
-msgstr ""
+msgstr "Пайтон нөхцөл"
 
 #. module: hr_payroll
 #: view:hr.contribution.register:0
@@ -755,29 +781,29 @@ msgstr "Ажил олгогчийн даах суутгал"
 #: code:addons/hr_payroll/hr_payroll.py:347
 #, python-format
 msgid "Refund Payslip"
-msgstr ""
+msgstr "Нөхөн төлбөрийн цалингийн хуудас"
 
 #. module: hr_payroll
 #: field:hr.rule.input,input_id:0
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
 msgid "Salary Rule Input"
-msgstr ""
+msgstr "Цалингийн дүрмийн оролт"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:895
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)"
-msgstr ""
+msgstr "%s (%s) цалингийн дүрэмд буруу Пайтон нөхцөл зарлагдсан байна"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,quantity:0 field:hr.salary.rule,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Тоо хэмжээ"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Refund"
-msgstr ""
+msgstr "Буцаалт"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
@@ -799,7 +825,7 @@ msgstr "Код"
 #: field:hr.salary.rule,amount_python_compute:0
 #: selection:hr.salary.rule,amount_select:0
 msgid "Python Code"
-msgstr ""
+msgstr "Python код"
 
 #. module: hr_payroll
 #: field:hr.payslip.input,sequence:0 field:hr.payslip.line,sequence:0
@@ -810,12 +836,12 @@ msgstr "Дараалал"
 #. module: hr_payroll
 #: report:contribution.register.lines:0 report:paylip.details:0
 msgid "Register Name"
-msgstr ""
+msgstr "Бүртгэлийн нэр"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
 msgid "General"
-msgstr ""
+msgstr "Ерөнхий"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:664
@@ -859,17 +885,22 @@ msgid ""
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
 msgstr ""
+"Сонгосон гэрээний дагууд энэ цалингийн хуудсанд хэрэглэгдэх шаардлагатай "
+"дүрмийг тодорхойлно. Хэрэв гэрээ талбарыг хоосон үлдээмээр байвал энэ талбар "
+"нь заавал шаардагдахгүй бөгөөд сонгосон мөчлөг дахь бүх гэрээнүүдийн бүтцэд "
+"хэрэглэгдэх дүрмүүд болно."
 
 #. module: hr_payroll
 #: field:hr.payroll.structure,children_ids:0
 #: field:hr.salary.rule.category,children_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Дэд"
 
 #. module: hr_payroll
 #: help:hr.payslip,credit_note:0
 msgid "Indicates this payslip has a refund of another"
 msgstr ""
+"Энэ цалингийн хуудас нь өөр нөхөн төлбөрийг агуулж байгааг илэрхийлнэ"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -885,7 +916,7 @@ msgstr "Цалингийн хуудасны дэлгэрэнгүй"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslips"
-msgstr ""
+msgstr "Ажилтны Цалингийн хуудас"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0 field:hr.payslip.line,register_id:0
@@ -906,12 +937,15 @@ msgid ""
 "the employees. It can be the social security, the estate or anyone that "
 "collect or inject money on payslips."
 msgstr ""
+"Хандивын бүртгэл гэдэг нь ажилтны цалингийн төлбөрт гуравдагч этгээд "
+"оролцсоныг хэлнэ. Энэ нь нийгмийн нууцлал байж болох бөгөөд төр болон хэн ч "
+"хамаагүй цалингийн хуудсыг бүрдүүлэх цус сэлбэлт байж болно."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:889
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)"
-msgstr ""
+msgstr "%s (%s) цалингийн дүрэмд буруу хязгаар тодорхойлогдсон байна"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0
@@ -933,7 +967,7 @@ msgstr "Цалингийн хуудсыг хайх"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
 msgid "Payslips Batches"
-msgstr ""
+msgstr "Цалингийн хуудсын багцууд"
 
 #. module: hr_payroll
 #: view:hr.contribution.register:0 field:hr.contribution.register,note:0
@@ -968,12 +1002,12 @@ msgstr "Цалингийн цэс"
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.contribution_register
 msgid "PaySlip Lines By Conribution Register"
-msgstr ""
+msgstr "Цалингийн хуудсын мөрүүд нь хандивын бүртгэлээр"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
-msgstr ""
+msgstr "Хүлээгдэж буй"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -985,12 +1019,13 @@ msgstr "Хаяг"
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)"
 msgstr ""
+"%s (%s) цалингийн дүрэмд буруу хувь эсвэл тоо хэмжээ тодорхойлогдсон байна"
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days_line_ids:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
 msgid "Payslip Worked Days"
-msgstr ""
+msgstr "Цалингийн хуудсын ажилласан өдрүүд"
 
 #. module: hr_payroll
 #: view:hr.salary.rule.category:0
@@ -1035,6 +1070,9 @@ msgid ""
 "but you can also use categories code fields in lowercase as a variable names "
 "(hra, ma, lta, etc.) and the variable basic."
 msgstr ""
+"Энэ нь талбарын утгын % бодоход хэрэглэгддэг; ерөнхийдөө энэ нь дараах "
+"үндэстэй, ангилалын кодын талбаруудыг жижиг үсгээр хувьсагч болгож хэрэглэж "
+"болно (hra, ma, lta, гм.). мөн хувьсагчийн нэрийг ашиглаж болно."
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -1044,18 +1082,18 @@ msgstr "Жил бүр"
 #. module: hr_payroll
 #: field:hr.payslip,input_line_ids:0
 msgid "Payslip Inputs"
-msgstr ""
+msgstr "Цалингийн хуудсын оролтууд"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,salary_rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "Дүрэм"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
 msgid "Salary Rule Categories Hierarchy"
-msgstr ""
+msgstr "Цалингийн Дүрмийн Ангилалын Урагийн мод"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0 field:hr.payslip.line,total:0
@@ -1067,29 +1105,29 @@ msgstr "Нийт"
 #: help:hr.payslip.line,appears_on_payslip:0
 #: help:hr.salary.rule,appears_on_payslip:0
 msgid "Used for the display of rule on payslip"
-msgstr ""
+msgstr "Цалингийн хуудас дээр дүрмийг харуулахад хэрэглэгддэг"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0
 msgid "Search Payslip Lines"
-msgstr ""
+msgstr "Цалингийн хуудсын мөрүүдийг хайх"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Details By Salary Rule Category"
-msgstr ""
+msgstr "Дэлгэрэнгүй нь Цалингийн Дүрмийн ангилал"
 
 #. module: hr_payroll
 #: help:hr.payslip.input,code:0 help:hr.payslip.worked_days,code:0
 #: help:hr.rule.input,code:0
 msgid "The code that can be used in the salary rules"
-msgstr ""
+msgstr "Цалингийн дүрэмд хэрэглэгдэж болох код"
 
 #. module: hr_payroll
 #: view:hr.payslip.run:0
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 msgid "Generate Payslips"
-msgstr ""
+msgstr "Цалингийн хуудсуудыг үүсгэх"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -1105,18 +1143,18 @@ msgstr "Нийт үндсэн цалин"
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Always True"
-msgstr ""
+msgstr "Үргэлж үнэн"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
 msgid "PaySlip Name"
-msgstr ""
+msgstr "Цалингийн хуудсын нэр"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_range:0
 #: field:hr.salary.rule,condition_range:0
 msgid "Range Based on"
-msgstr ""
+msgstr "Хязгаар тулгуурласан"
 
 #~ msgid "Working Days"
 #~ msgstr "Ажлын хоног"
@@ -1902,3 +1940,6 @@ msgstr ""
 
 #~ msgid "Contributions"
 #~ msgstr "Ажил олгогчийн даах суутгал"
+
+#~ msgid "Children definition"
+#~ msgstr "Дэд тодорхойлолт"

@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <record id="mail_alias_marketing_department" model="mail.alias">
+            <field name="alias_name">info</field>
+            <field name="alias_model_id" ref="model_crm_lead"/>
+            <field name="alias_user_id" ref="base.user_root"/>
+            <field name="alias_defaults">{'type':'lead'}</field>
+        </record>
+    </data>
+
     <data>
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/> 
         </record>
 
-    <record id="ir_ui_view_sc_calendar_demo" model="ir.ui.view_sc">
-        <field name="name">Meetings</field>
-        <field name="resource">ir.ui.menu</field>
-        <field name="user_id" ref="base.user_demo"/>
-        <field name="res_id" ref="base_calendar.menu_crm_meeting"/>
-    </record>
-
-    <record model="crm.case.section" id="section_sales_marketing_department">
+        <record id="ir_ui_view_sc_calendar_demo" model="ir.ui.view_sc">
+            <field name="name">Meetings</field>
+            <field name="resource">ir.ui.menu</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="res_id" ref="base_calendar.menu_crm_meeting"/>
+        </record>
+    
+        <record model="crm.case.section" id="section_sales_marketing_department">
             <field name="name">Sales Marketing Department</field>
             <field name="code">Sales Marketing</field>
             <field name="parent_id" ref="crm.section_sales_department"></field>
-    </record>
-
-    <record model="crm.segmentation" id="crm_segmentation0">
-        <field name="name">OpenERP partners</field>
-        <field name="exclusif">True</field>
-        <field name="categ_id" ref="base.res_partner_category_2"/>
-    </record>
-
+            <field name="alias_id" ref="mail_alias_marketing_department"/>
+        </record>
+        
+        <record model="crm.segmentation" id="crm_segmentation0">
+            <field name="name">OpenERP partners</field>
+            <field name="exclusif">True</field>
+            <field name="categ_id" ref="base.res_partner_category_2"/>
+        </record>
     </data>
 </openerp>

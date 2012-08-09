@@ -19,10 +19,9 @@ class EDI(openerpweb.Controller):
     _cp_path = "/edi"
 
     def template(self, req, mods='web,edi'):
-        self.wc = openerpweb.controllers_path['/web/webclient']
         d = {}
-        d["js"] = "\n".join('<script type="text/javascript" src="%s"></script>'%i for i in self.wc.manifest_list(req, mods, 'js'))
-        d["css"] = "\n".join('<link rel="stylesheet" href="%s">'%i for i in self.wc.manifest_list(req, mods, 'css'))
+        d["js"] = "\n".join('<script type="text/javascript" src="%s"></script>'%i for i in webmain.manifest_list(req, mods, 'js'))
+        d["css"] = "\n".join('<link rel="stylesheet" href="%s">'%i for i in webmain.manifest_list(req, mods, 'css'))
         d["modules"] = simplejson.dumps(mods.split(','))
         return d
 
