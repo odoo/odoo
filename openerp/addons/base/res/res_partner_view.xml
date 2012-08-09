@@ -179,7 +179,7 @@
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')" style="position: relative">
                                                 <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                <div>
+                                                <div class="oe_module_vignette">
                                                 <a type="edit">
                                                     <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
                                                 </a>
