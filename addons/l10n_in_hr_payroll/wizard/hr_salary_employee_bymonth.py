@@ -56,7 +56,7 @@ class hr_salary_employee_bymonth(osv.osv_memory):
             context = {}
         datas = {'ids': context.get('active_ids', [])}
 
-        res = self.read(cr, uid, ids, ['employee_ids', 'start_date', 'end_date'], context=context)
+        res = self.read(cr, uid, ids, context=context)
         res = res and res[0] or {}
         datas.update({'form': res})
         return {
