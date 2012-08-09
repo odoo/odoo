@@ -144,10 +144,10 @@ $sheet-max-width: 860px
     // }}}
     //Placeholder style{{{
     \:-moz-placeholder
-        color: $facets-border !important
+        color: $tag-border !important
         font-style: italic !important
     \::-webkit-input-placeholder
-        color: $facets-border !important
+        color: $tag-border !important
         font-style: italic !important
     //}}}
     // Tag reset {{{
@@ -160,7 +160,7 @@ $sheet-max-width: 860px
         font-weight: bold
         background-color: #f0f0f0
         th
-            border-right: 1px dotted $facets-border
+            border-right: 1px dotted $tag-border
             &:last-child
                 border-right: none
     th, td
@@ -554,7 +554,7 @@ $sheet-max-width: 860px
         top: 26px
         left: 0
         z-index: 1
-        border: 1px solid $facets-border
+        border: 1px solid $tag-border
         background: white
         padding: 4px 0
         min-width: 140px
@@ -834,7 +834,7 @@ $sheet-max-width: 860px
         display: none
         width: 220px
         background: #f0eeee
-        border-right: 1px solid $facets-border
+        border-right: 1px solid $tag-border
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
     a.oe_logo
@@ -1005,6 +1005,9 @@ $sheet-max-width: 860px
             .oe_header_row:last-child
                 td
                     padding-top: 0
+            .oe_header_row:first-child
+                td
+                    padding-top: 8px
             .oe_view_manager_sidebar
                 margin: 0px auto
                 text-align: center
@@ -1275,7 +1278,7 @@ $sheet-max-width: 860px
             background-color: white
             min-width: 100%
             display: none
-            border: 1px solid $facets-border
+            border: 1px solid $tag-border
             text-align: left
             @include radius(4px)
             @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
@@ -1660,7 +1663,7 @@ $sheet-max-width: 860px
             background: white
             min-height: 330px
             padding: 16px
-            border: 1px solid $facets-border
+            border: 1px solid $tag-border
             @include box-shadow(0 0 10px rgba(0,0,0,0.3))
             .ui-tabs
                 margin: 0 -16px
@@ -2095,7 +2098,7 @@ $sheet-max-width: 860px
             border-bottom: 2px solid #cacaca
         .treeview-tr, .treeview-td
             cursor: pointer
-            border-right: 1px dotted $facets-border
+            border-right: 1px dotted $tag-border
             vertical-align: top
             text-align: left
             border-bottom: 1px solid #cfcccc
