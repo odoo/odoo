@@ -635,6 +635,16 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             return null;
         }
     },
+
+    add_common_inputs: function() {
+        // add Filters to this.inputs, need view.controls filled
+        (new instance.web.search.Filters(this));
+        // add custom filters to this.inputs
+        (new instance.web.search.CustomFilters(this));
+        // add Advanced to this.inputs
+        (new instance.web.search.Advanced(this));
+    },
+
     on_loaded: function(data) {
         var self = this;
         this.fields_view = data.fields_view;
@@ -649,20 +659,13 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             data.fields_view['arch'].children,
             data.fields_view.fields);
 
-        // add Filters to this.inputs, need view.controls filled
-        (new instance.web.search.Filters(this));
-        // add custom filters to this.inputs
-        (new instance.web.search.CustomFilters(this));
-        // add Advanced to this.inputs
-        (new instance.web.search.Advanced(this));
+        this.add_common_inputs();
 
         // build drawer
         var drawer_started = $.when.apply(
             null, _(this.select_for_drawer()).invoke(
                 'appendTo', this.$element.find('.oe_searchview_drawer')));
         
-        new instance.web.search.AddToReporting(this).appendTo($('.oe_searchview_drawer', this.$element));
-
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
             'facet_for_defaults', this.defaults)).then(function () {
@@ -682,9 +685,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         switch(val) {
         case 'advanced_filter':
             this.extended_search.on_activate();
-            break;
-        case 'add_to_dashboard':
-            this.on_add_to_dashboard();
             break;
         case '':
             this.do_clear();
@@ -1676,74 +1676,6 @@ instance.web.search.Filters = instance.web.search.Input.extend({
             return $.when.apply(null,
                 _(group.filters).invoke('appendTo', $el));
         }));
-    }
-});
-instance.web.search.AddToReporting = instance.web.Widget.extend({
-    template: 'SearchView.addtoreporting',
-    _in_drawer: true,
-    start: function () {
-        var self = this;
-        this.$element
-            .on('click', 'h4', this.proxy('show_option'))
-            .on('submit', 'form', function (e) {
-                e.preventDefault();
-                self.add_dashboard();
-            });
-        return this.load_data().then(this.proxy("render_data"));
-    },
-    load_data:function(){
-        if (!instance.webclient) { return $.Deferred().reject(); }
-        var dashboard_menu = instance.webclient.menu.data.data.children;
-        return new instance.web.Model('ir.model.data')
-                .query(['res_id'])
-                .filter([['name','=','menu_reporting_dashboard']])
-                .first().pipe(function (result) {
-            var menu = _(dashboard_menu).chain()
-                .pluck('children')
-                .flatten(true)
-                .find(function (child) { return child.id === result.res_id; })
-                .value();
-            return menu ? menu.children : [];
-        });
-    },
-    render_data: function(dashboard_choices){
-        var selection = instance.web.qweb.render(
-            "SearchView.addtoreporting.selection", {
-                selections: dashboard_choices});
-        this.$("input").before(selection)
-    },
-    add_dashboard:function(){
-        var self = this;
-        var getParent = this.getParent();
-        var view_parent = this.getParent().getParent();
-        if (! view_parent.action || ! this.$element.find("select").val())
-            return this.do_warn("Can't find dashboard action");
-        var data = getParent.build_search_data();
-        var context = new instance.web.CompoundContext(getParent.dataset.get_context() || []);
-        var domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
-        _.each(data.contexts, context.add, context);
-        _.each(data.domains, domain.add, domain);
-        this.rpc('/web/searchview/add_to_dashboard', {
-            menu_id: this.$element.find("select").val(),
-            action_id: view_parent.action.id,
-            context_to_save: context,
-            domain: domain,
-            view_mode: view_parent.active_view,
-            name: this.$element.find("input").val()
-        }, function(r) {
-            if (r === false) {
-                self.do_warn("Could not add filter to dashboard");
-            } else {
-                self.$element.toggleClass('oe_opened');
-                self.do_notify("Filter added to dashboard", '');
-            }
-        });
-    },
-    show_option:function(){
-        this.$element.toggleClass('oe_opened');
-        if (! this.$element.hasClass('oe_opened'))
-            return;
-        this.$("input").val(this.getParent().fields_view.name || "" );
     }
 });
 
