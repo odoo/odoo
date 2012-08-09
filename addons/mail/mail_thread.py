@@ -1051,7 +1051,7 @@ class mail_thread(osv.Model):
     def message_subscription_remove_subtype(self, cr, uid, ids, user_id, subtype_id):
         subscription_obj = self.pool.get('mail.subscription')
         subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)])
-        return subscription_obj.write(cr, uid, subscription_ids, {'subtype_ids': [3, subtype_id]}, context = context) # remove linl or record ?
+        return subscription_obj.write(cr, uid, subscription_ids, {'subtype_ids': [3, subtype_id]}, context = context) # remove link
         
     def message_subscription_remove_subtype_name(self, cr, uid, ids, user_id, subtype_name):
         subtype_obj = self.pool.get('mail.message.subtype')

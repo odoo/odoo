@@ -540,5 +540,37 @@
                     ref('crm_case_ericdubois4'), ref('crm_case_abcfuelcounits0')], {}"
         />
 
+        <record id="message_blogpost0_subtype1" model="mail.message.subtype">
+            <field name="name">new</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="message_blogpost0_subtype2" model="mail.message.subtype">
+            <field name="name">won</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+        </record>
+        <record id="message_blogpost0_subtype3" model="mail.message.subtype">
+            <field name="name">lost</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+        </record>
+        <record id="message_blogpost0_subtype4" model="mail.message.subtype">
+            <field name="name">stage change</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="message_blogpost0_subtype5" model="mail.message.subtype">
+            <field name="name">other</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="message_blogpost0_subtype6" model="mail.message.subtype">
+            <field name="name">email</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+        </record>
+        <record id="message_blogpost0_subtype7" model="mail.message.subtype">
+            <field name="name">comment</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+            <field name="default" eval="False"/>
+        </record>
     </data>
 </openerp>
