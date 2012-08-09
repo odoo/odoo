@@ -19,7 +19,7 @@ class plugin_handler(osv.osv_memory):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
         if base_url:
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            base_url += '/web/webclient/login?db=%s&login=%s&key=%s#id=%s&model=%s' % (cr.dbname, user.login, user.password, res_id, model)
+            base_url += '/login?db=%s&login=%s&key=%s#id=%s&model=%s' % (cr.dbname, user.login, user.password, res_id, model)
         return base_url
 
     def is_installed(self, cr, uid):

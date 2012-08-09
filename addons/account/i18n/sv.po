@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 05:56+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:07+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -729,7 +729,7 @@ msgstr "Skriv ut faktura"
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr "Partners Sammanslagna Idag"
+msgstr "Avstämda företag idag"
 
 #. module: account
 #: view:report.hr.timesheet.invoice.journal:0
@@ -1576,7 +1576,7 @@ msgstr "Mall för skatteregion"
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
 msgid "Reconciled transactions"
-msgstr "Reconciled transactions"
+msgstr "Avstämda transaktioner"
 
 #. module: account
 #: field:account.journal.view,columns_id:0
@@ -2074,7 +2074,7 @@ msgstr "Öppna verifikat"
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
-msgstr "Konton att balansera"
+msgstr "Konton att stämma av"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
@@ -2471,7 +2471,7 @@ msgstr "30 dagar månadsskiftet"
 #. module: account
 #: view:account.entries.report:0
 msgid "Unreconciled entries"
-msgstr "Ej avstämda transaktioner"
+msgstr "Oavstämda poster"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -2712,7 +2712,7 @@ msgstr "Automatisk avstämning"
 #. module: account
 #: field:account.invoice,reconciled:0
 msgid "Paid/Reconciled"
-msgstr "Betald/Återbetald"
+msgstr "Betald/avstämd"
 
 #. module: account
 #: field:account.tax,ref_base_code_id:0
@@ -3386,7 +3386,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "Unreconcile Entries"
+msgstr "Oavstämda poster"
 
 #. module: account
 #: field:account.tax.code,notprintable:0
@@ -3519,7 +3519,7 @@ msgstr "Försäljningskonto per kontotyp"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr "Obalanserade transaktioner"
+msgstr "Oavstämda verifikat"
 
 #. module: account
 #: sql_constraint:res.currency:0
@@ -3645,7 +3645,7 @@ msgstr "Bokför"
 #: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconcile"
-msgstr "Unreconcile"
+msgstr "Oavstäm"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3677,7 +3677,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:837
 #, python-format
 msgid "Some entries are already reconciled !"
-msgstr "Some entries are already reconciled !"
+msgstr "Vissa poster är redan avstämda !"
 
 #. module: account
 #: view:account.tax:0
@@ -3770,7 +3770,8 @@ msgstr "Betalorder"
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
-"Check this option if you want the user to reconcile entries in this account."
+"Markera det här alternativet om du vill att användaren ska stämma av poster "
+"i detta konto."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_account_balance_landscape
@@ -4018,7 +4019,7 @@ msgstr "Visningskonton"
 #. module: account
 #: view:account.state.open:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(Invoice should be unreconciled if you want to open it)"
+msgstr "(fakturan skall vara oavstämd om du vill öppna den)"
 
 #. module: account
 #: field:account.chart,period_from:0
@@ -4386,7 +4387,7 @@ msgstr "Kontoutdrag är registrerade"
 #: code:addons/account/wizard/account_reconcile.py:133
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr "Beräkna avskrivning"
+msgstr "Stäm av avskrivning"
 
 #. module: account
 #: view:report.account.receivable:0
@@ -4709,7 +4710,7 @@ msgstr "Mina fakturor"
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
 msgid "Check"
-msgstr "Markera"
+msgstr "Check"
 
 #. module: account
 #: view:account.invoice:0
@@ -5531,7 +5532,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_move_line
 msgid "Lines to reconcile"
-msgstr "Rader att balansera"
+msgstr "Rader att stämma av"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -6894,7 +6895,7 @@ msgstr ""
 "Du kan inte göra denna ändring på en avstämd transaktion! Du kan bara ändra "
 "vissa icke bokföringsinformation eller så måste du göra transaktionen "
 "oavstämd först!\n"
-"% s"
+"%s"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -7700,7 +7701,7 @@ msgstr "Icke bokförda verifikat"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Sales Properties"
-msgstr "Sales Properties"
+msgstr "Försäljningsegenskaper"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
@@ -9032,7 +9033,7 @@ msgstr "Öppna transaktionsjournal"
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
 msgid "Draft invoices are checked, validated and printed."
-msgstr "Priliminära fakturor är kontrollerade, validerade och utskrivna."
+msgstr "Preliminära fakturor är kontrollerade, validerade och utskrivna."
 
 #. module: account
 #: help:account.chart.template,property_reserve_and_surplus_account:0
@@ -9445,7 +9446,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_reconcile.py:152
 #, python-format
 msgid "You must select accounts to reconcile"
-msgstr "You must select accounts to reconcile"
+msgstr "Du måste välja konton att stämma av"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
@@ -9557,8 +9558,8 @@ msgid ""
 "The journal must have centralised counterpart without the Skipping draft "
 "state option checked!"
 msgstr ""
-"The journal must have centralised counterpart without the Skipping draft "
-"state option checked!"
+"Journalen ska ha centraliserat motkonto som inte har alternativet att hoppar "
+"över utkastläget!"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -10457,7 +10458,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:832
 #, python-format
 msgid "Entry is already reconciled"
-msgstr "Entry is already reconciled"
+msgstr "Verifikat är redan avstämd"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable

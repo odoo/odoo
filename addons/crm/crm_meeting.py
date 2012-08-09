@@ -113,7 +113,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s".', data.get('name','<new'))
         return user_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -473,7 +473,7 @@ class account_voucher(osv.osv):
             tr_type = 'purchase'
         else:
             if not journal.default_credit_account_id or not journal.default_debit_account_id:
-                raise osv.except_osv(_('Error !'), _('Please define default credit/debit accounts on the journal "%s" !') % (journal.name))
+                raise osv.except_osv(_('Error!'), _('Please define default credit/debit accounts on the journal "%s".') % (journal.name))
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
             tr_type = 'receipt'
 
@@ -822,7 +822,7 @@ class account_voucher(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for t in self.read(cr, uid, ids, ['state'], context=context):
             if t['state'] not in ('draft', 'cancel'):
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Voucher(s) which are already opened or paid !'))
+                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete voucher(s) which are already opened or paid.'))
         return super(account_voucher, self).unlink(cr, uid, ids, context=context)
 
     def onchange_payment(self, cr, uid, ids, pay_now, journal_id, partner_id, ttype='sale'):
@@ -919,8 +919,8 @@ class account_voucher(osv.osv):
         elif voucher_brw.journal_id.sequence_id:
             name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id, context=context)
         else:
-            raise osv.except_osv(_('Error !'),
-                        _('Please define a sequence on the journal !'))
+            raise osv.except_osv(_('Error!'),
+                        _('Please define a sequence on the journal.'))
         if not voucher_brw.reference:
             ref = name.replace('/','')
         else:
@@ -952,11 +952,11 @@ class account_voucher(osv.osv):
         if amount_residual > 0:
             account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Income Currency Rate' on the company! "))
+                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Income Currency Rate' on the company, then create accounting entry for currency rate difference."))
         else:
             account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Expense Currency Rate' on the company! "))
+                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Expense Currency Rate' on the company, then create accounting entry for currency rate difference."))
         # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
         # the receivable/payable account may have a secondary currency, which render this field mandatory
         account_currency_id = company_currency <> current_currency and current_currency or False
@@ -1542,7 +1542,7 @@ class account_bank_statement_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_amount, 'The amount of the voucher must be the same amount as the one on the statement line', ['amount']),
+        (_check_amount, 'The amount of the voucher must be the same amount as the one on the statement line.', ['amount']),
     ]
 
     _columns = {

@@ -29,7 +29,7 @@ class stock_config_settings(osv.osv_memory):
         'module_claim_from_delivery': fields.boolean("allow claim on deliveries",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
-        'module_stock_invoice_directly': fields.boolean("generate invoice directly from the picking",
+        'module_stock_invoice_directly': fields.boolean("create and open the invoice when the user finish a delivery order",
             help="""This allows to automatically launch the invoicing wizard if the delivery is
                 to be invoiced when you send or deliver goods.
                 This installs the module stock_invoice_directly."""),
@@ -53,7 +53,7 @@ class stock_config_settings(osv.osv_memory):
             implied_group='product.group_uos',
             help="""Allows you to sell units of a product, but invoice based on a different unit of measure.
                 For instance, you can sell pieces of meat that you invoice based on their weight."""),
-        'group_stock_packaging': fields.boolean("manage product packaging",
+        'group_stock_packaging': fields.boolean("allow to define several packaging methods on products",
             implied_group='product.group_stock_packaging',
             help="""Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
         'group_stock_production_lot': fields.boolean("track serial number on products",
