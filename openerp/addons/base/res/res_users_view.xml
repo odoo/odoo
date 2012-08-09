@@ -2,6 +2,16 @@
 <openerp>
     <data>
         <!-- res.groups -->
+        <record id="view_groups_search" model="ir.ui.view">
+            <field name="name">res.groups.search</field>
+            <field name="model">res.groups</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Groups">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
+                </search>
+            </field>
+        </record>
         <record id="view_groups_form" model="ir.ui.view">
             <field name="name">res.groups.form</field>
             <field name="model">res.groups</field>
@@ -81,7 +91,7 @@
                 <form string="Users" version="7.0">
                     <field name="id" invisible="1"/>
                     <sheet>
-                        <field name="avatar" widget='image' on_change="onchange_avatar(avatar)" class="oe_avatar oe_left"/>
+                        <field name="image_medium" widget='image' class="oe_avatar oe_left"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
@@ -191,9 +201,8 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
-                   <sheet>
                     <div class="oe_right oe_avatar">
-                        <field name="avatar" widget='image' on_change="onchange_avatar(avatar)"/>
+                        <field name="image_small" widget='image' class="oe_image_small"/>
                     </div>
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
@@ -211,7 +220,11 @@
                         <field name="user_email" widget="email" readonly="0"/>
                         <field name="signature" readonly="0"/>
                     </group>
-                    </sheet>
+                    <footer>
+                        <button name="preference_save" type="object" string="Save"/>
+                        <button name="preference_cancel" special="cancel" string="Cancel"/>
+                        <button name="preference_change_password" type="object" string="Change password"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -219,14 +232,9 @@
             <field name="name">Change My Preferences</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.users</field>
+            <field name="target">new</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=',uid)]</field>
-        </record>
-        <record id="action_res_users_my_view1" model="ir.actions.act_window.view">
-            <field eval="20" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="act_window_id" ref="action_res_users_my"/>
+            <field name="view_mode">form</field>
         </record>
         <record id="action_res_users_my_view2" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>

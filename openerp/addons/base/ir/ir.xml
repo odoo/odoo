@@ -1796,7 +1796,6 @@
                 <tree string="Config Wizard Steps">
                     <field name="sequence"/>
                     <field name="action_id"/>
-                    <field name="category_id"/>
                     <field name="type"/>
                     <field name="state" readonly="1"/>
                     <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
@@ -1828,7 +1827,6 @@
                         <field name="action_id"/>
                         <field name="type"/>
                         <field name="sequence"/>
-                        <field name="category_id"/>
                     </group>
                     <group string="Groups">
                         <field name="groups_id" nolabel="1" colspan="4"/>
@@ -1846,11 +1844,7 @@
                 <search string="Search Actions">
                     <filter string="To Do" name="todo" icon="terp-camera_test" domain=" [('state','=','open')]" help="Wizards to be Launched"/>
                     <field name="action_id"/>
-                    <field name="category_id"/>
                     <field name="state"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Category" context="{'group_by': 'category_id'}" icon="terp-folder-orange"/>
-                    </group>
                 </search>
             </field>
         </record>
@@ -1875,50 +1869,6 @@
             <field name="model">osv_memory.autovacuum</field>
             <field name="function">power_on</field>
             <field name="args">()</field>
-        </record>
-
-        <!-- ir.actions.todo category -->
-
-        <record id="ir_actions_todo_category_form" model="ir.ui.view">
-            <field name="name">ir.actions.todo.category.form</field>
-            <field name="model">ir.actions.todo.category</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Wizard Category" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="sequence"/>
-                        <field name="wizards_ids" nolabel="1" colspan="4"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="ir_actions_todo_category_tree" model="ir.ui.view">
-            <field name="name">ir.actions.todo.category.tree</field>
-            <field name="model">ir.actions.todo.category</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Wizard Category">
-                        <field name="name"/>
-                        <field name="sequence"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="category_administration_config" model="ir.actions.todo.category">
-            <field name="name">Administration</field>
-            <field name="sequence">1</field>
-        </record>
-
-        <record id="category_sales_management_config" model="ir.actions.todo.category">
-            <field name="name">Sales Management</field>
-            <field name="sequence">5</field>
-        </record>
-
-        <record id="category_tools_customization_config" model="ir.actions.todo.category">
-            <field name="name">Tools / Customization</field>
-            <field name="sequence">5</field>
         </record>
 
         <!-- ir.mail.server -->

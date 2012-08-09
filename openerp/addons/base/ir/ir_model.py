@@ -178,14 +178,16 @@ class ir_model(osv.osv):
     def create(self, cr, user, vals, context=None):
         if  context is None:
             context = {}
-        if context and context.get('manual',False):
+        if context and context.get('manual'):
             vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
             self.instanciate(cr, user, vals['model'], context)
             self.pool.get(vals['model']).__init__(self.pool, cr)
-            ctx = context.copy()
-            ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0')})
+            ctx = dict(context,
+                field_name=vals['name'],
+                field_state='manual',
+                select=vals.get('select_level', '0'))
             self.pool.get(vals['model'])._auto_init(cr, ctx)
             #pooler.restart_pool(cr.dbname)
         return res
@@ -335,8 +337,11 @@ class ir_model_fields(osv.osv):
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
                 #Added context to _auto_init for special treatment to custom field for select_level
-                ctx = context.copy()
-                ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0'),'update_custom_fields':True})
+                ctx = dict(context,
+                    field_name=vals['name'],
+                    field_state='manual',
+                    select=vals.get('select_level', '0'),
+                    update_custom_fields=True)
                 self.pool.get(vals['model'])._auto_init(cr, ctx)
 
         return res
@@ -446,8 +451,8 @@ class ir_model_fields(osv.osv):
             # was called earlier, they will be in-sync before the _auto_init.
             # Anything we don't update in _columns now will be reset from
             # the model into ir.model.fields (db).
-            ctx = context.copy()
-            ctx.update({'select': vals.get('select_level','0'),'update_custom_fields':True})
+            ctx = dict(context, select=vals.get('select_level', '0'),
+                       update_custom_fields=True)
 
             for __, patch_struct in models_patch.items():
                 obj = patch_struct[0]
@@ -825,20 +830,16 @@ class ir_model_data(osv.osv):
                                 'res_id': inherit_id.id,
                                 'noupdate': noupdate,
                                 },context=context)
-        if xml_id:
-            if res_id:
-                self.loads[(module, xml_id)] = (model, res_id)
-                if model_obj._inherits:
-                    for table in model_obj._inherits:
-                        inherit_field = model_obj._inherits[table]
-                        inherit_id = model_obj.read(cr, uid, res_id,
-                                [inherit_field])[inherit_field]
-                        self.loads[(module, xml_id + '_' + \
-                                table.replace('.', '_'))] = (table, inherit_id)
+        if xml_id and res_id:
+            self.loads[(module, xml_id)] = (model, res_id)
+            for table, inherit_field in model_obj._inherits.iteritems():
+                inherit_id = model_obj.read(cr, uid, res_id,
+                        [inherit_field])[inherit_field]
+                self.loads[(module, xml_id + '_' + table.replace('.', '_'))] = (table, inherit_id)
         return res_id
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
-        if type(models[0])==type([]) or type(models[0])==type(()):
+        if isinstance(models[0], (list, tuple)):
             model,res_id = models[0]
         else:
             res_id=None
@@ -858,7 +859,7 @@ class ir_model_data(osv.osv):
         res = cr.fetchone()
         if not res:
             ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
-            res = ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
+            ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         elif xml_id:
             cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
         return True
@@ -890,8 +891,6 @@ class ir_model_data(osv.osv):
         for data in self.browse(cr, uid, ids, context):
             model = data.model
             res_id = data.res_id
-            model_obj = self.pool.get(model)
-            name = tools.ustr(data.name)
 
             pair_to_unlink = (model, res_id)
             if pair_to_unlink not in to_unlink:
@@ -909,19 +908,19 @@ class ir_model_data(osv.osv):
         for model,res_id in wkf_todo:
             try:
                 wf_service.trg_write(uid, model, res_id, cr)
-            except:
-                _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model)
+            except Exception:
+                _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model, exc_info=True)
 
         def unlink_if_refcount(to_unlink):
             for model, res_id in to_unlink:
                 external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
-                if (set(external_ids)-ids_set):
+                if set(external_ids)-ids_set:
                     # if other modules have defined this record, we must not delete it
                     continue
                 _logger.info('Deleting %s@%s', res_id, model)
                 try:
                     self.pool.get(model).unlink(cr, uid, [res_id], context=context)
-                except:
+                except Exception:
                     _logger.info('Unable to delete %s@%s', res_id, model, exc_info=True)
 
         # Remove non-model records first, then model fields, and finish with models

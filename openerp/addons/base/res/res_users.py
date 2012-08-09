@@ -25,7 +25,6 @@ from functools import partial
 
 import pytz
 
-import io, StringIO
 from lxml import etree
 from lxml.builder import E
 import netsvc
@@ -33,7 +32,6 @@ import openerp
 import openerp.exceptions
 from osv import fields,osv
 from osv.orm import browse_record
-from PIL import Image
 import pooler
 import random
 from service import security
@@ -152,33 +150,6 @@ class users(osv.osv):
                                          body=(self.get_welcome_mail_body(cr, uid, context=context) % user))
         return ir_mail_server.send_email(cr, uid, msg, context=context)
 
-    def onchange_avatar(self, cr, uid, ids, value, context=None):
-        if not value:
-            return {'value': {'avatar_big': value, 'avatar': value} }
-        return {'value': {'avatar_big': self._avatar_resize(cr, uid, value, 540, 450, context=context), 'avatar': self._avatar_resize(cr, uid, value, context=context)} }
-    
-    def _set_avatar(self, cr, uid, id, name, value, args, context=None):
-        if not value:
-            vals = {'avatar_big': value}
-        else:
-            vals = {'avatar_big': self._avatar_resize(cr, uid, value, 540, 450, context=context)}
-        return self.write(cr, uid, [id], vals, context=context)
-    
-    def _avatar_resize(self, cr, uid, avatar, height=180, width=150, context=None):
-        image_stream = io.BytesIO(avatar.decode('base64'))
-        img = Image.open(image_stream)
-        img.thumbnail((height, width), Image.ANTIALIAS)
-        img_stream = StringIO.StringIO()
-        img.save(img_stream, "PNG")
-        return img_stream.getvalue().encode('base64')
-
-    def _get_avatar(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for user in self.browse(cr, uid, ids, context=context):
-            if user.avatar_big:
-                result[user.id] = self._avatar_resize(cr, uid, user.avatar_big, context=context)
-        return result
-
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
             # Do not update the password if no value is provided, ignore silently.
@@ -194,6 +165,15 @@ class users(osv.osv):
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
         return dict.fromkeys(ids, '')
 
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image)
+        return result
+    
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+    
     _columns = {
         'id': fields.integer('ID'),
         'name': fields.char('User Name', size=64, required=True, select=True,
@@ -208,11 +188,26 @@ class users(osv.osv):
                                                             "otherwise leave empty. After a change of password, the user has to login again."),
         'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),
-        'avatar_big': fields.binary('Big-sized avatar', help="This field holds the image used as avatar for the user. The avatar field is used as an interface to access this field. The image is base64 encoded, and PIL-supported. It is stored as a 540x450 px image, in case a bigger image must be used."),
-        'avatar': fields.function(_get_avatar, fnct_inv=_set_avatar, string='Avatar', type="binary",
+        'image': fields.binary("Avatar",
+            help="This field holds the image used as avatar for the "\
+                 "user. The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 1024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized avatar", type="binary", multi="_get_image",
             store = {
-                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['avatar_big'], 10),
-            }, help="Image used as avatar for the user. It is automatically resized as a 180x150 px image. This field serves as an interface to the avatar_big field."),
+                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized image of the user. It is automatically "\
+                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Smal-sized avatar", type="binary", multi="_get_image",
+            store = {
+                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized image of the user. It is automatically "\
+                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
@@ -320,16 +315,16 @@ class users(osv.osv):
             pass
         return result
 
-    def _get_avatar(self, cr, uid, context=None):
-        # default avatar file name: avatar0 -> avatar6.png, choose randomly
-        avatar_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
-        return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'), context=context)
+    def _get_default_image(self, cr, uid, context=None):
+        # default image file name: avatar0 -> avatar6.png, choose randomly
+        image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'password' : '',
         'context_lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
         'context_tz': lambda self, cr, uid, context: context.get('tz', False),
-        'avatar': _get_avatar,
+        'image': _get_default_image,
         'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
@@ -338,7 +333,7 @@ class users(osv.osv):
     }
 
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'user_email', 'name', 'avatar', 'avatar_big']
+    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'user_email', 'name', 'image', 'image_medium', 'image_small']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
@@ -538,6 +533,19 @@ class users(osv.osv):
         if new_passwd:
             return self.write(cr, uid, uid, {'password': new_passwd})
         raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
+
+    def preference_save(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+    def preference_change_password(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'change_password',
+            'target': 'new',
+        }
 
     def has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
