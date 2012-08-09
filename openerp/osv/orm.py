@@ -3982,7 +3982,7 @@ class BaseModel(object):
         direct = []
         totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
         for field in vals:
-            field_column = (f != self.CONCURRENCY_CHECK_FIELD and self._all_columns.get(field).column)
+            field_column = (field != self.CONCURRENCY_CHECK_FIELD and self._all_columns.get(field).column)
             if field_column and field_column.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, field, field_column.deprecated)
             if field in self._columns:
