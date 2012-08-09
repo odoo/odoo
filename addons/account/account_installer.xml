@@ -9,9 +9,11 @@
                 <form position="attributes" version="7.0">
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
-                <button name="action_next" position="attributes">
-                    <attribute name="string">Continue</attribute>
-                </button>
+                <footer position="replace">
+                    <footer>
+                      <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
+                    </footer>
+                </footer>
                 <separator string="title" position="replace">
                     <group>
                         <field name="charts"/>
@@ -40,14 +42,8 @@
             <field name="target">new</field>
         </record>
 
-        <record id="category_accounting_configuration" model="ir.actions.todo.category">
-            <field name="name">Accounting</field>
-            <field name="sequence">5</field>
-        </record>
-
         <record id="account_configuration_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_account_configuration_installer"/>
-            <field name="category_id" ref="category_accounting_configuration"/>
             <field name="sequence">3</field>
             <field name="type">automatic</field>
         </record>

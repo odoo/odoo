@@ -81,10 +81,15 @@
                     <h1>
                         <field name="name" string="Project Name"/>
                     </h1>
+                    <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <field name="alias_id" invisible="1"/>
+                        <label for="alias_name" class="oe_edit_only "/>
+                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                    </div>
                     <group>
                         <group>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                            <field name="partner_id" string = "Contact" on_change="onchange_partner_id(partner_id)"/>
                             <field name="privacy_visibility"/>
                             <field name="analytic_account_id" invisible="1" required="0"/>
                         </group>
@@ -188,7 +193,7 @@
                     <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
-                    <field name="partner_id" string="Partner"/>
+                    <field name="partner_id" string="Contact"/>
                     <field name="parent_id" string="Parent" invisible="1"/>
                     <field name="planned_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
@@ -223,6 +228,8 @@
                     <field name="date"/>
                     <field name="color"/>
                     <field name="task_count"/>
+                    <field name="alias_id"/>
+                    <field name="alias_domain"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height oe_kanban_global_click">
@@ -247,15 +254,16 @@
                                         <div>Deadline</div>
                                         <div><field name="date"/></div>
                                     </div>
-
                                     <div class="oe_kanban_project_fields oe_kanban_project_progress">
                                         <div>Progress</div>
                                         <div><t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></div>
                                     </div>
-
+                                    <div name="alias_box" t-if="record.alias_domain.raw_value" class="oe_kanban_ellipsis">
+                                        <a t-attf-href="mailto:#{record.alias_id.value}"><field name="alias_id"/></a>
+                                    </div>
                                     <div class="oe_kanban_project_avatars">
                                         <t t-foreach="record.members.raw_value" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'avatar', member)" t-att-data-member_id="member"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
                                 </div>
@@ -285,12 +293,16 @@
             <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
-            <field name="help" type="xml">
-                <p>Click <i>'Create'</i> to <b>start a new project</b>.</p>
-                <p>Projects are used to organize your activities; plan tasks,
-                track issues, invoice timesheets. You can define internal
-                projects (R&amp;D, Improve Sales Process), private projects (My
-                Todos) or customer ones.</p>
+            <field name="help" type="html">
+                <p class="oe_form_nocontent_create">
+                  Click to start a new project.
+                </p>
+                <p>
+                  Projects are used to organize your activities; plan
+                  tasks, track issues, invoice timesheets. You can define
+                  internal projects (R&amp;D, Improve Sales Process),
+                  private projects (My Todos) or customer ones.
+                </p>
                 <p>
                     You will be able collaborate with internal users on
                     projects or invite customers to share your activities.
@@ -395,18 +407,12 @@
                                     states="cancelled,done" context="{'button_reactivate':True}"/>
                             <button name="action_close" string="Done" type="object"
                                     states="draft,open,pending" class="oe_highlight"/>
-                            <button name="do_pending" string="Pending" type="object"
-                                    states="open"/>
                             <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
                                     states="pending,open,draft" groups="project.group_delegate_task"/>
                             <button name="do_cancel" string="Cancel" type="object"
                                     states="draft,open,pending"/>
-                            <button name="stage_previous" string="Previous Stage" type="object"
-                                    states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                            <button name="stage_next" string="Next Stage" type="object" class="oe_highlight"
-                                    states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
                         </span>
-                        <field name="stage_id" widget="statusbar"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet string="Task">
                     <label for="name" class="oe_edit_only"/>
@@ -415,7 +421,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="project_id"  on_change="onchange_project(project_id)"/>
+                            <field name="project_id"  on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
@@ -542,15 +548,15 @@
                                     <i><field name="date_deadline"/></i>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="" name="set_kanban_state_done" class="oe_kanban_status"> </a>
-                                    <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
+                                    <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="Ready to Pull" name="set_kanban_state_done" class="oe_kanban_status"> </a>
+                                    <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready to Pull" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
                                     <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
-                                    <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
-                                    <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
-                                    <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    <a t-if="record.priority.raw_value == 1" type="object" string="Priority" name="set_normal_priority" class="oe_e oe_star_on">7</a>
+                                    <a t-if="record.priority.raw_value != 1" type="object" string="Priority" name="set_high_priority" class="oe_e oe_star_off">7</a>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left">
-                                    <span>
+                                    <span groups="project.group_time_work_estimation_tasks" title="Remaining hours">
                                         <span class="oe_e">N</span>
                                         <t t-esc="Math.round(record.remaining_hours.raw_value)"/>
                                     </span>
@@ -695,7 +701,15 @@
             <field name="view_id" eval="False"/>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="help">Tasks allow you to organize your work into a project. Click on button "Create" to create a new task.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new task.
+              </p><p>
+                OpenERP's project management allows you to manage the pipeline
+                of tasks in order to get things done efficiently. You can
+                track progress, discuss on tasks, attach documents, etc.
+              </p>
+            </field>
         </record>
         <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
@@ -790,7 +804,16 @@
             <field name="res_model">project.task.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="task_type_tree"/>
-            <field name="help">Define the steps that will be used in the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress in solving a task or an issue.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a stage in the task pipeline.
+              </p><p>
+                Define the steps that will be used in the project from the
+                creation of the task, up to the closing of the task or issue.
+                You will use these stages in order to track the progress in
+                solving a task or an issue.
+              </p>
+            </field>
         </record>
 
         <menuitem id="menu_tasks_config" name="GTD" parent="base.menu_definitions" sequence="1"/>

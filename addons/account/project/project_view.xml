@@ -100,7 +100,21 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
-            <field name="help">The normal chart of accounts has a structure defined by the legal requirement of the country. The analytic chart of accounts structure should reflect your own business needs in term of costs/revenues reporting. They are usually structured by contracts, projects, products or departements. Most of the OpenERP operations (invoices, timesheets, expenses, etc) generate analytic entries on the related account.</field>
+            <field name="help" type="html">
+              <p>
+                Click to add a new analytic account.
+              </p><p>
+                The normal chart of accounts has a structure defined by the
+                legal requirement of the country. The analytic chart of
+                accounts structure should reflect your own business needs in
+                term of costs/revenues reporting.
+              </p><p>
+                They are usually structured by contracts, projects, products or
+                departements. Most of the OpenERP operations (invoices,
+                timesheets, expenses, etc) generate analytic entries on the
+                related account.
+              </p>
+            </field>
         </record>
 
         <menuitem groups="analytic.group_analytic_accounting" id="next_id_40"

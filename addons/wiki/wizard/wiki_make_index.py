@@ -49,7 +49,7 @@ class wiki_make_index(osv.osv_memory):
                             order by section ", (tuple(data),))
             lst0 = cr.fetchall()
             if not lst0[0][1]:
-                raise osv.except_osv(_('Warning !'), _('There is no section in this Page'))
+                raise osv.except_osv(_('Warning!'), _('There is no section in this Page.'))
 
             lst = []
             s_ids = {}

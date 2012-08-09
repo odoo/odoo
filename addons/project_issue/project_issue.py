@@ -437,7 +437,7 @@ class project_issue(base_stage, osv.osv):
                 if case.task_id:
                     self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
-                raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
+                raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.case_set(cr, uid, ids, 'draft', data, context=context)
             self.case_escalate_send_note(cr, uid, [case.id], context=context)
         return True
@@ -542,6 +542,9 @@ project_issue()
 class project(osv.osv):
     _inherit = "project.project"
 
+    def _get_alias_models(self, cr, uid, context=None):
+        return [('project.task', "Tasks"), ("project.issue", "Issues")]
+        
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
@@ -551,7 +554,6 @@ class project(osv.osv):
 
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'reply_to' : fields.char('Reply-To Email Address', size=256),
         'issue_count': fields.function(_issue_count, type='integer'),
     }
 
@@ -565,6 +567,7 @@ class project(osv.osv):
     _constraints = [
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
+    
 project()
 
 class account_analytic_account(osv.osv):
@@ -587,5 +590,11 @@ class account_analytic_account(osv.osv):
         return res or vals.get('use_issues')
 
 account_analytic_account()
+
+class project_project(osv.osv):
+    _inherit = 'project.project'
+    _defaults = {
+        'use_issues': True
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

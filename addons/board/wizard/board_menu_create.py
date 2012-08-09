@@ -40,10 +40,6 @@ class board_menu_create(osv.osv_memory):
         """
         data = context and context.get('active_id', False) or False
         if data:
-            board = self.pool.get('board.board').browse(cr, uid, data, context=context)
-            if not board.line_ids:
-                raise osv.except_osv(_('User Error!'),
-                                     _('Please Insert Dashboard View(s) !'))
             return False
 
 
@@ -67,6 +63,19 @@ class board_menu_create(osv.osv_memory):
                 'view_mode': 'form',
                 'res_model': 'board.board',
                 'view_id': board.view_id.id,
+                'help': _('''<div class="oe_empty_custom_dashboard">
+                  <p>
+                    <b>This dashboard is empty.</b>
+                  </p><p>
+                    To add the first report into this dashboard, go to any
+                    menu, switch to list or graph view, and click <i>'Add to
+                    Dashboard'</i> in the extended search options.
+                  </p><p>
+                    You can filter and group data before inserting into the
+                    dashboard using the search options.
+                  </p>
+              </div>
+                ''')
                 })
         obj_menu = self.pool.get('ir.ui.menu')
         #start Loop
@@ -74,7 +83,6 @@ class board_menu_create(osv.osv_memory):
             obj_menu.create(cr, uid, {
                 'name': data.menu_name,
                 'parent_id': data.menu_parent_id.id,
-                'icon': 'STOCK_SELECT_COLOR',
                 'action': 'ir.actions.act_window,' + str(action_id)
                 }, context=context)
         #End Loop

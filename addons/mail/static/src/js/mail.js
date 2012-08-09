@@ -16,7 +16,7 @@ openerp.mail = function(session) {
 
     session.web.FormView = session.web.FormView.extend({
         do_action: function(action, on_close) {
-            if (action.res_model == 'mail.compose.message' && this.fields && this.fields.message_ids) {
+            if (action.res_model == 'mail.compose.message' && this.fields && this.fields.message_ids && this.fields.message_ids.view.get("actual_mode") != 'create') {
                 var record_thread = this.fields.message_ids;
                 var thread = record_thread.thread;
                 thread.instantiate_composition_form('comment', true, false, 0, action.context);
@@ -341,7 +341,7 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             // customize display: add avatar, clean previous content
             var user_avatar = mail.ChatterUtils.get_image(this.session.prefix,
-                this.session.session_id, 'res.users', 'avatar', this.session.uid);
+                this.session.session_id, 'res.users', 'image_small', this.session.uid);
             this.$element.find('img.oe_mail_icon').attr('src', user_avatar);
             this.$element.find('div.oe_mail_msg_content').empty();
             // create a context for the default_get of the compose form
@@ -373,7 +373,8 @@ openerp.mail = function(session) {
                 action_buttons: false,
                 pager: false,
                 initial_mode: 'edit',
-                });
+                disable_autofocus: true,
+            });
             // add the form, bind events, activate the form
             var msg_node = this.$element.find('div.oe_mail_msg_content');
             return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
@@ -736,12 +737,12 @@ openerp.mail = function(session) {
 
         /** Displays a record, performs text/link formatting */
         display_comment: function (record) {
-            record.body = mail.ChatterUtils.do_text_nl2br(record.body, true);
+            record.body = mail.ChatterUtils.do_text_nl2br($.trim(record.body), true);
             // if (record.type == 'email' && record.state == 'received') {
             if (record.type == 'email') {
                 record.mini_url = ('/mail/static/src/img/email_icon.png');
             } else {
-                record.mini_url = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', record.user_id[0]);
+                record.mini_url = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', record.user_id[0]);
             }
             // body text manipulation
             if (record.subtype == 'plain') {
@@ -754,9 +755,9 @@ openerp.mail = function(session) {
             record.is_author = mail.ChatterUtils.is_author(this, record.user_id[0]);
             // render
             var rendered = session.web.qweb.render('mail.thread.message', {'record': record, 'thread': this, 'params': this.params, 'display': this.display});
-            $(rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
             // expand feature
-            this.$element.find('div.oe_mail_msg_body:last').expander({
+            $(rendered).appendTo(this.$element.children('div.oe_mail_thread_display:first'));
+            this.$element.find('div.oe_mail_msg_record_body').expander({
                 slicePoint: this.params.msg_more_limit,
                 expandText: 'read more',
                 userCollapseText: '[^]',
@@ -767,7 +768,7 @@ openerp.mail = function(session) {
         },
 
         display_current_user: function () {
-            var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'avatar', this.params.uid);
+            var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.params.uid);
             return this.$element.find('img.oe_mail_icon').attr('src', avatar);
         },
         
@@ -912,7 +913,7 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_recthread_followers h4').html('Followers (' + records.length + ')');
             _(records).each(function (record) {
                 if (record.id == self.session.uid) { self.is_subscriber = true; }
-                record.avatar_url = mail.ChatterUtils.get_image(self.session.prefix, self.session.session_id, 'res.users', 'avatar', record.id);
+                record.avatar_url = mail.ChatterUtils.get_image(self.session.prefix, self.session.session_id, 'res.users', 'image_small', record.id);
                 $(session.web.qweb.render('mail.record_thread.subscriber', {'record': record})).appendTo(user_list);
             });
             if (self.is_subscriber) {

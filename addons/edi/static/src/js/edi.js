@@ -154,7 +154,7 @@ openerp.edi.EdiImport = openerp.web.OldWidget.extend({
     on_imported: function(response) {
         if ('action' in response) {
             this.rpc("/web/session/save_session_action", {the_action: response.action}, function(key) {
-                window.location = "/web/webclient/home#sa="+encodeURIComponent(key);
+                window.location = "/#sa="+encodeURIComponent(key);
             });
         }
         else {
