@@ -35,16 +35,10 @@ Keep track of Wiki groups, pages, and history.
     'web_depends': ['widget_document_page'],
     'init_xml': [],
     'update_xml': [
-        'data/document_page_sale_faq_data.xml',
-        'wizard/document_page_page_open_view.xml',
         'wizard/document_page_create_menu_view.xml',
         'wizard/document_page_show_diff_view.xml',
-        'wizard/document_page_make_index_view.xml',
         'document_page_view.xml',
         'document_page_sequence.xml',
-        'document_page_sale_faq_view.xml',
-        'data/document_page_quickstart.xml',
-        'data/document_page_main.xml',
         'security/document_page_security.xml',
         'security/ir.model.access.csv'
     ],
@@ -55,7 +49,7 @@ Keep track of Wiki groups, pages, and history.
     'auto_install': False,
     'certificate': '0086363630317',
     'web': True,
-    'images': ['images/create_index.jpeg','images/page_history.jpeg','images/document_page_groups.jpeg','images/document_page_pages.jpeg','document_page_type_internal_faq.jpeg','page_history.jpeg','sale_document.jpeg','wiki_pages.jpeg','wiki_pages_quality_manual.jpeg'],
+    'images': [],
     'js': ['static/src/lib/wiky/wiky.js', 'static/src/js/document_page.js'],
     'css' : [
         "static/src/css/document_page.css"],
