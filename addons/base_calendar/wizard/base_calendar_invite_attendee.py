@@ -78,6 +78,7 @@ send an Email to Invited Person')
         att_obj = self.pool.get('calendar.attendee')
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, uid, uid, context=context)
+
         for datas in self.read(cr, uid, ids, context=context):
             type = datas.get('type')
             vals = []
@@ -91,9 +92,9 @@ send an Email to Invited Person')
                 else:
                     return {'type': 'ir.actions.act_window_close'}
             if type == 'internal':
-                
+
                 if not datas.get('user_ids'):
-                    raise osv.except_osv(_('Error!'), ("Please select any User"))
+                    raise osv.except_osv(_('Error!'), ("Please select any user."))
                 for user_id in datas.get('user_ids'):
                     user = user_obj.browse(cr, uid, user_id)
                     res = {
@@ -140,7 +141,7 @@ send an Email to Invited Person')
                 if not mail_to:
                     name =  map(lambda x: x[1], filter(lambda x: type==x[0], \
                                        self._columns['type'].selection))
-                    raise osv.except_osv(_('Error!'), _("%s must have an email  address to send mail") %(name[0]))
+                    raise osv.except_osv(_('Error!'), _("%s must have an email address to send mail.") %(name[0]))
                 att_obj._send_mail(cr, uid, attendees, mail_to, \
                        email_from = current_user.user_email or tools.config.get('email_from', False))
 

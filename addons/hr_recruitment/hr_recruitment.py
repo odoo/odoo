@@ -19,15 +19,18 @@
 #
 ##############################################################################
 
-from base_status.base_stage import base_stage
+import logging
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from osv import fields, osv
 import tools
-import collections
-import binascii
+from osv import fields, osv
+from openerp.modules.registry import RegistryManager
+from openerp import SUPERUSER_ID
+from base_status.base_stage import base_stage
 from tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
@@ -62,8 +65,8 @@ class hr_recruitment_stage(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
-        'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
-        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
+        'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
+        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change according to the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
         'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
         'requirements': fields.text('Requirements'),
     }
@@ -253,8 +256,6 @@ class hr_applicant(base_stage, osv.Model):
         return {'value': {'department_id': False}}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, context=None):
-        if not department_id:
-            return {'value': {'stage_id': False}}
         obj_recru_stage = self.pool.get('hr.recruitment.stage')
         stage_ids = obj_recru_stage.search(cr, uid, ['|',('department_id','=',department_id),('department_id','=',False)], context=context)
         stage_id = stage_ids and stage_ids[0] or False
@@ -296,13 +297,11 @@ class hr_applicant(base_stage, osv.Model):
         category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
         res['context'] = {
-            'default_applicant_id': applicant.id,
-            'default_partner_id': applicant.partner_id and applicant.partner_id.id or False,
+            'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
             'default_user_id': uid,
-            'default_email_from': applicant.email_from,
             'default_state': 'open',
             'default_name': applicant.name,
-            'default_categ_id': category.id,
+            'default_categ_ids': category and [category.id] or False,
         }
         return res
 
@@ -511,9 +510,54 @@ class hr_applicant(base_stage, osv.Model):
 class hr_job(osv.osv):
     _inherit = "hr.job"
     _name = "hr.job"
+    _inherits = {'mail.alias': 'alias_id'}
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+                                    help="Email alias for this job position. New emails will automatically "
+                                         "create new applicants for this job position."),
     }
+
+    def init(self, cr):
+        # Installation hook to create aliases for all jobs, right after _auto_init
+        registry = RegistryManager.get(cr.dbname)
+        mail_alias = registry.get('mail.alias')
+        hr_job = registry.get('hr.job')
+        jobs_no_alias = hr_job.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
+        # Use read() not browse(), to avoid prefetching uninitialized inherited fields
+        for job_data in hr_job.read(cr, SUPERUSER_ID, jobs_no_alias, ['name']):
+            alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, {'alias_name': 'job_'+job_data['name'],
+                                                                         'alias_force_id': job_data['id']},
+                                                      model_name=self._name)
+            hr_job.write(cr, SUPERUSER_ID, job_data['id'], {'alias_id': alias_id})
+            _logger.info('Mail alias created for hr.job %s (uid %s)', job_data['name'], job_data['id'])
+
+        # Finally attempt to reinstate the missing constraint
+        try:
+            cr.execute('ALTER TABLE hr_job ALTER COLUMN alias_id SET NOT NULL')
+        except Exception:
+            pass
+    
+    def create(self, cr, uid, vals, context=None):
+        alias_pool = self.pool.get('mail.alias')
+        if not vals.get('alias_id'):
+            name = vals.pop('alias_name', None) or vals['name']
+            alias_id = alias_pool.create_unique_alias(cr, uid, 
+                          {'alias_name': "job_"+name},
+                          model_name="hr.applicant",
+                          context=context)
+            vals['alias_id'] = alias_id
+        res = super( hr_job, self).create(cr, uid, vals, context)
+        alias_pool.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade-delete mail aliases as well, as they should not exist without the job position.
+        mail_alias = self.pool.get('mail.alias')
+        alias_ids = [job.alias_id.id for job in self.browse(cr, uid, ids, context=context) if job.alias_id]
+        res = super(hr_job, self).unlink(cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
+        return res
     
     def action_print_survey(self, cr, uid, ids, context=None):
         if context is None:
@@ -531,12 +575,5 @@ class hr_job(osv.osv):
                 'context' : context,
                 'nodestroy':True,
             }
-
-
-class crm_meeting(osv.osv):
-    _inherit = 'crm.meeting'
-    _columns = {
-        'applicant_id': fields.many2one('hr.applicant','Applicant'),
-    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

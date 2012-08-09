@@ -15,7 +15,15 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
             <field name="context" eval="{'object_id': ref('model_crm_claim')}"/>
-            <field name="help">Create claim categories to better manage and classify your claims. Some example of claims can be: preventive action, corrective action.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a claim category.
+              </p><p>
+                Create claim categories to better manage and classify your
+                claims. Some example of claims can be: preventive action,
+                corrective action.
+              </p>
+            </field>
         </record>
 
         <menuitem action="crm_claim_categ_action" name="Categories"
@@ -57,7 +65,15 @@
             <field name="res_model">crm.claim.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_claim_stage_tree"/>
-            <field name="help">You can create claim stages to categorize the status of every claim entered in the system. The stages define all the steps required for the resolution of a claim.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to setup a new stage in the processing of the claims. 
+              </p><p>
+                You can create claim stages to categorize the status of every
+                claim entered in the system. The stages define all the steps
+                required for the resolution of a claim.
+              </p>
+            </field>
         </record>
 
         <!-- Claims    -->
@@ -168,9 +184,9 @@
                         </notebook>
                     </group>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                </footer>
+                </div>
                 </form>
             </field>
         </record>
@@ -199,66 +215,27 @@
             <field name="arch" type="xml">
                 <search string="Search Claims">
                     <field name="name" string="Claims"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-check" string="New" name="current"
-                        domain="[('state','=','draft')]"
-                        help="New Claims"/>
-                    <filter icon="terp-camera_test"
-                        string="In Progress"
-                        domain="[('state','=','open')]"
-                        help="In Progress Claims"/>
-                    <filter icon="terp-gtk-media-pause"
-                        string="Pending"
-                        domain="[('state','=','pending')]"/>
-                    <filter string="Unassigned Claims"
-                            icon="terp-personal-"
-                            domain="[('user_id','=', False)]"
-                            help="Unassigned Claims" />
-                    <separator orientation="vertical"/>
+                    <filter icon="terp-check" string="New" name="current" domain="[('state','=','draft')]" help="New Claims"/>
+                    <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="In Progress Claims"/>
+                    <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]"/>
+                    <separator/>
+                    <filter string="Unassigned Claims" icon="terp-personal-" domain="[('user_id','=', False)]" help="Unassigned Claims" />
                     <field name="partner_id"/>
-                    <field name="user_id" widget="selection"/>
-                    <newline/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Partner" icon="terp-partner"
-                            domain="[]" help="Partner"
-                            context="{'group_by':'partner_id'}"/>
-                        <filter string="Responsible" icon="terp-personal"
-                            domain="[]" help="Responsible User"
-                            context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Stage" icon="terp-stage"
-                            domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection"
-                            domain="[]" context="{'group_by':'categ_id'}"/>
-                        <filter string="Status"
-                            icon="terp-stock_effects-object-colorize"
-                            domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Claim Date" icon="terp-go-month"
-                            domain="[]" help="Claim Date"
-                            context="{'group_by':'date'}"/>
-                        <filter string="Deadline" icon="terp-go-month"
-                            domain="[]"
-                            context="{'group_by':'date_deadline'}"/>
-                        <filter string="Closure" icon="terp-go-month"
-                            domain="[]" help="Date Closed"
-                            context="{'group_by':'date_closed'}"  groups="base.group_no_one"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}"/>
+                        <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}"/>
+                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
+                        <filter string="Claim Date" icon="terp-go-month" domain="[]" help="Claim Date" context="{'group_by':'date'}"/>
+                        <filter string="Deadline" icon="terp-go-month" domain="[]" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Closure" icon="terp-go-month" domain="[]" help="Date Closed" context="{'group_by':'date_closed'}"  groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
         </record>
 
-        <record id="base.view_crm_partner_info_History1" model="ir.ui.view">
-            <field name="name">res.partner.crm.history.inherit1</field>
-            <field name="model">res.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//page[@string='History']" position="attributes">
-                    <attribute name="invisible">False</attribute>
-                </xpath>
-            </field>
-        </record>
         <record id="view_claim_partner_info_form1" model="ir.ui.view">
             <field name="name">res.partner.claim.info.form</field>
             <field name="model">res.partner</field>
@@ -266,15 +243,18 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//page[@string='History']" position="inside">
+                <xpath expr="//page[@name='page_history']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                </xpath>
+                <xpath expr="//page[@name='page_history']" position="inside">
+                    <group name="grp_claim" string="Claim">
                         <field name="claims_ids" colspan="4" nolabel="1">
                             <tree string="Partners Claim" editable="bottom">
                                 <field name="name"/>
                             </tree>
                         </field>
-                    </xpath>
-                </data>
+                    </group>
+                </xpath>
             </field>
         </record>
 

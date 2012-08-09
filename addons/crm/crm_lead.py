@@ -201,14 +201,13 @@ class crm_lead(base_stage, osv.osv):
         'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+        'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Categories', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
             domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
-        'opt_in': fields.boolean('Opt-In', oldname='optin', help="If opt-in is checked, this contact has accepted to receive emails."),
         'opt_out': fields.boolean('Opt-Out', oldname='optout', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
@@ -246,7 +245,7 @@ class crm_lead(base_stage, osv.osv):
         'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
-        
+
         # Fields for address, due to separation from crm and res.partner
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),
@@ -260,6 +259,9 @@ class crm_lead(base_stage, osv.osv):
         'function': fields.char('Function', size=128),
         'title': fields.many2one('res.partner.title', 'Title'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
+        'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode', \
+                            domain="[('section_id','=',section_id)]"),
+        'planned_cost': fields.float('Planned Costs'),
     }
 
     _defaults = {
@@ -278,20 +280,29 @@ class crm_lead(base_stage, osv.osv):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
-    
-    def on_change_opt_in(self, cr, uid, ids, opt_in):
-        return {'value':{'opt_in':opt_in,'opt_out':False}}
 
-    def on_change_opt_out(self, cr, uid, ids, opt_out):
-        return {'value':{'opt_out':opt_out,'opt_in':False}}
-
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value':{}}
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
+
+    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
+        result = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            values = {
+                'partner_name' : partner.name, 
+                'street' : partner.street,
+                'street2' : partner.street2,
+                'city' : partner.city,
+                'state_id' : partner.state_id and partner.state_id.id or False,
+                'country_id' : partner.country_id and partner.country_id.id or False,
+            }
+        return {'value' : values}
+
 
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.
@@ -526,7 +537,7 @@ class crm_lead(base_stage, osv.osv):
         lead_ids = context and context.get('lead_ids', []) or []
 
         if len(ids) <= 1:
-            raise osv.except_osv(_('Warning !'),_('Please select more than one opportunity from the list view.'))
+            raise osv.except_osv(_('Warning!'),_('Please select more than one opportunity from the list view.'))
 
         ctx_opportunities = self.browse(cr, uid, lead_ids, context=context)
         opportunities = self.browse(cr, uid, ids, context=context)
@@ -772,6 +783,7 @@ class crm_lead(base_stage, osv.osv):
         res['context'] = {
             'default_opportunity_id': opportunity.id,
             'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
+            'default_partner_ids' : opportunity.partner_id and [opportunity.partner_id.id] or False,
             'default_user_id': uid,
             'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
             'default_email_from': opportunity.email_from,
@@ -783,9 +795,9 @@ class crm_lead(base_stage, osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context):
             if (not lead.section_id.allow_unlink) and (lead.state != 'draft'):
-                raise osv.except_osv(_('Error'),
-                    _("You cannot delete lead '%s'; it must be in state 'Draft' to be deleted. " \
-                      "You should better cancel it, instead of deleting it.") % lead.name)
+                raise osv.except_osv(_('Error!'),
+                    _("You cannot delete lead '%s' because it is not in 'Draft' state. " \
+                      "You can still cancel it, instead of deleting it.") % lead.name)
         return super(crm_lead, self).unlink(cr, uid, ids, context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -859,12 +871,12 @@ class crm_lead(base_stage, osv.osv):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
         return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
-        
+
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
             lead = self.browse(cr, uid, [lead], context=context)[0]
         return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
-    
+
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
@@ -891,7 +903,7 @@ class crm_lead(base_stage, osv.osv):
             message = _("%s <b>partner</b> is now set to <em>%s</em>." % (self.case_get_note_msg_prefix(cr, uid, lead, context=context), lead.partner_id.name))
             lead.message_append_note(body=message)
         return True
-    
+
     def convert_opportunity_send_note(self, cr, uid, lead, context=None):
         message = _("Lead has been <b>converted to an opportunity</b>.")
         lead.message_append_note(body=message)

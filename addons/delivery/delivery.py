@@ -68,7 +68,7 @@ class delivery_carrier(osv.osv):
         'price' : fields.function(get_price, string='Price'),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it."),
         'normal_price': fields.float('Normal Price', help="Keep empty if the pricing depends on the advanced pricing per destination"),
-        'free_if_more_than': fields.boolean('Free If More Than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping"),
+        'free_if_more_than': fields.boolean('Free If Order Total Amount Is More Than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping"),
         'amount': fields.float('Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency"),
         'use_detailed_pricelist': fields.boolean('Advanced Pricing per Destination', help="Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order, etc."),
         'pricelist_ids': fields.one2many('delivery.grid', 'carrier_id', 'Advanced Pricing'),
@@ -217,7 +217,7 @@ class delivery_grid(osv.osv):
                 ok = True
                 break
         if not ok:
-            raise osv.except_osv(_('No price available!'), _('No line matched this product or order in the choosed delivery grid.'))
+            raise osv.except_osv(_('No price available!'), _('No line matched this product or order in the chosen delivery grid.'))
 
         return price
 

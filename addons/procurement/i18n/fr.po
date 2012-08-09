@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:00+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:31+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -84,7 +84,7 @@ msgstr "Calculer seulement les règles de stock minimum"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Temporary Procurement Exceptions"
-msgstr ""
+msgstr "Approvisionnement en Exception Temporaire"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -163,12 +163,12 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Permanent Procurement Exceptions"
-msgstr ""
+msgstr "Exceptions d'approvisionnement permanentes"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules Search"
-msgstr "Rechercher dans les règles de stock minimum"
+msgstr "Chercher parmi les règles de stock minimum"
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -233,6 +233,9 @@ msgid ""
 "procurement to bring the virtual stock to the Quantity specified as Max "
 "Quantity."
 msgstr ""
+"Quand le stock virtuel est plus petit que la quantité minimale, OpenERP "
+"génère un ordre d'approvisionnement pour remettre le stock virtuel à la "
+"quantité spécifiée dans quantité maximale."
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -387,7 +390,7 @@ msgstr "Références"
 #: view:product.product:0
 #: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rule"
-msgstr ""
+msgstr "Règle de Stock Minimum"
 
 #. module: procurement
 #: view:res.company:0
@@ -401,6 +404,8 @@ msgid ""
 "Please check the quantity in procurement order(s), it should not be 0 or "
 "less!"
 msgstr ""
+"Veuiilez vérifier la quantité dans l'ordre d'approvisionnement, elle ne peut "
+"pas être à 0 ou négative!"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -627,7 +632,7 @@ msgstr "Point de commande automatique"
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Règle du stock minimum."
+msgstr "Règle de stock minimum."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -677,7 +682,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,date_close:0
 msgid "Date Closed"
-msgstr "Date de fermeture"
+msgstr "Date de clôture"
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -796,7 +801,7 @@ msgstr "Règles de stock minimum"
 #. module: procurement
 #: field:procurement.order,close_move:0
 msgid "Close Move at end"
-msgstr "Fermer le transfert à la fin"
+msgstr "Clôturer le mouvement à la fin"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,qty_multiple:0
@@ -1017,7 +1022,7 @@ msgstr ""
 #. module: procurement
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Erreur : code EAN incorrect"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:152

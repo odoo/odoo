@@ -172,9 +172,9 @@ class hr_analytic_timesheet(osv.osv):
         if emp_id:
             ename = emp_obj.browse(cr, uid, emp_id[0], context=context).name
         if not vals.get('journal_id',False):
-           raise osv.except_osv(_('Warning !'), _('Analytic journal is not defined for employee %s \nDefine an employee for the selected user and assign an analytic journal!')%(ename,))
+           raise osv.except_osv(_('Warning!'), _('No \'Analytic Journal\' is defined for employee %s \nDefine an employee for the selected user and assign an \'Analytic Journal\'!')%(ename,))
         if not vals.get('account_id',False):
-           raise osv.except_osv(_('Warning !'), _('No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet.'))
+           raise osv.except_osv(_('Warning!'), _('No analytic account is defined on the project.\nPlease set one or we cannot automatically fill the timesheet.'))
         return super(hr_analytic_timesheet, self).create(cr, uid, vals, context=context)
 
     def on_change_user_id(self, cr, uid, ids, user_id):
@@ -198,6 +198,13 @@ class account_analytic_account(osv.osv):
     _columns = {
         'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
     }
+    
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['use_timesheets'] = template.use_timesheets
+        return res
 
 account_analytic_account()
 

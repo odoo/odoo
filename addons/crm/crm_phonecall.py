@@ -41,7 +41,7 @@ class crm_phonecall(base_state, osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Contact'),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.selection([ ('draft', 'Draft'),
@@ -81,6 +81,7 @@ class crm_phonecall(base_state, osv.osv):
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'state':  _get_default_state,
         'user_id': lambda self,cr,uid,ctx: uid,
+        'active': 1
     }
 
     def create(self, cr, uid, vals, context=None):
@@ -284,7 +285,7 @@ class crm_phonecall(base_state, osv.osv):
         return True
 
     def _call_set_partner_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Partner has been <b>created</b>"), context=context)
+        return self.message_append_note(cr, uid, ids, body=_("Partner has been <b>created</b>."), context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

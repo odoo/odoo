@@ -37,7 +37,7 @@ def get_datetime(date_field):
     date_split = date_field.split(' ')
     if len(date_split) == 1:
         date_field = date_split[0] + " 00:00:00"
-   
+
     return datetime.strptime(date_field[:19], '%Y-%m-%d %H:%M:%S')
 
 
@@ -185,7 +185,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 self.post_action(cr, uid, [new_id], model, context=context)
             return new_id
         return wrapper
-    
+
     def _write(self, old_write, model, context=None):
         """
         Return a wrapper around `old_write` calling both `old_write` and
@@ -327,7 +327,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         reply_to = emailfrom
         if not emailfrom:
             raise osv.except_osv(_('Error!'),
-                    _("No Email ID Found for your Company address!"))
+                    _("No email ID found for your company address."))
         return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=obj.id)
 
 
@@ -490,7 +490,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return True
 
     _constraints = [
-        (_check_mail, 'Error: The mail is not well formated', ['act_mail_body']),
+        (_check_mail, 'Error ! The mail is not well formated.', ['act_mail_body']),
     ]
 
 base_action_rule()

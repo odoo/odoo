@@ -9,10 +9,10 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//sheet" position="after">
-                    <footer>
-                    <field name="message_ids" widget="mail_thread" 
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread" 
                             options='{"thread_level": 1}'/>
-                    </footer>
+                    </div>
                 </xpath>
             </field>
         </record>

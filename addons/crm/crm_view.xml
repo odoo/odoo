@@ -2,10 +2,16 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="1"
+        <!-- Top menu item -->
+        <!--
+            This menu item's purpose is to overwrite another one defined in
+            the base module in order to set new groups.
+        -->
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
             groups="base.group_sale_manager,base.group_sale_salesman"/>
 
-        <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities" 
+        <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
             parent="base.menu_base_config" sequence="80" groups="base.group_sale_manager"/>
 
         <menuitem id="base.menu_crm_config_opportunity" name="Opportunities"
@@ -53,7 +59,18 @@
             <field name="res_model">crm.case.channel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Track from where is coming your leads and opportunities by creating specific channels that will be maintained at the creation of a document in the system. Some examples of channels can be: Website, Phone Call, Reseller, etc.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new channel.
+              </p><p>
+                Use channels to track the soure of your leads and opportunities. Channels
+                are mostly used in reporting to analyse sales performance
+                related to marketing efforts.
+              </p><p>
+                Some examples of channels: company website, phone call
+                campaign, reseller, etc.
+              </p>
+            </field>
         </record>
 
         <menuitem action="crm_case_channel_action" id="menu_crm_case_channel" parent="base.menu_crm_config_lead" sequence="4" groups="base.group_no_one"/>
@@ -72,6 +89,7 @@
                             <field name="parent_id"/>
                             <field name="code"/>
                         </group>
+                        
                         <group>
                             <field name="user_id"/>
                             <field name="resource_calendar_id"/>
@@ -80,14 +98,14 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Team">
-                            <group col="4">
-                                <group>
-                                    <field name="reply_to"/>
-                                </group>
-                                <group>
-                                    <field name="change_responsible"/>
-                                    <field name="allow_unlink"/>
-                                </group>
+                           <group>
+                                <field name="alias_id" invisible="1"/>
+                                <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                                 </div>
+                                <field name="change_responsible"/>
+                                <field name="allow_unlink"/>
                             </group>
                             <separator string="Team Members"/>
                             <field name="member_ids"/>
@@ -127,7 +145,15 @@
             <field name="res_model">crm.case.section</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
-            <field name="help">Define a Sales Team to organize your different salesmen or sales departments into separate teams. Each team will work in its own list of opportunities, sales orders, etc. Each user can set a default team in his user preferences. The opportunities and sales order displayed, will automatically be filtered according to his team.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new sales team. 
+              </p><p>
+                Use sales team to organize your different salespersons or
+                departments into separate teams. Each team will work in
+                its own list of opportunities.
+              </p>
+            </field>
         </record>
 
         <menuitem action="crm_case_section_act"
@@ -374,11 +400,20 @@
         </record>
 
         <record id="crm_segmentation_tree-act" model="ir.actions.act_window">
-            <field name="name">Partners Segmentation</field>
+            <field name="name">Contacts Segmentation</field>
             <field name="res_model">crm.segmentation</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Create specific partner categories which you can assign to your partners to better manage your interactions with them. The segmentation tool is able to assign categories to partners according to criteria you set.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new customer segmentation. 
+              </p><p>
+                Create specific categories which you can assign to your
+                contacts to better manage your interactions with them. The
+                segmentation tool is able to assign categories to contacts
+                according to criteria you set.
+              </p>
+            </field>
         </record>
 
        <menuitem action="crm_segmentation_tree-act"
@@ -389,5 +424,51 @@
         <!-- menu for the working time -->
         <menuitem action="resource.action_resource_calendar_form" id="menu_action_resource_calendar_form" parent="resource.menu_resource_config" sequence="1"/>
 
+        <!-- Payment Mode Tree View -->
+
+        <record model="ir.ui.view" id="view_crm_payment_mode_tree">
+            <field name="name">crm.payment.mode.tree</field>
+            <field name="model">crm.payment.mode</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Mode">
+                    <field name="name"/>
+                    <field name="section_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Payment Mode Form View -->
+
+        <record model="ir.ui.view" id="view_crm_payment_mode_form">
+            <field name="name">crm.payment.mode.form</field>
+            <field name="model">crm.payment.mode</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Payment Mode" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="section_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Payment Mode Action -->
+
+        <record id="action_crm_payment_mode" model="ir.actions.act_window">
+            <field name="name">Payment Mode</field>
+            <field name="res_model">crm.payment.mode</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem id="menu_crm_payment_mode" name="Fund Raising"
+            parent="base.menu_base_config" sequence="85" groups="crm.group_fund_raising"/>
+            
+        <menuitem action="action_crm_payment_mode"
+            id="menu_crm_payment_mode_act"
+            name="Payment Modes"
+            parent="menu_crm_payment_mode" />
     </data>
 </openerp>

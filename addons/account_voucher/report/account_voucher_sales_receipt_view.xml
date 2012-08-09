@@ -48,48 +48,26 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Sales Receipt Analysis">
-              <group>
-                    <field name="date"/>
-                    <field name="date_due"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Draft"
-                           icon="terp-document-new"
-                           domain="[('state','=','draft')]"
-                           help = "Draft Vouchers"/>
-                    <filter string="Pro-forma"
-                           icon="terp-gtk-media-pause"
-                           domain="[('state','=','proforma')]"
-                           help = "Pro-forma Vouchers"/>
-                    <filter string="Posted"
-                           name="current"
-                           icon="terp-check"
-                           domain="[('state','not in', ('draft','cancel'))]"
-                           help = "Validated Vouchers"/>
-                   <separator orientation="vertical"/>
-                   <field name="partner_id"/>
-                </group>
-                <newline/>
+                <field name="date"/>
+                <field name="date_due"/>
+                <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft Vouchers"/>
+                <filter string="Pro-forma" icon="terp-gtk-media-pause" domain="[('state','=','proforma')]" help = "Pro-forma Vouchers"/>
+                <filter string="Posted" name="current" icon="terp-check" domain="[('state','not in', ('draft','cancel'))]" help = "Validated Vouchers"/>
+                <field name="partner_id"/>
                 <group expand="0" string="Extended Filters...">
-                    <field name="journal_id" widget="selection"/>
+                    <field name="journal_id"/>
                     <field name="account_id"/>
                     <field name="pay_now"/>
-                    <separator orientation="vertical" groups="base.group_multi_company"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </group>
-                <newline/>
                 <group expand="1" string="Group By...">
                     <filter string="Partner" name="partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                     <filter string="Salesperson" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Due Date" icon="terp-go-today" context="{'group_by':'date_due'}"/>
-                    <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <separator orientation="vertical"/>
                     <filter string="Day" name="day" icon="terp-go-today" context="{'group_by':'day'}" help="Group by Invoice Date"/>
                     <filter string="Month" name="month" icon="terp-go-month" context="{'group_by':'month'}" help="Group by month of Invoice Date"/>
                     <filter string="Year" name="year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of Invoice Date"/>
@@ -105,7 +83,14 @@
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_current':1, 'search_default_partner':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1,}</field>
         <field name="search_view_id" ref="view_sale_receipt_report_search"/>
-        <field name="help">From this report, you can have an overview of the amount invoiced to your customer as well as payment delays. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
+        <field name="help" type="html">
+          <p>
+            From this report, you can have an overview of the amount invoiced
+            to your customer as well as payment delays. The tool search can
+            also be used to personalise your Invoices reports and so, match
+            this analysis to your needs.
+          </p>
+        </field>
 
     </record>
 

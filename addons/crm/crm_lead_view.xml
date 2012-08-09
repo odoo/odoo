@@ -51,7 +51,6 @@
             <field name="arch" type="xml">
                 <search string="Stage Search">
                     <field name="name" string="Stage Name"/>
-                    <separator orientation="vertical"/>
                     <field name="state"/>
                     <field name="type"/>
                 </search>
@@ -64,10 +63,17 @@
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to set a new stage in your lead/opportunity pipeline.
+              </p><p>
+                Stages will allow salespersons to easily track how a specific
+                lead or opportunity is positioned in the sales cycle.
+              </p>
+            </field>
         </record>
 
-        <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages" sequence="0" parent="base.menu_crm_config_lead" />
+        <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages" sequence="0" parent="base.menu_crm_config_lead" groups="base.group_no_one"/>
 
         <!--
             LEADS/OPPORTUNITIES CATEGORIES
@@ -75,13 +81,22 @@
 
         <!-- Categories Form View -->
         <record id="crm_lead_categ_action" model="ir.actions.act_window">
-            <field name="name">Categories</field>
+            <field name="name">Sales Tags</field>
             <field name="res_model">crm.case.categ</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_categ_tree-view"/>
             <field name="context" eval="{'object_id': ref('model_crm_lead')}"/>
             <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
-            <field name="help">Create specific categories that fit your company's activities to better classify and analyse your leads and opportunities. Such categories could for instance reflect your product structure or the different types of sales you do.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new sales tag. 
+              </p><p>
+                Create specific tags that fit your company's activities
+                to better classify and analyse your leads and opportunities.
+                Such categories could for instance reflect your product
+                structure or the different types of sales you do.
+              </p>
+            </field>
         </record>
 
         <menuitem action="crm_lead_categ_action"
@@ -97,8 +112,7 @@
                 groups="base.group_sale_salesman"
                 res_model="crm.phonecall"
                 view_mode="tree,calendar,form"
-                context="{'default_duration': 1.0 ,'default_opportunity_id': active_id,'default_partner_phone':phone}"
-                domain="[('opportunity_id', '=', active_id)]"
+                context="{'default_duration': 1.0 ,'default_opportunity_id': active_id}"
                 view_type="form"/>
 
         <act_window
@@ -107,7 +121,6 @@
                 res_model="crm.meeting"
                 view_mode="tree,form,calendar"
                 context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
-                domain="[('opportunity_id', '=', active_id)]"
                 view_type="form"/>
 
 
@@ -133,41 +146,28 @@
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
                         <button type="action"
-                            name="%(act_crm_opportunity_crm_meeting_new)d"
-                            string="Meetings" />
-
-                        <button type="action"
                             name="%(act_crm_opportunity_crm_phonecall_new)d"
                             string="Phone Calls" />
                     </div>
-
-                    <label for="name" class="oe_edit_only" string="Lead Description"/>
-                    <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Lead Description"/>
+                        <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="user_id" />
-                            <field name="section_id" widget="selection" />
-                            <field name="type" invisible="1"/>
-                        </group>
-                        <group>
-                            <field name="priority"/>
-                            <field name="categ_id"
-                                widget="selection"
-                                domain="[('object_id.model','=','crm.lead')]"/>
-                        </group>
-                        <group>
                             <field name="partner_name" string="Company Name"/>
-                            <field name="partner_id" string="Customer"/>
+                            <field name="partner_id" string="Customer" 
+                                on_change="on_change_partner(partner_id)" />
                             <label for="street" string="Address"/>
                             <div>
                                 <field name="street" placeholder="Street..."/>
                                 <field name="street2"/>
-                                <div>
-                                    <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                    <field name="city" class="oe_inline" placeholder="City"/>
+                                <div class="address_format">
+                                    <field name="city" placeholder="City" style="width: 40%%"/>
+                                    <field name="state_id" options='{"no_open": true}' placeholder="State" style="width: 24%%"/>
+                                    <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                 </div>
-                                <field name="state_id" placeholder="State"/>
-                                <field name="country_id" placeholder="Country"/>
+                                <field name="country_id" placeholder="Country" options='{"no_open": true}'/>
                             </div>
                         </group>
                         <group>
@@ -188,6 +188,17 @@
                                 icon="terp-mail-message-new" type="action" colspan="1"/>
                             -->
                         </group>
+                        <group>
+                            <field name="user_id" />
+                            <field name="section_id"/>
+                            <field name="type" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="priority"/>
+                            <field name="categ_ids"
+                                widget="many2many_tags"
+                                domain="[('object_id.model','=','crm.lead')]"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                     <page string="Notes">
@@ -205,19 +216,32 @@
                                 <field name="state" groups="base.group_no_one"/>
                             </group>
                             <group string="Mailings">
-                                <field name="opt_in" on_change="on_change_opt_in(opt_in)"/>
-                                <field name="opt_out" on_change="on_change_opt_out(opt_out)"/>
+                                <field name="opt_out" />
                             </group>
                         </group>
                     </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
             </form>
         </field>
         </record>
+
+        <!-- CRM Lead Graph View -->
+        <record model="ir.ui.view" id="crm_case_graph_view_leads">
+            <field name="name">Opportunities</field>
+            <field name="model">crm.lead</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunities" type="bar">
+                    <field name="stage_id"/>
+                    <field name="planned_revenue" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
 
         <!-- CRM Lead Tree View -->
         <record model="ir.ui.view" id="crm_case_tree_view_leads">
@@ -234,7 +258,7 @@
                     <field name="email_from"/>
                     <field name="phone"/>
                     <field name="stage_id"/>
-                    <field name="categ_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)" />
                     <field name="state" groups="base.group_no_one"/>
                     <field name="type_id" invisible="1"/>
@@ -323,7 +347,7 @@
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kaban_status_red</t>
                                     <span t-attf-class="oe_kanban_status #{red}"> </span>
                                     -->
-                                    <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value and record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left">
                                     <t t-if="record.needaction_pending.raw_value"><span class="oe_kanban_mail_new">New</span></t>
@@ -353,65 +377,38 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Leads">
-                <filter icon="terp-mail-message-new"
-                    string="Inbox" help="Unread messages"
-                    name="needaction_pending"
-                    domain="[('needaction_pending','=',True)]"/>
                 <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]" />
                 <!-- subjects is not set as store=True so, it is placed outside filter_domain-->
-                <field name="subjects"/>     
-                <separator orientation="vertical"/>
+                <field name="subjects"/>
                 <field name="create_date"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-check"
-                    string="New"
-                    name="new" help="New Leads"
-                    domain="[('state','=','draft')]"/>
-                <filter icon="terp-camera_test"
-                    string="Open"
-                    name="open"
-                    domain="[('state','=','open')]"/>
-                <filter string="Unassigned Leads"
-                        icon="terp-personal-"
-                        domain="[('user_id','=', False)]"
-                        help="Unassigned Leads" />
-                <filter string="Leads Assigned to Me or My Team(s)"
-                        icon="terp-personal+"
-                        context="{'invisible_section': False}"
+                <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                <separator/>
+                <filter icon="terp-check" string="New" name="new" help="New Leads" domain="[('state','=','draft')]"/>
+                <filter icon="terp-camera_test" string="Open" name="open" domain="[('state','=','open')]"/>
+                <separator/>
+                <filter string="Unassigned Leads" icon="terp-personal-" domain="[('user_id','=', False)]" help="Unassigned Leads" />
+                <separator/>
+                <filter string="Leads Assigned to Me or My Team(s)" icon="terp-personal+" context="{'invisible_section': False}"
                         domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                         help="Leads that are assigned to one of the sale teams I manage, or to me"/>
-                <separator orientation="vertical"/>
                 <field name="user_id"/>
-                <field name="section_id" widget="selection"
-                    context="{'invisible_section': False}"/>
+                <field name="section_id" context="{'invisible_section': False}"/>
                 <field name="country_id" context="{'invisible_country': False}"/>
-                <separator orientation="vertical"/>
-                <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
-                    <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
-                        domain="[]" context="{'group_by':'type_id'}" />
-                    <filter string="Channel" icon="terp-call-start"
-                        domain="[]" context="{'group_by':'channel_id'}" />
+                    <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}" />
+                    <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
                     <separator orientation="vertical"/>
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical" groups="base.group_no_one"/>
-                    <filter string="Creation" help="Create date" icon="terp-go-month"
-                        domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                    <filter string="Creation" help="Create date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                 </group>
-                <separator orientation="vertical"/>
                 <group string="Display">
                     <filter string="Show Countries" icon="terp-personal+" context="{'invisible_country': False}" help="Show Countries"/>
-                    <filter string="Show Sales Team"
-                        icon="terp-personal+"
-                        context="{'invisible_section': False}"
-                        domain="[]"
-                        help="Show Sales Team"/>
+                    <filter string="Show Sales Team" icon="terp-personal+" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
                 </group>
            </search>
         </field>
@@ -431,35 +428,28 @@
         <field name="arch" type="xml">
             <form string="Opportunities" version="7.0">
                 <header>
-                    <button name="stage_previous" string="Previous" type="object"
-                            states="open" icon="gtk-go-back" context="{'stage_type': 'opportunity'}"/>
-                    <button name="stage_next" string="Next" type="object"  
-                            states="open" icon="gtk-go-forward" context="{'stage_type': 'opportunity'}"/>
                     <button name="case_mark_won" string="Mark Won" type="object"
                             states="open" class="oe_highlight"/>
                     <button name="case_mark_won" string="Mark Won" type="object"
-                            states="draft,pending"/>
-                    <button name="case_open" string="Open" type="object" class="oe_highlight"
                             states="draft,pending"/>
                     <button name="case_escalate" string="Escalate" type="object"
                             states="open" />
                     <button name="case_mark_lost" string="Mark Lost" type="object"
                             states="draft,open"/>
-                    <button name="case_reset" string="Reset to Draft" type="object"
-                            states="done,cancel" />
                     <button name="case_cancel" string="Cancel" type="object"
                             states="draft"/>
-                    <field name="stage_id" widget="statusbar"
-                            on_change="onchange_stage_id(stage_id)"/>
+                    <field name="stage_id" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box">
                         <button string="Schedule/Log Call"
                             name="%(opportunity2phonecall_act)d"
                             type="action"/>
-                        <button string="Schedule Meeting"
+                        <button string="Meeting"
                             name="action_makeMeeting"
-                            type="object"/>
+                            type="object"
+                            context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"
+                            />
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -468,7 +458,7 @@
                         <h2>
                             <field name="planned_revenue" class="oe_inline"/>
                             <field name="company_currency" class="oe_inline"/> at 
-                            <field name="probability" class="oe_inline"/>%% success rate
+                            <field name="probability" class="oe_inline" widget="integer"/>%% success rate
                         </h2>
                     </div>
                     <group>
@@ -484,8 +474,8 @@
                         <group>
                             <label for="title_action"/>
                             <div>
-                                <field name="date_action" nolabel="1"/> -
-                                <field name="title_action" class="oe_inline" nolabel="1" placeholder="Call for proposal"/>
+                                <field name="date_action" nolabel="1"/> <label string="-" attrs="{'invisible': ['|', ('date_action', '=', False), ('title_action', '=', False)]}"/>
+                                <field name="title_action" class="oe_inline" nolabel="1" placeholder="e.g. Call for proposal"/>
                             </div>
                             <field name="date_deadline"/>
                             <field name="priority"/>
@@ -496,9 +486,9 @@
                             <field name="section_id" colspan="1" widget="selection"/>
                         </group>
                         <group>
-                            <field name="categ_id"
-                                string="Category" widget="selection"
-                                domain="[('object_id.model', '=', 'crm.lead')]" />
+                            <field name="categ_ids"
+                                string="Categories" widget="many2many_tags"
+                                domain="[('object_id.model', '=', 'crm.lead')]"/>
 
                         </group>
                     </group>
@@ -520,12 +510,12 @@
                                 <div>
                                     <field name="street" placeholder="Street..."/>
                                     <field name="street2"/>
-                                    <div>
+                                    <div class="address_format">
                                         <field name="city" placeholder="City" style="width: 40%%"/>
-                                        <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                        <field name="state_id" options='{"no_open": true}' placeholder="State" style="width: 24%%"/>
                                         <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                     </div>
-                                    <field name="country_id" placeholder="Country"/>
+                                    <field name="country_id" placeholder="Country" options='{"no_open": true}'/>
                                 </div>
                             </group>
 
@@ -533,7 +523,7 @@
                                 <label for="contact_name" />
                                 <div>
                                     <field name="contact_name" class="oe_inline"/>
-                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline oe_no_button"/>
+                                    <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" options='{"no_open": true}' class="oe_inline"/>
                                 </div>
                                 <field name="function" />
                                 <field name="mobile"/>
@@ -545,8 +535,7 @@
                                 <field name="channel_id" widget="selection"/>
                             </group>
                             <group string="Mailings">
-                                <field name="opt_in" on_change="on_change_opt_in(opt_in)"/>
-                                <field name="opt_out" on_change="on_change_opt_out(opt_out)"/>
+                                <field name="opt_out" />
                             </group>
                             <group string="Misc">
                                 <field name="active"/>
@@ -562,11 +551,17 @@
                             </group>
                         </group>
                     </page>
+                    <page string="Fund Raising" groups="crm.group_fund_raising">
+                        <group>
+                            <field name="payment_mode" widget="selection"/>
+                            <field name="planned_cost"/>
+                        </group>
+                    </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                </div>
             </form>
         </field>
     </record>
@@ -594,7 +589,6 @@
                     <field name="section_id" invisible="context.get('invisible_section', True)" />
                     <field name="user_id"/>
                     <field name="priority" invisible="1"/>
-                    <field name="categ_id" invisible="1"/>
                     <field name="state" groups="base.group_no_one"/>
                     <field name="needaction_pending" invisible="1"/>
                 </tree>
@@ -609,75 +603,41 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Opportunities">
-                <filter icon="terp-mail-message-new"
-                    string="Inbox" help="Unread messages"
-                    name="needaction_pending"
-                    domain="[('needaction_pending','=',True)]"/>
                 <field name="name" string="Opportunity / Customer"
                     filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-check"
-                    string="New" help="New Opportunities"
-                    name="new"
-                    domain="[('state','=','draft')]"/>
-                <filter icon="terp-camera_test"
-                    string="Open" help="Open Opportunities"
-                    name="open"
-                    domain="[('state','=','open')]"/>
-                <filter string="Unassigned Opportunities"
-                        icon="terp-personal-"
-                        domain="[('user_id','=', False)]"
-                        help="Unassigned Opportunities" />
-               <filter string="Opportunities Assigned to Me or My Team(s)"  icon="terp-personal+"
-                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                        context="{'invisible_section': False}"
+                <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike', self)]" />
+                <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                <separator/>
+                <filter icon="terp-check" string="New" help="New Opportunities" name="new" domain="[('state','=','draft')]"/>
+                <filter icon="terp-camera_test" string="Open" help="Open Opportunities" name="open" domain="[('state','=','open')]"/>
+                <separator/>
+                <filter string="Unassigned Opportunities" icon="terp-personal-" domain="[('user_id','=', False)]" help="Unassigned Opportunities" />
+                <separator/>
+                <filter string="Opportunities Assigned to Me or My Team(s)"  icon="terp-personal+"
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                         help="Opportunities that are assigned to either me or one of the sale teams I manage" />
-                <separator orientation="vertical"/>
                 <field name="user_id"/>
                 <field name="country_id"/>
                 <field name="partner_id"/>
-                <field name="section_id"
-                    context="{'invisible_section': False, 'default_section_id': self}"/>
-                <newline/>
+                <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
                 <group expand="0" string="Group By..." colspan="16">
                     <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                     <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Customer" help="Partner" icon="terp-personal+" domain="[]" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical" />
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}" />
                     <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                    <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
                     <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}"/>
                     <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
                     <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical" />
                     <filter string="Creation" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                     <filter string="Exp.Closing" icon="terp-go-month" help="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}" />
                 </group>
                 <group string="Display">
-                    <filter string="Show Sales Team"
-                        icon="terp-personal+"
-                        context="{'invisible_section': False}"
-                        domain="[]"
-                        help="Show Sales Team"/>
+                    <filter string="Show Sales Team" icon="terp-personal+" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
                 </group>
             </search>
         </field>
     </record>
-
-        <!-- crm.lead Opportunities Graph View -->
-        <record model="ir.ui.view" id="crm_case_graph_view_opportunity">
-            <field name="name">CRM - Opportunity Graph</field>
-            <field name="model">crm.lead</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Opportunity by Categories" type="bar" orientation="horizontal">
-                    <field name="categ_id"/>
-                    <field name="planned_revenue" operator="+"/>
-                    <field name="state" group="True"/>
-                </graph>
-            </field>
-        </record>
 
     </data>
 </openerp>

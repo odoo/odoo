@@ -19,13 +19,13 @@
 #
 ##############################################################################
 {
-    'name': 'Belgium - Payroll',
+    'name': 'Belgium - Payroll with Accounting',
     'category': 'Localization',
     'author': 'OpenERP SA',
     'depends': ['l10n_be_hr_payroll', 'hr_payroll_account', 'l10n_be'],
     'version': '1.0',
     'description': """
-Accounting Data for Belgian Payroll Rules
+Accounting Data for Belgian Payroll Rules.
     """,
 
     'auto_install': True,

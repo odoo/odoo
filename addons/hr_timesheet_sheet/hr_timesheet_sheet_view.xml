@@ -23,11 +23,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Account">
-                    <group>
-                        <field name="sheet_id" />
-                        <field name="name" groups="analytic.group_analytic_accounting"/>
-                        <field name="invoice_rate"/>
-                    </group>
+                    <field name="name" groups="analytic.group_analytic_accounting"/>
+                    <field name="invoice_rate"/>
+                    <field name="sheet_id" />
                 </search>
             </field>
         </record>
@@ -158,16 +156,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                    <group>
-                        <field name="date_from"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
-                        <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-                        <separator orientation="vertical"/>
-                        <field name="employee_id"/>
-                        <field name="department_id" widget="selection"/>
-                    </group>
-                    <newline/>
+                    <field name="date_from"/>
+                    <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
+                    <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
@@ -184,7 +177,18 @@
             <field name="view_id" eval="False"/>
             <field name="context">{'search_default_my_timesheet':1}</field>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
-            <field name="help">Check your timesheets for a specific period. You can also encode time spent on a project (i.e. an analytic account) thus generating costs in the analytic account concerned.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to go to your timesheet. 
+              </p><p>
+                You must record timesheets every day and confirm at the end
+                of the week. Once the timesheet is confirmed, it his sent to
+                the manager for validation.
+              </p><p>
+                Timesheets can also be invoiced to customers, depending on the
+                configuration of the project.
+              </p>
+            </field>
         </record>
 
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
@@ -200,12 +204,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
-                    <separator string="Timesheets" colspan="4"/>
-                    <field name="timesheet_range"/>
-                    <field name="timesheet_max_difference"/>
-                    <newline/>
-                </page>
+                <xpath expr="//group[@name='account_grp']" position="after">
+                    <group name="timesheets_grp" string="Timesheets">
+                        <field name="timesheet_range"/>
+                        <field name="timesheet_max_difference"/>
+                    </group>
+                </xpath>
             </field>
         </record>
 

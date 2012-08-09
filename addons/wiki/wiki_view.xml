@@ -1,15 +1,18 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-       <menuitem name="Knowledge" icon="terp-stock"
-           id="knowledge.menu_document" sequence="19" />
 
-       <menuitem name="Configuration"
-           id="knowledge.menu_document_configuration"
-           parent="knowledge.menu_document" sequence="50"/>
+        <!-- Top menu item -->
+        <menuitem name="Knowledge"
+            id="knowledge.menu_document"
+            sequence="130"/>
 
-       <menuitem name="Wiki" id="menu_wiki_configuration"
-           parent="knowledge.menu_document_configuration" sequence="2" />
+        <menuitem name="Configuration"
+            id="knowledge.menu_document_configuration"
+            parent="knowledge.menu_document" sequence="50"/>
+
+        <menuitem name="Wiki" id="menu_wiki_configuration"
+            parent="knowledge.menu_document_configuration" sequence="2"/>
 
 
         <!--  Wiki Groups Tree view -->
@@ -38,7 +41,7 @@
                     <group col="2" colspan="1">
                         <field name="method"/>
                         <field name="home" domain="[('group_id','=',active_id)]"
-                            attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}" />
+                            attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Notes">
@@ -61,7 +64,7 @@
                          name="open_wiki_page"
                          string="Open Wiki Page"
                           type="object"
-                          icon="gtk-ok" />
+                          icon="gtk-ok"/>
                 </form>
             </field>
         </record>
@@ -131,7 +134,7 @@
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                                <h1><field name="name" select="1" /></h1>
+                                <h1><field name="name" select="1"/></h1>
                             <label for="group_id" class="oe_edit_only"/>
                             <h2>
                             <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/></h2>
@@ -155,7 +158,7 @@
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="4" string="Meta Information"/>
-                            <field name="tags"/>
+                            <field name="tags" widget="many2many_tags"/>
                             <field name="toc" groups="base.group_no_one"/>
                         </group>
                     </sheet>
@@ -173,14 +176,10 @@
                     <field name="name"
                         filter_domain="['|', '|', ('name','ilike',self), ('section','ilike',self), ('tags','ilike',self)]"
                         string="Wiki"/>
-                    <separator orientation="vertical"/>
                     <field name="write_date" groups="base.group_no_one"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-jump-to-ltr" string="Need Review" domain="[('review','=',True)]"/>
-                    <separator orientation="vertical"/>
                     <field name="group_id"/>
                     <field name="write_uid"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter icon="terp-folder-blue" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
                         <filter icon="terp-personal" string="Author" domain="[]" context="{'group_by':'create_uid'}"/>
@@ -203,7 +202,7 @@
 
         <menuitem parent="knowledge.menu_document2"
             id="menu_action_wiki_wiki" name="Wiki Pages"
-            action="action_wiki" />
+            action="action_wiki"/>
 
         <!--  Pages Waiting Review -->
         <record model="ir.actions.act_window" id="action_wiki_review">
@@ -258,7 +257,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <act_window 
+        <act_window
             context="{'search_default_wiki_id': [active_id], 'default_wiki_id': active_id}"
             id="act_wiki_wiki_history"
             name="Page History"
