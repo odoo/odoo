@@ -68,7 +68,7 @@ class mail_thread(osv.Model):
         for id in ids:
             message_ids = self.message_search(cr, uid, [id], context=context)
             subscriber_ids = self.message_get_subscribers(cr, uid, [id], context=context)
-            vote_list = self.message_vote_ids(cr, uid, ids, context=context)
+            vote_list = self.message_vote_ids(cr, uid, message_ids, context=context)
             res[id] = {
                 'message_ids': message_ids,
                 'message_summary': "<span>Msg: %d</span> . <span>Fol: %d</span> . <span> %s  %d</span>" % (len(message_ids), len(subscriber_ids), img_vote, len(vote_list)),
@@ -105,8 +105,7 @@ class mail_thread(osv.Model):
     def message_vote_ids(self, cr, uid, ids, context=None):
         message_pool = self.pool.get('mail.message')
         vote_list = []
-        message_ids = self.message_search(cr, uid, [id], context=context)
-        for message in message_pool.browse(cr, uid, message_ids, context=context):
+        for message in message_pool.browse(cr, uid, ids, context=context):
             if message.vote_ids:
                 vote_list.append(message.vote_ids)
         return vote_list
