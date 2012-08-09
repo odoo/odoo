@@ -5,6 +5,7 @@
         <record id="view_pos_payment" model="ir.ui.view">
             <field name="name">Add payment :</field>
             <field name="model">pos.make.payment</field>
+            <field name="arch" type="xml">
             <form string="Add payment :">
                 <group colspan="4" col="4" >
                     <group colspan="4">
@@ -21,6 +22,7 @@
                     </group>
                 </group>
             </form>
+            </field>
         </record>
         <record id="action_pos_payment" model="ir.actions.act_window">
             <field name="name">Payment</field>
