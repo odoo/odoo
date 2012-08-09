@@ -72,6 +72,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
             this.db = new module.PosLS();                       // a database used to store the products and categories
+            this.db.clear();
 
             window.db = this.db;
 
@@ -98,12 +99,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'products':         new module.ProductCollection(), 
                 'cashRegisters':    null, 
 
-                'product_list':     null,   // the list of all products, does not change. 
                 'bank_statements':  null,
                 'taxes':            null,
                 'pos_session':      null,
                 'pos_config':       null,
-                'categories':       null,
 
                 'selectedOrder':    undefined,
             });
@@ -139,10 +138,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.set('currency',currencies[0]);
                 });
 
-            var cat_def = fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'category_image_small'])
-                .pipe(function(result){
-                    return self.set({'categories': result});
-                });
 
             var uom_def = fetch(    //unit of measure
                 'product.uom',
@@ -213,18 +208,20 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 self.use_selfcheckout       = pos_config.iface_self_checkout     || false;
                                 self.use_cashbox            = pos_config.iface_cashdrawer        || false;
 
-                                return shop_def = fetch('sale.shop',[], [['id','=',pos_config.shop_id[0]]])
+                                return fetch('sale.shop',[], [['id','=',pos_config.shop_id[0]]])
                             }).pipe(function(shops){
                                 self.set('shop',shops[0]);
+                                return fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'category_image_small'])
+                            }).pipe( function(categories){
+                                self.db.add_categories(categories);
                                 return fetch( 
                                     'product.product', 
-                                    //context {pricelist: shop.pricelist_id[0]} 
                                     ['name', 'list_price','price','pos_categ_id', 'taxes_id','product_image_small', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
                                     [['pos_categ_id','!=', false]],
-                                    {pricelist: shops[0].pricelist_id[0]} // context for price
-                                    );
-                            }).pipe( function(product_list){
-                                self.set({'product_list': product_list});
+                                    {pricelist: self.get('shop').pricelist_id[0]} // context for price
+                                );
+                            }).pipe( function(products){
+                                self.db.add_products(products);
                             });
 
                         var bank_def = fetch(
@@ -267,13 +264,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 });
 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(pack_def, cat_def, user_def, users_def, uom_def, session_def, tax_def, user_def, this.flush())
+            $.when(pack_def, user_def, users_def, uom_def, session_def, tax_def, user_def, this.flush())
                 .then(function(){ 
-                    self.db.clear();
-                    self.db.add_categories(self.get('categories'));
-                    self.db.add_product(self.get('product_list'));
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
-                    self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
+                    //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
                     self.ready.resolve();
                 },function(){
                     //we failed to load some backend data, or the backend was badly configured.
@@ -286,7 +280,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         log_loaded_data: function(){
             console.log('PosModel data has been loaded:');
             console.log('PosModel: categories:',this.get('categories'));
-            console.log('PosModel: product_list:',this.get('product_list'));
             console.log('PosModel: units:',this.get('units'));
             console.log('PosModel: bank_statements:',this.get('bank_statements'));
             console.log('PosModel: journals:',this.get('journals'));
@@ -300,7 +293,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             console.log('PosModel: user_list:',this.get('user_list'));
             console.log('PosModel: user:',this.get('user'));
             console.log('PosModel.session:',this.session);
-            console.log('PosModel.categories:',this.categories);
             console.log('PosModel end of data log.');
         },
         

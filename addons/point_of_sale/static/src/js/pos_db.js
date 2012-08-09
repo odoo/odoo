@@ -429,7 +429,7 @@ function openerp_pos_db(instance, module){
         _set_categories: function(categories){
             localStorage[this.categories] = JSON.stringify(categories);
         },
-        add_product: function(products){
+        add_products: function(products){
             var stored_products = this._get_products();
             var stored_categories = this._get_categories();
 
