@@ -68,15 +68,17 @@ instance.account.extend_form_view = instance.web.FormView.extend({
                 self.do_action(result.result, function () {
                     // reload view
                     list_view.reload();
+                    self.reload();
             });
         });
     },
     
-    do_nothing_to_reconcile:function(event){
-        viewmanager = this.getParent();
+    do_nothing_to_reconcile:function(){
         this.dataset.ids = _.without(this.dataset.ids, this.datarecord.id)
-        viewmanager.action.context.active_ids = viewmanager.dataset_form.ids;
-        this.on_pager_action();
+        // viewmanager = this.getParent();
+        // viewmanager.action.context.active_ids = viewmanager.dataset_form.ids;
+        if (!_.isEmpty(this.dataset.ids))
+            this.on_pager_action('first');
     },
     
     do_update_pager: function(hide_index) {

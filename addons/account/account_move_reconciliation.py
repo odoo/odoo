@@ -22,8 +22,6 @@
 import tools
 from osv import fields,osv
 
-#1. Remove field from res.partner
-
 #4  remove get_unreconcile_entry method mange it with domain
 
 class account_move_line(osv.osv):
@@ -50,11 +48,11 @@ class account_move_reconciliation(osv.osv):
         res = 0
         if active_ids:
             total_records = self.search(cr, uid, [('id','in',active_ids)])
-            total_reconcile = 0
-            for record in self.read(cr, uid, total_records, ['reconcile_count'], context=context):
-                if record['reconcile_count'] > 0:
-                    total_reconcile += 1
-            res =  float(total_reconcile)/len(total_records) * 100
+            total_unreconcile = 0
+            for record in self.read(cr, uid, total_records, ['unreconcile_count'], context=context):
+                if record['unreconcile_count'] > 0:
+                    total_unreconcile += 1
+            res =  float(len(total_records) - total_unreconcile)/len(total_records) * 100
         res_all = {}
         for id in ids:
             res_all[id] = res
@@ -66,7 +64,7 @@ class account_move_reconciliation(osv.osv):
         'last_reconciliation_date':fields.related('partner_id', 'last_reconciliation_date' ,type='datetime', relation='res.partner', string='Last Reconciliation'),
         'latest_date' :fields.date('Latest Entry'),
         'reconciliation_progress': fields.function(_rec_progress, string='Progress (%)',  type='float'),
-        'reconcile_count':fields.integer('Reconcile Count'),
+        'unreconcile_count':fields.integer('Unreconcile Count'),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_move_reconciliation')
@@ -74,7 +72,7 @@ class account_move_reconciliation(osv.osv):
             CREATE or REPLACE VIEW account_move_reconciliation as (
                 SELECT  move_line.partner_id as id, move_line.partner_id, 
                 MAX(move_line.date) as latest_date,
-                (select count(reconcile.id) from account_move_line as reconcile where reconcile.reconcile_id is not null and reconcile.partner_id = move_line.partner_id) as reconcile_count
+                (select count(unreconcile.id) from account_move_line as unreconcile where unreconcile.reconcile_id is null and unreconcile.partner_id = move_line.partner_id) as unreconcile_count
                 FROM account_move_line as move_line where move_line.state <> 'draft'
                 GROUP by move_line.partner_id
                 )
