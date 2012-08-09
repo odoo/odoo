@@ -161,7 +161,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.$element.find(".oe_form_field,label").on('click', function (e) {
             if(self.get("actual_mode") == "view") {
                 var $button = self.options.$buttons.find(".oe_form_button_edit");
-                $button.effect('bounce', {distance: 18, times: 7}, 200)
+                $button.effect('bounce', {distance: 18, times: 5}, 150)
             }
         });
 
@@ -638,8 +638,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      */
     _actualize_mode: function(switch_to) {
         var mode = switch_to || this.get("actual_mode");
-        if (! this.datarecord.id)
+        if (! this.datarecord.id) {
             mode = "create";
+        }
         this.set({actual_mode: mode});
     },
     check_actual_mode: function(source, options) {
@@ -681,7 +682,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_button_save: function() {
         var self = this;
-        return this.do_save().then(function(result) {
+        return this.do_save().then(function(result) {            
             self.to_view_mode();
         });
     },
@@ -789,16 +790,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 self.set({'display_invalid_fields': false});
                 var save_deferral;
                 if (!self.datarecord.id) {
-                    //console.log("FormView(", self, ") : About to create", values);
+                    // console.log("FormView(", self, ") : About to create", values);
                     save_deferral = self.dataset.create(values).pipe(function(r) {
                         return self.on_created(r, undefined, prepend_on_create);
                     }, null);
                 } else if (_.isEmpty(values) && ! self.force_dirty) {
-                    //console.log("FormView(", self, ") : Nothing to save");
+                    // console.log("FormView(", self, ") : Nothing to save");
                     save_deferral = $.Deferred().resolve({}).promise();
                 } else {
                     self.force_dirty = false;
-                    //console.log("FormView(", self, ") : About to save", values);
+                    // console.log("FormView(", self, ") : About to save", values);
                     save_deferral = self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
                         return self.on_saved(r);
                     }, null);
@@ -2082,7 +2083,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function() {
-        this.$element.find('input:first').focus();
+        this.$('input:first').focus();
     }
 });
 
@@ -2166,6 +2167,9 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
             value_ = 0;
         }
         this._super.apply(this, [value_]);
+    },
+    focus: function () {
+        this.$('input:first').select();
     }
 });
 
@@ -3011,7 +3015,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.addClass('oe_form_field_one2many');
+        this.$element.addClass('oe_form_field oe_form_field_one2many');
 
         var self = this;
 
@@ -4612,8 +4616,9 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         if (this.get('value') && ! /^\d+(\.\d*)? \w+$/.test(this.get('value'))) {
             url = 'data:image/png;base64,' + this.get('value');
         } else if (this.get('value')) {
+            var id = escape(JSON.stringify(this.view.datarecord.id || null));
             url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
-                this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime());
+                this.view.dataset.model +'&id=' + id + '&field=' + this.name + '&t=' + (new Date().getTime());
         } else {
             url = "/web/static/src/img/placeholder.png";
         }
@@ -4638,9 +4643,11 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
 
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     template: "FieldStatus",
+    clickable: false,
     start: function() {
         this._super();
         this.selected_value = null;
+        this.clickable = !!this.node.attrs.clickable;
         if (this.$element.parent().is('header')) {
             this.$element.after('<div class="oe_clear"/>');
         }
@@ -4745,14 +4752,32 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
      *  state (given by the key of (key, label)).
      */
     render_elements: function () {
+        var self = this;
         var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
-
+        if (this.clickable) {
+            this.$element.addClass("oe_form_steps_clickable");
+            $('.oe_form_steps_arrow').remove();
+            var elemts = this.$element.find('.oe_form_steps_button');
+            _.each(elemts, function(element){
+                $item = $(element);
+                if ($item.attr("data-id") != self.selected_value) {
+                    $item.click(function(event){
+                        var data_id = parseInt($(this).attr("data-id"))
+                        self.view.dataset.call('stage_set', [[self.view.datarecord.id],data_id]).then(function() {
+                            return self.view.reload();
+                        });
+                    });
+                }
+            });
+        } else {
+            this.$element.addClass("oe_form_steps");
+        }
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
-        if (color) {
+        if (color) {            
             var elem = this.$element.find("li.oe_form_steps_active span");
-            elem.css("color", color);
+            elem.css("color", color);            
         }
     },
 });

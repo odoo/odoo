@@ -661,6 +661,37 @@ instance.web.Home = instance.web.Widget.extend({
 });
 instance.web.client_actions.add("home", "instance.web.Home");
 
+instance.web.ChangePassword =  instance.web.Widget.extend({
+    template: "ChangePassword",
+    start: function() {
+        var self = this;
+        self.$element.find("form[name=change_password_form]").validate({
+            submitHandler: function (form) {
+                self.rpc("/web/session/change_password",{
+                    'fields': $(form).serializeArray()
+                }, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
+                        return;
+                    } else {
+                        instance.webclient.on_logout();
+                    }
+                });
+            }
+        });
+    },
+    display_error: function (error) {
+        return instance.web.dialog($('<div>'), {
+            modal: true,
+            title: error.title,
+            buttons: [
+                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
+            ]
+        }).html(error.error);
+    },
+})
+instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
+
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
     init: function() {
@@ -828,37 +859,6 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             }
         });
     },
-    change_password :function() {
-        var self = this;
-        this.dialog = new instance.web.Dialog(this, {
-            title: _t("Change Password"),
-            width : 'auto'
-        }).open();
-        this.dialog.$element.html(QWeb.render("UserMenu.password", self));
-        this.dialog.$element.find("form[name=change_password_form]").validate({
-            submitHandler: function (form) {
-                self.rpc("/web/session/change_password",{
-                    'fields': $(form).serializeArray()
-                }, function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    } else {
-                        instance.webclient.on_logout();
-                    }
-                });
-            }
-        });
-    },
-    display_error: function (error) {
-        return instance.web.dialog($('<div>'), {
-            modal: true,
-            title: error.title,
-            buttons: [
-                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
-            ]
-        }).html(error.error);
-    },
     do_update: function () {
         var self = this;
         var fct = function() {
@@ -886,44 +886,10 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     },
     on_menu_settings: function() {
         var self = this;
-        var action_manager = new instance.web.ActionManager(this);
-        var dataset = new instance.web.DataSet (this,'res.users',this.context);
-        dataset.call ('action_get','',function (result){
-            self.rpc('/web/action/load', {action_id:result}, function(result){
-                action_manager.do_action(_.extend(result['result'], {
-                    target: 'inline',
-                    res_id: self.session.uid,
-                    res_model: 'res.users',
-                    flags: {
-                        action_buttons: false,
-                        search_view: false,
-                        sidebar: false,
-                        views_switcher: false,
-                        pager: false
-                    }
-                }));
-            });
+        self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
+            result.result.res_id = instance.connection.uid;
+            self.getParent().action_manager.do_action(result.result);
         });
-        this.dialog = new instance.web.Dialog(this,{
-            title: _t("Preferences"),
-            width: '700px',
-            buttons: [
-                {text: _t("Change password"), click: function(){ self.change_password(); }},
-                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
-                {text: _t("Save"), click: function(){
-                        var inner_widget = action_manager.inner_widget;
-                        inner_widget.views[inner_widget.active_view].controller.do_save()
-                        .then(function() {
-                            self.dialog.destroy();
-                            // needs to refresh interface in case language changed
-                            window.location.reload();
-                        });
-                    }
-                }
-            ]
-        }).open();
-       action_manager.appendTo(this.dialog.$element);
-       action_manager.renderElement(this.dialog);
     },
     on_menu_about: function() {
         var self = this;
@@ -935,7 +901,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                         window.location.href, 'debug');
             });
             instance.web.dialog($help, {autoOpen: true,
-                modal: true, width: 580, height: 290, resizable: false, title: _t("About")});
+                modal: true, width: 507, height: 290, resizable: false, title: _t("About")});
         });
     },
 });
@@ -1098,15 +1064,15 @@ instance.web.WebClient = instance.web.Client.extend({
         $(window).bind('hashchange', this.on_hashchange);
 
         var state = $.bbq.getState(true);
-        if (! _.isEmpty(state)) {
-            $(window).trigger('hashchange');
-        } else {
+        if (_.isEmpty(state) || state.action == "login") {
             self.menu.has_been_loaded.then(function() {
                 var first_menu_id = self.menu.$element.find("a:first").data("menu");
                 if(first_menu_id) {
                     self.menu.menu_click(first_menu_id);
                 }
             });
+        } else {
+            $(window).trigger('hashchange');
         }
     },
     on_hashchange: function(event) {

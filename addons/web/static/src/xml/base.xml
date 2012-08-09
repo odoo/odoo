@@ -271,6 +271,31 @@
     </div>
 </t>
 
+<t t-name="ChangePassword">
+    <form name="change_password_form" method="POST">
+        <table align="center">
+            <tr>
+                <td><label for="old_pwd">Old Password:</label></td>
+                <td><input type="password" name="old_pwd"
+                           minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+            <td><label for="new_password">New Password:</label></td>
+            <td><input type="password" name="new_password"
+                       minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+                <td><label for="confirm_pwd">Confirm Password:</label></td>
+                <td><input type="password" name="confirm_pwd"
+                             minlength="1"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
+            </tr>
+        </table>
+    </form>
+</t>
+
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
@@ -317,7 +342,7 @@
         t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
         <t t-esc="menu.name"/>
         <t t-if="menu.needaction_enabled and menu.needaction_counter">
-            <div class="oe_menu_counter">
+            <div class="oe_tag oe_tag_dark oe_menu_counter">
                 <t t-esc="menu.needaction_counter"/>
             </div>
         </t>
@@ -350,30 +375,6 @@
       </div>
     </div>
 
-</t>
-<t t-name="UserMenu.password">
-    <form name="change_password_form" method="POST">
-        <table align="center">
-            <tr>
-                <td><label for="old_pwd">Old Password:</label></td>
-                <td><input type="password" name="old_pwd"
-                           minlength="1" autofocus="autofocus"/></td>
-            </tr>
-            <tr>
-            <td><label for="new_password">New Password:</label></td>
-            <td><input type="password" name="new_password"
-                       minlength="1" autofocus="autofocus"/></td>
-            </tr>
-            <tr>
-                <td><label for="confirm_pwd">Confirm Password:</label></td>
-                <td><input type="password" name="confirm_pwd"
-                             minlength="1"/></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
-            </tr>
-        </table>
-    </form>
 </t>
 
 <t t-name="WebClient">
@@ -618,7 +619,7 @@
                     <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
                 </th>
             </t>
-            <th t-if="options.deletable" width="1"/>
+            <th t-if="options.deletable" width="13px"/>
         </tr>
     </thead>
     <tfoot>
@@ -670,11 +671,11 @@
         <t t-set="number" t-value="column.type === 'integer' or column.type == 'float'"/>
         <t t-set="modifiers" t-value="column.modifiers_for(asData)"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-attf-class="oe_list_field_cell oe_list_field_#{column.widget or column.type} #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''}"
+            t-attf-class="oe_list_field_cell oe_list_field_#{column.widget or column.type} #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''} #{modifiers.required ? 'oe_required' : ''}"
             t-att-data-field="column.id"
             ><t t-raw="render_cell(record, column)"/></td>
     </t>
-    <td t-if="options.deletable" class='oe_list_record_delete' width="1">
+    <td t-if="options.deletable" class='oe_list_record_delete' width="13px">
         <button type="button" name="delete" class="oe_i">d</button>
     </td>
 </tr>
@@ -976,7 +977,7 @@
         </t>
         <t t-if="!widget.get('effective_readonly')">
             <a t-if="! widget.get_definition_options().no_open" href="#" tabindex="-1"
-                class="oe_m2o_cm_button oe_e oe_right">/</a>
+                class="oe_m2o_cm_button oe_e">/</a>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
@@ -1036,14 +1037,19 @@
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul class="oe_form_steps" t-att-style="widget.node.attrs.style"/>
+    <ul class="" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
     <t t-set="size" t-value="widget.to_show.length"/>
     <t t-foreach="_.range(size)" t-as="i">
-        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
-            <span><t t-esc="widget.to_show[i][1]"/></span>
-            <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
+        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : 'oe_form_steps_inactive'">
+            <div class="oe_form_steps_button" t-att-data-id="widget.to_show[i][0]">
+                <t t-esc="widget.to_show[i][1]"/>
+                <span class="oe_form_steps_arrow">
+                    <span></span>
+                </span>
+                <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
+            </div>            
         </li>
     </t>
 </t>
@@ -1052,13 +1058,8 @@
         <div class="oe_form_field_image_controls oe_edit_only">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                <button class="oe_button" type="button" title="Set Image">
-                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                </button>
+                Edit 
             </t>
-            <button class="oe_button oe_form_binary_file_clear" type="button" title="Clear">
-                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
-            </button>
             <div class="oe_form_binary_progress" style="display: none">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
@@ -1278,7 +1279,7 @@
      contenteditable="true"/>
 <!-- tabindex: makes div focusable -->
 <div t-name="SearchView.FacetView"
-     class="oe_searchview_facet"
+     class="oe_tag oe_tag_dark oe_searchview_facet"
      tabindex="0"
     ><span class="oe_facet_remove">x</span
     ><span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">

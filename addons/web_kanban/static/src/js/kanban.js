@@ -178,7 +178,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var remaining = groups.length - 1,
                 groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
-                var dataset = new instance.web.DataSetSearch(self, self.dataset.model, group.context, group.domain);
+                var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
+                    new instance.web.CompoundContext(self.dataset.get_context(), group.context), group.domain);
                 return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
                     .pipe(function(records) {
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
@@ -226,7 +227,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.groups[group.undefined_title ? 'unshift' : 'push'](group);
         });
         var groups_started = _.map(this.groups, function(group) {
-            return group.prependTo(self.$element.find('.oe_kanban_groups_headers'));
+            return group.insertBefore(self.$element.find('.oe_kanban_groups_headers td:last'));
         });
         return $.when.apply(null, groups_started).then(function () {
             self.on_groups_started();
@@ -400,7 +401,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
             self.quick.replace($(".oe_kanban_no_group_qc_placeholder"));
         }
         this.$records = $(QWeb.render('KanbanView.group_records_container', { widget : this}));
-        this.$records.prependTo(this.view.$element.find('.oe_kanban_groups_records'));
+        this.$records.insertBefore(this.view.$element.find('.oe_kanban_groups_records td:last'));
         this.$element.find(".oe_kanban_fold_icon").click(function() {
             self.do_toggle_fold();
             self.view.compute_groups_width();
@@ -432,7 +433,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         this.$records.click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (!self.state.folded) {
-                    add_btn.effect('bounce', {distance: 18, times: 7}, 200)
+                    add_btn.effect('bounce', {distance: 18, times: 5}, 150)
                 } 
             }
         });
@@ -756,6 +757,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         } else if (this.record[field] && ! this.record[field].value) {
             url = "/web/static/src/img/placeholder.png";
         } else {
+            id = escape(JSON.stringify(id));
             url = instance.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
             if (cache !== undefined) {
                 // Set the cache duration in seconds.
