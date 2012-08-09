@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import document_page_page_open
-import document_page_make_index
 import document_page_create_menu
 import document_page_show_diff
 

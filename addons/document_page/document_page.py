@@ -29,72 +29,72 @@ class document_page(osv.osv):
     _description = "Document Page"
     _order = 'name'
 
-    _columns = {
-        'name': fields.char('Title', size=256, select=True, required=True),
-        'type':fields.selection([('normal','Content Page'),  ('index','Index Page')], 'Type', help="Define the type of the document"), 
+    def _get_page_index(self, cr, uid, page):
+        index == []
+        for subpage in page.child_ids:
+            index += ["<li>"+ self._get_page_index(cr, uid, subpage) +"</li>"]
+        if index:
+            index = "<ul>" + "".join(index) + "</ul>"
+        else:
+            index = page.title
 
-        'parent_id': fields.many2one('document.page', 'Section', select=1 , ondelete='set null'),
+    def _get_display_content(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for page in self.browse(cr, uid, ids, context=context):
+            if parent.type == "index":
+               content = self._get_page_index(cr, uid, page)
+            else:
+               content = page.content
+            res[page.id] = {
+               'display_content': content
+            }
+        return res
+
+    _columns = {
+        'name': fields.char('Title', required=True),
+        'type':fields.selection([('content','Content Page'), ('index','Index Page')], 'Type', help="Page type"), 
+
+        'parent_id': fields.many2one('document.page', 'Section'),
         'child_ids': fields.one2many('document.page', 'parent_id', 'Children'),
 
-        'display_content': fields.text('Displayed Content'),
         'content': fields.text("Content"),
+        'display_content': fields.function(_get_display_content, string='Displayed Content', type='text'),
+
         'history_ids': fields.one2many('document.page.history', 'document_id', 'History'),
         'menu_id': fields.many2one('ir.ui.menu', "Menu", readonly=True),
 
         'create_date': fields.datetime("Created on", select=True, readonly=True),
+        'create_uid': fields.many2one('res.users', 'Author', select=True, readonly=True),
         'write_date': fields.datetime("Modification Date", select=True, readonly=True),
         'write_uid': fields.many2one('res.users', "Last Contributor", select=True),
-        'create_uid': fields.many2one('res.users', 'Author', select=True, readonly=True),
-
-        'index': fields.char('Index', size=256),
-        'minor_edit': fields.boolean('Minor edit', select=True),
-        'edit_summary': fields.char('Summary', size=256),
-        'tags': fields.char('Keywords', size=1024, select=True),
-
     }
     _defaults = {
-        'type':'normal',
+        'type':'content',
     }
 
     def onchange_parent_id(self, cr, uid, ids, parent_id, content, context=None):
-        if (not parent_id) or content:
-            return {}
-        grp = self.pool.get('document.page.type').browse(cr, uid, parent_id, context=context)
-        template = grp.content_template
-        try:
-            s[-1] = str(int(s[-1])+1)
-        except:
-            pass
-        return {
-            'value':{
-                'content': template,
-            }
-        }
-
-    def onchange_content(self, cr, uid, ids, content, context=None):
-        if content:
-            return {'value':{'summary': content}}
-        return {}
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        return super(document_page2, self).copy_data(cr, uid, id, {'document_id': False}, context)
+        res = {}
+        if parent_id and not content:
+            parent = self.browse(cr, uid, parent_id, context=context)
+            if parent.type == "content":
+                res['value'] = {
+                    'content': parent.content_template,
+                }
+        return res
 
     def create_history(self, cr, uid, ids, vals, context=None):
-        history_id = False
-        history = self.pool.get('document.page.history')
-        if vals.get('content'):
-            res = {
-                'content': vals.get('content', ''),
-                'write_uid': uid,
-                'document_id': ids[0],
-                'summary':vals.get('edit_summary', '')
-            }
-            history_id = history.create(cr, uid, res)
-        return history_id
+        for i in ids:
+            history = self.pool.get('document.page.history')
+            if vals.get('content'):
+                res = {
+                    'content': vals.get('content', ''),
+                    'page_id': i,
+                }
+                history.create(cr, uid, res)
 
     def create(self, cr, uid, vals, context=None):
-        document_id = super(document_page2, self).create(cr, uid, vals, context)
-        self.create_history(cr, uid, [document_id], vals, context)
+        page_id = super(document_page2, self).create(cr, uid, vals, context)
+        self.create_history(cr, uid, [page_id], vals, context)
         return document_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -102,23 +102,18 @@ class document_page(osv.osv):
         self.create_history(cr, uid, ids, vals, context)
         return result
 
-
 class document_page_history(osv.osv):
     _name = "document.page.history"
     _description = "Document Page History"
-    _rec_name = "summary"
     _order = 'id DESC'
+    _rec_name = "create_date"
 
     _columns = {
-          'document_id': fields.many2one('document.page', 'Document Page', select=True)
+          'page_id': fields.many2one('document.page', 'Page'),
           'summary': fields.char('Summary', size=256, select=True),
           'content': fields.text("Content"),
-          'create_date': fields.datetime("Date", select=True),
-          'write_uid': fields.many2one('res.users', "Modify By", select=True),
-    }
-
-    _defaults = {
-        'write_uid': lambda obj, cr, uid, context: uid,
+          'create_date': fields.datetime("Date"),
+          'create_uid': fields.many2one('res.users', "Modified By"),
     }
 
     def getDiff(self, cr, uid, v1, v2, context=None):
