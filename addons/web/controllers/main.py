@@ -1373,7 +1373,7 @@ class Binary(openerpweb.Controller):
 
         retag = hashed_session
         try:
-            id = simplejson.loads(id)
+            id = None if not id else simplejson.loads(id)
             if type(id) is list:
                 id = id[0] # m2o
             if not id:
