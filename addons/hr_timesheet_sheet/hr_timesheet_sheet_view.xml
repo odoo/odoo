@@ -71,7 +71,7 @@
                             <field name="total_attendance" widget="float_time"/>
                             <field name="total_timesheet" widget="float_time"/>
                             <field name="total_difference" widget="float_time"/>
-                            <field name="user_id" invisible="1" options='{"no_open": true}'/>
+                            <field name="user_id" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -130,7 +130,7 @@
                                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
                                     <field name="amount"/>
                                     <field name="general_account_id"/>
-                                    <field name="user_id" required="1" options='{"no_open": true}'/>
+                                    <field name="user_id" required="1"/>
                                 </form>
                             </field>
                         </page>

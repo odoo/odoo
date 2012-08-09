@@ -1,5 +1,7 @@
+<?xml version="1.0"?>
 <openerp>
     <data>
+
         <record id="view_crm_lead2opportunity_partner" model="ir.ui.view">
             <field name="name">crm.lead2opportunity.partner.form</field>
             <field name="model">crm.lead2opportunity.partner</field>
@@ -16,20 +18,20 @@
                     <separator string="Select Opportunities" attrs="{'invisible': [('name', '=', 'convert')]}"/>
                     <field name="opportunity_ids" attrs="{'invisible': [('name', '=', 'convert')]}">
                         <tree>
-                            <field name="name" />
-                            <field name="partner_id" />
-                            <field name="user_id" options='{"no_open": true}'/>
-                            <field name="section_id" />
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                            <field name="section_id"/>
                         </tree>
                     </field>
                     <footer>
                         <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight"/>
                         or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
                 </form>
             </field>
-        </record> 
+        </record>
 
         <record id="view_crm_lead2opportunity_partner_mass" model="ir.ui.view">
             <field name="name">crm.lead2opportunity.partner.mass.form</field>
@@ -40,18 +42,18 @@
                     <field name="action"/>
                     <field name="name" colspan="4"/>
                     <group string="Assigned Opportunities to">
-                        <field name="section_id" />
+                        <field name="section_id"/>
                     </group>
                     <separator string="Select Salesman"/>
                     <field name="user_ids">
                         <tree>
-                            <field name="name" />
+                            <field name="name"/>
                         </tree>
                     </field>
                     <footer>
                         <button name="mass_convert" string="Convert into Opportunities" type="object" class="oe_highlight"/>
                         or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -65,13 +67,13 @@
             <field name="view_id" ref="view_crm_lead2opportunity_partner"/>
             <field name="target">new</field>
         </record>
-           
-          <act_window id="action_crm_send_mass_convert"
+
+        <act_window id="action_crm_send_mass_convert"
             multi="True"
             key2="client_action_multi" name="Convert opportunities"
             res_model="crm.lead2opportunity.partner.mass" src_model="crm.lead"
             view_mode="form" target="new" view_type="form"
             context="{'mass_convert' : True}"
-            view_id="view_crm_lead2opportunity_partner_mass"/> 
+            view_id="view_crm_lead2opportunity_partner_mass"/>
     </data>
 </openerp>

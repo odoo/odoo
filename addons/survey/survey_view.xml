@@ -235,7 +235,7 @@
                                 </tree>
                                 <form string="History">
                                     <field name="date"/>
-                                    <field name="user_id" options='{"no_open": true}'/>
+                                    <field name="user_id"/>
                                 </form>
                            </field>
                         </page>
@@ -1034,7 +1034,7 @@
                 <form string="Survey Answer">
                     <field name="survey_id"/>
                     <field name="date_create"/>
-                    <field name="user_id" options='{"no_open": true}'/>
+                    <field name="user_id"/>
                     <field name="response_type"/>
                     <field name="question_ids" nolabel="1" colspan="4" />
                     <field name="state"/>
@@ -1153,7 +1153,7 @@
                     <group class="oe_header">
                     <field name="date_deadline"/>
                     <field name="survey_id"/>
-                    <field name="user_id" on_change="on_change_user(user_id)" options='{"no_open": true}'/>
+                    <field name="user_id" on_change="on_change_user(user_id)"/>
                      <field name="response" readonly="1"/>
                     </group>
                     </sheet>

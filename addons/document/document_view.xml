@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <openerp>
 <data>
     <menuitem name="Document Management" id="menu_document_management_configuration" parent="knowledge.menu_document_configuration" sequence="1"/>
@@ -11,7 +12,7 @@
                 <group col="4">
                     <field name="name" colspan="4"/>
                     <field name="type"/>
-                    <field name="user_id" options='{"no_open": true}'/>
+                    <field name="user_id"/>
                     <field name="online"/>
                     <field name="readonly"/>
                 </group>
@@ -73,7 +74,7 @@
                     <field name="name"/>
                     <field name="parent_id"/>
                     <field name="storage_id"/>
-                    <field name="user_id" options='{"no_open": true}'/>
+                    <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <notebook colspan="4">
@@ -235,7 +236,7 @@
         <field name="inherit_id" ref="base.view_attachment_form"/>
         <field name="arch" type="xml">
             <field name="url" position="after">
-                <field name="user_id" options='{"no_open": true}'/>
+                <field name="user_id"/>
             </field>
             <field name="company_id" position="before">
                 <field name="parent_id"/>

@@ -477,7 +477,7 @@
                             </group>
                             <group>
                                 <field name="nb_register"/>
-                                <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}" options='{"no_open": true}'/>
+                                <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                             </group>
                             <group groups="base.group_no_one">
                                 <field name="create_date"/>

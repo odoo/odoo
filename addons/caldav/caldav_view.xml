@@ -10,7 +10,7 @@
                 <form string="Calendar Collections" version="7.0">
                     <group col="4">
                         <field name="name" colspan="4"/>
-                        <field name="user_id" options='{"no_open": true}'/>
+                        <field name="user_id"/>
                         <field name="parent_id"/>
                         <field name="type"/>
                         <field name="calendar_collection"/>
@@ -84,7 +84,7 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="type"/>
-                        <field name="user_id" options='{"no_open": true}'/>
+                        <field name="user_id"/>
                         <field name="collection_id" required="1"/>
                         <field name="has_webcal" groups="base.group_no_one" />
                         <field name="calendar_color" groups="base.group_no_one" />

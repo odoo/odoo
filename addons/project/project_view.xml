@@ -88,7 +88,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" options='{"no_open": true}'/>
+                            <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                             <field name="partner_id" string="Contact" on_change="onchange_partner_id(partner_id)"/>
                             <field name="privacy_visibility"/>
                             <field name="analytic_account_id" invisible="1" required="0"/>
