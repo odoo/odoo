@@ -28,6 +28,7 @@ import werkzeug.wsgi
 from . import nonliterals
 from . import session
 from . import openerplib
+import urlparse
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']
@@ -417,6 +418,23 @@ class ControllerType(type):
 class Controller(object):
     __metaclass__ = ControllerType
 
+class DisableCacheMiddleware(object):
+    def __init__(self, app):
+        self.app = app
+    def __call__(self, environ, start_response):
+        def start_wrapped(status, headers):
+            referer = environ.get('HTTP_REFERER', '')
+            parsed = urlparse.urlparse(referer)
+            debug = parsed.query.count('debug') >= 1
+            nh = dict(headers)
+            if 'Last-Modified' in nh: del nh['Last-Modified']
+            if debug:
+                if 'Expires' in nh: del nh['Expires']
+                if 'Etag' in nh: del nh['Etag']
+                nh['Cache-Control'] = 'no-cache'
+            start_response(status, nh.items())
+        return self.app(environ, start_wrapped)
+
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
 
@@ -437,7 +455,6 @@ class Root(object):
                       by the server, will be filtered by this pattern
     """
     def __init__(self, options, openerp_addons_namespace=True):
-        self.root = '/web/webclient/home'
         self.config = options
 
         if not hasattr(self.config, 'connector'):
@@ -452,8 +469,8 @@ class Root(object):
 
         static_dirs = self._load_addons(openerp_addons_namespace)
         if options.serve_static:
-            self.dispatch = werkzeug.wsgi.SharedDataMiddleware(
-                self.dispatch, static_dirs, cache=False)
+            app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
+            self.dispatch = DisableCacheMiddleware(app)
 
         if options.session_storage:
             if not os.path.exists(options.session_storage):
@@ -476,14 +493,6 @@ class Root(object):
         request = werkzeug.wrappers.Request(environ)
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
         request.app = self
-
-        if request.path == '/':
-            params = urllib.urlencode(request.args)
-            return werkzeug.utils.redirect(self.root + '?' + params, 301)(
-                environ, start_response)
-        elif request.path == '/mobile':
-            return werkzeug.utils.redirect(
-                '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
 
         handler = self.find_handler(*(request.path.split('/')[1:]))
 

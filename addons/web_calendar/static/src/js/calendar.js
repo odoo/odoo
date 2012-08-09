@@ -492,15 +492,17 @@ instance.web_calendar.Sidebar = instance.web.Widget.extend({
     }
 });
 instance.web_calendar.SidebarFilter = instance.web.Widget.extend({
+    events: {
+        'change input:checkbox': 'on_filter_click'
+    },
     init: function(parent, view) {
         this._super(parent);
         this.view = view;
-        this.$element.delegate('input:checkbox', 'change', this.on_filter_click);
     },
     on_events_loaded: function(filters) {
         var selected_filters = this.view.selected_filters.slice(0);
         this.$element.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
-        this.$element.find('div.oe_calendar_responsible input').each(function() {
+        this.$('div.oe_calendar_responsible input').each(function() {
             if (_.indexOf(selected_filters, $(this).val()) > -1) {
                 $(this).click();
             }
@@ -511,7 +513,7 @@ instance.web_calendar.SidebarFilter = instance.web.Widget.extend({
             responsibles = [],
             $e = $(e.target);
         this.view.selected_filters = [];
-        this.$element.find('div.oe_calendar_responsible input:checked').each(function() {
+        this.$('div.oe_calendar_responsible input:checked').each(function() {
             responsibles.push($(this).val());
             self.view.selected_filters.push($(this).val());
         });

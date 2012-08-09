@@ -3,8 +3,10 @@
     "category": "Hidden",
     "description":
         """
-        OpenERP Web core module.
-        This module provides the core of the OpenERP Web Client.
+OpenERP Web core module.
+========================
+
+This module provides the core of the OpenERP Web Client.
         """,
     "depends" : [],
     'auto_install': True,
@@ -20,6 +22,7 @@
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
+        "static/lib/spinjs/spin.js",
         "static/lib/jquery.blockUI/jquery.blockUI.js",
         "static/lib/jquery.ui/js/jquery-ui-1.8.17.custom.min.js",
         "static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js",
@@ -33,6 +36,7 @@
         "static/lib/underscore/underscore.js",
         "static/lib/underscore/underscore.string.js",
         "static/lib/backbone/backbone.js",
+        "static/lib/cleditor/jquery.cleditor.js",
         "static/lib/py.js/lib/py.js",
         "static/src/js/boot.js",
         "static/src/js/corelib.js",
@@ -49,7 +53,6 @@
         "static/src/js/view_list.js",
         "static/src/js/view_list_editable.js",
         "static/src/js/view_tree.js",
-        "static/src/js/view_editor.js"
     ],
     'css' : [
         "static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.8.16.custom.css",
@@ -60,6 +63,7 @@
         "static/src/css/base.css",
         "static/src/css/data_export.css",
         "static/src/css/data_import.css",
+        "static/lib/cleditor/jquery.cleditor.css",
     ],
     'qweb' : [
         "static/src/xml/*.xml",

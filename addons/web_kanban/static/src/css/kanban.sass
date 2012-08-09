@@ -1,6 +1,15 @@
 @charset "utf-8"
 
 // Mixins {{{
+@mixin vertical-gradient($startColor: #555, $endColor: #333)
+    background-color: $startColor
+    background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(top, $startColor, $endColor) /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image:    -moz-linear-gradient(top, $startColor, $endColor) /* FF3.6 */
+    background-image:     -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
+    background-image:      -o-linear-gradient(top, $startColor, $endColor) /* Opera 11.10+ */
+    background-image:         linear-gradient(to bottom, $startColor, $endColor)
+
 @mixin radial-gradient($gradient)
     background-position: center center
     background-image: -webkit-radial-gradient(circle, $gradient)
@@ -21,8 +30,10 @@
 
 .openerp .oe_kanban_view
     // KanbanView {{{
-    background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
+    //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
     height: inherit
+    &.oe_kanban_grouped .oe_kanban_dummy_cell
+        background: url(/web/static/src/img/form_sheetbg.png)
     .ui-sortable-placeholder
         border: 1px dotted black
         visibility: visible !important
@@ -53,6 +64,8 @@
     // KanbanGroups {{{
     .oe_kanban_groups
         height: inherit
+    &.oe_kanban_ungrouped .oe_kanban_groups
+        width: 100%
     .oe_kanban_header
         &:hover
             .oe_dropdown_kanban
@@ -63,7 +76,7 @@
     .oe_kanban_group_title
         font-size: 16px
         font-weight: bold
-        min-height: 30px
+        min-height: 32px
         color: #333333
         text-shadow: 0 1px 0 white
         > span
@@ -76,12 +89,13 @@
     .oe_kanban_group_header.oe_kanban_no_group
         padding: 0px
 
-    .oe_kanban_column.oe_kanban_grouped, .oe_kanban_group_header
+    &.oe_kanban_grouped .oe_kanban_column, .oe_kanban_group_header
         background: #f0eeee
         border-left: 1px solid #f0f8f8
         border-right: 1px solid #b9b9b9
-        min-width: 170px
-        max-width: 250px
+    &.oe_kanban_grouped 
+        .oe_kanban_group_header
+            width: 1%
 
     .oe_form
         .oe_kanban_column
@@ -171,22 +185,15 @@
         display: block
         min-height: 50px
         margin: 0
-        display: block
         @include radius(4px)
         &:last-child
             margin-bottom: 0
         .oe_kanban_title
             font-weight: bold
             margin: 2px 4px
-    .oe_kanban_grouped .oe_kanban_record
+    &.oe_kanban_grouped .oe_kanban_record
         margin-bottom: 6px
-    .oe_kanban_gravatar
-        display: block
-        width: 20px
-        height: 20px
-        @include radius(3px)
-        @include box-shadow(0 1px 2px rgba(0,0,0,0.2))
-    .oe_kanban_avatar_toto
+    .oe_kanban_avatar_smallbox
         height: 40px
         width: 40px
         border: 1px solid
@@ -213,14 +220,16 @@
     .oe_kanban_show_more
         clear: both
         text-align: center
-    .oe_kanban_grouped .oe_kanban_show_more .oe_button
+    &.oe_kanban_grouped .oe_kanban_show_more .oe_button
         width: 100%
-    .oe_kanban_ungrouped .oe_kanban_record
-        float: left
-        padding: 2px
-        box-sizing: border-box
-        -moz-box-sizing: border-box
-        -webkit-box-sizing: border-box
+    &.oe_kanban_ungrouped .oe_kanban_column
+        background: white
+        .oe_kanban_record
+            float: left
+            padding: 2px
+            box-sizing: border-box
+            -moz-box-sizing: border-box
+            -webkit-box-sizing: border-box
     .oe_kanban_action_button
         height: 22px
         margin: 0
@@ -284,7 +293,6 @@
     .oe_kanban_card
         position: relative
         display: block
-        min-height: 50px
         background: white
         border: 1px solid #d8d8d8
         border-bottom-color: #b9b9b9
@@ -305,6 +313,10 @@
             text-decoration: none
         .oe_dropdown_kanban
             margin-top: 4px
+            .oe_kanban_project_times
+                li
+                    float: left
+       
     .oe_kanban_star
         float: left
         position: inline-block
@@ -328,20 +340,24 @@
                 font-size: 22px
         .oe_kanban_mail_new
             line-height: 18px
+            background-color: #8a89ba
+            color: white
+            font-weight: bold
             position: relative
             top: -1px
     .oe_kanban_bottom_right
         float: right
         position: relative
         top: 2px
-       
+
     .oe_kanban_status
+        position: relative
+        top: 4px
         display: inline-block
         height: 12px
         width: 12px
-        margin: 4px auto
         @include radius(6px)
-        @include box-shadow(0 1px 3px rgba(0,0,0,0.6))
+        @include radial-gradient((#eee 0%, #ccc 40%, #bbb 100%))
     .oe_kanban_status_green
         background: green
         @include radial-gradient((#55dd55 0%, #44aa44 40%, #339933 100%))
@@ -381,24 +397,20 @@
     // }}}
     // KanbanColorPicker {{{
     .oe_kanban_colorpicker
-        padding: 3px 6px
         white-space: nowrap
     .oe_kanban_colorpicker li
         float: left
+        margin: 0
+        padding: 0
         a
             display: inline-block
-            width: 18px
-            height: 18px
+            width: 16px
+            height: 16px
             border: 1px solid white
         a:hover
             border: 1px solid gray !important
     .oe_kanban_colorpicker li:first-child a
-        margin-top: 1px
-        height: 16px
         border: 1px solid #ccc
-        &:hover
-            margin-top: 0px
-            height: 18px
     // }}}
     // KanbanColors {{{
     .oe_kanban_color_0
@@ -435,6 +447,23 @@
     .oe_kanban_column, .oe_kanban_group_header
         padding: 0px
         background: #ffffff
+
+.openerp
+    .oe_popup_form
+        .oe_kanban_buttons
+            .oe_highlight
+                color: #404040
+                background: none
+            button.oe_highlight
+                @include vertical-gradient(#efefef, #d8d8d8)
+                @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+            button.oe_highlight:active
+                @include vertical-gradient(#e3e3e3, #f6f6f6)
+                @include box-shadow(none)
+            button.oe_highlight:hover
+                @include vertical-gradient(#f6f6f6, #e3e3e3)
+                @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

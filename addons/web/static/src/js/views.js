@@ -14,6 +14,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog = null;
         this.dialog_widget = null;
         this.breadcrumbs = [];
+        this.on('history_back', this, function() {
+            return this.history_back();
+        });
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -65,21 +68,46 @@ instance.web.ActionManager = instance.web.Widget.extend({
         item.id = _.uniqueId('breadcrumb_');
         this.breadcrumbs.push(item);
     },
+    history_back: function() {
+        var last = this.breadcrumbs.slice(-1)[0];
+        if (!last) {
+            return false;
+        }
+        var title = last.get_title();
+        if (_.isArray(title) && title.length > 1) {
+            return this.select_breadcrumb(this.breadcrumbs.length - 1, title.length - 2);
+        } else if (this.breadcrumbs.length === 1) {
+            // Only one single titled item in breadcrumb, most of the time you want to trigger back to home
+            return false;
+        } else {
+            var prev = this.breadcrumbs[this.breadcrumbs.length - 2];
+            title = prev.get_title();
+            return this.select_breadcrumb(this.breadcrumbs.length - 2, _.isArray(title) ? title.length - 1 : undefined);
+        }
+    },
     on_breadcrumb_clicked: function(ev) {
         var $e = $(ev.target);
         var id = $e.data('id');
-        var item;
+        var index;
         for (var i = this.breadcrumbs.length - 1; i >= 0; i--) {
-            var it = this.breadcrumbs[i];
-            if (it.id == id) {
-                item = it;
+            if (this.breadcrumbs[i].id == id) {
+                index = i;
                 break;
             }
-            this.remove_breadcrumb(i);
         }
-        var index = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
-        item.show(index, $e);
+        var subindex = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
+        this.select_breadcrumb(index, subindex);
+    },
+    select_breadcrumb: function(index, subindex) {
+        for (var i = this.breadcrumbs.length - 1; i >= 0; i--) {
+            if (i > index) {
+                this.remove_breadcrumb(i);
+            }
+        }
+        var item = this.breadcrumbs[index];
+        item.show(subindex);
         this.inner_widget = item.widget;
+        return true;
     },
     clear_breadcrumbs: function() {
         while (this.breadcrumbs.length) {
@@ -114,15 +142,21 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 }
             }
         }
-        return titles.join(' / ');
+        return titles.join(' <span class="oe_fade">/</span> ');
     },
     do_push_state: function(state) {
+        state = state || {};
         if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
                 state['title'] = this.inner_action.name;
-                state['model'] = this.inner_action.res_model;
+                if(this.inner_action.type == 'ir.actions.act_window') {
+                    state['model'] = this.inner_action.res_model;
+                }
                 if (this.inner_action.id) {
-                    state['action_id'] = this.inner_action.id;
+                    state['action'] = this.inner_action.id;
+                } else if (this.inner_action.type == 'ir.actions.client') {
+                    state['action'] = this.inner_action.tag;
+                    //state = _.extend(this.inner_action.params || {}, state);
                 }
             }
             this.getParent().do_push_state(state);
@@ -131,14 +165,20 @@ instance.web.ActionManager = instance.web.Widget.extend({
     do_load_state: function(state, warm) {
         var self = this,
             action_loaded;
-        if (state.action_id) {
-            var run_action = (!this.inner_widget || !this.inner_widget.action) || this.inner_widget.action.id !== state.action_id;
-            if (run_action) {
+        if (state.action) {
+            if (_.isString(state.action) && instance.web.client_actions.contains(state.action)) {
+                var action_client = {type: "ir.actions.client", tag: state.action, params: state};
                 this.null_action();
-                action_loaded = this.do_action(state.action_id);
-                instance.webclient.menu.has_been_loaded.then(function() {
-                    instance.webclient.menu.open_action(state.action_id);
-                });
+                action_loaded = this.do_action(action_client);
+            } else {
+                var run_action = (!this.inner_widget || !this.inner_widget.action) || this.inner_widget.action.id !== state.action;
+                if (run_action) {
+                    this.null_action();
+                    action_loaded = this.do_action(state.action);
+                    instance.webclient.menu.has_been_loaded.then(function() {
+                        instance.webclient.menu.open_action(state.action);
+                    });
+                }
             }
         } else if (state.model && state.id) {
             // TODO handle context & domain ?
@@ -152,23 +192,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_loaded = this.do_action(action);
         } else if (state.sa) {
             // load session action
-            var self = this;
             this.null_action();
             action_loaded = this.rpc('/web/session/get_session_action',  {key: state.sa}).pipe(function(action) {
                 if (action) {
                     return self.do_action(action);
                 }
             });
-        } else if (state.client_action) {
-            this.null_action();
-            var action = state.client_action;
-            if(_.isString(action)) {
-                action = {
-                    tag: action,
-                    params: state,
-                };
-            }
-            this.ir_actions_client(action);
         }
 
         $.when(action_loaded || null).then(function() {
@@ -178,7 +207,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     do_action: function(action, on_close) {
-        if (_.isNumber(action) || _.isString(action)) {
+        if (_.isString(action) && instance.web.client_actions.contains(action)) {
+            var action_client = { type: "ir.actions.client", tag: action };
+            return this.do_action(action_client);
+        } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
             return self.rpc("/web/action/load", { action_id: action }, function(result) {
                 self.do_action(result.result, on_close);
@@ -186,7 +218,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         if (!action.type) {
             console.error("No type for action", action);
-            return;
+            return null;
         }
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
@@ -201,7 +233,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }, action.flags || {});
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
-            return;
+            return null;
         }
         return this[type](action, on_close);
     },
@@ -209,6 +241,52 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog_stop();
         this.clear_breadcrumbs();
     },
+
+    do_ir_actions_common: function(action, on_close) {
+        var self = this, klass, widget, post_process;
+        if (action.type === 'ir.actions.client') {
+            var ClientWidget = instance.web.client_actions.get_object(action.tag);
+            widget = new ClientWidget(this, action.params);
+            klass = 'oe_act_client';
+            post_process = function() {
+                self.push_breadcrumb({
+                    widget: widget,
+                    title: action.name
+                });
+                if (action.tag !== 'reload') {
+                    self.do_push_state({});
+                }
+            };
+        } else {
+            widget = new instance.web.ViewManagerAction(this, action);
+            klass = 'oe_act_window';
+            post_process = widget.proxy('add_breadcrumb');
+        }
+        if (action.target === 'new') {
+            if (this.dialog === null) {
+                // These buttons will be overwrited by <footer> if any
+                this.dialog = new instance.web.Dialog(this, {
+                    buttons: { "Close": function() { $(this).dialog("close"); }},
+                    dialogClass: klass
+                });
+                if(on_close)
+                    this.dialog.on_close.add(on_close);
+            } else {
+                this.dialog_widget.destroy();
+            }
+            this.dialog.dialog_title = action.name;
+            this.dialog_widget = widget;
+            this.dialog_widget.appendTo(this.dialog.$element);
+            this.dialog.open();
+        } else  {
+            this.dialog_stop();
+            this.inner_action = action;
+            this.inner_widget = widget;
+            post_process();
+            this.inner_widget.appendTo(this.$element);
+        }
+    },
+
     ir_actions_act_window: function (action, on_close) {
         var self = this;
         if (_(['base.module.upgrade', 'base.setup.installer'])
@@ -218,34 +296,18 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 instance.webclient.do_reload().then(old_close);
             };
         }
-        if (action.target === 'new') {
-            if (this.dialog === null) {
-                // These buttons will be overwrited by <footer> if any
-                this.dialog = new instance.web.Dialog(this, {
-                    buttons: { "Close": function() { $(this).dialog("close"); }},
-		    dialogClass: 'oe_act_window'
-                });
-                if(on_close)
-                    this.dialog.on_close.add(on_close);
-            } else {
-                this.dialog_widget.destroy();
-            }
-            this.dialog.dialog_title = action.name;
-            this.dialog_widget = new instance.web.ViewManagerAction(this, action);
-            this.dialog_widget.appendTo(this.dialog.$element);
-            this.dialog.open();
-        } else  {
-            this.dialog_stop();
+        if (action.target !== 'new') {
             if(action.menu_id) {
+                this.dialog_stop();
                 return this.getParent().do_action(action, function () {
                     instance.webclient.menu.open_menu(action.menu_id);
                 });
             }
-            this.inner_action = action;
-            var inner_widget = this.inner_widget = new instance.web.ViewManagerAction(this, action);
-            inner_widget.add_breadcrumb();
-            this.inner_widget.appendTo(this.$element);
         }
+        return this.do_ir_actions_common(action, on_close);
+    },
+    ir_actions_client: function (action, on_close) {
+        return this.do_ir_actions_common(action, on_close);
     },
     ir_actions_act_window_close: function (action, on_closed) {
         if (!this.dialog && on_closed) {
@@ -262,19 +324,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
             self.do_action(action, on_closed)
         });
     },
-    ir_actions_client: function (action) {
-        this.dialog_stop();
-        var ClientWidget = instance.web.client_actions.get_object(action.tag);
-        this.inner_widget = new ClientWidget(this, action.params);
-        this.push_breadcrumb({
-            widget: this.inner_widget,
-            title: action.name
-        });
-        this.inner_widget.appendTo(this.$element);
-    },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
-        $.blockUI();
+        instance.web.blockUI();
         self.rpc("/web/session/eval_domain_and_context", {
             contexts: [action.context],
             domains: []
@@ -284,7 +336,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             self.session.get_file({
                 url: '/web/report',
                 data: {action: JSON.stringify(action)},
-                complete: $.unblockUI,
+                complete: instance.web.unblockUI,
                 success: function(){
                     if (!self.dialog && on_closed) {
                         on_closed();
@@ -396,7 +448,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
 
-        $.when(view_promise).then(function () {
+        return $.when(view_promise).then(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
@@ -408,7 +460,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                         container.hide();
                         controller.do_hide();
                     }
-		    // put the <footer> in the dialog's buttonpane
+                    // put the <footer> in the dialog's buttonpane
                     if (self.$element.parent('.ui-dialog-content') && self.$element.find('footer')) {
                         self.$element.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonset').hide()
                         self.$element.find('footer').appendTo(
@@ -418,7 +470,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
             });
         });
-        return view_promise;
     },
     do_create_view: function(view_type) {
         // Lazy loading of views
@@ -435,6 +486,13 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             }
         }
         var controller = new controllerclass(this, this.dataset, view.view_id, options);
+
+        controller.on('history_back', this, function() {
+            var am = self.getParent();
+            if (am && am.trigger) {
+                return am.trigger('history_back');
+            }
+        });
 
         controller.on("change:title", this, function() {
             if (self.active_view === view_type) {
@@ -478,7 +536,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         });
         this.getParent().push_breadcrumb({
             widget: this,
-            show: function(index, $e) {
+            action: this.action,
+            show: function(index) {
                 var view_to_select = views[index];
                 self.$element.show();
                 if (self.active_view !== view_to_select) {
@@ -486,9 +545,27 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 }
             },
             get_title: function() {
-                return _.map(views, function(v) {
-                    return self.views[v].controller.get('title');
+                var id;
+                var currentIndex;
+                _.each(self.getParent().breadcrumbs, function(bc, i) {
+                    if (bc.widget === self) {
+                        currentIndex = i;
+                    }
                 });
+                var next = self.getParent().breadcrumbs.slice(currentIndex + 1)[0];
+                var titles = _.map(views, function(v) {
+                    var controller = self.views[v].controller;
+                    if (v === 'form') {
+                        id = controller.datarecord.id;
+                    }
+                    return controller.get('title');
+                });
+                if (next && next.action && next.action.res_id && self.active_view === 'form' && self.model === next.action.res_model && id === next.action.res_id) {
+                    // If the current active view is a formview and the next item in the breadcrumbs
+                    // is an action on same object (model / res_id), then we omit the current formview's title
+                    titles.pop();
+                }
+                return titles;
             }
         });
     },
@@ -657,32 +734,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
 
         this.$element.find('.oe_debug_view').change(this.on_debug_changed);
         this.$element.addClass("oe_view_manager_" + (this.action.target || 'current'));
-
-        if (this.action.help && !this.flags.low_profile) {
-            var Users = new instance.web.DataSet(self, 'res.users'),
-                $tips = this.$element.find('.oe_view_manager_menu_tips');
-            $tips.delegate('blockquote button', 'click', function() {
-                var $this = $(this);
-                //noinspection FallthroughInSwitchStatementJS
-                switch ($this.attr('name')) {
-                case 'disable':
-                    Users.write(self.session.uid, {menu_tips:false});
-                case 'hide':
-                    $this.closest('blockquote').hide();
-                    self.session.hidden_menutips[self.action.id] = true;
-                }
-            });
-            if (!(self.action.id in self.session.hidden_menutips)) {
-                Users.read_ids([this.session.uid], ['menu_tips']).then(function(users) {
-                    var user = users[0];
-                    if (!(user && user.id === self.session.uid)) {
-                        return;
-                    }
-                    $tips.find('blockquote').toggle(user.menu_tips);
-                });
-            }
-        }
-
         return manager_ready;
     },
     on_debug_changed: function (evt) {
@@ -735,15 +786,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                                              self.dataset.model),
                         width: '95%'}, $root).open();
                 });
-                break;
-            case 'manage_views':
-                if (current_view.fields_view && current_view.fields_view.arch) {
-                    var view_editor = new instance.web.ViewEditor(current_view, current_view.$element, this.dataset, current_view.fields_view.arch);
-                    view_editor.start();
-                } else {
-                    this.do_warn(_t("Manage Views"),
-                            _t("Could not find current view declaration"));
-                }
                 break;
             case 'edit_workflow':
                 return this.do_action({
@@ -867,7 +909,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
             } else {
                 self.do_attachement_update(self.dataset, self.model_id);
             }
-            $.unblockUI();
+            instance.web.unblockUI();
         });
     },
     start: function() {
@@ -1006,7 +1048,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
             this.$('.oe_sidebar_add_attachment span').text(_t('Uploading...'));
-            $.blockUI();
+            instance.web.blockUI();
         }
     },
     on_attachment_delete: function(e) {
@@ -1033,14 +1075,15 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
         this['on_button_' + _t("Close")] = this.on_btn_close;
         this._super(view, {
             width: '80%',
-            height: '80%'
+            height: '80%',
+            destroy_on_close: false,
         });
         this.view = view;
         this.view_type = view.fields_view.type || '';
         this.$fields_form = null;
         this.$view_form = null;
         this.$sidebar_form = null;
-        this.translatable_fields_keys = _.map(this.view.translatable_fields || [], function(i) { return i.name });
+        this.translatable_fields_keys = _.map(this.view.translatable_fields || [], function(i) { return i.name; });
         this.languages = null;
         this.languages_loaded = $.Deferred();
         (new instance.web.DataSetSearch(this, 'res.lang', this.view.dataset.get_context(),
@@ -1071,7 +1114,8 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
             deffered.push(deff);
             var callback = function(values) {
                 _.each(self.translatable_fields_keys, function(f) {
-                    self.$fields_form.find('.oe_trad_field[name="' + lg.code + '-' + f + '"]').val(values[0][f] || '').attr('data-value', values[0][f] || '');
+                    var value = values[0][f] || '';
+                    self.$fields_form.find('.oe_trad_field[name="' + lg.code + '-' + f + '"]').val(value).attr('data-value', value);
                 });
                 deff.resolve();
             };
@@ -1082,24 +1126,19 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
                 });
                 callback([values]);
             } else {
-                self.rpc('/web/dataset/get', {
-                    model: self.view.dataset.model,
-                    ids: [self.view.datarecord.id],
-                    fields: self.translatable_fields_keys,
-                    context: self.view.dataset.get_context({
-                        'lang': lg.code
-                    })}, callback);
+                self.view.dataset.read_ids([self.view.datarecord.id], self.translatable_fields_keys, {
+                    context: { 'lang': lg.code }
+                }).then(callback);
             }
         });
         $.when.apply(null, deffered).then(callback);
     },
     open: function(field) {
-        var self = this,
-            sup = this._super;
+        var self = this;
+        this._super();
         $.when(this.languages_loaded).then(function() {
             if (self.view.translatable_fields && self.view.translatable_fields.length) {
                 self.do_load_fields_values(function() {
-                    sup.call(self);
                     if (field) {
                         var $field_input = self.$element.find('tr[data-field="' + field.name + '"] td:nth-child(2) *:first-child');
                         self.$element.scrollTo($field_input);
@@ -1153,7 +1192,7 @@ instance.web.View = instance.web.Widget.extend({
         this.view_id = view_id;
         this.set_default_options(options);
     },
-    start: function() {
+    start: function () {
         return this.load_view();
     },
     load_view: function() {
@@ -1193,7 +1232,7 @@ instance.web.View = instance.web.Widget.extend({
     },
     open_translate_dialog: function(field) {
         if (!this.translate_dialog) {
-            this.translate_dialog = new instance.web.TranslateDialog(this).start();
+            this.translate_dialog = new instance.web.TranslateDialog(this);
         }
         this.translate_dialog.open(field);
     },
@@ -1363,7 +1402,6 @@ instance.web.xml_to_json = function(node) {
 }
 instance.web.json_node_to_xml = function(node, human_readable, indent) {
     // For debugging purpose, this function will convert a json node back to xml
-    // Maybe useful for xml view editor
     indent = indent || 0;
     var sindent = (human_readable ? (new Array(indent + 1).join('\t')) : ''),
         r = sindent + '<' + node.tag,
@@ -1372,7 +1410,9 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
     if (typeof(node) === 'string') {
         return sindent + node;
     } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
-        throw("Node a json node");
+        throw new Error(
+            _.str.sprintf("Node [%s] is not a JSONified XML node",
+                          JSON.stringify(node)));
     }
     for (var attr in node.attrs) {
         var vattr = node.attrs[attr];

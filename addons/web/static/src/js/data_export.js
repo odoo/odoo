@@ -376,7 +376,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
 
         exported_fields.unshift({name: 'id', label: 'External ID'});
         var export_format = this.$element.find("#export_format").val();
-        $.blockUI();
+        instance.web.blockUI();
         this.session.get_file({
             url: '/web/export/' + export_format,
             data: {data: JSON.stringify({
@@ -387,7 +387,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 import_compat: Boolean(
                     this.$element.find("#import_compat").val())
             })},
-            complete: $.unblockUI
+            complete: instance.web.unblockUI
         });
     },
     close: function() {
