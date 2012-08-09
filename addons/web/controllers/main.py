@@ -163,98 +163,126 @@ def sass2scss(src):
         return out
     return write(sass)
 
+def server_wide_modules(req):
+    addons = [i for i in req.config.server_wide_modules if i in openerpweb.addons_manifest]
+    return addons
+
+def manifest_glob(req, addons, key):
+    if addons is None:
+        addons = server_wide_modules(req)
+    else:
+        addons = addons.split(',')
+    r = []
+    for addon in addons:
+        manifest = openerpweb.addons_manifest.get(addon, None)
+        if not manifest:
+            continue
+        # ensure does not ends with /
+        addons_path = os.path.join(manifest['addons_path'], '')[:-1]
+        globlist = manifest.get(key, [])
+        for pattern in globlist:
+            for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
+                r.append((path, path[len(addons_path):]))
+    return r
+
+def manifest_list(req, mods, extension):
+    if not req.debug:
+        path = '/web/webclient/' + extension
+        if mods is not None:
+            path += '?mods=' + mods
+        return [path]
+    files = manifest_glob(req, mods, extension)
+    i_am_diabetic = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1 or \
+                    req.httprequest.environ.get('HTTP_REFERER', '').count("no_sugar") >= 1
+    if i_am_diabetic:
+        return [wp for _fp, wp in files]
+    else:
+        return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in files]
+
+def get_last_modified(files):
+    """ Returns the modification time of the most recently modified
+    file provided
+
+    :param list(str) files: names of files to check
+    :return: most recent modification time amongst the fileset
+    :rtype: datetime.datetime
+    """
+    files = list(files)
+    if files:
+        return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
+                   for f in files)
+    return datetime.datetime(1970, 1, 1)
+
+def make_conditional(req, response, last_modified=None, etag=None):
+    """ Makes the provided response conditional based upon the request,
+    and mandates revalidation from clients
+
+    Uses Werkzeug's own :meth:`ETagResponseMixin.make_conditional`, after
+    setting ``last_modified`` and ``etag`` correctly on the response object
+
+    :param req: OpenERP request
+    :type req: web.common.http.WebRequest
+    :param response: Werkzeug response
+    :type response: werkzeug.wrappers.Response
+    :param datetime.datetime last_modified: last modification date of the response content
+    :param str etag: some sort of checksum of the content (deep etag)
+    :return: the response object provided
+    :rtype: werkzeug.wrappers.Response
+    """
+    response.cache_control.must_revalidate = True
+    response.cache_control.max_age = 0
+    if last_modified:
+        response.last_modified = last_modified
+    if etag:
+        response.set_etag(etag)
+    return response.make_conditional(req.httprequest)
+
+class Home(openerpweb.Controller):
+    _cp_path = '/'
+
+    @openerpweb.httprequest
+    def index(self, req, s_action=None, **kw):
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, None, 'js'))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, None, 'css'))
+
+        r = html_template % {
+            'js': js,
+            'css': css,
+            'modules': simplejson.dumps(server_wide_modules(req)),
+            'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
+        }
+        return r
+
+    @openerpweb.httprequest
+    def login(self, req, db, login, key):
+        return self._login(req, db, login, key)
+
+    def _login(self, req, db, login, key, redirect_url='/'):
+        req.session.authenticate(db, login, key, {})
+        redirect = werkzeug.utils.redirect(redirect_url, 303)
+        cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
+        redirect.set_cookie('instance0|session_id', cookie_val)
+        return redirect
+
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
 
-    def server_wide_modules(self, req):
-        addons = [i for i in req.config.server_wide_modules if i in openerpweb.addons_manifest]
-        return addons
-
-    def manifest_glob(self, req, addons, key):
-        if addons is None:
-            addons = self.server_wide_modules(req)
-        else:
-            addons = addons.split(',')
-        r = []
-        for addon in addons:
-            manifest = openerpweb.addons_manifest.get(addon, None)
-            if not manifest:
-                continue
-            # ensure does not ends with /
-            addons_path = os.path.join(manifest['addons_path'], '')[:-1]
-            globlist = manifest.get(key, [])
-            for pattern in globlist:
-                for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    r.append( (path, path[len(addons_path):]))
-        return r
-
-    def manifest_list(self, req, mods, extension):
-        if not req.debug:
-            path = '/web/webclient/' + extension
-            if mods is not None:
-                path += '?mods=' + mods
-            return [path]
-        no_sugar = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1
-        no_sugar = no_sugar or req.httprequest.environ.get('HTTP_REFERER', '').count("no_sugar") >= 1
-        if not no_sugar:
-            return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
-        else:
-            return [el[1] for el in self.manifest_glob(req, mods, extension)]
-
     @openerpweb.jsonrequest
     def csslist(self, req, mods=None):
-        return self.manifest_list(req, mods, 'css')
+        return manifest_list(req, mods, 'css')
 
     @openerpweb.jsonrequest
     def jslist(self, req, mods=None):
-        return self.manifest_list(req, mods, 'js')
+        return manifest_list(req, mods, 'js')
 
     @openerpweb.jsonrequest
     def qweblist(self, req, mods=None):
-        return self.manifest_list(req, mods, 'qweb')
-
-    def get_last_modified(self, files):
-        """ Returns the modification time of the most recently modified
-        file provided
-
-        :param list(str) files: names of files to check
-        :return: most recent modification time amongst the fileset
-        :rtype: datetime.datetime
-        """
-        files = list(files)
-        if files:
-            return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
-                       for f in files)
-        return datetime.datetime(1970, 1, 1)
-
-    def make_conditional(self, req, response, last_modified=None, etag=None):
-        """ Makes the provided response conditional based upon the request,
-        and mandates revalidation from clients
-
-        Uses Werkzeug's own :meth:`ETagResponseMixin.make_conditional`, after
-        setting ``last_modified`` and ``etag`` correctly on the response object
-
-        :param req: OpenERP request
-        :type req: web.common.http.WebRequest
-        :param response: Werkzeug response
-        :type response: werkzeug.wrappers.Response
-        :param datetime.datetime last_modified: last modification date of the response content
-        :param str etag: some sort of checksum of the content (deep etag)
-        :return: the response object provided
-        :rtype: werkzeug.wrappers.Response
-        """
-        response.cache_control.must_revalidate = True
-        response.cache_control.max_age = 0
-        if last_modified:
-            response.last_modified = last_modified
-        if etag:
-            response.set_etag(etag)
-        return response.make_conditional(req.httprequest)
+        return manifest_list(req, mods, 'qweb')
 
     @openerpweb.httprequest
     def css(self, req, mods=None):
-        files = list(self.manifest_glob(req, mods, 'css'))
-        last_modified = self.get_last_modified(f[0] for f in files)
+        files = list(manifest_glob(req, mods, 'css'))
+        last_modified = get_last_modified(f[0] for f in files)
         if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
             return werkzeug.wrappers.Response(status=304)
 
@@ -287,56 +315,35 @@ class WebClient(openerpweb.Controller):
 
         content, checksum = concat_files((f[0] for f in files), reader)
 
-        return self.make_conditional(
+        return make_conditional(
             req, req.make_response(content, [('Content-Type', 'text/css')]),
             last_modified, checksum)
 
     @openerpweb.httprequest
     def js(self, req, mods=None):
-        files = [f[0] for f in self.manifest_glob(req, mods, 'js')]
-        last_modified = self.get_last_modified(files)
+        files = [f[0] for f in manifest_glob(req, mods, 'js')]
+        last_modified = get_last_modified(files)
         if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
             return werkzeug.wrappers.Response(status=304)
 
         content, checksum = concat_files(files, intersperse=';')
 
-        return self.make_conditional(
+        return make_conditional(
             req, req.make_response(content, [('Content-Type', 'application/javascript')]),
             last_modified, checksum)
 
     @openerpweb.httprequest
     def qweb(self, req, mods=None):
-        files = [f[0] for f in self.manifest_glob(req, mods, 'qweb')]
-        last_modified = self.get_last_modified(files)
+        files = [f[0] for f in manifest_glob(req, mods, 'qweb')]
+        last_modified = get_last_modified(files)
         if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
             return werkzeug.wrappers.Response(status=304)
 
-        content,checksum = concat_xml(files)
+        content, checksum = concat_xml(files)
 
-        return self.make_conditional(
+        return make_conditional(
             req, req.make_response(content, [('Content-Type', 'text/xml')]),
             last_modified, checksum)
-
-    @openerpweb.httprequest
-    def home(self, req, s_action=None, **kw):
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>'%i for i in self.manifest_list(req, None, 'js'))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">'%i for i in self.manifest_list(req, None, 'css'))
-
-        r = html_template % {
-            'js': js,
-            'css': css,
-            'modules': simplejson.dumps(self.server_wide_modules(req)),
-            'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
-        }
-        return r
-
-    @openerpweb.httprequest
-    def login(self, req, db, login, key):
-        req.session.authenticate(db, login, key, {})
-        redirect = werkzeug.utils.redirect('/web/webclient/home', 303)
-        cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
-        redirect.set_cookie('instance0|session_id', cookie_val)
-        return redirect
 
     @openerpweb.jsonrequest
     def translations(self, req, mods, lang):
@@ -997,6 +1004,16 @@ class DataSet(openerpweb.Controller):
             elif isinstance(kwargs[k], common.nonliterals.BaseDomain):
                 kwargs[k] = req.session.eval_domain(kwargs[k])
 
+        # Temporary implements future display_name special field for model#read()
+        if method == 'read' and kwargs.get('context') and kwargs['context'].get('future_display_name'):
+            if 'display_name' in args[1]:
+                names = req.session.model(model).name_get(args[0], **kwargs)
+                args[1].remove('display_name')
+                r = getattr(req.session.model(model), method)(*args, **kwargs)
+                for i in range(len(r)):
+                    r[i]['display_name'] = names[i][1] or "%s#%d" % (model, names[i][0])
+                return r
+
         return getattr(req.session.model(model), method)(*args, **kwargs)
 
     @openerpweb.jsonrequest
@@ -1360,7 +1377,12 @@ class Binary(openerpweb.Controller):
                 res = Model.default_get([field], context).get(field)
                 image_data = base64.b64decode(res)
             else:
-                res = Model.read([int(id)], [last_update, field], context)[0]
+                try:
+                    id = int(id)
+                except (ValueError):
+                    # objects might use virtual ids as string
+                    pass
+                res = Model.read([id], [last_update, field], context)[0]
                 retag = hashlib.md5(res.get(last_update)).hexdigest()
                 image_data = base64.b64decode(res.get(field))
         except (TypeError, xmlrpclib.Fault):

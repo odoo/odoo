@@ -4,8 +4,10 @@
         <div class="oe_kanban_buttons"/>
         <table class="oe_kanban_groups">
         <tr class="oe_kanban_groups_headers">
+            <td class="oe_kanban_dummy_cell"><div/></td>
         </tr>
         <tr class="oe_kanban_groups_records">
+            <td class="oe_kanban_dummy_cell"><div/></td>
         </tr>
         </table>
     </div>
@@ -55,7 +57,7 @@
     </td>
 </t>
 <t t-name="KanbanView.group_records_container">
-    <td t-attf-class="oe_kanban_column #{widget.group ? 'oe_kanban_grouped' : 'oe_kanban_ungrouped'}">
+    <td class="oe_kanban_column">
         <div class="oe_kanban_group_list_header"/>
         <div class="oe_kanban_show_more">
             <button class="oe_button">Show more... (<span class="oe_kanban_remaining"></span> remaining)</button>

@@ -426,10 +426,13 @@ class DisableCacheMiddleware(object):
             referer = environ.get('HTTP_REFERER', '')
             parsed = urlparse.urlparse(referer)
             debug = parsed.query.count('debug') >= 1
-            filtered_headers = [(k,v) for k,v in headers if not (k=='Last-Modified' or (debug and (k=='Cache-Control' or k=='Expires')))]
+            nh = dict(headers)
+            if 'Last-Modified' in nh: del nh['Last-Modified']
             if debug:
-                filtered_headers.append(('Cache-Control', 'no-cache'))
-            start_response(status, filtered_headers)
+                if 'Expires' in nh: del nh['Expires']
+                if 'Etag' in nh: del nh['Etag']
+                nh['Cache-Control'] = 'no-cache'
+            start_response(status, nh.items())
         return self.app(environ, start_wrapped)
 
 class Root(object):
@@ -452,7 +455,6 @@ class Root(object):
                       by the server, will be filtered by this pattern
     """
     def __init__(self, options, openerp_addons_namespace=True):
-        self.root = '/web/webclient/home'
         self.config = options
 
         if not hasattr(self.config, 'connector'):
@@ -491,14 +493,6 @@ class Root(object):
         request = werkzeug.wrappers.Request(environ)
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
         request.app = self
-
-        if request.path == '/':
-            params = urllib.urlencode(request.args)
-            return werkzeug.utils.redirect(self.root + '?' + params, 301)(
-                environ, start_response)
-        elif request.path == '/mobile':
-            return werkzeug.utils.redirect(
-                '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
 
         handler = self.find_handler(*(request.path.split('/')[1:]))
 

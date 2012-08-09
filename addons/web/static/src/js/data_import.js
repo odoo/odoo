@@ -156,7 +156,7 @@ instance.web.DataImport = instance.web.Dialog.extend({
         });
     },
     toggle_import_button: function (newstate) {
-    	instance.web.dialog(this.$element, 'widget')
+        instance.web.dialog(this.$element, 'widget')
                 .find('.oe_import_dialog_button')
                 .button('option', 'disabled', !newstate);
     },

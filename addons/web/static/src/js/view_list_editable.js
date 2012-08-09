@@ -96,12 +96,10 @@ openerp.web.list_editable = function (instance) {
         },
         on_loaded: function (data, grouped) {
             var self = this;
-            if (this.editor) {
-                this.editor.destroy();
-            }
             // tree/@editable takes priority on everything else if present.
             var result = this._super(data, grouped);
             if (this.editable()) {
+                this.$element.addClass('oe_list_editable');
                 // FIXME: any hook available to ensure this is only done once?
                 this.$buttons
                     .off('click', '.oe_list_save')
@@ -118,6 +116,7 @@ openerp.web.list_editable = function (instance) {
                             self.start_edition();
                         }
                     });
+                this.editor.destroy();
                 // Editor is not restartable due to formview not being
                 // restartable
                 this.editor = this.make_editor();
@@ -125,6 +124,8 @@ openerp.web.list_editable = function (instance) {
                     .then(this.proxy('setup_events'));
 
                 return $.when(result, editor_ready);
+            } else {
+                this.$element.removeClass('oe_list_editable');
             }
 
             return result;
@@ -137,10 +138,13 @@ openerp.web.list_editable = function (instance) {
         make_editor: function () {
             return new instance.web.list.Editor(this);
         },
-        do_button_action: function () {
+        do_button_action: function (name, id, callback) {
             var self = this, args = arguments;
-            this.ensure_saved().then(function () {
-                self.handle_button.apply(self, args);
+            this.ensure_saved().then(function (done) {
+                if (!id && done.created) {
+                    id = done.record.get('id');
+                }
+                self.handle_button.call(self, name, id, callback);
             });
         },
         /**
@@ -283,16 +287,17 @@ openerp.web.list_editable = function (instance) {
             });
         },
         /**
+         * @param {Boolean} [force=false] discards the data even if the form has been edited
          * @return {jQuery.Deferred}
          */
-        cancel_edition: function () {
+        cancel_edition: function (force) {
             var self = this;
             return this.with_event('cancel', {
                 editor: this.editor,
                 form: this.editor.form,
                 cancel: false
             }, function () {
-                return this.editor.cancel().pipe(function (attrs) {
+                return this.editor.cancel(force).pipe(function (attrs) {
                     if (attrs.id) {
                         var record = self.records.get(attrs.id);
                         if (!record) {
@@ -604,6 +609,7 @@ openerp.web.list_editable = function (instance) {
             this.form = new (this.options.formView)(
                 this, this.delegate.dataset, false, {
                     initial_mode: 'edit',
+                    disable_autofocus: true,
                     $buttons: $(),
                     $pager: $()
             });
@@ -683,9 +689,8 @@ openerp.web.list_editable = function (instance) {
                 if (!field.$element.is(':visible')) {
                     return false;
                 }
-                field.focus();
                 // Stop as soon as a field got focused
-                return true;
+                return field.focus() !== false;
             });
         },
         edit: function (record, configureField, options) {
@@ -719,13 +724,13 @@ openerp.web.list_editable = function (instance) {
                     return self.cancel();
                 });
         },
-        cancel: function () {
-            var record = this.record;
-            this.record = null;
-            if (!this.form.can_be_discarded()) {
+        cancel: function (force) {
+            if (!(force || this.form.can_be_discarded())) {
                 return $.Deferred().reject({
                     message: "The form's data can not be discarded"}).promise();
             }
+            var record = this.record;
+            this.record = null;
             this.form.do_hide();
             return $.when(record);
         }

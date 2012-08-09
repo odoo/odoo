@@ -226,6 +226,8 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         }
     },
     renderElement: function() {
+        this._super();
+
         var check = _.detect(this.node.children, function(column, column_index) {
             return _.detect(column.children,function(element){
                 return element.tag === "action"? element: false;
@@ -249,7 +251,6 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         if (this.view.options.action.help) {
             this.$element.append(
                 $('<div class="oe_view_nocontent">')
-                    .append($('<img>', { src: '/web_dashboard/static/src/img/view_todo_arrow.png' }))
                     .append($('<div>').html(this.view.options.action.help || " "))
             );
         }

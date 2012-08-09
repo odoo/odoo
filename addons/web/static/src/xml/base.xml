@@ -25,6 +25,13 @@
         </div>
     </div>
 </t>
+<t t-name="Tipsy.alert">
+    <a class="oe_tooltip_close oe_e">[</a>
+    <span style="float:left; margin:2px 5px 0 0;" class="ui-icon ui-icon-alert ui-state-error"></span>
+    <div class="oe_tooltip_message">
+        <t t-esc="message"/>
+    </div>
+</t>
 
 <t t-name="CrashManager.warning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
@@ -264,6 +271,31 @@
     </div>
 </t>
 
+<t t-name="ChangePassword">
+    <form name="change_password_form" method="POST">
+        <table align="center">
+            <tr>
+                <td><label for="old_pwd">Old Password:</label></td>
+                <td><input type="password" name="old_pwd"
+                           minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+            <td><label for="new_password">New Password:</label></td>
+            <td><input type="password" name="new_password"
+                       minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+                <td><label for="confirm_pwd">Confirm Password:</label></td>
+                <td><input type="password" name="confirm_pwd"
+                             minlength="1"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
+            </tr>
+        </table>
+    </form>
+</t>
+
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
@@ -303,7 +335,7 @@
     </ul>
 </t>
 <t t-name="Menu.secondary.link">
-    <a t-attf-href="#menu_id=#{menu.id}&amp;action_id=#{menu.action ? menu.action.split(',')[1] : ''}"
+    <a t-attf-href="#menu_id=#{menu.id}&amp;action=#{menu.action ? menu.action.split(',')[1] : ''}"
         t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
         t-att-data-menu="menu.id"
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
@@ -331,7 +363,7 @@
 <t t-name="UserMenu.about">
 
     <div class="oe_about">
-      <a class="oe_activate_debug_mode oe_right" href="?debug">Activate the developer mode</a>
+      <a class="oe_activate_debug_mode oe_right" href="?debug" style="background-color: white; padding:2px 6px; border-radius: 10px;">Activate the developer mode</a>
       <img class="oe_logo" src="/web/static/src/img/logo2.png"/>
       <h3>Version <t t-esc="version_info.version"/></h3>
 
@@ -343,30 +375,6 @@
       </div>
     </div>
 
-</t>
-<t t-name="UserMenu.password">
-    <form name="change_password_form" method="POST">
-        <table align="center">
-            <tr>
-                <td><label for="old_pwd">Old Password:</label></td>
-                <td><input type="password" name="old_pwd"
-                           minlength="1" autofocus="autofocus"/></td>
-            </tr>
-            <tr>
-            <td><label for="new_password">New Password:</label></td>
-            <td><input type="password" name="new_password"
-                       minlength="1" autofocus="autofocus"/></td>
-            </tr>
-            <tr>
-                <td><label for="confirm_pwd">Confirm Password:</label></td>
-                <td><input type="password" name="confirm_pwd"
-                             minlength="1"/></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
-            </tr>
-        </table>
-    </form>
 </t>
 
 <t t-name="WebClient">
@@ -406,10 +414,10 @@
 <t t-name="ViewManager">
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">
-	    <col width="20%"/>
-	    <col width="25%"/>
-	    <col width="20%"/>
-	    <col width="35%"/>
+            <col width="20%"/>
+            <col width="25%"/>
+            <col width="20%"/>
+            <col width="35%"/>
             <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
@@ -607,7 +615,7 @@
             </th>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
-                    t-att-class="((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)">
+                    t-attf-class="oe_list_header_#{column.widget or column.type} #{((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)}">
                     <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
                 </th>
             </t>
@@ -701,7 +709,9 @@
 <div t-name="FormView.buttons" class="oe_form_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <span class="oe_form_buttons_view">
-            <button type="button" class="oe_button oe_form_button_edit">Edit</button>
+            <div style="display: inline-block;"> <!-- required for the bounce effect on button -->
+              <button type="button" class="oe_button oe_form_button_edit">Edit</button>
+            </div>
             <button type="button" class="oe_button oe_form_button_create">Create</button>
         </span>
         <span class="oe_form_buttons_edit">
@@ -921,9 +931,10 @@
             t-att-tabindex="widget.node.attrs.tabindex"
             t-att-autofocus="widget.node.attrs.autofocus"
             t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
-        ></textarea>
-        <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate"
-            t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+        ></textarea><img class="oe_field_translate oe_input_icon"
+                        t-if="widget.field.translate and !widget.get('effective_readonly')"
+                        t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
+        />
     </div>
 </t>
 <t t-name="web.datepicker">
@@ -1026,14 +1037,19 @@
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul class="oe_form_steps" t-att-style="widget.node.attrs.style"/>
+    <ul class="" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
     <t t-set="size" t-value="widget.to_show.length"/>
     <t t-foreach="_.range(size)" t-as="i">
-        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
-            <span><t t-esc="widget.to_show[i][1]"/></span>
-            <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
+        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : 'oe_form_steps_inactive'">
+            <div class="oe_form_steps_button" t-att-data-id="widget.to_show[i][0]">
+                <t t-esc="widget.to_show[i][1]"/>
+                <span class="oe_form_steps_arrow">
+                    <span></span>
+                </span>
+                <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
+            </div>            
         </li>
     </t>
 </t>
@@ -1184,11 +1200,11 @@
     </tr>
     <tr t-foreach="widget.view.translatable_fields" t-as="field" t-att-data-field="field.name">
         <td class="oe_form_group_cell" width="1%" nowrap="nowrap">
-            <label class="oe_label"><t t-esc="field.node.attrs.string"/>:</label>
+            <label class="oe_label"><t t-esc="field.string"/>:</label>
         </td>
         <td t-foreach="widget.languages" t-as="lg" class="oe_form_group_cell">
-            <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
-            <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
+            <input t-if="field.field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
+            <textarea t-if="field.field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
         </td>
     </tr>
     </table>
@@ -1443,18 +1459,18 @@
     <div>
     </div>
 </div>
-<div t-name="SearchView.addtodashboard" class="oe_searchview_dashboard">
+<div t-name="SearchView.addtoreporting" class="oe_searchview_dashboard">
     <h4>Add to Dashboard</h4>
     <form>
-        <p><input placeholder ="Title of new Dashboard item" title = "Title of new Dashboard item" type="text"/></p>
-        <button class="oe_apply" type="submit">Save</button>
+        <p><input placeholder="Title of new dashboard item"/></p>
+        <button class="oe_apply" type="submit">Add</button>
     </form>
 </div>
-<t t-name="SearchView.addtodashboard.selection">
-    <select  title = "Select Dashboard to add this filter to">
-        <t t-foreach="selections" t-as="element">
-        <option t-att-value="element.id || element.res_id "><t t-esc="element.name"/></option>
-        </t>
+<t t-name="SearchView.addtoreporting.selection">
+    <select>
+        <option t-foreach="selections" t-as="element"
+                t-att-value="element.id || element.res_id ">
+            <t t-esc="element.name"/></option>
     </select>
 </t>
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
@@ -1500,70 +1516,6 @@
         <option t-att-value="element[0]"><t t-esc="element[1]"/></option>
         </t>
     </select>
-</t>
-
-<t t-name="view_editor">
-    <table class="oe_view_editor">
-        <t t-call="view_editor.row"/>
-    </table>
-</t>
-<t t-name="view_editor.row">
-    <tr  t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
-        <td width="90%">
-            <table class="oe_view_editor_field">
-                <tr>
-                    <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
-                        <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
-                            t-att-src='_s + "/web/static/src/img/collapse.gif"' width="16" height="16" border="0"/>
-                    </td>
-                    <td style="cursor: pointer;">
-                        <a style="text-decoration:none" href="javascript:void(0);">
-                            <t t-esc="rec.name"/>
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length"
-                id="side-add" t-att-src='_s + "/web/static/src/img/icons/gtk-add.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img  id="side-remove" t-att-src='_s + "/web/static/src/img/icons/gtk-remove.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
-                id="side-edit" t-att-src='_s + "/web/static/src/img/icons/gtk-edit.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length"
-                id="side-up" t-att-src='_s + "/web/static/src/img/icons/gtk-go-up.png"' style="cursor: pointer;"/>
-        </td>
-        <td width="2%">
-            <img t-if="rec.att_list.length"
-                id="side-down" t-att-src='_s + "/web/static/src/img/icons/gtk-go-down.png"' style="cursor: pointer;"/>
-        </td>
-        <t t-if="rec.child_id.length">
-            <t t-set="data" t-value="rec.child_id"/>
-            <t t-call="view_editor.row"/>
-        </t>
-    </tr>
-</t>
-<t t-name="vieweditor_char">
-    <input type="text" t-att-id="widget.name" class="field_char" size="50"/>
-</t>
-<t t-name="vieweditor_selection">
-    <select t-att-id="widget.name" >
-        <t t-if="widget.selection" t-foreach="widget.selection" t-as="option">
-            <option
-                t-att-value="typeof option === 'object' ? option[0] : option">
-                <t t-esc="typeof option === 'object' ? option[1] : option"/>
-            </option>
-        </t>
-    </select>
-</t>
-<t t-name="vieweditor_boolean">
-    <input type="checkbox" t-att-id="widget.name"/>
 </t>
 
 <t t-name="ExportView">
