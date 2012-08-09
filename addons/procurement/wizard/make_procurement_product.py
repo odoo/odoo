@@ -114,8 +114,9 @@ class make_procurement(osv.osv_memory):
 
         res = super(make_procurement, self).default_get(cr, uid, fields, context=context)
         product_id = self.pool.get('product.product').browse(cr, uid, record_id, context=context).id
+        warehouse_id = self.pool.get('stock.warehouse').search(cr, uid, [], context=context)
         if 'product_id' in fields:
-            res.update({'product_id':product_id})
+            res.update({'product_id':product_id,'warehouse_id':warehouse_id and warehouse_id[0]})
         return res
 
 make_procurement()
