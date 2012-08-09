@@ -31,6 +31,7 @@ class hr_salary_employee_bymonth(osv.osv_memory):
         'start_date': fields.date('Start Date', required=True),
         'end_date': fields.date('End Date', required=True),
         'employee_ids': fields.many2many('hr.employee', 'payroll_year_rel', 'payroll_year_id', 'employee_id', 'Employees', required=True),
+        'category_id': fields.many2one('hr.salary.rule.category', 'Category', required=True),
     }
 
     _defaults = {
@@ -51,7 +52,7 @@ class hr_salary_employee_bymonth(osv.osv_memory):
             context = {}
         datas = {'ids': context.get('active_ids', [])}
 
-        res = self.read(cr, uid, ids, ['employee_ids',  'start_date', 'end_date'], context=context)
+        res = self.read(cr, uid, ids, ['category_id', 'employee_ids', 'start_date', 'end_date'], context=context)
         res = res and res[0] or {}
         datas.update({'form': res})
         return {
