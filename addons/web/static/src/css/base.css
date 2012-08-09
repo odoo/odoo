@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -156,7 +156,7 @@
 .openerp h4 {
   margin: 4px 0;
 }
-.openerp a.button:link, .openerp a.button:visited, .openerp button, .openerp input[type='submit'] {
+.openerp a.button:link, .openerp a.button:visited, .openerp button, .openerp input[type='submit'], .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button {
   display: inline-block;
   border: 1px solid #ababab;
   color: #404040;
@@ -181,7 +181,7 @@
   -webkit-font-smoothing: antialiased;
   outline: none;
 }
-.openerp a.button:hover, .openerp button:hover, .openerp input[type='submit']:hover {
+.openerp a.button:hover, .openerp button:hover, .openerp input[type='submit']:hover, .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover {
   background-color: #f6f6f6;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
   background-image: -webkit-linear-gradient(top, #f6f6f6, #e3e3e3);
@@ -190,9 +190,11 @@
   background-image: -o-linear-gradient(top, #f6f6f6, #e3e3e3);
   background-image: linear-gradient(to bottom, #f6f6f6, #e3e3e3);
   cursor: pointer;
+  background-position: 0;
 }
-.openerp a.button:focus, .openerp button:focus, .openerp input[type='submit']:focus {
+.openerp a.button:focus, .openerp button:focus, .openerp input[type='submit']:focus, .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus {
   border: 1px solid #80bfff;
+  background-position: 0;
   background-color: #f6f6f6;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
   background-image: -webkit-linear-gradient(top, #f6f6f6, #e3e3e3);
@@ -204,7 +206,7 @@
   -webkit-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
   box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
 }
-.openerp a.button:active, .openerp a.button.active, .openerp button:active, .openerp button.active, .openerp input[type='submit']:active, .openerp input[type='submit'].active {
+.openerp a.button:active, .openerp a.button.active, .openerp button:active, .openerp button.active, .openerp input[type='submit']:active, .openerp input[type='submit'].active, .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active {
   background-color: #e3e3e3;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6));
   background-image: -webkit-linear-gradient(top, #e3e3e3, #f6f6f6);
@@ -230,6 +232,9 @@
   font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
   font-size: 13px;
 }
+.openerp .ui-widget-content a {
+  color: #8a89ba;
+}
 .openerp .ui-menu .ui-menu-item {
   margin: 0 8px 0 0;
   padding: 0 0 0 12px;
@@ -237,11 +242,6 @@
 }
 .openerp .ui-menu .ui-menu-item a.ui-state-active {
   background: #f0f0fa;
-}
-.openerp div.ui-widget-overlay {
-  background: black;
-  filter: alpha(opacity=30);
-  opacity: 0.3;
 }
 .openerp.ui-dialog {
   display: none;
@@ -302,6 +302,9 @@
 .openerp.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
   float: left;
 }
+.openerp.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button {
+  margin-right: 4px;
+}
 .openerp.ui-dialog .ui-dialog-titlebar-close {
   padding: 0;
 }
@@ -336,6 +339,9 @@
 }
 .openerp.ui-dialog .oe_about a:hover {
   text-decoration: underline;
+}
+.openerp.ui-dialog .oe_about a:focus {
+  outline: none;
 }
 .openerp.ui-dialog .oe_about .oe_logo {
   margin-left: -6px;
@@ -492,9 +498,6 @@
 .openerp .oe_button_box button {
   margin: 4px;
 }
-.openerp .oe_avatar {
-  margin: 0 6px 15px 0;
-}
 .openerp .oe_avatar > img {
   height: 90px;
   max-width: 100px;
@@ -563,17 +566,19 @@
   color: gold;
 }
 .openerp .oe_tag {
-  border-radius: 2px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  box-sizing: border-box;
-  border: 1px solid #9daccc;
-  background: #e2e6f0;
-  color: black !important;
-  padding: 0px 3px 0px 3px;
+  border: 1px solid #afafb6;
+  font-size: 11px;
+  padding: 2px 4px;
   margin: 0 2px 2px 0;
-  height: 16px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  background: #f0f0fa;
+  color: #4c4c4c;
+}
+.openerp .oe_tag_dark {
+  background: #8786b7;
+  color: #eeeeee;
 }
 .openerp .oe_tags .text-wrap {
   width: 100% !important;
@@ -1208,16 +1213,9 @@
 }
 .openerp .oe_secondary_submenu .oe_menu_counter {
   float: right;
-  background: #8a89ba;
-  color: #eeeeee;
-  font-size: 10px;
-  border: 1px solid lightgray;
-  padding: 2px 4px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   margin: 0px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
+  padding: 1px 4px;
 }
 .openerp .oe_secondary_submenu .oe_active {
   background: #8a89ba;
@@ -1560,25 +1558,27 @@
   display: inline-block;
   line-height: 17px;
 }
-.openerp .oe_searchview .oe_searchview_facets .oe_searchview_input, .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet {
+.openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet {
   height: 18px;
   margin: 1px 0;
   font-size: 11px;
 }
-.openerp .oe_searchview .oe_searchview_facets .oe_searchview_input:focus, .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet:focus {
+.openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet:focus {
   outline: none;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_input {
   padding: 0 0 0 6px;
+  font-size: 12px;
+  height: 16px;
+  margin-top: 3px;
+}
+.openerp .oe_searchview .oe_searchview_facets .oe_searchview_input:focus {
+  outline: none;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet {
   position: relative;
   cursor: pointer;
-  border: 1px solid #afafb6;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  background: #8786b7;
+  padding: 0;
   -webkit-font-smoothing: auto;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet:focus {
@@ -1607,6 +1607,7 @@
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value {
   border-left: 1px solid #afafb6;
   text-shadow: 0 1px 1px white;
+  color: #4c4c4c;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value:last-child {
   padding-right: 16px;
@@ -1619,6 +1620,7 @@
   line-height: 8px;
   width: 12px;
   height: 12px;
+  padding-top: 1px;
   text-align: center;
   font-weight: bold;
   cursor: pointer;
@@ -1918,7 +1920,7 @@
   width: auto;
 }
 .openerp .oe_form_nosheet {
-  margin: 20px;
+  margin: 8px;
 }
 .openerp .oe_form_nosheet > header {
   margin-top: -20px;
@@ -2345,20 +2347,14 @@
 .openerp .oe_form_editable .oe_form .oe_form_field_datetime {
   width: 11.5em !important;
 }
-.openerp .oe_hidden_input_file {
-  overflow: hidden;
-  position: relative;
-  display: inline-block;
-  width: 45px;
-  height: 30px;
-}
 .openerp .oe_hidden_input_file input.oe_form_binary_file {
   z-index: 0;
   line-height: 0;
   font-size: 12px;
   position: absolute;
   top: 1px;
-  right: 10px;
+  left: 0;
+  right: 0;
   opacity: 0;
   filter: alpha(opacity=0);
   -ms-filter: "alpha(opacity=0)";
@@ -2374,15 +2370,16 @@
 }
 .openerp .oe_form .oe_form_field_image .oe_form_field_image_controls {
   position: absolute;
-  white-space: nowrap;
   top: 1px;
-  padding: 3px 0 0 0;
-  margin: 0 1px;
+  padding: 4px;
+  width: 100%;
   display: none;
-  width: 99%;
   text-align: center;
-  background: url(/web/static/src/img/form_sheetbg.png);
-  border-bottom: 1px dotted black;
+  color: #eeeeee;
+  background: rgba(37, 37, 37, 0.9);
+  -moz-border-radius: 3px 3px 0 0;
+  -webkit-border-radius: 3px 3px 0 0;
+  border-radius: 3px 3px 0 0;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
@@ -2736,4 +2733,10 @@
 }
 .kitten-mode-activated > * {
   opacity: 0.7;
+}
+
+div.ui-widget-overlay {
+  background: black;
+  filter: alpha(opacity=30);
+  opacity: 0.3;
 }
