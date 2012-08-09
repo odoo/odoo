@@ -1,4 +1,13 @@
-@import "base.sass"
+@mixin radius($radius: 5px)
+  -moz-border-radius: $radius
+  -webkit-border-radius: $radius
+  border-radius: $radius
+
+@mixin box-shadow($bsval: 0px 1px 4px #777)
+  -moz-box-shadow: $bsval
+  -webkit-box-shadow: $bsval
+  box-shadow: $bsval
+
 .openerp
   .oe_dashboard_links
     text-align: right
