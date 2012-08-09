@@ -64,7 +64,7 @@ class hr_employee_category(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Categories.', ['parent_id'])
+        (_check_recursion, 'Error! You cannot create recursive Categories.', ['parent_id'])
     ]
 
 hr_employee_category()
@@ -277,7 +277,7 @@ class hr_employee(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
+        (_check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
     ]
 
 hr_employee()
@@ -310,7 +310,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s".', data.get('name','<new'))
 
         return user_id
 
