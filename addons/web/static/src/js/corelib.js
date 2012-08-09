@@ -1135,7 +1135,8 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
             uid: new py.float(this.uid),
             datetime: datetime,
             time: time,
-            relativedelta: relativedelta
+            relativedelta: relativedelta,
+            current_date: date.today.__call__().strftime(['%Y-%m-%d'])
         };
     },
     /**
@@ -1376,7 +1377,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
             processData: false
         }, url);
         if (this.synch)
-        	ajax.async = false;
+            ajax.async = false;
         return $.ajax(ajax);
     },
     rpc_jsonp: function(url, payload) {
@@ -1395,7 +1396,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
             data: data
         }, url);
         if (this.synch)
-        	ajax.async = false;
+            ajax.async = false;
         var payload_str = JSON.stringify(payload);
         var payload_url = $.param({r:payload_str});
         if(payload_url.length < 2000) {

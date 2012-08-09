@@ -57,7 +57,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
-        this.setElement(content || this.make(this.tagName));
+        this.content_to_set = content;
         this.dialog_options = {
             modal: true,
             destroy_on_close: true,
@@ -80,11 +80,6 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
         if (options) {
             _.extend(this.dialog_options, options);
-        }
-        if (this.dialog_options.autoOpen) {
-            this.open();
-        } else {
-            instance.web.dialog(this.$element, this.get_options());
         }
     },
     get_options: function(options) {
@@ -114,31 +109,44 @@ instance.web.Dialog = instance.web.Widget.extend({
         } else if (val.slice(-1) == "%") {
             return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
         } else {
-            return parseInt(val, 10);
+            return parseInt(val, 10);        
+        }
+    },
+    renderElement: function() {
+        if (this.content_to_set) {
+            this.setElement(this.content_to_set);
+        } else if (this.template) {
+            this._super();
         }
     },
     open: function(options) {
-        // TODO fme: bind window on resize
-        if (this.template) {
-            this.$element.html(this.renderElement());
-        }
+        if (! this.dialog_inited)
+            this.init_dialog();
         var o = this.get_options(options);
-        instance.web.dialog(this.$element, o).dialog('open');
+        instance.web.dialog(this.$element, o).dialog('open');     
         if (o.height === 'auto' && o.max_height) {
             this.$element.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
         return this;
     },
+    init_dialog: function(options) {
+        this.renderElement();
+        var o = this.get_options(options);
+        instance.web.dialog(this.$element, o);
+        var res = this.start();
+        this.dialog_inited = true;
+        return res;
+    },
     close: function() {
         this.$element.dialog('close');
     },
     on_close: function() {
-	if (this.__tmp_dialog_destroying)
-	    return;
+        if (this.__tmp_dialog_destroying)
+            return;
         if (this.dialog_options.destroy_on_close) {
-	    this.__tmp_dialog_closing = true;
+            this.__tmp_dialog_closing = true;
             this.destroy();
-	    this.__tmp_dialog_closing = undefined;
+            this.__tmp_dialog_closing = undefined;
         }
     },
     on_resized: function() {
@@ -148,10 +156,10 @@ instance.web.Dialog = instance.web.Widget.extend({
             el.destroy();
         });
         if (! this.__tmp_dialog_closing) {
-	    this.__tmp_dialog_destroying = true;
-	    this.close();
-	    this.__tmp_dialog_destroying = undefined;
-	}
+            this.__tmp_dialog_destroying = true;
+            this.close();
+            this.__tmp_dialog_destroying = undefined;
+        }
         if (! this.isDestroyed()) {
             this.$element.dialog('destroy');
         }
@@ -261,11 +269,11 @@ instance.web.Loading = instance.web.Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
-	    if (instance.connection.debug) {
-		this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
-	    } else {
-		this.$element.text(_t("Loading"));
-	    }
+            if (instance.connection.debug) {
+                this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+            } else {
+                this.$element.text(_t("Loading"));
+            }
             this.$element.show();
             this.getParent().$element.addClass('oe_wait');
         } else {
@@ -392,6 +400,9 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'db': form_obj['db_name'],
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
+                    'login_successful': function() {
+                        instance.webclient.show_application();
+                    },
                 },
             };
             self.do_action(client_action);
@@ -494,7 +505,11 @@ instance.web.Login =  instance.web.Widget.extend({
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
-        this.params = params;
+        this.params = params || {};
+
+        if (this.params.login_successful) {
+            this.on('login_successful', this, this.params.login_successful);
+        }
 
         if (this.has_local_storage && this.remember_credentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
@@ -511,7 +526,7 @@ instance.web.Login =  instance.web.Widget.extend({
             self.do_action("database_manager");
         });
         return self.load_db_list().then(self.on_db_list_loaded).then(function() {
-            if(self.params) {
+            if (self.params.db) {
                 self.do_login(self.params.db, self.params.login, self.params.password);
             }
         });
@@ -596,6 +611,86 @@ instance.web.Login =  instance.web.Widget.extend({
     }
 });
 instance.web.client_actions.add("login", "instance.web.Login");
+
+/**
+ * Client action to reload the whole interface.
+ * If params has an entry 'menu_id', it opens the given menu entry.
+ */
+instance.web.Reload = instance.web.Widget.extend({
+    init: function(parent, params) {
+        this._super(parent);
+        this.menu_id = (params && params.menu_id) || false;
+    },
+    start: function() {
+        var l = window.location;
+        var timestamp = new Date().getTime();
+        var search = "?ts=" + timestamp;
+        if (l.search) {
+            search = l.search + "&ts=" + timestamp;
+        } 
+        var hash = l.hash;
+        if (this.menu_id) {
+            hash = "#menu_id=" + this.menu_id;
+        }
+        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+        window.location = url;
+    }
+});
+instance.web.client_actions.add("reload", "instance.web.Reload");
+
+/**
+ * Client action to go back in breadcrumb history.
+ * If can't go back in history stack, will go back to home.
+ */
+instance.web.HistoryBack = instance.web.Widget.extend({
+    init: function(parent, params) {
+        if (!parent.history_back()) {
+            window.location = '/' + (window.location.search || '');
+        }
+    }
+});
+instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
+
+/**
+ * Client action to go back home.
+ */
+instance.web.Home = instance.web.Widget.extend({
+    init: function(parent, params) {
+        window.location = '/' + (window.location.search || '');
+    }
+});
+instance.web.client_actions.add("home", "instance.web.Home");
+
+instance.web.ChangePassword =  instance.web.Widget.extend({
+    template: "ChangePassword",
+    start: function() {
+        var self = this;
+        self.$element.find("form[name=change_password_form]").validate({
+            submitHandler: function (form) {
+                self.rpc("/web/session/change_password",{
+                    'fields': $(form).serializeArray()
+                }, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
+                        return;
+                    } else {
+                        instance.webclient.on_logout();
+                    }
+                });
+            }
+        });
+    },
+    display_error: function (error) {
+        return instance.web.dialog($('<div>'), {
+            modal: true,
+            title: error.title,
+            buttons: [
+                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
+            ]
+        }).html(error.error);
+    },
+})
+instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
@@ -764,37 +859,6 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             }
         });
     },
-    change_password :function() {
-        var self = this;
-        this.dialog = new instance.web.Dialog(this, {
-            title: _t("Change Password"),
-            width : 'auto'
-        }).open();
-        this.dialog.$element.html(QWeb.render("UserMenu.password", self));
-        this.dialog.$element.find("form[name=change_password_form]").validate({
-            submitHandler: function (form) {
-                self.rpc("/web/session/change_password",{
-                    'fields': $(form).serializeArray()
-                }, function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    } else {
-                        instance.webclient.on_logout();
-                    }
-                });
-            }
-        });
-    },
-    display_error: function (error) {
-        return instance.web.dialog($('<div>'), {
-            modal: true,
-            title: error.title,
-            buttons: [
-                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
-            ]
-        }).html(error.error);
-    },
     do_update: function () {
         var self = this;
         var fct = function() {
@@ -810,7 +874,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$element.find('.oe_topbar_name').text(topbar_name);
-                var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=avatar&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
+                var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=image_small&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
                 $avatar.attr('src', avatar_src);
             });
         };
@@ -822,44 +886,10 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     },
     on_menu_settings: function() {
         var self = this;
-        var action_manager = new instance.web.ActionManager(this);
-        var dataset = new instance.web.DataSet (this,'res.users',this.context);
-        dataset.call ('action_get','',function (result){
-            self.rpc('/web/action/load', {action_id:result}, function(result){
-                action_manager.do_action(_.extend(result['result'], {
-                    target: 'inline',
-                    res_id: self.session.uid,
-                    res_model: 'res.users',
-                    flags: {
-                        action_buttons: false,
-                        search_view: false,
-                        sidebar: false,
-                        views_switcher: false,
-                        pager: false
-                    }
-                }));
-            });
+        self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
+            result.result.res_id = instance.connection.uid;
+            self.getParent().action_manager.do_action(result.result);
         });
-        this.dialog = new instance.web.Dialog(this,{
-            title: _t("Preferences"),
-            width: '700px',
-            buttons: [
-                {text: _t("Change password"), click: function(){ self.change_password(); }},
-                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
-                {text: _t("Save"), click: function(){
-                        var inner_widget = action_manager.inner_widget;
-                        inner_widget.views[inner_widget.active_view].controller.do_save()
-                        .then(function() {
-                            self.dialog.destroy();
-                            // needs to refresh interface in case language changed
-                            window.location.reload();
-                        });
-                    }
-                }
-            ]
-        }).open();
-       action_manager.appendTo(this.dialog.$element);
-       action_manager.renderElement(this.dialog);
     },
     on_menu_about: function() {
         var self = this;
@@ -918,6 +948,7 @@ instance.web.Client = instance.web.Widget.extend({
             }, 0);
         });
         instance.web.bus.on('click', this, function(ev) {
+            $.fn.tipsy.clear();
             if (!$(ev.target).is('input[type=file]')) {
                 self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
             }
@@ -1033,15 +1064,15 @@ instance.web.WebClient = instance.web.Client.extend({
         $(window).bind('hashchange', this.on_hashchange);
 
         var state = $.bbq.getState(true);
-        if (! _.isEmpty(state)) {
-            $(window).trigger('hashchange');
-        } else {
+        if (_.isEmpty(state) || state.action == "login") {
             self.menu.has_been_loaded.then(function() {
                 var first_menu_id = self.menu.$element.find("a:first").data("menu");
                 if(first_menu_id) {
                     self.menu.menu_click(first_menu_id);
                 }
             });
+        } else {
+            $(window).trigger('hashchange');
         }
     },
     on_hashchange: function(event) {

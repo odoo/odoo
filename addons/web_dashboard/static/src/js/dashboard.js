@@ -251,7 +251,6 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         if (this.view.options.action.help) {
             this.$element.append(
                 $('<div class="oe_view_nocontent">')
-                    .append($('<img>', { src: '/web_dashboard/static/src/img/view_todo_arrow.png' }))
                     .append($('<div>').html(this.view.options.action.help || " "))
             );
         }
