@@ -665,7 +665,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
     template: "ChangePassword",
     start: function() {
         var self = this;
-        self.$element.find("form[name=change_password_form]").validate({
+        self.$element.validate({
             submitHandler: function (form) {
                 self.rpc("/web/session/change_password",{
                     'fields': $(form).serializeArray()
