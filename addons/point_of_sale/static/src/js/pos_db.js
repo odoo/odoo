@@ -146,6 +146,8 @@ function openerp_pos_db(instance, module){
             productStore.createIndex('category','category', {unique:false});
 
             var imageStore = this.db.createObjectStore('images', {keyPath: 'id'});
+
+            var categoryStore = this.db.createObjectStore('categories', {keypath:'name'});
         },
 
         _add_data: function(store, data){
@@ -286,6 +288,9 @@ function openerp_pos_db(instance, module){
                 }
             }
         },
+        /* the callback function will be called with all products as parameter, by increasing id.
+         * if the callback returns 'break' the iteration will stop
+         */
         for_all_products: function(callback){
             var transaction = this.db.transaction('products');
             var objectStore = transaction.objectStore('products');
@@ -295,6 +300,29 @@ function openerp_pos_db(instance, module){
                     var ret = callback(cursor.value);
                     if(ret !== 'break'){
                         cursor.continue();
+                    }
+                }
+            };
+        },
+        /* the callback function will be called with all products as parameter by increasing id.
+         * if the callback returns 'break', the iteration will stop
+         * if the callback returns a product object, it will be inserted in the db, possibly 
+         * overwriting an existing product. The intended usage is for the callback to return a 
+         * modified version version of the product with the same id. Anything else and you're on your own.
+         */
+        modify_all_products: function(callback){
+            var transaction = this.db.transaction('products','readwrite');
+            var objectStore = transaction.objectStore('products');
+            objectStore.openCursor().onsuccess = function(event){
+                var cursor = event.target.result;
+                if(cursor){
+                    var ret = callback(cursor.value);
+                    if(ret === undefined || ret === null){
+                        cursor.continue();
+                    }else if(ret === 'break'){
+                        return;
+                    }else{
+                        objectStore.put(ret);
                     }
                 }
             };
@@ -310,7 +338,74 @@ function openerp_pos_db(instance, module){
             this.name = options.name || this.name;
             this.limit = options.limit || this.limit;
             this.products = this.name + '_products';
-            this.images   = this.name + '_images';
+            this.categories = this.name + '_categories';
+
+            this.category_by_id = {};
+            this.root_category_id  = 0;
+            this.category_products = {};
+            this.category_ancestors = {};
+            this.category_childs = {};
+            this.category_parent    = {};
+        },
+        get_category_by_id: function(categ_id){
+            if(categ_id instanceof Array){
+                var list = [];
+                for(var i = 0, len = categ_id.length; i < len; i++){
+                    var cat = this.category_by_id[categ_id[i]];
+                    if(cat){
+                        list.push(cat);
+                    }else{
+                        console.error("get_category_by_id: no category has id:",categ_id[i]);
+                    }
+                }
+                return list;
+            }else{
+                return this.category_by_id[categ_id];
+            }
+        },
+        get_category_childs_ids: function(categ_id){
+            return this.category_childs[categ_id] || [];
+        },
+        get_category_ancestors_ids: function(categ_id){
+            return this.category_ancestors[categ_id] || [];
+        },
+        get_category_parent_id: function(categ_id){
+            return this.category_parent[categ_id] || this.root_category_id;
+        },
+        add_categories: function(categories){
+            var self = this;
+            if(!this.category_by_id[this.root_category_id]){
+                this.category_by_id[this.root_category_id] = {
+                    id : this.root_category_id,
+                    name : 'Root',
+                };
+            }
+            for(var i=0, len = categories.length; i < len; i++){
+                console.log('putting category : ',categories[i].id, categories[i].name);
+                this.category_by_id[categories[i].id] = categories[i];
+            }
+            for(var i=0, len = categories.length; i < len; i++){
+                var cat = categories[i];
+                var parent_id = cat.parent_id[0] || this.root_category_id;
+                console.log('category parent',cat.id, parent_id);
+                this.category_parent[cat.id] = cat.parent_id[0];
+                if(!this.category_childs[parent_id]){
+                    this.category_childs[parent_id] = [];
+                }
+                this.category_childs[parent_id].push(cat.id);
+            }
+            function make_ancestors(cat_id, ancestors){
+                self.category_ancestors[cat_id] = ancestors;
+
+                ancestors = ancestors.slice(0);
+                ancestors.push(cat_id);
+
+                var childs = self.category_childs[cat_id] || [];
+                for(var i=0, len = childs.length; i < len; i++){
+                    make_ancestors(childs[i], ancestors);
+                }
+            }
+            make_ancestors(this.root_category_id, []);
         },
         _get_products: function(){
             var products = localStorage[this.products];
@@ -323,39 +418,51 @@ function openerp_pos_db(instance, module){
         _set_products: function(products){
             localStorage[this.products] = JSON.stringify(products);
         },
-        _get_images: function(){
-            var images = localStorage[this.images];
-            if(images){
-                return JSON.parse(images) || {};
+        _get_categories: function(){
+            var categories = localStorage[this.categories];
+            if(categories){
+                return JSON.parse(categories) || {};
             }else{
                 return {};
             }
         },
-        _set_images: function(images){
-            localStorage[this.images] = JSON.stringify(images);
+        _set_categories: function(categories){
+            localStorage[this.categories] = JSON.stringify(categories);
         },
         add_product: function(products){
-            var stored_images = this._get_images();
             var stored_products = this._get_products();
+            var stored_categories = this._get_categories();
 
             if(!products instanceof Array){
                 products = [products];
             }
             for(var i = 0, len = products.length; i < len; i++){
                 var product = products[i];
-                if(product.product_image_small){
-                    product = _.clone(product);
-                    stored_images[product.id] = product.product_image_small;
-                    delete product['product_image_small'];
+                var categ_id = product.pos_categ_id[0];
+                if(!stored_categories[categ_id]){
+                    stored_categories[categ_id] = [];
+                }
+                stored_categories[categ_id].push(product.id);
+                var ancestors = this.get_category_ancestors_ids(categ_id) || [];
+                console.log('ancestors:',ancestors);
+
+                for(var j = 0; j < ancestors.length; j++){
+                    if(! stored_categories[ancestors[j]]){
+                        stored_categories[ancestors[j]] = [];
+                    }
+                    stored_categories[ancestors[j]].push(product.id);
                 }
                 stored_products[product.id] = product;
             }
-            this._set_images(stored_images);
             this._set_products(stored_products);
+            this._set_categories(stored_categories);
         },
         clear: function(done_callback){
             localStorage.removeItem(this.products);
-            localStorage.removeItem(this.images);
+            localStorage.removeItem(this.categories);
+            if(done_callback){
+                done_callback();
+            }
         },
         _count_props : function(obj){
             if(obj.__count__){
@@ -372,9 +479,6 @@ function openerp_pos_db(instance, module){
         },
         get_product_count: function(result_callback){
             result_callback(this._count_props(this._get_products()));
-        },
-        get_image_count: function(result_callback){
-            result_callback(this._count_props(this._get_images()));
         },
         get_product_by_id: function(id, result_callback){
             var products = this._get_products();
@@ -400,66 +504,55 @@ function openerp_pos_db(instance, module){
             }
             result_callback(undefined);
         },
-        get_product_by_category: function(category, result_callback){
-            var products = this._get_products();
+        get_product_by_category: function(category_id, result_callback){
+            var stored_categories = this._get_categories();
+            var stored_products   = this._get_products();
+            var product_ids  = stored_categories[category_id];
             var list = [];
-            for(var i in products){
-                if( products[i] && products[i].category === category){
-                    list.push(products[i]);
-                }
+            for(var i = 0, len = product_ids.length; i < len; i++){
+                list.push(stored_products[product_ids[i]]);
             }
             result_callback(list);
         },
-        get_product_image: function(product, result_callback){
-            var images = this._get_images();
-            result_callback(images[product.id]);
-        },
-        search_product: function(fields, query, result_callback){
-            var products = this._get_products();
-            var list = [];
-            if(typeof query !== 'string'){
-                if(query.toString){
-                    query = query.toString();
-                }else{
-                    throw new Error('search_product: the query must be a string or must be convertible to string');
+        search_product_in_category: function(category_id, fields, query, result_callback){
+            var self = this;
+            this.get_product_by_category(category_id, function(products){
+                var list = [];
+
+                query = query.toString().toLowerCase();
+
+                if(!(fields instanceof Array)){
+                    fields = [fields];
                 }
-            }
-
-            query = query.toLowerCase();
-
-            if(!(fields instanceof Array)){
-                fields = [fields];
-            }
-            for(var i in products){
-                for(var j = 0, jlen = fields.length; j < jlen; j++){
-                    var field = products[i][fields[j]];
-                    if(field === null || field === undefined){
-                        continue;
-                    }
-                    if(typeof field !== 'string'){
-                        if(field.toString){
-                            field = field.toString();
-                        }else{
+                for(var i in products){
+                    for(var j = 0, jlen = fields.length; j < jlen; j++){
+                        var field = products[i][fields[j]];
+                        if(field === null || field === undefined){
                             continue;
                         }
-                    }
-                    if(field.toLowerCase().indexOf(query) != -1){
-                        list.push(products[i]);
-                        break;
+                        if(typeof field !== 'string'){
+                            if(field.toString){
+                                field = field.toString();
+                            }else{
+                                continue;
+                            }
+                        }
+                        if(field.toLowerCase().indexOf(query) != -1){
+                            list.push(products[i]);
+                            break;
+                        }
                     }
                 }
-            }
-            result_callback(list);
+                result_callback(list);
+            });
         },
-        for_all_products: function(callback){
-            var products = this._get_products();
-            for(var i in products){
-                var ret = callback(products[i]);
-                if(ret === 'break'){
-                    break;
-                }
-            }
+        add_order: function(order,done_callback){
         },
+        remove_order: function(order_id, done_callback){
+        },
+        get_orders: function(result_callback){
+        },
+
     });
 
     window.PosLS = module.PosLS;

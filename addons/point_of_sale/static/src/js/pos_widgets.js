@@ -396,29 +396,21 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
         // changes the category. if undefined, sets to root category
         set_category : function(category){
+            var db = this.pos.db;
             if(!category){
-                this.category = this.pos.root_category;
+                this.category = db.get_category_by_id(db.root_category_id);
             }else{
                 this.category = category;
             }
-
             this.breadcrumb = [];
-            for(var i = 1; i < this.category.ancestors.length; i++){
-                this.breadcrumb.push(this.category.ancestors[i]);
+            var ancestors_ids = db.get_category_ancestors_ids(this.category.id);
+            for(var i = 1; i < ancestors_ids.length; i++){
+                this.breadcrumb.push(db.get_category_by_id(ancestors_ids[i]));
             }
-            if(this.category !== this.pos.root_category){
+            if(this.category.id !== db.root_category_id){
                 this.breadcrumb.push(this.category);
             }
-            if(this.product_type === 'weightable'){
-                this.subcategories = [];
-                for(var i = 0; i < this.category.childrens.length; i++){
-                    if(this.category.childrens[i].weightable_product_list.length > 0){
-                        this.subcategories.push( this.category.childrens[i]);
-                    }
-                }
-            }else{
-                this.subcategories = this.category.childrens || [];
-            }
+            this.subcategories = db.get_category_by_id(db.get_category_childs_ids(this.category.id));
         },
 
         renderElement: function(){
@@ -443,7 +435,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 $(button).appendTo(this.$('.category-list')).click(function(event){
                     var id = category.id;
-                    var cat = self.pos.categories_by_id[id];
+                    var cat = self.pos.db.get_category_by_id(id);
                     self.set_category(cat);
                     self.renderElement();
                     self.search_and_categories(cat);
@@ -452,7 +444,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             // breadcrumb click actions
             this.$(".oe-pos-categories-list a").click(function(event){
                 var id = $(event.target).data("category-id");
-                var category = self.pos.categories_by_id[id];
+                var category = self.pos.db.get_category_by_id(id);
                 self.set_category(category);
                 self.renderElement();
                 self.search_and_categories(category);
@@ -475,50 +467,39 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         // filters the products, and sets up the search callbacks
         search_and_categories: function(category){
             var self = this;
-            
-            var all_products = this.pos.get('product_list');
-            var all_packages = this.pos.get('product.packaging');
 
             // find all products belonging to the current category
-            var products = [];
-            if(this.product_type === 'weightable'){
-                products = all_products.filter( function(product){
-                    return self.category.weightable_product_set[product.id];
-                });
-            }else{
-                products = all_products.filter( function(product){
-                    return self.category.product_set[product.id];
-                });
-            }
+            this.pos.db.get_product_by_category(this.category.id, function(products){
+                // product lists watch for reset events on 'products' to re-render. 
+                // FIXME that means all productlist widget re-render... even the hidden ones ! 
+                self.pos.get('products').reset(products);
+            });
 
-            // product lists watch for reset events on 'products' to re-render. 
-            // FIXME that means all productlist widget re-render... even the hidden ones ! 
-            this.pos.get('products').reset(products);
-            
-            // find all the products whose name match the query in the searchbox
+            // filter the products according to the search string
             this.$('.searchbox input').keyup(function(){
-                var results, search_str;
-                search_str = $(this).val().toLowerCase();
-                if(search_str){
-                    results = products.filter( function(p){
-                        return p.name.toLowerCase().indexOf(search_str) != -1 || 
-                               (p.ean13 && p.ean13.indexOf(search_str) != -1);
+                query = $(this).val().toLowerCase();
+                if(query){
+                    self.pos.db.search_product_in_category(self.category.id, ['name','ean13'], query, function(products){
+                        self.pos.get('products').reset(products);
+                        self.$('.search-clear').fadeIn();
                     });
-                    self.$element.find('.search-clear').fadeIn();
                 }else{
-                    results = products;
-                    self.$element.find('.search-clear').fadeOut();
+                    self.pos.db.get_product_by_category(self.category.id, function(products){
+                        self.pos.get('products').reset(products);
+                        self.$('.search-clear').fadeOut();
+                    });
                 }
-                self.pos.get('products').reset(results);
             });
-            this.$('.searchbox input').click(function(){
-            });
+
+            this.$('.searchbox input').click(function(){}); //Why ???
 
             //reset the search when clicking on reset
             this.$('.search-clear').click(function(){
-                self.pos.get('products').reset(products);
-                self.$('.searchbox input').val('').focus();
-                self.$('.search-clear').fadeOut();
+                self.pos.db.get_product_by_category(self.category.id, function(products){
+                    self.pos.get('products').reset(products);
+                    self.$('.searchbox input').val('').focus();
+                    self.$('.search-clear').fadeOut();
+                });
             });
         },
     });
@@ -693,7 +674,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 self.build_currency_template();
                 self.renderElement();
                 
-                self.$('.neworder-button').click(_.bind(self.create_new_order, self));
+                self.$('.neworder-button').click(function(){
+                    self.pos.add_new_order();
+                });
                 
                 //when a new order is created, add an order button widget
                 self.pos.get('orders').bind('add', function(new_order){
@@ -721,7 +704,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
                 }
             
-                self.$('.loader').animate({opacity:0},3000,'swing',function(){self.$('.loader').hide();});
+                self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
                 self.$('.loader img').hide();
 
                 if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
@@ -851,51 +834,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
         },
 
-        //FIXME this method is probably not at the right place ... 
-        scan_product: function(parsed_ean){
-            var selectedOrder = this.pos.get('selectedOrder');
-            var scannedProductModel = this.get_product_by_ean(parsed_ean);
-            if (!scannedProductModel){
-                return false;
-            } else {
-                if(parsed_ean.type === 'price'){
-                    selectedOrder.addProduct(new module.Product(scannedProductModel), { price:parsed_ean.value});
-                }else if(parsed_ean.type === 'weight'){
-                    selectedOrder.addProduct(new module.Product(scannedProductModel), { quantity:parsed_ean.value, merge:false});
-                }else{
-                    selectedOrder.addProduct(new module.Product(scannedProductModel));
-                }
-                return true;
-            }
-        },
-
-        get_product_by_ean: function(parsed_ean) {
-            var allProducts = this.pos.get('product_list');
-            var allPackages = this.pos.get('product.packaging');
-            var scannedProductModel = undefined;
-
-            if (parsed_ean.type === 'price' || parsed_ean.type === 'weight') {
-                var itemCode = parsed_ean.id;
-                var scannedPackaging = _.detect(allPackages, function(pack) { 
-                    return pack.ean && pack.ean.substring(0,7) === itemCode;
-                });
-                if (scannedPackaging) {
-                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.id === scannedPackaging.product_id[0];});
-                }else{
-                    scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13  && (pc.ean13.substring(0,7) === parsed_ean.id);});   
-                }
-            } else if(parsed_ean.type === 'unit'){
-                scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === parsed_ean.ean;});   //TODO DOES NOT SCALE
-            }
-            return scannedProductModel;
-        },
-        // creates a new order, and add it to the list of orders.
-        create_new_order: function() {
-            var new_order;
-            new_order = new module.Order({ pos: this.pos });
-            this.pos.get('orders').add(new_order);
-            this.pos.set({ selectedOrder: new_order });
-        },
         changed_pending_operations: function () {
             var self = this;
             this.synch_notification.on_change_nbr_pending(self.pos.get('nbr_pending_operations').length);

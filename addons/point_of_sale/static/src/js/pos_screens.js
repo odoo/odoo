@@ -159,17 +159,20 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // it will add the product to the order and go to barcode_product_screen. Or show barcode_product_error_popup if 
         // there's an error.
         barcode_product_action: function(ean){
-            if(this.pos_widget.scan_product(ean)){
-                this.pos.proxy.scan_item_success(ean);
-                if(this.barcode_product_screen){ 
-                    this.pos_widget.screen_selector.set_current_screen(this.barcode_product_screen);
-                }
-            }else{
-                this.pos.proxy.scan_item_error_unrecognized(ean);
-                if(this.barcode_product_error_popup && this.pos_widget.screen_selector.get_user_mode() !== 'cashier'){
-                    this.pos_widget.screen_selector.show_popup(this.barcode_product_error_popup);
-                }
-            }
+            var self = this;
+            this.pos_widget.scan_product(ean)
+                .done(function(){
+                    self.pos.proxy.scan_item_success(ean);
+                    if(self.barcode_product_screen){ 
+                        self.pos_widget.screen_selector.set_current_screen(self.barcode_product_screen);
+                    }
+                })
+                .fail(function(){
+                    self.pos.proxy.scan_item_error_unrecognized(ean);
+                    if(self.barcode_product_error_popup && self.pos_widget.screen_selector.get_user_mode() !== 'cashier'){
+                        self.pos_widget.screen_selector.show_popup(self.barcode_product_error_popup);
+                    }
+                });
         },
         
         // what happens when a cashier id barcode is scanned.

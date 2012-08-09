@@ -64,17 +64,16 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         initialize: function(session, attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
             var  self = this;
+            this.session = session;                 
             this.dao = new module.LocalStorageDAO();            // used to store the order's data on the Hard Drive
             this.ready = $.Deferred();                          // used to notify the GUI that the PosModel has loaded all resources
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
-            //this.build_tree = _.bind(this.build_tree, this);    // ???
-            this.session = session;                 
-            this.categories = {};
-            this.root_category = null;
-            this.weightable_categories = [];                    // a flat list of all categories that directly contain weightable products
+
             this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
-            this.proxy = new module.ProxyDevice();             // used to communicate to the hardware devices via a local proxy
-            this.db = new module.PosLS();   // a database used to store the products and product images
+            this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
+            this.db = new module.PosLS();                       // a database used to store the products and categories
+
+            window.db = this.db;
 
             // pos settings
             this.use_scale              = false;
@@ -267,30 +266,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return session_data_def;
                 });
 
-            // associate the products with their categories
-            var prod_process_def = $.when(cat_def, session_def)
-                .pipe(function(){
-                    var product_list = self.get('product_list');
-                    var categories = self.get('categories');
-                    var cat_by_id = {};
-                    for(var i = 0; i < categories.length; i++){
-                        cat_by_id[categories[i].id] = categories[i];
-                    }
-                    //set the parent in the category
-                    for(var i = 0; i < categories.length; i++){
-                        categories[i].parent_category = cat_by_id[categories[i].parent_id[0]];
-                    }
-                    for(var i = 0; i < product_list.length; i++){
-                        product_list[i].pos_category = cat_by_id[product_list[i].pos_categ_id[0]];
-                    }
-                });
-
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(pack_def, cat_def, user_def, users_def, uom_def, session_def, tax_def, prod_process_def, user_def, this.flush())
+            $.when(pack_def, cat_def, user_def, users_def, uom_def, session_def, tax_def, user_def, this.flush())
                 .then(function(){ 
-                    self.build_categories(); 
+                    self.db.clear();
+                    self.db.add_categories(self.get('categories'));
+                    self.db.add_product(self.get('product_list'));
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
-                    //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
+                    self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
                     self.ready.resolve();
                 },function(){
                     //we failed to load some backend data, or the backend was badly configured.
@@ -325,7 +308,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // order and a valid selected order
         on_removed_order: function(removed_order){
             if( this.get('orders').isEmpty()){
-                this.add_and_select_order(new module.Order({ pos: this }));
+                this.add_new_order();
             }
             if( this.get('selectedOrder') === removed_order){
                 this.set({ selectedOrder: this.get('orders').last() });
@@ -340,13 +323,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             });
         },
 
-        add_and_select_order: function(newOrder) {
-            (this.get('orders')).add(newOrder);
-            return this.set({
-                selectedOrder: newOrder
-            });
+        //creates a new empty order and sets it as the current order
+        add_new_order: function(){
+            var order = new module.Order({pos:this});
+            this.get('orders').add(order);
+            this.set('selectedOrder', order);
         },
-        
+
         // attemps to send all pending orders ( stored in the DAO ) to the server.
         // it will do it one by one, and remove the successfully sent ones from the DAO once
         // it has been confirmed that they have been received.
@@ -390,119 +373,25 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             });
         },
 
-        // this adds several properties to the categories in order to make it easier to diplay them
-        // fields added include the list of product relevant to each category, list of child categories,
-        // list of ancestors, etc.
-        build_categories : function(){
-            var categories = this.get('categories');
-            var products   = this.get('product_list');
-
-            //append the content of array2 into array1
-            function append(array1, array2){
-                for(var i = 0, len = array2.length; i < len; i++){
-                    array1.push(array2[i]);
+        scan_product: function(parsed_ean){
+            var self = this;
+            var def  = new $.Deferred();
+            this.db.get_product_by_ean13(parsed_ean.base_ean, function(product){
+                var selectedOrder = this.get('selectedOrder');
+                if(!product){
+                    def.reject('product-not-found: '+parsed_ean.base_ean);
+                    return;
                 }
-            }
-
-            function appendSet(set1, set2){
-                for(key in set2){
-                    set1[key] = set2[key];
+                if(parsed_ean.type === 'price'){
+                    selectedOrder.addProduct(new module.Product(product), {price:parsed_ean.value});
+                }else if(parsed_ean.type === 'weight'){
+                    selectedOrder.addProduct(new module.Product(product), {quantity:parsed_ean.value, merge:false});
+                }else{
+                    selectedOrder.addProduct(new module.Product(product));
                 }
-            }
-
-            var categories_by_id = {};
-            for(var i = 0; i < categories.length; i++){
-                categories_by_id[categories[i].id] = categories[i];
-            }
-            this.categories_by_id = categories_by_id;
-
-            var root_category = {
-                name      : 'Root',
-                id        : 0,
-                parent    : null,
-                childrens : [],
-            };
-
-            // add parent and childrens field to categories, find root_categories
-            for(var i = 0; i < categories.length; i++){
-                var cat = categories[i];
-                
-                cat.parent = categories_by_id[cat.parent_id[0]];
-                if(!cat.parent){
-                    root_category.childrens.push(cat);
-                    cat.parent = root_category;
-                }
-                
-                cat.childrens = [];
-                for(var j = 0; j < cat.child_id.length; j++){
-                    cat.childrens.push(categories_by_id[ cat.child_id[j] ]);
-                }
-            }
-
-            categories.push(root_category);
-
-            // set some default fields for next steps
-            for(var i = 0; i < categories.length; i++){
-                var cat = categories[i];
-
-                cat.product_list = [];  //list of all products in the category
-                cat.product_set = {};   // [product.id] === true if product is in category
-                cat.weightable_product_list = [];
-                cat.weightable_product_set = {};
-                cat.weightable = false; //true if directly contains weightable products
-            }
-
-            this.root_category = root_category;
-            
-            //we add the products to the categories. 
-            for(var i = 0, len = products.length; i < len; i++){
-                var product = products[i];
-                var cat = categories_by_id[product.pos_categ_id[0]];
-                if(cat){
-                    cat.product_list.push(product);
-                    cat.product_set[product.id] = true;
-                    if(product.to_weight){
-                        cat.weightable_product_list.push(product);
-                        cat.weightable_product_set[product.id] = true;
-                        cat.weightable = true;
-                    }
-                }
-            }
-
-            // we build a flat list of all categories that directly contains weightable products
-            this.weightable_categories = [];
-            for(var i = 0, len = categories.length; i < len; i++){
-                var cat = categories[i];
-                if(cat.weightable){
-                    this.weightable_categories.push(cat);
-                }
-            }
-            
-            // add ancestor field to categories, contains the list of parents of parents, from root to parent
-            function make_ancestors(cat, ancestors){
-                cat.ancestors = ancestors.slice(0);
-                ancestors.push(cat);
-
-                for(var i = 0; i < cat.childrens.length; i++){
-                    make_ancestors(cat.childrens[i], ancestors.slice(0));
-                }
-            }
-            
-            //add the products of the subcategories to the parent categories
-            function make_products(cat){
-                for(var i = 0; i < cat.childrens.length; i++){
-                    make_products(cat.childrens[i]);
-
-                    append(cat.product_list, cat.childrens[i].product_list);
-                    append(cat.weightable_product_list, cat.childrens[i].weightable_product_list);
-
-                    appendSet(cat.product_set, cat.childrens[i].product_set);
-                    appendSet(cat.weightable_product_set, cat.childrens[i].weightable_product_set);
-                }
-            }
-
-            make_ancestors(root_category,[]);
-            make_products(root_category);
+                def.resolve();
+            });
+            return def;
         },
     });
 
