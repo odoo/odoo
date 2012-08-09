@@ -71,7 +71,7 @@ class mail_thread(osv.Model):
             vote_list = self.message_vote_ids(cr, uid, message_ids, context=context)
             res[id] = {
                 'message_ids': message_ids,
-                'message_summary': "<span>Msg: %d</span> . <span>Fol: %d</span> . <span> %s  %d</span>" % (len(message_ids), len(subscriber_ids), img_vote, len(vote_list)),
+                 'message_summary': "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span> <span> %s  %d</span>" % (len(message_ids), len(subscriber_ids), img_vote, len(vote_list)),
             }
         return res
 
