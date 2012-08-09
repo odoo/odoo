@@ -22,7 +22,6 @@
 import pos_confirm
 import pos_discount
 import pos_open_statement
-import pos_close_statement
 import pos_details
 import pos_sales_user
 import pos_sales_user_today
