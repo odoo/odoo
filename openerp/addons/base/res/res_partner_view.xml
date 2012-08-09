@@ -99,7 +99,7 @@
             <field name="arch" type="xml">
                 <form string="Partners" version="7.0">
                 <sheet>
-                    <field name="photo" widget='image' class="oe_avatar oe_left"/>
+                    <field name="image_small" widget='image' class="oe_avatar oe_left"/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
                             <label for="name"/> (
@@ -168,7 +168,7 @@
                                     <field name="phone"/>
                                     <field name="street"/>
                                     <field name="street2"/>
-                                    <field name="photo"/>
+                                    <field name="image_small"/>
                                     <field name="zip"/>
                                     <field name="city"/>
                                     <field name="country_id"/>
@@ -181,7 +181,7 @@
                                                 <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
                                                 <div class="oe_module_vignette">
                                                 <a type="edit">
-                                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_avatar oe_kanban_avatar_toto"/>
+                                                    <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
                                                 </a>
                                                     <div class="oe_module_desc">
                                                         <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
@@ -207,7 +207,23 @@
                                         </t>
                                     </templates>
                                 </kanban>
+                                <form string="Contact" version="7.0">
+                                    <field name="image_small" widget='image' class="oe_avatar oe_left"/>
+                                    <div class="oe_title">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                                            <field name="function" placeholder="e.g. Sales Director"/>
+                                            <field name="email"/>
+                                            <field name="phone"/>
+                                            <field name="mobile"/>
+                                        </group>
+                                    </div>
+                                </form>
                             </field>
+                        </page>
+                        <page string="Internal Notes">
+                            <field name="comment" placeholder="Internal notes about this customer..."/>
                         </page>
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
                             <group>
@@ -232,9 +248,6 @@
                         <!-- The History page becomes visible as soon as there is something to display inside -->
                         <page string="History" name="page_history" invisible="True">
                         </page>
-                        <page string="Internal Notes">
-                            <field name="comment" placeholder="Internal notes about this customer..."/>
-                        </page>
                     </notebook>
                 </sheet>
                 </form>
@@ -258,7 +271,7 @@
                    <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
                    <separator/>
                    <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-                   <field name="category_id"/>
+                   <field name="category_id" string="Category" filter_domain="[('category_id','ilike', self)]"/>
                    <field name="user_id"/>
                    <field name="parent_id" filter_domain="[('parent_id','child_of',[self])]"/>
                    <group expand="0" string="Group By...">
@@ -286,7 +299,7 @@
                     <field name="phone"/>
                     <field name="street"/>
                     <field name="street2"/>
-                    <field name="photo"/>
+                    <field name="image_small"/>
                     <field name="zip"/>
                     <field name="city"/>
                     <field name="country_id"/>
@@ -297,7 +310,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette">
                                 <a type="edit">
-                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_kanban_image"/>
+                                    <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)" class="oe_kanban_image"/>
                                 </a>
                                 <div class="oe_kanban_details">
                                     <h4 class="oe_partner_heading"><a type="edit"><field name="name"/></a></h4>
