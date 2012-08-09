@@ -271,6 +271,31 @@
     </div>
 </t>
 
+<t t-name="ChangePassword">
+    <form name="change_password_form" method="POST">
+        <table align="center">
+            <tr>
+                <td><label for="old_pwd">Old Password:</label></td>
+                <td><input type="password" name="old_pwd"
+                           minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+            <td><label for="new_password">New Password:</label></td>
+            <td><input type="password" name="new_password"
+                       minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+                <td><label for="confirm_pwd">Confirm Password:</label></td>
+                <td><input type="password" name="confirm_pwd"
+                             minlength="1"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
+            </tr>
+        </table>
+    </form>
+</t>
+
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
@@ -310,7 +335,7 @@
     </ul>
 </t>
 <t t-name="Menu.secondary.link">
-    <a t-attf-href="#menu_id=#{menu.id}&amp;action_id=#{menu.action ? menu.action.split(',')[1] : ''}"
+    <a t-attf-href="#menu_id=#{menu.id}&amp;action=#{menu.action ? menu.action.split(',')[1] : ''}"
         t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
         t-att-data-menu="menu.id"
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
@@ -338,7 +363,7 @@
 <t t-name="UserMenu.about">
 
     <div class="oe_about">
-      <a class="oe_activate_debug_mode oe_right" href="?debug">Activate the developer mode</a>
+      <a class="oe_activate_debug_mode oe_right" href="?debug" style="background-color: white; padding:2px 6px; border-radius: 10px;">Activate the developer mode</a>
       <img class="oe_logo" src="/web/static/src/img/logo2.png"/>
       <h3>Version <t t-esc="version_info.version"/></h3>
 
@@ -350,30 +375,6 @@
       </div>
     </div>
 
-</t>
-<t t-name="UserMenu.password">
-    <form name="change_password_form" method="POST">
-        <table align="center">
-            <tr>
-                <td><label for="old_pwd">Old Password:</label></td>
-                <td><input type="password" name="old_pwd"
-                           minlength="1" autofocus="autofocus"/></td>
-            </tr>
-            <tr>
-            <td><label for="new_password">New Password:</label></td>
-            <td><input type="password" name="new_password"
-                       minlength="1" autofocus="autofocus"/></td>
-            </tr>
-            <tr>
-                <td><label for="confirm_pwd">Confirm Password:</label></td>
-                <td><input type="password" name="confirm_pwd"
-                             minlength="1"/></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
-            </tr>
-        </table>
-    </form>
 </t>
 
 <t t-name="WebClient">
@@ -614,7 +615,7 @@
             </th>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
-                    t-att-class="((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)">
+                    t-attf-class="oe_list_header_#{column.widget or column.type} #{((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)}">
                     <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
                 </th>
             </t>
@@ -708,7 +709,9 @@
 <div t-name="FormView.buttons" class="oe_form_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <span class="oe_form_buttons_view">
-            <button type="button" class="oe_button oe_form_button_edit">Edit</button>
+            <div style="display: inline-block;"> <!-- required for the bounce effect on button -->
+              <button type="button" class="oe_button oe_form_button_edit">Edit</button>
+            </div>
             <button type="button" class="oe_button oe_form_button_create">Create</button>
         </span>
         <span class="oe_form_buttons_edit">
@@ -928,9 +931,10 @@
             t-att-tabindex="widget.node.attrs.tabindex"
             t-att-autofocus="widget.node.attrs.autofocus"
             t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
-        ></textarea>
-        <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate"
-            t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+        ></textarea><img class="oe_field_translate oe_input_icon"
+                        t-if="widget.field.translate and !widget.get('effective_readonly')"
+                        t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
+        />
     </div>
 </t>
 <t t-name="web.datepicker">
@@ -1033,14 +1037,19 @@
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul class="oe_form_steps" t-att-style="widget.node.attrs.style"/>
+    <ul class="" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
     <t t-set="size" t-value="widget.to_show.length"/>
     <t t-foreach="_.range(size)" t-as="i">
-        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : ''">
-            <span><t t-esc="widget.to_show[i][1]"/></span>
-            <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
+        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : 'oe_form_steps_inactive'">
+            <div class="oe_form_steps_button" t-att-data-id="widget.to_show[i][0]">
+                <t t-esc="widget.to_show[i][1]"/>
+                <span class="oe_form_steps_arrow">
+                    <span></span>
+                </span>
+                <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
+            </div>            
         </li>
     </t>
 </t>
@@ -1191,11 +1200,11 @@
     </tr>
     <tr t-foreach="widget.view.translatable_fields" t-as="field" t-att-data-field="field.name">
         <td class="oe_form_group_cell" width="1%" nowrap="nowrap">
-            <label class="oe_label"><t t-esc="field.node.attrs.string"/>:</label>
+            <label class="oe_label"><t t-esc="field.string"/>:</label>
         </td>
         <td t-foreach="widget.languages" t-as="lg" class="oe_form_group_cell">
-            <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
-            <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
+            <input t-if="field.field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
+            <textarea t-if="field.field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
         </td>
     </tr>
     </table>

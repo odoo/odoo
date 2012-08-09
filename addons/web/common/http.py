@@ -455,7 +455,6 @@ class Root(object):
                       by the server, will be filtered by this pattern
     """
     def __init__(self, options, openerp_addons_namespace=True):
-        self.root = '/web/webclient/home'
         self.config = options
 
         if not hasattr(self.config, 'connector'):
@@ -494,14 +493,6 @@ class Root(object):
         request = werkzeug.wrappers.Request(environ)
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
         request.app = self
-
-        if request.path == '/':
-            params = urllib.urlencode(request.args)
-            return werkzeug.utils.redirect(self.root + '?' + params, 301)(
-                environ, start_response)
-        elif request.path == '/mobile':
-            return werkzeug.utils.redirect(
-                '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
 
         handler = self.find_handler(*(request.path.split('/')[1:]))
 
