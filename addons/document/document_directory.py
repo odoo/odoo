@@ -78,7 +78,7 @@ class document_directory(osv.osv):
             root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']
             return root_id
         except Exception, e:
-            
+
             _logger.warning('Cannot set directory root:'+ str(e))
             return False
         return objid.browse(cr, uid, mid, context=context).res_id
@@ -108,7 +108,7 @@ class document_directory(osv.osv):
     _sql_constraints = [
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !'),
         ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!'),
-        ('dir_parented', 'check(parent_id IS NOT NULL OR storage_id IS NOT NULL)', 'Directory must have a parent or a storage')
+        ('dir_parented', 'check(parent_id IS NOT NULL OR storage_id IS NOT NULL)', 'Directory must have a parent or a storage.')
     ]
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -153,7 +153,7 @@ class document_directory(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error! You can not create recursive Directories.', ['parent_id'])
+        (_check_recursion, 'Error! You cannot create recursive directories.', ['parent_id'])
     ]
 
     def __init__(self, *args, **kwargs):
@@ -179,7 +179,7 @@ class document_directory(osv.osv):
 
     def get_node_class(self, cr, uid, ids, dbro=None, dynamic=False, context=None):
         """Retrieve the class of nodes for this directory
-           
+
            This function can be overriden by inherited classes ;)
            @param dbro The browse object, if caller already has it
         """
@@ -193,17 +193,17 @@ class document_directory(osv.osv):
         elif dbro.type == 'ressource':
             return nodes.node_res_dir
         else:
-            raise ValueError("dir node for %s type", dbro.type)
+            raise ValueError("dir node for %s type.", dbro.type)
 
     def _prepare_context(self, cr, uid, nctx, context=None):
         """ Fill nctx with properties for this database
         @param nctx instance of nodes.node_context, to be filled
         @param context ORM context (dict) for us
-        
-        Note that this function is called *without* a list of ids, 
+
+        Note that this function is called *without* a list of ids,
         it should behave the same for the whole database (based on the
         ORM instance of document.directory).
-        
+
         Some databases may override this and attach properties to the
         node_context. See WebDAV, CalDAV.
         """
