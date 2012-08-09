@@ -660,7 +660,7 @@ class many2many(_column):
                  %(limit)s \
                  OFFSET %(offset)d' \
                  % values
-        return (query, where_params)
+        return query, where_params
 
     def get(self, cr, model, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
