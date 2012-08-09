@@ -61,8 +61,8 @@ class account_analytic_line(osv.osv):
         for account in analytic_account_obj.browse(cr, uid, account_ids, context=context):
             partner = account.partner_id
             if (not partner) or not (account.pricelist_id):
-                raise osv.except_osv(_('Analytic Account incomplete'),
-                        _('Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n%s') % (account.name,))
+                raise osv.except_osv(_('Analytic Account incomplete !'),
+                        _('Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n%s.') % (account.name,))
 
 
 
@@ -101,9 +101,9 @@ class account_analytic_line(osv.osv):
                      product_id = data['product'][0]
                 product = product_obj.browse(cr, uid, product_id, context=context2)
                 if not product:
-                    raise osv.except_osv(_('Error'), _('There is no product defined for the line %s. Please select one or force the product through the wizard.') % (line_name))
+                    raise osv.except_osv(_('Error!'), _('There is no product defined for the line %s. Please select one or force the product through the wizard.') % (line_name))
                 factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
-                factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1] 
+                factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
                 if factor.customer_name:
                     factor_name += ' - ' + factor.customer_name
 
@@ -119,7 +119,7 @@ class account_analytic_line(osv.osv):
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
                 if not account_id:
-                    raise osv.except_osv(_("Configuration Error"), _("No income account defined for product '%s'") % product.name)
+                    raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
                 curr_line = {
                     'price_unit': price,
                     'quantity': qty,
@@ -196,7 +196,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         data = context and context.get('active_ids', [])
         for analytic in analytic_obj.browse(cr, uid, data, context=context):
             if analytic.invoice_id:
-                     raise osv.except_osv(_('Warning !'), _("Invoice is already linked to some of the analytic line(s)!"))
+                     raise osv.except_osv(_('Warning!'), _("Invoice is already linked to some of the analytic line(s)!"))
 
     def do_create(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]
