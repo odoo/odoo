@@ -210,10 +210,6 @@ class act_window(osv.osv):
             res[act.id] = str(field_get)
         return res
 
-    def _get_help_status(self, cr, uid, ids, name, arg, context=None):
-        activate_tips = self.pool.get('res.users').browse(cr, uid, uid).menu_tips
-        return dict([(id, activate_tips) for id in ids])
-
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
@@ -251,8 +247,6 @@ class act_window(osv.osv):
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),
-        'display_menu_tip':fields.function(_get_help_status, type='boolean', string='Display Menu Tips',
-            help='It gives the status if the tip has to be displayed or not when a user executes an action'),
         'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
 
@@ -755,20 +749,6 @@ class act_window_close(osv.osv):
     }
 act_window_close()
 
-class ir_actions_todo_category(osv.osv):
-    """
-    Category of Configuration Wizards
-    """
-
-    _name = 'ir.actions.todo.category'
-    _description = "Configuration Wizard Category"
-    _columns = {
-         'name':fields.char('Name', size=64, translate=True, required=True),
-         'sequence': fields.integer('Sequence'),
-         'wizards_ids': fields.one2many('ir.actions.todo', 'category_id', 'Configuration Wizards'),
-    }
-ir_actions_todo_category()
-
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done')]
@@ -782,8 +762,7 @@ class ir_actions_todo(osv.osv):
     _description = "Configuration Wizards"
     _columns={
         'action_id': fields.many2one(
-            'ir.actions.act_window', 'Action', select=True, required=True,
-            ondelete='cascade'),
+            'ir.actions.actions', 'Action', select=True, required=True),
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
         'name': fields.char('Name', size=64),
@@ -793,14 +772,13 @@ Automatic: Runs whenever the system is reconfigured.
 Launch Manually Once: after hacing been launched manually, it sets automatically to Done."""),
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
-        'category_id': fields.many2one('ir.actions.todo.category','Category'),
     }
     _defaults={
         'state': 'open',
         'sequence': 10,
         'type': 'manual',
     }
-    _order="sequence,name,id"
+    _order="sequence,id"
 
     def action_launch(self, cr, uid, ids, context=None):
         """ Launch Action of Wizard"""
@@ -810,7 +788,11 @@ Launch Manually Once: after hacing been launched manually, it sets automatically
             wizard.write({'state': 'done'})
 
         # Load action
-        res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
+        act_type = self.pool.get('ir.actions.actions').read(cr, uid, wizard.action_id.id, ['type'], context=context)
+
+        res = self.pool.get(act_type['type']).read(cr, uid, wizard.action_id.id, [], context=context)
+        if act_type<>'ir.actions.act_window':
+            return res
         res.setdefault('context','{}')
         res['nodestroy'] = True
 
@@ -885,8 +867,10 @@ class act_client(osv.osv):
         ])
 
     def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
-        assert isinstance(field_value, dict), "params can only be dictionaries"
-        self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
+        if isinstance(field_value, dict):
+            self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
+        else:
+            self.write(cr, uid, id, {'params_store': field_value}, context=context)
 
     _columns = {
         'tag': fields.char('Client action tag', size=64, required=True,

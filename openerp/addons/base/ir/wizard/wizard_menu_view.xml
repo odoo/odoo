@@ -7,15 +7,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Menu" version="7.0">
-                    <header>
-                        <button name="menu_create" string="Create _Menu" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <field name="name"/>
                         <field name="menu_id" domain="[('parent_id','&lt;&gt;',False)]"/>
                     </group>
+                    <footer>
+                        <button name="menu_create" string="Create _Menu" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
