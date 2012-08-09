@@ -43,7 +43,7 @@ class purchase_config_settings(osv.osv_memory):
         'group_purchase_delivery_address': fields.boolean("allow a different address for incoming products and invoicings",
             implied_group='purchase.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a purchase order."),
-        'module_purchase_analytic_plans': fields.boolean('use multiple analytic accounts on orders',
+        'module_purchase_analytic_plans': fields.boolean('allow using multiple analytic accounts on the same order',
             help ="""Allows the user to maintain several analysis plans. These let you split
                 lines on a purchase order between several accounts and analytic plans.
                 This installs the module purchase_analytic_plans."""),

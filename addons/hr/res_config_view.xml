@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_hr_menu" model="ir.actions.client">
+            <field name="name">Open HR Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_hr_root')}"/>
+        </record>
+        <record id="todo_open_hr_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_hr_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
     <data>
-
         <record id="open_payroll_modules" model="ir.actions.act_window">
             <field name="name">Payroll</field>
             <field name="res_model">ir.module.module</field>
@@ -54,16 +66,16 @@
                         <label for="id" string="Time Tracking"/>
                         <div>
                             <div>
-                                <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)" class="oe_inline"/>
-                                <label for="module_hr_attendance"/>
-                            </div>
-                            <div>
                                 <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)" class="oe_inline"/>
                                 <label for="module_hr_timesheet"/>
                             </div>
                             <div name="hr_timesheet">
                                 <field name="module_hr_timesheet_sheet" class="oe_inline"/>
                                 <label for="module_hr_timesheet_sheet"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)" class="oe_inline"/>
+                                <label for="module_hr_attendance"/>
                             </div>
                         </div>
                     </group>

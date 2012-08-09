@@ -174,7 +174,7 @@ class product_pricelist(osv.osv):
                                                         ('date_end', '>=', date),
                                                     ])
         if len(pricelist_ids) != len(pricelist_version_ids):
-            raise osv.except_osv(_('Warning !'), _("At least one pricelist has no active version !\nPlease create or activate one."))
+            raise osv.except_osv(_('Warning!'), _("At least one pricelist has no active version !\nPlease create or activate one."))
 
         # product.product:
         product_ids = [i[0] for i in products_by_qty_by_partner]

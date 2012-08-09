@@ -47,7 +47,14 @@
         <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
         <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
         <field name="context" eval="{'object_id': ref('model_crm_phonecall')}"/>
-        <field name="help">Create specific phone call categories to better define the type of calls tracked in the system.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a new category.
+          </p><p>
+            Create specific phone call categories to better define the type of
+            calls tracked in the system.
+          </p>
+        </field>
     </record>
 
     <menuitem action="crm_phonecall_categ_action" name="Categories"

@@ -81,10 +81,17 @@
         <field name="domain">[('type','=','in_invoice')]</field>
         <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-        <field name="help">
-            Use this menu to control the invoices to be received from your supplier.
-            OpenERP generates draft invoices from your purchase orders or receptions, according to your settings.
-            Once you receive a supplier invoice, you can match it with the draft invoice and validate it.
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a draft invoice.
+          </p><p>
+            Use this menu to control the invoices to be received from your
+            supplier. OpenERP generates draft invoices from your purchase
+            orders or receptions, according to your settings.
+          </p><p>
+            Once you receive a supplier invoice, you can match it with the
+            draft invoice and validate it.
+          </p>
         </field>
     </record>
 
@@ -330,8 +337,6 @@
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="minimum_planned_date" invisible="context.get('quotation_only', False)"/>
                     <field name="origin"/>
-                    <field name="invoiced_rate" widget="progressbar" invisible="context.get('quotation_only', False)"/>
-                    <field name="shipped_rate" widget="progressbar" invisible="context.get('quotation_only', False)"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount"/>
                     <field name="amount_total" sum="Total amount"/>
                     <field name="state"/>
@@ -346,14 +351,17 @@
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
-            <field name="help">
-                Create a request for quotation when you want to buy products from a supplier.
-                You can also use this menu to review requests for quotation created automatically
-                (based on logistic rules, like minimum stock, MTO, etc.)
-                &lt;p&gt;
-                Once confirmed, a request for quotation becomes a purchase order.
-                In the Purchase Settings, you can select the way to control supplier invoicing:
-                based on the order, based on receptions, or manual.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a request for quotation.
+              </p><p>
+                The quotation contains the history of the discussion/negociation
+                you had with your supplier. Once confirmed, a request for
+                quotation is converted into a purchase order.
+              </p><p>
+                Most propositions of purchase orders are created automatically
+                by OpenERP based on inventory needs.
+              </p>
             </field>
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq"
@@ -367,7 +375,16 @@
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="context">{'search_default_approved': 1}</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
-            <field name="help">Use this menu to search within your purchase orders by references, supplier, products, etc. For each purchase order, you can track the products received, and control the supplier invoices.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that will be converted into a purchase order. 
+              </p><p>
+                Use this menu to search within your purchase orders by
+                references, supplier, products, etc. For each purchase order,
+                you can track the related discussion with the supplier, control
+                the products received and control the supplier invoices.
+              </p>
+            </field>
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management" sequence="6"/>
 
@@ -492,14 +509,6 @@
         </record>
 
         <act_window
-            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
-            id="act_res_partner_2_purchase_order"
-            name="RFQs and Purchases"
-            groups="purchase.group_purchase_user"
-            res_model="purchase.order"
-            src_model="res.partner"/>
-
-        <act_window
             context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
             id="action_purchase_line_product_tree"
             name="Purchases"
@@ -516,10 +525,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="purchase_order_line_search"/>
-            <field name="help">
-                Here you can track all the lines of purchase orders where the invoicing is "Based on Purchase Order Lines",
-                and for which you have not received a supplier invoice yet.
-                You can generate a draft supplier invoice based on the lines from this list.
+            <field name="help" type="html">
+              <p>
+                Here you can track all the lines of purchase orders where the
+                invoicing is "Based on Purchase Order Lines", and for which you
+                have not received a supplier invoice yet. You can generate a
+                draft supplier invoice based on the lines from this list.
+              </p>
             </field>
         </record>
         <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">

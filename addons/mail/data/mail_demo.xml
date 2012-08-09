@@ -88,5 +88,10 @@ Check the file in attachment for more information !  (third comment)]]></field>
             <field name="attachment_ids" eval="[(4,ref('message_blogpost0_comment2_attachment0'))]"/>
         </record>
 
+        <record model="ir.config_parameter" id="user_mail_alias">
+            <field name="key">mail.catchall.domain</field>
+            <field name="value">demo.openerp.com</field>
+        </record>
+
     </data>
 </openerp>
