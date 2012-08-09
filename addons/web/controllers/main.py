@@ -1373,15 +1373,13 @@ class Binary(openerpweb.Controller):
 
         retag = hashed_session
         try:
+            id = simplejson.loads(id)
+            if type(id) is list:
+                id = id[0] # m2o
             if not id:
                 res = Model.default_get([field], context).get(field)
                 image_data = base64.b64decode(res)
             else:
-                try:
-                    id = int(id)
-                except (ValueError):
-                    # objects might use virtual ids as string
-                    pass
                 res = Model.read([id], [last_update, field], context)[0]
                 retag = hashlib.md5(res.get(last_update)).hexdigest()
                 image_data = base64.b64decode(res.get(field))
