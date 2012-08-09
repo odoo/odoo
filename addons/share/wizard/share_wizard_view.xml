@@ -5,7 +5,6 @@
         <record id="share_step0_form" model="ir.ui.view">
             <field name="name">share.step0.form</field>
             <field name="model">share.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sharing: preparation" version="7.0">
                     <separator
@@ -28,7 +27,6 @@
         <record id="share_step1_form" model="ir.ui.view">
             <field name="name">share.step1.form</field>
             <field name="model">share.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configuration" version="7.0">
                     <group>
@@ -67,7 +65,6 @@
         <record id="share_step2_form" model="ir.ui.view">
             <field name="name">share.step2.form</field>
             <field name="model">share.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Access granted!" version="7.0">
                     <group attrs="{'invisible':[('user_type','=','embedded')]}"

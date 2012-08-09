@@ -14,7 +14,6 @@
         <record id="wizard_view" model="ir.ui.view">
             <field name="name">Add Portal Access</field>
             <field name="model">res.portal.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Add Portal Access" version="7.0">
                     <group col="4">
@@ -37,7 +36,6 @@
         <record id="wizard_user_tree_view" model="ir.ui.view">
             <field name="name">Portal Users</field>
             <field name="model">res.portal.wizard.user</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <!-- the attribute 'editable' is set below to make the elements
                      editable in the web client 6.0 -->
@@ -53,7 +51,6 @@
         <record id="wizard_user_form_view" model="ir.ui.view">
             <field name="name">Portal User</field>
             <field name="model">res.portal.wizard.user</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Portal User" version="7.0">
                     <group colspan="2" col="2">

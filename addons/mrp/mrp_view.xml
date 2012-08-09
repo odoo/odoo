@@ -25,7 +25,6 @@
         <record id="mrp_property_group_form_view" model="ir.ui.view">
             <field name="name">mrp.property.group.form</field>
             <field name="model">mrp.property.group</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Properties categories" version="7.0">
                     <label for="name"/>
@@ -67,7 +66,6 @@
         <record id="mrp_property_tree_view" model="ir.ui.view">
             <field name="name">mrp.property.tree</field>
             <field name="model">mrp.property</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Properties">
                     <field name="name"/>
@@ -79,7 +77,6 @@
         <record id="mrp_property_form_view" model="ir.ui.view">
             <field name="name">mrp.property.form</field>
             <field name="model">mrp.property</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Properties" version="7.0">
                     <group col="4">
@@ -96,7 +93,6 @@
         <record id="view_mrp_property_search" model="ir.ui.view">
             <field name="name">mrp.property.search</field>
             <field name="model">mrp.property</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="name" string="Name"/>
@@ -156,7 +152,6 @@
         <record id="mrp_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.workcenter.tree</field>
             <field name="model">mrp.workcenter</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Work Center">
                     <field name="code"/>
@@ -169,7 +164,6 @@
         <record id="mrp_workcenter_view" model="ir.ui.view">
             <field name="name">mrp.workcenter.form</field>
             <field name="model">mrp.workcenter</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Work Center" version="7.0">
                     <group col="4">
@@ -217,7 +211,6 @@
         <record id="view_mrp_workcenter_search" model="ir.ui.view">
             <field name="name">mrp.workcenter.search</field>
             <field name="model">mrp.workcenter</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search for mrp workcenter">
                     <field name="name" string="Mrp Workcenter" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
@@ -238,7 +231,6 @@
         <record id="mrp_routing_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.tree</field>
             <field name="model">mrp.routing.workcenter</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Routing Work Centers">
                     <field name="sequence"/>
@@ -254,7 +246,6 @@
         <record id="mrp_routing_workcenter_form_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.form</field>
             <field name="model">mrp.routing.workcenter</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Routing Work Centers" version="7.0">
                     <group col="4" string="General Information">
@@ -274,7 +265,6 @@
         <record id="mrp_routing_form_view" model="ir.ui.view">
             <field name="name">mrp.routing.form</field>
             <field name="model">mrp.routing</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Routing" version="7.0">
                     <group col="4">
@@ -302,7 +292,6 @@
         <record id="mrp_routing_tree_view" model="ir.ui.view">
             <field name="name">mrp.routing.tree</field>
             <field name="model">mrp.routing</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Routing">
                     <field name="code"/>
@@ -315,7 +304,6 @@
         <record id="mrp_routing_search_view" model="ir.ui.view">
             <field name="name">mrp.routing.search</field>
             <field name="model">mrp.routing</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Routing">
                     <field name="name" string="Routing" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
@@ -355,7 +343,6 @@
         <record id="mrp_bom_form_view" model="ir.ui.view">
             <field name="name">mrp.bom.form</field>
             <field name="model">mrp.bom</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material" version="7.0">
                     <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
@@ -427,7 +414,6 @@
         <record id="view_mrp_bom_filter" model="ir.ui.view">
             <field name="name">mrp.bom.select</field>
             <field name="model">mrp.bom</field>
-           <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
                     <field name="name" string="Bill Of Material" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
@@ -447,7 +433,6 @@
        <record id="mrp_bom_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.tree</field>
             <field name="model">mrp.bom</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree string="Bill of Materials" colors="blue:method">
@@ -468,7 +453,6 @@
        <record id="mrp_bom_component_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.component.tree</field>
             <field name="model">mrp.bom</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree string="BoM Structure" colors="blue:method">
@@ -557,7 +541,6 @@
         <record id="mrp_bom_revision_tree" model="ir.ui.view">
             <field name="name">mrp.bom.revision</field>
             <field name="model">mrp.bom.revision</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="BoM Revisions">
                     <field name="indice"/>
@@ -570,7 +553,6 @@
         <record id="mrp_bom_revision_form" model="ir.ui.view">
             <field name="name">mrp.bom.revision</field>
             <field name="model">mrp.bom.revision</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="BoM Revisions" version="7.0">
                     <group col="4">
@@ -591,7 +573,6 @@
         <record id="mrp_production_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree fonts="bold:needaction_pending==True" colors="blue:state in ('draft','confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date;gray:state in ('done','cancel') " string="Manufacturing Orders">
                     <field name="needaction_pending" invisible="1"/>
@@ -612,7 +593,6 @@
         <record id="view_production_calendar" model="ir.ui.view">
             <field name="name">mrp.production.calendar</field>
             <field name="model">mrp.production</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="routing_id" date_start="date_planned" string="Manufacturing Orders">
@@ -627,7 +607,6 @@
         <record id="view_production_gantt" model="ir.ui.view">
             <field name="name">mrp.production.gantt</field>
             <field name="model">mrp.production</field>
-            <field name="type">gantt</field>
             <field name="arch" type="xml">
                 <gantt date_stop="date_finished" date_start="date_start" string="Productions" default_group_by="routing_id">
                 </gantt>
@@ -638,7 +617,6 @@
         <record model="ir.ui.view" id="view_production_graph">
             <field name="name">mrp.production.graph</field>
             <field name="model">mrp.production</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Manufacturing Orders" type="bar">
                     <field name="date_planned_date"/>
@@ -651,7 +629,6 @@
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders" version="7.0">
                 <header>
@@ -849,7 +826,6 @@
         <record id="view_mrp_production_filter" model="ir.ui.view">
             <field name="name">mrp.production.select</field>
             <field name="model">mrp.production</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Production">
                     <field name="name" string="Production" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
@@ -956,7 +932,6 @@
         <record id="mrp_production_product_form_view" model="ir.ui.view">
             <field name="name">mrp.production.product.line.form</field>
             <field name="model">mrp.production.product.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scheduled Products" version="7.0">
                     <group col="4">
@@ -973,7 +948,6 @@
         <record id="mrp_production_product_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.product.line.tree</field>
             <field name="model">mrp.production.product.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Scheduled Products">
                     <field name="product_id"/>
@@ -993,7 +967,6 @@
             <field name="name">procurement.order.form.inherit</field>
             <field name="model">procurement.order</field>
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='move_id']" position="before">
@@ -1011,7 +984,6 @@
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.mrp.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <page string="Procurement &amp; Locations" position="inside">

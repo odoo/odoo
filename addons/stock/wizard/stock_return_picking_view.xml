@@ -29,7 +29,6 @@
         <record id="stock_return_memory_tree_in" model="ir.ui.view">
             <field name="name">stock.return.picking.memory.tree</field>
             <field name="model">stock.return.picking.memory</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Product Moves">
                     <field name="product_id" />
@@ -42,7 +41,6 @@
         <record id="stock_return_memory_form_in" model="ir.ui.view">
             <field name="name">stock.return.picking.memory.from</field>
             <field name="model">stock.return.picking.memory</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Return Picking Memory" version="7.0">
                     <group col="4">
@@ -56,7 +54,6 @@
         <record id="view_stock_return_picking_form" model="ir.ui.view">
             <field name="name">Return lines</field>
             <field name="model">stock.return.picking</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Return lines" version="7.0">
                     <label string="Provide the quantities of the returned products."/>
