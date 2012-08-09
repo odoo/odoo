@@ -20,7 +20,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
 
         this.$element.find('.oe_dashboard_column').sortable({
             connectWith: '.oe_dashboard_column',
-            handle: '.oe_dashboard_action_header',
+            handle: '.oe_header',
             scroll: false
         }).disableSelection().bind('sortstop', self.do_save_dashboard);
 
@@ -28,8 +28,8 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         this.$element.find('.oe_dashboard_link_reset').click(this.on_reset);
         this.$element.find('.oe_dashboard_link_change_layout').click(this.on_change_layout);
 
-        this.$element.delegate('.oe_dashboard_column .oe_dashboard_fold', 'click', this.on_fold_action);
-        this.$element.delegate('.oe_dashboard_column .ui-icon-closethick', 'click', this.on_close_action);
+        this.$element.delegate('.oe_dashboard_column .oe_fold', 'click', this.on_fold_action);
+        this.$element.delegate('.oe_dashboard_column .oe_close', 'click', this.on_close_action);
 
         // Init actions
         _.each(this.node.children, function(column, column_index) {
@@ -80,7 +80,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 var $last_column = $();
                 $dashboard.find('.oe_dashboard_column').each(function(k, v) {
                     if (k >= nlayout) {
-                        $(v).find('.oe_dashboard_action').appendTo($last_column);
+                        $(v).find('.oe_action').appendTo($last_column);
                     } else {
                         $last_column = $(v);
                     }
@@ -93,20 +93,20 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     },
     on_fold_action: function(e) {
         var $e = $(e.currentTarget),
-            $action = $e.parents('.oe_dashboard_action:first'),
+            $action = $e.parents('.oe_action:first'),
             id = parseInt($action.attr('data-id'), 10);
-        if ($e.is('.ui-icon-minusthick')) {
+        if ($e.is('.oe_minimize')) {
             $action.data('action_attrs').fold = '1';
         } else {
             delete($action.data('action_attrs').fold);
         }
-        $e.toggleClass('ui-icon-minusthick ui-icon-plusthick');
-        $action.find('.oe_dashboard_action_content').toggle();
+        $e.toggleClass('oe_minimize oe_maximize');
+        $action.find('.oe_content').toggle();
         this.do_save_dashboard();
     },
     on_close_action: function(e) {
         if (confirm(_t("Are you sure you want to remove this item ?"))) {
-            $(e.currentTarget).parents('.oe_dashboard_action:first').remove();
+            $(e.currentTarget).parents('.oe_action:first').remove();
             this.do_save_dashboard();
         }
     },
@@ -119,7 +119,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             };
         this.$element.find('.oe_dashboard_column').each(function() {
             var actions = [];
-            $(this).find('.oe_dashboard_action').each(function() {
+            $(this).find('.oe_action').each(function() {
                 var action_id = $(this).attr('data-id'),
                     new_attrs = _.clone($(this).data('action_attrs'));
                 if (new_attrs.domain) {
