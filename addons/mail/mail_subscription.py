@@ -22,7 +22,7 @@
 from osv import osv
 from osv import fields
 
-class mail_subscription(osv.osv):
+class mail_subscription(osv.Model):
     """
     mail_subscription holds the data related to the follow mechanism inside OpenERP.
     A subscription is characterized by:
@@ -32,6 +32,7 @@ class mail_subscription(osv.osv):
     """
     _name = 'mail.subscription'
     _rec_name = 'id'
+    _log_access = False
     _order = 'res_model asc'
     _description = 'Mail subscription'
     _columns = {
@@ -44,7 +45,7 @@ class mail_subscription(osv.osv):
                         ondelete='cascade', required=True, select=1),
     }
 
-class mail_notification(osv.osv):
+class mail_notification(osv.Model):
     """
     mail_notification is a relational table modeling messages pushed to users.
         :param: read: not used currently

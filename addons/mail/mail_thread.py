@@ -34,6 +34,25 @@ import xmlrpclib
 
 _logger = logging.getLogger(__name__)
 
+class many2many_model_in_where(fields.many2many):
+
+    def _get_query_and_where_params(self, cr, model, ids, values, where_params):
+        """ Add in where:
+            - mail_subscription.res_model = 'crm.lead'
+        """
+        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
+                   FROM %(rel)s, %(from_c)s \
+                  WHERE %(rel)s.%(id1)s IN %%s \
+                    AND %(rel)s.%(id2)s = %(tbl)s.id \
+                    AND %(rel)s.res_model = %%s \
+                 %(where_c)s  \
+                 %(order_by)s \
+                 %(limit)s \
+                 OFFSET %(offset)d' \
+                 % values
+        where_params = [model._name] + where_params
+        return query, where_params
+
 class mail_thread(osv.Model):
     '''Mixin model, meant to be inherited by any model that needs to
        act as a discussion topic on which messages can be attached.
@@ -84,6 +103,10 @@ class mail_thread(osv.Model):
             type='one2many', obj='mail.message', _fields_id = 'res_id',
             string='Temp messages', multi="_get_message_ids",
             help="Functional field holding messages related to the current document."),
+        'message_subscriber_ids': many2many_model_in_where('res.users',
+            rel='mail_subscription', id1='res_id', id2='user_id', string="Followers",
+            help="Followers of the document. The followers have full access to " \
+                 "the document details, as well as the conversation."),
         'message_state': fields.boolean('Read',
             help="When checked, new messages require your attention."),
         'message_summary': fields.function(_get_message_ids, method=True,
