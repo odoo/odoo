@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_linkedin_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.linkedin.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="replace">
+                    <field name="name" default_focus="1" nolabel="1" widget="linkedin" />
+                </field>
+                <!--<field name="title" position="before">
+                    <field name="linkedin_id" invisible="1"/>
+                    <field name="profile_id" invisible="1"/>
+                    <field name="twitter_id" invisible="1"/>
+                </field>-->
+            </field>
+       </record>
+   </data>
+</openerp>

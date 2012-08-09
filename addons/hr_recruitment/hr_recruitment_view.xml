@@ -108,21 +108,11 @@
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" version="7.0">
             <header>
-                <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" type="action"
+                <button name="case_close_with_emp" string="Hire" type="object"
                         states="open,pending" class="oe_highlight"/>
-                <button name="case_open" string="Open" type="object"
-                        states="draft,pending" class="oe_highlight"/>
-                <button name="case_pending" string="Pending" type="object" invisible="1"
-                        states="open"/>
-                <button name="case_reset" string="Reset to New" type="object"
-                        states="done,cancel"/>
                 <button name="case_cancel" string="Refuse" type="object"
                         states="draft,open,pending" class="oe_highlight"/>
-                <button name="stage_previous" string="Previous" type="object"
-                        states="open"/>
-                <button name="stage_next" string="Next" type="object"
-                        states="open"/>
-                <field name="stage_id" widget="statusbar"/>
+                <field name="stage_id" widget="statusbar" clickable="True"/>
             </header>
             <sheet>
                 <div class="oe_right oe_button_box">

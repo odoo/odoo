@@ -60,7 +60,7 @@ class calendar_event_import(osv.osv_memory):
             try:
                 vals = model_obj.import_cal(cr, uid, base64.decodestring(data['file_path']), context['active_id'], context)
             except:
-                raise osv.except_osv(_('Warning !'),_('Invalid format of the ics, file can not be imported'))
+                raise osv.except_osv(_('Warning!'),_('Invalid format of the ics, file cannot be imported.'))
             global cnt
             if vals:
                 cnt = len(vals)

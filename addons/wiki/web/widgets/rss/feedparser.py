@@ -233,7 +233,7 @@ class FeedParserDict(UserDict):
             assert not key.startswith('_')
             return self.__getitem__(key)
         except:
-            raise AttributeError, "object has no attribute '%s'" % key
+            raise AttributeError, "Object has no attribute '%s'" % key
 
     def __setattr__(self, key, value):
         if key.startswith('_') or key == 'data':

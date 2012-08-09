@@ -141,7 +141,7 @@
   !context
     'type': 'receipt'
 -
-  I create the first voucher of payment with values 240 USD, journal USD, 
+  On the first March, I create the first voucher of payment with values 240 USD, journal USD, 
 -
   !record {model: account.voucher, id: account_voucher_1_case1, view: view_vendor_receipt_form}:
     account_id: account.cash
@@ -235,7 +235,7 @@
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
     assert (move_line.amount_residual_currency == 30.0) , "Residual amount is not correct for first Invoice"
 -
-  I create the second voucher of payment with values 45 USD, journal USD, 
+  On the first April, I create the second voucher of payment with values 45 USD, journal USD, 
 -
   !record {model: account.voucher, id: account_voucher_2_case1}:
     account_id: account.cash

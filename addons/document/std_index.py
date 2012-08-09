@@ -104,7 +104,7 @@ class DocIndex(indexer):
         except OSError:
             
             _logger.warn("Failed attempt to execute antiword (MS Word reader). Antiword is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
-            _logger.debug("Trace of the failed file indexing attempt: ", exc_info=True)
+            _logger.debug("Trace of the failed file indexing attempt.", exc_info=True)
             return False
     
 cntIndex.register(DocIndex())
