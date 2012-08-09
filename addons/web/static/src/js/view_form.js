@@ -4616,8 +4616,9 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         if (this.get('value') && ! /^\d+(\.\d*)? \w+$/.test(this.get('value'))) {
             url = 'data:image/png;base64,' + this.get('value');
         } else if (this.get('value')) {
+            var id = escape(JSON.stringify(this.view.datarecord.id || null));
             url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
-                this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime());
+                this.view.dataset.model +'&id=' + id + '&field=' + this.name + '&t=' + (new Date().getTime());
         } else {
             url = "/web/static/src/img/placeholder.png";
         }
