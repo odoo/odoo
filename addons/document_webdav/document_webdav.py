@@ -43,7 +43,7 @@ class document_davdir(osv.osv):
         elif dbro.type == 'ressource':
             return nodes.node_res_dir
         else:
-            raise ValueError("dir node for %s type", dbro.type)
+            raise ValueError("Directory node for %s type.", dbro.type)
 
     def _prepare_context(self, cr, uid, nctx, context=None):
         nctx.node_file_class = nodes.node_file
@@ -67,18 +67,18 @@ document_davdir()
 
 class dav_dir_property(osv.osv):
     """ Arbitrary WebDAV properties, attached to document.directories.
-    
+
     Some DAV properties have to be settable at directories, depending
     on the database directory structure.
-    
+
     Example would be the principal-URL.
-    
+
     There _can_ be properties without a directory, which means that they
     globally apply to all the directories (aka. collections) of the
     present database.
     """
     _name = 'document.webdav.dir.property'
-    
+
     _columns = {
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
@@ -90,25 +90,25 @@ class dav_dir_property(osv.osv):
         'value': fields.text('Value'),
         'do_subst': fields.boolean('Substitute', required=True),
         }
-        
+
     _defaults = {
         'do_subst': False,
         }
-        
+
 dav_dir_property()
 
 class dav_file_property(osv.osv):
     """ Arbitrary WebDAV properties, attached to ir.attachments.
-    
+
     A special case is the locks that can be applied on file nodes.
-    
+
     There _can_ be properties without a file (RFC?), which means that they
     globally apply to all the attachments of the present database.
-    
+
     TODO access permissions, per property.
     """
     _name = 'document.webdav.file.property'
-    
+
     _columns = {
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
@@ -120,11 +120,11 @@ class dav_file_property(osv.osv):
         'value': fields.text('Value'),
         'do_subst': fields.boolean('Substitute', required=True),
         }
-        
+
     _defaults = {
         'do_subst': False,
         }
-        
+
 dav_file_property()
 
 #eof

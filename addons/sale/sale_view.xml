@@ -168,7 +168,7 @@
                             <button name="print_quotation" string="Send by Post" type="object" states="sent"/>
                             <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
-                            <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
+                            <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
                             <button name="action_view_delivery" string="View Delivery Order" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
@@ -287,7 +287,7 @@
                                     <field name="product_uos" string="UoS" groups="product.group_uos"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_unit"/>
-                                    <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
+                                    <field name="price_subtotal"/>
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
@@ -303,8 +303,8 @@
                             <group name="sale_margin_grp">
                             </group>
                             <div class="oe_clear"/>
-                            <label for="note"/>
-                            <field name="note"/>
+                            <label for="note"/><br/>
+                            <field name="note" class="oe_inline"/>
                         </page>
                         <page string="Other Information" groups="base.group_user">
                             <group>
@@ -493,7 +493,7 @@
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="salesman_id"/>
-                    <field name="price_subtotal" sum="Total" groups="base.group_sale_notes_subtotal"/>
+                    <field name="price_subtotal" sum="Total"/>
                     <field name="state"/>
                     <field name="invoiced"/>
                 </tree>
@@ -530,7 +530,7 @@
                         <group>
                             <field name="price_unit"/>
                             <field name="discount" groups="sale.group_discount_per_so_line"/>
-                            <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
+                            <field name="price_subtotal"/>
                             <field name="invoiced"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>

@@ -63,9 +63,10 @@
                 <field name="standard_price" position="replace" version="7.0">
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
-                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/>
+                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/> - 
                         <button name="%(action_view_change_standard_price)d" string="Update"
-                            type="action" icon="gtk-execute" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"/>
+                            type="action" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"
+                            class="oe_link"/>
                     </div>
                 </field>
             </field>
@@ -174,7 +175,7 @@
                 <kanban>
                     <field name="color"/>
                     <field name="type"/>
-                    <field name="product_image"/>
+                    <field name="image_medium"/>
                     <field name="list_price"/>
                     <field name="reception_count"/>
                     <field name="delivery_count"/>
@@ -182,7 +183,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_product_vignette">
                                 <div class="oe_product_img">
-                                <a type="edit"><img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" class="oe_product_photo"/></a>
+                                <a type="edit"><img t-att-src="kanban_image('product.product', 'image_medium', record.id.value)" class="oe_product_photo"/></a>
                                 </div>
                                 <div class="oe_product_desc">
                                     <h4><a type="edit"><field name="name"></field></a></h4>
