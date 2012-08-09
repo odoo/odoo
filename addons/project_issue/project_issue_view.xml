@@ -99,28 +99,16 @@
                 <form version="7.0">
                 <header>
                     <span groups="base.group_user">
-                        <button name="case_open" string="Open" type="object"
-                                states="draft,pending" class="oe_highlight"/>
                         <button name="case_close" string="Done" type="object"
                                 states="open"/>
                          <button name="case_close" string="Done" type="object"
                                 states="draft,pending"/>
-                        <button name="case_pending" string="Pending" type="object"
-                                states="draft,open"/>
                         <button name="case_escalate" string="Escalate" type="object"
                                 states="draft,open,pending"/>
-                        <button name="case_reset" string="Reset to New" type="object"
-                                states="cancelled,done"/>
-                        <button name="stage_previous" string="Previous Stage" type="object"
-                                states="open,pending"
-                                attrs="{'invisible': [('stage_id','=', False)]}"/>
-                        <button name="stage_next" string="Next Stage" type="object"
-                                states="open,pending"
-                                attrs="{'invisible': [('stage_id','=', False)]}"/>
                         <button name="case_cancel" string="Cancel" type="object"
                                 states="draft,open,pending"/>
                     </span>
-                    <field name="stage_id" widget="statusbar"/>
+                    <field name="stage_id" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet string="Issue">
                     <label for="name" class="oe_edit_only"/>
@@ -310,7 +298,7 @@
                                             <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
                                                 <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
                                             </t>
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
                                 </div>
