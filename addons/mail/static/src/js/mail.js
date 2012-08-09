@@ -559,6 +559,48 @@ openerp.mail = function(session) {
             return display_done && compose_done;
         },
 
+        //Mail vote Functionality...
+        add_vote_event: function(element){
+            vote_img = element.find('.oe_mail_msg_vote_like');
+            self = this;
+            if (vote_img)
+                vote_img.click(function(){
+                    self.subscribe_vote($(this).attr('data-id'));
+                });
+            return
+        },
+        
+        find_parent_element: function(name, message_id){
+            parent_element = false;
+            _.each($(name), function(element){
+                if ($(element).attr("data-id") == message_id){
+                    parent_element = element;
+                }
+            });
+            return parent_element;
+         },
+
+        render_vote: function(message_id){
+            var self = this;
+            this.mail_message = new session.web.DataSet(this, 'mail.message');
+            this.mail_message.call('get_vote_summary',[[parseInt(message_id)]]).then(function(result){
+                if (result){
+                    parent_element = self.find_parent_element(".oe_mail_msg_vote", message_id);
+                    vote_element = session.web.qweb.render('VoteDisplay', result);
+                    $(parent_element).html(vote_element);
+                    self.add_vote_event($(parent_element));
+                }
+            });
+        },
+        
+        subscribe_vote: function(message_id){
+            var self = this;
+            this.mail_message = new session.web.DataSet(this, 'mail.message');
+            return this.mail_message.call('vote_toggle', [[parseInt(message_id)]]).then(function(result){
+                    self.render_vote(message_id);
+            });
+        },
+         
         /**
          * Override-hack of do_action: automatically reload the chatter.
          * Normally it should be called only when clicking on 'Post/Send'
@@ -697,6 +739,10 @@ openerp.mail = function(session) {
         
         display_comments: function (records) {
             var self = this;
+            //Render Vote.
+            _.each(records, function(record){
+                self.render_vote(record.id);
+            });
             // sort the records
             mail.ChatterUtils.records_struct_add_records(this.comments_structure, records, this.params.parent_id);
             //build attachments download urls and compute time-relative from dates
@@ -1119,7 +1165,7 @@ openerp.mail = function(session) {
                 var records = self.comments_structure.tree_struct[root_id]['for_thread_msgs'];
                 var model_name = self.comments_structure.msgs[root_id]['model'];
                 var res_id = self.comments_structure.msgs[root_id]['res_id'];
-                var render_res = session.web.qweb.render('mail.wall_thread_container', {});
+                var render_res = session.web.qweb.render('mail.Wall_thread_container', {});
                 $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('ul.oe_mail_wall_threads'));
                 var thread = new mail.Thread(self, {
                     'res_model': model_name, 'res_id': res_id, 'uid': self.session.uid, 'records': records,

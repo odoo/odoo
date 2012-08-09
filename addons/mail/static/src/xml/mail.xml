@@ -45,7 +45,7 @@
         wall_thread_container template for the wall
         Each discussion thread is contained inside this template
         -->
-    <t t-name="mail.wall_thread_container">
+    <t t-name="mail.Wall_thread_container">
     </t>
 
     <!--
@@ -118,6 +118,25 @@
         </div>
     </ul>
 
+    <!-- Vote system (Like or Unlike -->
+    <t t-name="VoteDisplay">
+        <t t-if='vote_count'>
+             <span class="oe_left oe_mail_vote_string">Votes :<t t-esc="vote_count"/></span>
+        </t>
+        <li>
+        <t t-if="!is_vote_liked">
+            <button class="oe_mail_msg_vote_like" t-att-data-id="msg_id" title="Click to Vote.">
+                <span>+1</span>
+            </button>
+        </t>
+        <t t-if="is_vote_liked">
+            <button class="oe_mail_msg_vote_like" t-att-data-id="msg_id" title="Click to Unvote." style="background:#DC5F59; padding:2px">
+                <span>-1</span>
+            </button>
+        </t>
+        </li>
+    </t>
+
     <!-- default layout -->
     <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg">
         <div t-attf-class="oe_mail_msg_#{record.type}">
@@ -155,6 +174,7 @@
                       <li t-if="record.subject &amp; params.thread_level > 0"><a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}"><t t-raw="record.record_name"/></a></li>
                       <li><a t-attf-href="#model=res.users&amp;id=#{record.user_id[0]}"><t t-raw="record.user_id[1]"/></a></li>
                       <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
+                      <li> <span t-att-data-id="record.id" class="oe_mail_msg_vote"></span> </li>
                       <li t-if="display['show_reply']"><a href="#" class="oe_mail_msg_reply">Reply</a></li>
                       <!-- uncomment when merging vote
                       <li><a href="#">Like</a></li>

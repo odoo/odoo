@@ -64,12 +64,14 @@ class mail_thread(osv.Model):
 
     def _get_message_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
+        img_vote = "<img  class='oe_mail_vote_image'  src='/mail/static/src/img/vote.gif'/>"
         for id in ids:
             message_ids = self.message_search(cr, uid, [id], context=context)
             subscriber_ids = self.message_get_subscribers(cr, uid, [id], context=context)
+            vote_list = self.message_vote_ids(cr, uid, ids, context=context)
             res[id] = {
                 'message_ids': message_ids,
-                'message_summary': "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(message_ids), len(subscriber_ids)),
+                'message_summary': "<span>Msg: %d</span> . <span>Fol: %d</span> . <span> %s  %d</span>" % (len(message_ids), len(subscriber_ids), img_vote, len(vote_list)),
             }
         return res
 
@@ -100,7 +102,15 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
     # Automatic subscription when creating/reading
     #------------------------------------------------------
-
+    def message_vote_ids(self, cr, uid, ids, context=None):
+        message_pool = self.pool.get('mail.message')
+        vote_list = []
+        message_ids = self.message_search(cr, uid, [id], context=context)
+        for message in message_pool.browse(cr, uid, message_ids, context=context):
+            if message.vote_ids:
+                vote_list.append(message.vote_ids)
+        return vote_list
+    
     def create(self, cr, uid, vals, context=None):
         """Automatically subscribe the creator """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)

@@ -24,6 +24,7 @@ import mail_message
 import mail_thread
 import mail_group
 import mail_subscription
+import mail_vote
 import ir_needaction
 import res_users
 import res_partner
