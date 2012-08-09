@@ -71,7 +71,7 @@ class survey_send_invitation(osv.osv_memory):
             if sur.state != 'open':
                 msg +=  sur.title + "\n"
         if msg:
-            raise osv.except_osv(_('Warning !'), _('%sSurvey is not in open state') % msg)
+            raise osv.except_osv(_('Warning!'), _('%sSurvey is not in open state') % msg)
         data['mail'] = '''Hello %(name)s, \n\n We are inviting you for following survey. \
                     \n  ''' + name + '''\n Your login ID: %(login)s, Your password: %(passwd)s
                     \n link :- http://'''+ str(socket.gethostname()) + ''':8080 \n\n Thanks,'''
