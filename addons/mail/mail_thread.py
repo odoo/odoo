@@ -21,16 +21,19 @@
 
 import base64
 import email
-from email.utils import parsedate
 import logging
-from mail_message import decode, to_email
-from operator import itemgetter
-from osv import osv, fields
 import re
 import time
+import xmlrpclib
+from email.utils import parsedate
+from email.message import Message
+from operator import itemgetter
+
+from osv import osv, fields
+from mail_message import decode, to_email
 import tools
 from tools.translate import _
-import xmlrpclib
+from tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
@@ -600,42 +603,54 @@ class mail_thread(osv.Model):
                does not reply to an existing thread and does not match any mail alias.
            :return: model, thread_id, custom_values, user_id
         """
-        assert isinstance(message, email.Message), 'message must be an email.Message at this point'
-        
+        assert isinstance(message, Message), 'message must be an email.message.Message at this point'
+        message_id = message.get('Message-Id')
+
         # 1. Verify if this is a reply to an existing thread
         references = message.get('References') or message.get('In-Reply-To')
-        ref_match = tools.reference_re.search(references)
+        ref_match = references and tools.reference_re.search(references)
         if ref_match:
             thread_id = int(ref_match.group(1))
             model = ref_match.group(2) or model
             model_pool = self.pool.get(model)
             if thread_id and model and model_pool and model_pool.exists(cr, uid, thread_id) \
                 and hasattr(model_pool, 'message_update'):
+                _logger.debug('Routing mail with Message-Id %s: direct reply to model:%s, thread_id:%s, custom_values:%s, uid:%s',
+                              message_id, model, thread_id, custom_values, uid)
                 return model, thread_id, custom_values, uid
         
         # 2. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
         rcpt_to = message.get_all('Delivered-To', []) or (message.get_all('To', []) + message.get_all('Cc', []))
-        local_parts = [e.split('@')[0] for e in to_email(u','.join(decode(rcpt_to)))]
+        local_parts = [e.split('@')[0] for e in to_email(u','.join(map(decode,rcpt_to)))]
         if local_parts:
             mail_alias = self.pool.get('mail.alias')
             alias_ids = mail_alias.search(cr, uid, [('alias_name', 'in', local_parts)])
-            if len(alias_ids) > 1:
-                _logger.warning('Multiple mail.aliases match for mail with Message-Id %s, keeping first one only: %s',
-                                message.get('Message-Id'), alias_ids)
-            alias = mail_alias.browse(cr, uid, alias_ids[0], context=context)
-            user_id = alias.alias_user_id.id
-            if not user_id:
-                user_id = self._message_find_user_id(cr, uid, message, context=context)
-            return alias.alias_model_id.model, alias.alias_model_id.alias_force_thread_id, \
-                    alias.alias_defaults, user_id
+            if alias_ids:
+                if len(alias_ids) > 1:
+                    _logger.warning('Multiple mail.aliases match for mail with Message-Id %s, keeping first one only: %s',
+                                    message_id, alias_ids)
+                alias = mail_alias.browse(cr, uid, alias_ids[0], context=context)
+                user_id = alias.alias_user_id.id
+                if not user_id:
+                    user_id = self._message_find_user_id(cr, uid, message, context=context)
+                _logger.debug('Routing mail with Message-Id %s: direct alias match: model:%s, thread_id:%s, custom_values:%s, uid:%s',
+                      message_id, model, thread_id, custom_values, uid)
+                return alias.alias_model_id.model, alias.alias_force_thread_id, \
+                        eval(alias.alias_defaults), user_id
         
         # 3. Fallback to the provided parameters, if they work
         model_pool = self.pool.get(model)
         assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
             "No possible route found for incoming message with Message-Id %s. " \
             "Create an appropriate mail.alias or force the destination model."
+        if not model_pool.exists(cr, uid, thread_id):
+            _logger.warning('Received mail reply to missing document %s! Ignoring and creating new document instead for Message-Id %s',
+                            thread_id, message_id)
+            thread_id = None
+        _logger.debug('Routing mail with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
+                      message_id, model, thread_id, custom_values, uid)
         return model, thread_id, custom_values, uid
 
 
@@ -699,7 +714,7 @@ class mail_thread(osv.Model):
             "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
                 (msg['message-id'], model)
         if thread_id and hasattr(model_pool, 'message_update'):
-            model_pool.message_update(cr, user_id, [thread_id], msg, {}, context=context)
+            model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
         else:
             thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
 
