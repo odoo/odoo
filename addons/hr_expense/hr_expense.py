@@ -253,15 +253,23 @@ class hr_expense_line(osv.osv):
         res = dict(cr.fetchall())
         return res
 
+    def _get_uom_id(self, cr, uid, context=None):
+        try:
+            proxy = self.pool.get('ir.model.data')
+            result = proxy.get_object_reference(cr, uid, 'product', 'product_uom_unit')
+            return result[1]
+        except Exception, ex:
+            return False
+
     _columns = {
         'name': fields.char('Expense Note', size=128, required=True),
         'date_value': fields.date('Date', required=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
         'total_amount': fields.function(_amount, string='Total', digits_compute=dp.get_precision('Account')),
         'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Account')),
-        'unit_quantity': fields.float('Quantities' ),
+        'unit_quantity': fields.float('Quantities'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),
-        'uom_id': fields.many2one('product.uom', 'Unit of Measure'),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),
@@ -270,19 +278,30 @@ class hr_expense_line(osv.osv):
     _defaults = {
         'unit_quantity': 1,
         'date_value': lambda *a: time.strftime('%Y-%m-%d'),
+        'uom_id': _get_uom_id,
     }
     _order = "sequence, date_value desc"
 
-    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
         res = {}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             res['name'] = product.name
             amount_unit = product.price_get('standard_price')[product.id]
             res['unit_amount'] = amount_unit
-            if not uom_id:
-                res['uom_id'] = product.uom_id.id
+            res['uom_id'] = product.uom_id.id
         return {'value': res}
+
+    def onchange_uom(self, cr, uid, ids, product_id, uom_id, context=None):
+        res = {'value':{}}
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            uom = self.pool.get('product.uom').browse(cr, uid, uom_id, context=context)
+            if uom.category_id.id != product.uom_id.category_id.id:
+                res['warning'] = {'title': _('Warning'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure')}
+                uom_id = product.uom_id.id
+        res['value'].update({'uom_id': uom_id})
+        return res
 
 hr_expense_line()
 
