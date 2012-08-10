@@ -32,7 +32,7 @@
                     <group col="4" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
-                        <field name="session_id" required="1" />
+                        <field name="session_id" required="1"/>
                         <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     </group>
                     <notebook colspan="4">
@@ -61,14 +61,14 @@
                             <group class="oe_subtotal_footer">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <button name="button_dummy" string="Update" icon="gtk-execute" states="draft" />
+                                <button name="button_dummy" string="Update" icon="gtk-execute" states="draft"/>
                             </group>
                         </page>
                         <page string="Payments">
                             <field name="statement_ids" colspan="4" nolabel="1">
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="journal_id"/>
-                                    <field name="statement_id" />
+                                    <field name="statement_id"/>
                                     <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines" version="7.0">
@@ -164,7 +164,7 @@
             </field>
         </record>
 
-        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="10" />
+        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="10"/>
         <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="2" groups="group_pos_manager,group_pos_user"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
@@ -924,7 +924,7 @@
                             <button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened,closing_control"/>
                         </div>
                         <h1 class="oe_title">
-                            Point of Sale Session: 
+                            Point of Sale Session:
                             <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
                         </h1>
                         <field name="config_id" invisible="1"/>
