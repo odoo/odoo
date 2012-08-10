@@ -55,7 +55,7 @@ class pos_config(osv.osv):
         'shop_id' : fields.many2one('sale.shop', 'Shop',
              required=True),
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
-             required=True, domain=[('type', '=', 'sale')],
+             domain=[('type', '=', 'sale')],
              help="Accounting journal used to post sales entries."),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode',
              help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
@@ -195,23 +195,17 @@ class pos_session(osv.osv):
                                       required=True,
                                       select=1,
                                       domain="[('state', '=', 'active')]",
-#                                      readonly=True,
-#                                      states={'draft' : [('readonly', False)]}
                                      ),
 
-        'name' : fields.char('Session ID', size=32,
-                             required=True,
-#                             readonly=True,
-#                             states={'draft' : [('readonly', False)]}
-                            ),
+        'name' : fields.char('Session ID', size=32, required=True, readonly=True),
         'user_id' : fields.many2one('res.users', 'Responsible',
                                     required=True,
                                     select=1,
-#                                    readonly=True,
-#                                    states={'draft' : [('readonly', False)]}
+                                    readonly=True,
+                                    states={'opening_control' : [('readonly', False)]}
                                    ),
-        'start_at' : fields.datetime('Opening Date'), 
-        'stop_at' : fields.datetime('Closing Date'),
+        'start_at' : fields.datetime('Opening Date', readonly=True), 
+        'stop_at' : fields.datetime('Closing Date', readonly=True),
 
         'state' : fields.selection(POS_SESSION_STATE, 'State',
                 required=True, readonly=True,
@@ -281,7 +275,7 @@ class pos_session(osv.osv):
         for session in self.browse(cr, uid, ids, context=None):
             # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
             domain = [
-                ('state', '!=', 'closed'),
+                ('state', 'not in', ('closed','closing_control')),
                 ('user_id', '=', uid)
             ]
             count = self.search_count(cr, uid, domain, context=context)
@@ -307,11 +301,31 @@ class pos_session(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         config_id = values.get('config_id', False) or False
-
-        pos_config = None
         if config_id:
-            pos_config = self.pool.get('pos.config').browse(cr, uid, config_id, context=context)
+            # journal_id is not required on the pos_config because it does not
+            # exists at the installation. If nothing is configured at the
+            # installation we do the minimal configuration. Impossible to do in
+            # the .xml files as the CoA is not yet installed.
+            jobj = self.pool.get('pos.config')
+            pos_config = jobj.browse(cr, uid, config_id, context=context)
+            if not pos_config.journal_id:
+                jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
+                if jid:
+                    jobj.write(cr, uid, [pos_config.id], {'journal_id': jid}, context=context)
+                else:
+                    raise osv.except_osv( _('error!'),
+                        _("Unable to open the session. You have to assign a sale journal to your point of sale."))
 
+            # define some cash journal if no payment method exists
+            if not pos_config.journal_ids:
+                cashids = self.pool.get('account.journal').search(cr, uid, [('journal_user','=',True)], context=context)
+                if not cashids:
+                    cashids = self.pool.get('account.journal').search(cr, uid, [('type','=','cash')], context=context)
+                    self.pool.get('account.journal').write(cr, uid, cashids, {'journal_user': True})
+                jobj.write(cr, uid, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
+
+
+            pos_config = jobj.browse(cr, uid, config_id, context=context)
             bank_statement_ids = []
             for journal in pos_config.journal_ids:
                 bank_values = {
@@ -323,7 +337,8 @@ class pos_session(osv.osv):
 
             values.update({
                 'name' : pos_config.sequence_id._next(),
-                'statement_ids' : [(6, 0, bank_statement_ids)]
+                'statement_ids' : [(6, 0, bank_statement_ids)],
+                'config_id': config_id
             })
 
         return super(pos_session, self).create(cr, uid, values, context=context)
@@ -335,7 +350,7 @@ class pos_session(osv.osv):
         return True
 
     def wkf_action_open(self, cr, uid, ids, context=None):
-        # si pas de date start_at, je balance une date, sinon on utilise celle de l'utilisateur
+        # second browse because we need to refetch the data from the DB for cash_register_id
         for record in self.browse(cr, uid, ids, context=context):
             values = {}
             if not record.start_at:
@@ -344,7 +359,8 @@ class pos_session(osv.osv):
             record.write(values, context=context)
             for st in record.statement_ids:
                 st.button_open(context=context)
-        return True
+
+        return self.open_frontend_cb(cr, uid, ids, context=context)
 
     def wkf_action_opening_control(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'opening_control'}, context=context)
@@ -352,7 +368,7 @@ class pos_session(osv.osv):
     def wkf_action_closing_control(self, cr, uid, ids, context=None):
         for session in self.browse(cr, uid, ids, context=context):
             for statement in session.statement_ids:
-                if not statement.journal_id.closing_control:
+                if statement.id <> session.cash_register_id.id:
                     if statement.balance_end<>statement.balance_end_real:
                         self.pool.get('account.bank.statement').write(cr, uid,
                             [statement.id], {'balance_end_real': statement.balance_end})
@@ -377,7 +393,7 @@ class pos_session(osv.osv):
                         name= _('Point of Sale Loss')
                     if not account_id:
                         raise osv.except_osv( _('Error!'),
-                        _("Please set your profit and loss accounts on your payment method '%s'.") % (st.journal_id.name,))
+                        _("Please set your profit and loss accounts on your payment method '%s'. This will allow OpenERP to post the difference of %.2f in your ending balance. To close this session, you can update the 'Closing Cash Control' to avoid any difference.") % (st.journal_id.name,st.difference))
                     bsl.create(cr, uid, {
                         'statement_id': st.id,
                         'amount': st.difference,
@@ -388,7 +404,15 @@ class pos_session(osv.osv):
 
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
-        return self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
+        self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
+
+        obj = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'point_of_sale', 'menu_point_root')[1]
+        return {
+            'type' : 'ir.actions.client',
+            'name' : 'Point of Sale Menu',
+            'tag' : 'reload',
+            'params' : {'menu_id': obj},
+        }
 
     def _confirm_orders(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
@@ -413,10 +437,8 @@ class pos_session(osv.osv):
     def open_frontend_cb(self, cr, uid, ids, context=None):
         if not context:
             context = {}
-
         if not ids:
             return {}
-
         context.update({'session_id' : ids[0]})
         return {
             'type' : 'ir.actions.client',

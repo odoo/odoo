@@ -13,16 +13,16 @@
                     <field name="journal_id"/>
                     <field name="product_id"/>
                     <field name="amount"/>
-                    <field name="session_id" />
+                    <field name="session_id"/>
                     <field name="name"/>
-                    <field name="user_id" invisible="1" />
+                    <field name="user_id" invisible="1"/>
                     <separator colspan="4"/>
                     <group colspan="4" col="4">
                         <group col="2" colspan="2"/>
                          <button icon="gtk-stop" special="cancel"
-                            string="Cancel" />
+                            string="Cancel"/>
                         <button name="get_in" string="Put Money"
-                            colspan="1" type="object" icon="gtk-apply" />
+                            colspan="1" type="object" icon="gtk-apply"/>
                     </group>
                 </form>
             </field>
@@ -34,7 +34,7 @@
             view_mode="form"
             target="new"
             key2="client_action_multi"
-            id="action_box_entries" />
+            id="action_box_entries"/>
 
         <act_window name="Put Money In"
             res_model="pos.box.entries"
@@ -42,7 +42,7 @@
             view_mode="form"
             target="new"
             key2="client_action_multi"
-            id="action_pos_session_box_entries" />
+            id="action_pos_session_box_entries"/>
 
 
     </data>
