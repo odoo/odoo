@@ -152,8 +152,10 @@ class users(osv.osv):
         # context is set.
         'company_id': fields.many2one('res.company', 'Company', required=True,
             help='The company this user is currently working for.', context={'user_preference': True}),
-        # 'context_company_id': fields.many2one('res.company', 'Company', required=True,
-        #     help='The company this user is currently working for.', context={'user_preference': True}),
+        # 'context_company_id': fields.related('context_company_id', rel='res.company', 
+        #     string='Company', required=True, context={'user_preference': True},
+        #     help='The company this user is currently working for.',
+        #     deprecated='Use the context_company_id field instead. This field will be removed as of OpenERP 7.1.'),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         # backward compatibility fields
         'user_email': fields.related('email', type='char',
@@ -234,6 +236,7 @@ class users(osv.osv):
     _defaults = {
         'password' : '',
         'active' : True,
+        'customer': False,
         'menu_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
