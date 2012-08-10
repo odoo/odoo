@@ -7,8 +7,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base_calendar.view_crm_meeting_form"/>
             <field name="arch" type="xml">
-                <field name="categ_id" position="replace">
-                    <field name="categ_id" widget="selection" domain="[('user_id', 'in', [uid, False])]"/>
+                <field name="categ_ids" position="attributes">
+                    <attribute name="domain">[('user_id', 'in', [uid, False])]</attribute>
                 </field>
             </field>
         </record>
