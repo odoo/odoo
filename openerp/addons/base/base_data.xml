@@ -1087,17 +1087,20 @@
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
-        <record model="res.users" id="base.user_root">
-            <field name="signature">Administrator</field>
+        <record model="res.partner" id="base.partner_root">
+            <field name="name">Administrator</field>
             <field name="company_id" ref="main_company"/>
-            <field name="menu_id" ref="action_menu_admin"/>
+        </record>
+
+        <record model="res.users" id="base.user_root">
+            <field name="partner_id" ref="base.partner_root"/>
+            <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
+            <field name="menu_id" ref="action_menu_admin"/>
+            <field name="signature">Administrator</field>
         </record>
 
         <record id="main_partner" model="res.partner">
-            <field name="company_id" ref="main_company"/>
-        </record>
-        <record id="EUR" model="res.currency">
             <field name="company_id" ref="main_company"/>
         </record>
 
