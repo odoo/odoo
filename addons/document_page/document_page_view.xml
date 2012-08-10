@@ -20,7 +20,7 @@
             </field>
         </record>
         <!-- wiki list view  -->
-        <record model="ir.ui.view" id="view_wiki_tree">
+        <record id="view_wiki_tree" model="ir.ui.view">
             <field name="name">document.page.list</field>
             <field name="model">document.page</field>
             <field name="type">tree</field>
@@ -34,65 +34,57 @@
             </field>
         </record>
         <!-- wiki Form view  -->
-        <record model="ir.ui.view" id="view_wiki_form">
+        <record id="view_wiki_form" model="ir.ui.view">
             <field name="name">document.page.form</field>
             <field name="model">document.page</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Document Page" version="7.0">
-                    <sheet string="Document Page">
-                        <div class="oe_right oe_button_box">
-                            <button name="%(document_page.action_wiki_create_menu)d" string="Create Menu" type="action" class="oe_edit_only"/>
-                        </div>
+                    <div class="oe_right oe_button_box">
+                        <button name="%(document_page.action_wiki_create_menu)d" string="Create Menu" type="action" class="oe_edit_only"/>
+                        <button name="%(document_page.action_wiki_create_menu)d" string="History" type="action" class="oe_edit_only"/>
+                    </div>
+                    <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" select="1" /></h1>
-                        <label for="type" class="oe_edit_only"/>
-                        <field name="type" class="oe_edit_only"/>
-                        <label for="parent_id" />
-                        <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Topic" />
-                        <notebook colspan="4" >
-                            <page string="Content">
-                                <field name="display_content" attrs="{'invisible':[('type','=','normal')]}"/>
-                                <field name="content" placeholder="e.g. Once upon a time..." class="oe_edit_only" attrs="{'invisible':[('type','=','index')]}"/>
-                            </page>
-                            <page string="History" groups="base.group_no_one" >
-                                <field name="history_ids" nolabel="1"/>
-                                <separator colspan="4" string="Modification Information"/>
-                                <label for="write_date" readonly="1"/>
-                                <field name="write_date"/>
-                            </page>
-                        </notebook>
-                    </sheet>
+                    </div>
+                    <group class="oe_edit_only">
+                        <group>
+                            <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Section"/>
+                            <field name="type"/>
+                        </group>
+                        <group>
+                            <field name="write_uid" groups="base.group_no_one"/>
+                            <field name="write_date" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <label for="content" class="oe_edit_only" string="Template" attrs="{'invisible':[('type','=','content')]}"/>
+                    <field name="content" placeholder="e.g. Once upon a time..." class="oe_edit_only"/>
+                    <field name="display_content" widget="html"/>
                 </form>
             </field>
         </record>
-        <!-- wiki Search view  -->
+        <!-- page Search view  -->
         <record id="view_wiki_filter" model="ir.ui.view">
             <field name="name">document.page.search</field>
             <field name="model">document.page</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Document Page">
-                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('content','ilike',self)]" string="Document Page"/>
-                    <separator orientation="vertical"/>
-                    <field name="write_date" groups="base.group_no_one"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-jump-to-ltr" string="Need Review" domain="[('review','=',True)]"/>
-                    <separator orientation="vertical"/>
+                    <field name="name" string="Content" filter_domain="['|', '|', ('name','ilike',self), ('content','ilike',self)]"/>
                     <field name="write_uid"/>
                     <field name="parent_id"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
-                        <filter icon="terp-folder-blue" string="Document Type" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <filter icon="terp-personal" string="Author" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter icon="terp-personal+" string="Last Contributor" domain="[]" context="{'group_by':'write_uid'}"/>
+                        <filter string="Document Type" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Author" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Last Contributor" domain="[]" context="{'group_by':'write_uid'}"/>
                     </group>
                 </search>
             </field>
         </record>
-        <!-- search page for wiki -->
-        <record model="ir.actions.act_window" id="action_wiki">
-            <field name="name">Document Pages</field>
+        <!-- page action -->
+        <record id="action_page" model="ir.actions.act_window">
+            <field name="name">Pages</field>
             <field name="res_model">document.page</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -100,7 +92,7 @@
             <field name="search_view_id" ref="view_wiki_filter"/>
             <field name="help">Create web pages</field>
         </record>
-        <menuitem parent="menu_wiki" id="menu_page" name="Document Pages" action="action_page"/>
+        <menuitem parent="menu_wiki" id="menu_page" name="Pages" action="action_page"/>
 
         <!-- History Tree view -->
         <record model="ir.ui.view" id="view_wiki_history_tree">
@@ -110,9 +102,8 @@
             <field name="arch" type="xml">
                 <tree string="Document History">
                     <field name="create_date"/>
-                    <field name="write_uid"/>
-                    <field name="minor_edit" groups="base.group_no_one"/>
-                    <field name="summary"/>
+                    <field name="create_uid"/>
+                    <field name="page_id"/>
                 </tree>
             </field>
         </record>
@@ -123,50 +114,29 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Document Page History" version="7.0">
-                    <sheet>
-                        <label for="document_id" class="oe_edit_only"/>
-                        <h1><field name="document_id" select="1" /></h1>
-                        <label for="summary" class="oe_edit_only"/>
-                        <field name="summary" colspan="4" />
-                        <label for="content" class="oe_edit_only"/>
-                        <field name="content" colspan="4" nolabel="1" widget="text_wiki" onchange="onchange_content(content)"/>
-                        <label for="create_date" class="oe_edit_only"/>
-                        <field name="create_date" readonly="1"/>
-                        <label for="minor_edit" class="oe_edit_only" groups="base.group_no_one"/>
-                        <field name="minor_edit" groups="base.group_no_one"/>
-                    </sheet>
+                    <label for="page_id" class="oe_edit_only"/>
+                    <h1><field name="page_id" select="1" /></h1>
+                    <label for="create_date" class="oe_edit_only"/>
+                    <field name="create_date" readonly="1"/>
+                    <label for="content" class="oe_edit_only"/>
+                    <field name="content" colspan="4"/>
                 </form>
             </field>
         </record>
-
         <!-- History Action  -->
         <record model="ir.actions.act_window" id="action_history">
-            <field name="name">All Page Histories</field>
+            <field name="name">Page history</field>
             <field name="res_model">document.page.history</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
+        <menuitem parent="menu_wiki" id="menu_page_history" name="Pages history" action="action_history" groups="base.group_no_one"/>
         <act_window 
-            context="{'search_default_document_id': [active_id], 'default_document_id': active_id}"
             id="act_wiki_wiki_history"
+            context="{'search_default_page_id': [active_id], 'default_page_id': active_id}"
             name="Page History"
             res_model="document.page.history"
             src_model="document.page"/>
-
-        <act_window
-            context="{'search_default_parent_id': [active_id], 'default_parent_id': active_id}"
-            id="act_wiki_group_open"
-            name="Search Page"
-            res_model="document.page"
-            src_model="document.page.type"/>
-
-        <record id="ir_open_wiki_pages" model="ir.values">
-            <field name="key2">tree_but_open</field>
-            <field name="model">document.page.type</field>
-            <field name="name">Search a Page</field>
-             <field eval="'ir.actions.wizard,%d'%action_view_wiki_wiki_page_open" name="value"/>
-        </record>
 
     </data>
 </openerp>

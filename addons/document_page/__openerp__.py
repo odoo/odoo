@@ -24,34 +24,37 @@
     'version': '1.0.1',
     'category': 'Knowledge Management',
     'description': """
-The base module to manage documents(document_page).
-==========================================
-
-Keep track of Wiki groups, pages, and history.
+Pages
+=====
+Web pages
     """,
-    'author': ['OpenERP SA', 'Axelor'],
-    'website': 'http://openerp.com',
-    'depends': ['knowledge','document','crm'],
-    'web_depends': ['widget_document_page'],
+    'author': ['OpenERP SA'],
+    'website': 'http://www.openerp.com/',
+    'depends': ['knowledge'],
     'init_xml': [],
     'update_xml': [
         'wizard/document_page_create_menu_view.xml',
         'wizard/document_page_show_diff_view.xml',
         'document_page_view.xml',
-        'document_page_sequence.xml',
         'security/document_page_security.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
     ],
-    
-    'demo_xml': ['document_page_demo.xml'],
-    'test': ['test/document_page_test00.yml'],
+    'demo_xml': [
+        'document_page_demo.xml'
+    ],
+    'test': [
+        'test/document_page_test00.yml'
+    ],
     'installable': True,
     'auto_install': False,
     'certificate': '0086363630317',
-    'web': True,
     'images': [],
-    'js': ['static/src/lib/wiky/wiky.js', 'static/src/js/document_page.js'],
+    'js': [
+        'static/src/lib/wiky/wiky.js', 
+        'static/src/js/document_page.js'
+    ],
     'css' : [
-        "static/src/css/document_page.css"],
+        "static/src/css/document_page.css"
+    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -25,42 +25,41 @@ import difflib
 import tools
 
 class document_page(osv.osv):
-    _inherit = "document.page"
+    _name = "document.page"
     _description = "Document Page"
     _order = 'name'
 
     def _get_page_index(self, cr, uid, page):
-        index == []
+        index = []
         for subpage in page.child_ids:
             index += ["<li>"+ self._get_page_index(cr, uid, subpage) +"</li>"]
         if index:
-            index = "<ul>" + "".join(index) + "</ul>"
+            r = "<ul>" + "".join(index) + "</ul>"
         else:
-            index = page.title
+            r = page.name
+        return r
 
     def _get_display_content(self, cr, uid, ids, name, args, context=None):
         res = {}
         for page in self.browse(cr, uid, ids, context=context):
-            if parent.type == "index":
+            if page.type == "index":
                content = self._get_page_index(cr, uid, page)
             else:
                content = page.content
-            res[page.id] = {
-               'display_content': content
-            }
+            res[page.id] =  content
         return res
 
     _columns = {
         'name': fields.char('Title', required=True),
-        'type':fields.selection([('content','Content Page'), ('index','Index Page')], 'Type', help="Page type"), 
+        'type':fields.selection([('content','Content'), ('index','Section')], 'Type', help="Page type"), 
 
-        'parent_id': fields.many2one('document.page', 'Section'),
+        'parent_id': fields.many2one('document.page', 'Section', domain=[('type','=','index')]),
         'child_ids': fields.one2many('document.page', 'parent_id', 'Children'),
 
         'content': fields.text("Content"),
         'display_content': fields.function(_get_display_content, string='Displayed Content', type='text'),
 
-        'history_ids': fields.one2many('document.page.history', 'document_id', 'History'),
+        'history_ids': fields.one2many('document.page.history', 'page_id', 'History'),
         'menu_id': fields.many2one('ir.ui.menu', "Menu", readonly=True),
 
         'create_date': fields.datetime("Created on", select=True, readonly=True),
@@ -78,7 +77,7 @@ class document_page(osv.osv):
             parent = self.browse(cr, uid, parent_id, context=context)
             if parent.type == "content":
                 res['value'] = {
-                    'content': parent.content_template,
+                    'content': parent.content,
                 }
         return res
 
@@ -93,12 +92,12 @@ class document_page(osv.osv):
                 history.create(cr, uid, res)
 
     def create(self, cr, uid, vals, context=None):
-        page_id = super(document_page2, self).create(cr, uid, vals, context)
+        page_id = super(document_page, self).create(cr, uid, vals, context)
         self.create_history(cr, uid, [page_id], vals, context)
-        return document_id
+        return page_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        result = super(document_page2, self).write(cr, uid, ids, vals, context)
+        result = super(document_page, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result
 
@@ -129,6 +128,5 @@ class document_page_history(osv.osv):
             raise osv.except_osv(_('Warning!'), _('There are no changes in revisions.'))
         diff = difflib.HtmlDiff()
         return diff.make_file(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=False)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-<!-- Create Menu From view -->
-
+        <!-- Create Menu From view -->
         <record id="view_wiki_create_menu" model="ir.ui.view">
             <field name="name">Create Menu</field>
             <field name="model">document.page.create.menu</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Menu" version="7.0">
-                	<group string="Menu Information">
-                        <field name="menu_name" />
+                    <group string="Menu Information">
                         <field name="menu_parent_id" />
                     </group>
                     <footer>
@@ -22,9 +19,7 @@
                 </form>
             </field>
         </record>
-
-<!-- Create Menu Action -->
-
+        <!-- Create Menu Action -->
         <record id="action_wiki_create_menu" model="ir.actions.act_window">
             <field name="name">Create Menu</field>
             <field name="type">ir.actions.act_window</field>

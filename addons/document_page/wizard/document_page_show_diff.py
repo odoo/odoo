@@ -29,10 +29,6 @@ class showdiff(osv.osv_memory):
     _name = 'wizard.document.page.history.show_diff'
 
     def get_diff(self, cr, uid, context=None):
-
-        """ @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        """
         if context is None:
             context = {}
         history = self.pool.get('document.page.history')
@@ -41,29 +37,25 @@ class showdiff(osv.osv_memory):
         diff = ""
         if len(ids) == 2:
             if ids[0] > ids[1]:
-                diff = base64.encodestring(history.getDiff(cr, uid, ids[1], ids[0]))
+                diff = history.getDiff(cr, uid, ids[1], ids[0])
             else:
-                diff = base64.encodestring(history.getDiff(cr, uid, ids[0], ids[1]))
+                diff = history.getDiff(cr, uid, ids[0], ids[1])
 
         elif len(ids) == 1:
             old = history.browse(cr, uid, ids[0])
             nids = history.search(cr, uid, [('document_id', '=', old.document_id.id)])
             nids.sort()
-            diff = base64.encodestring(history.getDiff(cr, uid, ids[0], nids[-1]))
+            diff = history.getDiff(cr, uid, ids[0], nids[-1])
         else:
             raise osv.except_osv(_('Warning!'), _('You need to select minimum one or maximum two history revisions!'))
-
-
         return diff
 
     _columns = {
-        'file_path':fields.binary('Diff', readonly=True),
+        'diff': fields.text('Diff', readonly=True),
     }
 
     _defaults = {
-        'file_path': get_diff
+        'diff': get_diff
     }
-
-showdiff()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
