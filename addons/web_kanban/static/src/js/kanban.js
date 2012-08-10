@@ -503,9 +503,9 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
         }
     },
     /**
-     * Handles a non-erroneous response from name_create
+     * Handles a newly created record
      *
-     * @param {(Id, String)} record name_get format for the newly created record
+     * @param {id} id of the newly created record
      */
     quick_created: function (record) {
         var id = record, self = this;
