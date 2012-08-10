@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-07-25 14:15+0000\n"
-"Last-Translator: Kaare Pettersen <Unknown>\n"
+"PO-Revision-Date: 2012-08-09 14:59+0000\n"
+"Last-Translator: Kjell H. Skalmeraas (adEgo) <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-26 05:22+0000\n"
-"X-Generator: Launchpad (build 15679)\n"
+"X-Launchpad-Export-Date: 2012-08-10 05:19+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -25,7 +25,7 @@ msgstr "DDR 512MB PC400"
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
-msgstr ""
+msgstr "Antall lag/nivåer"
 
 #. module: product
 #: constraint:product.pricelist.item:0
@@ -42,6 +42,8 @@ msgid ""
 "Set a template if this rule only apply to a template of product. Keep empty "
 "for all products"
 msgstr ""
+"Sett en mal hvis denne regelen bare gjelder en mal av produktet. Hold tom "
+"for alle produkter"
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -70,7 +72,7 @@ msgstr "Mainboard ASUStek A7V8X-X"
 #. module: product
 #: help:product.template,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr ""
+msgstr "Dette er minimumsantall som kjøpes fra hovedleverandør."
 
 #. module: product
 #: model:product.uom,name:product.uom_day
@@ -98,11 +100,13 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
+"Denne prislisten vil bli benyttet for salg til partneren i stedet for "
+"standardprislisten."
 
 #. module: product
 #: field:product.template,seller_qty:0
 msgid "Supplier Quantity"
-msgstr ""
+msgstr "Leverandørs antall"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -147,6 +151,8 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
 msgstr ""
+"Minimumsantallet for å utløse denne regelen, angitt i leverandørs enheter "
+"(hvis spesifisert) eller standard vareenhet."
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -165,6 +171,8 @@ msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"Konvertering fra vareenhet %s til standard enhet %s er ikke mulig ettersom "
+"enhetene tilhører ulike kategorier!"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -257,7 +265,7 @@ msgstr ""
 #. module: product
 #: view:product.uom:0
 msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "  f.eks.: 1 * (denne enhet) = faktor * (referanseenhet)"
 
 #. module: product
 #: code:addons/product/product.py:418
@@ -363,7 +371,7 @@ msgstr "Utgående"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference UoM for this category"
-msgstr ""
+msgstr "Referanseenhet for denne kategorien"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
@@ -403,7 +411,7 @@ msgid ""
 "products, consumables or services. The Product form contains detailed "
 "information about your products related to procurement logistics, sales "
 "price, product category, suppliers and so on."
-msgstr ""
+msgstr "Produkter"
 
 #. module: product
 #: help:product.product,qty_available:0
@@ -573,6 +581,8 @@ msgid ""
 "Quantity conversions may happen automatically between Units of Measure in "
 "the same category, according to their respective ratios."
 msgstr ""
+"Antall konverteringer kan skje automatisk mellom måleenheter i samme "
+"kategori, ifølge deres respektive forholdstall."
 
 #. module: product
 #: help:product.packaging,width:0
@@ -1212,7 +1222,7 @@ msgstr "Bredde"
 #. module: product
 #: help:product.price.type,field:0
 msgid "Associated field in the product form."
-msgstr ""
+msgstr "Tilknyttet feltet i produktskjemaet."
 
 #. module: product
 #: view:product.product:0
