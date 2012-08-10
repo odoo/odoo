@@ -4165,7 +4165,10 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
         this.view_form.appendTo(this.$element.find(".oe_popup_form"));
         this.view_form.on_loaded.add_last(function() {
             var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
-            self.$buttonpane.html(QWeb.render("AbstractFormPopup.buttons", {multi_select: multi_select}));
+            self.$buttonpane.html(QWeb.render("AbstractFormPopup.buttons", {
+                multi_select: multi_select,
+                readonly: self.row_id !== null && self.options.readonly,
+            }));
             var $snbutton = self.$buttonpane.find(".oe_abstractformpopup-form-save-new");
             $snbutton.click(function() {
                 $.when(self.view_form.do_save()).then(function() {
@@ -4186,11 +4189,6 @@ instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
             $cbutton.click(function() {
                 self.check_exit();
             });
-            if (self.row_id !== null && self.options.readonly) {
-                $snbutton.hide();
-                $sbutton.hide();
-                $cbutton.text(_t("Close"));
-            }
             self.view_form.do_show();
         });
     },
