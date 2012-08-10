@@ -372,7 +372,7 @@ class users(osv.osv):
                                 AND active FOR UPDATE NOWAIT""",
                        (tools.ustr(login), tools.ustr(password)))
             cr.execute("""UPDATE res_users
-                            SET date = now() AT TIME ZONE 'UTC'
+                            SET login_date = now() AT TIME ZONE 'UTC'
                             WHERE login=%s AND password=%s AND active
                             RETURNING id""",
                        (tools.ustr(login), tools.ustr(password)))
