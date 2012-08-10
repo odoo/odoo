@@ -2784,8 +2784,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
             }
         });
-        var tip_def = $.Deferred();
-        var untip_def = $.Deferred();
+        self.tip_def = $.Deferred();
+        self.untip_def = $.Deferred();
         var tip_delay = 200;
         var tip_duration = 15000;
         var anyoneLoosesFocus = function() {
@@ -2807,24 +2807,25 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
                 self.floating = false;
             }
-            if (used && self.get("value") === false) {
-                tip_def.reject();
-                untip_def.reject();
-                tip_def = $.Deferred();
-                tip_def.then(function() {
+            if (used && self.get("value") === false && ! self.no_tipsy) {
+                self.tip_def.reject();
+                self.untip_def.reject();
+                self.tip_def = $.Deferred();
+                self.tip_def.then(function() {
                     self.$input.tipsy("show");
                 });
                 setTimeout(function() {
-                    tip_def.resolve();
-                    untip_def.reject();
-                    untip_def = $.Deferred();
-                    untip_def.then(function() {
+                    self.tip_def.resolve();
+                    self.untip_def.reject();
+                    self.untip_def = $.Deferred();
+                    self.untip_def.then(function() {
                         self.$input.tipsy("hide");
                     });
-                    setTimeout(function() {untip_def.resolve();}, tip_duration);
+                    setTimeout(function() {self.untip_def.resolve();}, tip_duration);
                 }, tip_delay);
             } else {
-                tip_def.reject();
+                self.no_tipsy = false;
+                self.tip_def.reject();
             }
         };
         this.$input.focusout(anyoneLoosesFocus);
@@ -2953,7 +2954,15 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     },
     focus: function () {
         this.$input.focus();
-    }
+    },
+    _quick_create: function() {
+        this.no_tipsy = true;
+        return instance.web.form.CompletionFieldMixin._quick_create.apply(this, arguments);
+    },
+    _search_create_popup: function() {
+        this.no_tipsy = true;
+        return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
+    },
 });
 
 /*
