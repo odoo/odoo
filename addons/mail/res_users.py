@@ -123,6 +123,23 @@ To setup your preferences (name, email signature, avatar), click on the top righ
         alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
     
+    def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
+                        type='email', email_date=None, parent_id=False,
+                        content_subtype='plain', state=None,
+                        partner_ids=None, email_from=False, email_to=False,
+                        email_cc=None, email_bcc=None, reply_to=None,
+                        headers=None, message_id=False, references=None,
+                        attachments=None, original=None, context=None):
+        """ Override of message_append. Messages appened to res.users are
+            redirected to the related partner. Using partner_id.message_append,
+            messages will have correct model and id, set to res_partner and
+            partner_id.id.
+        """
+        for user in self.browse(cr, uid, threads, context=context):
+            user.partner_id.message_append(subject, body_text, body_html, type, email_date, parent_id,
+                content_subtype, state, partner_ids, email_from, email_to, email_cc, email_bcc, reply_to,
+                headers, message_id, references, attachments, original)
+
     def message_search_get_domain(self, cr, uid, ids, context=None):
         """ Override of message_search_get_domain for partner discussion page.
             The purpose is to add messages directly sent to user using
