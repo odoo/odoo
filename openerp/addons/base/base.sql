@@ -155,6 +155,7 @@ CREATE TABLE res_users (
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
     company_id int,
+    partner_id int,
     primary key(id)
 );
 alter table res_users add constraint res_users_login_uniq unique (login);
@@ -383,7 +384,7 @@ CREATE TABLE ir_model_relation (
 -- Users
 ---------------------------------
 
-insert into res_users (id,login,password,name,active,company_id,lang) values (1,'admin','admin','Administrator',True,1,'en_US');
+insert into res_users (id,login,password,name,active,company_id,partner_id,lang) values (1,'admin','admin','Administrator',True,1,1,'en_US');
 insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_root','base','res.users',True,1);
 
 -- Compatibility purpose, to remove V6.0
