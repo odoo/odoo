@@ -27,7 +27,6 @@ import time
 import xmlrpclib
 from email.utils import parsedate
 from email.message import Message
-from operator import itemgetter
 
 from osv import osv, fields
 from mail_message import decode, to_email
@@ -36,6 +35,11 @@ from tools.translate import _
 from tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
+
+
+def decode_header(message, header, separator=' '):
+    return separator.join(map(decode,message.get_all(header, [])))
+
 
 class mail_thread(osv.Model):
     '''Mixin model, meant to be inherited by any model that needs to
@@ -154,10 +158,9 @@ class mail_thread(osv.Model):
         
         message_obj = self.pool.get('mail.message')
         notification_obj = self.pool.get('mail.notification')
-        body = vals.get('body_html', '') if vals.get('content_subtype') == 'html' else vals.get('body_text', '')
         
         # automatically subscribe the writer of the message
-        if vals['user_id']:
+        if vals.get('user_id'):
             self.message_subscribe(cr, uid, [thread_id], [vals['user_id']], context=context)
         
         # create message
@@ -176,12 +179,11 @@ class mail_thread(osv.Model):
             notification_obj.create(cr, uid, {'user_id': id, 'message_id': msg_id}, context=context)
         
         # create the email to send
-        email_id = self.message_create_notify_by_email(cr, uid, vals, user_to_push_ids, context=context)
+        self.message_create_notify_by_email(cr, uid, vals, user_to_push_ids, context=context)
         
         return msg_id
     
     def message_get_user_ids_to_notify(self, cr, uid, thread_ids, new_msg_vals, context=None):
-        subscription_obj = self.pool.get('mail.subscription')
         # get body
         body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
         
@@ -304,7 +306,6 @@ class mail_thread(osv.Model):
             threads = model_pool.browse(cr, uid, threads, context=context)
 
         ir_attachment = self.pool.get('ir.attachment')
-        mail_message = self.pool.get('mail.message')
 
         new_msg_ids = []
         for thread in threads:
@@ -504,10 +505,6 @@ class mail_thread(osv.Model):
 
         """ Retrieve all attachments names """
         map_id_to_name = dict((attachment_id, '') for message in messages for attachment_id in message['attachment_ids'])
-        map_id_to_name = {}
-        for msg in messages:
-            for attach_id in msg["attachment_ids"]:
-                map_id_to_name[attach_id] = '' # use empty string as a placeholder
 
         ids = map_id_to_name.keys()
         names = self.pool.get('ir.attachment').name_get(cr, uid, ids, context=context)
@@ -577,6 +574,8 @@ class mail_thread(osv.Model):
                       custom_values=None, context=None):
         """Attempt to figure out the correct target model, thread_id,
         custom_values and user_id to use for an incoming message.
+        Multiple values may be returned, if a message had multiple
+        recipients matching existing mail.aliases, for example.
 
         The following heuristics are used, in this order: 
              1. If the message replies to an existing thread_id, and
@@ -601,13 +600,13 @@ class mail_thread(osv.Model):
            :param int thread_id: optional ID of the record/thread from ``model``
                to which this mail should be attached. Only used if the message
                does not reply to an existing thread and does not match any mail alias.
-           :return: model, thread_id, custom_values, user_id
+           :return: list of [model, thread_id, custom_values, user_id]
         """
         assert isinstance(message, Message), 'message must be an email.message.Message at this point'
         message_id = message.get('Message-Id')
 
         # 1. Verify if this is a reply to an existing thread
-        references = message.get('References') or message.get('In-Reply-To')
+        references = decode_header(message, 'References') or decode_header(message, 'In-Reply-To')
         ref_match = references and tools.reference_re.search(references)
         if ref_match:
             thread_id = int(ref_match.group(1))
@@ -617,44 +616,46 @@ class mail_thread(osv.Model):
                 and hasattr(model_pool, 'message_update'):
                 _logger.debug('Routing mail with Message-Id %s: direct reply to model:%s, thread_id:%s, custom_values:%s, uid:%s',
                               message_id, model, thread_id, custom_values, uid)
-                return model, thread_id, custom_values, uid
+                return [(model, thread_id, custom_values, uid)]
         
         # 2. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_to = message.get_all('Delivered-To', []) or (message.get_all('To', []) + message.get_all('Cc', []))
-        local_parts = [e.split('@')[0] for e in to_email(u','.join(map(decode,rcpt_to)))]
+        rcpt_tos = decode_header(message, 'Delivered-To') or \
+            (decode_header(message, 'To') + decode_header(message, 'Cc') \
+              + decode_header(message, 'Resent-To') + decode_header(message, 'Resent-Cc'))
+        local_parts = [e.split('@')[0] for e in to_email(','.join(rcpt_tos))]
         if local_parts:
             mail_alias = self.pool.get('mail.alias')
             alias_ids = mail_alias.search(cr, uid, [('alias_name', 'in', local_parts)])
             if alias_ids:
-                if len(alias_ids) > 1:
-                    _logger.warning('Multiple mail.aliases match for mail with Message-Id %s, keeping first one only: %s',
-                                    message_id, alias_ids)
-                alias = mail_alias.browse(cr, uid, alias_ids[0], context=context)
-                user_id = alias.alias_user_id.id
-                if not user_id:
-                    user_id = self._message_find_user_id(cr, uid, message, context=context)
-                _logger.debug('Routing mail with Message-Id %s: direct alias match: model:%s, thread_id:%s, custom_values:%s, uid:%s',
-                      message_id, model, thread_id, custom_values, uid)
-                return alias.alias_model_id.model, alias.alias_force_thread_id, \
-                        eval(alias.alias_defaults), user_id
+                routes = []
+                for alias in mail_alias.browse(cr, uid, alias_ids, context=context):
+                    user_id = alias.alias_user_id.id
+                    if not user_id:
+                        user_id = self._message_find_user_id(cr, uid, message, context=context)
+                    routes.append((alias.alias_model_id.model, alias.alias_force_thread_id, \
+                                   eval(alias.alias_defaults), user_id))
+                _logger.debug('Routing mail with Message-Id %s: direct alias match: %r', message_id, routes)
+                return routes
         
         # 3. Fallback to the provided parameters, if they work
         model_pool = self.pool.get(model)
+        if not thread_id:
+            # Legacy: fallback to matching [ID] in the Subject
+            match = tools.res_re.search(decode_header(message, 'Subject'))
+            thread_id = match and match.group(1)
         assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
             "No possible route found for incoming message with Message-Id %s. " \
             "Create an appropriate mail.alias or force the destination model."
-        if not model_pool.exists(cr, uid, thread_id):
+        if thread_id and not model_pool.exists(cr, uid, thread_id):
             _logger.warning('Received mail reply to missing document %s! Ignoring and creating new document instead for Message-Id %s',
                             thread_id, message_id)
             thread_id = None
         _logger.debug('Routing mail with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
                       message_id, model, thread_id, custom_values, uid)
-        return model, thread_id, custom_values, uid
+        return [(model, thread_id, custom_values, uid)]
 
-
-        
 
     def message_process(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
@@ -699,29 +700,29 @@ class mail_thread(osv.Model):
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-        model, thread_id, custom_values, user_id = self.message_route(cr, uid, msg_txt, model,
-                                                                      thread_id, custom_values,
-                                                                      context=context)
-        if self._name != model:
-            context.update({'thread_model': model})
+        routes = self.message_route(cr, uid, msg_txt, model,
+                                    thread_id, custom_values,
+                                    context=context)
         msg = self.pool.get('mail.message').parse_message(msg_txt, save_original=save_original, context=context)
         msg['state'] = 'received'     
         if strip_attachments and 'attachments' in msg:
             del msg['attachments']
-
-        model_pool = self.pool.get(model)
-        assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
-            "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
-                (msg['message-id'], model)
-        if thread_id and hasattr(model_pool, 'message_update'):
-            model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
-        else:
-            thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
-
-        # Forward the email to other followers
-        self.message_forward(cr, uid, model, [thread_id], msg_txt, context=context)
-        model_pool.message_mark_as_unread(cr, uid, [thread_id], context=context)
-        return thread_id
+        for model, thread_id, custom_values, user_id in routes:   
+            if self._name != model:
+                context.update({'thread_model': model})
+            model_pool = self.pool.get(model)
+            assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
+                "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
+                    (msg['message-id'], model)
+            if thread_id and hasattr(model_pool, 'message_update'):
+                model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
+            else:
+                thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
+    
+            # Forward the email to other followers
+            self.message_forward(cr, uid, model, [thread_id], msg_txt, context=context)
+            model_pool.message_mark_as_unread(cr, uid, [thread_id], context=context)
+        return True
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Called by ``message_process`` when a new message is received
@@ -811,7 +812,6 @@ class mail_thread(osv.Model):
         """
         model_pool = self.pool.get(model)
         smtp_server_obj = self.pool.get('ir.mail_server')
-        mail_message = self.pool.get('mail.message')
         for res in model_pool.browse(cr, uid, thread_ids, context=context):
             if hasattr(model_pool, 'message_thread_followers'):
                 followers = model_pool.message_thread_followers(cr, uid, [res.id])[res.id]
