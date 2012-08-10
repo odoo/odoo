@@ -177,8 +177,8 @@ class module(osv.osv):
     _columns = {
         'name': fields.char("Technical Name", size=128, readonly=True, required=True, select=True),
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
-        'shortdesc': fields.char('Module Name', size=256, readonly=True, translate=True),
-        'summary': fields.char('Summary', size=256, readonly=True, translate=True),
+        'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
+        'summary': fields.char('Summary', size=64, readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
         'maintainer': fields.char('Maintainer', size=128, readonly=True),
@@ -355,22 +355,7 @@ class module(osv.osv):
         :returns: next res.config item to execute
         :rtype: dict[str, object]
         """
-        self.button_install(cr, uid, ids, context=context)
-        cr.commit()
-        _, pool = pooler.restart_pool(cr.dbname, update_module=True)
-
-        config = pool.get('res.config').next(cr, uid, [], context=context) or {}
-        if config.get('type') not in ('ir.actions.reload', 'ir.actions.act_window_close'):
-            return config
-
-        # reload the client; open the first available root menu
-        menu_obj = self.pool.get('ir.ui.menu')
-        menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-            'params': {'menu_id': menu_ids and menu_ids[0] or False},
-        }
+        return self._button_immediate_function(cr, uid, ids, self.button_install, context=context)
 
     def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
@@ -415,8 +400,35 @@ class module(osv.osv):
                                                           known_dep_ids, exclude_states,context))
         return list(known_dep_ids)
 
+    def _button_immediate_function(self, cr, uid, ids, function, context=None):
+        function(cr, uid, ids, context=context)
+
+        cr.commit()
+        _, pool = pooler.restart_pool(cr.dbname, update_module=True)
+
+        config = pool.get('res.config').next(cr, uid, [], context=context) or {}
+        if config.get('type') not in ('ir.actions.reload', 'ir.actions.act_window_close'):
+            return config
+
+        # reload the client; open the first available root menu
+        menu_obj = self.pool.get('ir.ui.menu')
+        menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+
+        return {
+            'type' : 'ir.actions.client',
+            'tag' : 'reload',
+            'params' : {'menu_id' : menu_ids and menu_ids[0] or False}
+        }
+
+    def button_immediate_uninstall(self, cr, uid, ids, context=None):
+        """
+        Uninstall the selected module(s) immediately and fully,
+        returns the next res.config action to execute
+        """
+        return self._button_immediate_function(cr, uid, ids, self.button_uninstall, context=context)
+
     def button_uninstall(self, cr, uid, ids, context=None):
-        if any(m.name == 'base' for m in self.browse(cr, uid, ids)):
+        if any(m.name == 'base' for m in self.browse(cr, uid, ids, context=context)):
             raise orm.except_orm(_('Error'), _("The `base` module cannot be uninstalled"))
         dep_ids = self.downstream_dependencies(cr, uid, ids, context=context)
         self.write(cr, uid, ids + dep_ids, {'state': 'to remove'})
@@ -425,6 +437,13 @@ class module(osv.osv):
     def button_uninstall_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
+
+    def button_immediate_upgrade(self, cr, uid, ids, context=None):
+        """
+        Upgrade the selected module(s) immediately and fully,
+        return the next res.config action to execute
+        """
+        return self._button_immediate_function(cr, uid, ids, self.button_upgrade, context=context)
 
     def button_upgrade(self, cr, uid, ids, context=None):
         depobj = self.pool.get('ir.module.module.dependency')
