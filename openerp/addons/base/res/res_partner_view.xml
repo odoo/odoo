@@ -228,7 +228,7 @@
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
                             <group>
                                 <group>
-                                    <field name="user_id" options='{"no_open": true}'/>
+                                    <field name="user_id"/>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 </group>
                                 <group>
