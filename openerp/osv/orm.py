@@ -3601,7 +3601,7 @@ class BaseModel(object):
 
         # Warn about deprecated fields now that fields_pre and fields_post are computed
         for f in fields_pre + fields_post:
-            field_column = (f != self.CONCURRENCY_CHECK_FIELD and self._all_columns.get(f) and self._all_columns.get(f).column)
+            field_column = self._all_columns.get(f) and self._all_columns.get(f).column
             if field_column and field_column.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, f, field_column.deprecated)
 
@@ -3982,7 +3982,7 @@ class BaseModel(object):
         direct = []
         totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
         for field in vals:
-            field_column = (field != self.CONCURRENCY_CHECK_FIELD and self._all_columns.get(field) and self._all_columns.get(field).column)
+            field_column = self._all_columns.get(field) and self._all_columns.get(field).column
             if field_column and field_column.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, field, field_column.deprecated)
             if field in self._columns:
