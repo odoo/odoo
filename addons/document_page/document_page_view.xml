@@ -56,9 +56,13 @@
                         <group>
                             <field name="write_uid" groups="base.group_no_one"/>
                             <field name="write_date" groups="base.group_no_one"/>
+                            <field name="menu_id" groups="base.group_no_one"/>
                         </group>
                     </group>
-                    <label for="content" class="oe_edit_only" string="Template" attrs="{'invisible':[('type','=','content')]}"/>
+                    <div class="oe_edit_only" attrs="{'invisible':[('type','=','content')]}">
+                        <label for="content" string="Template"/>
+                        This will be used as template content for all new page of this section.
+                    </div>
                     <field name="content" placeholder="e.g. Once upon a time..." class="oe_edit_only"/>
                     <field name="display_content" widget="html"/>
                 </form>
@@ -71,7 +75,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Document Page">
-                    <field name="name" string="Content" filter_domain="['|', '|', ('name','ilike',self), ('content','ilike',self)]"/>
+                    <field name="name" string="Content" filter_domain="['|', ('name','ilike',self), ('content','ilike',self)]"/>
                     <field name="write_uid"/>
                     <field name="parent_id"/>
                     <group expand="0" string="Group By...">

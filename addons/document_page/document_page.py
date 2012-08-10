@@ -75,7 +75,7 @@ class document_page(osv.osv):
         res = {}
         if parent_id and not content:
             parent = self.browse(cr, uid, parent_id, context=context)
-            if parent.type == "content":
+            if parent.type == "index":
                 res['value'] = {
                     'content': parent.content,
                 }
