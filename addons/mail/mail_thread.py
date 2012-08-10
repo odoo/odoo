@@ -340,7 +340,6 @@ class mail_thread(osv.osv):
             context.update({'thread_model': model})
 
         mail_message = self.pool.get('mail.message')
-        res_id = False
 
         # Parse Message
         # Warning: message_from_string doesn't always work correctly on unicode,
@@ -353,38 +352,26 @@ class mail_thread(osv.osv):
         if strip_attachments and 'attachments' in msg:
             del msg['attachments']
 
-        # Create New Record into particular model
-        def create_record(msg):
-            if hasattr(model_pool, 'message_new'):
-                return model_pool.message_new(cr, uid, msg,
-                                              custom_values,
-                                              context=context)
         res_id = False
         if msg.get('references') or msg.get('in-reply-to'):
             references = msg.get('references') or msg.get('in-reply-to')
-            if '\r\n' in references:
-                references = references.split('\r\n')
-            else:
-                references = references.split(' ')
-            for ref in references:
-                ref = ref.strip()
-                res_id = tools.reference_re.search(ref)
-                if res_id:
-                    res_id = res_id.group(1)
-                else:
-                    res_id = tools.res_re.search(msg['subject'])
-                    if res_id:
-                        res_id = res_id.group(1)
-                if res_id:
-                    res_id = int(res_id)
-                    if model_pool.exists(cr, uid, res_id):
-                        if hasattr(model_pool, 'message_update'):
-                            model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
-                    else:
-                        # referenced thread was not found, we'll have to create a new one
-                        res_id = False
+            match = tools.reference_re.search(references)
+            if match: res_id = match.group(1)
         if not res_id:
-            res_id = create_record(msg)
+            match = tools.res_re.search(msg['subject'])
+            if match: res_id = match.group(1)
+        if res_id:
+            res_id = int(res_id)
+            if model_pool.exists(cr, uid, res_id) and hasattr(model_pool, 'message_update'):
+                    model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
+            else:
+                # referenced thread was not found, we'll have to create a new one
+                res_id = False
+        if not res_id:
+            if hasattr(model_pool, 'message_new'):
+                res_id = model_pool.message_new(cr, uid, msg, custom_values, context=context)
+            else:
+                raise Exception('No message_new() method on target model %s, cannot deliver mail!' % model)
         #To forward the email to other followers
         self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
         return res_id
