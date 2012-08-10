@@ -34,24 +34,37 @@ import xmlrpclib
 
 _logger = logging.getLogger(__name__)
 
-class many2many_model_in_where(fields.many2many):
-
+class many2many_reference(fields.many2many):
+    
     def _get_query_and_where_params(self, cr, model, ids, values, where_params):
         """ Add in where:
             - mail_subscription.res_model = 'crm.lead'
         """
         query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
-                   FROM %(rel)s, %(from_c)s \
-                  WHERE %(rel)s.%(id1)s IN %%s \
+                    FROM %(rel)s, %(from_c)s \
+                    WHERE %(rel)s.%(id1)s IN %%s \
                     AND %(rel)s.%(id2)s = %(tbl)s.id \
                     AND %(rel)s.res_model = %%s \
-                 %(where_c)s  \
-                 %(order_by)s \
-                 %(limit)s \
-                 OFFSET %(offset)d' \
-                 % values
+                    %(where_c)s  \
+                    %(order_by)s \
+                    %(limit)s \
+                    OFFSET %(offset)d' \
+                % values
         where_params = [model._name] + where_params
         return query, where_params
+
+    def set(self, cr, model, id, name, values, user=None, context=None):
+        if not values: return
+        rel, id1, id2 = self._sql_names(model)
+        obj = model.pool.get(self._obj)
+        for act in values:
+            if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
+                continue
+            if act[0] == 3:
+                cr.execute('delete from "'+rel+'" WHERE '+rel+'."'+id1+'"=%s AND '+rel+'."'+id2+'"=%s and res_model=%s', (id, act[1], model._name))
+                print '-->\t', cr.rowcount
+            else:
+                return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
 
 class mail_thread(osv.Model):
     '''Mixin model, meant to be inherited by any model that needs to
@@ -103,7 +116,7 @@ class mail_thread(osv.Model):
             type='one2many', obj='mail.message', _fields_id = 'res_id',
             string='Temp messages', multi="_get_message_ids",
             help="Functional field holding messages related to the current document."),
-        'message_subscriber_ids': many2many_model_in_where('res.users',
+        'message_subscriber_ids': many2many_reference('res.users',
             rel='mail_subscription', id1='res_id', id2='user_id', string="Followers",
             help="Followers of the document. The followers have full access to " \
                  "the document details, as well as the conversation."),
@@ -942,15 +955,8 @@ class mail_thread(osv.Model):
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
         """
-        subscription_obj = self.pool.get('mail.subscription')
         to_subscribe_uids = [uid] if user_ids is None else user_ids
-        create_ids = []
-        for id in ids:
-            already_subscribed_user_ids = self.message_get_subscribers(cr, uid, [id], context=context)
-            for user_id in to_subscribe_uids:
-                if user_id in already_subscribed_user_ids: continue
-                create_ids.append(subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context))
-        return create_ids
+        return self.write(cr, uid, ids, {'message_subscriber_ids': [(4, id) for id in to_subscribe_uids]}, context=context)
 
     def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
         """ Unsubscribe the user (or user_ids) from the current document.
@@ -958,16 +964,8 @@ class mail_thread(osv.Model):
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
         """
-        # Trying to unsubscribe somebody not in subscribers: returns False
-        # if special management is needed; allows to know that an automatically
-        # subscribed user tries to unsubscribe and allows to warn him
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
-        subscription_obj = self.pool.get('mail.subscription')
-        to_delete_sub_ids = subscription_obj.search(cr, uid,
-                        ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', 'in', to_unsubscribe_uids)], context=context)
-        if not to_delete_sub_ids:
-            return False
-        return subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
+        return self.write(cr, uid, ids, {'message_subscriber_ids': [(3, id) for id in to_unsubscribe_uids]}, context=context)
 
     #------------------------------------------------------
     # Notification API
