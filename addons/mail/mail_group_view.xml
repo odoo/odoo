@@ -78,11 +78,12 @@
                                 </group>
                             </group>
                         </group>
-                        <field name="message_subscriber_ids"/>
                     </sheet>
-                    <div class="oe_chatter oe_mail_group_footer">
+                    <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"
                                 options='{"thread_level": 1}'/>
+                        <field name="message_subscriber_ids" widget="mail_followers"
+                                context="{'lapin': 'nouille'}"/>
                     </div>
                 </form>
             </field>

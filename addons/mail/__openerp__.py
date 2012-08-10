@@ -102,9 +102,11 @@ The main features of the module are:
     'js': [
         'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
+        'static/src/js/mail_followers.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',
+        'static/src/xml/mail_followers.xml',
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
