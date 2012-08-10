@@ -243,6 +243,19 @@ class users(osv.osv):
         'groups_id': _get_group,
     }
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        """ Override of res.users fields_view_get.
+            - if the view is specified: resume with normal behavior
+            - else: the default view is overrided and redirected to the partner
+              view
+        """
+        print view_id
+        print view_type
+        if not view_id and view_type == 'form':
+            print 'acacpornief'
+            return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        return super(users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+
     # User can write to a few of her own fields (but not her groups for example)
     SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small']
 
