@@ -3,6 +3,10 @@
     <data>
 
         <!-- Top menu item -->
+        <menuitem name="PoS Backend"
+            id="menu_point_root"
+            groups="group_pos_manager"
+            sequence="140"/>
 
         <record id="categ_others" model="pos.category">
             <field name="name">Others</field>
@@ -151,6 +155,9 @@
             </field>
         </record>
 
+        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="10" />
+        <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
+        <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
         <record id="product_normal_action" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -163,7 +170,10 @@
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
-
+        <menuitem
+            action="product_normal_action"
+            id="menu_pos_products"
+            parent="menu_point_of_sale_product" sequence="2"/>
 
         <record model="ir.ui.view" id="view_pos_order_line">
             <field name="name">Sale lines</field>
@@ -663,8 +673,11 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
         </record>
+        <menuitem action="pos_category_action" id="menu_pos_category" parent="menu_point_of_sale_product" sequence="0" />
         <!-- END -->
 
+        <menuitem name="Configuration" parent="menu_point_root"
+            id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
 
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Payment Methods</field>
@@ -676,6 +689,10 @@
             <field name="help">Payment methods are defined by accounting journals having the field Payment Method checked.</field>
         </record>
 
+        <menuitem action="action_account_journal_form"
+            id="menu_action_account_journal_form_open"
+            parent="menu_point_config_product"
+            sequence="20"/>
 
         <record model="ir.ui.view" id="view_pos_order_tree_all_sales_lines">
             <field name="name">POS Sales Lines</field>
@@ -699,6 +716,9 @@
             <field name="view_id" ref="view_pos_order_tree_all_sales_lines" />
         </record>
 
+        <!--  Miscellaneous Operations/Reporting -->
+        <menuitem name="Point of Sale" parent="base.menu_reporting" id="menu_point_rep" sequence="50" groups="group_pos_manager"/>
+        <!-- Invoice -->
 
         <record model="ir.actions.act_window" id="action_pos_invoice">
             <field name="name">Invoices</field>
@@ -709,6 +729,8 @@
             <field name="domain">[('origin','like','POS')]</field>
         </record>
 
+        <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
+                id="menu_pos_details" parent="menu_point_rep" sequence="6" />
 
         <record model="ir.actions.client" id="action_pos_pos">
             <field name="name">Start Point of Sale</field>
@@ -826,6 +848,11 @@
             <field name="search_view_id" ref="view_pos_config_search" />
         </record>
 
+        <menuitem
+            parent="menu_point_config_product"
+            action="action_pos_config_pos"
+            id="menu_pos_config_pos"
+            groups="group_pos_manager"/>
 
         <act_window
             id="act_pos_session_orders"
@@ -968,6 +995,20 @@
             <field name="search_view_id" ref="view_pos_session_search" />
         </record>
 
+        <menuitem
+            parent="menu_point_rep"
+            action="action_pos_session"
+            id="menu_pos_session"
+            sequence="0"
+            groups="group_pos_manager"/>
+
+        <menuitem
+            parent="menu_point_of_sale"
+            action="action_pos_session"
+            id="menu_pos_session_all"
+            sequence="0"
+            groups="group_pos_manager"/>
+
         <record id="view_pos_order_filter" model="ir.ui.view">
             <field name="name">pos.order.list.select</field>
             <field name="model">pos.order</field>
@@ -993,6 +1034,7 @@
             </field>
         </record>
 
+        <menuitem action="action_pos_session_opening" parent="menu_point_of_sale" id="menu_pos_session_opening" sequence="0" />
 
         <record model="ir.ui.view" id="pos_ean13_generator">
             <field name="name">pos.ean_wizard</field>
@@ -1008,24 +1050,6 @@
             </field>
         </record>
 
-        <menuitem id="menu_point_root" name="PoS New" sequence="140" groups="group_pos_manager,group_pos_user"/>
-            <menuitem id="menu_point_of_sale" parent="menu_point_root" name="Daily Operations"  sequence="10" />
-                <menuitem id="menu_pos_session_opening" parent="menu_point_of_sale" action="action_pos_session_opening" sequence="10" />
-                <menuitem id="menu_pos_session_all" parent="menu_point_of_sale" action="action_pos_session" sequence="20" groups="group_pos_manager"/>
-                <menuitem id="menu_orders" parent="menu_point_of_sale" action="action_pos_pos_form" sequence="30"/>
-                
-            <menuitem id="menu_point_of_sale_product" parent="menu_point_root" name="Products" sequence="15"  groups="group_pos_manager" />
-                <menuitem action="product_normal_action" id="menu_pos_products" parent="menu_point_of_sale_product" sequence="2"/>
-                <menuitem action="pos_category_action" id="menu_pos_category" parent="menu_point_of_sale_product" sequence="0" />
-
-            <menuitem name="Configuration" parent="menu_point_root" id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
-                <menuitem action="action_account_journal_form" id="menu_action_account_journal_form_open" parent="menu_point_config_product" sequence="20"/>
-                <menuitem parent="menu_point_config_product" action="action_pos_config_pos" id="menu_pos_config_pos" groups="group_pos_manager"/>
-
-        <!--  Miscellaneous Operations/Reporting -->
-        <menuitem id="menu_point_rep" name="Point of Sale" parent="base.menu_reporting"  sequence="50" groups="group_pos_manager"/>
-            <menuitem icon="STOCK_PRINT" action="action_report_pos_details" id="menu_pos_details" parent="menu_point_rep" sequence="6" />
-            <menuitem id="menu_pos_session" parent="menu_point_rep" action="action_pos_session" sequence="0" groups="group_pos_manager"/>
 
     </data>
 </openerp>
