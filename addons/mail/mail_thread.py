@@ -353,7 +353,7 @@ class mail_thread(osv.Model):
                 data.update({
                     'email_to': email_to,
                     'email_from': email_from or \
-                        (hasattr(thread, 'user_id') and thread.user_id and thread.user_id.user_email),
+                        (hasattr(thread, 'user_id') and thread.user_id and thread.user_id.email),
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
                     'references': references,
@@ -771,7 +771,7 @@ class mail_thread(osv.Model):
         for thread in self.browse(cr, uid, ids, context=context):
             l = set()
             for message in thread.message_ids:
-                l.add((message.user_id and message.user_id.user_email) or '')
+                l.add((message.user_id and message.user_id.email) or '')
                 l.add(message.email_from or '')
                 l.add(message.email_cc or '')
             res[thread.id] = filter(None, l)
@@ -985,9 +985,9 @@ class mail_thread(osv.Model):
             if not user.notification_email_pref == 'all' and \
                 not (user.notification_email_pref == 'to_me' and user.id in user_to_push_from_parse_ids):
                 continue
-            if not user.user_email:
+            if not user.email:
                 continue
-            email_to = '%s, %s' % (email_to, user.user_email)
+            email_to = '%s, %s' % (email_to, user.email)
             email_to = email_to.lstrip(', ')
         
         # did not find any email address: not necessary to create an email
@@ -998,7 +998,7 @@ class mail_thread(osv.Model):
         current_user = res_users_obj.browse(cr, uid, [uid], context=context)[0]
         email_from = new_msg_values.get('email_from')
         if not email_from:
-            email_from = current_user.user_email
+            email_from = current_user.email
         
         # get email content, create it (with mail_message.create)
         email_values = self.message_create_notify_get_email_dict(cr, uid, new_msg_values, email_from, email_to, context)

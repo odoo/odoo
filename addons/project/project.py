@@ -794,7 +794,7 @@ class task(base_stage, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'id': fields.integer('ID', readonly=True),
         'color': fields.integer('Color Index'),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }
 
     _defaults = {

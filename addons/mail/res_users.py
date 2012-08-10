@@ -40,9 +40,8 @@ class res_users(osv.osv):
     
     _columns = {
         'notification_email_pref': fields.selection([
-            ('all', 'All feeds'),
-            ('comments', 'Only comments'),
-            ('to_me', 'Only when sent directly to me'),
+            ('all', 'All Feeds'),
+            ('to_me', 'Only send directly to me'),
             ('none', 'Never')
             ], 'Receive Feeds by Email', required=True,
             help="Choose in which case you want to receive an email when you "\
@@ -101,8 +100,14 @@ class res_users(osv.osv):
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
         # create a welcome message
         company_name = user.company_id.name if user.company_id else _('the company')
-        message = _('%s joined the %s network! Take a moment to welcome %s.') % (user.name, company_name, user.name)
-        self.message_append_note(cr, uid, [user_id], body=message, type='comment', context=context)
+        message = '''%s has joined %s! Welcome in OpenERP !
+
+Your homepage is a summary of messages you received and key information about documents you follow.
+
+The top menu bar contains all applications you installed. You can use this <i>Settings</i> menu to install more applications, activate others features or give access to new users.
+
+To setup your preferences (name, email signature, avatar), click on the top right corner.''' % (user.name, company_name)
+        self.message_append_note(cr, uid, [user_id], subject='Welcome to OpenERP', body=message, type='comment', content_subtype='html', context=context)
         return user_id
     
     def write(self, cr, uid, ids, vals, context=None):

@@ -228,7 +228,7 @@ class hr_applicant(base_stage, osv.Model):
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
         'emp_id': fields.many2one('hr.employee', 'employee'),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }
 
     _defaults = {

@@ -4,7 +4,7 @@ class res_users(osv.Model):
     _inherit = 'res.users'
 
     _sql_constraints = [
-        ('email_uniq', 'UNIQUE (user_email)', 'You can not have two users with the same email!')
+        ('email_uniq', 'UNIQUE (email)', 'You can not have two users with the same email!')
     ]
 
 class signup_signup(osv.TransientModel):
@@ -24,7 +24,7 @@ class signup_signup(osv.TransientModel):
         new_user = {
             'name': values['name'],
             'login': values['email'],
-            'user_email': values['email'],
+            'email': values['email'],
             'password': values['password'],
             'active': True,
         }

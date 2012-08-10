@@ -93,6 +93,9 @@ class mail_message_common(osv.TransientModel):
         return result
 
     def name_get(self, cr, uid, ids, context=None):
+        # name_get may receive int id instead of an id list
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         res = []
         for message in self.browse(cr, uid, ids, context=context):
             name = ''
@@ -208,12 +211,13 @@ class mail_message(osv.Model):
         'partner_id': fields.many2one('res.partner', 'Related partner',
             help="Deprecated field. Use partner_ids instead."),
         'partner_ids': fields.many2many('res.partner',
-            'mail_message_destination_partner_rel',
+            'mail_message_res_partner_rel',
             'message_id', 'partner_id', 'Destination partners',
             help="When sending emails through the social network composition wizard"\
                  "you may choose to send a copy of the mail to partners."),
         'user_id': fields.many2one('res.users', 'Related User', readonly=1),
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel',
+            'message_id', 'attachment_id', 'Attachments'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
         'state': fields.selection([
                         ('outgoing', 'Outgoing'),
@@ -371,7 +375,8 @@ class mail_message(osv.Model):
             }
         email_msg_id = self.create(cr, uid, msg_vals, context)
         attachment_ids = []
-        for fname, fcontent in attachments.iteritems():
+        for attachment in attachments:
+            fname, fcontent = attachment
             attachment_data = {
                     'name': fname,
                     'datas_fname': fname,
