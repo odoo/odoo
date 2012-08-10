@@ -3,9 +3,9 @@
     <data>
 
         <!-- Top menu item -->
-        <menuitem name="PoS Backend"
+        <menuitem name="Point of Sale"
             id="menu_point_root"
-            groups="group_pos_manager"
+            groups="group_pos_manager,group_pos_user"
             sequence="140"/>
 
         <record id="categ_others" model="pos.category">
@@ -32,7 +32,7 @@
                     <group col="4" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
-                        <field name="session_id" required="1" />
+                        <field name="session_id" required="1"/>
                         <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     </group>
                     <notebook colspan="4">
@@ -61,14 +61,14 @@
                             <group class="oe_subtotal_footer">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <button name="button_dummy" string="Update" icon="gtk-execute" states="draft" />
+                                <button name="button_dummy" string="Update" icon="gtk-execute" states="draft"/>
                             </group>
                         </page>
                         <page string="Payments">
                             <field name="statement_ids" colspan="4" nolabel="1">
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="journal_id"/>
-                                    <field name="statement_id" />
+                                    <field name="statement_id"/>
                                     <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines" version="7.0">
@@ -155,8 +155,8 @@
             </field>
         </record>
 
-        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="10" />
-        <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
+        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="10"/>
+        <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="2" groups="group_pos_manager,group_pos_user"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
         <record id="product_normal_action" model="ir.actions.act_window">
@@ -764,18 +764,6 @@
         </record>
 
         <!-- Top menu item -->
-        <!--
-            right now it's not possible to directly call a client action
-            from a menuitem, so we can't use this shortcut element and
-            use an explicit record element instead
-        -->
-        <record id="menu_point_root_touchscreen" model="ir.ui.menu">
-            <field name="name">Point of Sale</field>
-            <field name="action" ref="action_pos_pos"/>
-            <field name="groups_id" eval="[(6, 0, [ref('point_of_sale.group_pos_manager'), ref('point_of_sale.group_pos_user')])]"/>
-            <field name="sequence">150</field>
-        </record>
-
         <record model="ir.ui.view" id="view_pos_config_form">
             <field name="name">pos.config.form.view</field>
             <field name="model">pos.config</field>
@@ -896,80 +884,92 @@
             <field name="arch" type="xml">
                 <form string="Point of Sale Session" version="7.0">
                     <header>
-                        <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" />
-                        <button name="cashbox_control" type="workflow" string="End of Session" states="opened" />
-                        <button name="close" type="workflow" string="Validate &amp; Close" states="closing_control,opened" />
-
+                        <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" class="oe_highlight"/>
+                        <button name="cashbox_control" type="workflow" string="End of Session" states="opened"
+                            class="oe_highlight"/>
+                        <button name="close" type="workflow" string="Validate Closing &amp; Post Entries" states="closing_control"
+                            class="oe_highlight"/>
+                        <button name="open_frontend_cb" type="object" string="Start Selling" states="opened"/>
                         <div class="oe_right">
                             <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1"/>
                         </div>
                     </header>
                     <sheet>
-
-                    <group>
-                        <field name="config_id"/>
+                        <div class="oe_right oe_button_box">
+                            <button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened,closing_control"/>
+                            <button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened,closing_control"/>
+                        </div>
+                        <h1 class="oe_title">
+                            Point of Sale Session:
+                            <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
+                        </h1>
+                        <field name="config_id" invisible="1"/>
                         <field name="has_opening_control" invisible="1" />
                         <field name="has_closing_control" invisible="1" />
-            			<group>
-            				<button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened"/>
-            				<button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened"/>
-                            <button name="open_frontend_cb" type="object" string="Open Point Of Sale" states="opened" />
-            			</group>
-                        <newline/>
-                        <field name="user_id"/>
-                        <field name="name"/>
-                        <newline/>
-                        <field name="start_at" attrs="{'insivible' : [('state', '=', 'opening_control')]}"/>
-                        <field name="stop_at" attrs="{'insivible' : [('state', '=', 'opening_control')]}"/>
-                        <separator string="Cash Control" colspan="4"/>
-                            <field name="cash_register_id" invisible="1" />
-                            <field name="opening_details_ids" colspan="4" nolabel="1" attrs="{'invisible' : [('state', 'not in', ('opening_control',))]}">
-                                <tree string="Opening Cashbox Lines" editable="bottom">
-                                    <field name="pieces" readonly="1" />
-                                    <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)" />
-                                    <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
-                                </tree>
-                            </field>
+                        <group>
+                            <group>
+                                <field name="user_id"/>
+                            </group>
+                            <group>
+                                <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
+                                <field name="stop_at" attrs="{'invisible' : [('state', '&lt;&gt;', 'closed')]}"/>
+                            </group>
+                            <newline/>
 
-                            <field name="details_ids" colspan="4" nolabel="1" attrs="{'invisible': [('state', '=', 'opening_control')]}">
-                                <tree string="Cashbox Lines" editable="bottom">
-                                    <field name="pieces" readonly="1" />
-                                    <field name="number_opening" readonly="1"/>
-                                    <field name="subtotal_opening"/>
-                                    <field name="number_closing"/>
-                                    <field name="subtotal_closing"/>
-                                </tree>
-                            </field>
-
-
-                            <group col="4" colspan="4">
-                                <group col="2" colspan="2">
-                                    <separator string="Cash Balance" colspan="2"/>
-                                    <field name="cash_register_balance_start" readonly="1" string="Opening Cash Control"/>
-                                    <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
-                                    <field name="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Theorical Cash Closing"/>
-                                </group>
-                                <group col="2" colspan="2" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
-                                    <separator string="Cash Closing Balance" colspan="2"/>
-                                    <field name="cash_register_balance_end_real"/>
-                                    <field name="cash_register_difference" />
-                                </group>
+                            <group string="Opening Cash Control">
+                                <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', 'not in', ('opening_control',))]}">
+                                    <tree string="Opening Cashbox Lines" editable="bottom">
+                                        <field name="pieces" readonly="1" />
+                                        <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening)" />
+                                        <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Closing Cash Control" attrs="{'invisible': [('state', '=', 'opening_control')]}">
+                                <field name="details_ids" nolabel="1" colspan="2">
+                                    <tree string="Cashbox Lines" editable="bottom">
+                                        <field name="pieces" readonly="1" />
+                                        <field name="number_closing"/>
+                                        <field name="subtotal_closing"/>
+                                    </tree>
+                                </field>
                             </group>
 
-                            <separator string="Summary by Payment Methods" colspan="4" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
-                            <field name="statement_ids" colspan="4" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
-                                <tree string="Statements">
-                                    <field name="name" />
-                                    <field name="journal_id" />
-                                    <field name="balance_start" />
-                                    <field name="total_entry_encoding" />
-                                    <field name="balance_end_real" />
-                                    <field name="difference" />
-                                    <field name="currency" />
-                                    <field name="state" />
-                                </tree>
-                            </field>
+                            <div>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
+                                    <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
+                                    <field name="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Theorical Balance"/>
+                                </group>
+                                <div attrs="{'invisible' : [('state', '&lt;&gt;', 'opening_control')]}" class="oe_view_nocontent" groups="point_of_sale.group_pos_manager">
+                                    <p class="oe_view_nocontent_create">
+                                    You can define another list of available currencies on the
+                                    <i>Cash Registers</i> tab of the <b><field name="cash_register_id" class="oe_inline"/></b>
+                                    payment method.
+                                    </p>
+                                </div>
+                            </div>
+
+
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
+                                <field name="cash_register_balance_end_real" class="oe_subtotal_footer_separator"/>
+                                <field name="cash_register_difference"  class="oe_subtotal_footer_separator"/>
+                            </group>
                         </group>
+
+                        <separator string="Summary by Payment Methods" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
+                        <field name="statement_ids" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
+                            <tree string="Statements">
+                                <field name="name" />
+                                <field name="journal_id" />
+                                <field name="balance_start" />
+                                <field name="total_entry_encoding" />
+                                <field name="balance_end_real" />
+                                <field name="difference" />
+                                <field name="currency" />
+                                <field name="state" />
+                            </tree>
+                        </field>
 
                     </sheet>
                 </form>
@@ -987,6 +987,7 @@
                     <field name="user_id" />
                     <field name="start_at" />
                     <field name="stop_at" />
+                    <field name="state" />
                 </tree>
             </field>
         </record>
@@ -1022,17 +1023,10 @@
         </record>
 
         <menuitem
-            parent="menu_point_rep"
-            action="action_pos_session"
-            id="menu_pos_session"
-            sequence="0"
-            groups="group_pos_manager"/>
-
-        <menuitem
             parent="menu_point_of_sale"
             action="action_pos_session"
             id="menu_pos_session_all"
-            sequence="0"
+            sequence="1"
             groups="group_pos_manager"/>
 
         <record id="view_pos_order_filter" model="ir.ui.view">
@@ -1060,7 +1054,9 @@
             </field>
         </record>
 
-        <menuitem action="action_pos_session_opening" parent="menu_point_of_sale" id="menu_pos_session_opening" sequence="0" />
+        <menuitem action="action_pos_session_opening"
+            parent="menu_point_of_sale"
+            id="menu_pos_session_opening" sequence="0"/>
 
     </data>
 </openerp>

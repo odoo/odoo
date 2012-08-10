@@ -41,7 +41,7 @@
 
         <!--
             CRM CASE STAGE
-            -->
+        -->
 
         <!-- Stage Search view -->
         <record id="crm_lead_stage_search" model="ir.ui.view">
@@ -77,7 +77,7 @@
 
         <!--
             LEADS/OPPORTUNITIES CATEGORIES
-            -->
+        -->
 
         <!-- Categories Form View -->
         <record id="crm_lead_categ_action" model="ir.actions.act_window">
@@ -105,7 +105,7 @@
 
         <!--
             LEADS
-            -->
+        -->
         <act_window
                 id="act_crm_opportunity_crm_phonecall_new"
                 name="Phone calls"
@@ -343,11 +343,7 @@
                                     <div class="oe_kanban_bottom_right">
                                         <a t-if="record.priority.raw_value == 1" type="object" name="set_normal_priority" class="oe_e oe_star_on">7</a>
                                         <a t-if="record.priority.raw_value != 1" type="object" name="set_high_priority" class="oe_e oe_star_off">7</a>
-                                        <!--
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kaban_status_red</t>
-                                        <span t-attf-class="oe_kanban_status #{red}"> </span>
-                                        -->
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value and record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
                                         <t t-if="record.needaction_pending.raw_value"><span class="oe_kanban_mail_new">New</span></t>
@@ -356,14 +352,6 @@
                                 </div>
                                 <div class="oe_clear"></div>
                             </div>
-                            <!--
-                                <div class="oe_kanban_right">
-                                    <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
-                                    <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
-                                    <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
-                                    <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
-                                </div>
-                            -->
                         </t>
                     </templates>
                 </kanban>
@@ -417,7 +405,7 @@
 
         <!--
             OPPORTUNITY
-            -->
+        -->
 
         <!-- Opportunities Form View -->
         <record model="ir.ui.view" id="crm_case_form_view_oppor">
@@ -429,15 +417,11 @@
                 <form string="Opportunities" version="7.0">
                     <header>
                         <button name="case_mark_won" string="Mark Won" type="object"
-                                states="open" class="oe_highlight"/>
-                        <button name="case_mark_won" string="Mark Won" type="object"
-                                states="draft,pending"/>
+                                states="draft,open,pending" class="oe_highlight"/>
+                        <button name="case_mark_lost" string="Mark Lost" type="object"
+                                states="draft,open" class="oe_highlight"/>
                         <button name="case_escalate" string="Escalate" type="object"
                                 states="open" />
-                        <button name="case_mark_lost" string="Mark Lost" type="object"
-                                states="draft,open"/>
-                        <button name="case_cancel" string="Cancel" type="object"
-                                states="draft"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
@@ -517,6 +501,7 @@
                                 <group>
                                     <label for="contact_name" />
                                     <div>
+                                        <field name="contact_name" class="oe_inline"/>
                                         <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" options='{"no_open": true}' class="oe_inline"/>
                                     </div>
                                     <field name="function" />
