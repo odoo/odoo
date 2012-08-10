@@ -4327,11 +4327,12 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         });
     },
     on_click_element: function(ids) {
+        var self = this;
         this.selected_ids = ids || [];
         if(this.selected_ids.length > 0) {
-            this.$element.find(".oe_selectcreatepopup-search-select").removeAttr('disabled');
+            self.$buttonpane.find(".oe_selectcreatepopup-search-select").removeAttr('disabled');
         } else {
-            this.$element.find(".oe_selectcreatepopup-search-select").attr('disabled', "disabled");
+            self.$buttonpane.find(".oe_selectcreatepopup-search-select").attr('disabled', "disabled");
         }
     },
     new_object: function() {
