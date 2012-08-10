@@ -114,6 +114,15 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
             <field name="domain">[]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new order.
+              </p><p>
+                Use this menu to browse your preceeding orders. To record new
+                orders, you should better use the menu <i>Your Session</i> for
+                the touchscreen interface.
+              </p>
+            </field>
         </record>
         <record model="ir.ui.view" id="view_pos_order_tree">
             <field name="name">Sales</field>
@@ -166,6 +175,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
             <field name="context" eval="{'default_pos_categ_id': ref('point_of_sale.categ_others')}"/>
+            <field name="domain" eval="[('pos_categ_id','&lt;&gt;',False)]"/>
             <field name="view_id" ref="product.product_product_tree_view"/>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help" type="html">
@@ -691,6 +701,18 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new category.
+              </p><p>
+                Categories are used to browse your products through the
+                touchscreen interface.
+              </p><p>
+                If you put a photo on the category, the layout of the
+                touchscreen interface will automatically. We suggest not to put
+                a photo on categories for small (1024x768) screens.
+              </p>
+            </field>
         </record>
         <menuitem action="pos_category_action" id="menu_pos_category" parent="menu_point_of_sale_product" sequence="0" />
         <!-- END -->
@@ -710,7 +732,9 @@
                 Click to add a payment method.
               </p><p>
                 Payment methods are defined by accounting journals having the
-                field <i>Payment Method</i> checked.
+                field <i>PoS Payment Method</i> checked. In order to be useable
+                from the touchscreen interface, you must set the payment method
+                on the <i>Point of Sale</i> configuration.
               </p>
             </field>
         </record>
