@@ -33,10 +33,9 @@ class document_page(osv.osv):
         index = []
         for subpage in page.child_ids:
             index += ["<li>"+ self._get_page_index(cr, uid, subpage) +"</li>"]
+        r = '<a href="#id=%s">%s</a>'%(page.id,page.name)
         if index:
-            r = "<ul>" + "".join(index) + "</ul>"
-        else:
-            r = '<a href="#id=%s">%s</a>'%(page.id,page.name)
+            r += "<ul>" + "".join(index) + "</ul>"
         return r
 
     def _get_display_content(self, cr, uid, ids, name, args, context=None):

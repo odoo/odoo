@@ -60,7 +60,9 @@
                         This will be used as template content for all new page of this section.
                     </div>
                     <field name="content" placeholder="e.g. Once upon a time..." class="oe_edit_only"/>
-                    <field name="display_content" widget="html" class="oe_view_only"/>
+                    <div class="oe_document_page">
+                        <field name="display_content" widget="html" class="oe_view_only"/>
+                    </div>
                 </form>
             </field>
         </record>
