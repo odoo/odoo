@@ -150,10 +150,8 @@ CREATE TABLE res_users (
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
     password varchar(64) default null,
-    email varchar(64) default null,
-    context_tz varchar(64) default null,
-    signature text,
-    context_lang varchar(64) default '',
+    tz varchar(64) default null,
+    lang varchar(64) default '',
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
     company_id int,
@@ -385,7 +383,7 @@ CREATE TABLE ir_model_relation (
 -- Users
 ---------------------------------
 
-insert into res_users (id,login,password,name,active,company_id,context_lang) values (1,'admin','admin','Administrator',True,1,'en_US');
+insert into res_users (id,login,password,name,active,company_id,lang) values (1,'admin','admin','Administrator',True,1,'en_US');
 insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_root','base','res.users',True,1);
 
 -- Compatibility purpose, to remove V6.0
