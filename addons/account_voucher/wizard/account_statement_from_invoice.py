@@ -75,16 +75,26 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                     statement.currency.id, amount, context=ctx)
 
             context.update({'move_line_ids': [line.id]})
-            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, amount=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'), date=line_date, context=context)
-            voucher_res = { 'type':(amount < 0 and 'payment' or 'receipt'),
+            type = 'general'
+            ttype = amount < 0 and 'payment' or 'receipt'
+            sign = 1
+            if line.journal_id.type in ('sale', 'sale_refund'):
+                type = 'customer'
+                ttype = 'receipt'
+            elif line.journal_id.type in ('purchase', 'purhcase_refund'):
+                type = 'supplier'
+                ttype = 'payment'
+                sign = -1
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, amount=sign*amount, currency_id= statement.currency.id, ttype=ttype, date=line_date, context=context)
+            voucher_res = { 'type': ttype,
                             'name': line.name,
                             'partner_id': line.partner_id.id,
                             'journal_id': statement.journal_id.id,
-                            'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id), # improve me: statement.journal_id.default_credit_account_id.id
-                            'company_id':statement.company_id.id,
-                            'currency_id':statement.currency.id,
-                            'date':line.date,
-                            'amount':abs(amount),
+                            'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
+                            'company_id': statement.company_id.id,
+                            'currency_id': statement.currency.id,
+                            'date': line.date,
+                            'amount': sign*amount,
                             'period_id':statement.period_id.id}
             voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
 
@@ -97,12 +107,6 @@ class account_statement_from_invoice_lines(osv.osv_memory):
             if voucher_line_dict:
                 voucher_line_dict.update({'voucher_id': voucher_id})
                 voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
-            if line.journal_id.type == 'sale':
-                type = 'customer'
-            elif line.journal_id.type == 'purchase':
-                type = 'supplier'
-            else:
-                type = 'general'
             statement_line_obj.create(cr, uid, {
                 'name': line.name or '?',
                 'amount': amount,
