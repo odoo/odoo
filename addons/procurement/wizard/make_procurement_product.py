@@ -27,18 +27,6 @@ class make_procurement(osv.osv_memory):
     _name = 'make.procurement'
     _description = 'Make Procurements'
     
-    def onchange_product_id(self, cr, uid, ids, prod_id):
-        """ On Change of Product ID getting the value of related UoM.
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param ids: List of IDs selected 
-         @param prod_id: Changed ID of Product 
-         @return: A dictionary which gives the UoM of the changed Product 
-        """
-        product = self.pool.get('product.product').browse(cr, uid, prod_id)
-        return {'value': {'uom_id': product.uom_id.id}}
-    
     _columns = {
         'qty': fields.float('Quantity', digits=(16,2), required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=1),
@@ -113,9 +101,10 @@ class make_procurement(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
 
         res = super(make_procurement, self).default_get(cr, uid, fields, context=context)
-        product_id = self.pool.get('product.product').browse(cr, uid, record_id, context=context).id
-        if 'product_id' in fields:
-            res.update({'product_id':product_id})
+        warehouse_id = self.pool.get('stock.warehouse').search(cr, uid, [], context=context)
+        product_uom_id = self.pool.get('product.product').browse(cr, uid, record_id, context=context).uom_id.id
+        warehouse_id = warehouse_id and warehouse_id[0] or False
+        res.update({'uom_id':product_uom_id, 'warehouse_id': warehouse_id})
         return res
 
 make_procurement()

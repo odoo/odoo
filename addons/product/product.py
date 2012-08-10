@@ -602,6 +602,8 @@ class product_product(osv.osv):
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if not len(ids):
             return []
         def _name_get(d):
