@@ -2130,14 +2130,30 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 }
             }
         };
-        this.$input.focusout(anyoneLoosesFocus);
+        var $self = $(self), ignore_blur = false;
+        this.$input.bind({
+            focusout: anyoneLoosesFocus,
+            focus: function () { $self.trigger('widget-focus'); },
+            autocompleteopen: function () { ignore_blur = true; },
+            autocompleteclose: function () { ignore_blur = false; },
+            blur: function () {
+                // autocomplete open
+                if (ignore_blur) { return; }
+                var child_popup_open = _(self.widget_children).any(function (child) {
+                    return child instanceof openerp.web.form.SelectCreatePopup
+                        || child instanceof openerp.web.form.FormOpenPopup;
+                });
+                if (child_popup_open) {
+                    return;
+                }
+                $self.trigger('widget-blur');
+            },
+        });
 
-        var isSelecting = false;
         // autocomplete
         this.$input.autocomplete({
             source: function(req, resp) { self.get_search_result(req, resp); },
             select: function(event, ui) {
-                isSelecting = true;
                 var item = ui.item;
                 if (item.id) {
                     self._change_int_value([item.id, item.name]);
@@ -2159,24 +2175,13 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
             if (e.which === 13) {
-                if (isSelecting)
+                if (ignore_blur) {
                     e.stopPropagation();
+                }
             }
-            isSelecting = false;
         });
 
         this.setupFocus(this.$menu_btn);
-        this.$input.bind({
-            focus: function () {
-                $(self).trigger('widget-focus')
-            },
-            blur: function () {
-                if (!isSelecting) {
-                    $(self).trigger('widget-blur');
-                }
-                isSelecting = false;
-            }
-        })
     },
     // autocomplete component content handling
     get_search_result: function(request, response) {
