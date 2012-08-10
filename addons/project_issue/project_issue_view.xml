@@ -210,7 +210,7 @@
                     <field name="project_id"/>
                     <group expand="0" string="Group By..." >
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Contact" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Project"  icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Version" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'version_id'}"/>
                         <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
@@ -298,7 +298,7 @@
                                             <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
                                                 <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
                                             </t>
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
                                 </div>
