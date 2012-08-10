@@ -27,8 +27,19 @@ class document_page_create_menu(osv.osv_memory):
     _description = "Wizard Create Menu"
 
     _columns = {
+        'menu_name': fields.char('Menu Name', size=256, required=True),
         'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
     }
+
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        res = super(document_page_create_menu,self).default_get(cr, uid, fields, context=context)
+        page_id = context.get('active_id')
+        obj_page = self.pool.get('document.page')
+        page = obj_page.browse(cr, uid, page_id, context=context)
+        res['menu_name'] = page.name
+        return res
 
     def document_page_menu_create(self, cr, uid, ids, context=None):
         if context is None:
@@ -38,8 +49,7 @@ class document_page_create_menu(osv.osv_memory):
         obj_menu = self.pool.get('ir.ui.menu')
         obj_action = self.pool.get('ir.actions.act_window')
         page_id = context.get('active_id', False)
-        if not page_id:
-            return {}
+        page = obj_page.browse(cr, uid, page_id, context=context)
 
         datas = self.browse(cr, uid, ids, context=context)
         data = False
@@ -57,13 +67,12 @@ class document_page_create_menu(osv.osv_memory):
             'target': 'inline',
             'nodestroy': True,
         }
-        page = obj_page.browse(cr, uid, page_id, context=context)
         value['domain'] = "[('parent_id','=',%d)]" % (page.id)
         value['res_id'] = page.id
 
         action_id = obj_action.create(cr, uid, value)
         menu_id = obj_menu.create(cr, uid, {
-                        'name': page.name,
+                        'name': data.menu_name,
                         'parent_id':data.menu_parent_id.id,
                         'icon': 'STOCK_DIALOG_QUESTION',
                         'action': 'ir.actions.act_window,'+ str(action_id),

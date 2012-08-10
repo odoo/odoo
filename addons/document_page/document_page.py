@@ -36,13 +36,13 @@ class document_page(osv.osv):
         if index:
             r = "<ul>" + "".join(index) + "</ul>"
         else:
-            r = page.name
+            r = '<a href="#id=%s">%s</a>'%(page.id,page.name)
         return r
 
     def _get_display_content(self, cr, uid, ids, name, args, context=None):
         res = {}
         for page in self.browse(cr, uid, ids, context=context):
-            if page.type == "index":
+            if page.type == "category":
                content = self._get_page_index(cr, uid, page)
             else:
                content = page.content
@@ -51,9 +51,9 @@ class document_page(osv.osv):
 
     _columns = {
         'name': fields.char('Title', required=True),
-        'type':fields.selection([('content','Content'), ('index','Section')], 'Type', help="Page type"), 
+        'type':fields.selection([('content','Content'), ('category','Category')], 'Type', help="Page type"), 
 
-        'parent_id': fields.many2one('document.page', 'Section', domain=[('type','=','index')]),
+        'parent_id': fields.many2one('document.page', 'Category', domain=[('type','=','category')]),
         'child_ids': fields.one2many('document.page', 'parent_id', 'Children'),
 
         'content': fields.text("Content"),
@@ -75,7 +75,7 @@ class document_page(osv.osv):
         res = {}
         if parent_id and not content:
             parent = self.browse(cr, uid, parent_id, context=context)
-            if parent.type == "index":
+            if parent.type == "category":
                 res['value'] = {
                     'content': parent.content,
                 }

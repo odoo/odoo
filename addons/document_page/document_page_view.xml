@@ -40,18 +40,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Document Page" version="7.0">
-                    <div class="oe_right oe_button_box">
-                        <button name="%(document_page.action_wiki_create_menu)d" string="Create Menu" type="action" class="oe_edit_only"/>
-                        <button name="%(document_page.action_wiki_create_menu)d" string="History" type="action" class="oe_edit_only"/>
-                    </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name" select="1" /></h1>
+                        <h1><field name="name"/></h1>
+                        <field name="type" invisible="1"/>
                     </div>
                     <group class="oe_edit_only">
                         <group>
-                            <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Section"/>
-                            <field name="type"/>
+                            <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Category"/>
                         </group>
                         <group>
                             <field name="write_uid" groups="base.group_no_one"/>
@@ -64,7 +60,7 @@
                         This will be used as template content for all new page of this section.
                     </div>
                     <field name="content" placeholder="e.g. Once upon a time..." class="oe_edit_only"/>
-                    <field name="display_content" widget="html"/>
+                    <field name="display_content" widget="html" class="oe_view_only"/>
                 </form>
             </field>
         </record>
@@ -87,16 +83,29 @@
             </field>
         </record>
         <!-- page action -->
+        <record id="action_category" model="ir.actions.act_window">
+            <field name="name">Category</field>
+            <field name="res_model">document.page</field>
+            <field name="domain">[('type','=','category')]</field>
+            <field name="context">{'default_type': 'category'}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wiki_tree"/>
+            <field name="search_view_id" ref="view_wiki_filter"/>
+        </record>
+        <menuitem id="menu_category" parent="menu_wiki" name="Categories" action="action_category" sequence="10"/>
         <record id="action_page" model="ir.actions.act_window">
             <field name="name">Pages</field>
             <field name="res_model">document.page</field>
+            <field name="domain">[('type','=','content')]</field>
+            <field name="context">{'default_type': 'content'}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
             <field name="search_view_id" ref="view_wiki_filter"/>
             <field name="help">Create web pages</field>
         </record>
-        <menuitem parent="menu_wiki" id="menu_page" name="Pages" action="action_page"/>
+        <menuitem id="menu_page" parent="menu_wiki" name="Pages" action="action_page" sequence="20"/>
 
         <!-- History Tree view -->
         <record model="ir.ui.view" id="view_wiki_history_tree">
@@ -134,12 +143,21 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem parent="menu_wiki" id="menu_page_history" name="Pages history" action="action_history" groups="base.group_no_one"/>
-        <act_window 
-            id="act_wiki_wiki_history"
+        <menuitem id="menu_page_history" parent="menu_wiki" name="Pages history" action="action_history" sequence="30" groups="base.group_no_one"/>
+        <act_window
+            id="action_related_page_history"
             context="{'search_default_page_id': [active_id], 'default_page_id': active_id}"
+            domain="[('page_id','=',active_id)]"
             name="Page History"
             res_model="document.page.history"
+            src_model="document.page"/>
+        <act_window 
+            id="action_related_page_create_menu"
+            name="Create Menu"
+            res_model="document.page.create.menu"
+            target="new"
+            view_type="form"
+            view_mode="form"
             src_model="document.page"/>
 
     </data>
