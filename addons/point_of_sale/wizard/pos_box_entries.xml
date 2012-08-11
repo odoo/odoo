@@ -8,22 +8,24 @@
             <field name="model">pos.box.entries</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Put Money">
-                    <separator string="Fill in this form if you put money in the cash register:" colspan="4"/>
-                    <field name="journal_id"/>
-                    <field name="product_id"/>
-                    <field name="amount"/>
-                    <field name="session_id"/>
-                    <field name="name"/>
-                    <field name="user_id" invisible="1"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="4">
-                        <group col="2" colspan="2"/>
-                         <button icon="gtk-stop" special="cancel"
-                            string="Cancel"/>
-                        <button name="get_in" string="Put Money"
-                            colspan="1" type="object" icon="gtk-apply"/>
+                <form string="Put Money" version="7.0">
+                    <separator string="Fill in this form if you put money in the cash register:"/>
+                    <group col="4">
+                        <field name="journal_id"/>
+                        <field name="product_id"/>
+                        <field name="amount"/>
+                        <field name="session_id"/>
+                        <field name="name"/>
+                        <field name="user_id" invisible="1"/>
                     </group>
+                    <footer>
+                        <button name="get_in" string="Put Money" class="oe_highlight"
+                            type="object"/>
+                        or
+                        <button class="oe_link" special="cancel"
+                            string="Cancel"/>
+
+                    </footer>
                 </form>
             </field>
         </record>

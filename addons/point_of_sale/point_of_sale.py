@@ -156,6 +156,15 @@ class pos_session(osv.osv):
         ('closed', 'Closed & Posted'),
     ]
 
+    def _compute_cash_journal_id(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for record in self.browse(cr, uid, ids, context=context):
+            for st in record.statement_ids:
+                if st.journal_id.type == 'cash':
+                    result[record.id] = st.journal_id.id
+                    break
+        return result
+
     def _compute_cash_register_id(self, cr, uid, ids, fieldnames, args, context=None):
         result = dict.fromkeys(ids, False)
         for record in self.browse(cr, uid, ids, context=context):
@@ -211,6 +220,9 @@ class pos_session(osv.osv):
                 required=True, readonly=True,
                 select=1),
 
+        'cash_journal_id' : fields.function(_compute_cash_journal_id, method=True, 
+                type='many2one', relation='account.journal',
+                string='Cash Journal', store=True),
         'cash_register_id' : fields.function(_compute_cash_register_id, method=True, 
                 type='many2one', relation='account.bank.statement',
                 string='Cash Register', store=True),
