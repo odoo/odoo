@@ -291,6 +291,7 @@ instance.web.Loading = instance.web.Widget.extend({
 });
 
 instance.web.DatabaseManager = instance.web.Widget.extend({
+    template: "DatabaseManager",
     init: function(parent) {
         this._super(parent);
         this.unblockUIFunction = instance.web.unblockUI;
@@ -300,6 +301,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
+        $('.oe_secondary_menus_container,.oe_user_menu_placeholder').empty();
         var fetch_db = this.rpc("/web/database/get_list", {}).pipe(
             function(result) {
                 self.db_list = result.db_list;
@@ -315,12 +317,21 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     },
     do_render: function() {
         var self = this;
-        self.$element.html(QWeb.render("DatabaseManager", { widget : self }));
-        self.$element.find(".oe_database_manager_menu").tabs({
-            show: function(event, ui) {
-                $('*[autofocus]:first', ui.panel).focus();
-            }
+        $('.oe_topbar,.oe_leftbar').show();
+        $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
+        $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
+        $('ul.oe_secondary_submenu > li:first').addClass('oe_active')
+        $('ul.oe_secondary_submenu > li').bind('click', function (event) {
+            var menuitem = $(this);
+            menuitem.addClass('oe_active').siblings().removeClass('oe_active');
+            var form_id =menuitem.find('a').attr('href');
+            $(form_id).show().siblings().hide();
+            event.preventDefault();
         });
+        $('#back-to-login').click(self.do_exit);
+        self.$element.find("td").addClass("oe_form_group_cell");
+        self.$element.find("tr td:first-child").addClass("oe_form_group_cell_label");
+        self.$element.find("label").addClass("oe_form_label");
         self.$element.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
         self.$element.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
         self.$element.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
@@ -336,7 +347,6 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
             },
             submitHandler: self.do_change_password
         });
-        self.$element.find("#back_to_login").click(self.do_exit);
     },
     destroy: function () {
         this.$element.find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login').unbind('click').end().empty();
@@ -407,7 +417,6 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
             };
             self.do_action(client_action);
         });
-
     },
     do_drop: function(form) {
         var self = this;
@@ -486,11 +495,14 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.display_error(result);
                 return;
             }
+            self.unblockUI();
             self.do_notify("Changed Password", "Password has been changed successfully");
         });
     },
     do_exit: function () {
-        this.do_action("login");
+        this.$element.remove();
+        $('.oe_topbar,.oe_leftbar').hide();
+        this.do_action('login');
     }
 });
 instance.web.client_actions.add("database_manager", "instance.web.DatabaseManager");
