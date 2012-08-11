@@ -222,7 +222,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
-        var inline = action.target === 'inline';
+        var inline = action.target === 'inline' || action.target === 'inlineview';
         action.flags = _.extend({
             views_switcher : !popup && !inline,
             search_view : !popup && !inline,
@@ -241,8 +241,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog_stop();
         this.clear_breadcrumbs();
     },
-
-    do_ir_actions_common: function(action, on_close) {
+    ir_actions_common: function(action, on_close) {
         var self = this, klass, widget, post_process;
         if (action.type === 'ir.actions.client') {
             var ClientWidget = instance.web.client_actions.get_object(action.tag);
@@ -286,16 +285,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_widget.appendTo(this.$element);
         }
     },
-
     ir_actions_act_window: function (action, on_close) {
         var self = this;
-        if (_(['base.module.upgrade', 'base.setup.installer'])
-                .contains(action.res_model)) {
-            var old_close = on_close;
-            on_close = function () {
-                instance.webclient.do_reload().then(old_close);
-            };
-        }
         if (action.target !== 'new') {
             if(action.menu_id) {
                 this.dialog_stop();
@@ -304,10 +295,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 });
             }
         }
-        return this.do_ir_actions_common(action, on_close);
+        return this.ir_actions_common(action, on_close);
     },
     ir_actions_client: function (action, on_close) {
-        return this.do_ir_actions_common(action, on_close);
+        return this.ir_actions_common(action, on_close);
     },
     ir_actions_act_window_close: function (action, on_closed) {
         if (!this.dialog && on_closed) {
@@ -350,9 +341,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_act_url: function (action) {
         window.open(action.url, action.target === 'self' ? '_self' : '_blank');
     },
-    ir_ui_menu: function (action) {
-        this.getParent().do_action(action);
-    }
 });
 
 instance.web.ViewManager =  instance.web.Widget.extend({
@@ -475,17 +463,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         // Lazy loading of views
         var self = this;
         var view = this.views[view_type];
-        var controllerclass = this.registry.get_object(view_type);
+        var viewclass = this.registry.get_object(view_type);
         var options = _.clone(view.options);
-        if (view_type === "form" && this.action) {
-            switch (this.action.target) {
-                case 'new':
-                case 'inline':
-                    options.initial_mode = 'edit';
-                    break;
-            }
+        if (view_type === "form" && this.action && (this.action.target == 'new' || this.action.target == 'inline')) {
+            options.initial_mode = 'edit';
         }
-        var controller = new controllerclass(this, this.dataset, view.view_id, options);
+        var controller = new viewclass(this, this.dataset, view.view_id, options);
 
         controller.on('history_back', this, function() {
             var am = self.getParent();
@@ -1179,7 +1162,6 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
 });
 
 instance.web.View = instance.web.Widget.extend({
-    template: "EmptyComponent",
     // name displayed in view switchers
     display_name: '',
     /**
