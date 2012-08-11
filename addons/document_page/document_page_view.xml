@@ -40,11 +40,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Document Page" version="7.0">
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
-                        <field name="type" invisible="1"/>
-                    </div>
+                    <field name="type" invisible="1"/>
+                    <h1><field name="name" placeholder="Name"/></h1>
                     <group class="oe_edit_only">
                         <group>
                             <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Category"/>
@@ -57,11 +54,11 @@
                     </group>
                     <div class="oe_edit_only" attrs="{'invisible':[('type','=','content')]}">
                         <label for="content" string="Template"/>
-                        This will be used as template content for all new page of this section.
+                        that will be used as a content template for all new page of this category.
                     </div>
                     <field name="content" placeholder="e.g. Once upon a time..." class="oe_edit_only"/>
                     <div class="oe_document_page">
-                        <field name="display_content" widget="html" class="oe_view_only"/>
+                        <field name="display_content" widget="text_wiki" class="oe_view_only"/>
                     </div>
                 </form>
             </field>

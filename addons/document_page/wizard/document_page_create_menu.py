@@ -64,7 +64,7 @@ class document_page_create_menu(osv.osv_memory):
             'res_model': 'document.page',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'target': 'inline',
+            'target': 'inlineview',
             'nodestroy': True,
         }
         value['domain'] = "[('parent_id','=',%d)]" % (page.id)
@@ -78,6 +78,10 @@ class document_page_create_menu(osv.osv_memory):
                         'action': 'ir.actions.act_window,'+ str(action_id),
                         }, context)
         obj_page.write(cr, uid, [page_id], {'menu_id':menu_id})
-        return {'type': 'ir.actions.act_window_close'}
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

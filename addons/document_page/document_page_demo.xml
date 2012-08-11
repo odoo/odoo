@@ -4,11 +4,27 @@
         <record id="base.user_demo" model="res.users">
             <field eval="[(4, ref('base.group_sale_salesman')),(4, ref('base.group_document_user'))]" name="groups_id"/>
         </record>
+        <record id="demo_category1" model="document.page">
+            <field name="name">OpenERP Features</field>
+            <field name="sequence">10</field>
+            <field name="type">category</field>
+            <field  name="content">
+Summary of the feature
+
+Long explanation
+
+Conclusion
+
+Additional ressources
+
+</field>
+        </record>
+
         <record id="document_google_docs" model="document.page">
             <field name="name">OpenERP 6.1. Functional Demo</field>
-            <field name="index">6</field>
-            <field  name="content">==OpenERP 6.1. Functional Demo==
-            	
+            <field name="parent_id" ref="demo_category1"/>
+            <field name="content">
+
 The news is out, OpenERP's latest version 6.1. is here.
 It's more user-friendly, even more business oriented and efficient to manage your company
 
@@ -25,12 +41,12 @@ We have also put together a functional demo that presents 6.1. Watch this video 
 [[Video:http://www.youtube.com/embed/7jES2jxKMso ]]
 
 </field>
-</record>
+        </record>
 
         <record id="document_dashboards" model="document.page">
             <field name="name">Personalise Dashboards</field>
-            <field name="index">7</field>
-            <field  name="content">==Personalise your OpenERP dashboards==
+            <field name="parent_id" ref="demo_category1"/>
+            <field name="content">
 You like OpenERP, but feel like you want to personalise it more? Now, OpenERP goes a step further and lets you customize your dashboard.
 How? you will ask. Thanks to a new feature that allows you to customize your dashboard by adding new boards of any search view.
 
@@ -57,12 +73,12 @@ In less than a minute, the search view is visible on the dashboard
 
 Of course, you are free to delete what you don't need or like, but just in case you change your mind there is a reset button to return to the default view.
 </field>
-</record>
+        </record>
 
         <record id="document_pos" model="document.page">
             <field name="name">Touchscreen Point of Sale</field>
-            <field name="content">==The new OpenERP touchscreen Point of Sale==
-
+            <field name="parent_id" ref="demo_category1"/>
+            <field name="content">
 The brand new OpenERP touchscreen point of sale available with 6.1 allows you to manage your shop sales very easily.
 It's fully web based so that you don't have to install or deploy any software and all the sales shops can be easily consolidated.
 It works in connected and disconnected modes so that you can continue to sell if you lose your internet connection.
@@ -90,8 +106,8 @@ You have different options to select your products. You can do it through the ba
 If you need to use the POS for your restaurant, for example, your employees can record at the same time multiple tickets without having to wait to do one transaction at a time. Along, to facilitate payment, the application allows multiple payment methods.
 
 The POS application is so simple and accessible to use that your shop or restaurant will never need any other tool to manage orders. Due to its smart and user-friendly interface you don't need any training to learn how to use it. Think of it as an out-of-the-box solution to boost your business' productivity.
-	</field>
-</record>
-        
+</field>
+        </record>
+
     </data>
 </openerp>
