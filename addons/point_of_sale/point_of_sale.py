@@ -471,26 +471,33 @@ class pos_order(osv.osv):
         order_ids = []
         for tmp_order in orders:
             order = tmp_order['data']
-            # order :: {'name': 'Order 1329148448062', 'amount_paid': 9.42, 'lines': [[0, 0, {'discount': 0, 'price_unit': 1.46, 'product_id': 124, 'qty': 5}], [0, 0, {'discount': 0, 'price_unit': 0.53, 'product_id': 62, 'qty': 4}]], 'statement_ids': [[0, 0, {'journal_id': 7, 'amount': 9.42, 'name': '2012-02-13 15:54:12', 'account_id': 12, 'statement_id': 21}]], 'amount_tax': 0, 'amount_return': 0, 'amount_total': 9.42}
-            # get statements out of order because they will be generated with add_payment to ensure
-            # the module behavior is the same when using the front-end or the back-end
-            statement_ids = order.get('statement_ids', [])
-            order_id = self.create(cr, uid, order, context)
-            order_ids.append(order_id)
-            # call add_payment; refer to wizard/pos_payment for data structure
-            # add_payment launches the 'paid' signal to advance the workflow to the 'paid' state
+            order_id = self.create(cr, uid, {
+                'name': order['name'],
+                'user_id': order['user_id'] or False,
+                'session_id': order['pos_session_id'],
+                'lines': order['lines']
+            }, context)
 
-            data = {
-                'journal': statement_ids[0][2]['journal_id'],
-                'amount': order['amount_paid'],
-                'payment_name': order['name'],
-                'payment_date': statement_ids[0][2]['name'],
-            }
+            for payments in order['statement_ids']:
+                payment = payments[2]
+                self.add_payment(cr, uid, order_id, {
+                    'amount': payment['amount'] or 0.0,
+                    'payment_date': payment['name'],
+                    'payment_name': payment.get('note', False),
+                    'journal': payment['journal_id']
+                }, context=context)
+
+            if order['amount_return']:
+                session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+                self.add_payment(cr, uid, order_id, {
+                    'amount': -order['amount_return'],
+                    'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                    'payment_name': _('return'),
+                    'journal': session.cash_journal_id.id
+                }, context=context)
+            order_ids.append(order_id)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
-            wf_service.trg_write(uid, 'pos.order', order_id, cr)
-
-            #self.add_payment(cr, uid, order_id, data, context=context)
         return order_ids
 
     def unlink(self, cr, uid, ids, context=None):
