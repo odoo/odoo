@@ -12,10 +12,13 @@
             <field name="type">automatic</field>
             <field name="sequence">100</field>
         </record>
-    </data>
-    <data>
         <record model="pos.config" id="pos_config_main">
             <field name="name">Main</field>
+        </record>
+    </data>
+    <data>
+        <record id="sale.todo_open_sale_menu" model="ir.actions.todo">
+            <field name="state">done</field>
         </record>
     </data>
 
