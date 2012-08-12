@@ -6,15 +6,12 @@
  'category': 'Authentication',
  'website': 'http://www.openerp.com',
  'installable': True,
- 'depends': ['auth_anonymous', 'base_setup'],
+ 'depends': ['base_setup'],
  'data': [
      'res_config.xml',
  ],
  'js': [
      'static/src/js/auth_signup.js',
- ],
- 'css': [
-     'static/src/css/auth_signup.css',
  ],
  'qweb': [
      'static/src/xml/auth_signup.xml',
