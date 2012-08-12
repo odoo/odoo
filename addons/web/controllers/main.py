@@ -34,7 +34,6 @@ openerpweb = common.http
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
-
 def concat_xml(file_list):
     """Concatenate xml files
 
@@ -63,7 +62,6 @@ def concat_xml(file_list):
             root.append(child)
     return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
 
-
 def concat_files(file_list, reader=None, intersperse=""):
     """ Concatenates contents of all provided files
 
@@ -90,27 +88,6 @@ def concat_files(file_list, reader=None, intersperse=""):
 
     files_concat = intersperse.join(files_content)
     return files_concat, checksum.hexdigest()
-
-html_template = """<!DOCTYPE html>
-<html style="height: 100%%">
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>OpenERP</title>
-        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/web/static/src/css/full.css" />
-        %(css)s
-        %(js)s
-        <script type="text/javascript">
-            $(function() {
-                var s = new openerp.init(%(modules)s);
-                %(init)s
-            });
-        </script>
-    </head>
-    <body></body>
-</html>
-"""
 
 def sass2scss(src):
     # Validated by diff -u of sass2scss against:
@@ -236,6 +213,27 @@ def make_conditional(req, response, last_modified=None, etag=None):
     if etag:
         response.set_etag(etag)
     return response.make_conditional(req.httprequest)
+
+html_template = """<!DOCTYPE html>
+<html style="height: 100%%">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>OpenERP</title>
+        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+        <link rel="stylesheet" href="/web/static/src/css/full.css" />
+        %(css)s
+        %(js)s
+        <script type="text/javascript">
+            $(function() {
+                var s = new openerp.init(%(modules)s);
+                %(init)s
+            });
+        </script>
+    </head>
+    <body></body>
+</html>
+"""
 
 class Home(openerpweb.Controller):
     _cp_path = '/'

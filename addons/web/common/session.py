@@ -68,7 +68,7 @@ class OpenERPSession(object):
         self._login = login
         self._password = password
 
-    def authenticate(self, db, login, password, env):
+    def authenticate(self, db, login, password, env=None):
         # TODO use the openerplib API once it exposes authenticate()
         uid = self.proxy('common').authenticate(db, login, password, env)
         self.bind(db, uid, login, password)
