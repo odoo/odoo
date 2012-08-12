@@ -142,7 +142,9 @@ def module_installed(req):
     # Candidates module the current heuristic is the /static dir
     loadable = openerpweb.addons_manifest.keys()
     modules = {}
+
     # Retrieve database installed modules
+    # TODO The following code should move to ir.module.module.list_installed_modules()
     Modules = req.session.model('ir.module.module')
     domain = [('state','=','installed'), ('name','in', loadable)]
     for module in Modules.search_read(domain, ['name', 'dependencies_id']):
@@ -156,11 +158,44 @@ def module_installed(req):
     sorted_modules = module_topological_sort(modules)
     return sorted_modules
 
+def module_installed_bypass_session(dbname):
+    loadable = openerpweb.addons_manifest.keys()
+    modules = {}
+    try:
+        import openerp.modules.registry
+        registry = openerp.modules.registry.RegistryManager.get(dbname)
+        cr = registry.db.cursor()
+        try:
+            m = registry.get('ir.module.module')
+            # TODO The following code should move to ir.module.module.list_installed_modules()
+            domain = [('state','=','installed'), ('name','in', loadable)]
+            ids = m.search(cr, 1, [('state','=','installed'), ('name','in', loadable)])
+            for module in m.read(cr, 1, ids, ['name', 'dependencies_id']):
+                modules[module['name']] = []
+                deps = module.get('dependencies_id')
+                if deps:
+                    deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
+                    dependencies = [i['name'] for i in deps_read]
+                    modules[module['name']] = dependencies
+        finally:
+            cr.close()
+    except Exception,e:
+        pass
+    sorted_modules = module_topological_sort(modules)
+    return sorted_modules
+
 def module_boot(req):
-    addons = []
+    dbs = db_list(req)
+    serverside = []
+    dbside = []
     for i in req.config.server_wide_modules:
         if i in openerpweb.addons_manifest:
-            addons.append(i)
+            serverside.append(i)
+    if len(dbs) == 1:
+        # if only one db load every module at boot
+        dbside = module_installed_bypass_session(dbs[0])
+        dbside = [i for i in dbside if i not in serverside]
+    addons = serverside + dbside
     return addons
 
 def concat_xml(file_list):
