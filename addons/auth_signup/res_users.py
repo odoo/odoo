@@ -5,6 +5,9 @@ class res_users(osv.Model):
     _inherit = 'res.users'
 
     def auth_signup_create(self, cr, uid, new_user, context=None):
+        # add login, email, name passowrd
+        # if options groups
+        # add groups
         user_template_id = self.pool.get('ir.config_parameter').get_param(cr, uid, 'auth.signup_template_user_id', 0)
         if user_template_id:
             self.pool.get('res.users').copy(cr, 1, user_template_id, new_user, context=context)
