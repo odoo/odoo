@@ -291,7 +291,6 @@ instance.web.Loading = instance.web.Widget.extend({
 });
 
 instance.web.DatabaseManager = instance.web.Widget.extend({
-    template: "DatabaseManager",
     init: function(parent) {
         this._super(parent);
         this.unblockUIFunction = instance.web.unblockUI;
@@ -318,6 +317,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     do_render: function() {
         var self = this;
         $('.oe_topbar,.oe_leftbar').show();
+        self.$element.html(QWeb.render("DatabaseManager", { widget : self }));
         $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
         $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
         $('ul.oe_secondary_submenu > li:first').addClass('oe_active')
