@@ -172,8 +172,8 @@ class OpenIDController(openerpweb.Controller):
 
         if info.status == consumer.SUCCESS:
             dbname = session['dbname']
-            with utils.cursor(dbname) as cr:
-                registry = RegistryManager.get(dbname)
+            registry = RegistryManager.get(dbname)
+            with registry.cursor() as cr:
                 Modules = registry.get('ir.module.module')
 
                 installed = Modules.search_count(cr, 1, ['&', ('name', '=', 'auth_openid'), ('state', '=', 'installed')]) == 1

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.modules.registry import RegistryManager
 from openerp.osv import osv, fields
 import openerp.exceptions
 import tools
@@ -64,7 +65,7 @@ class res_users(osv.osv):
         if result:
             return result
         else:
-            with utils.cursor(db) as cr:
+            with RegistryManager.get(db).cursor() as cr:
                 cr.execute("""UPDATE res_users
                                 SET date=now() AT TIME ZONE 'UTC'
                                 WHERE login=%s AND openid_key=%s AND active=%s RETURNING id""",
@@ -73,14 +74,13 @@ class res_users(osv.osv):
                 cr.commit()
                 return res[0] if res else False
 
-
     def check(self, db, uid, passwd):
         try:
             return super(res_users, self).check(db, uid, passwd)
         except openerp.exceptions.AccessDenied:
             if not passwd:
                 raise
-            with utils.cursor(db) as cr:
+            with RegistryManager.get(db).cursor() as cr:
                 cr.execute('''SELECT COUNT(1)
                                 FROM res_users
                                WHERE id=%s
