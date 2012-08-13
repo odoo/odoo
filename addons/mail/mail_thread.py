@@ -965,7 +965,8 @@ class mail_thread(osv.Model):
                              uid instead
         """
         to_subscribe_uids = [uid] if user_ids is None else user_ids
-        return self.write(cr, uid, ids, {'message_subscriber_ids': [(4, id) for id in to_subscribe_uids]}, context=context)
+        write_res = self.write(cr, uid, ids, {'message_subscriber_ids': [(4, id) for id in to_subscribe_uids]}, context=context)
+        return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_subscriber_ids]
 
     def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
         """ Unsubscribe the user (or user_ids) from the current document.
@@ -974,7 +975,8 @@ class mail_thread(osv.Model):
                              uid instead
         """
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
-        return self.write(cr, uid, ids, {'message_subscriber_ids': [(3, id) for id in to_unsubscribe_uids]}, context=context)
+        write_res = self.write(cr, uid, ids, {'message_subscriber_ids': [(3, id) for id in to_unsubscribe_uids]}, context=context)
+        return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_subscriber_ids]
 
     #------------------------------------------------------
     # Notification API
