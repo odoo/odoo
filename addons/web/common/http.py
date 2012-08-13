@@ -330,12 +330,29 @@ def httprequest(f):
     return http_handler
 
 #----------------------------------------------------------
+# OpenERP Web Controller registration with a metaclass
+#----------------------------------------------------------
+addons_module = {}
+addons_manifest = {}
+controllers_class = []
+controllers_object = {}
+controllers_path = {}
+
+class ControllerType(type):
+    def __init__(cls, name, bases, attrs):
+        super(ControllerType, cls).__init__(name, bases, attrs)
+        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
+
+class Controller(object):
+    __metaclass__ = ControllerType
+
+#----------------------------------------------------------
 # OpenERP Web Session context manager
 #----------------------------------------------------------
 STORES = {}
 
 @contextlib.contextmanager
-def session_context(request, storage_path, session_cookie='sessionid'):
+def session_context(request, storage_path, session_cookie='httpsessionid'):
     session_store, session_lock = STORES.get(storage_path, (None, None))
     if not session_store:
         session_store = werkzeug.contrib.sessions.FilesystemSessionStore( storage_path)
@@ -401,26 +418,8 @@ def session_context(request, storage_path, session_cookie='sessionid'):
             session_store.save(request.session)
 
 #----------------------------------------------------------
-# OpenERP Web Controller registration with a metaclass
-#----------------------------------------------------------
-addons_module = {}
-addons_manifest = {}
-controllers_class = []
-controllers_object = {}
-controllers_path = {}
-
-class ControllerType(type):
-    def __init__(cls, name, bases, attrs):
-        super(ControllerType, cls).__init__(name, bases, attrs)
-        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
-
-class Controller(object):
-    __metaclass__ = ControllerType
-
-#----------------------------------------------------------
 # OpenERP Web WSGI Application
 #----------------------------------------------------------
-
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
@@ -578,7 +577,6 @@ class Root(object):
 #----------------------------------------------------------
 # OpenERP Web Client lib
 #----------------------------------------------------------
-
 class LibException(Exception):
     """ Base of all client lib exceptions """
     def __init__(self,code=None,message=None):
