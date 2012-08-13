@@ -164,8 +164,7 @@ def module_installed_bypass_session(dbname):
     try:
         import openerp.modules.registry
         registry = openerp.modules.registry.RegistryManager.get(dbname)
-        cr = registry.db.cursor()
-        try:
+        with registry.cursor() as cr:
             m = registry.get('ir.module.module')
             # TODO The following code should move to ir.module.module.list_installed_modules()
             domain = [('state','=','installed'), ('name','in', loadable)]
@@ -177,8 +176,6 @@ def module_installed_bypass_session(dbname):
                     deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
                     dependencies = [i['name'] for i in deps_read]
                     modules[module['name']] = dependencies
-        finally:
-            cr.close()
     except Exception,e:
         pass
     sorted_modules = module_topological_sort(modules)
