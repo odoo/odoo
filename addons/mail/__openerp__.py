@@ -59,7 +59,7 @@ The main features of the module are:
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'base_tools'],
+    'depends': ['base', 'base_tools', 'base_setup'],
     'data': [
         'wizard/mail_compose_message_view.xml',
         'res_config_view.xml',

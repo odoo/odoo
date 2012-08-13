@@ -53,6 +53,8 @@ class sale_config_settings(osv.osv_memory):
     _name = 'sale.config.settings'
     _inherit = 'res.config.settings'
     _columns = {
+        'module_web_linkedin': fields.boolean('get contacts automatically from LinkedIn',
+            help="""When you create a new contact (person or company), you will be able to load all the data from LinkedIn (photos, address, etc)."""),
         'module_crm': fields.boolean('CRM'),
         'module_plugin_thunderbird': fields.boolean('enable Thunderbird plugin',
             help="""The plugin allows you archive email and its attachments to the selected

@@ -875,7 +875,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         close: function() {
             this.pos.barcode_reader.disconnect();
-            return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
+            return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                     var action = result.result;

@@ -103,7 +103,7 @@ class Expression(unohelper.Base, XJobExecutor ):
                     tableText.insertTextContent(cursor,oInputList,False)
                 self.win.endExecute()
             else:
-                ErrorDialog("Please Fill appropriate data in Name field or \nExpression field")
+                ErrorDialog("Please fill appropriate data in Name field or in Expression field.")
 
     def btnCancel_clicked( self, oActionEvent ):
         self.win.endExecute()
