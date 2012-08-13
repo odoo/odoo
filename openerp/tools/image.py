@@ -21,6 +21,7 @@
 
 import io
 from PIL import Image
+from PIL import ImageFilter
 import StringIO
 
 # ----------------------------------------
@@ -63,6 +64,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         return base64_source
     # create a thumbnail: will resize and keep ratios
     image.thumbnail(size, Image.ANTIALIAS)
+    image = image.filter(ImageFilter.SHARPEN)
     # create a transparent image for background
     background = Image.new('RGBA', size, (255, 255, 255, 0))
     # past the resized image on the background
