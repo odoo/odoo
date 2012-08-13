@@ -2,18 +2,18 @@
   I create a draft Sale Order
 -
   !record {model: sale.order, id: sale_order_edi_1}:
-    partner_id: base.res_partner_agrolait
-    partner_invoice_id: base.res_partner_address_8invoice
-    partner_shipping_id: base.res_partner_address_8invoice
+    partner_id: base.res_partner_2
+    partner_invoice_id: base.res_partner_address_3
+    partner_shipping_id: base.res_partner_address_3
     pricelist_id: 1
     order_line:
-      - product_id: product.product_product_pc1
+      - product_id: product.product_product_3
         product_uom_qty: 1.0
         product_uom: 1
         price_unit: 150.0
         name: 'Basic pc'
     order_line:
-      - product_id: product.product_product_pc3
+      - product_id: product.product_product_5
         product_uom_qty: 10.0
         product_uom: 1
         price_unit: 200.0
@@ -75,7 +75,7 @@
                 "name": "Basic PC",
                 "date_planned": "2011-09-30",
                 "price_unit": 150.0,
-                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_pc1", "[PC1] Basic PC"],
+                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_3", "[PC1] Basic PC"],
                 "product_qty": 1.0,
                 "product_uom": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_uom_unit", "Unit"],
         },
@@ -88,7 +88,7 @@
                 "name": "Medium PC",
                 "date_planned": "2011-09-15",
                 "price_unit": 100.0,
-                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_pc3", "[PC3] Medium PC"],
+                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_5", "[PC3] Medium PC"],
                 "product_qty": 2.0,
                 "product_uom": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_uom_unit", "Unit"],
         }],
