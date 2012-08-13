@@ -1042,14 +1042,11 @@
 <t t-name="FieldStatus.content">
     <t t-set="size" t-value="widget.to_show.length"/>
     <t t-foreach="_.range(size)" t-as="i">
-        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : 'oe_form_steps_inactive'">
-            <div class="oe_form_steps_button" t-att-data-id="widget.to_show[i][0]">
+        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_active' : ''">
+            <span class="label">
                 <t t-esc="widget.to_show[i][1]"/>
-                <span class="oe_form_steps_arrow">
-                    <span></span>
-                </span>
-                <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
-            </div>            
+            </span>
+            <span class="arrow"><span></span></span>
         </li>
     </t>
 </t>
