@@ -189,7 +189,7 @@ class mail_thread(osv.Model):
         notif_user_ids += self.message_parse_users(cr, uid, body, context=context)
         
         # add users requested to perform an action (need_action mechanism)
-        if self._columns.get('user_id'):
+        if hasattr(self, get_needaction_user_ids) and self._columns.get('user_id'):
             user_ids_dict = self.get_needaction_user_ids(cr, uid, thread_ids, context=context)
             for id, user_ids in user_ids_dict.iteritems():
                 notif_user_ids += user_ids
