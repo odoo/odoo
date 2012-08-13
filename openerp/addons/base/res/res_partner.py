@@ -318,7 +318,8 @@ class res_partner(osv.osv):
 
     def update_address(self, cr, uid, ids, vals, context=None):
         addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if vals.get(key))
-        return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
+        if addr_vals:
+            return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
 
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
