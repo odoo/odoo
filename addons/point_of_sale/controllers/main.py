@@ -1,13 +1,43 @@
 # -*- coding: utf-8 -*-
 import logging
+import simplejson
 
 try:
     import openerp.addons.web.common.http as openerpweb
+    from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 except ImportError:
     import web.common.http as openerpweb
 
 class PointOfSaleController(openerpweb.Controller):
     _cp_path = '/pos'
+
+    @openerpweb.httprequest
+    def app(self, req, s_action=None, **kw):
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, None, 'js'))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, None, 'css'))
+
+        cookie = req.httprequest.cookies.get("instance0|session_id")
+        session_id = cookie.replace("%22","")
+        template = html_template.replace('<html','<html manifest="/pos/manifest?session_id=%s"'%session_id)
+        r = template % {
+            'js': js,
+            'css': css,
+            'modules': simplejson.dumps(module_boot(req)),
+            'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
+        }
+        return r
+
+    @openerpweb.httprequest
+    def manifest(self, req, **kwargs):
+        ml = ["CACHE MANIFEST"]
+        Products = req.session.model('product.product')
+        for p in Products.search_read([('pos_categ_id','!=',False)], ['name', 'dependencies_id']):
+            session_id = req.session_id
+            product_id = p['id']
+            url = "/web/binary/image?session_id=%s&model=product.product&field=image&id=%s" % (session_id, product_id)
+            ml.append(url)
+        m = "\n".join(ml)
+        return m
 
     @openerpweb.jsonrequest
     def dispatch(self, request, iface, **kwargs):
@@ -108,4 +138,5 @@ class PointOfSaleController(openerpweb.Controller):
     def print_receipt(self, request, receipt):
         print 'print_receipt' + str(receipt)
         return
+
 
