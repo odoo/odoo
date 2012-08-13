@@ -927,7 +927,7 @@ class mail_thread(osv.Model):
 
     def message_get_subscribers(self, cr, uid, ids, context=None):
         """ Returns the current document followers. Basically this method
-            checks in mail.subscription for entries with matching res_model,
+            checks in mail.followers for entries with matching res_model,
             res_id.
         """
         subscr_obj = self.pool.get('mail.followers')
