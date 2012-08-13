@@ -31,6 +31,7 @@
     background:     -ms-linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
     background:         linear-gradient(top,rgba(0,0,0,0.09),rgba(0,0,0,0));
 }
+
 .point-of-sale .darker-shadow-top{
     position: absolute;
     top:0;
@@ -42,6 +43,7 @@
     background:     -ms-linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
     background:         linear-gradient(top,rgba(0,0,0,0.15),rgba(0,0,0,0));
 }
+
 /*  ********* The black loading screen ********* */
 
 .point-of-sale .loader{
@@ -527,9 +529,11 @@
     cursor: pointer;
 }
 
+/*
 .point-of-sale .category-button .category-img img {
     height: 100px;
 }
+*/
 
 .point-of-sale .category-button .category-name {
     position: absolute;
@@ -577,7 +581,8 @@
 }
 
 .point-of-sale .product .product-img img {
-    height: 100px;
+    max-height: 100px;
+    max-width:  120px;
 }
 
 .point-of-sale .product .price-tag {
