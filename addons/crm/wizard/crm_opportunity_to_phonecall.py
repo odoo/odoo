@@ -71,7 +71,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
         call_ids = opportunity.schedule_phonecall(cr, uid, opportunity_ids, data.date, data.name, \
                 data.note, data.phone, data.contact_name, data.user_id and data.user_id.id or False, \
                 data.section_id and data.section_id.id or False, \
-                data.categ_id and data.categ_id.id or False, \
+                data.categ_ids and data.categ_ids[0].id or False, \
                 action=data.action, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
