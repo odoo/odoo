@@ -561,8 +561,8 @@ openerp.mail = function(session) {
 
         //Mail vote Functionality...
         add_vote_event: function(element){
-            vote_img = element.find('.oe_mail_msg_vote_like');
             self = this;
+            vote_img = element.find('.oe_mail_msg_vote_like');
             if (vote_img)
                 vote_img.click(function(){
                     self.subscribe_vote($(this).attr('data-id'));
@@ -589,13 +589,12 @@ openerp.mail = function(session) {
                 _.each(result, function(vote){
                     if (self.session.uid == vote.user_id[0]){
                         is_vote_liked = true;
-                        }
+                    }
                 });
                 parent_element = self.find_parent_element(".oe_mail_msg_vote", message_id);
                 vote_element = session.web.qweb.render('VoteDisplay', {'msg_id': message_id, 'vote_count': vote_count, 'is_vote_liked': is_vote_liked});
                 $(parent_element).html(vote_element);
                 self.add_vote_event($(parent_element));
-              
             });
         },
         
@@ -603,7 +602,7 @@ openerp.mail = function(session) {
             var self = this;
             this.mail_message = new session.web.DataSet(this, 'mail.message');
             return this.mail_message.call('vote_toggle', [[parseInt(message_id)]]).then(function(result){
-                    self.render_vote(message_id);
+                self.render_vote(message_id);
             });
         },
          
