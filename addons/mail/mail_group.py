@@ -57,24 +57,16 @@ class mail_group(osv.osv):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
     
-    def get_member_ids(self, cr, uid, ids, field_names, args, context=None):
+    def get_followers_data(self, cr, uid, ids, field_names, args, context=None):
         if context is None:
             context = {}
         result = dict.fromkeys(ids)
-        for id in ids:
-            result[id] = {}
-            result[id]['member_ids'] = self.message_get_subscribers(cr, uid, [id], context=context)
-            result[id]['member_count'] = len(result[id]['member_ids'])
-            result[id]['is_subscriber'] = uid in result[id]['member_ids']
+        for thread in self.browse(cr, uid, ids, context=context):
+            result[thread.id] = {
+                'member_count': len(thread.message_follower_ids),
+                'is_subscriber': uid in [follower.id for follower in thread.message_follower_ids],
+            }
         return result
-    
-    def search_member_ids(self, cr, uid, obj, name, args, context=None):
-        if context is None:
-            context = {}
-        sub_obj = self.pool.get('mail.subscription')
-        sub_ids = sub_obj.search(cr, uid, ['&', ('res_model', '=', obj._name), ('user_id', '=', args[0][2])], context=context)
-        subs = sub_obj.read(cr, uid, sub_ids, context=context)
-        return [('id', 'in', map(itemgetter('res_id'), subs))]
     
     def get_last_month_msg_nbr(self, cr, uid, ids, name, args, context=None):
         result = {}
@@ -121,12 +113,10 @@ class mail_group(osv.osv):
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 50x50px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids,
-            type='many2many', relation='res.users', string='Group members', multi='get_member_ids'),
-        'member_count': fields.function(get_member_ids, type='integer',
-            string='Member count', multi='get_member_ids'),
-        'is_subscriber': fields.function(get_member_ids, type='boolean',
-            string='Joined', multi='get_member_ids'),
+        'member_count': fields.function(get_followers_data, type='integer',
+            string='Member count', multi='get_followers_data'),
+        'is_subscriber': fields.function(get_followers_data, type='boolean',
+            string='Joined', multi='get_followers_data'),
         'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer',
             string='Messages count for last month'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
