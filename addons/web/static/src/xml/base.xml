@@ -976,8 +976,11 @@
     </div>
 </t>
 <t t-name="FieldTextHtml">
-    <div class="oe_form_field oe_form_field_text" t-att-style="widget.node.attrs.style">
+    <div t-att-class="'oe_form_field oe_form_field_html' + (widget.get('effective_readonly') ? ' oe_form_embedded_html' : '')"
+            t-att-style="widget.node.attrs.style">
+        <t t-if="! widget.get('effective_readonly')">
             <textarea/>
+        </t>
     </div>
 </t>
 <t t-name="web.datepicker">

@@ -2397,33 +2397,44 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
 instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldTextHtml',
     initialize_content: function() {
-        this.$textarea = this.$element.find('textarea');
-        var width = ((this.node.attrs || {}).editor_width || 468);
-        var height = ((this.node.attrs || {}).editor_height || 100);
-        this.$textarea.cleditor({
-            width:      width, // width not including margins, borders or padding
-            height:     height, // height not including margins, borders or padding
-            controls:   // controls to add to the toolbar
-                        "bold italic underline strikethrough " +
-                        "| removeformat | bullets numbering | outdent " +
-                        "indent | link unlink | source",
-            bodyStyle:  // style to assign to document body contained within the editor
-                        "margin:4px; font:12px monospace; cursor:text; color:#1F1F1F"
-        });
-        this.$cleditor = this.$textarea.cleditor()[0];
+        var self = this;
+        if (! this.get("effective_readonly")) {
+            self._updating_editor = false;
+            this.$textarea = this.$element.find('textarea');
+            var width = ((this.node.attrs || {}).editor_width || 468);
+            var height = ((this.node.attrs || {}).editor_height || 100);
+            this.$textarea.cleditor({
+                width:      width, // width not including margins, borders or padding
+                height:     height, // height not including margins, borders or padding
+                controls:   // controls to add to the toolbar
+                            "bold italic underline strikethrough " +
+                            "| removeformat | bullets numbering | outdent " +
+                            "indent | link unlink | source",
+                bodyStyle:  // style to assign to document body contained within the editor
+                            "margin:4px; font:12px monospace; cursor:text; color:#1F1F1F"
+            });
+            this.$cleditor = this.$textarea.cleditor()[0];
+            this.$cleditor.change(function() {
+                if (! self._updating_editor) {
+                    self.$cleditor.updateTextArea();
+                    self.set({'value': self.$textarea.val()});
+                }
+            });
+        }
     },
     set_value: function(value_) {
         this._super.apply(this, arguments);
-        this._dirty_flag = true;
         this.render_value();
     },
     render_value: function() {
-        this.$textarea.val(this.get('value'));
-        this.$cleditor.updateFrame();
-    },
-    get_value: function() {
-        this.$cleditor.updateTextArea();
-        return this.$textarea.val();
+        if (! this.get("effective_readonly")) {
+            this.$textarea.val(this.get('value'));
+            this._updating_editor = true;
+            this.$cleditor.updateFrame();
+            this._updating_editor = false;
+        } else {
+            this.$element.html(this.get('value'));
+        }
     },
 });
 
