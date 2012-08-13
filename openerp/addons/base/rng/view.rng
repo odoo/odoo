@@ -181,12 +181,12 @@
 
     <rng:define name="diagram">
         <rng:element name="diagram">
-            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>                                    
             <rng:ref name="node"/>
-            <rng:ref name="arrow"/>
-            <rng:oneOrMore>
-                <rng:optional><rng:ref name="label"/></rng:optional>
-            </rng:oneOrMore>
+            <rng:ref name="arrow"/>            
+            <rng:zeroOrMore>
+                <rng:ref name="label"/>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
