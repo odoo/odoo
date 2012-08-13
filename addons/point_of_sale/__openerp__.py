@@ -51,7 +51,6 @@ Main features:
         'wizard/pos_confirm.xml',
         'wizard/pos_discount.xml',
         'wizard/pos_open_statement.xml',
-        'wizard/pos_close_statement.xml',
         'wizard/pos_payment_report_user_view.xml',
         'wizard/pos_sales_user.xml',
         'wizard/pos_receipt_view.xml',

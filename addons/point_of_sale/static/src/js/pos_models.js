@@ -211,12 +211,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 return fetch('sale.shop',[], [['id','=',pos_config.shop_id[0]]])
                             }).pipe(function(shops){
                                 self.set('shop',shops[0]);
-                                return fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'category_image_small'])
+                                return fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'image'])
                             }).pipe( function(categories){
                                 self.db.add_categories(categories);
                                 return fetch( 
                                     'product.product', 
-                                    ['name', 'list_price','price','pos_categ_id', 'taxes_id','product_image_small', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
+                                    ['name', 'list_price','price','pos_categ_id', 'taxes_id','image', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
                                     [['pos_categ_id','!=', false]],
                                     {pricelist: self.get('shop').pricelist_id[0]} // context for price
                                 );

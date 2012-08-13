@@ -89,12 +89,7 @@
     <t t-name="CategoryButton">
         <li class='category-button'>
             <div class="category-img">
-                <t t-if="category.category_image_small">
-                    <img t-att-src="'data:image/gif;base64,'+ category.category_image_small" />
-                </t>
-                <t t-if="!category.category_image_small">
-                    <img src="/point_of_sale/static/src/img/default_category_photo.png" />
-                </t>
+                <img t-att-src="'data:image/gif;base64,'+ category.image" />
             </div>
             <div class="category-name">
                 <t t-esc="category.name"/>
@@ -362,8 +357,7 @@
         <li class='product'>
             <a href="#">
                 <div class="product-img">
-                    
-                    <img t-att-src="'data:image/gif;base64,'+ widget.model.get('product_image_small')" />
+                    <img t-att-src="widget.get_image_url()" />
                     <t t-if="!widget.model.get('to_weight')">
                         <span class="price-tag">
                             <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>

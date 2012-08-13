@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    Copyright (C) 2004-2012 OpenERP S.A (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,7 +22,7 @@
 {
     'name' : "Portal",
     'version' : "1.0",
-    'depends' : ["base", "share", "anonymous"],
+    'depends' : ["base", "share", "auth_anonymous"],
     'author' : "OpenERP SA",
     'category': 'Portal',
     'description': """

@@ -496,7 +496,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         get_product_image: function(){
             var product = this.get_product();
-            return product ? product.get('product_image_small') : undefined;
+            return product ? product.get('image') : undefined;
         },
         get_product_weight: function(){
             return this.weight || 0;

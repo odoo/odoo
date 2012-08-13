@@ -241,6 +241,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.model.attributes.weight = weight;
             this.renderElement();
         },
+        get_image_url: function() {
+            return 'data:image/gif;base64,'+this.model.get('image');
+        },
         renderElement: function() {
             this._super();
             var self = this;
@@ -419,9 +422,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             var hasimages = false;  //if none of the subcategories have images, we don't display buttons with icons
             _.each(this.subcategories, function(category){
-                if(category.category_image_small){
+                if(category.image){
                     hasimages = true;
-                }else{
                 }
             });
 
@@ -908,7 +910,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         close: function() {
             var self = this;
             this.pos.barcode_reader.disconnect();
-            return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
+            return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                     var action = result.result;

@@ -14,19 +14,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:27+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-08-09 05:00+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Assets in draft and open states"
-msgstr "أصول في مسودة أو حالات مفتوحة"
+msgstr "أصول في مسودة وحالات مفتوحة"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
 #: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
-msgstr "اخر تاريخ"
+msgstr "تاريخ الإنتهاء"
 
 #. module: account_asset
 #: field:account.asset.asset,value_residual:0
@@ -143,7 +143,7 @@ msgstr "مُدخلات"
 #: view:account.asset.asset:0
 #: field:account.asset.asset,depreciation_line_ids:0
 msgid "Depreciation Lines"
-msgstr "خطوط الإستلاك"
+msgstr "خطوط الأستهلاك"
 
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
@@ -282,7 +282,7 @@ msgstr "طريقة الحساب"
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "State here the time during 2 depreciations, in months"
-msgstr "تحديد الوقت لـ ٢ إستهلاك في الشهو"
+msgstr "تحديد الوقت لـ ٢ إستهلاك في الشهر"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
@@ -462,6 +462,9 @@ msgid ""
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
 msgstr ""
+"أختر طريقة تستخدمها لحساب مبلغ  خطوط  الأستهلاك.\n"
+"  الخطي: محسوبة علي أساس: إجمالي القيمة/ عدد الأستهلاك\n"
+"  التدريجي: محسوبة علي أساس :القيمة المتبقية x عامل التدريجية"
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -474,6 +477,10 @@ msgid ""
 "  * Ending Date: Choose the time between 2 depreciations and the date the "
 "depreciations won't go beyond."
 msgstr ""
+"أختر طريقة تستخدمها لحساب مواعيد وعددخطوط الأستهلاك.\n"
+"  * عدد الاستهلاك: حدد عدد خطوط الاستهلاك والوقت بين 2 أستهلاك.\n"
+"  * تاريخ الانتهاء:اختر الوقت بين 2 أستهلاك وتاريخ الأستهلاكات التي لم "
+"تتجاوز التخفيض."
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -494,12 +501,12 @@ msgstr "الشريك"
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
-msgstr ""
+msgstr "قيمة خطوط الأستهلاك"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Posted depreciation lines"
-msgstr ""
+msgstr "سجل خطوط الأستهلاك"
 
 #. module: account_asset
 #: constraint:account.move.line:0
@@ -514,7 +521,7 @@ msgstr "أصول فرعية"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Date of depreciation"
-msgstr ""
+msgstr "تاريخ الأستهلاك"
 
 #. module: account_asset
 #: field:account.asset.history,user_id:0
@@ -529,7 +536,7 @@ msgstr "التاريخ"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets purchased in current month"
-msgstr ""
+msgstr "اصول مشتراه في الشهر الحالي"
 
 #. module: account_asset
 #: constraint:account.move.line:0
@@ -549,12 +556,12 @@ msgstr "احسب"
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Search Asset Category"
-msgstr ""
+msgstr "بحث فئة الأصول"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
 msgid "asset.depreciation.confirmation.wizard"
-msgstr ""
+msgstr "asset.depreciation.confirmation.wizard"
 
 #. module: account_asset
 #: field:account.asset.asset,active:0
@@ -564,17 +571,17 @@ msgstr "نشِط"
 #. module: account_asset
 #: model:ir.actions.wizard,name:account_asset.wizard_asset_close
 msgid "Close asset"
-msgstr ""
+msgstr "وثيقة أصول"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
 msgid "State of Asset"
-msgstr ""
+msgstr "حالة الأصول"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
 msgid "Depreciation Name"
-msgstr ""
+msgstr "اسم الأستهلاك"
 
 #. module: account_asset
 #: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
@@ -599,7 +606,7 @@ msgstr "عام"
 #. module: account_asset
 #: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr ""
+msgstr "تناسب زمني"
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -614,7 +621,7 @@ msgstr "فاتورة"
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form_normal
 msgid "Review Asset Categories"
-msgstr ""
+msgstr "مراجعة أصول الفئات"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
@@ -629,7 +636,7 @@ msgstr "إغلاق"
 #. module: account_asset
 #: view:account.asset.asset:0 view:account.asset.category:0
 msgid "Depreciation Method"
-msgstr ""
+msgstr "طريقة الأستهلاك"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
@@ -641,14 +648,14 @@ msgstr "تاريخ الشراء"
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Degressive"
-msgstr ""
+msgstr "تدريجي"
 
 #. module: account_asset
 #: help:asset.depreciation.confirmation.wizard,period_id:0
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr ""
+msgstr "أختر الفترة التي تريدها تلقائياً لنشر خطوط الأستهلاك من أصول التشغيل"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -658,18 +665,18 @@ msgstr "الحالي"
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Amount to Depreciate"
-msgstr ""
+msgstr "قيمة الاستهلاك"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
 msgid "Skip Draft State"
-msgstr ""
+msgstr "تخطي حالة المسودة"
 
 #. module: account_asset
 #: view:account.asset.asset:0 view:account.asset.category:0
 #: view:account.asset.history:0
 msgid "Depreciation Dates"
-msgstr ""
+msgstr "تواريخ الأستهلاك"
 
 #. module: account_asset
 #: field:account.asset.asset,currency_id:0
@@ -684,7 +691,7 @@ msgstr "السجل اليومي"
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
 msgid "Amount Already Depreciated"
-msgstr ""
+msgstr "القيمة المستهلكة بالفعل"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -701,6 +708,11 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that state."
 msgstr ""
+"عند إنشاء الاصول , الحالة تكون 'مسودة'.\n"
+"إذا تاكدت هذه الاصول ,الحالة تدخل في 'التشغيل' ويمكن إضافة خطوط الأستهلاك في "
+"الحساب .\n"
+"يمكنك يدوياً إغلاق الاصول عند زيادة الأستهلاك . إذا تم إضافة أخر خط من خطوط "
+"الأستهلاك,الاصل يذهب تلقائياً في هذه الحالة."
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -713,6 +725,8 @@ msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
 msgstr ""
+"تحقق من هذا إذا كنت تريد التأكد تلقائياً من أصول فئة تم إنشاؤها بواسطة "
+"فواتير."
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -733,25 +747,25 @@ msgstr "شهر- ١"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr ""
+msgstr "أصل خط إستهلاك"
 
 #. module: account_asset
 #: field:account.asset.asset,category_id:0 view:account.asset.category:0
 #: field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
-msgstr ""
+msgstr "فئة أصول"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets purchased in last month"
-msgstr ""
+msgstr "أصول مشتراه في الشهر الماضي"
 
 #. module: account_asset
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
 #, python-format
 msgid "Created Asset Moves"
-msgstr ""
+msgstr "إنشاء حركات الأصول"
 
 #. module: account_asset
 #: constraint:account.move.line:0
@@ -765,11 +779,14 @@ msgid ""
 "search can also be used to personalise your Assets reports and so, match "
 "this analysis to your needs;"
 msgstr ""
+"من هذا التقرير, يمكنك أخذ فكرة عامة عن جميع الأستهلاك كما يمكن أيضا َ "
+"استخدام أداة البحث لإضفاء الطابع الشخصي الخاص بك علي تقارير الأصول وغير ذلك, "
+"طابق هذه التحليلات مع الأحتياجات الخاصة بك"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0
 msgid "State here the time between 2 depreciations, in months"
-msgstr ""
+msgstr "أذكر الوقت بين ٢ تخفيضات، في الأشهر"
 
 #. module: account_asset
 #: field:account.asset.asset,method_number:0
@@ -780,28 +797,28 @@ msgstr ""
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
-msgstr ""
+msgstr "عدد التلفيات أو عدد الأستهلاكات"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Create Move"
-msgstr ""
+msgstr "إيجاد تحرك"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
 msgid "Post Depreciation Lines"
-msgstr ""
+msgstr "إضافة خطوط الأستهلاك"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Confirm Asset"
-msgstr ""
+msgstr "تأكيد الأصول"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
-msgstr ""
+msgstr "هرمية الأصول"
 
 #~ msgid "Child assets"
 #~ msgstr "أصل فرعي"
@@ -877,3 +894,6 @@ msgstr ""
 
 #~ msgid "Analytic information"
 #~ msgstr "معلومات تحليلية"
+
+#~ msgid "Accounting information"
+#~ msgstr "معلومات محاسبية"

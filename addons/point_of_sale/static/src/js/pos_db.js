@@ -13,65 +13,6 @@
  */
 function openerp_pos_db(instance, module){ 
 
-    // this is used for testing
-    var gen_products = function(options){
-        options = options || {};
-        var count = options.count || 100;
-        var imageSize = options.imageSize || 1800;
-
-        var imagedata = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'];
-        
-        function gen_image(){
-            var image = '';
-            for(var i = 0; i < imageSize; i++){
-                image += imagedata[Math.floor(Math.random()*imagedata.length)];
-            }
-            return image;
-        }
-
-        var categories = [ 'drinks', 'food', 'beers', 'meat', 'fruits', 'candy', 'bread', 'fruity beers', 'tea', 'coffee' ];
-        var syllabes   = [ 
-            'ko','no','mo','ro','do','so','ho','to','yo',
-            'ke','ne','me','re','de','se','he','te','ye',
-            'ki','ni','mi','ri','di','si','hi','ti','yi',
-            'ku','nu','mu','ru','du','su','hu','tu','yu',
-            'ka','na','ma','ra','da','sa','ha','ta','ya',
-            ' ', '-', '!', ' ', ' ', '-', ' ', ' ',  ' ',
-        ];
-        var id = 1284;
-        var ean = 845923;
-
-        function gen_product(){
-            var name = '';
-            var sc = Math.ceil(Math.random()*10);
-            for(var i = 0; i < sc; i++){
-                name = name + syllabes[Math.floor(Math.random()*syllabes.length)];
-            }
-            return {
-                id: ''+(id++),
-                price: Math.random()*100,
-                ean13:''+(ean++),
-                name: name,
-                category: categories[Math.floor(Math.random()*categories.length)],
-                product_image_small: gen_image(),
-            };
-        }
-
-        var products = [];
-        for(var i = 0; i < count; i++){
-            products.push(gen_product());
-        }
-        return products;
-    };
-    
-    //this is used for testing
-    var log = function(x){
-        console.log(x);
-    };
-
-    // window.gen_products = gen_products;
-    // window.log = log;
-
     function importIndexedDB(){
         if('indexedDB' in window){
             return true;
