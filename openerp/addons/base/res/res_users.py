@@ -265,10 +265,7 @@ class users(osv.osv):
             - else: the default view is overrided and redirected to the partner
               view
         """
-        print view_id
-        print view_type
         if not view_id and view_type == 'form':
-            print 'acacpornief'
             return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         return super(users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
