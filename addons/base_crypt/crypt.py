@@ -35,9 +35,13 @@
 # 59 Temple Place - Suite 330
 # Boston, MA  02111-1307
 # USA.
+from __future__ import with_statement
 
+from contextlib import closing
+import logging
 from random import seed, sample
 from string import ascii_letters, digits
+
 from osv import fields,osv
 import pooler
 from tools.translate import _
@@ -135,6 +139,20 @@ class users(osv.osv):
     # agi - 022108
     # Add handlers for 'input_pw' field.
 
+    def init(self, cr):
+        cr.execute("SELECT id, password FROM res_users "
+                   "WHERE active=true AND password NOT LIKE '$%' ")
+        to_crypt = cr.fetchall()
+        if to_crypt:
+            # Full table lock to guarantee we won't do a partial job or
+            # end up with a TransactionRollbackError if another transaction
+            # alters res_users in the mean time. The lock will be released
+            # by the commit() that follows the model initialization step
+            cr.execute('LOCK res_users')
+            cr.executemany("UPDATE res_users SET password=%s WHERE id=%s",
+                ((encrypt_md5(password, gen_salt()), id)
+                 for id, password in to_crypt))
+
     def set_pw(self, cr, uid, id, name, value, args, context):
         if not value:
             raise osv.except_osv(_('Error'), _("Please specify the password !"))
@@ -174,17 +192,13 @@ class users(osv.osv):
             return False
         if db is False:
             raise RuntimeError("Cannot authenticate to False db!")
-        cr = None
+
         try:
-            cr = pooler.get_db(db).cursor()
-            return self._login(cr, db, login, password)
+            with closing(pooler.get_db(db).cursor()) as cr:
+                return self._login(cr, db, login, password)
         except Exception:
-            import logging
             logging.getLogger('netsvc').exception('Could not authenticate')
             return Exception('Access Denied')
-        finally:
-            if cr is not None:
-                cr.close()
 
     def _login(self, cr, db, login, password):
         cr.execute( 'SELECT password, id FROM res_users WHERE login=%s AND active',
@@ -196,12 +210,6 @@ class users(osv.osv):
             # Return early if no one has a login name like that.
             return False
     
-        stored_pw = self.maybe_encrypt(cr, stored_pw, id)
-        
-        if not stored_pw:
-            # means couldn't encrypt or user is not active!
-            return False
-
         # Calculate an encrypted password from the user-provided
         # password.
         obj = pooler.get_pool(db).get('res.users')
@@ -211,18 +219,25 @@ class users(osv.osv):
         encrypted_pw = encrypt_md5(password, salt)
     
         # Check if the encrypted password matches against the one in the db.
-        cr.execute("""UPDATE res_users
-                        SET date=now() AT TIME ZONE 'UTC'
-                        WHERE id=%s AND password=%s AND active
-                        RETURNING id""", 
-                   (int(id), encrypted_pw.encode('utf-8')))
-        res = cr.fetchone()
-        cr.commit()
+        login_ok = encrypted_pw == stored_pw
+        
+        # Attempt to update last login time, but don't fail if the row is
+        # currently locked.
+        if login_ok:
+            try:
+                cr.execute("SELECT 1 FROM res_users WHERE id=%s FOR UPDATE NOWAIT",
+                           params=(id,), log_exceptions=False)
+                cr.execute("""UPDATE res_users
+                              SET date=now() AT TIME ZONE 'UTC'
+                              WHERE id=%s""", (id,))
+                cr.commit()
+            except Exception:
+                # Failing to acquire the lock on the res_users row probably means
+                # another request is holding it. No big deal, we don't want to
+                # prevent/delay login in that case just for updating login timestamp.
+                cr.rollback()
     
-        if res:
-            return res[0]
-        else:
-            return False
+        return login_ok and id
 
     def check(self, db, uid, passwd):
         if not passwd:
@@ -239,8 +254,9 @@ class users(osv.osv):
         if (cached_pass is not None) and cached_pass == passwd:
             return True
 
-        cr = pooler.get_db(db).cursor()
-        try:
+        # We should get here only if the registry was just reloaded
+        # (e.g. after server startup or module install/upgrade)
+        with closing(pooler.get_db(db).cursor()) as cr:
             if uid not in self._salt_cache.get(db, {}):
                 # If we don't have cache, we have to repeat the procedure
                 # through the login function.
@@ -257,8 +273,6 @@ class users(osv.osv):
                 cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s AND active', 
                     (int(uid), encrypt_md5(passwd, salt)))
                 res = cr.fetchone()[0]
-        finally:
-            cr.close()
 
         if not bool(res):
             raise security.ExceptionNoTb('AccessDenied')
@@ -270,29 +284,6 @@ class users(osv.osv):
             else:
                 self._uid_cache[db] = {uid: passwd}
         return bool(res)
-    
-    def maybe_encrypt(self, cr, pw, id):
-        """ Return the password 'pw', making sure it is encrypted.
-        
-        If the password 'pw' is not encrypted, then encrypt all active passwords
-        in the db. Returns the (possibly newly) encrypted password for 'id'.
-        """
-
-        if not pw.startswith(magic_md5):
-            cr.execute("SELECT id, password FROM res_users " \
-                "WHERE active=true AND password NOT LIKE '$%'")
-            # Note that we skip all passwords like $.., in anticipation for
-            # more than md5 magic prefixes.
-            res = cr.fetchall()
-            for i, p in res:
-                encrypted = encrypt_md5(p, gen_salt())
-                cr.execute('UPDATE res_users SET password=%s where id=%s',
-                        (encrypted, i))
-                if i == id:
-                    encrypted_res = encrypted
-            cr.commit()
-            return encrypted_res
-        return pw
 
 users()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
