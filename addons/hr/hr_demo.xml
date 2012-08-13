@@ -139,11 +139,6 @@
           <field name="department_id" ref="dep_rd"/>
       </record>
 
-      <record id="job_hr_manager" model="hr.job">
-          <field name="name">Human Ressources Manager</field>
-          <field name="department_id" ref="dep_administration"/>
-      </record>
-
       <record id="job_consultant" model="hr.job">
           <field name="name">Consultant</field>
           <field name="department_id" ref="dep_ps"/>
@@ -156,6 +151,7 @@
 
       <record id="job_hrm" model="hr.job">
           <field name="name">Human Resources Manager</field>
+          <field name="department_id" ref="dep_administration"/>
       </record>
 
       <record id="job_marketing" model="hr.job">
