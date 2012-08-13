@@ -171,6 +171,14 @@ class users(osv.osv):
                 }
         }
 
+    def onchange_type(self, cr, uid, ids, is_company, context=None):
+        """ Wrapper on the user.partner onchange_type, because some calls to the
+            partner form view applied to the user may trigger the
+            partner.onchange_type method, but applied to the user object.
+        """
+        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
+        return self.pool.get('res_partner').onchange_type(cr, uid, partner_ids, is_company, context=context)
+
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
             if 'password' in o and ( 'id' not in o or o['id'] != uid ):
