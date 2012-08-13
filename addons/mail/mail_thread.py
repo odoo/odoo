@@ -335,6 +335,7 @@ class mail_thread(osv.Model):
                 'parent_id': parent_id,
                 'date': email_date or fields.datetime.now(),
                 'type': type,
+                'subtype_id' : subtype_id,
                 'content_subtype': content_subtype,
                 'state': state,
                 'message_id': message_id,
@@ -866,7 +867,7 @@ class mail_thread(osv.Model):
                         now deprecated res.log.")
         self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
 
-    def message_append_note(self, cr, uid, ids, subject=None, subtype_id=None, body=None, parent_id=False,
+    def message_append_note(self, cr, uid, ids, subject=None, subtype_id=False, body=None, parent_id=False,
                             type='notification', content_subtype='html', context=None):
         if content_subtype == 'html':
             body_html = body
