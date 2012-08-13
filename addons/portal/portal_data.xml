@@ -20,6 +20,18 @@
             <field name="view_mode">form</field>
         </record>
 
+        <!-- Mail group for the company's jobs -->
+        <record id="company_jobs" model="mail.group">
+            <field name="name">Company's jobs feed</field>
+        </record>
+
+        <record id="action_jobs" model="ir.actions.act_window">
+            <field name="name">Jobs</field>
+            <field name="res_model">mail.group</field>
+            <field name="res_id" ref="company_jobs"/>
+            <field name="view_mode">form</field>
+        </record>
+
         <!-- Top menu item -->
         <menuitem name="Portal"
             id="portal_menu"
@@ -28,6 +40,7 @@
 
             <menuitem name="Our company" id="portal_company" parent="portal_menu" sequence="10"/>
                 <menuitem name="News" id="portal_company_news" parent="portal_company" sequence="10" action="action_news"/>
+                <menuitem name="Jobs" id="portal_jobs" parent="portal_company" sequence="20" action="action_jobs"/>
 
             <!--
                 Create menu items that we'll leave empty for now - they'll be
