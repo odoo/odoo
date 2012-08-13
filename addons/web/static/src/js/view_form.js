@@ -2394,8 +2394,8 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
  * To find more information about CLEditor configutation: go to
  * http://premiumsoftware.net/cleditor/docs/GettingStarted.html
  */
-instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
-
+instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    template: 'FieldTextHtml',
     initialize_content: function() {
         this.$textarea = this.$element.find('textarea');
         var width = ((this.node.attrs || {}).editor_width || 468);
@@ -2411,22 +2411,16 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
                         "margin:4px; font:12px monospace; cursor:text; color:#1F1F1F"
         });
         this.$cleditor = this.$textarea.cleditor()[0];
-        // call super now, because cleditor resets the disable attr
-        this._super.apply(this, arguments);
-        // propagate disabled property to cleditor
-        this.$cleditor.disable(this.$textarea.prop('disabled'));
     },
-
     set_value: function(value_) {
         this._super.apply(this, arguments);
         this._dirty_flag = true;
+        this.render_value();
     },
-
     render_value: function() {
-        this._super.apply(this, arguments);
+        this.$textarea.val(this.get('value'));
         this.$cleditor.updateFrame();
     },
-
     get_value: function() {
         this.$cleditor.updateTextArea();
         return this.$textarea.val();

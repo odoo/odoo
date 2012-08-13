@@ -975,6 +975,11 @@
         />
     </div>
 </t>
+<t t-name="FieldTextHtml">
+    <div class="oe_form_field oe_form_field_text" t-att-style="widget.node.attrs.style">
+            <textarea/>
+    </div>
+</t>
 <t t-name="web.datepicker">
     <span>
         <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
