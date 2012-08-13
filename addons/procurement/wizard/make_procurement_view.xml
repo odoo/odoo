@@ -14,9 +14,9 @@
                      <group>
                         <field name="product_id" on_change="onchange_product_id(product_id)"/>
                         <field name="qty"/>
-                        <field name="uom_id"/>
+                        <field name="uom_id" groups="product.group_uom"/>
                         <field name="date_planned"/>
-                        <field name="warehouse_id"/>
+                        <field name="warehouse_id" groups="stock.group_locations"/>
                     </group>
                     <footer>
                         <button name="make_procurement" string="Ask New Products" type="object"  class="oe_highlight"  />
