@@ -32,7 +32,7 @@ class account_cashbox_line(osv.osv):
 
     _name = 'account.cashbox.line'
     _description = 'CashBox Line'
-    _rec_name = 'number'
+    _rec_name = 'pieces'
 
     def _sub_total(self, cr, uid, ids, name, arg, context=None):
 
@@ -169,7 +169,7 @@ class account_cash_statement(osv.osv):
         return result
 
     _columns = {
-        'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Total Cash Transactions",
+        'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Total Transactions",
             store = {
                 'account.bank.statement': (lambda self, cr, uid, ids, context=None: ids, ['line_ids','move_line_ids'], 10),
                 'account.bank.statement.line': (_get_statement_from_line, ['amount'], 10),
@@ -238,7 +238,7 @@ class account_cash_statement(osv.osv):
         for statement in statement_pool.browse(cr, uid, ids, context=context):
             vals = {}
             if not self._user_allow(cr, uid, statement.id, context=context):
-                raise osv.except_osv(_('Error !'), (_('You do not have rights to open this %s journal !') % (statement.journal_id.name, )))
+                raise osv.except_osv(_('Error!'), (_('You do not have rights to open this %s journal !') % (statement.journal_id.name, )))
 
             if statement.name and statement.name == '/':
                 c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
@@ -282,8 +282,8 @@ class account_cash_statement(osv.osv):
 
             for item_label, item_account in TALBES:
                 if getattr(obj.journal_id, item_account):
-                    raise osv.except_osv(_('Error !'), 
-                                         _('There is no %s Account on the Journal %s') % (item_label, obj.journal_id.name,))
+                    raise osv.except_osv(_('Error!'),
+                                         _('There is no %s Account on the journal %s.') % (item_label, obj.journal_id.name,))
 
             is_profit = obj.difference < 0.0
 
@@ -325,7 +325,7 @@ account_journal()
 
 class account_journal_cashbox_line(osv.osv):
     _name = 'account.journal.cashbox.line'
-    _rec_name = 'value'
+    _rec_name = 'pieces'
     _columns = {
         'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
         'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1),

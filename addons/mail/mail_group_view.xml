@@ -19,7 +19,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="{record.is_subscriber.raw_value} oe_group_vignette">
                                 <div class="oe_group_image">
-                                    <a type="edit"><img t-att-src="kanban_image('mail.group', 'photo', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
+                                    <a type="edit"><img t-att-src="kanban_image('mail.group', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="edit"><field name="name"/></a></h4>
@@ -33,7 +33,6 @@
                                 </div>
                             </div>
                             <script>
-                                $('.oe_group_photo').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_group_photo_wide') } });
                                 $('.oe_group_join').mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
                                 $('.oe_group_leave').mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
                             </script>
@@ -54,13 +53,20 @@
                     <sheet class="openerp_mail_group_sheet">
                         <group colspan="4" col="8">
                             <group colspan="1" col="2">
-                                <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
+                                <field name="image_small" widget='image' class="oe_image_small" nolabel="1"/>
                             </group>
                             <group colspan="7" col="6">
                                 <div class="oe_edit_only">
                                     <label for="name"/> 
                                 </div> 
-                                <h2><field name="name" colspan="4"/></h2>
+                                <div>
+                                    <h2><field name="name" colspan="4"/></h2>
+                                    <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}" class="oe_edit_only">
+                                        <field name="alias_id" invisible="1"/>
+                                        <label for="alias_name" class="oe_edit_only"/>
+                                        <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                                    </div>
+                                </div>
                                 <newline/>
                                 <group colspan="4" col="4">
                                     <field name="description" colspan="4" nolabel="1"/>
@@ -104,7 +110,6 @@
             <field name="arch" type="xml">
                 <search string="Search Groups">
                     <field name="name" string="Group"/>
-                    <separator orientation="vertical"/>
                     <field name="responsible_id"/>
                 </search>
             </field>

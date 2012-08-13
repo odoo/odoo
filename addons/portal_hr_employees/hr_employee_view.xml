@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- add visibility field to the employee form view -->
+        <record id="view_employee_form" model="ir.ui.view">
+            <field name="name">portal_hr_employees.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[last()]" position="after">
+                    <page string="Portal Settings">
+                        <group>
+                            <field name="visibility"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- a kanban view of the employees to the portal's contact page -->
+        <record id="wizard_contact_form_view_employees_list" model="ir.ui.view">
+            <field name="name">portal_hr_employees.employees_list</field>
+            <field name="model">portal_crm.crm_contact_us</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="portal_crm.wizard_contact_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_portal_crm_team']" position="inside">
+                    <h1>Meet the team</h1>
+                    <field name="employee_ids" widget="many2many_kanban">
+                        <kanban>
+                            <field name="visibility"/>
+
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_employee_vignette">
+                                        <div class="oe_employee_image">
+                                            <img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/>
+                                        </div>
+                                        <div class="oe_employee_details">
+                                            <h4>
+                                                <a type="edit"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
+                                            </h4>
+                                            <ul>
+                                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                                <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
+                                                <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
+                                                <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

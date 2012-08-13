@@ -80,10 +80,9 @@
             <field name="arch" type="xml">
                 <search string="Search Incoming Mail Servers">
                     <field name="name" string="Incoming Mail Server"/>
-                    <separator orientation="vertical"/>
                     <filter string="IMAP" icon="terp-folder-green" domain="[('type','=','imap')]" help="Server type IMAP."/>
                     <filter string="POP" icon="terp-folder-orange" domain="[('type','=','pop')]" help="Server type POP."/>
-                    <separator orientation="vertical"/>
+                    <separator/>
                     <filter string="SSL" icon="terp-camera_test" domain="[('is_ssl','=',True)]" help="If SSL required."/>
                 </search>
             </field>

@@ -126,21 +126,15 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group>
-                        <field name="number" string="Voucher"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" help="To Review"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id"/>
-                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
-                        <field name="period_id"/>
-                    </group>
-                    <newline/>
+                    <field name="number" string="Voucher"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <separator/>
+                    <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" help="To Review"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" />
+                    <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -277,6 +271,21 @@
                       <field name="expense_currency_exchange_account_id"/>
                 </field>
             </field>
+        </record>
+
+    </data>
+    <data noupdate="1">
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_invoice_menu" model="ir.actions.client">
+            <field name="name">Open Invoicing Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_finance')}"/>
+        </record>
+        <record id="todo_open_invoice_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_invoice_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
         </record>
 
     </data>

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:17+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:57+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_select:0
@@ -32,7 +32,7 @@ msgstr "Mensal"
 #: view:hr.payslip:0 field:hr.payslip,line_ids:0
 #: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
 msgid "Payslip Lines"
-msgstr "Linhas do Contracheque"
+msgstr "Linhas do Holerite"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0
@@ -77,13 +77,13 @@ msgstr "Regra de Salário Principal"
 #: field:hr.payslip.run,slip_ids:0
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 msgid "Payslips"
-msgstr "Contracheques"
+msgstr "Holerites"
 
 #. module: hr_payroll
 #: field:hr.payroll.structure,parent_id:0
 #: field:hr.salary.rule.category,parent_id:0
 msgid "Parent"
-msgstr "Diretório"
+msgstr "Superior (Conta-pai)"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -101,7 +101,7 @@ msgstr "Empresa"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Done Slip"
-msgstr ""
+msgstr "Holerite Concluído"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -145,7 +145,7 @@ msgstr "Quantidade / Taxa"
 #: field:hr.payslip.worked_days,payslip_id:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip report:payslip:0
 msgid "Pay Slip"
-msgstr "Contracheque"
+msgstr "Holerite"
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:0
@@ -166,7 +166,7 @@ msgstr "Total:"
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
-msgstr "Todas as Regras do Subdiretório"
+msgstr "Todas as Regras Subordinadas"
 
 #. module: hr_payroll
 #: view:hr.payslip:0 view:hr.salary.rule:0
@@ -181,7 +181,7 @@ msgstr "' Data de' contra cheque deve ser antes de 'Data para'"
 #. module: hr_payroll
 #: view:hr.payslip:0 view:hr.salary.rule.category:0
 msgid "Notes"
-msgstr ""
+msgstr "Anotações"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -219,7 +219,7 @@ msgstr "Contribuição para Registrar linhas dos Holerites"
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Atenção !"
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -229,18 +229,18 @@ msgstr "Detalhes por categoria regra salário:"
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
 #. module: hr_payroll
 #: field:hr.payroll.structure,code:0 field:hr.payslip,number:0
 #: report:paylip.details:0 report:payslip:0
 msgid "Reference"
-msgstr ""
+msgstr "Referência"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Draft Slip"
-msgstr "Rascunho de Contracheque"
+msgstr "Holerites Provisórios"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:422
@@ -291,17 +291,17 @@ msgstr "Semanalmente"
 #. module: hr_payroll
 #: field:hr.payslip.line,rate:0
 msgid "Rate (%)"
-msgstr ""
+msgstr "Taxa (%)"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.payslip_report
 msgid "Employee PaySlip"
-msgstr "Contracheque do Empregado"
+msgstr "Holerite do Funcionário"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range_max:0
@@ -322,12 +322,12 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip.employees:0
 msgid "Payslips by Employees"
-msgstr "Holerites pelos colaboradores"
+msgstr "Holerites por Funcionários"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Quarterly"
-msgstr ""
+msgstr "Trimestralmente"
 
 #. module: hr_payroll
 #: field:hr.payslip,state:0 field:hr.payslip.run,state:0
@@ -341,6 +341,10 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Ele é usado no cálculo da percentagem e, por uma porcentagem de valor fixo . "
+"Por exemplo A regra vale-refeição para ter valor fixo de R$ 10 por dia de "
+"trabalho pode ter sua quantidade definida na expressão como "
+"worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
@@ -371,7 +375,7 @@ msgstr "E-mail"
 #. module: hr_payroll
 #: view:hr.payslip.run:0
 msgid "Search Payslip Batches"
-msgstr ""
+msgstr "Procurar Lote de Holerites"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_percentage_base:0
@@ -413,12 +417,12 @@ msgstr ""
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_days:0
 msgid "Number of Days"
-msgstr ""
+msgstr "Número de Dias"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Rejected"
-msgstr ""
+msgstr "Rejeitado"
 
 #. module: hr_payroll
 #: view:hr.payroll.structure:0 field:hr.payroll.structure,rule_ids:0
@@ -442,7 +446,7 @@ msgstr "Linhas do Holerite por Contribuição de Registro"
 #. module: hr_payroll
 #: view:hr.payslip:0 selection:hr.payslip,state:0 view:hr.payslip.run:0
 msgid "Done"
-msgstr ""
+msgstr "Concluído"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,appears_on_payslip:0
@@ -474,12 +478,12 @@ msgstr "Dias Trabalhados & Entradas"
 #. module: hr_payroll
 #: field:hr.payslip,details_by_salary_rule_category:0
 msgid "Details by Salary Rule Category"
-msgstr ""
+msgstr "Detalhes por Categoria de Regras de Salário"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
 msgid "PaySlip Lines"
-msgstr ""
+msgstr "Linhas do Holerite"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,register_id:0 help:hr.salary.rule,register_id:0
@@ -490,7 +494,7 @@ msgstr ""
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_hours:0
 msgid "Number of Hours"
-msgstr ""
+msgstr "Número de Horas"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -506,7 +510,7 @@ msgstr "Faixa Mínima"
 #. module: hr_payroll
 #: field:hr.payslip.line,child_ids:0 field:hr.salary.rule,child_ids:0
 msgid "Child Salary Rule"
-msgstr ""
+msgstr "Regra de Salário Subordinado"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0 field:hr.payslip,date_to:0
@@ -519,13 +523,13 @@ msgstr "Para data"
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Range"
-msgstr ""
+msgstr "Intervalo"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
 msgid "Salary Structures Hierarchy"
-msgstr ""
+msgstr "Hierarquia da Estrutura de Salários"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -547,36 +551,36 @@ msgstr "Informações do Holerite"
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
 msgid "Payslip Computation Details"
-msgstr ""
+msgstr "Detalhes do Cálculo de Holerite"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:872
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s) "
-msgstr ""
+msgstr "Código python errado definido na regra de salário %s (%s) "
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
 msgid "Payslip Input"
-msgstr ""
+msgstr "Entrada de Holerite"
 
 #. module: hr_payroll
 #: view:hr.salary.rule.category:0
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 msgid "Salary Rule Categories"
-msgstr ""
+msgstr "Categoria de Regras de Salário"
 
 #. module: hr_payroll
 #: help:hr.payslip.input,contract_id:0
 #: help:hr.payslip.worked_days,contract_id:0
 msgid "The contract for which applied this input"
-msgstr ""
+msgstr "O contrato a que se aplica esta entrada"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
 msgid "Computation"
-msgstr ""
+msgstr "Calcular"
 
 #. module: hr_payroll
 #: help:hr.payslip.input,amount:0
@@ -585,6 +589,9 @@ msgid ""
 "basic salary for per product can defined in expression like result = "
 "inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
+"É utilizado no cálculo. Para por exemplo, A regra para as vendas com "
+"comissão de 1% do salário base por produto podem definido na expressão como "
+"resultado = inputs.SALEURO.amount * contract.wage * 0,01."
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0 field:hr.payslip.line,amount_select:0
@@ -604,17 +611,19 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
+"Se a sua marcada, indica que todos os recibos gerados a partir daqui são "
+"recibos de reembolso."
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
 msgid "Salary Structures"
-msgstr ""
+msgstr "Estrutura de Salários"
 
 #. module: hr_payroll
 #: view:hr.payslip.run:0
 msgid "Draft Payslip Batches"
-msgstr ""
+msgstr "Lotes de Holerites Temporários"
 
 #. module: hr_payroll
 #: view:hr.payslip:0 selection:hr.payslip,state:0 view:hr.payslip.run:0
@@ -627,22 +636,22 @@ msgstr "Rascunho"
 #: field:hr.payslip.run,date_start:0 report:paylip.details:0 report:payslip:0
 #: field:payslip.lines.contribution.register,date_from:0
 msgid "Date From"
-msgstr ""
+msgstr "Do dia"
 
 #. module: hr_payroll
 #: view:hr.payslip.run:0
 msgid "Done Payslip Batches"
-msgstr ""
+msgstr "Lotes de Holerites Concluídos"
 
 #. module: hr_payroll
 #: report:paylip.details:0
 msgid "Payslip Lines by Contribution Register:"
-msgstr ""
+msgstr "Linhas  de Holerite por Contribuição Registrada"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
 msgid "Conditions"
-msgstr ""
+msgstr "Condições"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_percentage:0
@@ -665,7 +674,7 @@ msgstr "Função do Funcionário"
 #. module: hr_payroll
 #: field:hr.payslip,credit_note:0 field:hr.payslip.run,credit_note:0
 msgid "Credit Note"
-msgstr ""
+msgstr "Anotação de crédito"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -680,12 +689,12 @@ msgstr "Ativo"
 #. module: hr_payroll
 #: view:hr.salary.rule:0
 msgid "Child Rules"
-msgstr ""
+msgstr "Regras Subordinadas"
 
 #. module: hr_payroll
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Erro! Você não pode criar uma Hierarquia de Funcionários recursiva."
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
@@ -707,7 +716,7 @@ msgstr "Expressão Python"
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
 msgid "Designation"
-msgstr ""
+msgstr "Designação"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
@@ -719,7 +728,7 @@ msgstr "Você deve selecionar funcionário(s) para gerar holerite(s)"
 #: code:addons/hr_payroll/hr_payroll.py:861
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)"
-msgstr ""
+msgstr "Quantidade errada definida para a regra de salário %s (%s)"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -742,12 +751,12 @@ msgstr "Contrato"
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
 msgid "Credit"
-msgstr ""
+msgstr "Crédito"
 
 #. module: hr_payroll
 #: field:hr.contract,schedule_pay:0
 msgid "Scheduled Pay"
-msgstr ""
+msgstr "Pagamento Agendado"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:861
@@ -757,13 +766,13 @@ msgstr ""
 #: code:addons/hr_payroll/hr_payroll.py:895
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_python:0
 #: field:hr.salary.rule,condition_python:0
 msgid "Python Condition"
-msgstr ""
+msgstr "Condição Python"
 
 #. module: hr_payroll
 #: view:hr.contribution.register:0
@@ -774,29 +783,29 @@ msgstr "Contribuição"
 #: code:addons/hr_payroll/hr_payroll.py:347
 #, python-format
 msgid "Refund Payslip"
-msgstr ""
+msgstr "Holerites de Reembolso"
 
 #. module: hr_payroll
 #: field:hr.rule.input,input_id:0
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
 msgid "Salary Rule Input"
-msgstr ""
+msgstr "Regra de Entrada de Salário"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:895
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)"
-msgstr ""
+msgstr "Condição python errada definida para a regra de salário %s (%s)"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,quantity:0 field:hr.salary.rule,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantidade"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Refund"
-msgstr ""
+msgstr "Reembolso"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
@@ -810,7 +819,7 @@ msgstr "Contribuição da Empresa"
 #: field:hr.salary.rule.category,code:0 report:paylip.details:0
 #: report:payslip:0
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_python_compute:0
@@ -818,13 +827,13 @@ msgstr ""
 #: field:hr.salary.rule,amount_python_compute:0
 #: selection:hr.salary.rule,amount_select:0
 msgid "Python Code"
-msgstr ""
+msgstr "Código python"
 
 #. module: hr_payroll
 #: field:hr.payslip.input,sequence:0 field:hr.payslip.line,sequence:0
 #: field:hr.payslip.worked_days,sequence:0 field:hr.salary.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Seqüência"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0 report:paylip.details:0
@@ -840,7 +849,7 @@ msgstr "Geral"
 #: code:addons/hr_payroll/hr_payroll.py:664
 #, python-format
 msgid "Salary Slip of %s for %s"
-msgstr ""
+msgstr "Folha de Pagamento de %s para %s"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
@@ -863,7 +872,7 @@ msgstr "Registrar Linha"
 #: view:hr.payslip:0 view:hr.payslip.employees:0
 #: view:payslip.lines.contribution.register:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: hr_payroll
 #: view:hr.payslip.run:0 selection:hr.payslip.run,state:0
@@ -888,7 +897,7 @@ msgstr ""
 #: field:hr.payroll.structure,children_ids:0
 #: field:hr.salary.rule.category,children_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Filhos"
 
 #. module: hr_payroll
 #: help:hr.payslip,credit_note:0
@@ -898,7 +907,7 @@ msgstr "Indica que este holerite tem um reembolso de outro"
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Bi-monthly"
-msgstr ""
+msgstr "Bimestral"
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -921,7 +930,7 @@ msgstr "Contribuição do Registro"
 #. module: hr_payroll
 #: view:payslip.lines.contribution.register:0
 msgid "Print"
-msgstr ""
+msgstr "Imprimir"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -938,22 +947,22 @@ msgstr ""
 #: code:addons/hr_payroll/hr_payroll.py:889
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)"
-msgstr ""
+msgstr "Faixa errada na condição da regra do salário %s (%s)"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0
 msgid "Calculations"
-msgstr ""
+msgstr "Cálculos"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Worked Days"
-msgstr ""
+msgstr "Dias trabalhados :"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Search Payslips"
-msgstr "Procurar Contracheques"
+msgstr "Procurar Holerites"
 
 #. module: hr_payroll
 #: view:hr.payslip.run:0
@@ -995,12 +1004,12 @@ msgstr "Folha de Pagamento"
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.contribution_register
 msgid "PaySlip Lines By Conribution Register"
-msgstr ""
+msgstr "Holerites por linhas de Contribuições Registrada"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
-msgstr ""
+msgstr "Em espera"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -1012,17 +1021,18 @@ msgstr "Endereço"
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)"
 msgstr ""
+"Porcentagem ou quantidade definidas errada, na regra de salário %s (%s)"
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days_line_ids:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
 msgid "Payslip Worked Days"
-msgstr ""
+msgstr "Holerites de Dias Trabalhados"
 
 #. module: hr_payroll
 #: view:hr.salary.rule.category:0
 msgid "Salary Categories"
-msgstr ""
+msgstr "Categorias de Salário"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0 field:hr.contribution.register,name:0
@@ -1042,7 +1052,7 @@ msgstr "Estruturas de folha de pagamento"
 #: view:hr.payslip:0 view:hr.payslip.employees:0
 #: field:hr.payslip.employees,employee_ids:0 view:hr.payslip.line:0
 msgid "Employees"
-msgstr ""
+msgstr "Funcionários"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -1062,11 +1072,14 @@ msgid ""
 "but you can also use categories code fields in lowercase as a variable names "
 "(hra, ma, lta, etc.) and the variable basic."
 msgstr ""
+"Isso será usado para calcular os valores de campos %  em geral é básico, mas "
+"você também pode usar os campos de código de categorias em letras minúsculas "
+"como um nomes de variáveis ​​(HRA, ma, lta, etc) e básicos variável."
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Annually"
-msgstr ""
+msgstr "Anual"
 
 #. module: hr_payroll
 #: field:hr.payslip,input_line_ids:0
@@ -1076,13 +1089,13 @@ msgstr "Entradas de Holerites"
 #. module: hr_payroll
 #: field:hr.payslip.line,salary_rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "Regra"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
 msgid "Salary Rule Categories Hierarchy"
-msgstr ""
+msgstr "Hierarquia da Regra de Salário"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0 field:hr.payslip.line,total:0
@@ -1121,7 +1134,7 @@ msgstr "Gerar Holerites"
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Bi-weekly"
-msgstr ""
+msgstr "Quinzenal"
 
 #. module: hr_payroll
 #: field:hr.employee,total_wage:0
@@ -1400,4 +1413,4 @@ msgstr "Com base na Faixa de"
 #~ msgstr "Contribuição da Empresa"
 
 #~ msgid "Children definition"
-#~ msgstr "Definição do subdiretório"
+#~ msgstr "Definição Subordinada"
