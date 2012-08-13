@@ -279,7 +279,7 @@ class payroll_advice_line(osv.osv):
         if not employee_id:
             return {'value': res}
         employee = hr_obj.browse(cr, uid, [employee_id], context=context)[0]
-        res.update({'name': employee.bank_account_id.acc_number , 'ifsc_code': employee.bank_account_id.bank_bic})
+        res.update({'name': employee.bank_account_id.acc_number , 'ifsc_code': employee.bank_account_id.bank_bic or ''})
         return {'value': res}
 
     _name = 'hr.payroll.advice.line'
