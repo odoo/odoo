@@ -35,7 +35,8 @@ class hr_salary_employee_bymonth(osv.osv_memory):
     }
 
     def _get_default_category(self, cr, uid, context=None):
-        return self.pool.get('hr.salary.rule.category').search(cr, uid, [('code', '=', 'NET')], context=context)
+        category_ids = self.pool.get('hr.salary.rule.category').search(cr, uid, [('code', '=', 'NET')], context=context)
+        return category_ids and category_ids[0] or False
 
     _defaults = {
          'start_date': lambda *a: time.strftime('%Y-01-01'),
