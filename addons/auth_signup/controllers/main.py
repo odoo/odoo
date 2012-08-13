@@ -3,7 +3,7 @@ import logging
 import werkzeug.urls
 
 import openerp.modules.registry
-import openerp.addons.web.controllers.main
+from openerp.addons.web.controllers.main import login_and_redirect
 import openerp.addons.web.common.http as openerpweb
 
 _logger = logging.getLogger(__name__)
@@ -15,21 +15,21 @@ class OpenIDController(openerpweb.Controller):
     def signup(self, req, dbname, name, login, password):
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         cr = registry.db.cursor()
+        url = '/'
         try:
             try:
-                u = registry.get('res.users')
-                r = u.auth_signup(cr, 1, name, login, password)
+                Users = registry.get('res.users')
+                credentials = Users.auth_signup(cr, 1, name, login, password)
                 cr.commit()
-                return openerp.addons.web.controllers.main.login_and_redirect(req, dbname, login, password)
-                # or
-                req.authenticate(*r)
-                url = "/"
+                return login_and_redirect(req, *credentials)
             except AttributeError:
                 # auth_signup is not installed
-                url = "/#action=auth_signup&error=1"
-            except Exception,e:
+                _logger.exception('attribute error when signup')
+                url = "/#action=auth_signup&error=NA"   # Not Available
+            except Exception:
                 # signup error
-                url = "/#action=auth_signup&error=2"
+                _logger.exception('error when signup')
+                url = "/#action=auth_signup&error=UE"   # Unexcpected Error
         finally:
             cr.close()
         return werkzeug.utils.redirect(url)

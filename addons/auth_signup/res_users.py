@@ -1,5 +1,5 @@
 import openerp
-from openerp.osv import osv, fields
+from openerp.osv import osv
 
 class res_users(osv.Model):
     _inherit = 'res.users'
@@ -20,9 +20,9 @@ class res_users(osv.Model):
             self.pool.get('res.users').create(cr, 1, new_user, context=context)
 
     def auth_signup_check(self, cr, uid, login, key, context=None):
-        res = self.search(cr, uid, [("login","=",login)])
+        res = self.search(cr, uid, [("login", "=", login)])
         if res:
-            user_id = res[0]['id']
+            user_id = res[0]
             self.check(cr.dbname, user_id, key)
             return user_id
         return False
@@ -41,7 +41,7 @@ class res_users(osv.Model):
                     'password': password,
                     'active': True,
                 }
-                self.auth_signup_create(cr,uid, new_user)
+                self.auth_signup_create(cr, uid, new_user)
                 return r
             else:
                 print "Existing same"
