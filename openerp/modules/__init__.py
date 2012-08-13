@@ -24,11 +24,7 @@
 
 """
 
-import openerp.modules.db
-import openerp.modules.graph
-import openerp.modules.loading
-import openerp.modules.migration
-import openerp.modules.module
+from . import db, graph, loading, migration, module, registry
 
 # TODO temporarily expose those things
 from openerp.modules.module import \

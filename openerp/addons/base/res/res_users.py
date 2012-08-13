@@ -325,6 +325,8 @@ class users(osv.osv):
         'context_lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
         'context_tz': lambda self, cr, uid, context: context.get('tz', False),
         'image': _get_default_image,
+        'image_small': _get_default_image,
+        'image_medium': _get_default_image,
         'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
