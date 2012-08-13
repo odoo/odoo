@@ -181,12 +181,8 @@ class l10n_be_vat_declaration(osv.osv_memory):
                     cases_list.append(item)
         cases_list.sort()
         for item in cases_list:
-            grid_amount_data = {
-                    'code': str(int(item['code'])),
-                    'amount': str(abs(item['sum_period'])),
-                    }
-            data_of_file += '\n\t\t\t<ns2:Amount GridNumber="%(code)s">%(amount)s</ns2:Amount''>' % (grid_amount_data)
-            
+            data_of_file += '\n\t\t\t<ns2:Amount GridNumber="%s">%.2f</ns2:Amount''>' % (str(int(item['code'])), abs(item['sum_period']))
+
         data_of_file += '\n\t\t</ns2:Data>'
         data_of_file += '\n\t\t<ns2:ClientListingNihil>%(client_nihil)s</ns2:ClientListingNihil>' % (file_data)
         data_of_file += '\n\t\t<ns2:Ask Restitution="%(ask_restitution)s" Payment="%(ask_payment)s"/>' % (file_data)
