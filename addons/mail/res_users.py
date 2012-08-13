@@ -85,7 +85,6 @@ class res_users(osv.osv):
             cr.execute('ALTER TABLE res_users ALTER COLUMN alias_id SET NOT NULL')
         except Exception:
             pass
-            
     
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
