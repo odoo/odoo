@@ -20,11 +20,9 @@
 ##############################################################################
 
 import addons
-import io
 import logging
 from osv import fields, osv
-from PIL import Image
-import StringIO
+import tools
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
@@ -66,7 +64,7 @@ class hr_employee_category(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Categories.', ['parent_id'])
+        (_check_recursion, 'Error! You cannot create recursive Categories.', ['parent_id'])
     ]
 
 hr_employee_category()
@@ -149,32 +147,14 @@ class hr_employee(osv.osv):
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
 
-    def onchange_photo(self, cr, uid, ids, value, context=None):
-        if not value:
-            return {'value': {'photo_big': value, 'photo': value} }
-        return {'value': {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context), 'photo': self._photo_resize(cr, uid, value, context=context)} }
-    
-    def _set_photo(self, cr, uid, id, name, value, args, context=None):
-        if not value:
-            vals = {'photo_big': value}
-        else:
-            vals = {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context)}
-        return self.write(cr, uid, [id], vals, context=context)
-    
-    def _photo_resize(self, cr, uid, photo, heigth=180, width=150, context=None):
-        image_stream = io.BytesIO(photo.decode('base64'))
-        img = Image.open(image_stream)
-        img.thumbnail((heigth, width), Image.ANTIALIAS)
-        img_stream = StringIO.StringIO()
-        img.save(img_stream, "JPEG")
-        return img_stream.getvalue().encode('base64')
-    
-    def _get_photo(self, cr, uid, ids, name, args, context=None):
+    def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
-        for hr_empl in self.browse(cr, uid, ids, context=context):
-            if hr_empl.photo_big:
-                result[hr_empl.id] = self._photo_resize(cr, uid, hr_empl.photo_big, context=context)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
+    
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
     
     _columns = {
         'country_id': fields.many2one('res.country', 'Nationality'),
@@ -195,16 +175,31 @@ class hr_employee(osv.osv):
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager'),
-        'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Categories'),
+        'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Tags'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
-        'photo_big': fields.binary('Big-sized employee photo', help="This field holds the photo of the employee. The photo field is used as an interface to access this field. The image is base64 encoded, and PIL-supported. Full-sized photo are however resized to 540x450 px."),
-        'photo': fields.function(_get_photo, fnct_inv=_set_photo, string='Employee photo', type="binary",
+        'image': fields.binary("Photo",
+            help="This field holds the image used as a photo for the "\
+                 "employee. The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 1024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
-                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['photo_big'], 10),
-            }, help="Image used as photo for the employee. It is automatically resized as a 180x150 px image. A larger photo is stored inside the photo_big field."),
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized photo of the employee. It is automatically "\
+                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Smal-sized photo", type="binary", multi="_get_image",
+            store = {
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized photo of the employee. It is automatically "\
+                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
@@ -260,13 +255,13 @@ class hr_employee(osv.osv):
             work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).user_email
         return {'value': {'work_email' : work_email}}
 
-    def _default_get_photo(self, cr, uid, context=None):
-        photo_path = addons.get_module_resource('hr','images','photo.png')
-        return self._photo_resize(cr, uid, open(photo_path, 'rb').read().encode('base64'), context=context)
+    def _get_default_image(self, cr, uid, context=None):
+        image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'active': 1,
-        'photo': _default_get_photo,
+        'image': _get_default_image,
         'marital': 'single',
         'color': 0,
     }
@@ -282,7 +277,7 @@ class hr_employee(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
+        (_check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
     ]
 
 hr_employee()
@@ -315,7 +310,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s".', data.get('name','<new'))
 
         return user_id
 

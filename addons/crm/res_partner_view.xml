@@ -141,7 +141,7 @@
                     <button type="action" string="Schedule a Call" 
                         name="%(crm.crm_case_categ_phone_create_partner)d" 
                         context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
-                    <button type="action" string="Opportunities"
+                    <button type="action" string="Opportunities" attrs="{'invisible': [('customer', '=', False)]}"
                         name="%(crm.crm_case_category_act_oppor11)d" context="{'search_default_partner_id': active_id}"/>
                 </xpath>
             </field>

@@ -1,0 +1,178 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-06-16 22:21+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:37+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
+
+#. module: users_ldap
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
+
+#. module: users_ldap
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "選択した会社は、このユーザに許された会社ではありません。"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_tls:0
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication "
+"attempts will fail."
+msgstr ""
+"LDAPサーバへの接続時に安全なTLS/SSL暗号化を要求します。このオプションはサーバがSTARTTLSが使用可能であることを要求します。そうでない場合"
+"は全ての認証要求は失敗します。"
+
+#. module: users_ldap
+#: view:res.company:0
+#: view:res.company.ldap:0
+msgid "LDAP Configuration"
+msgstr "LDAP設定"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_binddn:0
+msgid "LDAP binddn"
+msgstr "LDAPバインディング"
+
+#. module: users_ldap
+#: help:res.company.ldap,create_user:0
+msgid "Create the user if not in database"
+msgstr "データベースにない場合、ユーザを作成します。"
+
+#. module: users_ldap
+#: help:res.company.ldap,user:0
+msgid "Model used for user creation"
+msgstr "ユーザ作成のために使用するモデル"
+
+#. module: users_ldap
+#: field:res.company.ldap,company:0
+msgid "Company"
+msgstr "会社"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_server:0
+msgid "LDAP Server address"
+msgstr "LDAPサーバアドレス"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_server_port:0
+msgid "LDAP Server port"
+msgstr "LDAPサーバポート"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr "LDAPサーバ上のユーザアカウントはディレクトリへのクエリーのために使用されます。匿名接続する場合は空のままにして下さい。"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
+msgstr "LDAPベース"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "User Information"
+msgstr "ユーザー情報"
+
+#. module: users_ldap
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "会社名は固有でなければいけません。"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Process Parameter"
+msgstr "処理パラメータ"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company_ldap
+msgid "res.company.ldap"
+msgstr ""
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
+msgstr "TLS を使用"
+
+#. module: users_ldap
+#: field:res.company.ldap,sequence:0
+msgid "Sequence"
+msgstr "順序"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Login Information"
+msgstr "ログイン情報"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Server Information"
+msgstr "サーバー情報"
+
+#. module: users_ldap
+#: model:ir.actions.act_window,name:users_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "LDAPサーバの設定"
+
+#. module: users_ldap
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "同じログインでは２つのユーザを持てません。"
+
+#. module: users_ldap
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "LDAPパラメータ"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr "LDAPサーバのユーザアカウントのパスワードはディレクトリへのクエリー使用されます。"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "LDAPパスワード"
+
+#. module: users_ldap
+#: field:res.company.ldap,user:0
+msgid "Model User"
+msgstr "モデルユーザ"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_users
+msgid "res.users"
+msgstr ""
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_filter:0
+msgid "LDAP filter"
+msgstr "LDAPフィルタ"
+
+#. module: users_ldap
+#: field:res.company.ldap,create_user:0
+msgid "Create user"
+msgstr "ユーザの作成"
