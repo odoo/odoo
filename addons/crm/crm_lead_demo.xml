@@ -5,218 +5,273 @@
             Demo Leads
             -->
 
-        <record id="crm_case_itisatelesalescampaign0" model="crm.lead">
-            <field name="type_id" ref="crm.type_lead1"/>
-            <field eval="'3'" name="priority"/>
+        <record id="crm_case_1" model="crm.lead">
             <field name="type">lead</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="'The Oil Company'" name="partner_name"/>
-            <field name="section_id" ref="crm.section_sales_marketing_department"/>
-            <field eval="'Luc Latour'" name="contact_name"/>
-            <field name="title" ref="base.res_partner_title_sir"/>
-            <field eval="'Training Manager'" name="function"/>
-            <field eval="'Paris'" name="city"/>
+            <field name="name">Plan to Attend a Training</field>
+            <field name="contact_name">Jason Dunagan</field>
+            <field name="partner_name">Le Club SARL</field>
+            <field name="email_from">jason@leclub.fr</field>
+            <field name="partner_id" ref=""/>
+            <field name="function">Training Manager</field>
+            <field name="street">73, rue Léon Dierx</field>
             <field name="country_id" ref="base.fr"/>
-            <field eval="'luc.latour@oilcompany.fr'" name="email_from"/>
-            <field eval="'0033 621 782-0636'" name="mobile"/>
+            <field name="city">Paris</field>
+            <field name="zip">93190</field>
+            <field name="phone">+33 1 25 54 45 69</field>
+            <field name="type_id" ref="type_lead2"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor6])]"/>
+            <field name="channel_id" ref="crm_case_channel_email"/>
+            <field name="priority">1</field>
+            <field name="section_id" ref="crm_case_section_4"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="description">Hello,
+I am Jason from Le Club SARL,
+I am intertested to attend Training organized in your company,
+Can you send details,</field>
             <field eval="1" name="active"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Plan to Attend a Training'" name="name"/>
-            <field eval="'0033 769 703-274'" name="phone"/>
         </record>
-        <record id="crm_case_electonicgoodsdealer0" model="crm.lead">
-            <field name="type_id" ref="crm.type_lead7"/>
-            <field eval="'4'" name="priority"/>
+
+        <record id="crm_case_2" model="crm.lead">
             <field name="type">lead</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="'Le Club SARL'" name="partner_name"/>
-            <field eval="'Marc Dufour'" name="contact_name"/>
-            <field name="title" ref="base.res_partner_title_sir"/>
-            <field eval="'Purchase Manager'" name="function"/>
-            <field eval="'Bordeaux'" name="city"/>
+            <field name="name">Interest in Your New Software</field>
+            <field name="contact_name">Marc Dufour</field>
+            <field name="partner_name">The Oil Company</field>
+            <field name="email_from">md@oilcompany.fr</field>
+            <field name="partner_id" ref=""/>
+            <field name="function">Purchase Manager</field>
             <field name="country_id" ref="base.fr"/>
-            <field eval="'md@leclub.fr'" name="email_from"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="'(392) 895-7917'" name="mobile"/>
+            <field name="city">Bordeaux</field>
+            <field name="type_id" ref="type_lead7"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="channel_id" ref="crm_case_channel_website"/>
+            <field name="priority">4</field>
+            <field name="section_id" ref="crm_case_section_3"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="description">Want to know features and benifits to use the new software.</field>
             <field eval="1" name="active"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor2')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Interest in Your New Product'" name="name"/>
-            <field eval="'(956) 293-2595'" name="phone"/>
         </record>
-        <record id="crm_case_developingwebapplications0" model="crm.lead">
-            <field name="type_id" ref="crm.type_lead5"/>
-            <field eval="'2'" name="priority"/>
+
+        <record id="crm_case_3" model="crm.lead">
             <field name="type">lead</field>
-            <field name="user_id" ref="base.user_demo"/>
-            <field eval="'The Kompany'" name="partner_name"/>
-            <field eval="'John Miller'" name="contact_name"/>
-            <field eval="'New-York'" name="city"/>
+            <field name="name">Need Info about Web Design</field>
+            <field name="contact_name">John Miller</field>
+            <field name="partner_name">The Kompany</field>
+            <field name="email_from">contact@thkompany.com</field>
+            <field name="partner_id" ref=""/>
             <field name="country_id" ref="base.us"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="'(820) 167-3208'" name="mobile"/>
+            <field name="city">New-York</field>
+            <field name="type_id" ref="type_lead5"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor4])]"/>
+            <field name="channel_id" ref=""/>
+            <field name="priority">2</field>
+            <field name="section_id" ref="crm_case_section_2"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="stage_lead2"/>
             <field eval="1" name="active"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor4')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Need Info about Web Design'" name="name"/>
-            <field eval="'(079) 681-2139'" name="phone"/>
-            <field eval="'contact@thkompany.com'" name="email_from"/>
         </record>
-        <record id="crm_case_qrecorp0" model="crm.lead">
-            <field name="type_id" ref="crm.type_lead8"/>
-            <field eval="'3'" name="priority"/>
+
+        <record id="crm_case_4" model="crm.lead">
             <field name="type">lead</field>
-            <field eval="'The Gas Company'" name="partner_name"/>
-            <field eval="'Henry Mc Coy'" name="contact_name"/>
-            <field eval="'London'" name="city"/>
+            <field name="name">Need a New Website</field>
+            <field name="contact_name">Henry Campbell</field>
+            <field name="partner_name">Burstein-Applebee</field>
+            <field name="email_from">hmc@yahoo.com</field>
+            <field name="partner_id" ref=""/>
             <field name="country_id" ref="base.uk"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="'(077) 582-4035'" name="mobile"/>
+            <field name="city">Drury</field>
+            <field name="type_id" ref="type_lead8"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor5])]"/>
+            <field name="channel_id" ref=""/>
+            <field name="priority">3</field>
+            <field name="section_id" ref="crm_case_section_2"/>
+            <field name="user_id" ref=""/>
+            <field name="stage_id" ref="stage_lead7"/>
             <field eval="1" name="active"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Need a New Website'" name="name"/>
-            <field eval="'(514) 698-4118'" name="phone"/>
-            <field eval="'hmc@thgascompany.com'" name="email_from"/>
         </record>
-        <record id="crm_case_itdeveloper0" model="crm.lead">
-            <field name="type_id" ref="crm.type_lead4"/>
-            <field eval="'3'" name="priority"/>
+
+        <record id="crm_case_5" model="crm.lead">
             <field name="type">lead</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="'Stonage IT'" name="partner_name"/>
-            <field eval="'Carrie Helle'" name="contact_name"/>
-            <field eval="'Purchase Manager'" name="function"/>
-            <field eval="'Bruxelles'" name="city"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="section_id" ref="crm.section_sales_marketing_department"/>
-            <field eval="'(333) 715-1450'" name="mobile"/>
+            <field name="name">Need a Quotation for Computers with Accessories</field>
+            <field name="contact_name">Carrie Helle</field>
+            <field name="partner_name">Stonage IT</field>
+            <field name="email_from">helle@stonageit.be</field>
+            <field name="partner_id" ref=""/>
+            <field name="function">Purchase Manager</field>
+            <field name="street">50 West street,</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="city">Franklinville</field>
+            <field name="zip">NJ 08322</field>
+            <field name="phone">+1 813 494 5005</field>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="channel_id" ref="crm_case_channel_website"/>
+            <field name="priority">3</field>
+            <field name="section_id" ref="section_sales_department"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="description">Hi, Can you send a quotation for 20 Computers with speakers? 
+Regards,
+Carrie Helle,
+Purchase Manager
+Stonage IT,
+Franklinville
+Contact: +1 813 494 5005</field>
             <field eval="1" name="active"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Need a Quotation for PC1'" name="name"/>
-            <field eval="'(855) 924-4364'" name="phone"/>
-            <field eval="'helle@stonageit.be'" name="email_from"/>
         </record>
-        <record id="crm_case_mgroperations0" model="crm.lead">
-            <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_lead3"/>
-            <field name="partner_id" ref="base.res_partner_9"/>
-            <field eval="'3'" name="priority"/>
+
+        <record id="crm_case_6" model="crm.lead">
             <field name="type">lead</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="'Opensides'" name="partner_name"/>
-            <field eval="'Tina Pinero'" name="contact_name"/>
-            <field eval="'Consultant'" name="function"/>
-            <field eval="'Roma'" name="city"/>
+            <field name="name">Need Info about your Services</field>
+            <field name="contact_name">Tina Pinero</field>
+            <field name="partner_name">Opensides</field>
+            <field name="email_from">tina@opensides.be</field>
+            <field name="partner_id" ref=""/>
+            <field name="function">Consultant</field>
             <field name="country_id" ref="base.it"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="'(468) 017-2684'" name="mobile"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor8')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Need Info about your Services'" name="name"/>
-            <field eval="'(373) 907-1009'" name="phone"/>
-            <field eval="'info@opensides.be'" name="email_from"/>
-        </record>
-        <record id="crm_case_vpoperations0" model="crm.lead">
+            <field name="city">Roma</field>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor3,categ_oppor4])]"/>
+            <field name="channel_id" ref=""/>
+            <field name="priority">3</field>
+            <field name="section_id" ref="crm_case_section_4"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="stage_lead1"/>
             <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_lead8"/>
-            <field eval="'3'" name="priority"/>
+        </record>
+
+        <record id="crm_case_7" model="crm.lead">
             <field name="type">lead</field>
-            <field name="user_id" ref="base.user_demo"/>
-            <field eval="'Gardner Group'" name="partner_name"/>
-            <field eval="'Wendi Baltz'" name="contact_name"/>
-            <field eval="'Journalist'" name="function"/>
-            <field eval="'Kiev'" name="city"/>
+            <field name="name">Info about Your Company?</field>
+            <field name="contact_name">Wendi Baltz</field>
+            <field name="partner_name">Gardner Group</field>
+            <field name="partner_id" ref=""/>
+            <field name="function">Journalist</field>
             <field name="country_id" ref="base.ua"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="'(463) 014-1208'" name="mobile"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor4')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Info about Your Company ?'" name="name"/>
-            <field eval="'(282) 603-7489'" name="phone"/>
-        </record>
-        <record id="crm_case_webvisitor0" model="crm.lead">
-            <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_lead5"/>
-            <field eval="'1'" name="priority"/>
-            <field name="type">lead</field>
+            <field name="city">Kiev</field>
+            <field name="type_id" ref="type_lead8"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor4])]"/>
+            <field name="channel_id" ref=""/>
+            <field name="priority">5</field>
+            <field name="section_id" ref="crm_case_section_4"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field eval="'Survey'" name="name"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor6')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Survey Expert'" name="partner_name"/>
-            <field eval="'John Smith'" name="contact_name"/>
-            <field eval="'Sales'" name="function"/>
-            <field eval="'Cambridge'" name="city"/>
+            <field name="stage_id" ref="stage_lead7"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_8" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Product catalogue</field>
+            <field name="contact_name">Logan</field>
+            <field name="partner_name">ESM Expert</field>
+            <field name="email_from">logan12_expert@gmail.com</field>
+            <field name="partner_id" ref=""/>
+            <field name="function">Sales</field>
             <field name="country_id" ref="base.uk"/>
-            <field eval="'smith_john@gmail.com'" name="email_from"/>
-            <field eval="'(282) 596-8584'" name="phone"/>
-        </record>
-        <record id="crm_case_business_card0" model="crm.lead">
+            <field name="city">Cambridge</field>
+            <field name="type_id" ref="type_lead5"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor6,categ_oppor8])]"/>
+            <field name="channel_id" ref=""/>
+            <field name="priority">4</field>
+            <field name="section_id" ref="section_sales_department"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="stage_lead7"/>
             <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_lead3"/>
-            <field eval="'2'" name="priority"/>
+        </record>
+
+        <record id="crm_case_9" model="crm.lead">
             <field name="type">lead</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="'Partnership'" name="name"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor5')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Marketing Business'" name="partner_name"/>
-            <field eval="'Laure Smith'" name="contact_name"/>
-            <field eval="'Sales'" name="function"/>
-            <field eval="'Oxford'" name="city"/>
+            <field name="name">Partnership Details</field>
+            <field name="contact_name">Delisle Albert</field>
+            <field name="partner_name">Marketing Business</field>
+            <field name="email_from">d.albert@marketing-business.com</field>
+            <field name="partner_id" ref=""/>
+            <field name="function">Sales</field>
             <field name="country_id" ref="base.uk"/>
-            <field eval="'l.smith@marketing-business.com'" name="email_from"/>
-            <field eval="'(252) 578-7894'" name="phone"/>
-        </record>
-        <record id="crm_case_imported_contact0" model="crm.lead">
+            <field name="city">Oxford</field>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="channel_id" ref="crm_case_channel_phone"/>
+            <field name="priority">2</field>
+            <field name="section_id" ref="section_sales_department"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="stage_lead1"/>
             <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_lead8"/>
-            <field eval="'2'" name="priority"/>
-            <field name="type">lead</field>
-            <field eval="'Info'" name="name"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Business Group'" name="partner_name"/>
         </record>
-        <record id="crm_case_employee0" model="crm.lead">
-            <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_lead3"/>
-            <field eval="'3'" name="priority"/>
+
+        <record id="crm_case_10" model="crm.lead">
             <field name="type">lead</field>
+            <field name="name">Information about laptop</field>
+            <field name="contact_name">Andrew</field>
+            <field name="partner_name">Komerci</field>
+            <field name="partner_id" ref=""/>
+            <field name="function">Medical illustrator</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="city">Sevilla</field>
+            <field name="type_id" ref="type_lead8"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="channel_id" ref="crm_case_channel_email"/>
+            <field name="priority">2</field>
+            <field name="section_id" ref="crm_case_section_3"/>
+            <field name="user_id" ref=""/>
+            <field name="stage_id" ref="stage_lead1"/>
+            <field name="description">hi,
+I want to know specification and cost of laptops of your company.
+Thanks,
+Andrew</field>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_11" model="crm.lead">
+            <field name="type">lead</field>
+            <field name="name">Need estimated cost for new project</field>
+            <field name="contact_name">Thomas Passot</field>
+            <field name="partner_name">Agrolait</field>
+            <field name="email_from">p.thomas@agrolait.com</field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="function">Functional Consultant</field>
+            <field name="country_id" ref=""/>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="channel_id" ref="crm_case_channel_direct"/>
+            <field name="priority">3</field>
+            <field name="section_id" ref="crm_case_section_2"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field eval="'Need Info about Onsite Intervention'" name="name"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor3')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Agrolait'" name="partner_name"/>
-            <field eval="'Sylvie Lelitre'" name="contact_name"/>
-        </record>
-        <record id="crm_case_company_partnership0" model="crm.lead">
+            <field name="stage_id" ref="stage_lead1"/>
             <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_lead3"/>
-            <field eval="'3'" name="priority"/>
+        </record>
+
+        <record id="crm_case_12" model="crm.lead">
             <field name="type">lead</field>
+            <field name="name">Need Quotation for 100 PC and 100 Keyboards</field>
+            <field name="contact_name">Bojing Hú</field>
+            <field name="partner_name">Incom Corporation</field>
+            <field name="email_from">bhu.a100@gmail.com</field>
+            <field name="partner_id" ref=""/>
+            <field name="country_id" ref="base.cn"/>
+            <field name="city">Shenzhen</field>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="channel_id" ref="crm_case_channel_website"/>
+            <field name="priority">2</field>
+            <field name="section_id" ref="section_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field eval="'Need Quotation for 100 PC and 100 Keyboards'" name="name"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Centrale d\'achats 1'" name="partner_name"/>
-       </record>
+            <field name="stage_id" ref="stage_lead2"/>
+            <field eval="1" name="active"/>
+        </record>
+
 
         <!--        Call Function to Cancel the leads (set as Dead) -->
         <function model="crm.lead" name="case_cancel"
-            eval="[ ref('crm_case_company_partnership0'), ref('crm_case_vpoperations0'),
-                    ref('crm_case_developingwebapplications0'), ref('crm_case_webvisitor0')],
+            eval="[ ref('crm_case_12'), ref('crm_case_7'),
+                    ref('crm_case_3'), ref('crm_case_8')],
                   {'install_mode': True}"
         />
         <!--        Call Function to set the leads as Unread -->
         <function model="crm.lead" name="message_mark_as_unread"
-            eval="[ ref('crm_case_itisatelesalescampaign0'), ref('crm_case_electonicgoodsdealer0'),
-                    ref('crm_case_itdeveloper0'), ref('crm_case_employee0')], {}"
+            eval="[ ref('crm_case_1'), ref('crm_case_2'),
+                    ref('crm_case_5'), ref('crm_case_11')], {}"
         />
 
 
@@ -224,71 +279,280 @@
             Demo Opportunities
             -->
 
-        <record id="crm_case_construstazunits0" model="crm.lead">
-            <field eval="60" name="probability"/>
-            <field eval="1" name="active"/>
+
+        <record id="crm_case_13" model="crm.lead">
             <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead1"/>
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="'150000'" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
-            <field name="stage_id" ref="crm.stage_lead4"/>
-            <field eval="'Plan to buy 200 PC2'" name="name"/>
-            <field eval="'Conf call with purchase manager'" name="title_action"/>
-        </record>
-        <record id="crm_case_rdroundfundingunits0" model="crm.lead">
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead2"/>
-            <field name="partner_id" ref="base.res_partner_9"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field eval="45000.0" name="planned_revenue"/>
-            <field eval="35" name="probability"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor3')])]"/>
+            <field name="name">Plan to buy 60 keyboards and mouses</field>
+            <field eval="40000" name="planned_revenue"/>
+            <field eval="40.0" name="probability"/>
+            <field name="contact_name">Will McEncroe</field>
+            <field name="email_from">willmac@rediffmail.com</field>
+            <field name="street">1 rue Rockfeller</field>
+            <field name="country_id" ref="base.at"/>
+            <field name="city">Melbourne</field>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="channel_id" ref="crm_case_channel_email"/>
+            <field name="priority">1</field>
+            <field eval="time.strftime('%Y-%m-25')" name="date_deadline"/>
+            <field eval="time.strftime('%Y-%m-12')" name="date_action"/>
+            <field name="title_action">Meeting for pricing information.</field>
+            <field name="section_id" ref="crm_case_section_3"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
-            <field eval="'Pricing Information of Onsite Intervention'" name="name"/>
-            <field eval="'Send price list regarding our interventions'" name="title_action"/>
-            <field eval="time.strftime('%Y-%m-03')" name="date_action"/>
-            <field eval="time.strftime('%Y-%m-08')" name="date_deadline"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_14" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Interest in your Graphic Design Project</field>
+            <field eval="24000" name="planned_revenue"/>
+            <field eval="30.0" name="probability"/>
+            <field name="partner_name">Agrolait</field>
+            <field name="email_from">info@agrolait.com</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="street">69 rue de Chimay</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Wavre</field>
+            <field name="zip">1300</field>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor2])]"/>
+            <field name="channel_id" ref="crm_case_channel_website"/>
+            <field name="priority">3</field>
+            <field eval="time.strftime('%Y-%m-23')" name="date_deadline"/>
+            <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
+            <field name="title_action">Send Catalogue by Email</field>
+            <field name="section_id" ref="crm_case_section_4"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_15" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Plan to buy a Laptop</field>
+            <field eval="2570" name="planned_revenue"/>
+            <field eval="30.0" name="probability"/>
+            <field name="street">12 rue Albert Einstein</field>
+            <field name="country_id" ref="base.tr"/>
+            <field name="city">Istanbul</field>
+            <field name="type_id" ref="type_lead8"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="priority">1</field>
+            <field eval="time.strftime('%Y-%m-12')" name="date_deadline"/>
+            <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
+            <field name="title_action">Call to ask system requirement</field>
+            <field name="section_id" ref="crm_case_section_3"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="crm.stage_lead4"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_16" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Need a new design for my website</field>
+            <field eval="3800" name="planned_revenue"/>
+            <field eval="100.0" name="probability"/>
+            <field name="contact_name">Robin Smith</field>
+            <field name="partner_name">Global Solutions</field>
+            <field name="partner_id" ref="base.res_partner_21"/>
+            <field name="street">Union Road</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">Liverpool</field>
+            <field name="zip">L25 4RL</field>
+            <field name="type_id" ref="type_lead5"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor5])]"/>
+            <field name="priority">2</field>
+            <field eval="time.strftime('%Y-%m-30')" name="date_deadline"/>
+            <field eval="time.strftime('%Y-%m-1')" name="date_action"/>
+            <field name="title_action">Convert to quote</field>
+            <field name="section_id" ref="crm_case_section_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead6"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_17" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Pricing Information of Services</field>
+            <field eval="100" name="planned_revenue"/>
+            <field eval="35.0" name="probability"/>
+            <field name="contact_name">Oliver Passot</field>
             <field name="partner_name">BalmerInc S.A.</field>
             <field name="street">Rue des Palais 51, bte 33</field>
-            <field name="city">Bruxelles</field>
-            <field eval="1000" name="zip"/>
             <field name="country_id" ref="base.be"/>
-        </record>
-        <record id="crm_case_rdroundfundingunits25" model="crm.lead">
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead2"/>
-            <field name="partner_id" ref="base.res_partner_lucievonck0"/>
-            <field eval="'3'" name="priority"/>
+            <field name="city">Brussels</field>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor3,categ_oppor4])]"/>
+            <field name="channel_id" ref="crm_case_channel_website"/>
+            <field name="priority">4</field>
+            <field eval="time.strftime('%Y-%m-8')" name="date_deadline"/>
+            <field eval="time.strftime('%Y-%m-3')" name="date_action"/>
+            <field name="title_action">Send price list regarding our interventions</field>
+            <field name="section_id" ref="crm_case_section_2"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field eval="30000.0" name="planned_revenue"/>
-            <field eval="30" name="probability"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor3')])]"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
-            <field eval="'Interest in your Kitchen Design Project'" name="name"/>
-            <field eval="'Send Catalogue by Email'" name="title_action"/>
-            <field eval="time.strftime('%Y-01-10')" name="date_action"/>
-            <field eval="time.strftime('%Y-02-23')" name="date_deadline"/>
-            <field name="partner_name">Lucie Vonck</field>
-            <field name="street">Chaussée de Namur</field>
-            <field name="city">Grand-Rosière</field>
-            <field eval="1367" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="color">8</field>
+            <field eval="1" name="active"/>
         </record>
+
+        <record id="crm_case_18" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Student's training plan in your Organization</field>
+            <field eval="35000" name="planned_revenue"/>
+            <field eval="25.0" name="probability"/>
+            <field name="contact_name">Leland Martinez</field>
+            <field name="partner_name">Toronto University</field>
+            <field name="street">2488 Queens Bay</field>
+            <field name="country_id" ref="base.ca"/>
+            <field name="city">Toronto</field>
+            <field name="type_id" ref="type_lead8"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor4,categ_oppor6])]"/>
+            <field name="priority">4</field>
+            <field eval="time.strftime('%Y-%m-13')" name="date_deadline"/>
+            <field eval="time.strftime('%Y-%m-4')" name="date_action"/>
+            <field name="title_action">Call to define real needs about training</field>
+            <field name="section_id" ref="crm_case_section_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_19" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Interest in your customizable Pcs</field>
+            <field eval="15000" name="planned_revenue"/>
+            <field eval="65.0" name="probability"/>
+            <field name="contact_name">Robin Smith</field>
+            <field name="partner_name">Global Solutions</field>
+            <field name="partner_id" ref="base.res_partner_21"/>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">Liverpool</field>
+            <field name="zip">L25 4RL</field>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
+            <field name="priority">1</field>
+            <field eval="time.strftime('%Y-%m-10')" name="date_deadline"/>
+            <field eval="time.strftime('%Y-%m-5')" name="date_action"/>
+            <field name="title_action">Ask for the good receprion of the proposition</field>
+            <field name="section_id" ref="crm_case_section_1"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="crm.stage_lead4"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_20" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Interest in your Partnership Contract</field>
+            <field eval="19800" name="planned_revenue"/>
+            <field name="contact_name">John M. Brown</field>
+            <field name="partner_name">Epic Technologies</field>
+            <field name="email_from">john.b@tech.info</field>
+            <field name="partner_id" ref="base.res_partner_5"/>
+            <field name="type_id" ref="type_lead3"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor4,categ_oppor8])]"/>
+            <field name="priority">2</field>
+            <field name="section_id" ref="crm_case_section_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_21" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">“Resource Planning” project develpment</field>
+            <field eval="350" name="planned_revenue"/>
+            <field name="partner_id" ref="base.res_partner_7"/>
+            <field name="type_id" ref="type_lead2"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="channel_id" ref="crm_case_channel_phone"/>
+            <field name="priority">3</field>
+            <field name="section_id" ref="crm_case_section_4"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="crm.stage_lead8"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_22" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Need script to Import external data</field>
+            <field eval="560" name="planned_revenue"/>
+            <field eval="30.0" name="probability"/>
+            <field name="contact_name">Benjamin Flores</field>
+            <field name="partner_name">Nebula Business</field>
+            <field name="partner_id" ref="base.res_partner_17"/>
+            <field name="type_id" ref="type_lead7"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor3])]"/>
+            <field name="channel_id" ref="crm_case_channel_email"/>
+            <field name="priority">3</field>
+            <field name="section_id" ref="crm_case_section_4"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="crm.stage_lead8"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_23" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Want to subscribe to your online solution</field>
+            <field eval="2000" name="planned_revenue"/>
+            <field eval="80.0" name="probability"/>
+            <field name="partner_id" ref="base.res_partner_18"/>
+            <field name="type_id" ref="type_lead5"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor3])]"/>
+            <field name="channel_id" ref="crm_case_channel_direct"/>
+            <field name="priority">5</field>
+            <field name="section_id" ref="section_sales_department"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead5"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_24" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Need 20 Days of Consultancy</field>
+            <field eval="5025" name="planned_revenue"/>
+            <field eval="90.0" name="probability"/>
+            <field name="email_from">info@mycompany.net</field>
+            <field name="country_id" ref="base.pe"/>
+            <field name="city">Lima</field>
+            <field name="type_id" ref="type_lead8"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor7])]"/>
+            <field name="channel_id" ref="crm_case_channel_website"/>
+            <field name="priority">5</field>
+            <field eval="time.strftime('%Y-%m-6')" name="date_deadline"/>
+            <field name="section_id" ref="section_sales_department"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="crm.stage_lead6"/>
+            <field eval="1" name="active"/>
+        </record>
+
+        <record id="crm_case_25" model="crm.lead">
+            <field name="type">opportunity</field>
+            <field name="name">Need to customize the solution</field>
+            <field eval="4060" name="planned_revenue"/>
+            <field eval="60.0" name="probability"/>
+            <field name="contact_name">Henry Jordan</field>
+            <field name="partner_name">E-light Industry</field>
+            <field name="email_from">henry@elight.com</field>
+            <field name="street">Palermo, Capital Federal</field>
+            <field name="street2">C1414CMS Capital Federal</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="city">Buenos Aires</field>
+            <field name="zip">B7313</field>
+            <field name="type_id" ref="type_lead4"/>
+            <field name="categ_ids" eval="[(6, 0, [categ_oppor4])]"/>
+            <field name="priority">2</field>
+            <field name="title_action">Conf call with technical service</field>
+            <field name="section_id" ref="crm_case_section_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="crm.stage_lead4"/>
+            <field eval="1" name="active"/>
+        </record>
+
         <!-- Some messages linked to the previous opportunity -->
         <record id="message_email0" model="mail.message">
             <field name="subject">Kitchen design</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="res_id" ref="crm_case_15"/>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[Email0 inquiry]]></field>
             <field name="type">email</field>
@@ -298,7 +562,7 @@
         <record id="message_note0" model="mail.message">
             <field name="subject">Reply</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="res_id" ref="crm_case_15"/>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[Internal note0]]></field>
             <field name="type">comment</field>
@@ -307,7 +571,7 @@
         <record id="message_note0_comment0" model="mail.message">
             <field name="subject">Reply</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="res_id" ref="crm_case_15"/>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[comment on note0]]></field>
             <field name="parent_id" ref="message_note0"/>
@@ -317,7 +581,7 @@
         <record id="message_note0_comment1" model="mail.message">
             <field name="subject">Reply</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="res_id" ref="crm_case_15"/>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[comment1 on note0]]></field>
             <field name="parent_id" ref="message_note0"/>
@@ -327,217 +591,19 @@
         <record id="message_email1" model="mail.message">
             <field name="subject">Your inquiry</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_rdroundfundingunits25"></field>
+            <field name="res_id" ref="crm_case_15"/>
             <field name="subtype">html</field>
             <field name="body_html"><![CDATA[hello, outgoing email]]></field>
             <field name="type">email</field>
             <field name="state">received</field>
             <field name="user_id" ref="base.user_root"></field>
         </record>
-        
-        <record id="crm_case_unifliege" model="crm.lead">
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead2"/>
-            <field name="partner_id" ref="base.res_partner_accent"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="2500.0" name="planned_revenue"/>
-            <field eval="25" name="probability"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor6')])]"/>
-            <field name="stage_id" ref="crm.stage_lead3"/>
-            <field eval="'Plan train our students on your product'" name="name"/>
-            <field eval="'Call to define real needs about training'" name="title_action"/>
-            <field eval="time.strftime('%Y-%m-04')" name="date_action"/>
-            <field eval="time.strftime('%Y-%m-13')" name="date_deadline"/>
-            <field eval="4000" name="zip"/>
-            <field name="partner_name">Université de Liège</field>
-            <field name="street">Place du 20Août</field>
-            <field name="city">Liège</field>
-            <field eval="75016" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-        </record>
-        <record id="crm_case_bankwealthy2" model="crm.lead">
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead2"/>
-            <field name="partner_id" ref="base.res_partner_2"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="462.0" name="planned_revenue"/>
-            <field eval="40" name="probability"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor2')])]"/>
-            <field name="stage_id" ref="crm.stage_lead3"/>
-            <field eval="'Plan to buy 66 keyboards and 66 mouses'" name="name"/>
-            <field eval="'Propose the kit keyboard+mouse'" name="title_action"/>
-            <field eval="time.strftime('%Y-04-12')" name="date_action"/>
-            <field eval="time.strftime('%Y-04-25')" name="date_deadline"/>
-            <field name="partner_name">Bank Wealthy and sons</field>
-            <field name="street">1 rue Rockfeller</field>
-            <field name="city">Paris</field>
-            <field eval="75016" name="zip"/>
-            <field name="country_id" ref="base.fr"/>
-        </record>
-        <record id="crm_case_mediapoleunits0" model="crm.lead">
-            <field eval="100" name="probability"/>
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead1"/>
-            <field name="partner_id" ref="base.res_partner_8"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="55000.0" name="planned_revenue"/>
-            <field eval="90" name="probability"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor7')])]"/>
-            <field name="stage_id" ref="crm.stage_lead6"/>
-            <field eval="'Need 20 Days of Consultancy'" name="name"/>
-            <field eval="time.strftime('%Y-%m-%d')" name="date_deadline"/>
-            <field eval="'info@mycompany.net'" name="email_from"/>
-        </record>
-        <record id="crm_case_abcfuelcounits0" model="crm.lead">
-            <field eval="80" name="probability"/>
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead1"/>
-            <field name="partner_id" ref="base.res_partner_duboissprl0"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field eval="45000.0" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor5')])]"/>
-            <field name="stage_id" ref="crm.stage_lead5"/>
-            <field eval="'Need a new design for my website'" name="name"/>
-            <field eval="time.strftime('%Y-05-01')" name="date_action"/>
-            <field eval="time.strftime('%Y-06-30')" name="date_deadline"/>
-            <field eval="'info@opensides.be'" name="email_from"/>
-            <field eval="'Convert to quote'" name="title_action"/>
-            <field name="partner_name">Dubois sprl</field>
-            <field name="street">Avenue de la Liberté 56</field>
-            <field name="city">Brussels</field>
-            <field eval="1000" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-        </record>
-        <record id="crm_case_dirtminingltdunits25" model="crm.lead">
-            <field eval="30" name="probability"/>
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="partner_id" ref="base.res_partner_maxtor"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field eval="42000.0" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor2')])]"/>
-            <field name="stage_id" ref="crm.stage_lead8"/>
-            <field eval="'Want to subscribe to your online solution'" name="name"/>
-        </record>
-        <record id="crm_case_dirtminingltdunits0" model="crm.lead">
-            <field eval="30" name="probability"/>
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="partner_id" ref="base.res_partner_tinyatwork"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="25000.0" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor6')])]"/>
-            <field name="stage_id" ref="crm.stage_lead8"/>
-            <field eval="'Interest in your Partnership Contract'" name="name"/>
-        </record>
-        <record id="crm_case_dirtminingltdunits10" model="crm.lead">
-            <field eval="30" name="probability"/>
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="5000" name="planned_revenue"/>
-            <field eval="30" name="probability"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor2')])]"/>
-            <field name="stage_id" ref="crm.stage_lead3"/>
-            <field eval="'Plan to attend a training'" name="name"/>
-            <field eval="time.strftime('%Y-04-10')" name="date_action"/>
-            <field eval="time.strftime('%Y-06-12')" name="date_deadline"/>
-            <field eval="'Call to give info about next training session'" name="title_action"/>
-            <field name="partner_name">Axelor</field>
-            <field name="street">12 rue Albert Einstein</field>
-            <field name="city">Champs sur Marne</field>
-            <field eval="77420" name="zip"/>
-            <field name="country_id" ref="base.fr"/>
-        </record>
-        <record id="crm_case_construstazunits0" model="crm.lead">
-            <field eval="60" name="probability"/>
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead1"/>
-            <field name="partner_id" ref="base.res_partner_thymbra"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="'150000'" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
-            <field name="stage_id" ref="crm.stage_lead4"/>
-            <field eval="'Need to customize the solution'" name="name"/>
-            <field eval="'Conf call with technical service'" name="title_action"/>
-            <field name="partner_name">Thymbra</field>
-            <field name="street">Palermo, Capital Federal</field>
-            <field name="street2">C1414CMS Capital Federal</field>
-            <field name="city">Buenos Aires</field>
-            <field eval="1659" name="zip"/>
-            <field name="country_id" ref="base.ar"/>
-        </record>
-        <record id="crm_case_ericdubois4" model="crm.lead">
-            <field eval="65" name="probability"/>
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead1"/>
-            <field name="partner_id" ref="base.res_partner_ericdubois0"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="'1200'" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
-            <field name="stage_id" ref="crm.stage_lead4"/>
-            <field eval="'Interest in your customizable PC'" name="name"/>
-            <field eval="time.strftime('%Y-08-05')" name="date_action"/>
-            <field eval="time.strftime('%Y-10-10')" name="date_deadline"/>
-            <field eval="'Ask for the good receprion of the proposition'" name="title_action"/>
-            <field name="partner_name">Eric Dubois</field>
-            <field name="street">Chaussée de Binche, 27</field>
-            <field name="city">Mons</field>
-            <field eval="7000" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-        </record>
-        <record id="crm_case_fabiendupont" model="crm.lead">
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead1"/>
-            <field name="partner_id" ref="base.res_partner_fabiendupont0"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor4')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Need more info about the onsite intervention'" name="name"/>
-        </record>
-        <record id="crm_case_shelvehouse" model="crm.lead">
-            <field eval="1" name="active"/>
-            <field name="type">opportunity</field>
-            <field name="type_id" ref="crm.type_lead1"/>
-            <field name="partner_id" ref="base.res_partner_theshelvehouse0"/>
-            <field eval="'3'" name="priority"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor4')])]"/>
-            <field name="stage_id" ref="crm.stage_lead1"/>
-            <field eval="'Need more info about your pc2'" name="name"/>
-        </record>
+
 
         <!--        Call Function to set the opportunities as Unread -->
         <function model="crm.lead" name="message_mark_as_unread"
-            eval="[ ref('crm_case_rdroundfundingunits25'), ref('crm_case_unifliege'),
-                    ref('crm_case_ericdubois4'), ref('crm_case_abcfuelcounits0')], {}"
+            eval="[ ref('crm_case_15'), ref('crm_case_16'),
+                    ref('crm_case_23'), ref('crm_case_19')], {}"
         />
 
     </data>

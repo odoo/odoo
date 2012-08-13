@@ -26,7 +26,7 @@
         </record>
 
         <!-- Resource: sale.shop -->
-        <record id="shop" model="sale.shop">
+        <record id="sale_shop_1" model="sale.shop">
             <field name="company_id" ref="base.main_company"/>
             <field name="warehouse_id" ref="stock.warehouse0"/>
             <field name="payment_default_id" ref="account.account_payment_term"/>
@@ -38,7 +38,7 @@
             <field model="res.company" name="name" search="[]" use="name"/>
         </record>
 
-        <function eval="('default',False,'shop_id', [('sale.order', False)], shop, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
+        <function eval="('default',False,'shop_id', [('sale.order', False)], sale_shop_1, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
 
         <!-- notify all employees of module installation -->
         <function model="mail.group" name="message_append_note">
