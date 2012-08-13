@@ -287,11 +287,15 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             res_text = '';
 
         if (this.info_fields) {
-            res_text = _.map(this.info_fields, function(fld) {
-                if(evt[fld] instanceof Array)
-                    return evt[fld][1];
-                return evt[fld];
-            });
+            res_text = _.chain(this.info_fields)
+                    .filter(function(fld){
+                        return evt[fld] !== false;
+                    }) 
+                    .map(function(fld) {
+                        if(evt[fld] instanceof Array)
+                            return evt[fld][1];
+                        return evt[fld];
+                    }).value();
         }
         if (!date_stop && date_delay) {
             date_stop = date_start.clone().addHours(date_delay);
