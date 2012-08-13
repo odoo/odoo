@@ -62,14 +62,23 @@ class many2many_reference(fields.many2many):
                 continue
             if act[0] == 0:
                 idnew = obj.create(cr, user, act[2], context=context)
-                cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+') VALUES (%s,%s,res_model)', (id, idnew, model._name))
+                cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, idnew, model._name))
             elif act[0] == 3:
                 cr.execute('DELETE FROM "'+rel+'" WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
             elif act[0] == 4:
                 # following queries are in the same transaction - so should be relatively safe
                 cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
                 if not cr.fetchone():
-                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) values (%s,%s,%s)', (id, act[1], model._name))
+                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, act[1], model._name))
+            elif act[0] == 6:
+                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
+                if d1:
+                    d1 = ' and ' + ' and '.join(d1)
+                else:
+                    d1 = ''
+                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND res_model=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, model._name, id]+d2)
+                for act_nbr in act[2]:
+                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, act_nbr, model._name))
             else:
                 print act
                 return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
