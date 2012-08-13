@@ -330,7 +330,7 @@ def httprequest(f):
     return http_handler
 
 #----------------------------------------------------------
-# OpenERP Web werkzeug Session Managment wraped using with
+# OpenERP Web Session context manager
 #----------------------------------------------------------
 STORES = {}
 
@@ -338,8 +338,7 @@ STORES = {}
 def session_context(request, storage_path, session_cookie='sessionid'):
     session_store, session_lock = STORES.get(storage_path, (None, None))
     if not session_store:
-        session_store = werkzeug.contrib.sessions.FilesystemSessionStore(
-            storage_path)
+        session_store = werkzeug.contrib.sessions.FilesystemSessionStore( storage_path)
         session_lock = threading.Lock()
         STORES[storage_path] = session_store, session_lock
 
@@ -402,7 +401,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
             session_store.save(request.session)
 
 #----------------------------------------------------------
-# OpenERP Web Module/Controller Loading and URL Routing
+# OpenERP Web Controller registration with a metaclass
 #----------------------------------------------------------
 addons_module = {}
 addons_manifest = {}
@@ -417,6 +416,10 @@ class ControllerType(type):
 
 class Controller(object):
     __metaclass__ = ControllerType
+
+#----------------------------------------------------------
+# OpenERP Web WSGI Application
+#----------------------------------------------------------
 
 class DisableCacheMiddleware(object):
     def __init__(self, app):
@@ -469,7 +472,7 @@ class Root(object):
                 self.config.connector = openerplib.get_connector(
                     hostname=self.config.server_host, port=self.config.server_port)
 
-        self.session_cookie = 'sessionid'
+        self.httpsession_cookie = 'httpsessionid'
         self.addons = {}
 
         static_dirs = self._load_addons(openerp_addons_namespace)
@@ -504,7 +507,7 @@ class Root(object):
         if not handler:
             response = werkzeug.exceptions.NotFound()
         else:
-            with session_context(request, self.session_storage, self.session_cookie) as session:
+            with session_context(request, self.session_storage, self.httpsession_cookie) as session:
                 result = handler( request, self.config)
 
                 if isinstance(result, basestring):
@@ -514,7 +517,7 @@ class Root(object):
                     response = result
 
                 if hasattr(response, 'set_cookie'):
-                    response.set_cookie(self.session_cookie, session.sid)
+                    response.set_cookie(self.httpsession_cookie, session.sid)
 
         return response(environ, start_response)
 
@@ -572,6 +575,10 @@ class Root(object):
                     ps = '/'
         return None
 
+#----------------------------------------------------------
+# OpenERP Web Client lib
+#----------------------------------------------------------
+
 class LibException(Exception):
     """ Base of all client lib exceptions """
     def __init__(self,code=None,message=None):
@@ -589,7 +596,6 @@ class AccessError(LibException):
 
 class AccessDenied(LibException):
     """ maps to code: 4, server side: openerp.exceptions.AccessDenied"""
-
 
 class LocalConnector(openerplib.Connector):
     """
@@ -623,3 +629,4 @@ class LocalConnector(openerplib.Connector):
             formatted_info = "".join(traceback.format_exception(*(sys.exc_info())))
             raise xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
 
+# vim:et:
