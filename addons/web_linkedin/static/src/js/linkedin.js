@@ -37,7 +37,6 @@ openerp.web_linkedin = function(instance) {
             if (this.api_key) {
                 return $.when();
             }
-            return new instance.web.Model("ir.config_parameter").call("set_param", ["web.linkedin.apikey", ""]).pipe(function() {
             return new instance.web.Model("ir.config_parameter").call("get_param", ["web.linkedin.apikey"]).pipe(function(a) {
                 if (!!a) {
                     self.api_key = a;
@@ -45,7 +44,6 @@ openerp.web_linkedin = function(instance) {
                 } else {
                     return $.Deferred().reject();
                 }
-            });
             });
         },
         test_authentication: function() {
