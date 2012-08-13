@@ -275,4 +275,19 @@
         </record>
 
     </data>
+    <data noupdate="1">
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_invoice_menu" model="ir.actions.client">
+            <field name="name">Open Invoicing Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_finance')}"/>
+        </record>
+        <record id="todo_open_invoice_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_invoice_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+
+    </data>
 </openerp>

@@ -101,8 +101,8 @@ class res_users(osv.osv):
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
         # create a welcome message
         company_name = user.company_id.name if user.company_id else _('the company')
-        message = _('%s has joined %s! Welcome to OpenERP !') % (user.name, company_name)
-        self.message_append_note(cr, uid, [user_id], subject='Welcome to OpenERP', body=message, type='comment', context=context)
+        message = _('%s joined the %s network! Take a moment to welcome %s.') % (user.name, company_name, user.name)
+        self.message_append_note(cr, uid, [user_id], body=message, type='comment', context=context)
         return user_id
     
     def write(self, cr, uid, ids, vals, context=None):
