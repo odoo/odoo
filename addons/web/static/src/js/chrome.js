@@ -66,9 +66,9 @@ instance.web.Dialog = instance.web.Widget.extend({
             max_width: '95%',
             height: 'auto',
             min_height: 0,
-            max_height: this.get_height('100%') - 140,
+            max_height: this.get_height('100%') - 200,
             autoOpen: false,
-            position: [false, 50],
+            position: [false, 40],
             buttons: {},
             beforeClose: function () { self.on_close(); },
             resizeStop: this.on_resized
