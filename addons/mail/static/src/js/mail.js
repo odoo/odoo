@@ -582,14 +582,20 @@ openerp.mail = function(session) {
 
         render_vote: function(message_id){
             var self = this;
-            this.mail_message = new session.web.DataSet(this, 'mail.message');
-            this.mail_message.call('get_vote_summary',[[parseInt(message_id)]]).then(function(result){
-                if (result){
-                    parent_element = self.find_parent_element(".oe_mail_msg_vote", message_id);
-                    vote_element = session.web.qweb.render('VoteDisplay', result);
-                    $(parent_element).html(vote_element);
-                    self.add_vote_event($(parent_element));
-                }
+            var mail_vote = new session.web.DataSetSearch(self, 'mail.vote', self.session.context, [['msg_id','=',parseInt(message_id)]]);
+            mail_vote.read_slice(['user_id']).then(function(result){
+                vote_count = result.length;
+                is_vote_liked = false;
+                _.each(result, function(vote){
+                    if (self.session.uid == vote.user_id[0]){
+                        is_vote_liked = true;
+                        }
+                });
+                parent_element = self.find_parent_element(".oe_mail_msg_vote", message_id);
+                vote_element = session.web.qweb.render('VoteDisplay', {'msg_id': message_id, 'vote_count': vote_count, 'is_vote_liked': is_vote_liked});
+                $(parent_element).html(vote_element);
+                self.add_vote_event($(parent_element));
+              
             });
         },
         
@@ -739,10 +745,6 @@ openerp.mail = function(session) {
         
         display_comments: function (records) {
             var self = this;
-            //Render Vote.
-            _.each(records, function(record){
-                self.render_vote(record.id);
-            });
             // sort the records
             mail.ChatterUtils.records_struct_add_records(this.comments_structure, records, this.params.parent_id);
             //build attachments download urls and compute time-relative from dates
@@ -756,6 +758,8 @@ openerp.mail = function(session) {
                 }
             }
             _(records).each(function (record) {
+                //Render Votes.
+                 self.render_vote(record.id);
                 var sub_msgs = [];
                 if ((record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
                     var sub_list = self.comments_structure['tree_struct'][record.id]['direct_childs'];

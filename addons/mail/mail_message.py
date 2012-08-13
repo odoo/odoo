@@ -242,41 +242,20 @@ class mail_message(osv.Model):
     #---------------------------------------------------
     #Mail Vote system (Like or Unlike comments
     #-----------------------------------------------------
-    
-    def get_vote_summary(self, cr, uid, ids, context=None):
-        '''
-        Return message ,count vote of message id given by .particular user with True or False.
-        '''
-        for message in self.browse(cr, uid, ids, context):
-            is_vote_liked = False
-            vote_count = len(message.vote_ids)
-            for vote in message.vote_ids:
-                if vote.user_id.id == uid:
-                    is_vote_liked = True
-                    break
-            res = {
-                'msg_id': message.id,
-                'vote_count': vote_count,
-                'is_vote_liked': is_vote_liked
-            }
-        return res
-    
     def vote_toggle(self, cr, uid, ids, context=None):
         '''
         Toggles when Comment is liked or unlike.
         Return the number of votes of particular message.
         '''
         vote_pool = self.pool.get('mail.vote')
-        vote_count = 0
+        new_vote_id = False
         for message in self.browse(cr, uid, ids, context):
-            voters_id = vote_pool.search(cr, uid, [('msg_id', '=', message.id), ('user_id', '=', uid)], context=context)
-            if not voters_id:
+            voters_ids = [x.id for x in message.vote_ids if x.user_id.id == uid]
+            if not voters_ids:
                 new_vote_id =  vote_pool.create(cr, uid, {'msg_id': message.id, 'user_id': uid}, context=context)
             else:
-                vote_pool.unlink(cr, uid, voters_id, context=context)
-            if message.vote_ids:
-                vote_count = len(message.vote_ids)    
-        return vote_count 
+                vote_pool.unlink(cr, uid, voters_ids, context=context)
+        return True
 
     #------------------------------------------------------
     # Email api
