@@ -39,12 +39,15 @@ class TransactionCase(unittest2.TestCase):
     """
 
     def setUp(self):
-        self.cr = openerp.modules.registry.RegistryManager.get(DB).db.cursor()
+        self.cr = self.cursor()
         self.uid = openerp.SUPERUSER_ID
 
     def tearDown(self):
         self.cr.rollback()
         self.cr.close()
+
+    def cursor(self):
+        return openerp.modules.registry.RegistryManager.get(DB).db.cursor()
 
     def registry(self, model):
         return openerp.modules.registry.RegistryManager.get(DB)[model]
