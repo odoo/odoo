@@ -8,14 +8,28 @@ def html_sanitize(x):
     new = pq(result)
     return new.html()
 
+to_remove = set(["script", "head", "meta", "title", "link"])
+to_unwrap = set(["html", "body"])
+
+def handle_a(el, new):
+    new.set("href", el.get("href", "#"))
+special = {
+    "a": handle_a,
+}
+
 def handle_element(el):
     if type(el) == str or type(el) == unicode:
         return [el]
-    else:
-        new = pq("<%s />" % el.tag)[0]
-        for i in children(el):
-            append_to(handle_element(i), new)
-        return [new]
+    if el.tag in to_remove:
+        return []
+    if el.tag in to_unwrap:
+        return reduce(lambda x,y: x+y, [handle_element(x) for x in children(el)])
+    new = pq("<%s />" % el.tag)[0]
+    for i in children(el):
+        append_to(handle_element(i), new)
+    if el.tag in special:
+        special[el.tag](el, new)
+    return [new]
     
 def children(el):
     res = []
