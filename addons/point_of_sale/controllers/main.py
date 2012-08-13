@@ -36,6 +36,7 @@ class PointOfSaleController(openerpweb.Controller):
             product_id = p['id']
             url = "/web/binary/image?session_id=%s&model=product.product&field=image&id=%s" % (session_id, product_id)
             ml.append(url)
+        ml += ["NETWORK:","*"]
         m = "\n".join(ml)
         return m
 

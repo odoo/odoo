@@ -242,7 +242,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.renderElement();
         },
         get_image_url: function() {
-            return 'web/binary/image?session_id='+instance.connection.session_id+'&model=product.product&field=image&id='+this.model.get('id')+'&cache=1800';
+            return '/web/binary/image?session_id='+instance.connection.session_id+'&model=product.product&field=image&id='+this.model.get('id');
         },
         renderElement: function() {
             this._super();
