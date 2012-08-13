@@ -4802,7 +4802,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'email' : 'instance.web.form.FieldEmail',
     'url' : 'instance.web.form.FieldUrl',
     'text' : 'instance.web.form.FieldText',
-    'text_html' : 'instance.web.form.FieldTextHtml',
+    'html' : 'instance.web.form.FieldTextHtml',
     'date' : 'instance.web.form.FieldDate',
     'datetime' : 'instance.web.form.FieldDatetime',
     'selection' : 'instance.web.form.FieldSelection',
