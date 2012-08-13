@@ -64,7 +64,7 @@
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/> - 
-                        <button name="%(action_view_change_standard_price)d" string="Update"
+                        <button name="%(action_view_change_standard_price)d" string="update"
                             type="action" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"
                             class="oe_link"/>
                     </div>
@@ -104,17 +104,19 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="status" position="before" version="7.0">
-                    <group string="Stock and Expected Variations">
-                        <field name="qty_available"/>
-                        <field name="incoming_qty" groups="base.group_user"/>
+                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}">
+                        <label for="qty_available"/>
+                        <div>
+                            <field name="qty_available" class="oe_inline"/>
+                            <button name="%(action_view_change_product_quantity)d" string="update"
+                                type="action" groups="stock.group_stock_manager,stock.group_stock_user"
+                                class="oe_link"/>
+                        </div>
                         <label for="virtual_available" groups="base.group_user"/>
                         <div groups="base.group_user">
                             <field name="virtual_available" class="oe_inline"/>
-
-                            <button name="%(action_view_change_product_quantity)d" string="Update" attrs="{'invisible': [('type', '=', 'service')]}"
-                                type="action" icon="gtk-execute" groups="stock.group_stock_manager,stock.group_stock_user" class="oe_inline"/>
+                            (+<field name="incoming_qty" class="oe_inline"/> -<field name="outgoing_qty" class="oe_inline"/>)
                         </div>
-                        <field name="outgoing_qty" groups="base.group_user"/>
                     </group>
                     <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
                         <field name="track_production" groups="stock.group_production_lot"/>

@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,75 +20,58 @@
 #
 ##############################################################################
 
+from operator import itemgetter
+from textwrap import dedent
 from osv import fields, osv
-import time
 import tools
 
 class board_board(osv.osv):
-    """
-    Board
-    """
     _name = 'board.board'
     _description = "Board"
+    _auto = False
+    _columns = {}
 
-    def create_view(self, cr, uid, ids, context=None):
-        """
-        Create  view
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Board's IDs
-        @return: arch of xml view.
-        """
-        arch = """<?xml version="1.0"?>
-            <form string="My Board" version="7.0">
-            <board style="1-1">
-                <column/>
-                <column/>
-            </board>
-            </form>"""
-        return arch
+    @tools.cache()
+    def list(self, cr, uid, context=None):
+        Actions = self.pool.get('ir.actions.act_window')
+        Menus = self.pool.get('ir.ui.menu')
+        IrValues = self.pool.get('ir.values')
+
+        act_ids = Actions.search(cr, uid, [('res_model', '=', self._name)], context=context)
+        refs = ['%s,%s' % (Actions._name, act_id) for act_id in act_ids]
+
+        # cannot search "action" field on menu (non stored function field without search_fnct)
+        irv_ids = IrValues.search(cr, uid, [
+            ('model', '=', 'ir.ui.menu'),
+            ('key', '=', 'action'),
+            ('key2', '=', 'tree_but_open'),
+            ('value', 'in', refs),
+        ], context=context)
+        menu_ids = map(itemgetter('res_id'), IrValues.read(cr, uid, irv_ids, ['res_id'], context=context))
+        menu_names = Menus.name_get(cr, uid, menu_ids, context=context)
+        return [dict(id=m[0], name=m[1]) for m in menu_names]
+
+    def _clear_list_cache(self):
+        self.list.clear_cache(self)
 
     def create(self, cr, user, vals, context=None):
-        """
-        create new record.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param vals: dictionary of values for every field.
-                      dictionary must use this form: {‘name_of_the_field’: value, ...}
-        @return: id of new created record of board.board.
-        """
+        return 0
 
-
-        if not 'name' in vals:
-            return False
-        id = super(board_board, self).create(cr, user, vals, context=context)
-        view_id = self.pool.get('ir.ui.view').create(cr, user, {
-            'name': vals['name'],
-            'model': 'board.board',
-            'priority': 16,
-            'type': 'form',
-            'arch': self.create_view(cr, user, id, context=context),
-        })
-
-        super(board_board, self).write(cr, user, [id], {'view_id': view_id}, context)
-        return id
-
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None,\
-                         toolbar=False, submenu=False):
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """
         Overrides orm field_view_get.
         @return: Dictionary of Fields, arch and toolbar.
         """
 
         res = {}
-        res = super(board_board, self).fields_view_get(cr, user, view_id, view_type,\
-                                 context, toolbar=toolbar, submenu=submenu)
+        res = super(board_board, self).fields_view_get(cr, user, view_id, view_type,
+                                                       context, toolbar=toolbar, submenu=submenu)
 
-        vids = self.pool.get('ir.ui.view.custom').search(cr, user,\
-                     [('user_id', '=', user), ('ref_id' ,'=', view_id)])
+        CustView = self.pool.get('ir.ui.view.custom')
+        vids = CustView.search(cr, user, [('user_id', '=', user), ('ref_id', '=', view_id)], context=context)
         if vids:
             view_id = vids[0]
-            arch = self.pool.get('ir.ui.view.custom').browse(cr, user, view_id, context=context)
+            arch = CustView.browse(cr, user, view_id, context=context)
             res['custom_view_id'] = view_id
             res['arch'] = arch.arch
         res['arch'] = self._arch_preprocessing(cr, user, res['arch'], context=context)
@@ -98,10 +82,10 @@ class board_board(osv.osv):
         from lxml import etree
         def remove_unauthorized_children(node):
             for child in node.iterchildren():
-                if child.tag=='action' and child.get('invisible'):
+                if child.tag == 'action' and child.get('invisible'):
                     node.remove(child)
                 else:
-                    child=remove_unauthorized_children(child)
+                    child = remove_unauthorized_children(child)
             return node
 
         def encode(s):
@@ -110,16 +94,84 @@ class board_board(osv.osv):
             return s
 
         archnode = etree.fromstring(encode(arch))
-        return etree.tostring(remove_unauthorized_children(archnode),pretty_print=True)
+        return etree.tostring(remove_unauthorized_children(archnode), pretty_print=True)
+
+
+class board_create(osv.osv_memory):
+
+    def board_create(self, cr, uid, ids, context=None):
+        assert len(ids) == 1
+        this = self.browse(cr, uid, ids[0], context=context)
+
+        view_arch = dedent("""<?xml version="1.0"?>
+            <form string="%s" version="7.0">
+            <board style="2-1">
+                <column/>
+                <column/>
+            </board>
+            </form>
+        """.strip() % (this.name,))
+
+        view_id = self.pool.get('ir.ui.view').create(cr, uid, {
+            'name': this.name,
+            'model': 'board.board',
+            'priority': 16,
+            'type': 'form',
+            'arch': view_arch,
+        }, context=context)
+
+        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, {
+            'name': this.name,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'board.board',
+            'usage': 'menu',
+            'view_id': view_id,
+            'help': dedent('''<div class="oe_empty_custom_dashboard">
+              <p>
+                <b>This dashboard is empty.</b>
+              </p><p>
+                To add the first report into this dashboard, go to any
+                menu, switch to list or graph view, and click <i>'Add to
+                Dashboard'</i> in the extended search options.
+              </p><p>
+                You can filter and group data before inserting into the
+                dashboard using the search options.
+              </p>
+          </div>
+            ''')
+        }, context=context)
+
+        menu_id = self.pool.get('ir.ui.menu').create(cr, uid, {
+            'name': this.name,
+            'parent_id': this.menu_parent_id.id,
+            'action': 'ir.actions.act_window,%s' % (action_id,)
+        }, context=context)
+
+        self.pool.get('board.board')._clear_list_cache()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+            'params': {
+                'menu_id': menu_id
+            },
+        }
+
+    def _default_menu_parent_id(self, cr, uid, context=None):
+        _, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'menu_reporting_dashboard')
+        return menu_id
+
+    _name = "board.create"
+    _description = "Board Creation"
 
     _columns = {
-        'name': fields.char('Dashboard', size=64, required=True),
-        'view_id': fields.many2one('ir.ui.view', 'Board View'),
+        'name': fields.char('Board Name', size=64, required=True),
+        'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
     }
 
-    # the following lines added to let the button on dashboard work.
     _defaults = {
-        'name':lambda *args:  'Dashboard'
+        'menu_parent_id': _default_menu_parent_id,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

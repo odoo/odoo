@@ -49,7 +49,7 @@
                     <field name="virtual_available"/>
                     <field name="lst_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="standard_price"/>
+                    <field name="standard_price" invisible="1"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 </tree>
