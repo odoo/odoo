@@ -112,13 +112,11 @@ class mail_thread(osv.Model):
     _description = 'Email Thread'
 
     def _get_message_ids(self, cr, uid, ids, name, args, context=None):
-        res = {}
+        res = dict.fromkeys(ids)
+        for id in ids:
+            res[id] = {'message_ids': self.message_search(cr, uid, [id], context=context)}
         for thread in self.browse(cr, uid, ids, context=context):
-            message_ids = self.message_search(cr, uid, [thread.id], context=context)
-            res[id] = {
-                'message_ids': message_ids,
-                'message_summary': "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(message_ids), len(thread.message_follower_ids)),
-            }
+            res[thread.id]['message_summary'] = "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(res[thread.id]['message_ids']), len(thread.message_follower_ids))
         return res
 
     def _search_message_ids(self, cr, uid, obj, name, args, context=None):
@@ -203,7 +201,7 @@ class mail_thread(osv.Model):
             self.message_subscribe(cr, uid, [thread_id], [vals['user_id']], context=context)
         
         # create message
-        msg_id = message_obj.create(cr, uid, vals, context=context)
+        msg_id = self.pool.get('mail.message').create(cr, uid, vals, context=context)
         
         # Set as unread if writer is not the document responsible
         self.message_create_set_unread(cr, uid, [thread_id], context=context)
@@ -218,7 +216,7 @@ class mail_thread(osv.Model):
             notification_obj.create(cr, uid, {'user_id': id, 'message_id': msg_id}, context=context)
         
         # create the email to send
-        email_id = self.message_create_notify_by_email(cr, uid, vals, user_to_push_ids, context=context)
+        self.message_create_notify_by_email(cr, uid, vals, user_to_push_ids, context=context)
         
         return msg_id
     
