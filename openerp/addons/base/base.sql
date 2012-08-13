@@ -146,7 +146,6 @@ select setval('ir_ui_menu_id_seq', 2);
 
 CREATE TABLE res_users (
     id serial NOT NULL,
-    name varchar(64) not null,
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
     password varchar(64) default null,
@@ -384,7 +383,7 @@ CREATE TABLE ir_model_relation (
 -- Users
 ---------------------------------
 
-insert into res_users (id,login,password,name,active,company_id,partner_id,lang) values (1,'admin','admin','Administrator',True,1,1,'en_US');
+insert into res_users (id,login,password,active,company_id,partner_id,lang) values (1,'admin','admin',True,1,1,'en_US');
 insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_root','base','res.users',True,1);
 
 -- Compatibility purpose, to remove V6.0
