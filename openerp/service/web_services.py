@@ -77,7 +77,7 @@ def _initialize_db(serv, id, db_name, demo, lang, user_password):
 
         cr.execute('UPDATE res_users SET password=%s, lang=%s, active=True WHERE login=%s', (
             user_password, lang, 'admin'))
-        cr.execute('SELECT login, password, name ' \
+        cr.execute('SELECT login, password ' \
                    ' FROM res_users ' \
                    ' ORDER BY login')
         serv.actions[id].update(users=cr.dictfetchall(), clean=True)
