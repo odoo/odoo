@@ -145,6 +145,7 @@ class hr_expense_expense(osv.osv):
             total = 0.0
             ctx = context.copy()
             ctx.update({'date': exp.date})
+            journal = False
             for line in exp.line_ids:
                 if line.product_id:
                     acc = line.product_id.product_tmpl_id.property_account_expense
@@ -159,6 +160,18 @@ class hr_expense_expense(osv.osv):
                     total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, exp.company_id.currency_id.id, line.total_amount, context=ctx)
                 else:
                     total_amount = line.total_amount
+                if exp.journal_id:
+                     journal = exp.journal_id
+                else:
+                    journal_id = voucher_obj._get_journal(cr, uid, context={'type': 'purchase', 'company_id': company_id})
+                    if journal_id:
+                        journal = account_journal.browse(cr, uid, journal_id, context=context)
+                        if journal.currency:
+                            if exp.currency_id != journal.currency:
+                                total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, journal.currency.id, line.total_amount, context=ctx)
+                            else:
+                                total_amount = line.total_amount
+                            
                 lines.append((0, False, {
                     'name': line.name,
                     'account_id': acc.id,
@@ -178,18 +191,10 @@ class hr_expense_expense(osv.osv):
                 'partner_id': exp.employee_id.address_home_id.id,
                 'company_id': company_id,
                 'currency_id': exp.currency_id.id,
+                'journal_id': journal.id,
                 'line_ids': lines,
                 'amount': total
             }
-            journal = False
-            if exp.journal_id:
-                voucher['journal_id'] = exp.journal_id.id
-                journal = exp.journal_id
-            else:
-                journal_id = voucher_obj._get_journal(cr, uid, context={'type': 'purchase', 'company_id': company_id})
-                if journal_id:
-                    voucher['journal_id'] = journal_id
-                    journal = account_journal.browse(cr, uid, journal_id, context=context)
             if journal and not journal.analytic_journal_id:
                 analytic_journal_ids = analytic_journal_obj.search(cr, uid, [('type','=','purchase')], context=context)
                 if analytic_journal_ids:
