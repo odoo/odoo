@@ -322,6 +322,9 @@ def make_conditional(req, response, last_modified=None, etag=None):
 
 def login_and_redirect(req, db, login, key, redirect_url='/'):
     req.session.authenticate(db, login, key, {})
+    return set_cookie_and_redirect(req, redirect_url)
+
+def set_cookie_and_redirect(req, redirect_url):
     redirect = werkzeug.utils.redirect(redirect_url, 303)
     redirect.autocorrect_location_header = False
     cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
