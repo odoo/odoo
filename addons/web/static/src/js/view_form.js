@@ -2404,11 +2404,9 @@ instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
             width:      width, // width not including margins, borders or padding
             height:     height, // height not including margins, borders or padding
             controls:   // controls to add to the toolbar
-                        "bold italic underline strikethrough | size " +
+                        "bold italic underline strikethrough " +
                         "| removeformat | bullets numbering | outdent " +
-                        "indent | link unlink",
-            sizes:      // sizes in the font size popup
-                        "1,2,3,4,5,6,7",
+                        "indent | link unlink | source",
             bodyStyle:  // style to assign to document body contained within the editor
                         "margin:4px; font:12px monospace; cursor:text; color:#1F1F1F"
         });
