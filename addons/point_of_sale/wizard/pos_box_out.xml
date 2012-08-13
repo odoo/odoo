@@ -7,22 +7,23 @@
             <field name="name">Box Out</field>
             <field name="model">pos.box.out</field>
             <field name="arch" type="xml">
-                <form string="Output Operation">
-                    <separator string="Describe why you take money from the cash register:" colspan="4"/>
-                    <field name="journal_id"/>
-                    <field name="product_id"/>
-                    <field name="amount"/>
-                    <field name="session_id" />
-                    <field name="name"/>
-                    <field name="user_id" invisible="1" />
-                    <separator colspan="4"/>
-                    <group colspan="4" col="4">
-                        <group col="2" colspan="2"/>
-                         <button icon="gtk-stop" special="cancel"
-                            string="Cancel" />
-                        <button name="get_out" string="Take Money"
-                            colspan="1" type="object" icon="gtk-apply" />
+                <form string="Output Operation" version="7.0">
+                    <separator string="Describe why you take money from the cash register:"/>
+                    <group colspan="4">
+                        <field name="journal_id"/>
+                        <field name="product_id"/>
+                        <field name="amount"/>
+                        <field name="session_id" />
+                        <field name="name"/>
+                        <field name="user_id" invisible="1" />
                     </group>
+                    <footer>
+                        <button name="get_out" string="Take Money"
+                            type="object" class="oe_highlight"/> or 
+                         <button icon="gtk-stop" special="cancel"
+                            string="Cancel" class="oe_link"/>
+
+                    </footer>
                 </form>
             </field>
         </record>

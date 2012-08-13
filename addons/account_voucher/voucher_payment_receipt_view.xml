@@ -71,7 +71,7 @@
                     </group>
                     <notebook>
                         <page string="Payment Information">
-                            <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Open Supplier Journal Entries" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -84,7 +84,7 @@
                                     <field name="amount" sum="Total Allocation"/>
                                 </tree>
                             </field>
-                            <field name="line_cr_ids" attrs="{'invisible': [('type', '=', 'payment')]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_cr_ids" attrs="{'invisible': [('type', '=', 'payment')]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Open Customer Journal Entries" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -327,7 +327,7 @@
 
                     <notebook>
                         <page string="Payment Information" groups="base.group_user">
-                            <field name="line_cr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_cr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Invoices and outstanding transactions" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -343,7 +343,7 @@
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)" string="Allocation"/>
                                 </tree>
                             </field>
-                            <field name="line_dr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_dr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"

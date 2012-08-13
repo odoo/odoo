@@ -92,8 +92,8 @@
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
             <field name="progress" position="after">
-                <field name="context_id" widget="selection"/>
-                <field name="timebox_id" widget="selection"/>
+                <field name="context_id" widget="selection" options='{"no_open": true}'/>
+                <field name="timebox_id" widget="selection" options='{"no_open": true}'/>
             </field>
         </field>
     </record>

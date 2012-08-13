@@ -34,7 +34,7 @@
             <field name="inherit_id" ref="analytic_contract_project.project_invoice_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="replace">
-                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Contact"  attrs="{'required':[('to_invoice','!=',False)]}"/>
                 </field>
             </field>
         </record>

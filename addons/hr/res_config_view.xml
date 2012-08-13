@@ -65,16 +65,16 @@
                         <label for="id" string="Time Tracking"/>
                         <div>
                             <div>
-                                <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)" class="oe_inline"/>
-                                <label for="module_hr_attendance"/>
-                            </div>
-                            <div>
                                 <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)" class="oe_inline"/>
                                 <label for="module_hr_timesheet"/>
                             </div>
                             <div name="hr_timesheet">
                                 <field name="module_hr_timesheet_sheet" class="oe_inline"/>
                                 <label for="module_hr_timesheet_sheet"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)" class="oe_inline"/>
+                                <label for="module_hr_attendance"/>
                             </div>
                         </div>
                     </group>

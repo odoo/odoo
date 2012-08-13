@@ -25,6 +25,7 @@ import decimal_precision as dp
 import math
 from _common import rounding
 import re
+import tools
 from tools.translate import _
 
 def is_pair(x):
@@ -140,7 +141,7 @@ class product_uom(osv.osv):
             context = {}
         if from_unit.category_id.id <> to_unit.category_id.id:
             if context.get('raise-exception', True):
-                raise osv.except_osv(_('Error !'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
+                raise osv.except_osv(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
                 return qty
         amount = qty / from_unit.factor
@@ -167,12 +168,12 @@ class product_uom(osv.osv):
         if value == 'reference':
             return {'value': {'factor': 1, 'factor_inv': 1}}
         return {}
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
                 if uom.category_id.id != vals['category_id']:
-                    raise osv.except_osv(_('Warning'),_("Cannot change the category of existing Unit of Measure '%s'.") % (uom.name,))
+                    raise osv.except_osv(_('Warning!'),_("Cannot change the category of existing Unit of Measure '%s'.") % (uom.name,))
         return super(product_uom, self).write(cr, uid, ids, vals, context=context)
 
 product_uom()
@@ -231,7 +232,7 @@ class product_category(osv.osv):
     _parent_store = True
     _parent_order = 'sequence, name'
     _order = 'parent_left'
-    
+
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
@@ -314,7 +315,7 @@ class product_template(osv.osv):
         md = self.pool.get('ir.model.data')
         res = False
         try:
-            res = md.get_object_reference(cr, uid, 'product', 'cat0')[1]
+            res = md.get_object_reference(cr, uid, 'product', 'product_category_all')[1]
         except ValueError:
             res = False
         return res
@@ -330,7 +331,7 @@ class product_template(osv.osv):
             for product in self.browse(cr, uid, ids, context=context):
                 old_uom = product.uom_po_id
                 if old_uom.category_id.id != new_uom.category_id.id:
-                    raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may desactivate this product from the 'Procurement & Locations' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
+                    raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurement & Locations' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
     _defaults = {
@@ -461,8 +462,8 @@ class product_product(osv.osv):
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + \
                     (data['name'] or '') + (data['variants'] and (' - '+data['variants']) or '')
         return res
-        
-        
+
+
     def _get_main_product_supplier(self, cr, uid, product, context=None):
         """Determines the main (best) product supplier for ``product``,
         returning the corresponding ``supplierinfo`` record, or False
@@ -489,6 +490,15 @@ class product_product(osv.osv):
             }
         return result
 
+
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image)
+        return result
+    
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _defaults = {
         'active': lambda *a: 1,
@@ -523,7 +533,26 @@ class product_product(osv.osv):
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
         'color': fields.integer('Color Index'),
-        'product_image': fields.binary('Image'),
+        'image': fields.binary("Image",
+            help="This field holds the image used for the product. "\
+                 "The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 1024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized image", type="binary", multi="_get_image",
+            store = {
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized image of the product. It is automatically "\
+                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Small-sized image", type="binary", multi="_get_image",
+            store = {
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized image of the product. It is automatically "\
+                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
         'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", multi="seller_info"),
         'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),

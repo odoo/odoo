@@ -49,7 +49,6 @@ eInvoicing & Payments module manage all Voucher Entries such as "Reconciliation 
         "account_voucher_sequence.xml",
         "account_voucher_workflow.xml",
         "account_voucher_report.xml",
-        "wizard/account_voucher_unreconcile_view.xml",
         "wizard/account_statement_from_invoice_view.xml",
         "account_voucher_view.xml",
         "voucher_payment_receipt_view.xml",

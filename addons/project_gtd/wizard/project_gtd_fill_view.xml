@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Plannify Timebox" version="7.0">
                       <group col="4">
-                          <field name="timebox_id" widget="selection"/>
+                          <field name="timebox_id" widget="selection" options='{"no_open": true}'/>
                           <field name="timebox_to_id" widget="selection"/>
                       </group>
                       <field name="task_ids" domain="[('timebox_id','=',timebox_id),('state','=','open')]" />

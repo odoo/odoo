@@ -8,14 +8,14 @@
             <field name="model">pos.discount</field>
             <field name="arch" type="xml">
                 <form string="Apply Discount" version="7.0">
-                    <header>
-                        <button name="apply_discount" string="Apply Discount" type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <field name="discount"/>
                     </group>
+                    <footer>
+                        <button name="apply_discount" string="Apply Discount" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

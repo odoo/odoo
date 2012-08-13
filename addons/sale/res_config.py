@@ -86,11 +86,11 @@ class sale_configuration(osv.osv_memory):
             help="""This adds the 'Margin' on sales order.
                 This gives the profitability by calculating the difference between the Unit Price and Cost Price.
                 This installs the module sale_margin."""),
-        'module_sale_journal': fields.boolean("allow batch invoicing through journals",
+        'module_sale_journal': fields.boolean("allow batch invoicing of delivery orders through journals",
             help="""Allows you to categorize your sales and deliveries (picking lists) between different journals,
                 and perform batch operations on journals.
                 This installs the module sale_journal."""),
-        'module_analytic_user_function': fields.boolean("assign user roles per contract",
+        'module_analytic_user_function': fields.boolean("one employee can have different roles per contract",
             help="""Allows you to define what is the default function of a specific user on a given account.
                 This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
                 But the possibility to change these values is still available.
@@ -119,7 +119,7 @@ class sale_configuration(osv.osv_memory):
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
             res['time_unit'] = product.uom_id.id
         return res
 
@@ -157,7 +157,7 @@ class sale_configuration(osv.osv_memory):
         ir_values.set_default(cr, uid, 'sale.order', 'picking_policy', default_picking_policy)
 
         if wizard.time_unit:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
             product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
         if wizard.module_project and wizard.time_unit:
