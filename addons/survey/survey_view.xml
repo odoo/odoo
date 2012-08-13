@@ -3,13 +3,11 @@
     <data>
 
         <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
-        <menuitem name="Define Surveys" id="menu_define_survey"
-             groups="base.group_tool_manager"
-             parent="menu_surveys" />
-        <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
+        
         <menuitem name="Reporting" parent="base.menu_tools"
             id="base.menu_lunch_reporting" sequence="6"/>
         <menuitem name="Reporting" id="menu_reporting" parent="menu_surveys" sequence="60"/>
+        <menuitem id="base.next_id_10" name="Survey" parent="base.menu_reporting" sequence="1" />
 
         <!--
             Survey
@@ -314,7 +312,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"><field name="title"/></t></h3>
+                                    <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
                                     <div class="oe_survey_responsible">
                                        <t t-if="record.responsible_id.raw_value">By: <field name="responsible_id"/></t>
                                    </div><br/>
@@ -361,8 +359,8 @@
 
 
         <menuitem name="Surveys" id="menu_survey_form"
-            action="action_survey_form1" parent="menu_define_survey"
-            groups="base.group_tool_manager"/>
+            action="action_survey_form1" parent="menu_surveys"
+            groups="base.group_tool_manager" sequence="1"/>
 
         <!--
             Survey Pages
@@ -576,8 +574,8 @@
         </record>
 
         <menuitem name="Survey Pages" id="menu_survey_page_form1"
-            action="action_survey_page_form" parent='menu_define_survey'
-            groups="base.group_tool_manager"/>
+            action="action_survey_page_form" parent="menu_surveys"
+            groups="base.group_no_one"/>
 
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
@@ -1210,8 +1208,8 @@
         </record>
 
         <menuitem name="Survey Requests" id="menu_survey_type_form1"
-            action="action_survey_request_tree" parent='menu_answer_surveys'
-            groups="base.group_tool_manager"/>
+            action="action_survey_request_tree" parent="menu_surveys"
+            groups="base.group_tool_manager" sequence="3"/>
 
         <!--
             Survey Type
@@ -1277,8 +1275,12 @@
             res_model="survey.answer"
             src_model="survey.question"/>
 
-        <menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
-            action="action_view_survey_name" parent="menu_answer_surveys"            groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user" icon="STOCK_INDEX"/>
+        <act_window
+            context="{'search_default_survey_id': active_id, 'default_survey_id': active_id}"
+            id="act_survey_request"
+            name="Survey Requests"
+            res_model="survey.request"
+            src_model="survey"/>
 
     </data>
 </openerp>
