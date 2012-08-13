@@ -38,7 +38,7 @@ class many2many_reference(fields.many2many):
     
     def _get_query_and_where_params(self, cr, model, ids, values, where_params):
         """ Add in where:
-            - mail_subscription.res_model = 'crm.lead'
+            - mail_followers.res_model = 'crm.lead'
         """
         query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
                     FROM %(rel)s, %(from_c)s \
@@ -104,21 +104,20 @@ class mail_thread(osv.Model):
        default implementation will work for any model. However it is common
        to override at least the ``message_new`` and ``message_update``
        methods (calling ``super``) to add model-specific behavior at
-       creation and update of a thread; and ``message_get_subscribers``
-       to manage more precisely the social aspect of the thread through
-       the followers.
+       creation and update of a thread.
+       
+       TODO: UPDATE WITIH SUBTYPE / NEW FOLLOW MECHANISM
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
 
     def _get_message_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for id in ids:
-            message_ids = self.message_search(cr, uid, [id], context=context)
-            subscriber_ids = self.message_get_subscribers(cr, uid, [id], context=context)
+        for thread in self.browse(cr, uid, ids, context=context):
+            message_ids = self.message_search(cr, uid, [thread.id], context=context)
             res[id] = {
                 'message_ids': message_ids,
-                'message_summary': "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(message_ids), len(subscriber_ids)),
+                'message_summary': "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(message_ids), len(thread.message_follower_ids)),
             }
         return res
 
@@ -133,8 +132,8 @@ class mail_thread(osv.Model):
             type='one2many', obj='mail.message', _fields_id = 'res_id',
             string='Temp messages', multi="_get_message_ids",
             help="Functional field holding messages related to the current document."),
-        'message_subscriber_ids': many2many_reference('res.users',
-            rel='mail_subscription', id1='res_id', id2='user_id', string="Followers",
+        'message_follower_ids': many2many_reference('res.users',
+            rel='mail_followers', id1='res_id', id2='user_id', string="Followers",
             help="Followers of the document. The followers have full access to " \
                  "the document details, as well as the conversation."),
         'message_state': fields.boolean('Read',
@@ -155,7 +154,7 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        """Automatically subscribe the creator """
+        """ Automatically subscribe the creator """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
         if thread_id:
             self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
@@ -163,31 +162,24 @@ class mail_thread(osv.Model):
 
     def write(self, cr, uid, ids, vals, context=None):
         """ Override of write to subscribe the writer, except if he has changed
-            the subscribers (to avoid unsubscribe-->subscribe). """
+            the followers (to avoid unfollow-->follow). """
         if isinstance(ids, (int, long)):
             ids = [ids]
         write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context)
-        if write_res and not vals.get('message_subscriber_ids'):
+        if write_res and not vals.get('message_follower_ids'):
             self.message_subscribe(cr, uid, ids, [uid], context=context)
         return write_res;
 
     def unlink(self, cr, uid, ids, context=None):
-        """Override unlink, to automatically delete
-           - subscriptions
-           - messages
+        """Override unlink, to automatically delete messages
            that are linked with res_model and res_id, not through
            a foreign key with a 'cascade' ondelete attribute.
            Notifications will be deleted with messages
         """
-        subscr_obj = self.pool.get('mail.subscription')
         msg_obj = self.pool.get('mail.message')
-        # delete subscriptions
-        subscr_to_del_ids = subscr_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        subscr_obj.unlink(cr, uid, subscr_to_del_ids, context=context)
         # delete messages and notifications
         msg_to_del_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
         msg_obj.unlink(cr, uid, msg_to_del_ids, context=context)
-
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
 
     #------------------------------------------------------
@@ -198,12 +190,11 @@ class mail_thread(osv.Model):
         """ OpenChatter: wrapper of mail.message create method
            - creates the mail.message
            - automatically subscribe the message writer
-           - push the message to subscribed users
+           - push the message to followers
         """
         if context is None:
             context = {}
-        
-        message_obj = self.pool.get('mail.message')
+
         notification_obj = self.pool.get('mail.notification')
         body = vals.get('body_html', '') if vals.get('content_subtype') == 'html' else vals.get('body_text', '')
         
@@ -232,7 +223,6 @@ class mail_thread(osv.Model):
         return msg_id
     
     def message_get_user_ids_to_notify(self, cr, uid, thread_ids, new_msg_vals, context=None):
-        subscription_obj = self.pool.get('mail.subscription')
         # get body
         body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
         
@@ -939,33 +929,10 @@ class mail_thread(osv.Model):
         """ Returns the current document followers. Basically this method
             checks in mail.subscription for entries with matching res_model,
             res_id.
-            This method can be overriden to add implicit subscribers, such
-            as project managers, by adding their user_id to the list of
-            ids returned by this method.
         """
-        subscr_obj = self.pool.get('mail.subscription')
+        subscr_obj = self.pool.get('mail.followers')
         subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         return [sub['user_id'][0] for sub in subscr_obj.read(cr, uid, subscr_ids, ['user_id'], context=context)]
-
-    def message_read_subscribers(self, cr, uid, ids, fields=['id', 'name', 'image_small'], context=None):
-        """ Returns the current document followers as a read result. Used
-            mainly for Chatter having only one method to call to have
-            details about users.
-        """
-        user_ids = self.message_get_subscribers(cr, uid, ids, context=context)
-        return self.pool.get('res.users').read(cr, uid, user_ids, fields=fields, context=context)
-
-    def message_is_subscriber(self, cr, uid, ids, user_id = None, context=None):
-        """ Check if uid or user_id (if set) is a subscriber to the current
-            document.
-            
-            :param user_id: if set, check is done on user_id; if not set
-                            check is done on uid
-        """
-        sub_user_id = uid if user_id is None else user_id
-        if sub_user_id in self.message_get_subscribers(cr, uid, ids, context=context):
-            return True
-        return False
 
     def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
         """ Subscribe the user (or user_ids) to the current document.
@@ -973,12 +940,12 @@ class mail_thread(osv.Model):
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
         """
-        follower_ids = [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_subscriber_ids]
+        follower_ids = [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
         to_subscribe_uids = [uid] if user_ids is None else user_ids
         if all(follower_id in follower_ids for follower_id in to_subscribe_uids):
             return follower_ids
-        write_res = self.write(cr, uid, ids, {'message_subscriber_ids': [(4, id) for id in to_subscribe_uids]}, context=context)
-        return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_subscriber_ids]
+        write_res = self.write(cr, uid, ids, {'message_follower_ids': [(4, id) for id in to_subscribe_uids]}, context=context)
+        return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
     def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
         """ Unsubscribe the user (or user_ids) from the current document.
@@ -987,8 +954,8 @@ class mail_thread(osv.Model):
                              uid instead
         """
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
-        write_res = self.write(cr, uid, ids, {'message_subscriber_ids': [(3, id) for id in to_unsubscribe_uids]}, context=context)
-        return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_subscriber_ids]
+        write_res = self.write(cr, uid, ids, {'message_follower_ids': [(3, id) for id in to_unsubscribe_uids]}, context=context)
+        return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
     #------------------------------------------------------
     # Notification API
