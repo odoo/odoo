@@ -21,7 +21,7 @@
 
 import mail_alias
 import mail_message
-import mail_subscription
+import mail_followers
 import mail_thread
 import mail_group
 import ir_needaction
