@@ -201,7 +201,6 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
-                   <sheet>
                     <div class="oe_right oe_avatar">
                         <field name="image_small" widget='image' class="oe_image_small"/>
                     </div>
@@ -221,7 +220,11 @@
                         <field name="user_email" widget="email" readonly="0"/>
                         <field name="signature" readonly="0"/>
                     </group>
-                    </sheet>
+                    <footer>
+                        <button name="preference_save" type="object" string="Save"/>
+                        <button name="preference_cancel" special="cancel" string="Cancel"/>
+                        <button name="preference_change_password" type="object" string="Change password"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -229,14 +232,9 @@
             <field name="name">Change My Preferences</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.users</field>
+            <field name="target">new</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=',uid)]</field>
-        </record>
-        <record id="action_res_users_my_view1" model="ir.actions.act_window.view">
-            <field eval="20" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="act_window_id" ref="action_res_users_my"/>
+            <field name="view_mode">form</field>
         </record>
         <record id="action_res_users_my_view2" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>

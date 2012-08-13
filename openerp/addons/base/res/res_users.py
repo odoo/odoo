@@ -325,6 +325,8 @@ class users(osv.osv):
         'context_lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
         'context_tz': lambda self, cr, uid, context: context.get('tz', False),
         'image': _get_default_image,
+        'image_small': _get_default_image,
+        'image_medium': _get_default_image,
         'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
@@ -533,6 +535,19 @@ class users(osv.osv):
         if new_passwd:
             return self.write(cr, uid, uid, {'password': new_passwd})
         raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
+
+    def preference_save(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+    def preference_change_password(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'change_password',
+            'target': 'new',
+        }
 
     def has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.

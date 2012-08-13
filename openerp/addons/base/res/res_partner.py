@@ -232,6 +232,8 @@ class res_partner(osv.osv):
         'type': 'default',
         'use_parent_address': True,
         'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
+        'image_small': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
+        'image_medium': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
