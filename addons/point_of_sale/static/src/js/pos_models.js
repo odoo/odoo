@@ -216,7 +216,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 self.db.add_categories(categories);
                                 return fetch( 
                                     'product.product', 
-                                    ['name', 'list_price','price','pos_categ_id', 'taxes_id','image', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
+                                    ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
                                     [['pos_categ_id','!=', false]],
                                     {pricelist: self.get('shop').pricelist_id[0]} // context for price
                                 );
@@ -367,23 +367,21 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         scan_product: function(parsed_ean){
             var self = this;
-            var def  = new $.Deferred();
-            this.db.get_product_by_ean13(parsed_ean.base_ean, function(product){
-                var selectedOrder = this.get('selectedOrder');
-                if(!product){
-                    def.reject('product-not-found: '+parsed_ean.base_ean);
-                    return;
-                }
-                if(parsed_ean.type === 'price'){
-                    selectedOrder.addProduct(new module.Product(product), {price:parsed_ean.value});
-                }else if(parsed_ean.type === 'weight'){
-                    selectedOrder.addProduct(new module.Product(product), {quantity:parsed_ean.value, merge:false});
-                }else{
-                    selectedOrder.addProduct(new module.Product(product));
-                }
-                def.resolve();
-            });
-            return def;
+            var product = this.db.get_product_by_ean13(parsed_ean.base_ean);
+            var selectedOrder = this.get('selectedOrder');
+
+            if(!product){
+                return false;
+            }
+
+            if(parsed_ean.type === 'price'){
+                selectedOrder.addProduct(new module.Product(product), {price:parsed_ean.value});
+            }else if(parsed_ean.type === 'weight'){
+                selectedOrder.addProduct(new module.Product(product), {quantity:parsed_ean.value, merge:false});
+            }else{
+                selectedOrder.addProduct(new module.Product(product));
+            }
+            return true;
         },
     });
 

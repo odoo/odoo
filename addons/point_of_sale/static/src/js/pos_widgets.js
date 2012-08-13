@@ -242,7 +242,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.renderElement();
         },
         get_image_url: function() {
-            return 'data:image/gif;base64,'+this.model.get('image');
+            return 'web/binary/image?session_id='+instance.connection.session_id+'&model=product.product&field=image&id='+this.model.get('id')+'&cache=1800';
         },
         renderElement: function() {
             this._super();
@@ -471,25 +471,20 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
 
             // find all products belonging to the current category
-            this.pos.db.get_product_by_category(this.category.id, function(products){
-                // product lists watch for reset events on 'products' to re-render. 
-                // FIXME that means all productlist widget re-render... even the hidden ones ! 
-                self.pos.get('products').reset(products);
-            });
+            var products = this.pos.db.get_product_by_category(this.category.id);
+            self.pos.get('products').reset(products);
 
             // filter the products according to the search string
             this.$('.searchbox input').keyup(function(){
                 query = $(this).val().toLowerCase();
                 if(query){
-                    self.pos.db.search_product_in_category(self.category.id, ['name','ean13'], query, function(products){
-                        self.pos.get('products').reset(products);
-                        self.$('.search-clear').fadeIn();
-                    });
+                    var products = self.pos.db.search_product_in_category(self.category.id, ['name','ean13'], query);
+                    self.pos.get('products').reset(products);
+                    self.$('.search-clear').fadeIn();
                 }else{
-                    self.pos.db.get_product_by_category(self.category.id, function(products){
-                        self.pos.get('products').reset(products);
-                        self.$('.search-clear').fadeOut();
-                    });
+                    var products = self.pos.db.get_product_by_category(self.category.id);
+                    self.pos.get('products').reset(products);
+                    self.$('.search-clear').fadeOut();
                 }
             });
 
@@ -497,11 +492,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             //reset the search when clicking on reset
             this.$('.search-clear').click(function(){
-                self.pos.db.get_product_by_category(self.category.id, function(products){
-                    self.pos.get('products').reset(products);
-                    self.$('.searchbox input').val('').focus();
-                    self.$('.search-clear').fadeOut();
-                });
+                var products = self.pos.db.get_product_by_category(self.category.id);
+                self.pos.get('products').reset(products);
+                self.$('.searchbox input').val('').focus();
+                self.$('.search-clear').fadeOut();
             });
         },
     });
