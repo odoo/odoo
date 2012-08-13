@@ -171,11 +171,6 @@ class integer(_column):
 
     def __init__(self, string='unknown', required=False, **args):
         super(integer, self).__init__(string=string, required=required, **args)
-        if required:
-            _logger.debug(
-                "required=True is deprecated: making an integer field"
-                " `required` has no effect, as NULL values are "
-                "automatically turned into 0.")
 
 class reference(_column):
     _type = 'reference'
@@ -246,11 +241,6 @@ class float(_column):
         self.digits = digits
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
-        if required:
-            _logger.debug(
-                "required=True is deprecated: making a float field"
-                " `required` has no effect, as NULL values are "
-                "automatically turned into 0.0.")
 
     def digits_change(self, cr):
         if self.digits_compute:
