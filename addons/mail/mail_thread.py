@@ -157,7 +157,7 @@ class mail_thread(osv.Model):
             the subscribers (to avoid unsubscribe-->subscribe). """
         if isinstance(ids, (int, long)):
             ids = [ids]
-        write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context);
+        write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context)
         if write_res and not vals.get('message_subscriber_ids'):
             self.message_subscribe(cr, uid, ids, [uid], context=context)
         return write_res;
