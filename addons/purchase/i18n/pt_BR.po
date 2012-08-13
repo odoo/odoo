@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-07-30 01:34+0000\n"
-"Last-Translator: Fábio Martinelli <webmaster@guaru.net>\n"
+"PO-Revision-Date: 2012-08-13 02:33+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-31 05:23+0000\n"
-"X-Generator: Launchpad (build 15702)\n"
+"X-Launchpad-Export-Date: 2012-08-13 05:53+0000\n"
+"X-Generator: Launchpad (build 15791)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -234,7 +235,7 @@ msgstr "Propriedades de Compras"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking Processing Wizard"
-msgstr ""
+msgstr "Assistente de Separação Parcial"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1010,7 +1011,7 @@ msgstr "Categorias de Produtos"
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
 msgid "Pre-Generate Draft Invoices based on Purchase Orders"
-msgstr ""
+msgstr "Gerar previamente Faturas Provisórias baseadas em Pedidos de Compra"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
@@ -1276,6 +1277,13 @@ msgid ""
 "Based on generated invoice: create a draft invoice you can validate later.\n"
 "Based on receptions: let you create an invoice when receptions are validated."
 msgstr ""
+"Baseada em Linhas da Ordem de Compra: Usa linhas individuais em 'Controle de "
+"Faturas > Baseadas em linhas de O.C' de onde você pode criar uma fatura "
+"seletivamente.\n"
+"Baseada em fatura gerada: cria uma fatura provisória que você pode validar "
+"depois.\n"
+"Baseada em recebimentos: permite que você crie uma fatura quando os "
+"recebimentos forem validados."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
@@ -1645,7 +1653,7 @@ msgstr "Valor sem Impostos"
 #. module: purchase
 #: view:stock.picking:0
 msgid "Picking to Invoice"
-msgstr ""
+msgstr "Separação para Faturar"
 
 #. module: purchase
 #: view:purchase.config.wizard:0
@@ -1653,6 +1661,8 @@ msgid ""
 "This tool will help you to select the method you want to use to control "
 "supplier invoices."
 msgstr ""
+"Esta ferramenta te ajuda a selecionar o método que você deseja para "
+"controlar as faturas de fornecedores."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -1699,6 +1709,9 @@ msgid ""
 "receptions\", you can track here all the product receptions and create "
 "invoices for those receptions."
 msgstr ""
+"Se você definir o Controle de Faturamento em ordem de compra como 'Baseado "
+"em recebimentos'. você pode rastrear aqui todos os recebimentos de produtos "
+"e criar faturas para estes recebimentos."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1750,7 +1763,7 @@ msgstr "Preço Padrão de Compra"
 #. module: purchase
 #: field:purchase.config.wizard,default_method:0
 msgid "Default Invoicing Control Method"
-msgstr ""
+msgstr "Método de Controle de Fatura Padrão"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
@@ -1766,7 +1779,7 @@ msgstr "Controle Faturamento"
 #. module: purchase
 #: view:stock.picking:0
 msgid "Back Orders"
-msgstr ""
+msgstr "Pedidos Devolvidos"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
@@ -1821,7 +1834,7 @@ msgstr "Versões da lista"
 #. module: purchase
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Erro! Você não pode criar recursivamente a membros associados."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:359
@@ -1908,11 +1921,62 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"Olá${object.partner_address_id.name and ' ' or "
+"''}${object.partner_address_id.name or ''},\n"
+"\n"
+"Esta é a confirmação do pedido de compra de ${object.company_id.name}:\n"
+"       | Número do Pedido: *${object.name}*\n"
+"       | Total do Pedido: *${object.amount_total} "
+"${object.pricelist_id.currency_id.name}*\n"
+"       | Data do Pedido: ${object.date_order}\n"
+"       % if object.origin:\n"
+"       | Referência do Pedido: ${object.origin}\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       | Sua referência: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       | Seu contato: ${object.validator.name} ${object.validator.user_email "
+"and '<%s>'%(object.validator.user_email) or ''}\n"
+"\n"
+"Você pode ver a confirmação do pedido e fazer o download usando o seguinte "
+"link:\n"
+"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+"\n"
+"Se você tiver alguma dúvida por favor entre em contato conosco.\n"
+"\n"
+"Obrigado!\n"
+"\n"
+"\n"
+"--\n"
+"${object.validator.name} ${object.validator.user_email and "
+"'<%s>'%(object.validator.user_email) or ''}\n"
+"${object.company_id.name}\n"
+"% if object.company_id.street:\n"
+"${object.company_id.street or ''}\n"
+"% endif\n"
+"% if object.company_id.street2:\n"
+"${object.company_id.street2}\n"
+"% endif\n"
+"% if object.company_id.city or object.company_id.zip:\n"
+"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+"% endif\n"
+"% if object.company_id.country_id:\n"
+"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+"or ''} ${object.company_id.country_id.name or ''}\n"
+"% endif\n"
+"% if object.company_id.phone:\n"
+"Telefone: ${object.company_id.phone}\n"
+"% endif\n"
+"% if object.company_id.website:\n"
+"${object.company_id.website or ''}\n"
+"% endif\n"
+"            "
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in draft state"
-msgstr ""
+msgstr "Pedidos de Compra que estão como Provisórios"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1922,17 +1986,17 @@ msgstr "Maio"
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
 msgid "Manager"
-msgstr ""
+msgstr "Gerente"
 
 #. module: purchase
 #: view:purchase.config.wizard:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Order in current year"
-msgstr ""
+msgstr "Pedidos este ano"
 
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
@@ -1949,7 +2013,7 @@ msgstr "Ano"
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr ""
+msgstr "Baseada em Linhas de Pedido de Compra"
 
 #. module: purchase
 #: model:ir.actions.todo.category,name:purchase.category_purchase_config

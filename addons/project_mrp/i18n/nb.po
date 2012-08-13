@@ -1,17 +1,16 @@
-# translation of pt_BR.po to
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* project_mrp
+# Norwegian Bokmal translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: pt_BR\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-08-13 02:07+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@guaru.net>\n"
-"Language-Team: <pt@li.org>\n"
+"PO-Revision-Date: 2012-08-12 17:17+0000\n"
+"Last-Translator: Kaare Pettersen <Unknown>\n"
+"Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,68 +20,68 @@ msgstr ""
 #. module: project_mrp
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr "Referência de ordem deve ser única por empresa!"
+msgstr "Ordrereferanse må være unik pr. firma!"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
 msgid "For each product, on type service and on order"
-msgstr "Para cada produto, no tipo serviço e na ordem"
+msgstr "For hvert produkt, type service og ordre"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procurement Task"
-msgstr "Taréfa de Aquisição"
+msgstr "Innkjøps oppgave"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_sale_order
 msgid "Sales Order"
-msgstr "Pedido de Venda"
+msgstr "Salgsordre"
 
 #. module: project_mrp
 #: field:procurement.order,sale_line_id:0
 msgid "Sale order line"
-msgstr "Linha do pedido de venda"
+msgstr "Salgs ordre linje"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
 msgid "Product type is service, then its creates the task."
-msgstr "Tipo de produto é serviço, então isto cria a tarefa."
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
 msgid "if product type is 'service' then it creates the task."
-msgstr "Se o tipo de produto é 'serviço' então isto cria a tarefa"
+msgstr ""
 
 #. module: project_mrp
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
-msgstr "Erro ! A data final deve ser maior do que a data inicial"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.node,name:project_mrp.process_node_saleordertask0
 msgid "Sale Order Task"
-msgstr "Tarefa de Pedido de Venda"
+msgstr "Salgs ordre oppgave"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
 msgid "Product"
-msgstr "Produto"
+msgstr "Produkt"
 
 #. module: project_mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Erro: Código EAN inválido"
+msgstr "Feil: Ugyldig ean kode"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
 msgid "Project"
-msgstr "Projeto"
+msgstr "Prosjekt"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_procurement_order
 #: field:project.task,procurement_id:0
 msgid "Procurement"
-msgstr "Aquisição"
+msgstr "Innkjøp"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_project_task
@@ -90,41 +89,39 @@ msgstr "Aquisição"
 #: model:process.node,name:project_mrp.process_node_procuretasktask0
 #: field:procurement.order,task_id:0
 msgid "Task"
-msgstr "Tarefa"
+msgstr "Oppgave"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
 msgid "A task is created to provide the service."
-msgstr "Uma tarefa é criada para prover o serviço."
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
 msgid "Order Task"
-msgstr "Ordem de Tarefa"
+msgstr "Ordre oppgave"
 
 #. module: project_mrp
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr "Erro! Você não pode criar tarefas recursivas."
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
 msgid "Create Task"
-msgstr "Criar Tarefa"
+msgstr "Lag oppgave"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
 msgid "If procurement method is Make to order and supply method is produce"
 msgstr ""
-"Se o método de aquisição é fazer para Pedido e método de fornecimento é "
-"produzir"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
-msgstr "No caso de venda de serviços no Pedido de Venda"
+msgstr ""
 
 #. module: project_mrp
 #: field:project.task,sale_line_id:0
 msgid "Sale Order Line"
-msgstr "Linha do Pedido de Venda"
+msgstr ""

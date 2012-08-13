@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-08-02 02:12+0000\n"
-"Last-Translator: Fábio Martinelli <webmaster@guaru.net>\n"
+"PO-Revision-Date: 2012-08-13 02:21+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-03 06:21+0000\n"
-"X-Generator: Launchpad (build 15734)\n"
+"X-Launchpad-Export-Date: 2012-08-13 05:52+0000\n"
+"X-Generator: Launchpad (build 15791)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
@@ -192,6 +193,13 @@ msgid ""
 "the user and can be validated by his manager. If required, as defined on the "
 "project, you can generate the invoices based on the timesheet."
 msgstr ""
+"Minha folha de horas abre seu quadro de horários de modo que você pode "
+"reservar suas atividades no sistema. Da mesma forma, você pode registrar "
+"seus atendimentos (Registrar Entrada / Saída) e descrever as horas de "
+"trabalho feitas em diferentes projetos. No final do período de tempo "
+"definido na empresa, a folha de horas é confirmada pelo usuário e pode ser "
+"validado pelo seu gerente. Se necessário, conforme definido no projeto, você "
+"pode gerar as faturas com base na folha de horas."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -847,6 +855,11 @@ msgid ""
 "* The 'Done' state is used when users timesheet is accepted by his/her "
 "senior."
 msgstr ""
+" * 'Provisório' é usado quando um usuário está cadastrando uma folha de "
+"horas nova e sem confirmação\n"
+"* 'Confirmado' é usado para confirmar a folha de horas por usuário.\n"
+"* 'Concluído' é usado quando a folha de horas do usuário é aceita por seu "
+"superior."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -1017,11 +1030,13 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign it to a "
 "user!"
 msgstr ""
+"Para criar uma folha de horas para este funcionário, você precisa associar a "
+"um usuário!"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0 field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
-msgstr ""
+msgstr "#Presenças Totais"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,cost:0
@@ -1037,7 +1052,7 @@ msgstr "Data atual"
 #. module: hr_timesheet_sheet
 #: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
 msgid "Hr Timesheet"
-msgstr ""
+msgstr "Folha de Horas de RH"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 field:hr.timesheet.report,year:0
@@ -1048,12 +1063,12 @@ msgstr "Ano"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0 selection:hr_timesheet_sheet.sheet,state:0
 msgid "Open"
-msgstr ""
+msgstr "Aberto"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "To Approve"
-msgstr ""
+msgstr "Para Aprovar"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
@@ -1063,4 +1078,4 @@ msgstr "Total"
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Diário"
