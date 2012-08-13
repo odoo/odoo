@@ -26,7 +26,7 @@
     "sequence": 2,
     "summary": "Discussions, Mailing Lists, News",
     'description': """
-A bussiness oriented Social Networking with a fully-integrated email 
+A business oriented Social Networking with a fully-integrated email 
 and message management.
 =====================================================================
 
@@ -59,24 +59,29 @@ The main features of the module are:
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'base_tools'],
+    'depends': ['base', 'base_tools', 'base_setup'],
     'data': [
         'wizard/mail_compose_message_view.xml',
         'mail_message_subtype.xml',
+        'res_config_view.xml',
         'mail_message_view.xml',
         'mail_subscription_view.xml',
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_partner_view.xml',
-        'res_users_view.xml',
         'data/mail_data.xml',
         'data/mail_group_data.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
+        'mail_alias_view.xml',
+        'res_users_view.xml',
+    ],
+    'demo': [
+        'data/mail_demo.xml',
     ],
     'installable': True,
     'auto_install': False,
-    'application':True,
+    'application': True,
     'certificate': '001056784984222247309',
     'images': [
         'images/customer_history.jpeg',
@@ -102,8 +107,5 @@ The main features of the module are:
     'qweb': [
         'static/src/xml/mail.xml',
     ],
-    'demo': [
-        'data/mail_demo.xml',
-    ],   
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

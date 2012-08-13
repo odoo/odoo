@@ -453,5 +453,13 @@ You can automatically create application records from an email gateway, that you
         <field name="question_id" ref="survey_question_job_1"/>
         <field eval="13" name="sequence"/>
     </record>
+   
+    <record id="mail_alias_jobs" model="mail.alias">
+        <field name="alias_name">jobs</field>
+        <field name="alias_model_id" ref="model_hr_applicant"/>
+        <field name="alias_user_id" ref="base.user_root"/>
+        <field name="alias_defaults">{}</field>
+    </record>
+    
 </data>
 </openerp>

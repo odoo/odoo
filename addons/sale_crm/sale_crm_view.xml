@@ -9,8 +9,9 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="/form/header/button[@name='stage_previous']" position="before">
-                        <button string="Convert to Quote" name="%(action_crm_make_sale)d" type="action" class="oe_highlight"/>
+                    <xpath expr="/form/header/button[@name='case_mark_lost']" position="after">
+                        <button states="done" string="Convert to Quote" name="%(action_crm_make_sale)d" type="action" class="oe_highlight"/>
+                        <button states="draft,open,pending" string="Convert to Quote" name="%(action_crm_make_sale)d" type="action"/>
                     </xpath>
                 </data>
             </field>

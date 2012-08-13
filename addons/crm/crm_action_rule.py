@@ -54,12 +54,12 @@ class base_action_rule(osv.osv):
 
         name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
         emailfrom = tools.ustr(emailfrom)
-        if hasattr(obj, 'section_id') and obj.section_id and obj.section_id.reply_to:
-            reply_to = obj.section_id.reply_to
+        if hasattr(obj, 'section_id') and obj.section_id and obj.section_id.alias_id:
+            reply_to = obj.section_id.alias_id.name_get()[0][1]
         else:
             reply_to = emailfrom
         if not emailfrom:
-            raise osv.except_osv(_('Error!'), _("No Email Found for your Company address!"))
+            raise osv.except_osv(_('Error!'), _("There is no email for your company address."))
         return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model=obj._name, reply_to=reply_to, res_id=obj.id)
 
     def do_check(self, cr, uid, action, obj, context=None):

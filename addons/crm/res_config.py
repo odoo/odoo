@@ -38,12 +38,12 @@ class crm_configuration(osv.osv_memory):
         'module_import_google': fields.boolean("Google (Contacts and Calendar)",
             help="""Import google contact in partner address and add google calendar events details in Meeting.
                 This installs the module import_google."""),
-        'module_wiki_sale_faq': fields.boolean("share information with sales FAQ",
-            help="""This provides demo data, thereby creating a Wiki Group and a Wiki Page for Wiki Sale FAQ.
-                This installs the module wiki_sale_faq."""),
         'module_google_map': fields.boolean("add google maps on customer",
             help="""Locate customers on Google Map.
                 This installs the module google_map."""),
+        'group_fund_raising': fields.boolean("Manage Fund Raising",
+            implied_group='crm.group_fund_raising',
+            help="""Allows you to trace and manage your activities for fund raising."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
