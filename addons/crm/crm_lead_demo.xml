@@ -49,7 +49,6 @@ Can you send details,</field>
             <field name="section_id" ref="crm_case_section_3"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
-            <field name="description">Want to know features and benifits to use the new software.</field>
             <field eval="1" name="active"/>
         </record>
 
@@ -550,53 +549,86 @@ Andrew</field>
 
         <!-- Some messages linked to the previous opportunity -->
         <record id="message_email0" model="mail.message">
-            <field name="subject">Kitchen design</field>
+            <field name="subject">Plan to buy a Laptop</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
-            <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[Email0 inquiry]]></field>
-            <field name="type">email</field>
-            <field name="state">sent</field>
-            <field name="user_id" ref="base.user_root"></field>
-        </record>
-        <record id="message_note0" model="mail.message">
-            <field name="subject">Reply</field>
-            <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_15"/>
-            <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[Internal note0]]></field>
-            <field name="type">comment</field>
-            <field name="user_id" ref="base.user_root"></field>
-        </record>
-        <record id="message_note0_comment0" model="mail.message">
-            <field name="subject">Reply</field>
-            <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_15"/>
-            <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[comment on note0]]></field>
-            <field name="parent_id" ref="message_note0"/>
-            <field name="type">comment</field>
-            <field name="user_id" ref="base.user_root"></field>
-        </record>
-        <record id="message_note0_comment1" model="mail.message">
-            <field name="subject">Reply</field>
-            <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_15"/>
-            <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[comment1 on note0]]></field>
-            <field name="parent_id" ref="message_note0"/>
-            <field name="type">comment</field>
-            <field name="user_id" ref="base.user_root"></field>
-        </record>
-        <record id="message_email1" model="mail.message">
-            <field name="subject">Your inquiry</field>
-            <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_15"/>
-            <field name="subtype">html</field>
-            <field name="body_html"><![CDATA[hello, outgoing email]]></field>
+            <field name="content_subtype">html</field>
+            <field name="body_html">&lt;![CDATA[Email0 inquiry]]&gt;&lt;div&gt;&lt;font size="2"&gt;Hello,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;I am interested in your company's product and I plan to buy a new laptop having latest technologies and affordable price.&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;Can you please send me product catalogue?&lt;/font&gt;&lt;/div&gt;</field>
             <field name="type">email</field>
             <field name="state">received</field>
-            <field name="user_id" ref="base.user_root"></field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="message_note0" model="mail.message">
+            <field name="subject">Re: Plan to buy a Laptop</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_15"/>
+            <field name="parent_id" ref="message_email0"/>
+            <field name="content_subtype">plain</field>
+            <field name="body_text">Dear Customer,
+Thanks for showing interest in our products.
+We have attached the catalogue,
+We would like to know your interests, Let us know if we can call you for more details.
+
+Thanks</field>
+            <field name="type">email</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="state">sent</field>
+        </record>
+        <record id="message_note0_comment0" model="mail.message">
+            <field name="subject">Re: Plan to buy a Laptop</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_15"/>
+            <field name="content_subtype">html</field>
+            <field name="body_html">&lt;div&gt;Thanks for the information,&lt;/div&gt;&lt;div&gt;I will visit the store soon.&lt;/div&gt;</field>
+            <field name="parent_id" ref="message_note0"/>
+            <field name="type">email</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="state">received</field>
+        </record>
+        <record id="message_note0_comment1" model="mail.message">
+            <field name="subject">Re: Plan to buy a Laptop</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_15"/>
+            <field name="content_subtype">html</field>
+            <field name="body_html">&lt;font color="#1f1f1f"&gt;Can you tell me if the store is open at 9:00 PM?&lt;/b&gt;&lt;/font&gt;</field>
+            <field name="parent_id" ref="message_note0"/>
+            <field name="type">email</field>
+            <field name="state">received</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="message_email1" model="mail.message">
+            <field name="subject">Re: Plan to buy a Laptop</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_15"/>
+            <field name="content_subtype">plain</field>
+            <field name="body_text">Yes, its open till 10:00 PM, you are welcome!</field>
+            <field name="type">email</field>
+            <field name="state">sent</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="message_email_12" model="mail.message">
+            <field name="subject">Inquiry</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_1"/>
+            <field name="content_subtype">plain</field>
+            <field name="body_text">Hello,
+I am Jason from Le Club SARL,
+I am intertested to attend Training organized in your company,
+Can you send details,</field>
+            <field name="type">email</field>
+            <field name="state">received</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+
+        <record id="message_email_13" model="mail.message">
+            <field name="subject">Need Details</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_2"/>
+            <field name="content_subtype">plain</field>
+            <field name="body_text">Want to know features and benifits to use the new software.</field>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_demo"/>
         </record>
 
 
