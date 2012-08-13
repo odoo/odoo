@@ -1494,19 +1494,18 @@ account_bank_statement()
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
    
-    def bank_st_payment(self, cr, uid, ids, context):
-        record = record_id = False
-        for rec in self.browse(cr, uid, ids, context=context):
-            record_id = rec.voucher_id and rec.voucher_id .id or False
-            record = rec
+    def action_payment_reconcile(self, cr, uid, ids, context=None):
+        statement_id = ids[0]
+        statement = self.browse(cr, uid, statement_id, context=context)
+        voucher = statement.voucher_id or False
+        if voucher and voucher.state == 'posted':
+            return voucher.cancel_voucher(context=context)
         mod_obj = self.pool.get('ir.model.data')
-        if record and record.type == 'customer':
+        if voucher and voucher.type == 'customer':
             res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
         else:
             res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')    
         view_id = res and res[1] or False
-        context.update({'partner_id':record.partner_id.id, 'amount':record.amount})
-         
         return {
            'name': _('Payment Entry'),
            'res_model': 'account.voucher',
@@ -1515,10 +1514,9 @@ class account_bank_statement_line(osv.osv):
            'target':'new',
            'view_id':view_id,  
            'context': context,
-           'res_id':record_id,
+           'res_id':voucher and voucher.id or False,
            'type': 'ir.actions.act_window'
-            }
-
+        }
        
     def _amount_reconciled(self, cursor, user, ids, name, args, context=None):
         if not ids:
