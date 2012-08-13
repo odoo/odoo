@@ -52,7 +52,7 @@ class yearly_salary_detail(osv.osv_memory):
             context = {}
         datas = {'ids': context.get('active_ids', [])}
 
-        res = self.read(cr, uid, ids, ['employee_ids', 'date_from', 'date_to'], context=context)
+        res = self.read(cr, uid, ids, context=context)
         res = res and res[0] or {}
         datas.update({'form': res})
         return {
