@@ -217,18 +217,25 @@ class users(osv.osv):
         encrypted_pw = encrypt_md5(password, salt)
     
         # Check if the encrypted password matches against the one in the db.
-        cr.execute("""UPDATE res_users
-                        SET date=now() AT TIME ZONE 'UTC'
-                        WHERE id=%s AND password=%s AND active
-                        RETURNING id""", 
-                   (int(id), encrypted_pw.encode('utf-8')))
-        res = cr.fetchone()
-        cr.commit()
+        login_ok = encrypted_pw == stored_pw
+        
+        # Attempt to update last login time, but don't fail if the row is
+        # currently locked.
+        if login_ok:
+            try:
+                cr.execute("SELECT 1 FROM res_users WHERE id=%s FOR UPDATE NOWAIT",
+                           params=(id,), log_exceptions=False)
+                cr.execute("""UPDATE res_users
+                              SET date=now() AT TIME ZONE 'UTC'
+                              WHERE id=%s""", (id,))
+                cr.commit()
+            except Exception:
+                # Failing to acquire the lock on the res_users row probably means
+                # another request is holding it. No big deal, we don't want to
+                # prevent/delay login in that case just for updating login timestamp.
+                cr.rollback()
     
-        if res:
-            return res[0]
-        else:
-            return False
+        return login_ok and id
 
     def check(self, db, uid, passwd):
         if not passwd:
@@ -245,8 +252,9 @@ class users(osv.osv):
         if (cached_pass is not None) and cached_pass == passwd:
             return True
 
+        # We should get here only if the registry was just reloaded
+        # (e.g. after server startup or module install/upgrade)
         with closing(pooler.get_db(db).cursor()) as cr:
-            cr.execute('LOCK res_users')
             if uid not in self._salt_cache.get(db, {}):
                 # If we don't have cache, we have to repeat the procedure
                 # through the login function.
