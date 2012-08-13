@@ -341,6 +341,7 @@ def load_information_from_description_file(module):
                 'web': False,
                 'website': '',
                 'sequence': 100,
+                'summary': '',
             }
             info.update(itertools.izip(
                 'depends data demo test init_xml update_xml demo_xml'.split(),
