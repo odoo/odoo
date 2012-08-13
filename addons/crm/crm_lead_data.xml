@@ -156,5 +156,38 @@
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
 
+        <!--  mail subtype -->
+        <record id="mail_subtype_lead_new" model="mail.message.subtype">
+            <field name="name">new</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail_subtype_lead_won" model="mail.message.subtype">
+            <field name="name">won</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+        </record>
+        <record id="mail_subtype_lead_lost" model="mail.message.subtype">
+            <field name="name">lost</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+        </record>
+        <record id="mail_subtype_lead_stage_change" model="mail.message.subtype">
+            <field name="name">stage change</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail_subtype_lead_other" model="mail.message.subtype">
+            <field name="name">other</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail_subtype_lead_email" model="mail.message.subtype">
+            <field name="name">email</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+        </record>
+        <record id="mail_subtype_lead_comment" model="mail.message.subtype">
+            <field name="name">comment</field>
+            <field name="model_ids" eval="[(6, 0, [ref('crm.model_crm_lead')])]"/>
+            <field name="default" eval="False"/>
+        </record>
     </data>
 </openerp>

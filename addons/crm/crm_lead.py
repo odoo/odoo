@@ -278,6 +278,9 @@ class crm_lead(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
+        obj = self.browse(cr, uid, obj_id, context)
+        if obj.user_id:
+            self.message_subscribe(cr, uid, [obj_id], [obj.user_id.id], context = context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
@@ -858,14 +861,6 @@ class crm_lead(base_stage, osv.osv):
     # ----------------------------------------
     # OpenChatter methods and notifications
     # ----------------------------------------
-
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        """ Override to add the salesman. """
-        user_ids = super(crm_lead, self).message_get_subscribers(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id and not obj.user_id.id in user_ids:
-                user_ids.append(obj.user_id.id)
-        return user_ids
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """

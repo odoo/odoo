@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- 
+            SUBTYPES
+                !-->
+
+        <record model="ir.ui.view" id="view_message_subtype_tree">
+            <field name="name">mail.message.subtype.tree</field>
+            <field name="model">mail.message.subtype</field>
+            <field name="type">tree</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree string="Subtype">
+                    <field name="name"/>
+                    <field name="model_ids" invisible="1"/>
+                    <field name="default"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_mail_message_subtype_form">
+            <field name="name">mail.message.subtype.form</field>
+            <field name="model">mail.message.subtype</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Email message" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="default"/>
+                            </group>
+                        </group>
+                        <separator string="Models"/>
+                        <field name="model_ids" widget="many2many"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_view_message_subtype" model="ir.actions.act_window">
+            <field name="name">Subtypes</field>
+            <field name="res_model">mail.message.subtype</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem name="Subtypes" id="menu_message_subtype" parent="base.menu_email"
+                    action="action_view_message_subtype"/>
+
+    </data>
+</openerp>
