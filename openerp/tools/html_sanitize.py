@@ -8,7 +8,7 @@ def html_sanitize(x):
     new = pq(result)
     return new.html()
 
-to_remove = set(["script", "head", "meta", "title", "link"])
+to_remove = set(["script", "head", "meta", "title", "link", "img"])
 to_unwrap = set(["html", "body"])
 
 def handle_a(el, new):
