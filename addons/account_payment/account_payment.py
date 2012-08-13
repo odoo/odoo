@@ -71,8 +71,8 @@ class payment_order(osv.osv):
     #dead code
     def get_wizard(self, type):
         logger = netsvc.Logger()
-        logger.notifyChannel("warning", netsvc.LOG_WARNING,
-                "No wizard found for the payment type '%s'." % type)
+        logger.notifyChannel("Warning!", netsvc.LOG_WARNING,
+                "No wizard is found for the payment type '%s'." % type)
         return None
 
     def _total(self, cursor, user, ids, name, args, context=None):

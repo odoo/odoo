@@ -141,7 +141,7 @@
   !context
     'type': 'receipt'
 -
-  I create the first voucher of payment with values 240 USD, journal USD, 
+  On the first March, I create the first voucher of payment with values 240 USD, journal USD, 
 -
   !record {model: account.voucher, id: account_voucher_1_case1, view: view_vendor_receipt_form}:
     account_id: account.cash
@@ -173,12 +173,12 @@
         self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
 -
-  I check that writeoff amount computed is 10.0
+  I check that writeoff amount computed is -10.0
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 1 USD/USD'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.writeoff_amount == 10.0), "Writeoff amount is not 10.0"
+    assert (voucher_id.writeoff_amount == -10.0), "Writeoff amount is not -10.0"
 -
   I confirm the voucher
 -
@@ -235,7 +235,7 @@
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
     assert (move_line.amount_residual_currency == 30.0) , "Residual amount is not correct for first Invoice"
 -
-  I create the second voucher of payment with values 45 USD, journal USD, 
+  On the first April, I create the second voucher of payment with values 45 USD, journal USD, 
 -
   !record {model: account.voucher, id: account_voucher_2_case1}:
     account_id: account.cash
@@ -266,12 +266,12 @@
         self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
 -
-  I check that writeoff amount computed is 5.0
+  I check that writeoff amount computed is -5.0
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 1'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.writeoff_amount == 5.0), "Writeoff amount is not 5.0"
+    assert (voucher_id.writeoff_amount == -5.0), "Writeoff amount is not -5.0"
 -
   I confirm the voucher
 -
