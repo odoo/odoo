@@ -172,6 +172,9 @@
     <rng:define name="form">
         <rng:element name="form">
             <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="create" /></rng:optional>
+            <rng:optional><rng:attribute name="delete" /></rng:optional>
+            <rng:optional><rng:attribute name="edit" /></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="type"/></rng:optional>
             <rng:optional><rng:attribute name="link"/></rng:optional>
@@ -220,6 +223,8 @@
                 <rng:attribute name="default_group_by" />
             </rng:optional>
             <rng:optional><rng:attribute name="create" /></rng:optional>
+            <rng:optional><rng:attribute name="delete" /></rng:optional>
+            <rng:optional><rng:attribute name="edit" /></rng:optional>
             <rng:optional><rng:attribute name="quick_create" /></rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
@@ -235,6 +240,9 @@
     <rng:define name="tree">
         <rng:element name="tree">
             <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="create" /></rng:optional>
+            <rng:optional><rng:attribute name="delete" /></rng:optional>
+            <rng:optional><rng:attribute name="edit" /></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="colors"/></rng:optional>
             <rng:optional><rng:attribute name="fonts"/></rng:optional>

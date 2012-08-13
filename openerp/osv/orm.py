@@ -1830,6 +1830,10 @@ class BaseModel(object):
             fields = self.fields_get(cr, user, None, context)
         fields_def = self.__view_look_dom(cr, user, node, view_id, False, fields, context=context)
         node = self._disable_workflow_buttons(cr, user, node)
+        if node.tag in ('kanban', 'tree', 'form'):
+            for a, b in (('create', 'check_create'), ('delete', 'check_unlink'), ('edit', 'check_write')):
+                if not node.get(a) and not getattr(self, b)(cr, user, raise_exception=False):
+                    node.set(a, 'false')
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         for k in fields.keys():
             if k not in fields_def:
