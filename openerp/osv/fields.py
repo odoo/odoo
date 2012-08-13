@@ -227,6 +227,9 @@ class char(_column):
 class text(_column):
     _type = 'text'
 
+class html(text):
+    _type = 'html'
+
 import __builtin__
 
 class float(_column):
