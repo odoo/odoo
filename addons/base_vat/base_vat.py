@@ -108,7 +108,7 @@ class res_partner(osv.osv):
     def button_check_vat(self, cr, uid, ids, context=None):
         if not self.check_vat(cr, uid, ids, context=context):
             msg = self._construct_constraint_msg(cr, uid, ids, context=context)
-            raise osv.except_osv(_('Error'), msg)
+            raise osv.except_osv(_('Error!'), msg)
 
     def check_vat(self, cr, uid, ids, context=None):
         user_company = self.pool.get('res.users').browse(cr, uid, uid).company_id
