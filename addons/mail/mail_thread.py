@@ -330,7 +330,7 @@ class mail_thread(osv.Model):
 
             data = {
                 'subject': subject,
-                'body_text': body_text or (hasattr(thread, 'description') and thread.description or ''),
+                'body_text': body_text or thread._model._columns.get('description') and thread.description or ''),
                 'body_html': body_html or '',
                 'parent_id': parent_id,
                 'date': email_date or fields.datetime.now(),
@@ -353,7 +353,7 @@ class mail_thread(osv.Model):
                 data.update({
                     'email_to': email_to,
                     'email_from': email_from or \
-                        (hasattr(thread, 'user_id') and thread.user_id and thread.user_id.user_email),
+                        thread._model._columns.get('user_id') and thread.user_id and thread.user_id.user_email),
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
                     'references': references,
