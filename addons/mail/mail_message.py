@@ -245,7 +245,7 @@ class mail_message(osv.Model):
     def vote_toggle(self, cr, uid, ids, context=None):
         '''
         Toggles when Comment is liked or unlike.
-        Return the number of votes of particular message.
+        create vote entries if current user like comment..
         '''
         vote_pool = self.pool.get('mail.vote')
         new_vote_id = False
