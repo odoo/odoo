@@ -6,17 +6,17 @@
             <field name="model">cash.box.in</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Put Money In">
+                <form string="Put Money In" version="7.0">
                     <separator string="Fill in this form if you put money in the cash register:" colspan="4" />
-                    <field name="name" />
-                    <field name="amount" />
-
-                    <separator colspan="4" />
-                    <group colspan="4" col="4">
-                        <group col="2" colspan="2" />
-                        <button icon="gtk-stop" special="cancel" string="Cancel" />
-                        <button name="run" string="Put Money In" colspan="1" type="object" icon="gtk-apply" />
+                    <group>
+                        <field name="name" class="oe_inline"/>
+                        <field name="amount"  class="oe_inline"/>
                     </group>
+                    <footer>
+                        <button name="run" string="Put Money In" type="object" class="oe_highlight"/>
+                         or 
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -35,17 +35,18 @@
             <field name="model">cash.box.out</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Take Money Out">
-                    <separator string="Describe why you take money from the cash register:" colspan="4" />
-                    <field name="name" />
-                    <field name="amount" />
-
-                    <separator colspan="4" />
-                    <group colspan="4" col="4">
-                        <group col="2" colspan="2" />
-                        <button icon="gtk-stop" special="cancel" string="Cancel" />
-                        <button name="run" string="Take Money Out" colspan="1" type="object" icon="gtk-apply" />
+                <form string="Take Money Out" version="7.0">
+                    <separator string="Describe why you take money from the cash register:"/>
+                    <group>
+                        <field name="name" class="oe_inline"/>
+                        <field name="amount" class="oe_inline"/>
                     </group>
+
+                    <footer>
+                        <button name="run" string="Take Money Out" type="object" class="oe_highlight"/>
+                        or 
+                        <button class="oe_link" special="cancel" string="Cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

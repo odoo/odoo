@@ -5,7 +5,7 @@
 -
   !record {model: project.compute.phases, id: project_compute_phases01}:
     target_project: 'one'
-    project_id: project.project_integrate_openerp
+    project_id: project.project_project_1
 -
   I schedule the phases.
 -
@@ -15,7 +15,7 @@
   I check the starting date and ending date on the phases after scheduling.
 -
   !python {model: project.project}: |
-     project = self.browse(cr, uid, ref("project.project_integrate_openerp"), context=context)
+     project = self.browse(cr, uid, ref("project.project_project_1"), context=context)
      def _convert(date):
         import time
         return time.strptime(date, '%Y-%m-%d %H:%M:%S')
