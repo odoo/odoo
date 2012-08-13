@@ -60,10 +60,18 @@ class many2many_reference(fields.many2many):
         for act in values:
             if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
                 continue
-            if act[0] == 3:
-                cr.execute('delete from "'+rel+'" WHERE '+rel+'."'+id1+'"=%s AND '+rel+'."'+id2+'"=%s and res_model=%s', (id, act[1], model._name))
-                print '-->\t', cr.rowcount
+            if act[0] == 0:
+                idnew = obj.create(cr, user, act[2], context=context)
+                cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+') VALUES (%s,%s,res_model)', (id, idnew, model._name))
+            elif act[0] == 3:
+                cr.execute('DELETE FROM "'+rel+'" WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
+            elif act[0] == 4:
+                # following queries are in the same transaction - so should be relatively safe
+                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
+                if not cr.fetchone():
+                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) values (%s,%s,%s)', (id, act[1], model._name))
             else:
+                print act
                 return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
 
 class mail_thread(osv.Model):
@@ -145,11 +153,12 @@ class mail_thread(osv.Model):
         return thread_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        """Automatically subscribe the writer"""
+        """ Override of write to subscribe the writer, except if he has changed
+            the subscribers (to avoid unsubscribe-->subscribe). """
         if isinstance(ids, (int, long)):
             ids = [ids]
         write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context);
-        if write_res:
+        if write_res and not vals.get('message_subscriber_ids'):
             self.message_subscribe(cr, uid, ids, [uid], context=context)
         return write_res;
 
