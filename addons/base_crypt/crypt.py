@@ -140,16 +140,18 @@ class users(osv.osv):
     # Add handlers for 'input_pw' field.
 
     def init(self, cr):
-        with closing(pooler.get_db(cr.dbname).cursor()) as cr:
+        cr.execute("SELECT id, password FROM res_users "
+                   "WHERE active=true AND password NOT LIKE '$%' ")
+        to_crypt = cr.fetchall()
+        if to_crypt:
+            # Full table lock to guarantee we won't do a partial job or
+            # end up with a TransactionRollbackError if another transaction
+            # alters res_users in the mean time. The lock will be released
+            # by the commit() that follows the model initialization step
             cr.execute('LOCK res_users')
-            cr.execute("SELECT id, password FROM res_users "
-                       "WHERE active=true AND password NOT LIKE '$%' ")
-
             cr.executemany("UPDATE res_users SET password=%s WHERE id=%s",
                 ((encrypt_md5(password, gen_salt()), id)
-                 for id, password in cr.fetchall()))
-
-            cr.commit()
+                 for id, password in to_crypt))
 
     def set_pw(self, cr, uid, id, name, value, args, context):
         if not value:
