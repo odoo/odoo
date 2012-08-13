@@ -1,4 +1,8 @@
+# -*- encoding: utf-8 -*-
+import unittest2
 from openerp.tests.common import TransactionCase
+
+from .. import models
 
 ID_FIELD = {'id': 'id', 'name': 'id', 'string': "External ID", 'required': False, 'fields': []}
 def make_field(name='value', string='unknown', required=False, fields=[]):
@@ -71,3 +75,165 @@ class test_o2m(TransactionCase):
             ]},
             {'id': 'value', 'name': 'value', 'string': 'unknown', 'required': False, 'fields': []},
         ]))
+
+class test_match_headers_single(TransactionCase):
+    def test_match_by_name(self):
+        match = self.registry('base_import.import')._match_header(
+            'f0', [{'name': 'f0'}], {})
+
+        self.assertEqual(match, [{'name': 'f0'}])
+
+    def test_match_by_string(self):
+        match = self.registry('base_import.import')._match_header(
+            'some field', [{'name': 'bob', 'string': "Some Field"}], {})
+
+        self.assertEqual(match, [{'name': 'bob', 'string': "Some Field"}])
+
+    def test_nomatch(self):
+        match = self.registry('base_import.import')._match_header(
+            'should not be', [{'name': 'bob', 'string': "wheee"}], {})
+
+        self.assertEqual(match, [])
+
+    def test_recursive_match(self):
+        f = {
+            'name': 'f0',
+            'string': "My Field",
+            'fields': [
+                {'name': 'f0', 'string': "Sub field 0", 'fields': []},
+                {'name': 'f1', 'string': "Sub field 2", 'fields': []},
+            ]
+        }
+        match = self.registry('base_import.import')._match_header(
+            'f0/f1', [f], {})
+
+        self.assertEqual(match, [f, f['fields'][1]])
+
+    def test_recursive_nomatch(self):
+        """ Match first level, fail to match second level
+        """
+        f = {
+            'name': 'f0',
+            'string': "My Field",
+            'fields': [
+                {'name': 'f0', 'string': "Sub field 0", 'fields': []},
+                {'name': 'f1', 'string': "Sub field 2", 'fields': []},
+            ]
+        }
+        match = self.registry('base_import.import')._match_header(
+            'f0/f2', [f], {})
+
+        self.assertEqual(match, [])
+
+class test_match_headers_multiple(TransactionCase):
+    def test_noheaders(self):
+        self.assertIsNone(
+            self.registry('base_import.import')._match_headers(
+                [], [], {}))
+    def test_nomatch(self):
+        self.assertEqual(
+            self.registry('base_import.import')._match_headers(
+                iter([
+                    ['foo', 'bar', 'baz', 'qux'],
+                    ['v1', 'v2', 'v3', 'v4'],
+                ]),
+                [],
+                {'headers': True}),
+            dict((index, None) for index in range(4)))
+
+    def test_mixed(self):
+        self.assertEqual(
+            self.registry('base_import.import')._match_headers(
+                iter(['foo bar baz qux/corge'.split()]),
+                [
+                    {'name': 'bar', 'string': 'Bar'},
+                    {'name': 'bob', 'string': 'Baz'},
+                    {'name': 'qux', 'string': 'Qux', 'fields': [
+                        {'name': 'corge', 'fields': []},
+                     ]}
+                ],
+                {'headers': True}),
+            {
+                0: None,
+                1: ['bar'],
+                2: ['bob'],
+                3: ['qux', 'corge'],
+            })
+
+import base64, csv
+class test_preview(TransactionCase):
+    def make_import(self):
+        Import = self.registry('base_import.import')
+        id = Import.create(self.cr, self.uid, {
+            'res_model': 'res.users',
+            'file': base64.b64encode(
+                u"로그인,언어\n".encode('euc_kr'),
+                "bob,1\n"),
+        })
+        return Import, id
+
+    def test_encoding(self):
+        Import, id = self.make_import()
+        result = Import.parse_preview(self.cr, self.uid, id, {
+                'quote': '"',
+                'separator': ',',
+        })
+        self.assertTrue('error' in result)
+
+    def test_csv_errors(self):
+        Import, id = self.make_import()
+
+        result = Import.parse_preview(self.cr, self.uid, id, {
+                'quote': 'foo',
+                'separator': ',',
+                'encoding': 'euc_kr',
+        })
+        self.assertTrue('error' in result)
+
+    def test_csv_errors(self):
+        Import, id = self.make_import()
+
+        result = Import.parse_preview(self.cr, self.uid, id, {
+                'quote': '"',
+                'separator': 'bob',
+                'encoding': 'euc_kr',
+        })
+        self.assertTrue('error' in result)
+
+    def test_success(self):
+        Import = self.registry('base_import.import')
+        id = Import.create(self.cr, self.uid, {
+            'res_model': 'base_import.tests.models.preview',
+            'file': base64.b64encode('name,Some Value,Counter\n'
+                    'foo,1,2\n'
+                    'bar,3,4\n'
+                    'qux,5,6\n')
+        })
+
+        result = Import.parse_preview(self.cr, self.uid, id, {
+            'quote': '"',
+            'separator': ',',
+            'headers': True,
+        })
+
+        p = {
+            'matches': {0: ['name'], 1: ['somevalue'], 2: None},
+            'fields': [
+                {'id': 'id', 'name': 'id', 'string': 'External ID', 'required':False, 'fields': []},
+                {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': []},
+                {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': []},
+                {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': []},
+            ],
+            'preview': [
+                ['foo', '1', '2'],
+                ['bar', '3', '4'],
+                ['qux', '5', '6'],
+            ]
+        }
+
+        self.assertEqual(result['matches'], p['matches'])
+        # Order depends on iteration order of fields_get
+        self.assertItemsEqual(result['fields'], p['fields'])
+        self.assertEqual(result['preview'], p['preview'])
+        # Ensure we only have the response fields we expect
+        self.assertItemsEqual(result.keys(), ['matches', 'fields', 'preview'])

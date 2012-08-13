@@ -90,3 +90,12 @@ class o2m_child(orm.Model):
         'parent_id': fields.many2one(name('o2m')),
         'value': fields.integer()
     }
+
+class preview_model(orm.Model):
+    _name = name('preview')
+
+    _columns = {
+        'name': fields.char('Name', size=None),
+        'somevalue': fields.integer('Some Value', required=True),
+        'othervalue': fields.integer('Other Variable'),
+    }
