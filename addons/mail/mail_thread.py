@@ -973,7 +973,10 @@ class mail_thread(osv.Model):
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
         """
+        follower_ids = [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_subscriber_ids]
         to_subscribe_uids = [uid] if user_ids is None else user_ids
+        if all(follower_id in follower_ids for follower_id in to_subscribe_uids):
+            return follower_ids
         write_res = self.write(cr, uid, ids, {'message_subscriber_ids': [(4, id) for id in to_subscribe_uids]}, context=context)
         return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_subscriber_ids]
 
