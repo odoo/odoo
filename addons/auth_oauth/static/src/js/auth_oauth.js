@@ -13,7 +13,7 @@ openerp.auth_oauth = function(instance) {
                 response_type: 'token',
                 client_id: '108010644258-duuhmp6pu7li4tsmnqg7j9rvdeklg0ki.apps.googleusercontent.com',
                 redirect_uri: 'https://localhost/',
-                scope: 'https://www.googleapis.com/auth/userinfo.email',
+                scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
                 state: state,
             };
             var url = endpoint + '?' + $.param(params);
@@ -29,12 +29,9 @@ openerp.auth_oauth = function(instance) {
     instance.web.WebClient = instance.web.WebClient.extend({
         start: function() {
             this._super.apply(this, arguments);
-            var params = $.deparam(window.location.hash);
+            var params = $.deparam(window.location.hash.substring(1));
             if (params.hasOwnProperty('access_token')) {
-                // fix params for python marshmalling
-                params.state = params["#state"]
-                delete params["#state"]
-                var url = "/auth_oauth/signin" + '?' + $.param(params);
+                var url = "/auth_oauth/signin" + '?' + $.param(params);//alert(JSON.stringify(params));
                 window.location = url;
             }
         },
