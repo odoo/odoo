@@ -1,0 +1,52 @@
+-
+  In order to test Payslip Bacth I create New Payslip Batch
+-
+  I want to generate a payslip from Payslip run.
+-
+  !record {model: hr.payslip.run, id: hr_payslip_run_forAdvice}:
+    name: Payslip Batch for August
+-
+  I create record for generating the payslip for this Payslip run.
+-
+  !record {model: hr.payslip.employees, id: hr_payslip_employees}:
+    employee_ids:
+      - hr_payroll.hr_employee_bonamy0
+-
+  I generate the payslip by clicking on Generat button wizard.
+-
+  !python {model: hr.payslip.employees}: |
+     self.compute_sheet(cr, uid, [ref('hr_payslip_employees')], context={'active_id': ref('hr_payslip_run_forAdvice')})
+-
+  I check that the Payslip Batch is in "Draft"
+-
+  !assert {model: hr.payslip.run, id: hr_payslip_run_forAdvice}:
+    - state == 'draft'
+-
+  Now I close Payslip Batch
+-    
+  !python {model: hr.payslip.run}: |
+    self.close_payslip_run(cr, uid, [ref('hr_payslip_run_forAdvice')])
+-
+  I check that the Payslip Batch is "Close"
+-
+  !python {model: hr.payslip.run}: |
+    batch = self.browse(cr, uid, ref("hr_payslip_run_forAdvice"))
+    assert (batch.state == 'close')
+- 
+  I Create Advice from Payslip run
+- 
+  !record {model: hr.payroll.advice, id: hr_payroll_advice_fromBatch}:
+    batch_id: hr_payslip_run_forAdvice
+    company_id: base.main_company
+    date: '2012-08-31'
+    line_ids:
+      - bysal: 5700.0
+        company_id: base.main_company
+        employee_id: hr_payroll.hr_employee_bonamy0
+        name: '4656'
+    name: Advice of Payslip Batch for August
+-
+  I create advice from Payslip run by clicking on Create Advice button
+-
+    !python {model: hr.payslip.run}: |
+     self.create_advice(cr, uid, [ref('hr_payslip_run_forAdvice')])
