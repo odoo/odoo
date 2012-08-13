@@ -2396,6 +2396,13 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
  */
 instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldTextHtml',
+    init: function() {
+        this._super.apply(this, arguments);
+        if (this.field.type !== 'html') {
+            throw new Error(_.str.sprintf(
+                _t("Error with field %s, it is not allowed to use the widget 'html' with any other field type than 'html'"), this.string));
+        }
+    },
     initialize_content: function() {
         var self = this;
         if (! this.get("effective_readonly")) {
