@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data>
+        <record id="account_voucher.todo_open_invoice_menu" model="ir.actions.todo">
+            <field name="state">done</field>
+        </record>
+    </data>
     <data noupdate="1">
 
         <!-- After installation of the module, open the related menu -->
@@ -39,7 +44,7 @@
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
             <value>The Sales Management application has been installed.</value>
-            <value>&lt;b&gt;Click on the top menu &lt;i&gt;'Sales'&lt;/i&gt;&lt;/em&gt; to start managing your customers, sending quotations and processing sale orders.
+            <value>This modules allows you to create and send easily quotations and process your sales orders; from the delivery to the invoicing.
 
 If you need to manage your sales pipeline (leads, opportunities, phonecalls), you can install the module &lt;i&gt;CRM&lt;/i&gt; from the top menu Settings.</value>
         </function>

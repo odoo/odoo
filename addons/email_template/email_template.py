@@ -317,6 +317,7 @@ class email_template(osv.osv):
                   'message_id': False,
                   'state': 'outgoing',
                   'content_subtype': 'plain',
+                  'partner_ids': [],
         }
         if not template_id:
             return values

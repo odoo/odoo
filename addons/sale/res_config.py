@@ -70,7 +70,7 @@ class sale_configuration(osv.osv_memory):
             help="""Allows you to categorize your sales and deliveries (picking lists) between different journals,
                 and perform batch operations on journals.
                 This installs the module sale_journal."""),
-        'module_analytic_user_function': fields.boolean("assign user roles per contract",
+        'module_analytic_user_function': fields.boolean("one employee can have different roles per contract",
             help="""Allows you to define what is the default function of a specific user on a given account.
                 This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
                 But the possibility to change these values is still available.

@@ -239,6 +239,7 @@ class sale_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('In order to delete a confirmed sale order, you must cancel it before !'))
+
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_shop_id(self, cr, uid, ids, shop_id):
@@ -314,8 +315,8 @@ class sale_order(osv.osv):
             [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
             limit=1)
         if not journal_ids:
-            raise osv.except_osv(_('Error !'),
-                _('There is no sales journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+            raise osv.except_osv(_('Error!'),
+                _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
 
         invoice_vals = {
             'name': order.client_order_ref or '',
@@ -377,7 +378,7 @@ class sale_order(osv.osv):
                  'form': self.read(cr, uid, ids[0], context=context),
         }
         return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
-    
+
 
     def action_view_invoice(self, cr, uid, ids, context=None):
         '''
@@ -430,7 +431,7 @@ class sale_order(osv.osv):
             currency_id = o.pricelist_id.currency_id.id
             if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
                 raise osv.except_osv(
-                    _('Error !'),
+                    _('Error!'),
                     _('You cannot group sales having different currencies for the same partner.'))
 
             partner_currency[o.partner_id.id] = currency_id
@@ -527,8 +528,8 @@ class sale_order(osv.osv):
             for inv in sale.invoice_ids:
                 if inv.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
-                        _('Could not cancel this sales order !'),
-                        _('You must first cancel all invoices attached to this sales order.'))
+                        _('Cannot cancel this sales order!'),
+                        _('First cancel all invoices attached to this sales order.'))
             for r in self.read(cr, uid, ids, ['invoice_ids']):
                 for inv in r['invoice_ids']:
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
@@ -539,7 +540,7 @@ class sale_order(osv.osv):
         return True
 
     def action_button_confirm(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'sale.order', ids[0], 'order_confirm', cr)
 
@@ -571,7 +572,7 @@ class sale_order(osv.osv):
         '''
         This function opens a window to compose an email, with the edi sale template message loaded by default
         '''
-        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         mod_obj = self.pool.get('ir.model.data')
         template = mod_obj.get_object_reference(cr, uid, 'sale', 'email_template_edi_sale')
         template_id = template and template[1] or False
@@ -594,37 +595,34 @@ class sale_order(osv.osv):
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
-    
+
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if (obj.state == 'progress'):
                 result[obj.id].append(obj.user_id.id)
         return result
- 
+
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
             self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
-        
+
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
-    
+
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
-        
-      
     def invoice_paid_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
-        
+
     def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
                 self.message_append_note(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
-    
-        
+                
 sale_order()
 
 # TODO add a field price_unit_uos
@@ -727,8 +725,8 @@ class sale_order_line(osv.osv):
                     if not account_id:
                         account_id = line.product_id.categ_id.property_account_income_categ.id
                     if not account_id:
-                        raise osv.except_osv(_('Error !'),
-                                _('There is no income account defined for this product: "%s" (id:%d)') % \
+                        raise osv.except_osv(_('Error!'),
+                                _('Please define income account for this product: "%s" (id:%d).') % \
                                     (line.product_id.name, line.product_id.id,))
                 else:
                     prop = self.pool.get('ir.property').get(cr, uid,
@@ -744,8 +742,8 @@ class sale_order_line(osv.osv):
             fpos = line.order_id.fiscal_position or False
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
             if not account_id:
-                raise osv.except_osv(_('Error !'),
-                            _('There is no income category account defined in default Properties for Product Category or Fiscal Position is not defined !'))
+                raise osv.except_osv(_('Error!'),
+                            _('There is no Fiscal Position defined or Income category account defined for default properties of Product categories.'))
             return {
                 'name': line.name,
                 'origin': line.order_id.name,
@@ -823,14 +821,13 @@ class sale_order_line(osv.osv):
         default.update({'state': 'draft',  'invoiced': False, 'invoice_lines': []})
         return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
 
-
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         context = context or {}
         lang = lang or context.get('lang',False)
         if not  partner_id:
-            raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
+            raise osv.except_osv(_('No Customer Defined !'), _('Before choosing a product,\n select a customer in the sales form.'))
         warning = {}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
@@ -889,7 +886,6 @@ class sale_order_line(osv.osv):
                         [('category_id', '=', product_obj.uom_id.category_id.id)],
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
-
         elif uos and not uom: # only happens if uom is False
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
             result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
@@ -920,7 +916,7 @@ class sale_order_line(osv.osv):
                         'date': date_order,
                         })[pricelist]
             if price is False:
-                warn_msg = _("Couldn't find a pricelist line matching this product and quantity.\n"
+                warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")
 
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
@@ -928,7 +924,7 @@ class sale_order_line(osv.osv):
                 result.update({'price_unit': price})
         if warning_msgs:
             warning = {
-                       'title': _('Configuration Error !'),
+                       'title': _('Configuration Error!'),
                        'message' : warning_msgs
                     }
         return {'value': result, 'domain': domain, 'warning': warning}
@@ -938,15 +934,12 @@ class sale_order_line(osv.osv):
             lang=False, update_tax=True, date_order=False, context=None):
         context = context or {}
         lang = lang or ('lang' in context and context['lang'])
-        res = self.product_id_change(cursor, user, ids, pricelist, product,
+        if not uom:
+            return {'value': {'price_unit': 0.0, 'product_uom' : uom or False}}
+        return self.product_id_change(cursor, user, ids, pricelist, product,
                 qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
                 date_order=date_order, context=context)
-        if 'product_uom' in res['value']:
-            del res['value']['product_uom']
-        if not uom:
-            res['value']['price_unit'] = 0.0
-        return res
 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
@@ -954,18 +947,18 @@ class sale_order_line(osv.osv):
         """Allows to delete sales order lines in draft,cancel states"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel']:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sales order line which is in state \'%s\'!') %(rec.state,))
+                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
 sale_order_line()
 
 class mail_message(osv.osv):
     _inherit = 'mail.message'
-    
+
     def _postprocess_sent_message(self, cr, uid, message, context=None):
         if message.model == 'sale.order':
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'sale.order', message.res_id, 'quotation_sent', cr) 
+            wf_service.trg_validate(uid, 'sale.order', message.res_id, 'quotation_sent', cr)
         return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
 
 mail_message()

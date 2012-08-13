@@ -158,12 +158,12 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('In order to delete a confirmed sale order, you must cancel it before ! To cancel a sale order, you must first cancel related picking or delivery orders.'))
+                 raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it.\nTo do so, you must first cancel related picking for delivery orders.'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)    
     
     
-    
+
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''
         This function returns an action that display existing delivery orders of given sale order ids. It can either be a in a list or in a form view, if there is only one delivery order to show.
@@ -197,6 +197,7 @@ class sale_order(osv.osv):
             })
         result.update(view_id = res and res[1] or False)
         return result
+
     
     def action_wait(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids):
@@ -240,7 +241,6 @@ class sale_order(osv.osv):
             'target': 'current',
             'res_id': new_inv_ids and new_inv_ids[0] or False,
         }
-    
         
     
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
@@ -632,3 +632,13 @@ class sale_order_line(osv.osv):
 
         return {'value': result, 'warning': warning}
                               
+                              
+    def button_cancel(self, cr, uid, ids, context=None):
+        res = super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)
+        for line in self.browse(cr, uid, ids, context=context):
+            for move_line in line.move_ids:
+                if move_line.state != 'cancel':
+                    raise osv.except_osv(
+                            _('Cannot cancel sales order line!'),
+                            _('You must first cancel stock moves attached to this sales order line.'))   
+        return res

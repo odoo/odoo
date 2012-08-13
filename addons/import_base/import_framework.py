@@ -186,7 +186,7 @@ class import_framework(Thread):
 
         model_obj = self.obj.pool.get(model)
         if not model_obj:
-            raise ValueError(_("%s is not a valid model name") % model)
+            raise ValueError(_("%s is not a valid model name.") % model)
         _logger.debug(_(" fields imported : ") + str(fields))
         (p, r, warning, s) = model_obj.import_data(self.cr, self.uid, fields, res, mode='update', current_module=self.module_name, noupdate=True, context=self.context)
         for (field, field_name) in self_dependencies:

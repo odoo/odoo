@@ -72,15 +72,7 @@
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
                 <header>
-                    <button name="case_open" string="Confirm" type="object"
-                            states="draft"/>
-                    <button name="case_close" string="Done" type="object"
-                            states="open"/>
-                    <button name="case_reset" string="Reset to Unconfirmed" type="object" 
-                            states="cancel,done"/>
-                    <button name="case_cancel" string="Cancel" type="object"
-                            states="draft,open"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
+                    <field name="state"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -99,7 +91,7 @@
                     <page string="Meeting Detail">
                         <group>
                             <group>
-                                <field name="user_id" />
+                                <field name="user_id"/>
                                 <field name="categ_ids" widget="many2many_tags"/>
                                 <field name="location"/>
                                 <field name="organizer" groups="base.group_no_one"/>

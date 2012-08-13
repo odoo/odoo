@@ -192,11 +192,11 @@ class account_bank_statement(osv.osv):
             'ref': st_line.ref,
         }
 
-    def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, 
+    def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id,
         context=None):
         """Compute the args to build the dict of values to create the bank move line from a
-           statement line by calling the _prepare_move_line_vals. This method may be 
-           overridden to implement custom move generation (making sure to call super() to 
+           statement line by calling the _prepare_move_line_vals. This method may be
+           overridden to implement custom move generation (making sure to call super() to
            establish a clean extension chain).
 
            :param browse_record st_line: account.bank.statement.line record to
@@ -219,12 +219,12 @@ class account_bank_statement(osv.osv):
             res_currency_obj = self.pool.get('res.currency')
             amt_cur = -res_currency_obj.compute(cr, uid, company_currency_id, cur_id, amount, context=context)
 
-        res = self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit, 
+        res = self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit,
             amount_currency=amt_cur, currency_id=cur_id, analytic_id=anl_id, context=context)
         return res
 
     def _get_counter_part_account(sefl, cr, uid, st_line, context=None):
-        """Retrieve the account to use in the counterpart move. 
+        """Retrieve the account to use in the counterpart move.
            This method may be overridden to implement custom move generation (making sure to
            call super() to establish a clean extension chain).
 
@@ -237,7 +237,7 @@ class account_bank_statement(osv.osv):
         return st_line.statement_id.journal_id.default_debit_account_id.id
 
     def _get_counter_part_partner(sefl, cr, uid, st_line, context=None):
-        """Retrieve the partner to use in the counterpart move. 
+        """Retrieve the partner to use in the counterpart move.
            This method may be overridden to implement custom move generation (making sure to
            call super() to establish a clean extension chain).
 
@@ -247,11 +247,11 @@ class account_bank_statement(osv.osv):
         """
         return st_line.partner_id and st_line.partner_id.id or False
 
-    def _prepare_counterpart_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, 
+    def _prepare_counterpart_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id,
         context=None):
         """Compute the args to build the dict of values to create the counter part move line from a
-           statement line by calling the _prepare_move_line_vals. This method may be 
-           overridden to implement custom move generation (making sure to call super() to 
+           statement line by calling the _prepare_move_line_vals. This method may be
+           overridden to implement custom move generation (making sure to call super() to
            establish a clean extension chain).
 
            :param browse_record st_line: account.bank.statement.line record to
@@ -271,12 +271,12 @@ class account_bank_statement(osv.osv):
         if st_line.statement_id.currency.id <> company_currency_id:
             amt_cur = st_line.amount
             cur_id = st_line.statement_id.currency.id
-        return self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit, 
+        return self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit,
             amount_currency = amt_cur, currency_id = cur_id, account_id = account_id,
             partner_id = partner_id, context=context)
 
     def _prepare_move_line_vals(self, cr, uid, st_line, move_id, debit, credit, currency_id = False,
-                amount_currency= False, account_id = False, analytic_id = False, 
+                amount_currency= False, account_id = False, analytic_id = False,
                 partner_id = False, context=None):
         """Prepare the dict of values to create the move line from a
            statement line. All non-mandatory args will replace the default computed one.
@@ -350,12 +350,12 @@ class account_bank_statement(osv.osv):
         amount = res_currency_obj.compute(cr, uid, st.currency.id,
                 company_currency_id, st_line.amount, context=context)
 
-        bank_move_vals = self._prepare_bank_move_line(cr, uid, st_line, move_id, amount, 
+        bank_move_vals = self._prepare_bank_move_line(cr, uid, st_line, move_id, amount,
             company_currency_id, context=context)
         move_line_id = account_move_line_obj.create(cr, uid, bank_move_vals, context=context)
         torec.append(move_line_id)
 
-        counterpart_move_vals = self._prepare_counterpart_move_line(cr, uid, st_line, move_id, 
+        counterpart_move_vals = self._prepare_counterpart_move_line(cr, uid, st_line, move_id,
             amount, company_currency_id, context=context)
         account_move_line_obj.create(cr, uid, counterpart_move_vals, context=context)
 
@@ -364,7 +364,7 @@ class account_bank_statement(osv.osv):
                     context=context).line_id],
                 context=context):
             if line.state <> 'valid':
-                raise osv.except_osv(_('Error !'),
+                raise osv.except_osv(_('Error!'),
                         _('Journal item "%s" is not valid.') % line.name)
 
         # Bank statements will not consider boolean on journal entry_posted
@@ -377,7 +377,7 @@ class account_bank_statement(osv.osv):
     def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
         st = self.browse(cr, uid, st_id, context=context)
         if not ((abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001) or (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001)):
-            raise osv.except_osv(_('Error !'),
+            raise osv.except_osv(_('Error!'),
                     _('The statement balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
         return True
 
@@ -401,7 +401,7 @@ class account_bank_statement(osv.osv):
             self.balance_check(cr, uid, st.id, journal_type=j_type, context=context)
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
-                raise osv.except_osv(_('Configuration Error !'),
+                raise osv.except_osv(_('Configuration Error!'),
                         _('Please verify that an account is defined in the journal.'))
 
             if not st.name == '/':
@@ -415,7 +415,7 @@ class account_bank_statement(osv.osv):
 
             for line in st.move_line_ids:
                 if line.state <> 'valid':
-                    raise osv.except_osv(_('Error !'),
+                    raise osv.except_osv(_('Error!'),
                             _('The account entries lines are not in valid state.'))
             for st_line in st.line_ids:
                 if st_line.analytic_account_id:
@@ -445,7 +445,7 @@ class account_bank_statement(osv.osv):
             account_move_obj.unlink(cr, uid, ids, context)
             done.append(st.id)
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
-    
+
     def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
         cr.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
@@ -469,7 +469,7 @@ class account_bank_statement(osv.osv):
             if t['state'] in ('draft'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
+                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 

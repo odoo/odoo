@@ -26,9 +26,39 @@
         <record model="crm.case.channel">
             <field name="name">email</field>
         </record>
+        <record id="mail_alias_sales_department" model="mail.alias">
+            <field name="alias_name">sales</field>
+            <field name="alias_model_id" ref="model_crm_lead"/>
+            <field name="alias_user_id" ref="base.user_root"/>
+            <field name="alias_defaults">{'type':'lead'}</field>
+        </record>
+        
         <record model="crm.case.section" id="section_sales_department">
             <field name="name">Sales Department</field>
             <field name="code">Sales</field>
+            <field name="alias_id" ref="mail_alias_sales_department"/>
+        </record>
+
+        <!-- Payment Mode -->
+
+        <record model="crm.payment.mode" id="payment_mode_1">
+            <field name="name">Cash</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_2">
+            <field name="name">Cheque</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_3">
+            <field name="name">Credit Card</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_4">
+            <field name="name">Demand Draft</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
         </record>
 
         <!-- notify all employees of module installation -->

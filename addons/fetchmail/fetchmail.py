@@ -71,7 +71,7 @@ class fetchmail_server(osv.osv):
         'password' : fields.char('Password', size=1024, readonly=True, states={'draft':[('readonly', False)]}),
         'action_id':fields.many2one('ir.actions.server', 'Server Action', help="Optional custom server action to trigger for each incoming mail, "
                                                                                "on the record that was created or updated by this mail"),
-        'object_id': fields.many2one('ir.model', "Create a New Record", required=True, help="Process each incoming mail as part of a conversation "
+        'object_id': fields.many2one('ir.model', "Create a New Record", help="Process each incoming mail as part of a conversation "
                                                                                              "corresponding to this document type. This will create "
                                                                                              "new documents for new conversations, or attach follow-up "
                                                                                              "emails to the existing conversations (documents)."),
@@ -151,8 +151,8 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                 connection = server.connect()
                 server.write({'state':'done'})
             except Exception, e:
-                _logger.exception("Failed to connect to %s server %s", server.type, server.name)
-                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
+                _logger.exception("Failed to connect to %s server %s.", server.type, server.name)
+                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s.") % tools.ustr(e))
             finally:
                 try:
                     if connection:
@@ -189,10 +189,14 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
-                        res_id = mail_thread.message_process(cr, uid, server.object_id.model, data[0][1],
-                                                             save_original=server.original,
-                                                             strip_attachments=(not server.attach),
-                                                             context=context)
+                        if server.object_id:
+                            res_id = mail_thread.message_process(cr, uid, server.object_id.model, 
+                                                                 data[0][1],
+                                                                 save_original=server.original,
+                                                                 strip_attachments=(not server.attach),
+                                                                 context=context)
+                        else:
+                            res_id = mail_thread.message_catchall(cr, uid, data[0][1])
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
                             imap_server.store(num, '+FLAGS', '\\Seen')
@@ -200,7 +204,7 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                         count += 1
                     _logger.info("fetched/processed %s email(s) on %s server %s", count, server.type, server.name)
                 except Exception, e:
-                    _logger.exception("Failed to fetch mail from %s server %s", server.type, server.name)
+                    _logger.exception("Failed to fetch mail from %s server %s.", server.type, server.name)
                 finally:
                     if imap_server:
                         imap_server.close()
@@ -213,18 +217,21 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
-                        res_id = mail_thread.message_process(cr, uid, server.object_id.model,
-                                                             msg,
-                                                             save_original=server.original,
-                                                             strip_attachments=(not server.attach),
-                                                             context=context)
+                        if server.object_id:
+                            res_id = mail_thread.message_process(cr, uid, server.object_id.model,
+                                                                 msg,
+                                                                 save_original=server.original,
+                                                                 strip_attachments=(not server.attach),
+                                                                 context=context)
+                        else:
+                            res_id = mail_thread.message_catchall(cr, uid, data[0][1])
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
                         pop_server.dele(num)
                         cr.commit()
                     _logger.info("fetched/processed %s email(s) on %s server %s", numMsgs, server.type, server.name)
                 except Exception, e:
-                    _logger.exception("Failed to fetch mail from %s server %s", server.type, server.name)
+                    _logger.exception("Failed to fetch mail from %s server %s.", server.type, server.name)
                 finally:
                     if pop_server:
                         pop_server.quit()
