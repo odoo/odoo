@@ -1,5 +1,6 @@
 
 from pyquery import PyQuery as pq
+import re
 
 def html_sanitize(x):
     root = pq("<div />")
@@ -11,8 +12,12 @@ def html_sanitize(x):
 to_remove = set(["script", "head", "meta", "title", "link", "img"])
 to_unwrap = set(["html", "body"])
 
+javascript_regex = re.compile("""^\s*javascript\s*\:.*$""")
 def handle_a(el, new):
-    new.set("href", el.get("href", "#"))
+    href = el.get("href", "#")
+    if javascript_regex.search(href):
+        href = "#"
+    new.set("href", href)
 special = {
     "a": handle_a,
 }

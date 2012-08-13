@@ -17,6 +17,7 @@ test11</font></div></div></div></blockquote><blockquote style="margin: 0 0 0 40p
 <blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div><font color="#1f1f1f" face="monospace" size="2">
 test12</font></div><div><font color="#1f1f1f" face="monospace" size="2"><br></font></div></blockquote></blockquote>
 <font color="#1f1f1f" face="monospace" size="2"><a href="http://google.com">google</a></font>
+<a href="javascript:alert('malicious code')">test link</a>
 """
 
 class TestSanitizer(unittest.TestCase):
