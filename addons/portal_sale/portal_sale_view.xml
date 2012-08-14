@@ -48,6 +48,26 @@
             <field name="help">No products so far.</field>
         </record>
 
+        <record id="action_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Customer Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('type','=','out_invoice')]</field>
+            <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help">No invoices so far.</field>
+        </record>
+
+        <record id="action_vendor_receipt" model="ir.actions.act_window">
+            <field name="name">Customer Payment</field>
+            <field name="res_model">account.voucher</field>
+            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>
+            <field name="context">{'type':'receipt'}</field>
+            <field name="search_view_id" ref="account_voucher.view_voucher_filter_customer_pay"/>
+            <field name="target">current</field>
+            <field name="help">No purchase or payments so far.</field>
+        </record>
+
         <menuitem name="Quotations" id="portal_quotations" parent="portal.portal_orders"
             action="action_order_tree5" sequence="10"/>
         <menuitem name="Sales Orders" id="portal_sales_orders" parent="portal.portal_orders"
@@ -58,9 +78,9 @@
             action="product_normal_action" sequence="40"/>
 
         <menuitem name="Invoice" id="portal_invoices" parent="portal.portal_invoices_payements"
-            action="account.action_invoice_tree1" sequence="10"/>
+            action="action_invoice_tree1" sequence="10"/>
         <menuitem name="Refund/Payments" id="portal_payments" parent="portal.portal_invoices_payements"
-            action="account_voucher.action_vendor_receipt" sequence="20"/>
+            action="action_vendor_receipt" sequence="20"/>
 
     </data>
 </openerp>
