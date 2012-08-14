@@ -24,6 +24,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.fields_view = {};
         this.fields_keys = [];
         this.group_by = null;
+        this.group_by_field = {};
         this.grouped_by_m2o = false;
         this.state = {
             groups : {},
@@ -161,10 +162,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_add_group: function() {
         var self = this;
-        var group_by = self.fields_view.fields[self.group_by];
         self.do_action({
             name: _t("Add column"),
-            res_model: group_by.relation,
+            res_model: self.group_by_field.relation,
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
             target: "new",
@@ -188,8 +188,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.search_group_by = group_by;
         $.when(this.has_been_loaded).then(function() {
             self.group_by = group_by.length ? group_by[0] : self.fields_view.arch.attrs.default_group_by;
-            var group_by_field = self.fields_view.fields[self.group_by];
-            self.grouped_by_m2o = !!(group_by_field && group_by_field.type === 'many2one');
+            self.group_by_field = self.fields_view.fields[self.group_by] || {};
+            self.grouped_by_m2o = (self.group_by_field.type === 'many2one');
             self.$buttons.find('.oe_alternative').toggle(self.grouped_by_m2o);
             self.$element.toggleClass('oe_kanban_sortable_groups', self.grouped_by_m2o);
             self.datagroup = new instance.web.DataGroup(self, self.dataset.model, domain, context, self.group_by ? [self.group_by] : []);
@@ -306,8 +306,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                             var tmp_group = self.groups.splice(start_index, 1)[0];
                             self.groups.splice(stop_index, 0, tmp_group);
                             var new_sequence = _.pluck(self.groups, 'value');
-                            var field = self.fields_view.fields[self.group_by]; //TODO: self.field should be the field definition
-                            (new instance.web.DataSet(self, field.relation)).resequence(new_sequence).then(function(r) {
+                            (new instance.web.DataSet(self, self.group_by_field.relation)).resequence(new_sequence).then(function(r) {
                                 console.log(r);
                             });
                         }
@@ -421,7 +420,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                 this.title = this.value[1];
                 this.value = this.value[0];
             }
-            var field = this.view.fields_view.fields[this.view.group_by];
+            var field = this.view.group_by_field;
             if (field) {
                 try {
                     this.title = instance.web.format_value(group.value, field, false);

@@ -813,7 +813,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend( /** @lends openerp.
      */
     resequence: function (ids, options) {
         options = options || {};
-        return this.rpc('/web/dataset/resequence', {
+        return instance.session.rpc('/web/dataset/resequence', {
             model: this.model,
             ids: ids,
             context: this._model.context(options.context),
