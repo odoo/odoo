@@ -29,18 +29,12 @@ import tools
 from tools.translate import _
 from lxml import etree
 
-class mail_group(osv.osv):
+class mail_group(osv.Model):
     """
     A mail_group is a collection of users sharing messages in a discussion
     group. Group users are users that follow the mail group, using the
     subscription/follow mechanism of OpenSocial. A mail group has nothing
     in common with res.users.group.
-    Additional information on fields:
-        - ``member_ids``: user member of the groups are calculated with
-          ``message_get_subscribers`` method from mail.thread
-        - ``member_count``: calculated with member_ids
-        - ``is_subscriber``: calculated with member_ids
-        
     """
     
     _description = 'Discussion group'
@@ -57,18 +51,7 @@ class mail_group(osv.osv):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
     
-    def get_followers_data(self, cr, uid, ids, field_names, args, context=None):
-        if context is None:
-            context = {}
-        result = dict.fromkeys(ids)
-        for thread in self.browse(cr, uid, ids, context=context):
-            result[thread.id] = {
-                'member_count': len(thread.message_follower_ids),
-                'is_subscriber': uid in [follower.id for follower in thread.message_follower_ids],
-            }
-        return result
-    
-    def get_last_month_msg_nbr(self, cr, uid, ids, name, args, context=None):
+    def _get_last_month_msg_nbr(self, cr, uid, ids, name, args, context=None):
         result = {}
         message_obj = self.pool.get('mail.message')
         for id in ids:
@@ -113,11 +96,7 @@ class mail_group(osv.osv):
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 50x50px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'member_count': fields.function(get_followers_data, type='integer',
-            string='Member count', multi='get_followers_data'),
-        'is_subscriber': fields.function(get_followers_data, type='boolean',
-            string='Joined', multi='get_followers_data'),
-        'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer',
+        'last_month_msg_nbr': fields.function(_get_last_month_msg_nbr, type='integer',
             string='Messages count for last month'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
                                     help="The email address associated with this group. New emails received will automatically "
