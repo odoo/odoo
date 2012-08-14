@@ -614,7 +614,7 @@ class mail_thread(osv.Model):
             model_pool = self.pool.get(model)
             if thread_id and model and model_pool and model_pool.exists(cr, uid, thread_id) \
                 and hasattr(model_pool, 'message_update'):
-                _logger.debug('Routing mail with Message-Id %s: direct reply to model:%s, thread_id:%s, custom_values:%s, uid:%s',
+                _logger.debug('Routing mail with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
                               message_id, model, thread_id, custom_values, uid)
                 return [(model, thread_id, custom_values, uid)]
         
@@ -622,9 +622,11 @@ class mail_thread(osv.Model):
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
         rcpt_tos = decode_header(message, 'Delivered-To') or \
-            (decode_header(message, 'To') + decode_header(message, 'Cc') \
-              + decode_header(message, 'Resent-To') + decode_header(message, 'Resent-Cc'))
-        local_parts = [e.split('@')[0] for e in to_email(','.join(rcpt_tos))]
+             ','.join([decode_header(message, 'To'),
+                       decode_header(message, 'Cc'),
+                       decode_header(message, 'Resent-To'),
+                       decode_header(message, 'Resent-Cc')])
+        local_parts = [e.split('@')[0] for e in to_email(rcpt_tos)]
         if local_parts:
             mail_alias = self.pool.get('mail.alias')
             alias_ids = mail_alias.search(cr, uid, [('alias_name', 'in', local_parts)])
@@ -647,7 +649,7 @@ class mail_thread(osv.Model):
             thread_id = match and match.group(1)
         assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
             "No possible route found for incoming message with Message-Id %s. " \
-            "Create an appropriate mail.alias or force the destination model."
+            "Create an appropriate mail.alias or force the destination model." % message_id
         if thread_id and not model_pool.exists(cr, uid, thread_id):
             _logger.warning('Received mail reply to missing document %s! Ignoring and creating new document instead for Message-Id %s',
                             thread_id, message_id)
@@ -756,7 +758,7 @@ class mail_thread(osv.Model):
         fields = model_pool.fields_get(cr, uid, context=context)
         data = model_pool.default_get(cr, uid, fields, context=context)
         if 'name' in fields and not data.get('name'):
-            data['name'] = msg_dict.get('from', '')
+            data['name'] = msg_dict.get('subject', '')
         if custom_values and isinstance(custom_values, dict):
             data.update(custom_values)
         res_id = model_pool.create(cr, uid, data, context=context)

@@ -25,9 +25,7 @@ import openerp.tools as tools
 from operator import itemgetter
 from osv import osv
 from osv import fields
-import tools
 from tools.translate import _
-from lxml import etree
 
 class mail_group(osv.osv):
     """
@@ -78,7 +76,6 @@ class mail_group(osv.osv):
     
     def get_last_month_msg_nbr(self, cr, uid, ids, name, args, context=None):
         result = {}
-        message_obj = self.pool.get('mail.message')
         for id in ids:
             lower_date = (DT.datetime.now() - DT.timedelta(days=30)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
             result[id] = self.message_search(cr, uid, [id], limit=None, domain=[('date', '>=', lower_date)], count=True, context=context)
