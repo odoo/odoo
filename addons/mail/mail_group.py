@@ -122,7 +122,8 @@ class mail_group(osv.osv):
                  "resized as a 50x50px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids,
-            type='many2many', relation='res.users', string='Group members', multi='get_member_ids'),
+            type='many2many', relation='res.users', string='Group members', multi='get_member_ids',
+            deprecated='This field will be deleted in a few hours or days, so please do not use it.'),
         'member_count': fields.function(get_member_ids, type='integer',
             string='Member count', multi='get_member_ids'),
         'is_subscriber': fields.function(get_member_ids, type='boolean',
