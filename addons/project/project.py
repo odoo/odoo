@@ -1209,9 +1209,10 @@ class task(base_stage, osv.osv):
                 user_ids.append(obj.user_id.id)
             if obj.manager_id and not obj.manager_id.id in user_ids:
                 user_ids.append(obj.manager_id.id)
-            if obj.project_id.followers:
-                for follower in obj.project_id.followers:
-                    user_ids.append(follower.id)
+            if obj.project_id:
+                subscriber_ids = self.pool.get('project.project').message_get_subscribers(cr, uid, [obj.project_id.id], context=context)
+                for user_id in subscriber_ids:
+                    user_ids.append(user_id)
         return user_ids
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
