@@ -46,7 +46,7 @@ class mail_group(osv.osv):
     _description = 'Discussion group'
     _name = 'mail.group'
     _inherit = ['mail.thread']
-    _inherits = {'mail.alias': 'alias_id'}
+    _inherits = {'mail.alias': 'alias_id', 'ir.ui.menu': 'menu_id'}
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -89,15 +89,18 @@ class mail_group(osv.osv):
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
     
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        #'name': fields.char('Group Name', size=64, required=True),
         'description': fields.text('Description'),
+        'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
         'responsible_id': fields.many2one('res.users', string='Responsible',
             ondelete='set null', required=True, select=1,
             help="Responsible of the group that has all rights on the record."),
-        'public': fields.boolean('Visible by non members', help='This group is visible by non members. \
+        'public': fields.selection([('public','Public'),('private','Private'),('groups','Selected Group Only')], 'Privacy', required=True,
+            help='This group is visible by non members. \
             Invisible groups can add members through the invite button.'),
+        'group_public_id': fields.many2one('res.groups', string='Authorized Group'),
         'group_ids': fields.many2many('res.groups', rel='mail_group_res_group_rel',
-            id1='mail_group_id', id2='groups_id', string='Linked groups',
+            id1='mail_group_id', id2='groups_id', string='Auto Subscription',
             help="Members of those groups will automatically added as followers. "\
                     "Note that they will be able to manage their subscription manually "\
                     "if necessary."),
@@ -131,15 +134,25 @@ class mail_group(osv.osv):
             string='Joined', multi='get_member_ids'),
         'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer',
             string='Messages count for last month'),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", 
                                     help="The email address associated with this group. New emails received will automatically "
                                          "create new topics."),
     }
 
+    def _get_default_employee_group(self, cr, uid, context=None):
+        ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
+        return ref and ref[1] or False
+
+    def _get_menu_parent(self, cr, uid, context=None):
+        ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'mail_group_root')
+        return ref and ref[1] or False
+
     _defaults = {
-        'public': True,
+        'public': 'groups',
+        'group_public_id': _get_default_employee_group,
         'responsible_id': (lambda s, cr, uid, ctx: uid),
         'image': _get_default_image,
+        'parent_id': _get_menu_parent,
     }
 
     def _subscribe_user_with_group_m2m_command(self, cr, uid, ids, group_ids_command, context=None):
@@ -162,9 +175,25 @@ class mail_group(osv.osv):
                     {'alias_name': "group_"+name}, 
                     model_name=self._name, context=context)
             vals['alias_id'] = alias_id
+
         mail_group_id = super(mail_group, self).create(cr, uid, vals, context)
+
+        # Create client action for this group and link the menu to it
+        ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'action_mail_group_feeds')
+        if ref:
+            search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search_wall')
+            params = {
+                'search_view_id': search_ref and search_ref[1] or False,
+                'domain': [('model','=','mail.group'),('res_id','=',mail_group_id)],
+                'res_model': 'mail.group',
+                'res_id': mail_group_id,
+                'thread_level': 2
+            }
+            cobj = self.pool.get('ir.actions.client')
+            newref = cobj.copy(cr, uid, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
+            self.write(cr, uid, [mail_group_id], {'action': 'ir.actions.client,'+str(newref), 'mail_group_id': mail_group_id}, context=context)
+
         alias_pool.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
-       
         if vals.get('group_ids'):
             self._subscribe_user_with_group_m2m_command(cr, uid, [mail_group_id], vals.get('group_ids'), context=context)
 
