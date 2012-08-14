@@ -20,7 +20,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             Backbone.Model.prototype.initialize.call(this, attributes);
             var  self = this;
             this.session = session;                 
-            this.dao = new module.LocalStorageDAO();            // used to store the order's data on the Hard Drive
             this.ready = $.Deferred();                          // used to notify the GUI that the PosModel has loaded all resources
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
 
@@ -266,11 +265,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         push_order: function(record) {
             this.db.add_order(record);
             this.flush();
-            /*
-            return this.dao.add_operation(record).pipe(function(){
-                return self.flush();
-            });
-            */
         },
 
         //creates a new empty order and sets it as the current order
