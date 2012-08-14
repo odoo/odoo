@@ -1,5 +1,4 @@
 import logging
-import urllib2
 
 import werkzeug.urls
 import werkzeug.utils
@@ -13,25 +12,30 @@ _logger = logging.getLogger(__name__)
 class OAuthController(openerpweb.Controller):
     _cp_path = '/auth_oauth'
 
+    def list_providers(self, req, dbname):
+        #dbname = kw.get("state")
+        #registry = openerp.modules.registry.RegistryManager.get(dbname)
+        #with registry.cursor() as cr:
+        # dsfasdf
+        pass
+
     @openerpweb.httprequest
     def signin(self, req, **kw):
         dbname = kw.get("state")
         registry = openerp.modules.registry.RegistryManager.get(dbname)
-        cr = registry.db.cursor()
-        try:
+        with registry.cursor() as cr:
             try:
                 u = registry.get('res.users')
-                r = u.auth_oauth(cr, 1, kw)
+                credentials = u.auth_oauth(cr, 1, kw)
                 cr.commit()
-                return openerp.addons.web.controllers.main.login_and_redirect(req, *r)
+                return openerp.addons.web.controllers.main.login_and_redirect(req, *credentials)
             except AttributeError:
                 # auth_signup is not installed
                 url = "/#action=auth_signup&error=1"
             except Exception,e:
                 # signup error
                 url = "/#action=auth_signup&error=2"
-        finally:
-            cr.close()
-        return werkzeug.utils.redirect("https://localhost")
+        return werkzeug.utils.redirect("http://localhost:8069")
+
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

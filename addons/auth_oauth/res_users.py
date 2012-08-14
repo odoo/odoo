@@ -17,19 +17,19 @@ class res_users(osv.Model):
                                   readonly=True),
     }
 
-    def auth_oauth_rpc(self, cr, uid, endpoint, params, context=None):
-        url = endpoint + params.get('access_token')
+    def auth_oauth_rpc(self, cr, uid, endpoint, access_token, context=None):
+        url = endpoint + access_token
         f = urllib2.urlopen(url)
-        validation = f.read()
-        return simplejson.loads(validation)
+        response = f.read()
+        return simplejson.loads(response)
 
-    def auth_oauth_fetch_user_validation(self, cr, uid, params, context=None):
+    def auth_oauth_fetch_user_validation(self, cr, uid, access_token, context=None):
         endpoint = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token='    
-        return self.auth_oauth_rpc(cr, uid, endpoint, params)
+        return self.auth_oauth_rpc(cr, uid, endpoint, access_token)
 
-    def auth_oauth_fetch_user_data(self, cr, uid, params):
+    def auth_oauth_fetch_user_data(self, cr, uid, access_token, context=None):
         endpoint = 'https://www.googleapis.com/oauth2/v1/userinfo?access_token='
-        return self.auth_oauth_rpc(cr, uid, endpoint, params)
+        return self.auth_oauth_rpc(cr, uid, endpoint, access_token)
 
     def auth_oauth(self, cr, uid, params, context=None):
         # Advice by Google (to avoid Confused Deputy Problem)
@@ -37,33 +37,36 @@ class res_users(osv.Model):
         #   abort()
         # else:
         #   continue with the process
-        validation = self.auth_oauth_fetch_user_validation(cr, uid, params)
+
+        access_token = params.get('access_token')
+
+        validation = self.auth_oauth_fetch_user_validation(cr, uid, access_token, context=context)
+        if validation.get("error"):
+            raise openerp.exceptions.AccessDenied
+
         login = validation['email']
         oauth_uid = validation['user_id']
         name = self.auth_oauth_fetch_user_data(cr, uid, params)['name']
-        r = (cr.dbname, login, oauth_uid)
-        try:
-            # check for existing user
-            if not self.auth_signup_check(cr, uid, login, oauth_uid):
-                # new user
-                new_user = {
-                    'name': name,
-                    'login': login,
-                    'user_email': login,
-                    'password': oauth_uid,
-                    'oauth_provider': 'Google',
-                    'oauth_uid': oauth_uid,
-                    'oauth_access_token': params.get('access_token'),
-                    'active': True,
-                }
-                self.auth_signup_create(cr, uid, new_user)
-                return r
-            else:
-                # already existing with same password
-                return r
-        except openerp.exceptions.AccessDenied:
-            # already existing with diffrent password
-            raise    
+
+        r = (cr.dbname, login, access_token)
+        
+        res = self.search(cr, uid, [("oauth_uid", "=", oauth_uid)])
+        if res:
+            self.write(cr, uid, res[0]['id'], {'oauth_access_token':access_token})
+        else:
+            # New user
+            new_user = {
+                'name': name,
+                'login': login,
+                'user_email': login,
+                'oauth_provider': 'Google',
+                'oauth_uid': oauth_uid,
+                'oauth_access_token': access_token,
+                'active': True,
+            }
+            self.auth_signup_create(cr, uid, new_user)
+        return r
+
 
     def check(self, db, uid, passwd):
         try:
@@ -77,7 +80,7 @@ class res_users(osv.Model):
                 cr.execute('''SELECT COUNT(1)
                                 FROM res_users
                                WHERE id=%s
-                                 AND oauth_key=%s
+                                 AND oauth_access_token=%s
                                  AND active=%s''',
                             (int(uid), passwd, True))
                 if not cr.fetchone()[0]:

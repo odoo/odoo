@@ -19,37 +19,28 @@ class res_users(osv.Model):
         else:
             self.pool.get('res.users').create(cr, 1, new_user, context=context)
 
-    def auth_signup_check(self, cr, uid, login, key, context=None):
-        res = self.search(cr, uid, [("login", "=", login)])
-        if res:
-            user_id = res[0]
-            self.check(cr.dbname, user_id, key)
-            return user_id
-        return False
-
     def auth_signup(self, cr, uid, name, login, password, context=None):
         r = (cr.dbname, login, password)
-        try:
-            # check for existing user
-            if not self.auth_signup_check(cr, uid, login, password):
-                print "NEW USER"
-                # new user
-                new_user = {
-                    'name': name,
-                    'login': login,
-                    'user_email': login,
-                    'password': password,
-                    'active': True,
-                }
-                self.auth_signup_create(cr, uid, new_user)
-                return r
-            else:
-                print "Existing same"
-                # already existing with same password
-                return r
-        except openerp.exceptions.AccessDenied:
-            print "Existing different"
-            # already existing with diffrent password
-            raise
+        res = self.search(cr, uid, [("login", "=", login)])
+        if res:
+            # Existing user
+            user_id = res[0]
+            try:
+                self.check(cr.dbname, user_id, password)
+                # Same password
+            except openerp.exceptions.AccessDenied:
+                # Different password
+                raise
+        else:
+            # New user
+            new_user = {
+                'name': name,
+                'login': login,
+                'user_email': login,
+                'password': password,
+                'active': True,
+            }
+            self.auth_signup_create(cr, uid, new_user)
+        return r
 
 #
