@@ -1,5 +1,6 @@
 openerp.base_import = function (instance) {
     var QWeb = instance.web.qweb;
+    var _t = instance.web._t;
     var _lt = instance.web._lt;
 
     /**
@@ -41,7 +42,14 @@ openerp.base_import = function (instance) {
             'change input.oe_import_file': 'file_update'
         },
         init: function (parent, dataset) {
-            this._super(parent, {});
+            var self = this;
+            this._super(parent, {
+                buttons: [
+                    {text: _t("Import File"), click: function () {
+                        self.do_import();
+                    }, 'class': 'oe_import_dialog_button'}
+                ]
+            });
             this.res_model = parent.model;
             // import object id
             this.id = null;
@@ -57,6 +65,15 @@ openerp.base_import = function (instance) {
             });
         },
 
+        import_options: function () {
+            return {
+                // TODO: customizable gangnam style
+                quote: '"',
+                separator: ',',
+                headers: true,
+            };
+        },
+
         //- File change section
         file_update: function (e) {
             if (!this.$('input.oe_import_file').val()) { return; }
@@ -69,22 +86,49 @@ openerp.base_import = function (instance) {
         file_updated: function () {
             // immediately trigger preview...
             // TODO: test that write // succeeded?
-            this.Import.call('parse_preview', [this.id, {
-                quote: '"',
-                separator: ',',
-                headers: true,
-            }]).then(this.proxy('preview'));
+            this.Import.call(
+                'parse_preview', [this.id, this.import_options()])
+                .then(this.proxy('preview'));
         },
         preview: function (result) {
             if (result.error) {
                 this.$element.addClass('oe_import_error');
                 this.$('.oe_import_error_report').html(
-                    QWeb.render('ImportView.error', result));
+                    QWeb.render('ImportView.preview.error', result));
             } else {
                 this.$element.addClass('oe_import_preview');
                 this.$('table').html(
                     QWeb.render('ImportView.preview', result));
             }
+        },
+
+        //- import itself
+        do_import: function () {
+            var fields = this.$('.oe_import_fields input').map(function (index, el) {
+                return el.value || false;
+            }).get();
+            this.Import.call(
+                'do', [this.id, fields, this.import_options()], {
+                    // maybe could do a dryrun after successful
+                    // preview or something (note: don't go to
+                    // this.result if dryrun=true)
+                    dryrun: false
+                })
+                .then(this.proxy('result'));
+        },
+        result: function (errors) {
+            if (!errors.length) {
+                if (this.getParent().reload_content) {
+                    this.getParent().reload_content();
+                }
+                this.close();
+                return;
+            }
+            // import failed (or maybe just warnings, if we ever get
+            // warnings?)
+            this.$element.addClass('oe_import_error');
+            this.$('.oe_import_error_report').html(
+                QWeb.render('ImportView.error', {errors: errors}));
         },
     });
 };

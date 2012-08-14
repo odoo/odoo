@@ -7,9 +7,9 @@
             <label for="csvfile">CSV File:</label>
             <input type="file" id="csvfile" name="file" class="oe_import_file"/>
 
+            <div class="oe_import_error_report"></div>
             <table class="oe_import_grid" width="100%">
             </table>
-            <div class="oe_import_error_report"></div>
         </form>
     </t>
     <!-- TODO: column matcher? -->
@@ -18,14 +18,27 @@
             <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
                 ><t t-esc="header"/></td>
         </tr>
+        <tr class="oe_import_fields">
+            <!-- Iterate on first row to ensure we have all columns -->
+            <td t-foreach="preview[0]" t-as="column">
+                <input placeholder="Don't Import"/>
+            </td>
+        </tr>
         <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
             <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
                 ><t t-esc="cell"/></td>
         </tr>
     </t>
-    <t t-name="ImportView.error">
+    <t t-name="ImportView.preview.error">
         <p>Import preview failed due to: <t t-esc="error"/></p>
         <p>Here is the start of the file we could not import:</p>
         <pre><t t-esc="preview"/></pre>
     </t>
+    <ul t-name="ImportView.error">
+        <li t-foreach="errors" t-as="error" t-attf-class="oe_import_report_#{error.type}">
+            <!-- can also have error.record, but may be *huge* if
+                 e.g. has image fields -->
+            <t t-esc="error.message"/>
+        </li>
+    </ul>
 </templates>

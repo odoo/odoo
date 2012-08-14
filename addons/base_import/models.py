@@ -11,6 +11,8 @@ try:
 except ImportError:
     from StringIO import StringIO
 
+import psycopg2
+
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
@@ -300,24 +302,39 @@ class ir_import(orm.TransientModel):
             record, fields, options, context=context)
 
         try:
+            _logger.info('importing %d rows...', len(data))
             (code, record, message, _wat) = self.pool[record.res_model].import_data(
                 cr, uid, import_fields, data, context=context)
+            _logger.info('done')
+
         except Exception, e:
+            _logger.exception("Import failed")
             # TODO: remove when exceptions stop being an "expected"
-            #       behavior of import_data on some invalid input.
+            #       behavior of import_data on some (most) invalid
+            #       input.
             code, record, message = -1, None, str(e)
 
-        if dryrun:
-            cr.execute('ROLLBACK TO SAVEPOINT import')
-        else:
-            cr.execute('RELEASE SAVEPOINT import')
+        # If transaction aborted, RELEASE SAVEPOINT is going to raise
+        # an InternalError (ROLLBACK should work, maybe). Ignore that.
+        # TODO: to handle multiple errors, create savepoint around
+        #       write and release it in case of write error (after
+        #       adding error to errors array) => can keep on trying to
+        #       import stuff, and rollback at the end if there is any
+        #       error in the results.
+        try:
+            if dryrun:
+                cr.execute('ROLLBACK TO SAVEPOINT import')
+            else:
+                cr.execute('RELEASE SAVEPOINT import')
+        except psycopg2.InternalError:
+            pass
 
         if code != -1:
             return []
 
         # TODO: add key for error location?
         # TODO: error not within normal preview, how to display? Re-preview
-        #       with higher count?
+        #       with higher ``count``?
         return [{
             'type': 'error',
             'message': message,
