@@ -151,16 +151,10 @@ class res_users(osv.osv):
         # context is set.
         'company_id': fields.many2one('res.company', 'Company', required=True,
             help='The company this user is currently working for.', context={'user_preference': True}),
-        # 'context_company_id': fields.related('context_company_id', rel='res.company', 
-        #     string='Company', required=True, context={'user_preference': True},
-        #     help='The company this user is currently working for.',
-        #     deprecated='Use the context_company_id field instead. This field will be removed as of OpenERP 7.1.'),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         # backward compatibility fields
         'user_email': fields.related('email', type='char',
-            deprecated='Use the email field instead of user_email. This field will be removed as of OpenERP 7.1.'),
-        'date': fields.related('date', type='date', store=True,
-            deprecated='use the login_date field instead of date. This field will be removed as of OpenERP 7.1.'),
+            deprecated='Use the email field instead of user_email. This field will be removed with OpenERP 7.1.'),
     }
 
     def on_change_company_id(self, cr, uid, ids, company_id):
