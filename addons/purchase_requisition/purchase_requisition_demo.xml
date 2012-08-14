@@ -6,7 +6,7 @@
             <field eval="[(4, ref('group_purchase_requisition_user'))]" name="groups_id"/>
         </record>
 
-        <record id="product.product_product_hdd3" model="product.product">
+        <record id="product.product_product_13" model="product.product">
             <field name="purchase_requisition" eval="True"/>
         </record>
 
@@ -21,7 +21,7 @@
 
         <record id="requisition_line1" model="purchase.requisition.line">
             <field name="requisition_id" ref="requisition1"/>
-            <field name="product_id" ref="product.product_product_hdd3"/>
+            <field name="product_id" ref="product.product_product_13"/>
             <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="product_qty">5</field>
         </record>
@@ -39,7 +39,7 @@
             <field name="order_id" ref="rfq1"/>
             <field name="name">[HDD3] HDD Seagate 7200.8 160GB</field>
             <field name="date_planned" eval="time.strftime('%Y/%m/10')"/>
-            <field name="product_id" ref="product.product_product_hdd3"/>
+            <field name="product_id" ref="product.product_product_13"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">60</field>
             <field name="product_qty">5</field>
@@ -48,7 +48,7 @@
         <record id="rfq2" model="purchase.order">
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="pricelist_id" ref="purchase.list0"/>
-            <field name="partner_id" ref="base.res_partner_vickingdirect0"/>
+            <field name="partner_id" ref="base.res_partner_22"/>
             <field name="requisition_id" ref="requisition1"/>
         </record>
 
@@ -56,7 +56,7 @@
             <field name="order_id" ref="rfq2"/>
             <field name="name">[HDD3] HDD Seagate 7200.8 160GB</field>
             <field name="date_planned" eval="time.strftime('%Y/%m/15')"/>
-            <field name="product_id" ref="product.product_product_hdd3"/>
+            <field name="product_id" ref="product.product_product_13"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">50</field>
             <field name="product_qty">3</field>

@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <record id="action_mail_group_feeds" model="ir.actions.client">
+            <field name="name">Discussion Group</field>
+            <field name="tag">mail.wall</field>
+            <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
+        </record>
 
         <!-- Group Kanban View  !-->
         <record model="ir.ui.view" id="view_group_kanban">
@@ -51,35 +56,29 @@
             <field name="arch" type="xml">
                 <form string="Group Form" version="7.0">
                     <sheet class="openerp_mail_group_sheet">
-                        <group colspan="4" col="8">
-                            <group colspan="1" col="2">
-                                <field name="image_small" widget='image' class="oe_image_small" nolabel="1"/>
+                        <field name="image_small" widget='image' class="oe_avatar oe_left"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Group Name"/> 
+                            </div> 
+                            <h1><field name="name"/></h1>
+                            <field name="description" placeholder="Topics discussed in this group..."/>
+                        </div>
+                        <div class="oe_clear"/>
+                        <group col="1">
+                            <group class="oe_edit_only">
+                                <field name="public" class="oe_inline"/>
+                                <field name="group_public_id" class="oe_inline"
+                                    attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
+                                    />
+                                <field name="group_ids" widget="many2many_tags" class="oe_inline"/>
                             </group>
-                            <group colspan="7" col="6">
-                                <div class="oe_edit_only">
-                                    <label for="name"/> 
-                                </div> 
-                                <div>
-                                    <h2><field name="name" colspan="4"/></h2>
-                                    <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}" class="oe_edit_only">
-                                        <field name="alias_id" invisible="1"/>
-                                        <label for="alias_name" class="oe_edit_only"/>
-                                        <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
-                                    </div>
-                                </div>
-                                <newline/>
-                                <group colspan="4" col="4">
-                                    <field name="description" colspan="4" nolabel="1"/>
-                                    <field name="group_ids" colspan="4" widget="many2many_tags" class="oe_edit_only"/>
-                                </group>
-                                <group colspan="2" col="2" class="oe_edit_only">
-                                    <field name="responsible_id" colspan="2"/>
-                                    <field name="public" colspan="2"/>
-                                </group>
+                            <group class="oe_edit_only">
+                                <field name="responsible_id" class="oe_inline"/>
                             </group>
                         </group>
                     </sheet>
-                    <div class="oe_chatter oe_mail_group_footer">
+                    <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"
                                 options='{"thread_level": 1}'/>
                     </div>
@@ -95,7 +94,7 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Groups">
-                    <field name="name"/>
+                    <field name="name" string="Group Name"/>
                     <field name="responsible_id"/>
                 </tree>
             </field>
@@ -125,6 +124,7 @@
         </record>
 
         <!-- left-side menu: Groups !-->
-        <menuitem id="mail_allgroups" name="All Groups" parent="mail_feeds" sequence="12" action="action_view_groups"/>
+        <menuitem id="mail_group_root" parent="mail_feeds_main" sequence="12" name="My Groups"/>
+        <menuitem id="mail_allgroups" parent="mail_feeds" sequence="12" action="action_view_groups"/>
     </data>
 </openerp>

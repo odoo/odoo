@@ -14,7 +14,7 @@
                     <field name="name"/>
                     <field domain="[('type','=','normal'),('use_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1}"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
+                    <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
                     <field name="amount" sum="Total cost" invisible="1"/>
                     <field name="general_account_id" invisible="1"/>
@@ -42,7 +42,7 @@
                         <group>
                             <group string="Product">
                                 <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]"/>
-                                <label string="Quantity" for="unit_amount"/>
+                                <label string="Duration" for="unit_amount"/>
                                 <div>
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" class="oe_inline"/>
                                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" class="oe_inline"/>
