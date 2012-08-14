@@ -29,7 +29,6 @@ from tools.translate import _
 import logging
 import pooler
 import pytz
-import random
 
 def _tz_get(self,cr,uid, context=None):
     return [(x, x) for x in pytz.all_timezones]
@@ -228,9 +227,9 @@ class res_partner(osv.osv):
 
     def _get_default_image(self, cr, uid, is_company, context=None):
         if is_company:
-            image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'company_icon.png')
+            image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')
         else:
-            image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
+            image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'partner_image.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
