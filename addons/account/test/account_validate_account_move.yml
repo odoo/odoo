@@ -20,7 +20,7 @@
         debit: 0.0
         journal_id: account.bank_journal
         name: Basic Computer
-        partner_id: base.res_partner_desertic_hispafuentes
+        partner_id: base.res_partner_12
         period_id: account.period_6
         ref: '2011010'
         tax_amount: 0.0
@@ -37,8 +37,8 @@
       'search_default_journal_id': 1, 'journal_type': 'sale', 'search_default_period_id': 6, 'journal_id': 1, 'view_mode': False,
       'visible_id': 1, 'period_id': 6, 'tz': False, 'active_ids': [ref('menu_eaction_account_moves_sale')],
       'search_default_posted': 0, 'active_id': ref('menu_eaction_account_moves_sale')})
-    partner = self.onchange_partner_id(cr, uid, [], False, ref('base.res_partner_desertic_hispafuentes'), ref('account.cash'), debit=0, credit=2000, date=date, journal=False)
-    account = self.onchange_account_id(cr, uid, [], account_id=ref('account.a_recv'), partner_id= ref('base.res_partner_desertic_hispafuentes'))
+    partner = self.onchange_partner_id(cr, uid, [], False, ref('base.res_partner_12'), ref('account.cash'), debit=0, credit=2000, date=date, journal=False)
+    account = self.onchange_account_id(cr, uid, [], account_id=ref('account.a_recv'), partner_id= ref('base.res_partner_12'))
     vals = {
         'journal_id': ref('account.bank_journal'),
         'period_id': ref('account.period_6'),
@@ -51,7 +51,7 @@
         'date': time.strftime('%Y-%m-%d'),
         'debit': 2000.0,
         'name': 'Basic Computer',
-        'partner_id': ref('base.res_partner_desertic_hispafuentes'),
+        'partner_id': ref('base.res_partner_12'),
         'quantity': 0.0,
         'move_id': ref('account_move_0'),
         'date_maturity': partner['value']['date_maturity'],

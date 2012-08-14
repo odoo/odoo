@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Create Index Form view  -->
+        <record id="view_wiki_show_diff" model="ir.ui.view">
+            <field name="name">Show Difference</field>
+            <field name="model">wizard.document.page.history.show_diff</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Difference" version="7.0">
+                    <field name="diff"/>
+                    <footer>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- Create Index Action  -->
+        <record id="action_view_wiki_show_diff" model="ir.actions.act_window">
+            <field name="name">Difference</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.document.page.history.show_diff</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <!-- Create Index Action Window  -->
+        <act_window 
+            id="action_view_wiki_show_diff_values"
+            key2="client_action_multi"
+            name="Difference"
+            res_model="wizard.document.page.history.show_diff"
+            src_model="document.page.history"
+            view_mode="form"
+            target="new"
+            view_type="form"/>
+
+    </data>
+</openerp>
