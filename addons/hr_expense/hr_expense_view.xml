@@ -84,7 +84,7 @@
                         <group>
                             <field name="name"/>
                             <field name="user_valid"/>
-                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="currency_id" groups="base.group_multi_currency" on_change="onchange_currency_id(currency_id, company_id)"/>
                         </group>
                     </group>
                     <notebook>
