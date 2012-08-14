@@ -315,7 +315,7 @@ class product_template(osv.osv):
         md = self.pool.get('ir.model.data')
         res = False
         try:
-            res = md.get_object_reference(cr, uid, 'product', 'cat0')[1]
+            res = md.get_object_reference(cr, uid, 'product', 'product_category_all')[1]
         except ValueError:
             res = False
         return res
@@ -602,6 +602,8 @@ class product_product(osv.osv):
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if not len(ids):
             return []
         def _name_get(d):
