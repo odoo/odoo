@@ -565,8 +565,8 @@ class Root(object):
             while ps:
                 c = controllers_path.get(ps)
                 if c:
-                    m = getattr(c, meth)
-                    if getattr(m, 'exposed', False):
+                    m = getattr(c, meth, None)
+                    if m and getattr(m, 'exposed', False):
                         _logger.debug("Dispatching to %s %s %s", ps, c, meth)
                         return m
                 ps, _slash, meth = ps.rpartition('/')
