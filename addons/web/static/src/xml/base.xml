@@ -599,7 +599,7 @@
             <tr>
                 <th t-foreach="fields_view" t-as="field"
                     t-if="!field.attrs.modifiers.tree_invisible">
-                    <t t-esc="fields[field.attrs.name].string" />
+                    <t t-esc="field_value.attrs.string || fields[field.attrs.name].string" />
                 </th>
             </tr>
         </thead>
