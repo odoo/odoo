@@ -64,21 +64,21 @@ class mail_group(osv.Model):
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
     
     _columns = {
-        #'name': fields.char('Group Name', size=64, required=True),
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
         'responsible_id': fields.many2one('res.users', string='Responsible',
             ondelete='set null', required=True, select=1,
             help="Responsible of the group that has all rights on the record."),
-        'public': fields.selection([('public','Public'),('private','Private'),('groups','Selected Group Only')], 'Privacy', required=True,
-            help='This group is visible by non members. \
-            Invisible groups can add members through the invite button.'),
+        'public': fields.selection([('public', 'Public'), ('private', 'Private'), ('groups', 'Selected Group Only')],
+            string='Privacy', required=True,
+            help='This group is visible by non members. '\
+                 'Invisible groups can add members through the invite button.'),
         'group_public_id': fields.many2one('res.groups', string='Authorized Group'),
         'group_ids': fields.many2many('res.groups', rel='mail_group_res_group_rel',
             id1='mail_group_id', id2='groups_id', string='Auto Subscription',
             help="Members of those groups will automatically added as followers. "\
-                    "Note that they will be able to manage their subscription manually "\
-                    "if necessary."),
+                 "Note that they will be able to manage their subscription manually "\
+                 "if necessary."),
         'image': fields.binary("Photo",
             help="This field holds the image used as photo for the "\
                  "user. The image is base64 encoded, and PIL-supported. "\
