@@ -80,6 +80,7 @@
     'demo_xml': [
         'base_demo.xml',
         'res/res_partner_demo.xml',
+        'res/res_partner_demo.yml',
         'res/res_widget_demo.xml',
     ],
     'test': [

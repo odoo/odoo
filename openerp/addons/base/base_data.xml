@@ -1061,6 +1061,13 @@
             <field name="company_id" eval="None"/>
             <field name="customer" eval="False"/>
             <field name="is_company" eval="True"/>
+            <field name="street">45, Rue du Palais</field>
+            <field name="city">Paris</field>
+            <field name="zip">75016</field>
+            <field ref="base.fr" name="country_id"/>
+            <field name="phone">+33 1 49 51 23 94</field>
+            <field name="email">info@yourcompany.com</field>
+            <field name="website">www.yourcompany.com</field>
         </record>
 
         <!-- Currencies -->
@@ -1082,8 +1089,9 @@
         <record id="main_company" model="res.company">
             <field name="name">Your Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_footer1">Web: www.companyname.com - Tel: +1-212-555-12345</field>
-            <field name="rml_footer2">IBAN: XX12 3456 7890 1234 5678 - SWIFT: SWIFTCODE - VAT: Company vat number</field>
+            <field name="rml_header1">Your Company Slogan</field>
+            <field name="rml_footer1">Web: http://www.yourcompany.com - Tel: +33 1 49 51 23 94</field>
+            <field name="rml_footer2">Bank Accounts... to be configured in menu Settings > Accounting/Invoicing.</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
@@ -1628,7 +1636,7 @@
         </record>
 
         <record id="res_bank_1" model="res.bank">
-            <field name="name">Reserve</field>
+            <field name="name">International Bank</field>
         </record>
 
         <record id="CRC" model="res.currency">

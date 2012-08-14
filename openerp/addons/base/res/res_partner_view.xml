@@ -119,8 +119,8 @@
 
                     <group>
                         <group>
-                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
-                            <div attrs="{'invisible': [('parent_id','=', False)]}">
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}" invisible="1"/>
+                            <div attrs="{'invisible': [('parent_id','=', False)]}" invisible="1" name="div_type">
                                 <field class="oe_inline"
                                     name="type"/>
                                 <label for="use_parent_address" class="oe_edit_only"/>
