@@ -9,7 +9,6 @@
         <record model="ir.ui.view" id="view_audittrail_rule_form">
             <field name="name">audittrail.rule.form</field>
             <field name="model">audittrail.rule</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="AuditTrail Rule" version="7.0">
                    <header>
@@ -41,7 +40,6 @@
         <record model="ir.ui.view" id="view_audittrail_rule_tree">
             <field name="name">audittrail.rule.tree</field>
             <field name="model">audittrail.rule</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state == 'subscribed'" string="AuditTrail Rules">
                     <field name="name"/>
@@ -60,7 +58,6 @@
         <record id="view_audittrail_rule_search" model="ir.ui.view">
             <field name="name">audittrail.rule.search</field>
             <field name="model">audittrail.rule</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Audittrail Rule">
                     <field name="name" string="Audittrail Rule"/>
@@ -91,7 +88,6 @@
         <record model="ir.ui.view" id="view_audittrail_log_form">
             <field name="name">audittrail.log.form</field>
             <field name="model">audittrail.log</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="AuditTrail Logs" version="7.0">
                  <sheet>
@@ -148,7 +144,6 @@
         <record model="ir.ui.view" id="view_audittrail_log_tree">
             <field name="name">audittrail.log.tree</field>
             <field name="model">audittrail.log</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="AuditTrail Logs">
                     <field name="timestamp"/>
@@ -163,7 +158,6 @@
        <record id="view_audittrail_log_search" model="ir.ui.view">
             <field name="name">audittrail.log.search</field>
             <field name="model">audittrail.log</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Audittrail Log">
                     <field name="name" string="Audittrail Log"/>

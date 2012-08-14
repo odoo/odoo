@@ -16,7 +16,6 @@
         <record id="view_account_analytic_account_overdue_search" model="ir.ui.view">
             <field name="name">account.analytic.account.search</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Account">
                     <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>

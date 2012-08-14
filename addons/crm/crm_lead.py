@@ -479,7 +479,7 @@ class crm_lead(base_stage, osv.osv):
         details = []
         merge_message = _('Merged opportunities')
         subject = [merge_message]
-        fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id', 'categ_id', 'channel_id', 'company_id', 'contact_name',
+        fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id', 'categ_ids', 'channel_id', 'company_id', 'contact_name',
                   'email_from', 'phone', 'fax', 'mobile', 'state_id', 'description', 'probability', 'planned_revenue',
                   'country_id', 'city', 'street', 'street2', 'zip']
         for opportunity in opportunities:
@@ -550,7 +550,7 @@ class crm_lead(base_stage, osv.osv):
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
 
-        fields = ['partner_id', 'title', 'name', 'categ_id', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
+        fields = ['partner_id', 'title', 'name', 'categ_ids', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
             'partner_name', 'phone', 'probability', 'planned_revenue', 'street', 'street2', 'zip', 'create_date', 'date_action_last',
             'date_action_next', 'email_from', 'email_cc', 'partner_name']
 

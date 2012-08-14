@@ -4,7 +4,6 @@
         <record id="view_timesheet_report_graph" model="ir.ui.view">
             <field name="name">timesheet.report.graph</field>
             <field name="model">timesheet.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Timesheet" type="bar">
                     <field name="user_id" />
@@ -16,7 +15,6 @@
         <record id="view_timesheet_report_tree" model="ir.ui.view">
             <field name="name">timesheet.report.tree</field>
             <field name="model">timesheet.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'cancel'" string="Timesheet">
                     <field name="date_current" invisible="1"/>
@@ -45,7 +43,6 @@
         <record id="view_timesheet_report_search" model="ir.ui.view">
             <field name="name">timesheet.report.search</field>
             <field name="model">timesheet.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
