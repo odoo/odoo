@@ -29,24 +29,75 @@ import tools
 from tools.translate import _
 from lxml import etree
 
-class mail_group(osv.osv):
-    """
-    A mail_group is a collection of users sharing messages in a discussion
-    group. Group users are users that follow the mail group, using the
-    subscription/follow mechanism of OpenSocial. A mail group has nothing
-    in common with res.users.group.
-    Additional information on fields:
-        - ``member_ids``: user member of the groups are calculated with
-          ``message_get_subscribers`` method from mail.thread
-        - ``member_count``: calculated with member_ids
-        - ``is_subscriber``: calculated with member_ids
-        
-    """
-    
-    _description = 'Discussion group'
-    _name = 'mail.group'
-    _inherit = ['mail.thread']
-    _inherits = {'mail.alias': 'alias_id'}
+class ir_ui_menu(osv.osv):
+    _inherit = 'ir.ui.menu'
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        context = context or {}
+        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0,
+            limit=None, order=order, context=context, count=False)
+        if context.get('ir.ui.menu.full_list'):
+            return ids
+
+        root_group = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'mail_group_root')
+        if not root_group:
+            return ids
+        root_group = root_group[1]
+
+        print 'Root Group', root_group, ids, args
+        for a in args:
+            if a[0]=='id':
+                return ids
+            if a[0]=='parent_id':
+                if (a[1] == 'child_of'):
+                    if root_group not in ids:
+                        return ids
+                elif (a[1] == 'in'):
+                    if root_group not in a[2]:
+                        return ids
+                elif (a[1] <> '='):
+                    if a[2] <> root_group:
+                        return ids
+
+        print 'Got IT'
+        subs = self.pool.get('mail.subscription')
+        sub_ids = subs.search(cr, uid, [('user_id','=',uid),('res_model','=','mail.group')], context=context)
+        result = ids + map(lambda x: 'group-'+str(x.res_id), subs.browse(cr, uid, sub_ids, context=context))
+        print 'END SEARCH', result
+        return result
+
+    def _read_flat(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        group_ids = filter(lambda x: type(x)==str and x.startswith('group-'), ids)
+        nongroup_ids = filter(lambda x: x not in group_ids, ids)
+        print 'READ ***', ids, nongroup_ids, group_ids
+        result = super(ir_ui_menu, self)._read_flat(cr, uid, nongroup_ids, fields, context, load)
+
+        group_ids = map(lambda x: int(x[6:]), group_ids)
+        root_group = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'mail_group_root')
+        if not root_group:
+            return result
+        root_group = root_group[1]
+
+        for group in self.pool.get('mail.group').browse(cr, uid, group_ids, context=context):
+            data = {
+                'id': 'group-'+str(group.id),
+                'name': group.name,
+                'child_id': [],
+                'parent_id': root_group,
+                'complete_name': group.name,
+                'needaction_enabled': 1,
+                'needaction_counter': 1,  # to compute
+                'action': 'ir.actions.client,1'
+            }
+            for key in fields or []:
+                data.setdefault(key, False)
+            for key in data.keys():
+                if fields and key not in fields:
+                    del data[key]
+            result.append(data)
+
+        print result
+        return result
+
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
