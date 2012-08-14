@@ -2,6 +2,7 @@ import logging
 import urllib2
 
 import werkzeug.urls
+import werkzeug.utils
 
 import openerp.modules.registry
 import openerp.addons.web.controllers.main
@@ -22,10 +23,14 @@ class OAuthController(openerpweb.Controller):
                 u = registry.get('res.users')
                 r = u.auth_oauth(cr, 1, kw)
                 cr.commit()
-                # return openerp.addons.web.controllers.main.login_and_redirect(req, *r)
-                # or
-                # req.authenticate(*r)
-                # url = "/"
+                # tmp = openerp.addons.web.controllers.main.login_and_redirect(req, cr, *r)
+                # req.session.authenticate(db, login, key, {})
+                # redirect = werkzeug.utils.redirect("http://localhost:8069/", 303)
+                # redirect.autocorrect_location_header = False
+                # cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
+                # redirect.set_cookie('instance0|session_id', cookie_val)
+                print r
+                return openerp.addons.web.controllers.main.login_and_redirect(req, *r)
             except AttributeError:
                 # auth_signup is not installed
                 url = "/#action=auth_signup&error=1"
