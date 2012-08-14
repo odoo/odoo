@@ -127,9 +127,11 @@ class test_match_headers_single(TransactionCase):
 
 class test_match_headers_multiple(TransactionCase):
     def test_noheaders(self):
-        self.assertIsNone(
+        self.assertEqual(
             self.registry('base_import.import')._match_headers(
-                [], [], {}))
+                [], [], {}),
+            (None, None)
+        )
     def test_nomatch(self):
         self.assertEqual(
             self.registry('base_import.import')._match_headers(
@@ -139,7 +141,11 @@ class test_match_headers_multiple(TransactionCase):
                 ]),
                 [],
                 {'headers': True}),
-            dict((index, None) for index in range(4)))
+            (
+                ['foo', 'bar', 'baz', 'qux'],
+                dict.fromkeys(range(4))
+            )
+        )
 
     def test_mixed(self):
         self.assertEqual(
@@ -153,12 +159,13 @@ class test_match_headers_multiple(TransactionCase):
                      ]}
                 ],
                 {'headers': True}),
-            {
+            (['foo', 'bar', 'baz', 'qux/corge'], {
                 0: None,
                 1: ['bar'],
                 2: ['bob'],
                 3: ['qux', 'corge'],
             })
+        )
 
 import base64, csv
 class test_preview(TransactionCase):
@@ -216,27 +223,22 @@ class test_preview(TransactionCase):
             'headers': True,
         })
 
-        p = {
-            'matches': {0: ['name'], 1: ['somevalue'], 2: None},
-            'fields': [
-                {'id': 'id', 'name': 'id', 'string': 'External ID', 'required':False, 'fields': []},
-                {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': []},
-                {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': []},
-                {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': []},
-            ],
-            'preview': [
-                ['foo', '1', '2'],
-                ['bar', '3', '4'],
-                ['qux', '5', '6'],
-            ]
-        }
-
-        self.assertEqual(result['matches'], p['matches'])
+        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None})
+        self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         # Order depends on iteration order of fields_get
-        self.assertItemsEqual(result['fields'], p['fields'])
-        self.assertEqual(result['preview'], p['preview'])
+        self.assertItemsEqual(result['fields'], [
+            {'id': 'id', 'name': 'id', 'string': 'External ID', 'required':False, 'fields': []},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': []},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': []},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': []},
+        ])
+        self.assertEqual(result['preview'], [
+            ['foo', '1', '2'],
+            ['bar', '3', '4'],
+            ['qux', '5', '6'],
+        ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(result.keys(), ['matches', 'fields', 'preview'])
+        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
 class test_convert_import_data(TransactionCase):
     """ Tests conversion of base_import.import input into data which

@@ -24,6 +24,7 @@ class ir_import(orm.TransientModel):
         'res_model': fields.char('Model', size=64),
         'file': fields.binary('File'),
         'file_name': fields.char('File Name', size=None),
+        'file_mime': fields.char('File Type', size=None),
     }
 
     def get_fields(self, cr, uid, model, context=None,
@@ -174,19 +175,20 @@ class ir_import(orm.TransientModel):
 
         Will consume the first line of the ``rows`` iterator.
 
-        Returns either None (no title) or a dict mapping cell indices
+        Returns a pair of (None, None) if headers were not requested
+        or the list of headers and a dict mapping cell indices
         to key paths in the ``fields`` tree
 
         :param Iterator rows:
         :param dict fields:
         :param dict options:
-        :rtype: None | dict(int: list(str))
+        :rtype: (None, None) | (list(str), dict(int: list(str)))
         """
         if not options.get('headers'):
-            return None
+            return None, None
 
         headers = next(rows)
-        return dict(
+        return headers, dict(
             (index, [field['name'] for field in self._match_header(header, fields, options)] or None)
             for index, header in enumerate(headers)
         )
@@ -196,13 +198,16 @@ class ir_import(orm.TransientModel):
         fields-matching between the import's file data and the model's
         columns.
 
+        If the headers are not requested (not options.headers),
+        ``matches`` and ``headers`` are both ``False``.
+
         :param id: identifier of the import
         :param int count: number of preview lines to generate
         :param options: format-specific options.
                         CSV: {encoding, quote, separator, headers}
         :type options: {str, str, str, bool}
-        :returns: {fields, matches, preview} | {error, preview}
-        :rtype: {dict(str: dict(...)), dict(int, list(str)), list(list(str))} | {str, str}
+        :returns: {fields, matches, headers, preview} | {error, preview}
+        :rtype: {dict(str: dict(...)), dict(int, list(str)), list(str), list(list(str))} | {str, str}
         """
         (record,) = self.browse(cr, uid, [id], context=context)
         fields = self.get_fields(cr, uid, record.res_model, context=context)
@@ -210,13 +215,14 @@ class ir_import(orm.TransientModel):
         try:
             rows = self._read_csv(record, options)
 
-            match = self._match_headers(rows, fields, options)
+            headers, matches = self._match_headers(rows, fields, options)
             # Match should have consumed the first row (iif headers), get
             # the ``count`` next rows for preview
             preview = itertools.islice(rows, count)
             return {
                 'fields': fields,
-                'matches': match,
+                'matches': matches or False,
+                'headers': headers or False,
                 'preview': list(preview),
             }
         except (TypeError, UnicodeDecodeError), e:
