@@ -311,3 +311,35 @@ class test_convert_import_data(TransactionCase):
             ('foo', '2'),
             ('', '6'),
         ])
+
+    def test_nofield(self):
+        Import = self.registry('base_import.import')
+
+        id = Import.create(self.cr, self.uid, {
+            'res_model': 'base_import.tests.models.preview',
+            'file': base64.b64encode('name,Some Value,Counter\n'
+                    'foo,1,2\n')
+        })
+
+        record = Import.browse(self.cr, self.uid, id)
+        self.assertRaises(
+            ValueError,
+            Import._convert_import_data,
+            record, [],
+            {'quote': '"', 'separator': ',', 'headers': True,})
+
+    def test_falsefields(self):
+        Import = self.registry('base_import.import')
+
+        id = Import.create(self.cr, self.uid, {
+            'res_model': 'base_import.tests.models.preview',
+            'file': base64.b64encode('name,Some Value,Counter\n'
+                    'foo,1,2\n')
+        })
+
+        record = Import.browse(self.cr, self.uid, id)
+        self.assertRaises(
+            ValueError,
+            Import._convert_import_data,
+            record, [False, False, False],
+            {'quote': '"', 'separator': ',', 'headers': True,})

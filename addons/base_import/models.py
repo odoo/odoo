@@ -252,9 +252,12 @@ class ir_import(orm.TransientModel):
         :param list(str|bool): fields
         :returns: (data, fields)
         :rtype: (list(list(str)), list(str))
+        :raises ValueError: in case the import data could not be converted
         """
         # Get indices for non-empty fields
         indices = [index for index, field in enumerate(fields) if field]
+        if not indices:
+            raise ValueError(_("You must configure at least one field to import"))
         # If only one index, itemgetter will return an atom rather
         # than a 1-tuple
         if len(indices) == 1: mapper = lambda row: [row[indices[0]]]
@@ -298,8 +301,15 @@ class ir_import(orm.TransientModel):
         cr.execute('SAVEPOINT import')
 
         (record,) = self.browse(cr, uid, [id], context=context)
-        data, import_fields = self._convert_import_data(
-            record, fields, options, context=context)
+        try:
+            data, import_fields = self._convert_import_data(
+                record, fields, options, context=context)
+        except ValueError, e:
+            return [{
+                'type': 'error',
+                'message': str(e),
+                'record': False,
+            }]
 
         try:
             _logger.info('importing %d rows...', len(data))
