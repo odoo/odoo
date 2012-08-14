@@ -353,9 +353,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.appendTo(this.options.$sidebar);
             this.sidebar.add_items('other', [
                 { label: _t("Import"), callback: this.on_sidebar_import },
-                { label: _t("Export"), callback: this.on_sidebar_export },
-                { label: _t('Delete'), callback: this.do_delete_selected }
+                { label: _t("Export"), callback: this.on_sidebar_export }
             ]);
+            if (self._is_action_enabled('delete')){
+                this.sidebar.add_items('other', [
+                    { label: _t('Delete'), callback: this.do_delete_selected }
+                ]);
+            }
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$element.hide();
         }
@@ -831,6 +835,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.$element.prepend(
             $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
+    },
+    _is_action_enabled: function(action) {
+        return (_.has(this.fields_view.arch.attrs, action))?JSON.parse(this.fields_view.arch.attrs[action]):true;
     }
 });
 instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.ListView.List# */{

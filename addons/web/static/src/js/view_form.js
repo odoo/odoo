@@ -148,9 +148,17 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if(this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
+            if (self._is_action_enabled('delete')){
+                this.sidebar.add_items('other', [
+                    { label: _t('Delete'), callback: self.on_button_delete },
+                ]);
+            }
+            if (self._is_action_enabled('create')){
+                this.sidebar.add_items('other', [
+                    { label: _t('Duplicate'), callback: self.on_button_duplicate }
+                ]);
+            }
             this.sidebar.add_items('other', [
-                { label: _t('Delete'), callback: self.on_button_delete },
-                { label: _t('Duplicate'), callback: self.on_button_duplicate },
                 { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } }
             ]);
         }
@@ -1042,6 +1050,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     open_translate_dialog: function(field) {
         return this._super(field);
     },
+    _is_action_enabled: function(action) {
+        return (_.has(this.fields_view.arch.attrs, action))?JSON.parse(this.fields_view.arch.attrs[action]):true;
+    }
 });
 
 /**
