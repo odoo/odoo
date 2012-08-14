@@ -100,6 +100,14 @@ class hr_expense_expense(osv.osv):
         'currency_id': _get_currency,
     }
 
+    def onchange_currency_id(self, cr, uid, ids, currency_id, context=None):
+        res =  {'value': {'journal_id': False}}
+        company_id = self.browse(cr, uid, ids[0], context=context).company_id.id
+        journal_id = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase'), ('currency','=',currency_id), ('company_id', '=', company_id)])
+        if journal_id:
+            res['value']['journal_id'] = journal_id
+        return res
+
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
         emp_obj = self.pool.get('hr.employee')
         department_id = False
