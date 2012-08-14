@@ -5,7 +5,6 @@
     <record model="ir.ui.view" id="view_asset_asset_report_tree">
         <field name="name">asset.asset.report.tree</field>
         <field name="model">asset.asset.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Assets">
                 <field name="name" invisible="1"/>
@@ -28,7 +27,6 @@
     <record model="ir.ui.view" id="action_account_asset_report_graph">
         <field name="name">asset.asset.report.graph</field>
         <field name="model">asset.asset.report</field>
-        <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Assets Analysis" type="bar">
                 <field name="asset_id"/>
@@ -40,7 +38,6 @@
     <record id="view_asset_asset_report_search" model="ir.ui.view">
         <field name="name">asset.asset.report.search</field>
         <field name="model">asset.asset.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Assets Analysis">
                 <field name="purchase_date"/>

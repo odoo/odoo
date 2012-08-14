@@ -5,7 +5,6 @@
         <record id="view_voucher_filter_customer_pay" model="ir.ui.view">
             <field name="name">account.voucher.customer.pay.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
@@ -29,7 +28,6 @@
         <record id="view_voucher_filter_vendor_pay" model="ir.ui.view">
             <field name="name">account.voucher.purchase.pay.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
@@ -51,7 +49,6 @@
         <record model="ir.ui.view" id="view_low_priority_payment_form">
             <field name="name">account.voucher.payment.low.priority.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Bill Payment" version="7.0">
@@ -121,9 +118,8 @@
         <record model="ir.ui.view" id="view_vendor_payment_form">
             <field name="name">account.voucher.payment.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Voucher Payment" version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
@@ -286,9 +282,8 @@
         <record model="ir.ui.view" id="view_vendor_receipt_form">
             <field name="name">account.voucher.receipt.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Receipt" version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>

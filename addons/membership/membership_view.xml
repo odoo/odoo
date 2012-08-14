@@ -9,7 +9,6 @@
         <record model="ir.ui.view" id="membership_product_search_form_view">
             <field name="name">membership.product.search.form</field>
             <field name="model">product.product</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Membership Products">
                     <field name="name" filter_domain="['|',('name','ilike',self),('code','ilike',self)]" string="Membership Product"/>
@@ -26,7 +25,6 @@
         <record model="ir.ui.view" id="membership_products_tree">
             <field name="name">Membership products</field>
             <field name="model">product.product</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Membership products">
                     <field name="code"/>
@@ -44,7 +42,6 @@
         <record model="ir.ui.view" id="membership_products_form">
             <field name="name">Membership Products</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Membership products" version="7.0">
                     <sheet>
@@ -146,7 +143,6 @@
         <record model="ir.ui.view" id="membership_members_tree">
             <field name="name">Members</field>
             <field name="model">res.partner</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Members">
                     <field name="name"/>
@@ -162,7 +158,6 @@
         <record id="view_res_partner_member_filter" model="ir.ui.view">
             <field name="name">res.partner.select</field>
             <field name="model">res.partner</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Membership Partners">
                     <field name="membership_start" invisible="1"/>
@@ -278,7 +273,6 @@
         <!-- View for product.product object inherited from product module -->
         <record model="ir.ui.view" id="view_product_form_inherit1">
             <field name="name">product.normal.form</field>
-            <field name="type">form</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">

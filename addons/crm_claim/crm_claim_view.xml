@@ -34,7 +34,6 @@
         <record id="crm_claim_stage_tree" model="ir.ui.view">
             <field name="name">crm.claim.stage.tree</field>
             <field name="model">crm.claim.stage</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Claim Stages">
                     <field name="sequence"/>
@@ -47,7 +46,6 @@
         <record id="crm_claim_stage_form" model="ir.ui.view">
             <field name="name">crm.claim.stage.form</field>
             <field name="model">crm.claim.stage</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Claim Stage">
                     <field name="name"/>
@@ -81,7 +79,6 @@
         <record model="ir.ui.view" id="crm_case_claims_tree_view">
             <field name="name">CRM - Claims Tree</field>
             <field name="model">crm.claim</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Claims" colors="blue:state=='pending' and not(date_deadline and (date_deadline &lt; current_date));gray:state in ('close', 'cancel');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="name"/>
@@ -102,9 +99,8 @@
         <record model="ir.ui.view" id="crm_case_claims_form_view">
             <field name="name">CRM - Claims Form</field>
             <field name="model">crm.claim</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Claim" version="7.0">
                 <header>
                     <span groups="base.group_user">
                         <button name="case_open" string="Open" type="object" class="oe_highlight"
@@ -196,7 +192,6 @@
         <record model="ir.ui.view" id="crm_case_claims_calendar_view">
             <field name="name">Claims Actions</field>
             <field name="model">crm.claim</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Claims" date_start="date_action_next" color="user_id">
@@ -211,7 +206,6 @@
         <record id="view_crm_case_claims_filter" model="ir.ui.view">
             <field name="name">CRM - Claims Search</field>
             <field name="model">crm.claim</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
                     <field name="name" string="Claims"/>
@@ -239,7 +233,6 @@
         <record id="view_claim_partner_info_form1" model="ir.ui.view">
             <field name="name">res.partner.claim.info.form</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="priority">20</field>
             <field name="arch" type="xml">

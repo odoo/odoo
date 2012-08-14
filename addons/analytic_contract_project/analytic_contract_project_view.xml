@@ -5,7 +5,6 @@
         <record id="project_account_analytic_account_form" model="ir.ui.view">
             <field name="name">project.project.form.inherit</field>
             <field name="model">project.project</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
@@ -102,7 +101,6 @@
         <record id="project_invoice_form" model="ir.ui.view">
             <field name="name">Inherit project form : Invoicing Data</field>
             <field name="model">project.project</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
@@ -117,7 +115,6 @@
         <record id="contract_inherited_form" model="ir.ui.view">
             <field name="name">Inherit contract form : adding UoM</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="priority">50</field>
             <field name="arch" type="xml">

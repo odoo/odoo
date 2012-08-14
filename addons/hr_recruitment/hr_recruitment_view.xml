@@ -75,7 +75,6 @@
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Applicants" fonts="bold:needaction_pending==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
                 <field name="needaction_pending" invisible="1"/>
@@ -104,7 +103,6 @@
     <record model="ir.ui.view" id="crm_case_form_view_job">
         <field name="name">Jobs - Recruitment Form</field>
         <field name="model">hr.applicant</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" version="7.0">
             <header>
@@ -191,7 +189,6 @@
     <record model="ir.ui.view" id="crm_case_graph_view_job">
         <field name="name">Jobs - Recruitment Graph</field>
         <field name="model">hr.applicant</field>
-        <field name="type">graph</field>
         <field name="arch" type="xml">
               <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
                 <field name="job_id"/>
@@ -204,7 +201,6 @@
     <record id="view_crm_case_jobs_filter" model="ir.ui.view">
         <field name="name">Jobs - Recruitment Search</field>
         <field name="model">hr.applicant</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
@@ -240,7 +236,6 @@
     <record model="ir.ui.view" id="hr_applicant_calendar_view">
         <field name="name">Hr Applicants Calendar</field>
         <field name="model">hr.applicant</field>
-        <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Applicants"
@@ -256,7 +251,6 @@
     <record model="ir.ui.view" id="hr_kanban_view_applicant">
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
-        <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
                 <field name="color"/>
@@ -326,7 +320,6 @@
     <record id="hr_job_survey" model="ir.ui.view">
         <field name="name">hr.job.form1</field>
         <field name="model">hr.job</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <field name="no_of_recruitment" version="7.0" position="after">
@@ -353,7 +346,6 @@
     <record model="ir.ui.view" id="hr_recruitment_stage_tree">
         <field name="name">hr.recruitment.stage.tree</field>
         <field name="model">hr.recruitment.stage</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Stages">
                 <field name="sequence" invisible="1"/>
@@ -368,7 +360,6 @@
     <record model="ir.ui.view" id="hr_recruitment_stage_form">
         <field name="name">hr.recruitment.stage.form</field>
         <field name="model">hr.recruitment.stage</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Stage" version="7.0">
                 <group string="Stage Definition">
@@ -410,7 +401,6 @@
     <record model="ir.ui.view" id="hr_recruitment_degree_tree">
         <field name="name">hr.recruitment.degree.tree</field>
         <field name="model">hr.recruitment.degree</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Degree">
                 <field name="sequence" invisible="1"/>
@@ -423,7 +413,6 @@
     <record model="ir.ui.view" id="hr_recruitment_degree_form">
         <field name="name">hr.recruitment.degree.form</field>
         <field name="model">hr.recruitment.degree</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Degree" version="7.0">
                 <group>
@@ -453,7 +442,6 @@
     <record model="ir.ui.view" id="hr_recruitment_source_tree">
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Sources of Applicants">
                 <field name="name"/>
@@ -463,7 +451,6 @@
     <record model="ir.ui.view" id="hr_recruitment_source_form">
         <field name="name">hr.recruitment.source.form</field>
         <field name="model">hr.recruitment.source</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Sources of Applicants">
                 <field name="name"/>

@@ -4,7 +4,6 @@
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.purchase.property.form.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="priority">36</field>
             <field name="arch" type="xml">
@@ -34,7 +33,6 @@
         <record model="ir.ui.view" id="purchase_partner_kanban_view">
             <field name="name">res.partner.kanban.purchaseorder.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">kanban</field>
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="arch" type="xml">
                 <field name="mobile" position="after">
@@ -67,7 +65,6 @@
         <record id="res_partner_view_purchase_buttons" model="ir.ui.view">
             <field name="name">res.partner.view.purchase.buttons</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
