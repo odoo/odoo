@@ -228,8 +228,8 @@ class mail_thread(osv.Model):
                 ret_dict[model_name] = model._description
         return ret_dict
 
-    def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
-                        type = 'email', subtype_id = False, email_date = None, parent_id = False,
+    def message_append(self, cr, uid, threads, subject,subtype_id = "other", body_text=None, body_html=None,
+                        type = 'email', email_date = None, parent_id = False,
                         content_subtype='plain', state=None,
                         partner_ids=None, email_from=False, email_to=False,
                         email_cc=None, email_bcc=None, reply_to=None,
@@ -335,7 +335,6 @@ class mail_thread(osv.Model):
                 'parent_id': parent_id,
                 'date': email_date or fields.datetime.now(),
                 'type': type,
-                'subtype_id' : subtype_id,
                 'content_subtype': content_subtype,
                 'state': state,
                 'message_id': message_id,
@@ -383,11 +382,11 @@ class mail_thread(osv.Model):
         """
         return self.message_append(cr, uid, ids,
                             subject = msg_dict.get('subject'),
+                            subtype_id = msg_dict.get('subtype_id','other'),
                             body_text = msg_dict.get('body_text'),
                             body_html= msg_dict.get('body_html'),
                             parent_id = msg_dict.get('parent_id', False),
                             type = msg_dict.get('type', 'email'),
-                            subtype_id = msg_dict.get('subtype_id', False),
                             content_subtype = msg_dict.get('content_subtype'),
                             state = msg_dict.get('state'),
                             partner_ids = msg_dict.get('partner_ids'),
@@ -867,7 +866,7 @@ class mail_thread(osv.Model):
                         now deprecated res.log.")
         self.message_append_note(cr, uid, [id], 'res.log', message, context=context)
 
-    def message_append_note(self, cr, uid, ids, subject=None, subtype_id=False, body=None, parent_id=False,
+    def message_append_note(self, cr, uid, ids, subject=None, subtype_id='other', body=None, parent_id=False,
                             type='notification', content_subtype='html', context=None):
         if content_subtype == 'html':
             body_html = body
@@ -875,8 +874,8 @@ class mail_thread(osv.Model):
         else:
             body_html = body
             body_text = body
-        return self.message_append(cr, uid, ids, subject, body_html, body_text,
-                                    type, subtype_id = subtype_id, parent_id = parent_id,
+        return self.message_append(cr, uid, ids, subject,subtype_id, body_html, body_text,
+                                    type, parent_id = parent_id,
                                     content_subtype=content_subtype, context=context)
 
     #------------------------------------------------------
