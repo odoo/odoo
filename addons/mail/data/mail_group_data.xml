@@ -2,16 +2,14 @@
 <openerp>
     <data noupdate="1">
 
-        <record model="mail.group" id="group_all_company">
-            <field name="name">All Company</field>
-            <field name="description">All company users can come here and discuss.</field>
-        </record>
         <record model="mail.group" id="group_sales">
             <field name="name">Sales</field>
+            <field name="description">Discussion about best sales practices and deals.</field>
         </record>
         <record model="mail.group" id="group_all_employees">
             <field name="name">All Employees</field>
             <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="description">Discussion about best sales practices and deals.</field>
         </record>
 
         <!-- notify all employees of module installation -->

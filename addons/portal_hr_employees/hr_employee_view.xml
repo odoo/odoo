@@ -6,7 +6,6 @@
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">portal_hr_employees.employee.form</field>
             <field name="model">hr.employee</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[last()]" position="after">
@@ -23,7 +22,6 @@
         <record id="wizard_contact_form_view_employees_list" model="ir.ui.view">
             <field name="name">portal_hr_employees.employees_list</field>
             <field name="model">portal_crm.crm_contact_us</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="portal_crm.wizard_contact_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_portal_crm_team']" position="inside">

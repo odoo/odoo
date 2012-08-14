@@ -14,7 +14,6 @@
             <field name="name">board.mrp.procurement.form</field>
             <field name="model">board.board</field>
             <field name="inherit_id" ref="stock.board_warehouse_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
               <xpath expr="/form/board/column/action[@string='Incoming Shipments']" position="before">
                 <action name="%(procurement_action_board)d" string="Procurements in Exception"/>

@@ -7,7 +7,6 @@
         <record model="ir.ui.view" id="res_partner_activation_form">
             <field name="name">openerp_custom.res.partner.activation.form</field>
             <field name="model">res.partner.activation</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Activation" version="7.0">
                     <group col="4">
@@ -20,7 +19,6 @@
         <record model="ir.ui.view" id="res_partner_activation_tree">
             <field name="name">openerp_custom.res.partner.activation.tree</field>
             <field name="model">res.partner.activation</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Activation">
                     <field name="name" />
@@ -43,7 +41,6 @@
     <record id="view_partner_grade_tree" model="ir.ui.view">
         <field name="name">res.partner.grade.tree</field>
         <field name="model">res.partner.grade</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Partner Grade">
                 <field name="sequence" invisible="1"/>
@@ -54,7 +51,6 @@
     <record id="view_partner_grade_form" model="ir.ui.view">
         <field name="name">res.partner.grade.form</field>
         <field name="model">res.partner.grade</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Partner Grade" version="7.0">
                 <group col="4">
@@ -78,7 +74,6 @@
     <record id="view_res_partner_filter_assign_tree" model="ir.ui.view">
         <field name="name">res.partner.geo.inherit.tree</field>
         <field name="model">res.partner</field>
-        <field name="type">tree</field>
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <field name="user_id" position="after">
@@ -91,7 +86,6 @@
     <record id="view_res_partner_filter_assign" model="ir.ui.view">
         <field name="name">res.partner.geo.inherit.search</field>
         <field name="model">res.partner</field>
-        <field name="type">search</field>
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
             <field name="category_id" position="after">
@@ -103,7 +97,6 @@
     <record id="view_crm_partner_geo_form" model="ir.ui.view">
         <field name="name">res.partner.geo.inherit</field>
         <field name="model">res.partner</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook[last()]" position="inside">
@@ -175,7 +168,6 @@
       <record id="view_res_partner_filter_group_activation" model="ir.ui.view">
             <field name="name">res.partner.geo.inherit.search</field>
             <field name="model">res.partner</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
             <field name="arch" type="xml">
                 <filter string="Salesman" position="after">

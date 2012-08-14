@@ -33,7 +33,7 @@
                 </xpath>
                 <field name="email" position="after">
                     <field name="alias_domain" invisible="1"/>
-                    <field name="alias_id" readonly="1" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                    <field name="alias_id" readonly="1" required="0" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
                 </field>
             </data>
             </field>
