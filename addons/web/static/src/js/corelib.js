@@ -692,7 +692,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         instance.web.WidgetMixin.init.call(this,parent);
         // FIXME: this should not be
         this.setElement(this._make_descriptive());
-        this.session = instance.connection;
+        this.session = instance.session;
     },
     /**
      * Renders the element. The default implementation renders the widget using QWeb,
@@ -841,7 +841,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
-        instance.connection.rpc(url, data). then(function() {
+        instance.session.rpc(url, data). then(function() {
             if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
         }, function() {
@@ -863,7 +863,7 @@ instance.web.Registry = instance.web.Class.extend({
      *
      * An object path is simply a dotted name from the instance root to the
      * object pointed to (e.g. ``"instance.web.Session"`` for an OpenERP
-     * connection object).
+     * session object).
      *
      * @constructs instance.web.Registry
      * @param {Object} mapping a mapping of keys to object-paths

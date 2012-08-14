@@ -514,7 +514,7 @@ $.async_when = function() {
 // special tweak for the web client
 var old_async_when = $.async_when;
 $.async_when = function() {
-    if (instance.connection.synch)
+    if (instance.session.synch)
         return $.when.apply(this, arguments);
     else
         return old_async_when.apply(this, arguments);
@@ -559,7 +559,7 @@ instance.web.unblockUI = function() {
 }
 
 /** Setup default session */
-instance.connection = new instance.web.Session();
+instance.session = new instance.web.Session();
 
 /** Configure default qweb */
 instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
@@ -578,8 +578,8 @@ instance.web._lt = function (s) {
     return {toString: function () { return instance.web._t(s); }}
 };
 instance.web.qweb = new QWeb2.Engine();
-instance.web.qweb.default_dict['__debug__'] = instance.connection.debug; // Which one ?
-instance.web.qweb.debug = instance.connection.debug;
+instance.web.qweb.default_dict['__debug__'] = instance.session.debug; // Which one ?
+instance.web.qweb.debug = instance.session.debug;
 instance.web.qweb.default_dict = {
     '_' : _,
     '_t' : instance.web._t
@@ -636,7 +636,7 @@ var _t = instance.web._t;
     _t('%d years ago');
 }
 
-instance.connection.on('module_loaded', this, function () {
+instance.session.on('module_loaded', this, function () {
     // provide timeago.js with our own translator method
     $.timeago.settings.translator = instance.web._t;
 });

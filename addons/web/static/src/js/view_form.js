@@ -1656,7 +1656,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
                         template = 'WidgetLabel.tooltip';
                     }
                     return QWeb.render(template, {
-                        debug: instance.connection.debug,
+                        debug: instance.session.debug,
                         widget: widget
                 })},
                 gravity: $.fn.tipsy.autoBounds(50, 'nw'),
@@ -1733,7 +1733,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$element.click(this.on_click);
-        if (this.node.attrs.help || instance.connection.debug) {
+        if (this.node.attrs.help || instance.session.debug) {
             this.do_attach_tooltip();
         }
         this.setupFocus(this.$element);
@@ -1930,7 +1930,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
             }, this));
         }
         this.$label = this.view.$element.find('label[for=' + this.id_for_label + ']');
-        if (instance.connection.debug) {
+        if (instance.session.debug) {
             this.do_attach_tooltip(this, this.$label[0] || this.$element);
             this.$label.off('dblclick').on('dblclick', function() {
                 console.log("Field '%s' of type '%s' in View: %o", self.name, (self.node.attrs.widget || self.field.type), self.view);

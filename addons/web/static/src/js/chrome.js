@@ -193,7 +193,7 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
     on_traceback: function(error) {
         var self = this;
         var buttons = {};
-        if (instance.connection.openerp_entreprise) {
+        if (instance.session.openerp_entreprise) {
             buttons[_t("Send OpenERP Enterprise Report")] = function() {
                 var $this = $(this);
                 var issuename = $('#issuename').val();
@@ -224,7 +224,7 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
             min_height: '600px',
             buttons: buttons
         }).open();
-        dialog.$element.html(QWeb.render('CrashManager.error', {session: instance.connection, error: error}));
+        dialog.$element.html(QWeb.render('CrashManager.error', {session: instance.session, error: error}));
     },
     on_javascript_exception: function(exception) {
         this.on_traceback({
@@ -269,7 +269,7 @@ instance.web.Loading = instance.web.Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
-            if (instance.connection.debug) {
+            if (instance.session.debug) {
                 this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
             } else {
                 this.$element.text(_t("Loading"));
@@ -882,8 +882,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             var func = new instance.web.Model("res.users").get_func("read");
             return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
                 var topbar_name = res.name;
-                if(instance.connection.debug)
-                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.connection.db);
+                if(instance.session.debug)
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$element.find('.oe_topbar_name').text(topbar_name);
@@ -900,7 +900,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     on_menu_settings: function() {
         var self = this;
         self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
-            result.result.res_id = instance.connection.uid;
+            result.result.res_id = instance.session.uid;
             self.getParent().action_manager.do_action(result.result);
         });
     },
@@ -927,7 +927,7 @@ instance.web.Client = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        return instance.connection.session_bind(this.origin).pipe(function() {
+        return instance.session.session_bind(this.origin).pipe(function() {
             var $e = $(QWeb.render(self._template, {}));
             self.replaceElement($e);
             self.bind_events();
@@ -970,7 +970,7 @@ instance.web.Client = instance.web.Widget.extend({
     show_common: function() {
         var self = this;
         this.crashmanager =  new instance.web.CrashManager();
-        instance.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
+        instance.session.on_rpc_error.add(this.crashmanager.on_rpc_error);
         self.notification = new instance.web.Notification(this);
         self.notification.appendTo(self.$element);
         self.loading = new instance.web.Loading(self);
@@ -1067,7 +1067,7 @@ instance.web.WebClient = instance.web.Client.extend({
     do_reload: function() {
         var self = this;
         return this.session.session_reload().pipe(function () {
-            instance.connection.load_modules(true).pipe(
+            instance.session.load_modules(true).pipe(
                 self.menu.proxy('do_reload')); });
 
     },
@@ -1174,7 +1174,7 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).pipe(function() {
-            return instance.connection.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
+            return instance.session.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
                 return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
                     var action = result.result;
                     action.flags = _.extend({

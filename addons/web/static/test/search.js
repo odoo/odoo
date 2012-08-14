@@ -164,8 +164,8 @@ $(document).ready(function () {
         instance.dummy = {};
         instance.dummy.DummyWidget = instance.web.search.Field.extend(
             dummy_widget_attributes || {});
-        if (!('/web/searchview/load' in instance.connection.responses)) {
-            instance.connection.responses['/web/searchview/load'] = function () {
+        if (!('/web/searchview/load' in instance.session.responses)) {
+            instance.session.responses['/web/searchview/load'] = function () {
                 return {result: {fields_view: {
                     type: 'search',
                     fields: {
@@ -186,10 +186,10 @@ $(document).ready(function () {
                 }}};
             };
         }
-        instance.connection.responses['/web/searchview/get_filters'] = function () {
+        instance.session.responses['/web/searchview/get_filters'] = function () {
             return {result: []};
         };
-        instance.connection.responses['/web/searchview/fields_get'] = function () {
+        instance.session.responses['/web/searchview/fields_get'] = function () {
             return {result: {fields: {
                 dummy: {type: 'char', string: 'Dummy'}
             }}};
@@ -321,7 +321,7 @@ $(document).ready(function () {
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},
             view);
-        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+        instance.session.responses['/web/dataset/call_kw'] = function (req) {
             equal(req.params.method, 'name_get',
                   "m2o should resolve default id");
             equal(req.params.model, f.attrs.relation,
@@ -357,7 +357,7 @@ $(document).ready(function () {
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},
             view);
-        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+        instance.session.responses['/web/dataset/call_kw'] = function (req) {
            return {result: []};
         };
         f.facet_for_defaults({dummy: id})
@@ -573,7 +573,7 @@ $(document).ready(function () {
             });
     });
     asyncTest("M2O", 15, function () {
-        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+        instance.session.responses['/web/dataset/call_kw'] = function (req) {
             equal(req.params.method, "name_search");
             equal(req.params.model, "dummy.model");
             deepEqual(req.params.args, []);
@@ -607,7 +607,7 @@ $(document).ready(function () {
             });
     });
     asyncTest("M2O no match", 5, function () {
-        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+        instance.session.responses['/web/dataset/call_kw'] = function (req) {
             equal(req.params.method, "name_search");
             equal(req.params.model, "dummy.model");
             deepEqual(req.params.args, []);
@@ -1070,7 +1070,7 @@ $(document).ready(function () {
     });
     asyncTest('checkboxing', 6, function () {
         var view = makeSearchView();
-        instance.connection.responses['/web/searchview/get_filters'] = function () {
+        instance.session.responses['/web/searchview/get_filters'] = function () {
             return {result: [{
                 name: "filter name",
                 user_id: 42
@@ -1099,7 +1099,7 @@ $(document).ready(function () {
     });
     asyncTest('removal', 1, function () {
         var view = makeSearchView();
-        instance.connection.responses['/web/searchview/get_filters'] = function () {
+        instance.session.responses['/web/searchview/get_filters'] = function () {
             return {result: [{
                 name: "filter name",
                 user_id: 42

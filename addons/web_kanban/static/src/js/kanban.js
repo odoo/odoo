@@ -32,7 +32,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.aggregates = {};
         this.group_operators = ['avg', 'max', 'min', 'sum', 'count'];
         this.qweb = new QWeb2.Engine();
-        this.qweb.debug = instance.connection.debug;
+        this.qweb.debug = instance.session.debug;
         this.qweb.default_dict = _.clone(QWeb.default_dict);
         this.has_been_loaded = $.Deferred();
         this.search_domain = this.search_context = this.search_group_by = null;
@@ -132,7 +132,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                         node.children = [{
                             tag: 'img',
                             attrs: {
-                                src: instance.connection.prefix + '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
+                                src: instance.session.prefix + '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
                                 width: '16',
                                 height: '16'
                             }
@@ -760,7 +760,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             url = "/web/static/src/img/placeholder.png";
         } else {
             id = escape(JSON.stringify(id));
-            url = instance.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+            url = instance.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
             if (cache !== undefined) {
                 // Set the cache duration in seconds.
                 url += '&cache=' + parseInt(cache, 10);

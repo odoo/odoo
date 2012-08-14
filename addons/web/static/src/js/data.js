@@ -58,7 +58,7 @@ instance.web.Query = instance.web.Class.extend({
     },
     _execute: function () {
         var self = this;
-        return instance.connection.rpc('/web/dataset/search_read', {
+        return instance.session.rpc('/web/dataset/search_read', {
             model: this._model.name,
             fields: this._fields || false,
             domain: this._model.domain(this._filter),
@@ -233,7 +233,7 @@ instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
             kwargs = args;
             args = [];
         }
-        return instance.connection.rpc('/web/dataset/call_kw', {
+        return instance.session.rpc('/web/dataset/call_kw', {
             model: this.name,
             method: method,
             args: args,
@@ -256,7 +256,7 @@ instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
      * @param {String} signal signal to trigger on the workflow
      */
     exec_workflow: function (id, signal) {
-        return instance.connection.rpc('/web/dataset/exec_workflow', {
+        return instance.session.rpc('/web/dataset/exec_workflow', {
             model: this.name,
             id: id,
             signal: signal
@@ -282,7 +282,7 @@ instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
      */
     context: function (context) {
         return new instance.web.CompoundContext(
-            instance.connection.user_context, this._context, context || {});
+            instance.session.user_context, this._context, context || {});
     },
     /**
      * Button action caller, needs to perform cleanup if an action is returned
@@ -292,7 +292,7 @@ instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
      * FIXME: remove when evaluator integrated
      */
     call_button: function (method, args) {
-        return instance.connection.rpc('/web/dataset/call_button', {
+        return instance.session.rpc('/web/dataset/call_button', {
             model: this.name,
             method: method,
             domain_id: null,

@@ -1613,7 +1613,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             }
             var filter = {
                 name: $name.val(),
-                user_id: private_filter ? instance.connection.uid : false,
+                user_id: private_filter ? instance.session.uid : false,
                 model_id: self.view.model,
                 context: results.context,
                 domain: results.domain
