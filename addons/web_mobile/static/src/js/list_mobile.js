@@ -4,7 +4,7 @@
 
 openerp.web_mobile.list_mobile = function (instance) {
 
-instance.web_mobile.ListView = instance.web.OldWidget.extend({
+instance.web_mobile.ListView = instance.web_mobile.MobileWidget.extend({
 
     template: 'ListView',
 

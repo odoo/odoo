@@ -563,7 +563,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         });
         return new_record;
     },
-    render: function() {
+    renderElement: function() {
         this.qweb_context = {
             record: this.record,
             widget: this,
@@ -574,9 +574,11 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
                 this.qweb_context[p] = _.bind(this[p], this);
             }
         }
-        return this._super({
+        var $el = instance.web.qweb.render(this.template, {
+            'widget': this,
             'content': this.view.qweb.render('kanban-box', this.qweb_context)
         });
+        this.replaceElement($el);
     },
     bind_events: function() {
         var self = this;
