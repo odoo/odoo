@@ -10,12 +10,9 @@ function openerp_pos_db(instance, module){
             options = options || {};
             this.name = options.name || this.name;
             this.limit = options.limit || this.limit;
-            this.products = this.name + '_products';
-            this.categories = this.name + '_categories';
 
-            //products cache put the data in memory to avoid roundtrips to the localstorage
-            this.products_cache = null;
-            this.categories_cache = null;
+            //cache the data in memory to avoid roundtrips to the localstorage
+            this.cache = {};
 
             this.category_by_id = {};
             this.root_category_id  = 0;
@@ -92,43 +89,28 @@ function openerp_pos_db(instance, module){
             }
             make_ancestors(this.root_category_id, []);
         },
-        /* this internal method returns from disc a dictionary associating ids to the products */
-        _load_products: function(){
-            if(this.products_cache){
-                return this.products_cache;
+        /* loads a record store from the database. returns default if nothing is found */
+        load: function(store,deft){
+            if(this.cache[store] !== undefined){
+                return this.cache[store];
             }
-            var products = localStorage[this.products];
-            if(products){
-                return JSON.parse(products) || {};
+            var data = localStorage[this.name + '_' + store];
+            if(data !== undefined){
+                data = JSON.parse(data);
+                this.cache[store] = data;
+                return data;
             }else{
-                return {};
+                return deft;
             }
         },
-        /* this internal method saves a dictionary associating ids to product to the disc */
-        _save_products: function(products){
-            localStorage[this.products] = JSON.stringify(products);
-            this.products_cache = products;
-        },
-        /* this internal method returns from disc a dictionary associating ids to the categories */
-        _load_categories: function(){
-            if(this.categories_cache){
-                return this.categories_cache;
-            }
-            var categories = localStorage[this.categories];
-            if(categories){
-                return JSON.parse(categories) || {};
-            }else{
-                return {};
-            }
-        },
-        /* this internal method saves to disc an array associating ids to the categories */
-        _save_categories: function(categories){
-            localStorage[this.categories] = JSON.stringify(categories);
-            this.categories_cache = categories;
+        /* saves a record store to the database */
+        save: function(store,data){
+            localStorage[this.name + '_' + store] = JSON.stringify(data);
+            this.cache[store] = data;
         },
         add_products: function(products){
-            var stored_products = this._load_products();
-            var stored_categories = this._load_categories();
+            var stored_products = this.load('products',{}); 
+            var stored_categories = this.load('categories',{});
 
             if(!products instanceof Array){
                 products = [products];
@@ -150,13 +132,13 @@ function openerp_pos_db(instance, module){
                 }
                 stored_products[product.id] = product;
             }
-            this._save_products(stored_products);
-            this._save_categories(stored_categories);
+            this.save('products',stored_products);
+            this.save('categories',stored_categories);
         },
         /* removes all the data from the database. TODO : being able to selectively remove data */
         clear: function(){
-            localStorage.removeItem(this.products);
-            localStorage.removeItem(this.categories);
+            localStorage.removeItem(this.name + '_products');
+            localStorage.removeItem(this.name + '_categories');
         },
         /* this internal methods returns the count of properties in an object. */
         _count_props : function(obj){
@@ -169,10 +151,10 @@ function openerp_pos_db(instance, module){
             return count;
         },
         get_product_by_id: function(id){
-            return this._load_products()[id];
+            return this.load('products',{})[id];
         },
         get_product_by_ean13: function(ean13){
-            var products = this._load_products();
+            var products = this.load('products',{});
             for(var i in products){
                 if( products[i] && products[i].ean13 === ean13){
                     return products[i];
@@ -181,8 +163,8 @@ function openerp_pos_db(instance, module){
             return undefined;
         },
         get_product_by_category: function(category_id){
-            var stored_categories = this._load_categories();
-            var stored_products   = this._load_products();
+            var stored_categories = this.load('categories',{});
+            var stored_products   = this.load('products',{});
             var product_ids  = stored_categories[category_id];
             var list = [];
             for(var i = 0, len = Math.min(product_ids.length,this.limit); i < len; i++){
@@ -198,8 +180,8 @@ function openerp_pos_db(instance, module){
          */
         search_product_in_category: function(category_id, fields, query){
             var self = this;
-            var stored_categories = this._load_categories();
-            var stored_products   = this._load_products();
+            var stored_categories = this.load('categories',{});
+            var stored_products   = this.load('products',{});
             var product_ids       = stored_categories[category_id];
             var list = [];
             var count = 0;
@@ -226,14 +208,71 @@ function openerp_pos_db(instance, module){
             }
             return list;
         },
-        // TODO move the order storage from the crappy DAO in pos_models.js
         add_order: function(order){
+            var last_id = this.load('last_order_id',0);
+            var orders  = this.load('orders',[]);
+            orders.push({id: last_id + 1, data: order});
+            this.save('last_order_id',last_id+1);
+            this.save('orders',orders);
         },
         remove_order: function(order_id){
+            var orders = this.load('orders',[]);
+            orders = _.filter(orders, function(order){
+                return order.id !== order_id;
+            });
+            this.save('orders',orders);
         },
         get_orders: function(){
+            return this.load('orders',[]);
         },
     });
+    /*
+    module.LocalStorageDAO = instance.web.Class.extend({
+        add_operation: function(operation) {
+            var self = this;
+            return $.async_when().pipe(function() {
+                var tmp = self._get('oe_pos_operations', []);
+                var last_id = self._get('oe_pos_operations_sequence', 1);
+                tmp.push({'id': last_id, 'data': operation});
+                self._set('oe_pos_operations', tmp);
+                self._set('oe_pos_operations_sequence', last_id + 1);
+            });
+        },
+        remove_operation: function(id) {
+            var self = this;
+            return $.async_when().pipe(function() {
+                var tmp = self._get('oe_pos_operations', []);
+                tmp = _.filter(tmp, function(el) {
+                    return el.id !== id;
+                });
+                self._set('oe_pos_operations', tmp);
+            });
+        },
+        get_operations: function() {
+            var self = this;
+            return $.async_when().pipe(function() {
+                return self._get('oe_pos_operations', []);
+            });
+        },
+        _get: function(key, default_) {
+            var txt = localStorage['oe_pos_dao_'+key];
+            if (! txt)
+                return default_;
+            return JSON.parse(txt);
+        },
+        _set: function(key, value) {
+            localStorage['oe_pos_dao_'+key] = JSON.stringify(value);
+        },
+        reset_stored_data: function(){
+            for(key in localStorage){
+                if(key.indexOf('oe_pos_dao_') === 0){
+                    delete localStorage[key];
+                }
+            }
+            0497 53 82 88
+        },
+    });
+    */
 
     window.PosLS = module.PosLS;
 }
