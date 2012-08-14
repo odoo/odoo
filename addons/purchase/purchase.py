@@ -143,7 +143,6 @@ class purchase_order(osv.osv):
 
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
-        ('wait', 'Waiting'),
         ('sent', 'RFQ Sent'),
         ('confirmed', 'Waiting Approval'),
         ('approved', 'Purchase Order'),
