@@ -2173,7 +2173,7 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
     }
 });
 
-instance.web.DateTimeWidget = instance.web.OldWidget.extend({
+instance.web.DateTimeWidget = instance.web.Widget.extend({
     template: "web.datepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
@@ -4097,7 +4097,7 @@ instance.web.form.Many2ManyQuickCreate = instance.web.Widget.extend({
 /**
  * Class with everything which is common between FormOpenPopup and SelectCreatePopup.
  */
-instance.web.form.AbstractFormPopup = instance.web.OldWidget.extend({
+instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
     template: "AbstractFormPopup.render",
     /**
      *  options:

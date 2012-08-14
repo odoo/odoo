@@ -343,7 +343,7 @@ function get_class(name) {
     return new instance.web.Registry({'tmp' : name}).get_object("tmp");
 }
 
-instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
+instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     template: 'KanbanView.group_header',
     init: function (parent, records, group, dataset) {
         var self = this;
@@ -517,7 +517,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
     }
 });
 
-instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
+instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     template: 'KanbanView.record',
     init: function (parent, record) {
         this._super(parent);
@@ -563,7 +563,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         });
         return new_record;
     },
-    render: function() {
+    renderElement: function() {
         this.qweb_context = {
             record: this.record,
             widget: this,
@@ -574,9 +574,11 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
                 this.qweb_context[p] = _.bind(this[p], this);
             }
         }
-        return this._super({
+        var $el = instance.web.qweb.render(this.template, {
+            'widget': this,
             'content': this.view.qweb.render('kanban-box', this.qweb_context)
         });
+        this.replaceElement($el);
     },
     bind_events: function() {
         var self = this;

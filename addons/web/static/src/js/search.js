@@ -1737,11 +1737,11 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
     }
 });
 
-instance.web.search.ExtendedSearchProposition = instance.web.OldWidget.extend(/** @lends instance.web.search.ExtendedSearchProposition# */{
+instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @lends instance.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
     /**
      * @constructs instance.web.search.ExtendedSearchProposition
-     * @extends instance.web.OldWidget
+     * @extends instance.web.Widget
      *
      * @param parent
      * @param fields

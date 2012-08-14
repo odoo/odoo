@@ -11,32 +11,6 @@ if (!console.debug) {
 
 openerp.web.coresetup = function(instance) {
 
-/**
- * @deprecated use :class:`instance.web.Widget`
- */
-instance.web.OldWidget = instance.web.Widget.extend({
-    init: function(parent, element_id) {
-        this._super(parent);
-        this.element_id = element_id;
-        this.element_id = this.element_id || _.uniqueId('widget-');
-
-        var tmp = document.getElementById(this.element_id);
-        this.setElement(tmp || this._make_descriptive());
-    },
-    renderElement: function() {
-        var rendered = this.render();
-        if (rendered) {
-            this.replaceElement($(rendered));
-        }
-        return this;
-    },
-    render: function (additional) {
-        if (this.template)
-            return instance.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
-        return null;
-    }
-});
-
 /** Session openerp specific RPC class */
 instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Session# */{
     init: function() {
