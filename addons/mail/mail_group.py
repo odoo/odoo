@@ -95,9 +95,10 @@ class mail_group(osv.osv):
         'responsible_id': fields.many2one('res.users', string='Responsible',
             ondelete='set null', required=True, select=1,
             help="Responsible of the group that has all rights on the record."),
-        'public': fields.selection([('public','Public'),('private','Private'),('employee','Employees Only')], 'Privacy', required=True,
+        'public': fields.selection([('public','Public'),('private','Private'),('groups','Selected Group Only')], 'Privacy', required=True,
             help='This group is visible by non members. \
             Invisible groups can add members through the invite button.'),
+        'group_public_id': fields.many2one('res.groups', string='Authorized Group'),
         'group_ids': fields.many2many('res.groups', rel='mail_group_res_group_rel',
             id1='mail_group_id', id2='groups_id', string='Auto Subscription',
             help="Members of those groups will automatically added as followers. "\
@@ -136,12 +137,17 @@ class mail_group(osv.osv):
                                          "create new topics."),
     }
 
+    def _get_default_employee_group(self, cr, uid, context=None):
+        ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
+        return ref and ref[1] or False
+
     def _get_menu_parent(self, cr, uid, context=None):
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'mail_group_root')
         return ref and ref[1] or False
 
     _defaults = {
-        'public': 'employee',
+        'public': 'private',
+        'group_public_id': _get_default_employee_group,
         'responsible_id': (lambda s, cr, uid, ctx: uid),
         'image': _get_default_image,
         'parent_id': _get_menu_parent,
@@ -177,6 +183,8 @@ class mail_group(osv.osv):
             params = {
                 'search_view_id': search_ref and search_ref[1] or False,
                 'domain': [('model','=','mail.group'),('res_id','=',mail_group_id)],
+                'res_model': 'mail.group',
+                'res_id': mail_group_id,
                 'thread_level': 2
             }
             cobj = self.pool.get('ir.actions.client')

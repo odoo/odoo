@@ -65,13 +65,15 @@
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </div>
                         <div class="oe_clear"/>
-                        <group>
-                            <group class="oe_edit_only">
-                                <field name="responsible_id" class="oe_inline"/>
-                            </group>
+                        <group col="1">
                             <group class="oe_edit_only">
                                 <field name="public" class="oe_inline"/>
-                                <field name="group_ids" widget="many2many_tags"/>
+                                <field name="group_public_id" class="oe_inline"
+                                    attrs="{'invisible': [('public','&lt;&gt;','groups')]}"/>
+                                <field name="group_ids" widget="many2many_tags" class="oe_inline"/>
+                            </group>
+                            <group class="oe_edit_only">
+                                <field name="responsible_id" class="oe_inline"/>
                             </group>
                         </group>
                     </sheet>
@@ -113,7 +115,7 @@
 
         <!-- group record !-->
         <record id="action_view_groups" model="ir.actions.act_window">
-            <field name="name">All Groups</field>
+            <field name="name">Groups</field>
             <field name="res_model">mail.group</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -121,7 +123,7 @@
         </record>
 
         <!-- left-side menu: Groups !-->
-        <menuitem id="mail_group_root" parent="mail_feeds_main" sequence="12" name="Groups"/>
-        <menuitem id="mail_allgroups" parent="mail_group_root" sequence="12" action="action_view_groups"/>
+        <menuitem id="mail_group_root" parent="mail_feeds_main" sequence="12" name="My Groups"/>
+        <menuitem id="mail_allgroups" parent="mail_feeds" sequence="12" action="action_view_groups"/>
     </data>
 </openerp>
