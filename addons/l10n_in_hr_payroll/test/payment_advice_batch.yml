@@ -50,3 +50,9 @@
 -
     !python {model: hr.payslip.run}: |
      self.create_advice(cr, uid, [ref('hr_payslip_run_forAdvice')])
+-
+  I check for Advice which made from Payslip run
+-
+  !python {model: hr.payroll.advice}: |
+    advice_ids = self.search(cr, uid, [('batch_id','=',ref('hr_payslip_run_forAdvice'))])
+    assert advice_ids,"Advice is not created from payslip Batch."
