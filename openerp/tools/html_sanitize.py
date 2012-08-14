@@ -6,6 +6,8 @@ def html_sanitize(x):
     if not x:
         return x
     root = pq("<div />")
+    if type(x) == str:
+        x = unicode(x, "utf8", "replace")
     root.html(x)
     result = handle_element(root[0])
     new = pq(result)

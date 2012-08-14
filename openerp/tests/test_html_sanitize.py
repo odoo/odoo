@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import unittest
 from openerp.tools.html_sanitize import html_sanitize
 
@@ -28,6 +29,9 @@ class TestSanitizer(unittest.TestCase):
     
     def test_test_case(self):
         html_sanitize(test_case)
+        
+    def test_crm(self):
+        html_sanitize("Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci")
 
 if __name__ == '__main__':
     unittest.main()
