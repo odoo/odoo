@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <record id="action_mail_group_feeds" model="ir.actions.client">
+            <field name="name">Discussion Group</field>
+            <field name="tag">mail.wall</field>
+            <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
+        </record>
 
         <!-- Group Kanban View  !-->
         <record model="ir.ui.view" id="view_group_kanban">
@@ -54,7 +59,7 @@
                         <field name="image_small" widget='image' class="oe_avatar oe_left"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
-                                <label for="name"/> 
+                                <label for="name" string="Group Name"/> 
                             </div> 
                             <h1><field name="name"/></h1>
                             <field name="description" placeholder="Topics discussed in this group..."/>
@@ -63,11 +68,6 @@
                         <group>
                             <group class="oe_edit_only">
                                 <field name="responsible_id" class="oe_inline"/>
-                                <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                                <div name="alias_box" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
-                                    <field name="alias_id" invisible="1"/>
-                                </div>
                             </group>
                             <group class="oe_edit_only">
                                 <field name="public" class="oe_inline"/>
@@ -91,7 +91,7 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Groups">
-                    <field name="name"/>
+                    <field name="name" string="Group Name"/>
                     <field name="responsible_id"/>
                 </tree>
             </field>
