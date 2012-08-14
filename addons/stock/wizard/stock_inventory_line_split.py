@@ -53,7 +53,7 @@ class stock_inventory_line_split(osv.osv_memory):
         if context is None:
             context = {}
         assert context.get('active_model') == 'stock.inventory.line',\
-             'Incorrect use of the inventory line split wizard'
+             'Incorrect use of the inventory line split wizard.'
         prodlot_obj = self.pool.get('stock.production.lot')
         ir_sequence_obj = self.pool.get('ir.sequence')
         line_obj = self.pool.get('stock.inventory.line')

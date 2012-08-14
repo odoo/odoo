@@ -53,7 +53,7 @@ Dashboard for warehouse that includes:
     "init_xml" : [],
     "demo_xml" : [
         "stock_demo.xml",
-        "stock_demo.yml",
+#        "stock_demo.yml",
     ],
     "update_xml" : [
         "security/stock_security.xml",
@@ -85,9 +85,9 @@ Dashboard for warehouse that includes:
         "res_config_view.xml",
     ],
     'test': [
-        'test/opening_stock.yml',
-        'test/shipment.yml',
-        'test/stock_report.yml',
+#        'test/opening_stock.yml',
+#        'test/shipment.yml',
+#        'test/stock_report.yml',
     ],
     'installable': True,
     'application': True,

@@ -280,7 +280,7 @@ class crm_lead(base_stage, osv.osv):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
-    
+
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value':{}}
@@ -537,7 +537,7 @@ class crm_lead(base_stage, osv.osv):
         lead_ids = context and context.get('lead_ids', []) or []
 
         if len(ids) <= 1:
-            raise osv.except_osv(_('Warning !'),_('Please select more than one opportunity from the list view.'))
+            raise osv.except_osv(_('Warning!'),_('Please select more than one opportunity from the list view.'))
 
         ctx_opportunities = self.browse(cr, uid, lead_ids, context=context)
         opportunities = self.browse(cr, uid, ids, context=context)
@@ -795,9 +795,9 @@ class crm_lead(base_stage, osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context):
             if (not lead.section_id.allow_unlink) and (lead.state != 'draft'):
-                raise osv.except_osv(_('Error'),
-                    _("You cannot delete lead '%s'; it must be in state 'Draft' to be deleted. " \
-                      "You should better cancel it, instead of deleting it.") % lead.name)
+                raise osv.except_osv(_('Error!'),
+                    _("You cannot delete lead '%s' because it is not in 'Draft' state. " \
+                      "You can still cancel it, instead of deleting it.") % lead.name)
         return super(crm_lead, self).unlink(cr, uid, ids, context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -871,12 +871,12 @@ class crm_lead(base_stage, osv.osv):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
         return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
-        
+
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
             lead = self.browse(cr, uid, [lead], context=context)[0]
         return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
-    
+
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
@@ -903,7 +903,7 @@ class crm_lead(base_stage, osv.osv):
             message = _("%s <b>partner</b> is now set to <em>%s</em>." % (self.case_get_note_msg_prefix(cr, uid, lead, context=context), lead.partner_id.name))
             lead.message_append_note(body=message)
         return True
-    
+
     def convert_opportunity_send_note(self, cr, uid, lead, context=None):
         message = _("Lead has been <b>converted to an opportunity</b>.")
         lead.message_append_note(body=message)

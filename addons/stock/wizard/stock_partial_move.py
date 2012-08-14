@@ -60,7 +60,7 @@ class stock_partial_move(osv.osv_memory):
 
     def do_partial(self, cr, uid, ids, context=None):
         # no call to super!
-        assert len(ids) == 1, 'Partial move processing may only be done one form at a time'
+        assert len(ids) == 1, 'Partial move processing may only be done one form at a time.'
         partial = self.browse(cr, uid, ids[0], context=context)
         partial_data = {
             'delivery_date' : partial.date
