@@ -39,3 +39,6 @@ class mail_message_subtype(osv.osv):
     _defaults = {
         'default': True,
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', 'The name of the message subtype must be unique !')
+    ]
