@@ -1,7 +1,7 @@
 openerp.edi = function(openerp) {
 openerp.edi = {}
 
-openerp.edi.EdiView = openerp.web.OldWidget.extend({
+openerp.edi.EdiView = openerp.web.Widget.extend({
     init: function(parent, db, token) {
         this._super();
         this.db = db;
@@ -113,7 +113,7 @@ openerp.edi.edi_view = function (db, token) {
     });
 }
 
-openerp.edi.EdiImport = openerp.web.OldWidget.extend({
+openerp.edi.EdiImport = openerp.web.Widget.extend({
     init: function(parent,url) {
         this._super();
         this.url = url;

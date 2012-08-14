@@ -267,9 +267,6 @@ class project_issue(base_stage, osv.osv):
             }),
     }
 
-    def on_change_project(self, cr, uid, ids, project_id, context=None):
-        return {}
-
     _defaults = {
         'active': 1,
         'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
@@ -496,7 +493,7 @@ class project_issue(base_stage, osv.osv):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()
 
-        return super(project_issue, self).message_update(cr, uid, ids, update_vals=update_vals, context=context)
+        return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     # -------------------------------------------------------
     # OpenChatter methods and notifications

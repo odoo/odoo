@@ -4,7 +4,6 @@
     <record id="view_account_entries_report_tree" model="ir.ui.view">
         <field name="name">account.entries.report.tree</field>
         <field name="model">account.entries.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:move_state == 'draft';black:move_state == 'posted'" string="Entries Analysis">
                 <field name="date" invisible="1"/>
@@ -38,7 +37,6 @@
     <record id="view_account_entries_report_graph" model="ir.ui.view">
          <field name="name">account.entries.report.graph</field>
          <field name="model">account.entries.report</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Entries Analysis" type="bar">
                 <field name="partner_id"/>
@@ -51,7 +49,6 @@
     <record id="view_company_analysis_tree" model="ir.ui.view">
          <field name="name">account.company.analysis.tree</field>
          <field name="model">account.entries.report</field>
-         <field name="type">tree</field>
          <field name="arch" type="xml">
              <tree string="Company Analysis" >
                 <field name="user_type"/>
@@ -64,7 +61,6 @@
     <record id="view_account_entries_report_search" model="ir.ui.view">
         <field name="name">account.entries.report.search</field>
         <field name="model">account.entries.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Entries Analysis">
                 <field name="date"/>

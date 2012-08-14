@@ -5,7 +5,6 @@
         <record id="hr_timesheet_account_form" model="ir.ui.view">
             <field name="name">hr.timesheet.account.form</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet by Accounts" version="7.0">
                     <group col="4">
@@ -20,7 +19,6 @@
         <record id="hr_timesheet_account_filter" model="ir.ui.view">
             <field name="name">hr.timesheet.account.filter</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Account">
                     <field name="name" groups="analytic.group_analytic_accounting"/>
@@ -32,7 +30,6 @@
         <record id="hr_timesheet_account_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.account.tree</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Timesheet by Accounts">
                     <field name="sheet_id"/>
@@ -46,7 +43,6 @@
         <record id="hr_timesheet_sheet_form" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.form</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet" version="7.0">
                 <header>
@@ -153,7 +149,6 @@
         <record id="view_hr_timesheet_sheet_filter" model="ir.ui.view">
             <field name="name">hr_timesheet_sheet.sheet.filter</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
                     <field name="date_from"/>
@@ -201,7 +196,6 @@
         <record id="hr_timesheet_sheet_company" model="ir.ui.view">
             <field name="name">res.company.sheet</field>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='account_grp']" position="after">
@@ -220,7 +214,6 @@
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="date" position="after">
@@ -232,7 +225,6 @@
         <record id="hr_timesheet_line_search" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.search</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
             <field name="arch" type="xml">
                 <field name="date" position="before">
@@ -248,7 +240,6 @@
         <record model="ir.ui.view" id="view_hr_attendance_filter">
             <field name="name">view_hr_attendance_filter</field>
             <field name="model">hr.attendance</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="hr_attendance.view_hr_attendance_filter" />
             <field name="arch" type="xml">
                 <field name="employee_id" position="after">
@@ -260,7 +251,6 @@
         <record id="view_attendance_form" model="ir.ui.view">
             <field name="name">hr.attendance.form</field>
             <field name="model">hr.attendance</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr_attendance.view_attendance_form"/>
             <field name="arch" type="xml">
                 <field name="action_desc" position="after">
@@ -271,7 +261,6 @@
         <record id="view_attendance_tree" model="ir.ui.view">
             <field name="name">hr.attendance.tree</field>
             <field name="model">hr.attendance</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
             <field name="arch" type="xml">
                 <field name="action" position="after">
@@ -282,7 +271,6 @@
         <record id="view_attendance_tree_who" model="ir.ui.view">
             <field name="name">hr.attendance.tree</field>
             <field name="model">hr.attendance</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
             <field name="arch" type="xml">
                 <field name="action" position="after">
@@ -323,7 +311,6 @@
         <record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.tree</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
-            <field name="type">tree</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'done'" string="Timesheets">
@@ -342,7 +329,6 @@
         <record id="hr_timesheet_day_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.day.tree</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:total_difference&lt;0.1;red:total_difference&gt;=0.1" string="Period">
                     <field name="name"/>

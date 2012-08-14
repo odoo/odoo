@@ -4,7 +4,6 @@
         <record id="view_thunderbird_installer" model="ir.ui.view">
             <field name="name">plugin_thunderbird.installer.view</field>
             <field name="model">plugin_thunderbird.installer</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
                 <data>
@@ -52,7 +51,6 @@
         <record id="view_config_thunderbird_installer" model="ir.ui.view">
             <field name="name">Sales Application</field>
             <field name="model">sale.config.settings</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <div name="module_plugin_thunderbird" version="7.0" position="replace">
