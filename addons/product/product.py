@@ -484,7 +484,7 @@ class product_product(osv.osv):
             main_supplier = self._get_main_product_supplier(cr, uid, product, context=context)
             result[product.id] = {
                 'seller_info_id': main_supplier and main_supplier.id or False,
-                'seller_delay': main_supplier and main_supplier.delay or 1,
+                'seller_delay': main_supplier.delay if main_supplier else 1,
                 'seller_qty': main_supplier and main_supplier.qty or 0.0,
                 'seller_id': main_supplier and main_supplier.name.id or False
             }
