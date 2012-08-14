@@ -19,7 +19,7 @@
                 <form string="Add Portal Access" version="7.0">
                     <group>
                         <field name="partner_id" invisible="1"/>
-                        <field name="portal_id" widget="selection"/>
+                        <field name="portal_id" widget="selection" on_change="onchange_portal_id(partner_id, portal_id)"/>
                     </group>
                     <label for="user_ids"/>
                     <field name="user_ids"/>
