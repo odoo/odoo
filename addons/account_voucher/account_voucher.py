@@ -46,11 +46,7 @@ class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
         res = {}
         for voucher in self.browse(cr, uid, ids, context=context):
-            paid = False
-            for line in voucher.move_ids:
-                if (line.account_id.type, 'in', ('receivable', 'payable')) and line.reconcile_id:
-                    paid = True
-            res[voucher.id] = paid
+            res[voucher.id] = any([((line.account_id.type, 'in', ('receivable', 'payable')) and line.reconcile_id) for line in voucher.move_ids])
         return res
 
     def _get_type(self, cr, uid, context=None):
@@ -186,15 +182,16 @@ class account_voucher(osv.osv):
         res['arch'] = etree.tostring(doc)
         return res
 
-    def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount):
+    def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount, type):
         debit = credit = 0.0
+        sign = type == 'payment' and -1 or 1
         for l in line_dr_ids:
             debit += l['amount']
         for l in line_cr_ids:
             credit += l['amount']
-        return abs(amount - abs(credit - debit))
+        return amount - sign * (credit - debit)
 
-    def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, context=None):
+    def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, context=None):
         context = context or {}
         if not line_dr_ids and not line_cr_ids:
             return {'value':{}}
@@ -215,7 +212,7 @@ class account_voucher(osv.osv):
                 if voucher_line.get('currency_id', company_currency) != company_currency:
                     is_multi_currency = True
                     break
-        return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount), 'is_multi_currency': is_multi_currency}}
+        return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, type), 'is_multi_currency': is_multi_currency}}
 
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
         if not ids: return {}
@@ -223,12 +220,13 @@ class account_voucher(osv.osv):
         res = {}
         debit = credit = 0.0
         for voucher in self.browse(cr, uid, ids, context=context):
+            sign = voucher.type == 'payment' and -1 or 1
             for l in voucher.line_dr_ids:
                 debit += l.amount
             for l in voucher.line_cr_ids:
                 credit += l.amount
             currency = voucher.currency_id or voucher.company_id.currency_id
-            res[voucher.id] =  currency_obj.round(cr, uid, currency, abs(voucher.amount - abs(credit - debit)))
+            res[voucher.id] =  currency_obj.round(cr, uid, currency, voucher.amount - sign * (credit - debit))
         return res
 
     def _paid_amount_in_company_currency(self, cr, uid, ids, name, args, context=None):
@@ -716,7 +714,7 @@ class account_voucher(osv.osv):
                 default['value']['pre_line'] = 1
             elif ttype == 'receipt' and len(default['value']['line_dr_ids']) > 0:
                 default['value']['pre_line'] = 1
-            default['value']['writeoff_amount'] = self._compute_writeoff_amount(cr, uid, default['value']['line_dr_ids'], default['value']['line_cr_ids'], price)
+            default['value']['writeoff_amount'] = self._compute_writeoff_amount(cr, uid, default['value']['line_dr_ids'], default['value']['line_cr_ids'], price, ttype)
         return default
 
     def onchange_payment_rate_currency(self, cr, uid, ids, currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context=None):

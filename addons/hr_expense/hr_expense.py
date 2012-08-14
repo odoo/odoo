@@ -100,12 +100,12 @@ class hr_expense_expense(osv.osv):
         'currency_id': _get_currency,
     }
 
-    def onchange_currency_id(self, cr, uid, ids, currency_id, context=None):
+
+    def onchange_currency_id(self, cr, uid, ids, currency_id=False, company_id=False, context=None):
         res =  {'value': {'journal_id': False}}
-        company_id = self.browse(cr, uid, ids[0], context=context).company_id.id
-        journal_id = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase'), ('currency','=',currency_id), ('company_id', '=', company_id)])
-        if journal_id:
-            res['value']['journal_id'] = journal_id
+        journal = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase'), ('currency','=',currency_id), ('company_id', '=', company_id)], context=context)
+        if journal:
+            res['value']['journal_id'] = journal[0]
         return res
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
@@ -154,6 +154,12 @@ class hr_expense_expense(osv.osv):
             ctx = context.copy()
             ctx.update({'date': exp.date})
             journal = False
+            if exp.journal_id:
+                journal = exp.journal_id
+            else:
+                journal_id = voucher_obj._get_journal(cr, uid, context={'type': 'purchase', 'company_id': company_id})
+                if journal_id:
+                    journal = account_journal.browse(cr, uid, journal_id, context=context)
             for line in exp.line_ids:
                 if line.product_id:
                     acc = line.product_id.product_tmpl_id.property_account_expense
@@ -164,8 +170,8 @@ class hr_expense_expense(osv.osv):
                     if not acc:
                         raise osv.except_osv(_('Error!'), _('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
                 total_amount = 0.0
-                if exp.company_id.currency_id != exp.currency_id:
-                    total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, exp.company_id.currency_id.id, line.total_amount, context=ctx)
+                if journal.currency and exp.currency_id.id != journal.currency.id:
+                    total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, journal.currency.id, line.total_amount, context=ctx)
                 else:
                     total_amount = line.total_amount
                 if exp.journal_id:
@@ -206,7 +212,8 @@ class hr_expense_expense(osv.osv):
                 'currency_id': exp.currency_id.id,
                 'journal_id': journal.id,
                 'line_ids': lines,
-                'amount': total
+                'amount': total,
+                'journal_id': journal.id,
             }
             if journal and not journal.analytic_journal_id:
                 analytic_journal_ids = analytic_journal_obj.search(cr, uid, [('type','=','purchase')], context=context)
