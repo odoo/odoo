@@ -1021,7 +1021,6 @@ openerp.mail = function(session) {
             if (this.compose_message_widget) {
                 this.compose_message_widget.destroy();
             }
-	    debugger;
             this.compose_message_widget = new mail.ComposeMessage(this, {
                 'extended_mode': false, 'uid': this.session.uid, 'res_model': this.params.res_model,
                 'res_id': this.params.res_id, 'mode': mode || 'comment', 'msg_id': msg_id });
