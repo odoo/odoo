@@ -7,7 +7,6 @@
         <record id="view_resource_resource_search" model="ir.ui.view">
             <field name="name">resource.resource.search</field>
             <field name="model">resource.resource</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Resource">
                    <field name="name" string="Resource"/>
@@ -28,7 +27,6 @@
            <record id="view_resource_calendar_search" model="ir.ui.view">
             <field name="name">resource.calendar.search</field>
             <field name="model">resource.calendar</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Working Time">
                    <field name="name" string="Working Time"/>
@@ -41,7 +39,6 @@
         <record id="view_resource_calendar_leaves_search" model="ir.ui.view">
             <field name="name">resource.calendar.leaves.search</field>
             <field name="model">resource.calendar.leaves</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Working Period Leaves">
                     <field name="name" string="Reason"/>
@@ -60,7 +57,6 @@
         <record id="resource_calendar_form" model="ir.ui.view">
             <field name="name">resource.calendar.form</field>
             <field name="model">resource.calendar</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Working Time" version="7.0">
                     <sheet>
@@ -78,7 +74,6 @@
         <record id="view_resource_calendar_tree" model="ir.ui.view">
             <field name="name">resource.calendar.tree</field>
             <field name="model">resource.calendar</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Working Time">
                     <field name="name"/>
@@ -101,7 +96,6 @@
         <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
             <field name="name">resource.calendar.attendance.tree</field>
             <field name="model">resource.calendar.attendance</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Working Time" editable="top">
                     <field name="name"/>
@@ -116,7 +110,6 @@
         <record id="view_resource_calendar_attendance_form" model="ir.ui.view">
             <field name="name">resource.calendar.attendance.form</field>
             <field name="model">resource.calendar.attendance</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Working Time" version="7.0">
                     <group>
@@ -135,7 +128,6 @@
         <record id="view_resource_calendar" model="ir.ui.view">
             <field name="name">resource.calendar.leaves.calendar</field>
             <field name="model">resource.calendar.leaves</field>
-            <field name="type">calendar</field>
             <field name="arch" type="xml">
                 <calendar color="resource_id" date_start="date_from" date_stop="date_to" string="Resource">
                     <field name="name"/>
@@ -164,7 +156,6 @@
         <record id="resource_resource_form" model="ir.ui.view">
             <field name="name">resource.resource.form</field>
             <field name="model">resource.resource</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Resource" version="7.0">
                    <group>
@@ -187,7 +178,6 @@
         <record id="resource_resource_tree" model="ir.ui.view">
             <field name="name">resource.resource.tree</field>
             <field name="model">resource.resource</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Resources">
                     <field name="name" />
@@ -212,7 +202,6 @@
         <record id="resource_calendar_leave_form" model="ir.ui.view">
             <field name="name">resource.calendar.leaves.form</field>
             <field name="model">resource.calendar.leaves</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Leave Detail" version="7.0">
                     <group>
@@ -241,7 +230,6 @@
         <record id="resource_calendar_leave_tree" model="ir.ui.view">
             <field name="name">resource.calendar.leaves.tree</field>
             <field name="model">resource.calendar.leaves</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Leave Detail">
                     <field name="name" string="Reason"/>

@@ -11,7 +11,6 @@
         <record model="ir.ui.view" id="view_group_kanban">
             <field name="name">mail.group.kanban</field>
             <field name="model">mail.group</field>
-            <field name="type">kanban</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
@@ -51,7 +50,6 @@
         <record  model="ir.ui.view" id="view_group_form">
             <field name="name">mail.group.form</field>
             <field name="model">mail.group</field>
-            <field name="type">form</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Group Form" version="7.0">
@@ -90,7 +88,6 @@
         <record  model="ir.ui.view" id="view_group_tree">
             <field name="name">mail.group.tree</field>
             <field name="model">mail.group</field>
-            <field name="type">tree</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Groups">
@@ -104,7 +101,6 @@
         <record  model="ir.ui.view" id="view_group_search">
             <field name="name">mail.group.search</field>
             <field name="model">mail.group</field>
-            <field name="type">search</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <search string="Search Groups">

@@ -9,7 +9,6 @@
     <record id="view_partner_bank_form_inherit" model="ir.ui.view">
         <field name="name">Partner Bank Accounts - Journal</field>
         <field name="model">res.partner.bank</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <group name="bank" position="after">
@@ -26,7 +25,6 @@
     <record id="view_partner_bank_tree_add_currency" model="ir.ui.view">
         <field name="name">Partner Bank Accounts - Add currency on tree</field>
         <field name="model">res.partner.bank</field>
-        <field name="type">tree</field>
         <field name="inherit_id" ref="base.view_partner_bank_tree"/>
         <field name="arch" type="xml">
             <field name="acc_number" position="after">
