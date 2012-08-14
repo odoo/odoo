@@ -309,5 +309,18 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="product_form_view_procurement_button">
+            <field name="name">product.product.procurement</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='image_medium']" position="after">
+                    <div class='oe_right oe_button_box'>
+                        <button string="Procurement Request" name="%(act_make_procurement)d" type="action"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>
