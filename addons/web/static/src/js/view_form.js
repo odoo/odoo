@@ -1050,9 +1050,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     open_translate_dialog: function(field) {
         return this._super(field);
     },
-    _is_action_enabled: function(action) {
-        return (_.has(this.fields_view.arch.attrs, action))?JSON.parse(this.fields_view.arch.attrs[action]):true;
-    }
 });
 
 /**

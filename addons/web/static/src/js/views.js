@@ -1357,6 +1357,14 @@ instance.web.View = instance.web.Widget.extend({
      */
     reload: function () {
         return $.when();
+    },
+    _is_action_enabled: function(action) {
+    /**
+     * Takes action (e.g. create/edit/delete) and return the tag attribute from
+     * the view (e.g. <from string="" create="false" edit="false" delete="false">)
+     * will help to check access ui of the view.
+     */
+        return (_.has(this.fields_view.arch.attrs, action))?JSON.parse(this.fields_view.arch.attrs[action]):true;
     }
 });
 
