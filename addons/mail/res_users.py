@@ -28,7 +28,7 @@ from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-class res_users(osv.osv):
+class res_users(osv.Model):
     """ Update of res.users class
         - add a preference about sending emails about notifications
         - make a new user follow itself
@@ -37,7 +37,7 @@ class res_users(osv.osv):
     _name = 'res.users'
     _inherit = ['res.users']
     _inherits = {'mail.alias': 'alias_id'}
-    
+
     _columns = {
         'notification_email_pref': fields.selection([
             ('all', 'All Feeds'),
@@ -69,13 +69,13 @@ class res_users(osv.osv):
 
     def _auto_init(self, cr, context=None):
         """Installation hook to create aliases for all users and avoid constraint errors."""
-        
+
         # disable the unique alias_id not null constraint, to avoid spurious warning during 
         # super.auto_init. We'll reinstall it afterwards.
         self._columns['alias_id'].required = False
 
         super(res_users,self)._auto_init(cr, context=context)
-        
+
         registry = RegistryManager.get(cr.dbname)
         mail_alias = registry.get('mail.alias')
         res_users_model = registry.get('res.users')
@@ -105,13 +105,22 @@ class res_users(osv.osv):
         alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
         data['alias_id'] = alias_id
         data.pop('alias_name', None) # prevent errors during copy()
+        # create user that follows its related partner
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
-
         user = self.browse(cr, uid, user_id, context=context)
-        # make user follow itself
-        self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
+        self.pool.get('res.partner').message_subscribe(cr, uid, [user.partner_id.id], [user_id], context=context)
+        # alias
+        mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
         # create a welcome message
+        self.create_welcome_message_and_email(cr, uid, user, context=context)
+        return user_id
+
+    def create_welcome_message_and_email(self, cr, uid, user, context=None):
+        """ Method to :
+            - create a welcome message on the partner wall
+            - send an email to the user with the instance URL / login (#TODO)
+            :param user: res_users browse_record
+        """
         company_name = user.company_id.name if user.company_id else _('the company')
         message = '''%s has joined %s! Welcome in OpenERP !
 
@@ -120,9 +129,9 @@ Your homepage is a summary of messages you received and key information about do
 The top menu bar contains all applications you installed. You can use this <i>Settings</i> menu to install more applications, activate others features or give access to new users.
 
 To setup your preferences (name, email signature, avatar), click on the top right corner.''' % (user.name, company_name)
-        self.message_append_note(cr, uid, [user_id], subject='Welcome to OpenERP', body=message, type='comment', content_subtype='html', context=context)
-        return user_id
-    
+        return self.pool.get('res.partner').message_append_note(cr, uid, [user.partner_id.id],
+            subject='Welcome to OpenERP', body=message, type='comment', content_subtype='html', context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         # User alias is sync'ed with login
         if vals.get('login'): vals['alias_name'] = vals['login']
@@ -135,7 +144,11 @@ To setup your preferences (name, email signature, avatar), click on the top righ
         res = super(res_users, self).unlink(cr, uid, ids, context=context)
         alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
-    
+
+    # --------------------------------------------------
+    # Wrappers on partner methods for Chatter
+    # --------------------------------------------------
+
     def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
                         type='email', email_date=None, parent_id=False,
                         content_subtype='plain', state=None,
@@ -143,14 +156,21 @@ To setup your preferences (name, email signature, avatar), click on the top righ
                         email_cc=None, email_bcc=None, reply_to=None,
                         headers=None, message_id=False, references=None,
                         attachments=None, original=None, context=None):
-        """ Wrapper on message_append to redirect them to the related partner. """
         for user in self.browse(cr, uid, threads, context=context):
             user.partner_id.message_append(subject, body_text, body_html, type, email_date, parent_id,
                 content_subtype, state, partner_ids, email_from, email_to, email_cc, email_bcc, reply_to,
                 headers, message_id, references, attachments, original)
 
+    def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, domain=None, context=None):
+        for user in self.browse(cr, uid, ids, context=context):
+            user.partner_id.message_read(ids, fetch_ancestors, ancestor_ids, limit, offset, domain)
 
-class res_users_mail_group(osv.osv):
+    def message_read_subscribers(self, cr, uid, ids, fields=['id', 'name', 'image_small'], context=None):
+        for user in self.browse(cr, uid, ids, context=context):
+            user.partner_id.message_read_subscribers(ids, fields)
+
+class res_users_mail_group(osv.Model):
     """ Update of res.groups class
         - if adding/removing users from a group, check mail.groups linked to
           this user group, and subscribe / unsubscribe them from the discussion
@@ -171,7 +191,7 @@ class res_users_mail_group(osv.osv):
         return write_res
         
 
-class res_groups_mail_group(osv.osv):
+class res_groups_mail_group(osv.Model):
     """ Update of res.groups class
         - if adding/removing users from a group, check mail.groups linked to
           this user group, and subscribe / unsubscribe them from the discussion
