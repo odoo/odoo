@@ -3598,7 +3598,8 @@ class BaseModel(object):
                             record[f] = []
 
         # Warn about deprecated fields now that fields_pre and fields_post are computed
-        for f in fields_pre + fields_post:
+        # Explicitly use list() because we may receive tuples
+        for f in list(fields_pre) + list(fields_post):
             field_column = self._all_columns.get(f) and self._all_columns.get(f).column
             if field_column and field_column.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, f, field_column.deprecated)
