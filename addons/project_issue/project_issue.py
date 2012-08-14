@@ -267,9 +267,6 @@ class project_issue(base_stage, osv.osv):
             }),
     }
 
-    def on_change_project(self, cr, uid, ids, project_id, context=None):
-        return {}
-
     _defaults = {
         'active': 1,
         'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
