@@ -108,21 +108,11 @@
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" version="7.0">
             <header>
-                <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" type="action"
+                <button name="case_close_with_emp" string="Hire" type="object"
                         states="open,pending" class="oe_highlight"/>
-                <button name="case_open" string="Open" type="object"
-                        states="draft,pending" class="oe_highlight"/>
-                <button name="case_pending" string="Pending" type="object" invisible="1"
-                        states="open"/>
-                <button name="case_reset" string="Reset to New" type="object"
-                        states="done,cancel"/>
                 <button name="case_cancel" string="Refuse" type="object"
                         states="draft,open,pending" class="oe_highlight"/>
-                <button name="stage_previous" string="Previous" type="object"
-                        states="open"/>
-                <button name="stage_next" string="Next" type="object"
-                        states="open"/>
-                <field name="stage_id" widget="statusbar"/>
+                <field name="stage_id" widget="statusbar" clickable="True"/>
             </header>
             <sheet>
                 <div class="oe_right oe_button_box">
@@ -320,7 +310,7 @@
                                     <a type="object" name="set_priority" args="['1']">
                                         <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16" title="Excellent"/>
                                     </a>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
 
                                 </div>
                             </div>
