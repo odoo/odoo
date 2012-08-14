@@ -6,7 +6,6 @@
 
         <record id="view_expenses_line_tree" model="ir.ui.view">
             <field name="name">hr.expense.line.tree</field>
-            <field name="type">tree</field>
             <field name="model">hr.expense.line</field>
             <field name="arch" type="xml">
                 <tree string="Expense Lines">
@@ -25,7 +24,6 @@
         <record id="view_expenses_tree" model="ir.ui.view">
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Expenses" colors="blue:state=='draft'">
                     <field name="employee_id"/>
@@ -43,7 +41,6 @@
         <record id="view_editable_expenses_tree" model="ir.ui.view">
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'"  string="Expenses" editable="top">
                     <field name="employee_id"/>
@@ -60,7 +57,6 @@
 
         <record id="view_expenses_form" model="ir.ui.view">
             <field name="name">hr.expense.form</field>
-            <field name="type">form</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
                 <form string="Expenses Sheet" version="7.0">
@@ -133,7 +129,6 @@
         <record id="view_hr_expense_filter" model="ir.ui.view">
             <field name="name">hr.expense.expense.filter</field>
             <field name="model">hr.expense.expense</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Expense">
                     <field name="name" string="Expenses"/>
@@ -178,7 +173,6 @@
             <field name="name">product.product.expense.form</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <field name="purchase_ok" position="after">
             <field name="hr_expense_ok" on_change="on_change_hr_expense_ok(hr_expense_ok)"/>

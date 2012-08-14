@@ -5,7 +5,6 @@
         <record model="ir.ui.view" id="view_message_tree_short">
             <field name="name">mail.message.tree.short</field>
             <field name="model">mail.message</field>
-            <field name="type">tree</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <tree string="Messages">
@@ -22,7 +21,6 @@
         <record model="ir.ui.view" id="view_message_form_short">
             <field name="name">mail.message.form.short</field>
             <field name="model">mail.message</field>
-            <field name="type">form</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Message" version="7.0">
@@ -59,7 +57,6 @@
         <record model="ir.ui.view" id="view_message_search_short">
             <field name="name">mail.message.search.short</field>
             <field name="model">mail.message</field>
-            <field name="type">search</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <search string="Messages Search">
@@ -74,7 +71,6 @@
         <record model="ir.ui.view" id="view_message_search_wall">
             <field name="name">mail.message.search.wall</field>
             <field name="model">mail.message</field>
-            <field name="type">search</field>
             <field name="priority">25</field>
             <field name="arch" type="xml">
                 <search string="Messages Search">
@@ -110,7 +106,6 @@
         <record model="ir.ui.view" id="view_email_message_form">
             <field name="name">mail.message.form</field>
             <field name="model">mail.message</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Email message" version="7.0">
                     <sheet>
@@ -178,7 +173,6 @@
         <record model="ir.ui.view" id="view_email_message_tree">
             <field name="name">mail.message.tree</field>
             <field name="model">mail.message</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Emails" colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
                     <field name="date"/>
@@ -202,7 +196,6 @@
         <record model="ir.ui.view" id="view_email_message_search">
             <field name="name">mail.message.search</field>
             <field name="model">mail.message</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
                     <field name="email_from" filter_domain="['|' '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>

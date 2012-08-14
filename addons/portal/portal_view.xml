@@ -6,7 +6,6 @@
         <record id="portal_list_view" model="ir.ui.view">
             <field name="name">Portal List</field>
             <field name="model">res.portal</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Portals">
                     <field name="name" string="Portal Name"/>
@@ -18,7 +17,6 @@
         <record id="portal_form_view" model="ir.ui.view">
             <field name="name">Portal Form</field>
             <field name="model">res.portal</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_groups_form"/>
             <field name="arch" type="xml">
                 <page string="Users" position="before">
@@ -32,7 +30,7 @@
                                 <field name="override_menu"/>
                                 <field name="parent_menu_id"
                                     context="{'ir.ui.menu.full_list': True}"/>
-                                <label colspan="1"/>
+                                <label for="partent_menu_id" colspan="1"/>
                                 <button name="do_create_menu" type="object"
                                     string="Create Parent Menu"/>
                             </group>

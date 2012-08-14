@@ -54,6 +54,7 @@ class res_users(osv.osv):
     
     _defaults = {
         'notification_email_pref': 'to_me',
+        'alias_domain': False, # always hide alias during creation
     }
 
     def __init__(self, pool, cr):
@@ -67,32 +68,45 @@ class res_users(osv.osv):
         self.SELF_WRITEABLE_FIELDS.append('notification_email_pref')
         return init_res
 
-    def init(self, cr):
-        # Installation hook to create aliases for all users, right after _auto_init
+    def _auto_init(self, cr, context=None):
+        """Installation hook to create aliases for all users and avoid constraint errors."""
+        
+        # disable the unique alias_id not null constraint, to avoid spurious warning during 
+        # super.auto_init. We'll reinstall it afterwards.
+        self._columns['alias_id'].required = False
+
+        super(res_users,self)._auto_init(cr, context=context)
+        
         registry = RegistryManager.get(cr.dbname)
         mail_alias = registry.get('mail.alias')
-        res_users = registry.get('res.users')
-        users_no_alias = res_users.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
+        res_users_model = registry.get('res.users')
+        users_no_alias = res_users_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
         # Use read() not browse(), to avoid prefetching uninitialized inherited fields
-        for user_data in res_users.read(cr, SUPERUSER_ID, users_no_alias, ['login']):
+        for user_data in res_users_model.read(cr, SUPERUSER_ID, users_no_alias, ['login']):
             alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, {'alias_name': user_data['login'],
                                                                          'alias_force_id': user_data['id']},
                                                       model_name=self._name)
-            res_users.write(cr, SUPERUSER_ID, user_data['id'], {'alias_id': alias_id})
+            res_users_model.write(cr, SUPERUSER_ID, user_data['id'], {'alias_id': alias_id})
             _logger.info('Mail alias created for user %s (uid %s)', user_data['login'], user_data['id'])
 
         # Finally attempt to reinstate the missing constraint
         try:
             cr.execute('ALTER TABLE res_users ALTER COLUMN alias_id SET NOT NULL')
         except Exception:
-            pass
-            
-    
+            _logger.warning("Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
+                            "If you want to have it, you should update the records and execute manually:\n"\
+                            "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL",
+                            self._table, 'alias_id', self._table, 'alias_id')
+
+        self._columns['alias_id'].required = True
+
+
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
         mail_alias = self.pool.get('mail.alias')
         alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
         data['alias_id'] = alias_id
+        data.pop('alias_name', None) # prevent errors during copy()
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
 

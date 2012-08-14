@@ -5,7 +5,6 @@
     <record id="mrp_production_form_inherit_view" model="ir.ui.view">
         <field name="name">mrp.production.form.inherit</field>
         <field name="model">mrp.production</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='workcenter_lines']/form//field[@name='name']" position="before">
@@ -25,7 +24,6 @@
     <record id="mrp_production_form_inherit_view2" model="ir.ui.view">
         <field name="name">mrp.production.form.inherit2</field>
         <field name="model">mrp.production</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
            <xpath expr="//field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
@@ -42,7 +40,6 @@
     <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
         <field name="name">mrp.production.workcenter.line.tree</field>
         <field name="model">mrp.production.workcenter.line</field>
-        <field name="type">tree</field>
         <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
             <tree string="Work Orders" colors="gray:state in ('done','cancel');black:state in ('draft','startworking') and date_planned&gt;=current_date;red:date_planned&lt;current_date and state in ('draft', 'confirmed', 'ready')">
@@ -63,10 +60,9 @@
     <record model="ir.ui.view" id="mrp_production_workcenter_form_view_inherit">
         <field name="name">mrp.production.workcenter.line.form</field>
         <field name="model">mrp.production.workcenter.line</field>
-        <field name="type">form</field>
         <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
-            <form version="7.0">
+            <form string="Production Workcenter" version="7.0">
             <header>
                 <button name="button_start_working" string="Start" states="draft" class="oe_highlight"/>
                 <button name="button_resume" string="Resume" states="pause" class="oe_highlight"/>
@@ -120,7 +116,6 @@
     <record id="view_mrp_production_workcenter_form_view_filter" model="ir.ui.view">
         <field name="name">mrp.production.workcenter.line.select</field>
         <field name="model">mrp.production.workcenter.line</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Work Orders">
                 <field name="name" string="Work Orders"/>
@@ -147,7 +142,6 @@
     <record id="workcenter_line_calendar" model="ir.ui.view">
         <field name="name">mrp.production.workcenter.line.calendar</field>
         <field name="model">mrp.production.workcenter.line</field>
-        <field name="type">calendar</field>
         <field name="arch" type="xml">
             <calendar color="product" date_stop="date_finished" date_start="date_start" string="Operations">
                 <field name="workcenter_id"/>
@@ -160,7 +154,6 @@
     <record id="workcenter_line_gantt" model="ir.ui.view">
         <field name="name">mrp.production.workcenter.line.gantt</field>
         <field name="model">mrp.production.workcenter.line</field>
-        <field name="type">gantt</field>
         <field name="arch" type="xml">
             <gantt date_delay="hour" date_start="date_planned" string="Operations" default_group_by="production_id">
             </gantt>
@@ -215,7 +208,6 @@
     <record id="workcenter_line_resource_gantt" model="ir.ui.view">
         <field name="name">mrp.production.workcenter.line.resource.gantt</field>
         <field name="model">mrp.production.workcenter.line</field>
-        <field name="type">gantt</field>
         <field name="arch" type="xml">
             <gantt date_delay="hour" date_start="date_planned" default_group_by="workcenter_id">
             </gantt>
@@ -282,7 +274,6 @@
     <record model="ir.ui.view" id="mrp_production_code_tree_view">
         <field name="name">mrp.production.code.tree</field>
         <field name="model">mrp_operations.operation.code</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Production Operation Code">
                 <field name="name"/>
@@ -294,7 +285,6 @@
     <record model="ir.ui.view" id="mrp_production_code_form_view">
         <field name="name">mrp.production.code.form</field>
         <field name="model">mrp_operations.operation.code</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Production Operation Code" version="7.0">
                 <group col="4">
@@ -320,7 +310,6 @@
     <record model="ir.ui.view" id="mrp_production_operation_tree_view">
         <field name="name">mrp.production.operation.tree</field>
         <field name="model">mrp_operations.operation</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Production Operation" editable="top">
                 <field name="production_id"/>
@@ -336,7 +325,6 @@
      <record id="graph_in_hrs_workcenter" model="ir.ui.view">
             <field name="name">graph.in.hrs.workcenter</field>
             <field name="model">mrp.production.workcenter.line</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Hours by Work Center" type="bar">
                      <field name="date_start_date"/>
@@ -358,7 +346,6 @@
         <field name="name">mrp.production.allow_reorder.form</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="model">mrp.production</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <field name="date_finished" position="after">
                 <field name="allow_reorder"/>
@@ -369,7 +356,6 @@
     <record model="ir.ui.view" id="operation_calendar_view">
             <field name="name">mrp.perations.calendar</field>
             <field name="model">mrp_operations.operation</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Calendar View" date_start="order_date" color="workcenter_id">

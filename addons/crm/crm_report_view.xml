@@ -7,7 +7,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_categ_tree">
         <field name="name">CRM Report - Teams and Type(Tree)</field>
         <field name="model">report.crm.case.section.categ2</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Cases by Team and Type">
                 <field name="name"/>
@@ -29,7 +28,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_categ_form">
         <field name="name">CRM Report - Teams and Type(Form)</field>
         <field name="model">report.crm.case.section.categ2</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Cases by Team and Category2">
                 <field name="name"/>
@@ -51,7 +49,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_categ_graph">
         <field name="name">CRM Report - Teams and Type(Graph)</field>
         <field name="model">report.crm.case.section.categ2</field>
-        <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Cases by Teams and Type" type="bar" orientation="horizontal">
                 <field name="category2_id"/>
@@ -66,7 +63,6 @@
     <record id="view_crm_case_section_categ_filter" model="ir.ui.view">
             <field name="name">CRM Report - Teams and Type(Select)</field>
             <field name="model">report.crm.case.section.categ2</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Team and Type">
                     <field name="name"/>
@@ -94,7 +90,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_stage_tree">
         <field name="name">CRM Report - Teams and Stage(Tree)</field>
         <field name="model">report.crm.case.section.stage</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Cases by Team and Stage">
                 <field name="name"/>
@@ -115,7 +110,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_stage_form">
         <field name="name">CRM Report - Teams and Stage(Form)</field>
         <field name="model">report.crm.case.section.stage</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Cases by Team and Stage">
                 <field name="name"/>
@@ -136,7 +130,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_stage_graph">
         <field name="name">CRM Report - Teams and Stage(Graph)</field>
         <field name="model">report.crm.case.section.stage</field>
-        <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Cases by Team and Stage" type="bar" orientation="horizontal">
                 <field name="stage_id"/>
@@ -151,7 +144,6 @@
     <record id="view_crm_case_section_stage_filter" model="ir.ui.view">
             <field name="name">CRM Report - Teams and Stage(Select)</field>
             <field name="model">report.crm.case.section.stage</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Team and Stage">
                     <field name="name"/>
@@ -178,7 +170,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_categ_stage_tree">
         <field name="name">CRM Report - Team, Category and Stage(Tree)</field>
         <field name="model">report.crm.case.section.categ.stage</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Cases by Team, Category and Stage">
                 <field name="name"/>
@@ -199,7 +190,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_categ_stage_form">
         <field name="name">CRM Report - Team, Category and Stage(Form)</field>
         <field name="model">report.crm.case.section.categ.stage</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Cases by Section, Category and Stage">
                 <field name="name"/>
@@ -220,7 +210,6 @@
     <record id="view_crm_case_section_categ_stage_filter" model="ir.ui.view">
             <field name="name">CRM Report - Section, Category and Stage(Select)</field>
             <field name="model">report.crm.case.section.categ.stage</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Section, Category and Stage">
                     <field name="name"/>
@@ -237,7 +226,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_categ_stage_graph">
         <field name="name">CRM Report - Section, Category and Stage(Select)</field>
         <field name="model">report.crm.case.section.categ.stage</field>
-        <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Cases by Section, Category and Stage" type="bar" orientation="horizontal">
                 <field name="categ_id"/>
@@ -262,7 +250,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_categ_categ2_tree">
         <field name="name">CRM Report - Section, Category and Type(Tree)</field>
         <field name="model">report.crm.case.section.categ.categ2</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Cases by Section, Category and Type">
                 <field name="name"/>
@@ -284,7 +271,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_categ_categ2_form">
         <field name="name">CRM Report - Section, Category and Type(Form)</field>
         <field name="model">report.crm.case.section.categ.categ2</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Cases by Section, Category and Type">
                 <field name="name"/>
@@ -306,7 +292,6 @@
     <record id="view_crm_case_section_categ_categ2_filter" model="ir.ui.view">
             <field name="name">CRM Report - Section, Category and Type(Select)</field>
             <field name="model">report.crm.case.section.categ.categ2</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cases by User">
                     <field name="name"/>
@@ -323,7 +308,6 @@
     <record model="ir.ui.view" id="view_crm_case_section_categ_categ2_graph">
         <field name="name">CRM Report - Section, Category and Type(Select)</field>
         <field name="model">report.crm.case.section.categ.categ2</field>
-        <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Cases by Section, Category and Type" type="bar" orientation="horizontal">
                 <field name="category2_id"/>

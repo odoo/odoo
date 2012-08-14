@@ -6,7 +6,6 @@
             <field name="name">product.normal.form</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Manufacturer">
@@ -31,7 +30,6 @@
         <record model="ir.ui.view" id="product_manufacturer_attribute_tree_view">
             <field name="name">product.manufacturer.attribute.tree</field>
             <field name="model">product.manufacturer.attribute</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Product Attributes" editable="bottom">
                     <field name="name"/>
@@ -42,7 +40,6 @@
         <record model="ir.ui.view" id="product_manufacturer_attribute_form_view">
             <field name="name">product.manufacturer.attribute.form</field>
             <field name="model">product.manufacturer.attribute</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Template Name" version="7.0">
                     <group>

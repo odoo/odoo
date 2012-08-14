@@ -5,7 +5,6 @@
         <record id="view_task_history_tree" model="ir.ui.view">
             <field name="name">project.task.history.cumulative.tree</field>
             <field name="model">project.task.history.cumulative</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Tasks's Cumulative Flow">
                     <field name="date"/>
@@ -22,7 +21,6 @@
         <record id="view_task_history_graph" model="ir.ui.view">
             <field name="name">project.task.history.cumulative.graph</field>
             <field name="model">project.task.history.cumulative</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Project Tasks" type="bar">
                     <field name="date"/>
@@ -37,7 +35,6 @@
         <!--<record id="view_task_history_burndown_graph" model="ir.ui.view">-->
         <!--    <field name="name">project.task.history.burndown.graph</field>-->
         <!--    <field name="model">project.task.history.burndown</field>-->
-        <!--    <field name="type">graph</field>-->
         <!--    <field name="arch" type="xml">-->
         <!--        <graph string="Burndown Chart of Tasks" type="bar">-->
         <!--            <field name="date"/>-->
@@ -51,7 +48,6 @@
         <record id="view_task_history_search" model="ir.ui.view">
             <field name="name">project.task.history.cumulative.search</field>
             <field name="model">project.task.history.cumulative</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Task's Analysis">
                     <field name="date"/>
