@@ -5,7 +5,6 @@
         <record id="view_groups_search" model="ir.ui.view">
             <field name="name">res.groups.search</field>
             <field name="model">res.groups</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Groups">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
@@ -15,7 +14,6 @@
         <record id="view_groups_form" model="ir.ui.view">
             <field name="name">res.groups.form</field>
             <field name="model">res.groups</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Groups" version="7.0">
                   <sheet>
@@ -86,7 +84,6 @@
         <record id="view_users_form" model="ir.ui.view">
             <field name="name">res.users.form</field>
             <field name="model">res.users</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
                     <field name="id" invisible="1"/>
@@ -142,7 +139,6 @@
         <record id="view_users_tree" model="ir.ui.view">
             <field name="name">res.users.tree</field>
             <field name="model">res.users</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Users">
                     <field name="name"/>
@@ -155,7 +151,6 @@
         <record id="view_users_search" model="ir.ui.view">
             <field name="name">res.users.search</field>
             <field name="model">res.users</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Users">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('login','ilike',self)]" string="User"/>
@@ -198,7 +193,6 @@
         <record id="view_users_form_simple_modif" model="ir.ui.view">
             <field name="name">res.users.preferences.form</field>
             <field name="model">res.users</field>
-            <field name="type">form</field>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
