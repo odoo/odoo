@@ -155,7 +155,8 @@ class mail_thread(osv.Model):
         
         subtype_obj=self.pool.get('mail.message.subtype')
         subtype_id=subtype_obj.search(cr, uid, [('name', '=', vals.get('subtype')), ('model_ids', '=', self._name)])
-        vals['subtype_id'] = subtype_id[0]
+        if subtype_id:
+            vals['subtype_id'] = subtype_id[0]
         user_subscribe=self.message_is_subscriber(cr, uid, [thread_id], vals['user_id'], context)
         # automatically subscribe the writer of the message
         if vals['user_id']:
