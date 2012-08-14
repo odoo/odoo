@@ -206,7 +206,7 @@ class res_users(osv.osv):
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
 
-    def _get_default_image(self, cr, uid, is_company, context=None):
+    def _get_default_image(self, cr, uid, context=None):
         """ Override of res.partner: multicolor avatars ! """
         image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
@@ -255,7 +255,7 @@ class res_users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
+        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, context),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
