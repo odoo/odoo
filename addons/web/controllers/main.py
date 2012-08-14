@@ -164,8 +164,7 @@ def module_installed_bypass_session(dbname):
     try:
         import openerp.modules.registry
         registry = openerp.modules.registry.RegistryManager.get(dbname)
-        cr = registry.db.cursor()
-        try:
+        with registry.cursor() as cr:
             m = registry.get('ir.module.module')
             # TODO The following code should move to ir.module.module.list_installed_modules()
             domain = [('state','=','installed'), ('name','in', loadable)]
@@ -177,8 +176,6 @@ def module_installed_bypass_session(dbname):
                     deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
                     dependencies = [i['name'] for i in deps_read]
                     modules[module['name']] = dependencies
-        finally:
-            cr.close()
     except Exception,e:
         pass
     sorted_modules = module_topological_sort(modules)
@@ -326,6 +323,7 @@ def make_conditional(req, response, last_modified=None, etag=None):
 def login_and_redirect(req, db, login, key, redirect_url='/'):
     req.session.authenticate(db, login, key, {})
     redirect = werkzeug.utils.redirect(redirect_url, 303)
+    redirect.autocorrect_location_header = False
     cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
     redirect.set_cookie('instance0|session_id', cookie_val)
     return redirect
@@ -1359,19 +1357,19 @@ class Binary(openerpweb.Controller):
         headers = [('Content-Type', 'image/png')]
         etag = req.httprequest.headers.get('If-None-Match')
         hashed_session = hashlib.md5(req.session_id).hexdigest()
+        id = None if not id else simplejson.loads(id)
+        if type(id) is list:
+            id = id[0] # m2o
         if etag:
             if not id and hashed_session == etag:
                 return werkzeug.wrappers.Response(status=304)
             else:
-                date = Model.read([int(id)], [last_update], context)[0].get(last_update)
+                date = Model.read([id], [last_update], context)[0].get(last_update)
                 if hashlib.md5(date).hexdigest() == etag:
                     return werkzeug.wrappers.Response(status=304)
 
         retag = hashed_session
         try:
-            id = None if not id else simplejson.loads(id)
-            if type(id) is list:
-                id = id[0] # m2o
             if not id:
                 res = Model.default_get([field], context).get(field)
                 image_data = base64.b64decode(res)

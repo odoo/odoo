@@ -16,4 +16,6 @@ class Mobile(openerpweb.Controller):
 
     @openerpweb.httprequest
     def index(self, req):
-        return werkzeug.utils.redirect('/web_mobile/static/src/web_mobile.html', 301)
+        r = werkzeug.utils.redirect('/web_mobile/static/src/web_mobile.html', 301)
+        r.autocorrect_location_header = False
+        return r

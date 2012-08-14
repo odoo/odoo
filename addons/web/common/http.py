@@ -382,7 +382,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                 # note that domains_store and contexts_store are append-only (we
                 # only ever add items to them), so we can just update one with the
                 # other to get the right result, if we want to merge the
-                # ``context`` dict we'll need something smarter    
+                # ``context`` dict we'll need something smarter
                 in_store = session_store.get(sid)
                 for k, v in request.session.iteritems():
                     stored = in_store.get(k)
@@ -426,13 +426,18 @@ class DisableCacheMiddleware(object):
             referer = environ.get('HTTP_REFERER', '')
             parsed = urlparse.urlparse(referer)
             debug = parsed.query.count('debug') >= 1
-            nh = dict(headers)
-            if 'Last-Modified' in nh: del nh['Last-Modified']
+
+            new_headers = []
+            unwanted_keys = ['Last-Modified']
             if debug:
-                if 'Expires' in nh: del nh['Expires']
-                if 'Etag' in nh: del nh['Etag']
-                nh['Cache-Control'] = 'no-cache'
-            start_response(status, nh.items())
+                new_headers = [('Cache-Control', 'no-cache')]
+                unwanted_keys += ['Expires', 'Etag', 'Cache-Control']
+
+            for k, v in headers:
+                if k not in unwanted_keys:
+                    new_headers.append((k, v))
+
+            start_response(status, new_headers)
         return self.app(environ, start_wrapped)
 
 class Root(object):
