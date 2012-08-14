@@ -19,7 +19,7 @@ instance.web.ViewManagerAction.include({
         }
     }
 })
-instance.web_view_editor.ViewEditor =   instance.web.OldWidget.extend({
+instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
         this.element_id = element_id;

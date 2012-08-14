@@ -343,7 +343,7 @@ function get_class(name) {
     return new instance.web.Registry({'tmp' : name}).get_object("tmp");
 }
 
-instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
+instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     template: 'KanbanView.group_header',
     init: function (parent, records, group, dataset) {
         var self = this;
@@ -517,7 +517,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
     }
 });
 
-instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
+instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     template: 'KanbanView.record',
     init: function (parent, record) {
         this._super(parent);
