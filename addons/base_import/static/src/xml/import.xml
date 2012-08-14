@@ -4,15 +4,51 @@
             <input type="hidden" name="session_id"
                    t-att-value="widget.session.session_id"/>
             <input type="hidden" name="import_id"/>
-            <label for="csvfile">CSV File:</label>
+            <h2>Upload your file</h2>
+            <p>Select the <a href="#" class="oe_import_csv">.CSV</a>
+            file to import. If you need a sample importable file, you
+            can use <a href="#" class="oe_import_export">the export
+            tool</a> to generate one.</p>
+            <label for="csvfile" autofocus="autofocus">CSV File:</label>
             <input type="file" id="csvfile" name="file" class="oe_import_file"/>
 
-            <div class="oe_import_error_report"></div>
-            <table class="oe_import_grid" width="100%">
-            </table>
+            <div class="oe_import_with_file">
+                <h2>Map your data to OpenERP</h2>
+                <input type="checkbox" class="oe_import_has_header"
+                       id="oe_import_has_header" checked="checked"/>
+                <label for="oe_import_has_header">The first row of the
+                file contains the label of the column</label>
+                <p class="oe_import_noheaders">If the file contains
+                the column names, OpenERP can try auto-detecting the
+                field corresponding to the column. This makes imports
+                simpler especially when the file has many columns.</p>
+
+                <div class="oe_import_error_report"></div>
+                <table class="oe_import_grid" width="100%"/>
+                <!-- TODO: other CSV options -->
+
+                <h2>Frequently Asked Questions</h2>
+                <dl>
+                    <dt><a href="#">Need to import data from an other application?</a></dt>
+                    <dd>
+                        <p>In order to re-create relationships between
+                        different records, you should use the unique
+                        identifier from the original application and
+                        map it to the <abbr title="External ID">ID</abbr>
+                        column in OpenERP. When you
+                        import an other record that links to the first
+                        one, use <abbr title="XXX/External ID">XXX/ID</abbr>
+                        to the original unique identifier.</p>
+                        <p>The <abbr title="External ID">ID</abbr>
+                        will also be used to update the original
+                        import if you need to re-import modified data
+                        later, it's thus good practice to specify it
+                        whenever possible</p>
+                    </dd>
+                </dl>
+            </div>
         </form>
     </t>
-    <!-- TODO: column matcher? -->
     <t t-name="ImportView.preview">
         <tr t-if="headers" class="oe_import_grid-header">
             <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"

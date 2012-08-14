@@ -39,7 +39,22 @@ openerp.base_import = function (instance) {
         template: 'ImportView',
         dialog_title: _lt("Import Data"),
         events: {
-            'change input.oe_import_file': 'file_update'
+            'change input.oe_import_file': 'file_update',
+            'click input.oe_import_has_header': function (e) {
+                this.$element.toggleClass(
+                    'oe_import_noheaders', !e.target.checked);
+                this.settings_updated();
+            },
+            'click a.oe_import_csv': function (e) {
+                e.preventDefault();
+            },
+            'click a.oe_import_export': function (e) {
+                e.preventDefault();
+            },
+            'click dt a': function (e) {
+                e.preventDefault();
+                $(e.target).parent().next().toggle();
+            }
         },
         init: function (parent, dataset) {
             var self = this;
@@ -70,21 +85,21 @@ openerp.base_import = function (instance) {
                 // TODO: customizable gangnam style
                 quote: '"',
                 separator: ',',
-                headers: true,
+                headers: this.$('input.oe_import_has_header').prop('checked'),
             };
         },
 
-        //- File change section
+        //- File & settings change section
         file_update: function (e) {
             if (!this.$('input.oe_import_file').val()) { return; }
 
             this.$element.removeClass('oe_import_preview oe_import_error');
             jsonp(this.$element, {
                 url: '/base_import/set_file'
-            }, this.proxy('file_updated'));
+            }, this.proxy('settings_updated'));
         },
-        file_updated: function () {
-            // immediately trigger preview...
+        settings_updated: function () {
+            this.$element.addClass('oe_import_with_file');
             // TODO: test that write // succeeded?
             this.Import.call(
                 'parse_preview', [this.id, this.import_options()])
