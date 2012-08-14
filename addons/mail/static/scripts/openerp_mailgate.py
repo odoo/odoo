@@ -106,15 +106,15 @@ class EmailParser(object):
             self.email_default = email_default
 
 
-    def parse(self, method, message, custom_values=None, save_original=None):
+    def parse(self, message, custom_values=None, save_original=None):
         # pass message as bytes because we don't know its encoding until we parse its headers
         # and hence can't convert it to utf-8 for transport
-        res_id = self.rpc('mail.thread',
-                          method,
-                          self.model,
-                          xmlrpclib.Binary(message),
-                          custom_values or {},
-                          save_original or False)
+        return self.rpc('mail.thread',
+                        'message_process',
+                        self.model,
+                        xmlrpclib.Binary(message),
+                        custom_values or {},
+                        save_original or False)
 
 def configure_parser():
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.1')
@@ -123,32 +123,32 @@ def configure_parser():
         "with the OpenERP server for case management in the CRM module.")
     parser.add_option_group(group)
     parser.add_option("-u", "--user", dest="userid",
-                      help="ID of the user in OpenERP",
+                      help="OpenERP user id to connect with",
                       default=config.OPENERP_DEFAULT_USER_ID, type='int')
     parser.add_option("-p", "--password", dest="password",
-                      help="Password of the user in OpenERP",
+                      help="OpenERP user password",
                       default=config.OPENERP_DEFAULT_PASSWORD)
     parser.add_option("-o", "--model", dest="model",
-                      help="Name or ID of crm model",
+                      help="Name or ID of destination model",
                       default="crm.lead")
     parser.add_option("-m", "--default", dest="default",
-                      help="Default eMail in case of any trouble.",
+                      help="Admin email for error notifications.",
                       default=None)
     parser.add_option("-d", "--dbname", dest="dbname",
-                      help="Database name (default: %default)",
+                      help="OpenERP database name (default: %default)",
                       default=config.OPENERP_DEFAULT_DATABASE)
     parser.add_option("--host", dest="host",
-                      help="Hostname of the OpenERP Server",
+                      help="OpenERP Server hostname",
                       default=config.OPENERP_HOSTNAME)
     parser.add_option("--port", dest="port",
-                      help="Port of the OpenERP Server",
+                      help="OpenERP Server XML-RPC port number",
                       default=config.OPENERP_PORT)
     parser.add_option("--custom-values", dest="custom_values",
-                      help="Add Custom Values to the object",
+                      help="Dictionary of extra values to pass when creating records",
                       default=None)
     parser.add_option("-s", dest="save_original",
                       action="store_true",
-                      help="Attach a copy of original email to the message entry",
+                      help="Keep a full copy of the email source attached to each message",
                       default=False)
 
     return parser
@@ -160,7 +160,6 @@ def main():
 
     parser = configure_parser()
     (options, args) = parser.parse_args()
-    method = "message_process"
     email_parser = EmailParser(options.userid,
                                options.password,
                                options.dbname,
@@ -170,8 +169,6 @@ def main():
                                email_default= options.default)
     msg_txt = sys.stdin.read()
     custom_values = {}
-    if not options.model:
-        method = "message_catchall"  
     try:
         custom_values = dict(eval(options.custom_values or "{}" ))
     except:
@@ -179,7 +176,7 @@ def main():
         traceback.print_exc()
 
     try:
-        email_parser.parse(method, msg_txt, custom_values, options.save_original or False)
+        email_parser.parse(msg_txt, custom_values, options.save_original or False)
     except Exception:
         msg = '\n'.join([
             'parameters',

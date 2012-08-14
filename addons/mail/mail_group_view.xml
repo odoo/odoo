@@ -60,6 +60,11 @@
                                 <label for="name" string="Group Name"/> 
                             </div> 
                             <h1><field name="name"/></h1>
+                            <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_id" invisible="1" required="0"/>
+                                    <label for="alias_name" class="oe_edit_only"/>
+                                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                            </div>
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </div>
                         <div class="oe_clear"/>
