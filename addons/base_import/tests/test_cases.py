@@ -237,3 +237,75 @@ class test_preview(TransactionCase):
         self.assertEqual(result['preview'], p['preview'])
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'fields', 'preview'])
+
+class test_convert_import_data(TransactionCase):
+    """ Tests conversion of base_import.import input into data which
+    can be fed to Model.import_data
+    """
+    def test_all(self):
+        Import = self.registry('base_import.import')
+        id = Import.create(self.cr, self.uid, {
+            'res_model': 'base_import.tests.models.preview',
+            'file': base64.b64encode('name,Some Value,Counter\n'
+                    'foo,1,2\n'
+                    'bar,3,4\n'
+                    'qux,5,6\n')
+        })
+        record = Import.browse(self.cr, self.uid, id)
+        data, fields = Import._convert_import_data(
+            record, ['name', 'somevalue', 'othervalue'],
+            {'quote': '"', 'separator': ',', 'headers': True,})
+
+        self.assertItemsEqual(fields, ['name', 'somevalue', 'othervalue'])
+        self.assertItemsEqual(data, [
+            ('foo', '1', '2'),
+            ('bar', '3', '4'),
+            ('qux', '5', '6'),
+        ])
+
+    def test_filtered(self):
+        """ If ``False`` is provided as field mapping for a column,
+        that column should be removed from importable data
+        """
+        Import = self.registry('base_import.import')
+        id = Import.create(self.cr, self.uid, {
+            'res_model': 'base_import.tests.models.preview',
+            'file': base64.b64encode('name,Some Value,Counter\n'
+                    'foo,1,2\n'
+                    'bar,3,4\n'
+                    'qux,5,6\n')
+        })
+        record = Import.browse(self.cr, self.uid, id)
+        data, fields = Import._convert_import_data(
+            record, ['name', False, 'othervalue'],
+            {'quote': '"', 'separator': ',', 'headers': True,})
+
+        self.assertItemsEqual(fields, ['name', 'othervalue'])
+        self.assertItemsEqual(data, [
+            ('foo', '2'),
+            ('bar', '4'),
+            ('qux', '6'),
+        ])
+
+    def test_norow(self):
+        """ If a row is composed only of empty values (due to having
+        filtered out non-empty values from it), it should be removed
+        """
+        Import = self.registry('base_import.import')
+        id = Import.create(self.cr, self.uid, {
+            'res_model': 'base_import.tests.models.preview',
+            'file': base64.b64encode('name,Some Value,Counter\n'
+                    'foo,1,2\n'
+                    ',3,\n'
+                    ',5,6\n')
+        })
+        record = Import.browse(self.cr, self.uid, id)
+        data, fields = Import._convert_import_data(
+            record, ['name', False, 'othervalue'],
+            {'quote': '"', 'separator': ',', 'headers': True,})
+
+        self.assertItemsEqual(fields, ['name', 'othervalue'])
+        self.assertItemsEqual(data, [
+            ('foo', '2'),
+            ('', '6'),
+        ])

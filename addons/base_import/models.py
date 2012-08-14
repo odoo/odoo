@@ -3,6 +3,8 @@ import codecs
 import csv
 import itertools
 import logging
+import operator
+import random
 
 try:
     from cStringIO import StringIO
@@ -202,7 +204,7 @@ class ir_import(orm.TransientModel):
         :returns: {fields, matches, preview} | {error, preview}
         :rtype: {dict(str: dict(...)), dict(int, list(str)), list(list(str))} | {str, str}
         """
-        record = self.browse(cr, uid, id, context=context)
+        (record,) = self.browse(cr, uid, [id], context=context)
         fields = self.get_fields(cr, uid, record.res_model, context=context)
 
         try:
@@ -231,3 +233,87 @@ class ir_import(orm.TransientModel):
                 'preview': base64.b64decode(record.file)[:ERROR_PREVIEW_BYTES]\
                                  .decode('iso-8859-1'),
             }
+
+    def _convert_import_data(self, record, fields, options, context=None):
+        """ Extracts the input browse_record and fields list (with
+        ``False``-y placeholders for fields to *not* import) into a
+        format Model.import_data can use: a fields list without holes
+        and the precisely matching data matrix
+
+        :param browse_record record:
+        :param list(str|bool): fields
+        :returns: (data, fields)
+        :rtype: (list(list(str)), list(str))
+        """
+        # Get indices for non-empty fields
+        indices = [index for index, field in enumerate(fields) if field]
+        # If only one index, itemgetter will return an atom rather
+        # than a 1-tuple
+        if len(indices) == 1: mapper = lambda row: [row[indices[0]]]
+        else: mapper = operator.itemgetter(*indices)
+        # Get only list of actually imported fields
+        import_fields = filter(None, fields)
+
+        rows_to_import = self._read_csv(record, options)
+        if options.get('headers'):
+            rows_to_import = itertools.islice(
+                rows_to_import, 1, None)
+        data = [
+            row for row in itertools.imap(mapper, rows_to_import)
+            # don't try inserting completely empty rows (e.g. from
+            # filtering out o2m fields)
+            if any(row)
+        ]
+
+        return data, import_fields
+
+    def do(self, cr, uid, id, fields, options, dryrun=False, context=None):
+        """ Actual execution of the import
+
+        :param fields: import mapping: maps each column to a field,
+                       ``False`` for the columns to ignore
+        :type fields: list(str|bool)
+        :param dict options:
+        :param bool dryrun: performs all import operations (and
+                            validations) but rollbacks writes, allows
+                            getting as much errors as possible without
+                            the risk of clobbering the database.
+        :returns: A list of errors. If the list is empty the import
+                  executed fully and correctly. If the list is
+                  non-empty it contains dicts with 3 keys ``type`` the
+                  type of error (``error|warning``); ``message`` the
+                  error message associated with the error (a string)
+                  and ``record`` the data which failed to import (or
+                  ``false`` if that data isn't available or provided)
+        :rtype: list({type, message, record})
+        """
+        cr.execute('SAVEPOINT import')
+
+        (record,) = self.browse(cr, uid, [id], context=context)
+        data, import_fields = self._convert_import_data(
+            record, fields, options, context=context)
+
+        try:
+            (code, record, message, _wat) = self.pool[record.res_model].import_data(
+                cr, uid, import_fields, data, context=context)
+        except Exception, e:
+            # TODO: remove when exceptions stop being an "expected"
+            #       behavior of import_data on some invalid input.
+            code, record, message = -1, None, str(e)
+
+        if dryrun:
+            cr.execute('ROLLBACK TO SAVEPOINT import')
+        else:
+            cr.execute('RELEASE SAVEPOINT import')
+
+        if code != -1:
+            return []
+
+        # TODO: add key for error location?
+        # TODO: error not within normal preview, how to display? Re-preview
+        #       with higher count?
+        return [{
+            'type': 'error',
+            'message': message,
+            'record': record or False
+        }]
