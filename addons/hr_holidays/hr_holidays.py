@@ -266,7 +266,7 @@ class hr_holidays(osv.osv):
             if record.holiday_type == 'employee' and record.type == 'remove':
                 meeting_obj = self.pool.get('crm.meeting')
                 meeting_vals = {
-                    'name': record.name,
+                    'name': record.name or _('Leave Request'),
                     'categ_ids': record.holiday_status_id.categ_id and [(6,0,[record.holiday_status_id.categ_id.id])] or [],
                     'duration': record.number_of_days_temp * 8,
                     'description': record.notes,
