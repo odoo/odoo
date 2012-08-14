@@ -106,17 +106,22 @@ class mail_thread(osv.Model):
        methods (calling ``super``) to add model-specific behavior at
        creation and update of a thread.
        
-       TODO: UPDATE WITIH SUBTYPE / NEW FOLLOW MECHANISM
+       #TODO: UPDATE WITH SUBTYPE / NEW FOLLOW MECHANISM
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
 
-    def _get_message_ids(self, cr, uid, ids, name, args, context=None):
+    def _get_message_data(self, cr, uid, ids, field_names, args, context=None):
         res = dict.fromkeys(ids)
         for id in ids:
             res[id] = {'message_ids': self.message_search(cr, uid, [id], context=context)}
         for thread in self.browse(cr, uid, ids, context=context):
-            res[thread.id]['message_summary'] = "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(res[thread.id]['message_ids']), len(thread.message_follower_ids))
+            message_follower_ids = [follower.id for follower in thread.message_follower_ids]
+            res[thread.id].update({
+                'message_is_follower': uid in message_follower_ids,
+                'message_summary': "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % 
+                    (len(res[thread.id]['message_ids']), len(thread.message_follower_ids))
+                })
         return res
 
     def _search_message_ids(self, cr, uid, obj, name, args, context=None):
@@ -125,19 +130,22 @@ class mail_thread(osv.Model):
         return [('id', 'in', msg_ids)]
 
     _columns = {
-        'message_ids': fields.function(_get_message_ids,
+        'message_ids': fields.function(_get_message_data,
 			fnct_search=_search_message_ids,
             type='one2many', obj='mail.message', _fields_id = 'res_id',
-            string='Temp messages', multi="_get_message_ids",
+            string='Temp messages', multi="_get_message_data",
             help="Functional field holding messages related to the current document."),
         'message_follower_ids': many2many_reference('res.users',
             rel='mail_followers', id1='res_id', id2='user_id', string="Followers",
             help="Followers of the document. The followers have full access to " \
                  "the document details, as well as the conversation."),
+        'message_is_follower': fields.function(_get_message_data, method=True,
+            type='boolean', string='I am Follower', multi='_get_message_data',
+            help='True if the current user is following the current document.'),
         'message_state': fields.boolean('Read',
             help="When checked, new messages require your attention."),
-        'message_summary': fields.function(_get_message_ids, method=True,
-            type='text', string='Summary', multi="_get_message_ids",
+        'message_summary': fields.function(_get_message_data, method=True,
+            type='text', string='Summary', multi='_get_message_data',
             help="Holds the Chatter summary (number of messages, ...). "\
                  "This summary is directly in html format in order to "\
                  "be inserted in kanban views."),
