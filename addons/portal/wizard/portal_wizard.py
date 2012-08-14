@@ -120,7 +120,7 @@ class wizard(osv.osv_memory):
         res_user = self.pool.get('res.users')
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         if partner.parent_id:
-            user_ids = res_user.search(cr, uid, [('partner_id','=', partner.parent_id.id)])
+            user_ids = res_user.search(cr, uid, [('login','=',partner.email)])
         else:
             user_ids = res_user.search(cr, uid, [('partner_id','=', partner.id)])
         return user_ids
@@ -188,9 +188,11 @@ class wizard(osv.osv_memory):
 
 
     def action_manage_portal_access(self, cr, uid, ids, context=None):
-        clone_context = context or {}
+        if context is None:
+            context = {}
+        clone_context = context
         clone_context['noshortcut'] = True           # prevent shortcut creation
-        context = clone_context.copy()
+        context = dict(clone_context)
         res_portal_user = self.pool.get('res.portal.wizard.user')
         for data in self.browse(cr, uid, ids, context=context):
             if not data.user_ids:
@@ -295,7 +297,7 @@ class wizard_user(osv.osv_memory):
                 'groups_id': [(6, 0, [])],
         }
         user_id = res_user.create(cr, ROOT_UID, value, context=context)
-        portal_user.write({'user_id': user_id}, context)
+        portal_user.write({'user_id': user_id})
         self.send_email(cr, uid, portal_user, user_id, context=context)
         return user_id
 
@@ -323,7 +325,7 @@ class wizard_user(osv.osv_memory):
 
     def manage_portal_access(self, cr, uid, ids, context=None):
         res_user = self.pool.get('res.users')
-        for portal_user in self.browse(cr, uid, ids, context=None):
+        for portal_user in self.browse(cr, uid, ids, context=context):
             portal = portal_user.wizard_id.portal_id
             user_id = portal_user.user_id and portal_user.user_id.id
             if not user_id:
