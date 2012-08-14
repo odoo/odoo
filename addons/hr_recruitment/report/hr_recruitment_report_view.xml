@@ -4,7 +4,6 @@
     <record id="view_hr_recruitment_report_tree" model="ir.ui.view">
         <field name="name">hr.recruitment.report.tree</field>
         <field name="model">hr.recruitment.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Recruitment Analysis">
                 <field name="date" invisible="1"/>
@@ -34,7 +33,6 @@
     <record id="view_hr_recruitment_report_graph" model="ir.ui.view">
          <field name="name">hr.recruitment.report.graph</field>
          <field name="model">hr.recruitment.report</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Recruitment Analysis" type="bar">
                  <field name="job_id"/>
@@ -46,7 +44,6 @@
     <record id="view_hr_recruitment_report_search" model="ir.ui.view">
         <field name="name">hr.recruitment.report.search</field>
         <field name="model">hr.recruitment.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Recruitment Analysis">
                 <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft recruitment"/>

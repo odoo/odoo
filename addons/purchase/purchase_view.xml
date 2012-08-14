@@ -151,7 +151,6 @@
         <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>
             <field name="model">purchase.order</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Calendar View" date_start="minimum_planned_date" color="partner_id">
@@ -164,7 +163,6 @@
         <record model="ir.ui.view" id="purchase_order_graph">
             <field name="name">purchase.order.graph</field>
             <field name="model">purchase.order</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Purchase Order" type="bar">
                     <field name="partner_id"/>
@@ -176,7 +174,6 @@
         <record id="purchase_order_form" model="ir.ui.view">
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Purchase Order" version="7.0">
                 <header>
@@ -273,7 +270,6 @@
        <record id="view_request_for_quotation_filter" model="ir.ui.view">
             <field name="name">request.quotation.select</field>
             <field name="model">purchase.order</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                     <field name="name" string="Reference"/>
@@ -299,7 +295,6 @@
         <record id="view_purchase_order_filter" model="ir.ui.view">
             <field name="name">purchase.order.list.select</field>
             <field name="model">purchase.order</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                     <field name="name" string="Reference"/>
@@ -327,7 +322,6 @@
         <record id="purchase_order_tree" model="ir.ui.view">
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree fonts="bold:needaction_pending==True" colors="grey:state=='cancel';blue:state in ('wait','confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
                     <field name="needaction_pending" invisible="1"/>
@@ -391,7 +385,6 @@
         <record id="purchase_order_line_form" model="ir.ui.view">
             <field name="name">purchase.order.line.form</field>
             <field name="model">purchase.order.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Purchase Order Line" version="7.0">
                     <sheet>
@@ -428,7 +421,6 @@
         <record id="purchase_order_line_tree" model="ir.ui.view">
             <field name="name">purchase.order.line.tree</field>
             <field name="model">purchase.order.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Purchase Order Lines">
                     <field name="order_id"/>
@@ -448,7 +440,6 @@
         <record id="purchase_order_line_form2" model="ir.ui.view">
             <field name="name">purchase.order.line.form2</field>
             <field name="model">purchase.order.line</field>
-            <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Purchase Order Line" version="7.0">
@@ -492,7 +483,6 @@
           <record id="purchase_order_line_search" model="ir.ui.view">
             <field name="name">purchase.order.line.search</field>
             <field name="model">purchase.order.line</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                     <field name="order_id"/>
@@ -558,7 +548,6 @@
             <field name="name">procurement.order.form.inherit</field>
             <field name="model">procurement.order</field>
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='close_move']" position="before">
                     <field name="purchase_id"/>
