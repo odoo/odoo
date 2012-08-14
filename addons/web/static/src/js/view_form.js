@@ -2394,44 +2394,54 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
  * To find more information about CLEditor configutation: go to
  * http://premiumsoftware.net/cleditor/docs/GettingStarted.html
  */
-instance.web.form.FieldTextHtml = instance.web.form.FieldText.extend({
-
-    initialize_content: function() {
-        this.$textarea = this.$element.find('textarea');
-        var width = ((this.node.attrs || {}).editor_width || 468);
-        var height = ((this.node.attrs || {}).editor_height || 100);
-        this.$textarea.cleditor({
-            width:      width, // width not including margins, borders or padding
-            height:     height, // height not including margins, borders or padding
-            controls:   // controls to add to the toolbar
-                        "bold italic underline strikethrough | size " +
-                        "| removeformat | bullets numbering | outdent " +
-                        "indent | link unlink",
-            sizes:      // sizes in the font size popup
-                        "1,2,3,4,5,6,7",
-            bodyStyle:  // style to assign to document body contained within the editor
-                        "margin:4px; font:12px monospace; cursor:text; color:#1F1F1F"
-        });
-        this.$cleditor = this.$textarea.cleditor()[0];
-        // call super now, because cleditor resets the disable attr
+instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    template: 'FieldTextHtml',
+    init: function() {
         this._super.apply(this, arguments);
-        // propagate disabled property to cleditor
-        this.$cleditor.disable(this.$textarea.prop('disabled'));
+        if (this.field.type !== 'html') {
+            throw new Error(_.str.sprintf(
+                _t("Error with field %s, it is not allowed to use the widget 'html' with any other field type than 'html'"), this.string));
+        }
     },
-
+    initialize_content: function() {
+        var self = this;
+        if (! this.get("effective_readonly")) {
+            self._updating_editor = false;
+            this.$textarea = this.$element.find('textarea');
+            var width = ((this.node.attrs || {}).editor_width || 468);
+            var height = ((this.node.attrs || {}).editor_height || 100);
+            this.$textarea.cleditor({
+                width:      width, // width not including margins, borders or padding
+                height:     height, // height not including margins, borders or padding
+                controls:   // controls to add to the toolbar
+                            "bold italic underline strikethrough " +
+                            "| removeformat | bullets numbering | outdent " +
+                            "indent | link unlink | source",
+                bodyStyle:  // style to assign to document body contained within the editor
+                            "margin:4px; font:12px monospace; cursor:text; color:#1F1F1F"
+            });
+            this.$cleditor = this.$textarea.cleditor()[0];
+            this.$cleditor.change(function() {
+                if (! self._updating_editor) {
+                    self.$cleditor.updateTextArea();
+                    self.set({'value': self.$textarea.val()});
+                }
+            });
+        }
+    },
     set_value: function(value_) {
         this._super.apply(this, arguments);
-        this._dirty_flag = true;
+        this.render_value();
     },
-
     render_value: function() {
-        this._super.apply(this, arguments);
-        this.$cleditor.updateFrame();
-    },
-
-    get_value: function() {
-        this.$cleditor.updateTextArea();
-        return this.$textarea.val();
+        if (! this.get("effective_readonly")) {
+            this.$textarea.val(this.get('value'));
+            this._updating_editor = true;
+            this.$cleditor.updateFrame();
+            this._updating_editor = false;
+        } else {
+            this.$element.html(this.get('value'));
+        }
     },
 });
 
@@ -4802,7 +4812,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'email' : 'instance.web.form.FieldEmail',
     'url' : 'instance.web.form.FieldUrl',
     'text' : 'instance.web.form.FieldText',
-    'text_html' : 'instance.web.form.FieldTextHtml',
+    'html' : 'instance.web.form.FieldTextHtml',
     'date' : 'instance.web.form.FieldDate',
     'datetime' : 'instance.web.form.FieldDatetime',
     'selection' : 'instance.web.form.FieldSelection',
