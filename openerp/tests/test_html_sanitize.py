@@ -27,8 +27,7 @@ class TestSanitizer(unittest.TestCase):
         self.assertEqual(x, html_sanitize(x))
     
     def test_test_case(self):
-        res = html_sanitize(test_case)
-        print res
+        html_sanitize(test_case)
 
 if __name__ == '__main__':
     unittest.main()
