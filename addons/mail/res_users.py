@@ -143,28 +143,12 @@ To setup your preferences (name, email signature, avatar), click on the top righ
                         email_cc=None, email_bcc=None, reply_to=None,
                         headers=None, message_id=False, references=None,
                         attachments=None, original=None, context=None):
-        """ Override of message_append. Messages appened to res.users are
-            redirected to the related partner. Using partner_id.message_append,
-            messages will have correct model and id, set to res_partner and
-            partner_id.id.
-        """
+        """ Wrapper on message_append to redirect them to the related partner. """
         for user in self.browse(cr, uid, threads, context=context):
             user.partner_id.message_append(subject, body_text, body_html, type, email_date, parent_id,
                 content_subtype, state, partner_ids, email_from, email_to, email_cc, email_bcc, reply_to,
                 headers, message_id, references, attachments, original)
 
-    def message_search_get_domain(self, cr, uid, ids, context=None):
-        """ Override of message_search_get_domain for partner discussion page.
-            The purpose is to add messages directly sent to user using
-            @user_login.
-        """
-        initial_domain = super(res_users, self).message_search_get_domain(cr, uid, ids, context=context)
-        custom_domain = []
-        for user in self.browse(cr, uid, ids, context=context):
-            if custom_domain:
-                custom_domain += ['|']
-            custom_domain += ['|', ('body_text', 'like', '@%s' % (user.login)), ('body_html', 'like', '@%s' % (user.login))]
-        return ['|'] + initial_domain + custom_domain
 
 class res_users_mail_group(osv.osv):
     """ Update of res.groups class
@@ -173,7 +157,7 @@ class res_users_mail_group(osv.osv):
           group. This is done by overriding the write method.
     """
     _name = 'res.users'
-    _inherit = ['res.users', 'mail.thread']
+    _inherit = ['res.users']
 
     def write(self, cr, uid, ids, vals, context=None):
         write_res = super(res_users_mail_group, self).write(cr, uid, ids, vals, context=context)
