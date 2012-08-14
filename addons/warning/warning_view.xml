@@ -5,7 +5,6 @@
          <record id="view_partner_warning_form" model="ir.ui.view">
             <field name="name">res.partner.warning.form.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
@@ -42,7 +41,6 @@
         <record id="product_warning_form_view" model="ir.ui.view">
             <field name="name">product.warning.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <notebook position="inside">

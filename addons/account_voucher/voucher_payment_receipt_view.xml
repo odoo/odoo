@@ -5,7 +5,6 @@
         <record id="view_voucher_filter_customer_pay" model="ir.ui.view">
             <field name="name">account.voucher.customer.pay.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
@@ -29,7 +28,6 @@
         <record id="view_voucher_filter_vendor_pay" model="ir.ui.view">
             <field name="name">account.voucher.purchase.pay.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
@@ -51,7 +49,6 @@
         <record model="ir.ui.view" id="view_low_priority_payment_form">
             <field name="name">account.voucher.payment.low.priority.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Bill Payment" version="7.0">
@@ -74,7 +71,7 @@
                     </group>
                     <notebook>
                         <page string="Payment Information">
-                            <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Open Supplier Journal Entries" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -87,7 +84,7 @@
                                     <field name="amount" sum="Total Allocation"/>
                                 </tree>
                             </field>
-                            <field name="line_cr_ids" attrs="{'invisible': [('type', '=', 'payment')]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_cr_ids" attrs="{'invisible': [('type', '=', 'payment')]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Open Customer Journal Entries" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -121,9 +118,8 @@
         <record model="ir.ui.view" id="view_vendor_payment_form">
             <field name="name">account.voucher.payment.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Voucher Payment" version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
@@ -286,9 +282,8 @@
         <record model="ir.ui.view" id="view_vendor_receipt_form">
             <field name="name">account.voucher.receipt.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Receipt" version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
@@ -332,7 +327,7 @@
 
                     <notebook>
                         <page string="Payment Information" groups="base.group_user">
-                            <field name="line_cr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_cr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Invoices and outstanding transactions" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -348,7 +343,7 @@
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)" string="Allocation"/>
                                 </tree>
                             </field>
-                            <field name="line_dr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_dr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"

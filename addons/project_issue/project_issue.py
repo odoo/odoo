@@ -219,7 +219,7 @@ class project_issue(base_stage, osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
-        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
+        'partner_id': fields.many2one('res.partner', 'Contact', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
@@ -266,9 +266,6 @@ class project_issue(base_stage, osv.osv):
                 'project.task.work': (_get_issue_work, ['hours'], 10),
             }),
     }
-
-    def on_change_project(self, cr, uid, ids, project_id, context=None):
-        return {}
 
     _defaults = {
         'active': 1,
@@ -496,7 +493,7 @@ class project_issue(base_stage, osv.osv):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()
 
-        return super(project_issue, self).message_update(cr, uid, ids, update_vals=update_vals, context=context)
+        return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     # -------------------------------------------------------
     # OpenChatter methods and notifications

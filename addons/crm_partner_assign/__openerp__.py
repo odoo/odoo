@@ -49,7 +49,7 @@ You can also use the geolocalization without using the GPS coordinates.
         'report/crm_partner_report_view.xml',
     ],
     'test': [
-        'test/process/partner_assign.yml',
+        'test/partner_assign.yml'
     ],
     'installable': True,
     'auto_install': False,

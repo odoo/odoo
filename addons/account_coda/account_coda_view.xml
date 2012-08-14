@@ -9,7 +9,6 @@
     <record id="view_coda_bank_account_search" model="ir.ui.view">
         <field name="name">coda.bank.account.search</field>
         <field name="model">coda.bank.account</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="CODA Bank Account Configuration">
                 <field name="name" filter_domain="['|', ('name','ilike',self), ('description1','ilike',self)]" string="CODA Bank Account"/>
@@ -29,7 +28,6 @@
     <record id="view_coda_bank_account_list" model="ir.ui.view">
       <field name="name">coda.bank.account.list</field>
       <field name="model">coda.bank.account</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="CODA Bank Account Configuration">
           <field name="name"/>
@@ -44,7 +42,6 @@
     <record id="view_coda_bank_account_form" model="ir.ui.view">
       <field name="name">coda.bank.account.form</field>
       <field name="model">coda.bank.account</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="CODA Bank Account Configuration" version="7.0">
             <group col="4">
@@ -82,7 +79,6 @@
     <record id="view_account_coda_trans_type_tree" model="ir.ui.view">
       <field name="name">account.coda.trans.type.tree</field>
       <field name="model">account.coda.trans.type</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="CODA Transaction Types">
           <field name="type"/>
@@ -94,7 +90,6 @@
     <record id="view_account_coda_trans_type_form" model="ir.ui.view">
       <field name="name">account.coda.trans.type.form</field>
       <field name="model">account.coda.trans.type</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
           <form string="CODA Transaction Type" version="7.0">
               <group col="4">
@@ -118,7 +113,6 @@
     <record id="view_account_coda_trans_code_tree" model="ir.ui.view">
       <field name="name">account.coda.trans.code.tree</field>
       <field name="model">account.coda.trans.code</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="CODA Transaction Codes">
           <field name="code"/>
@@ -131,7 +125,6 @@
     <record id="view_account_coda_trans_code_form" model="ir.ui.view">
       <field name="name">account.coda.trans.code.form</field>
       <field name="model">account.coda.trans.code</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
           <form string="CODA Transaction Code" version="7.0">
               <group col="4">
@@ -157,7 +150,6 @@
     <record id="view_account_coda_trans_category_tree" model="ir.ui.view">
       <field name="name">account.coda.trans.category.tree</field>
       <field name="model">account.coda.trans.category</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="CODA Transaction Categories">
           <field name="category"/>
@@ -168,7 +160,6 @@
     <record id="view_account_coda_trans_category_form" model="ir.ui.view">
       <field name="name">account.coda.trans.category.form</field>
       <field name="model">account.coda.trans.category</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
           <form string="CODA Transaction Category" version="7.0">
               <field name="category"/>
@@ -189,7 +180,6 @@
     <record id="view_account_coda_comm_type_tree" model="ir.ui.view">
       <field name="name">account.coda.comm.type.tree</field>
       <field name="model">account.coda.comm.type</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="CODA Structured Communication Types">
           <field name="code"/>
@@ -200,7 +190,6 @@
     <record id="view_account_coda_comm_type_form" model="ir.ui.view">
       <field name="name">account.coda.comm.type.form</field>
       <field name="model">account.coda.comm.type</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
           <form string="CODA Structured Communication Type" version="7.0">
               <field name="code"/>
@@ -225,7 +214,6 @@
     <record model="ir.ui.view" id="view_account_coda_tree">
       <field name="name">account.coda.tree</field>
       <field name="model">account.coda</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="CODA Files">
           <field name="coda_creation_date"/>
@@ -240,7 +228,6 @@
     <record model="ir.ui.view" id="view_account_coda_form">
         <field name="name">account.coda.form</field>
         <field name="model">account.coda</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="CODA File" version="7.0">
                 <sheet>
@@ -263,7 +250,6 @@
     <record id="view_account_coda_filter" model="ir.ui.view">
       <field name="name">account.coda.search</field>
       <field name="model">account.coda</field>
-      <field name="type">search</field>
       <field name="arch" type="xml">
         <search string="Search CODA Files">
             <field name="coda_creation_date"/>
@@ -295,7 +281,6 @@
     <record id="view_coda_bank_statement_list" model="ir.ui.view">
       <field name="name">coda.bank.statement.list</field>
       <field name="model">coda.bank.statement</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end)" string="CODA Bank Statements">
           <field name="name"/>
@@ -313,7 +298,6 @@
     <record id="view_coda_bank_statement_form" model="ir.ui.view">
       <field name="name">coda.bank.statement.form</field>
       <field name="model">coda.bank.statement</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
           <form string="CODA Bank Statement" version="7.0">
               <sheet>
@@ -376,7 +360,6 @@
     <record id="view_coda_bank_statement_search" model="ir.ui.view">
         <field name="name">coda.bank.statement.search</field>
         <field name="model">coda.bank.statement</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search CODA Bank Statements">
                 <field name="name" string="CODA Bank Statement"/>
@@ -412,7 +395,6 @@
     <record id="view_coda_bank_statement_line_list" model="ir.ui.view">
       <field name="name">coda.bank.statement.line.list</field>
       <field name="model">coda.bank.statement.line</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree editable="bottom" string="CODA Statement Lines">
           <field name="sequence" readonly="1" invisible="1"/>
@@ -435,7 +417,6 @@
     <record id="view_coda_bank_statement_line_form" model="ir.ui.view">
       <field name="name">coda.bank.statement.line.form</field>
       <field name="model">coda.bank.statement.line</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="CODA Statement Line" version="7.0">
             <group col="4">
@@ -461,7 +442,6 @@
     <record id="view_coda_bank_statement_line_filter" model="ir.ui.view">
         <field name="name">coda.bank.statement.line.filter</field>
         <field name="model">coda.bank.statement.line</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Bank Transactions">
                 <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Bank Transaction"/>
