@@ -3596,6 +3596,14 @@ class BaseModel(object):
                             record[f] = res2[record['id']]
                         else:
                             record[f] = []
+
+        # Warn about deprecated fields now that fields_pre and fields_post are computed
+        # Explicitly use list() because we may receive tuples
+        for f in list(fields_pre) + list(fields_post):
+            field_column = self._all_columns.get(f) and self._all_columns.get(f).column
+            if field_column and field_column.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, f, field_column.deprecated)
+
         readonly = None
         for vals in res:
             for field in vals.copy():
@@ -3973,6 +3981,9 @@ class BaseModel(object):
         direct = []
         totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
         for field in vals:
+            field_column = self._all_columns.get(field) and self._all_columns.get(field).column
+            if field_column and field_column.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, field, field_column.deprecated)
             if field in self._columns:
                 if self._columns[field]._classic_write and not (hasattr(self._columns[field], '_fnct_inv')):
                     if (not totranslate) or not self._columns[field].translate:
