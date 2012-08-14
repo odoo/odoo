@@ -307,7 +307,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                             self.groups.splice(stop_index, 0, tmp_group);
                             var new_sequence = _.pluck(self.groups, 'value');
                             (new instance.web.DataSet(self, self.group_by_field.relation)).resequence(new_sequence).then(function(r) {
-                                console.log(r);
+                                if (r === false) {
+                                    console.error("Kanban: could not resequence model '%s'. Probably no 'sequence' field.", self.group_by_field.relation);
+                                }
                             });
                         }
                         self.$('.oe_kanban_record').show();
@@ -555,9 +557,8 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     do_save_sequences: function() {
         var self = this;
         if (_.indexOf(this.view.fields_keys, 'sequence') > -1) {
-            _.each(this.records, function(record, index) {
-                self.view.dataset.write(record.id, { sequence : index });
-            });
+            var new_sequence = _.pluck(this.records, 'id');
+            self.view.dataset.resequence(new_sequence);
         }
     },
     /**

@@ -1139,7 +1139,10 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def resequence(self, req, model, ids):
         m = req.session.model(model)
-        print "TODO: write resequencing"
+        if not len(m.fields_get(['sequence'])):
+            return False
+        for i in range(len(ids)):
+            m.write([ids[i]], { 'sequence': i })
         return True
 
 class DataGroup(openerpweb.Controller):
