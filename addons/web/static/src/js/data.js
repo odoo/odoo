@@ -439,7 +439,7 @@ instance.web.data = {
     })
 };
 
-instance.web.DataGroup =  instance.web.OldWidget.extend( /** @lends openerp.web.DataGroup# */{
+instance.web.DataGroup =  instance.web.CallbackEnabled.extend( /** @lends openerp.web.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
      * records.
@@ -451,9 +451,9 @@ instance.web.DataGroup =  instance.web.OldWidget.extend( /** @lends openerp.web.
      * content of the current grouping level.
      *
      * @constructs instance.web.DataGroup
-     * @extends instance.web.OldWidget
+     * @extends instance.web.CallbackEnabled
      *
-     * @param {instance.web.OldWidget} parent widget
+     * @param {instance.web.CallbackEnabled} parent widget
      * @param {String} model name of the model managed by this DataGroup
      * @param {Array} domain search domain for this DataGroup
      * @param {Object} context context of the DataGroup's searches
@@ -524,13 +524,13 @@ instance.web.StaticDataGroup = instance.web.GrouplessDataGroup.extend( /** @lend
     }
 });
 
-instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends openerp.web.DataSet# */{
+instance.web.DataSet =  instance.web.CallbackEnabled.extend( /** @lends openerp.web.DataSet# */{
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
      *
      * @constructs instance.web.DataSet
-     * @extends instance.web.OldWidget
+     * @extends instance.web.CallbackEnabled
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
