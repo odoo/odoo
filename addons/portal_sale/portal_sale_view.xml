@@ -2,16 +2,39 @@
 <openerp>
     <data>
 
+        <!--
+            Override the original action to set another help field and/or
+            another context field, more suited for portal members
+        -->
+        <record id="action_order_tree5" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{"search_default_draft":1}</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="help">No quotations so far.</field>
+        </record>
+
+        <record id="action_order_form" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="context">{"search_default_sales":1}</field>
+            <field name="help">No sale orders so far.</field>
+        </record>
+
         <record id="action_picking_tree" model="ir.actions.act_window">
             <field name="name">Delivery Orders</field>
             <field name="res_model">stock.picking.out</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="stock.view_picking_out_search"/>
-            <field name="help">This is the list of all delivery orders that have to be prepared, according to your different orders.</field>
+            <field name="help">No delivery orders so far.</field>
         </record>
 
         <record id="product_normal_action" model="ir.actions.act_window">
@@ -22,12 +45,13 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="product.product_kanban_view"/>
             <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="help">No products so far.</field>
         </record>
 
         <menuitem name="Quotations" id="portal_quotations" parent="portal.portal_orders"
-            action="sale.action_order_tree5" sequence="10"/>
+            action="action_order_tree5" sequence="10"/>
         <menuitem name="Sales Orders" id="portal_sales_orders" parent="portal.portal_orders"
-            action="sale.action_order_form" sequence="20"/>
+            action="action_order_form" sequence="20"/>
         <menuitem name="Delivery Orders" id="portal_delivery" parent="portal.portal_orders"
             action="action_picking_tree" sequence="30"/>
         <menuitem name="Products" id="portal_products" parent="portal.portal_orders"
