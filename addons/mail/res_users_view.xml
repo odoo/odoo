@@ -26,11 +26,6 @@
                 <field name="email" position="before">
                     <field name="notification_email_pref"/>
                 </field>
-                <xpath expr="/form/sheet" position="after">
-                    <div class="oe_chatter">
-                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                    </div>
-                </xpath>
                 <field name="email" position="after">
                     <field name="alias_domain" invisible="1"/>
                     <field name="alias_id" readonly="1" required="0" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
