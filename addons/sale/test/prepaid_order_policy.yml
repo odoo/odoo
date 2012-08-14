@@ -1,10 +1,10 @@
 -
   Now I confirm the Quotation with "Pay before delivery" policy.
 -
-  !workflow {model: sale.order, action: order_confirm, ref: order3}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_4}
 -
   I check that delivery order should not created before invoice is paid.
 -
   !python {model: sale.order}: |
-    sale_order = self.browse(cr, uid, ref("order3"))
+    sale_order = self.browse(cr, uid, ref("sale_order_4"))
     assert sale_order.invoice_ids, "Invoice should be created."

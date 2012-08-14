@@ -1,35 +1,34 @@
 -
   In order to test the cancel sale order.
-  
   First I confirm order.
 -
-  !workflow {model: sale.order, action: order_confirm, ref: order7}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_8}
 -
   I check state of order in 'Sale Order'.
 -
-  !assert {model: sale.order, id: order7, string: Sale order should be In Progress state}:
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be In Progress state}:
     - state == 'progress'
 -    
   I check that Invoice should be created.
 -
   !python {model: sale.order}: |
-    sale_order = self.browse(cr, uid, ref("order7"))
+    sale_order = self.browse(cr, uid, ref("sale_order_8"))
     assert len(sale_order.invoice_ids) == True, "Invoice should be created."
 -
   To cancel the sale order from Invoice Exception, I have to cancel the invoice of sale order.
 -
   !python {model: sale.order}: |
     import netsvc
-    invoice_ids = self.browse(cr, uid, ref("order7")).invoice_ids
+    invoice_ids = self.browse(cr, uid, ref("sale_order_8")).invoice_ids
     wf_service = netsvc.LocalService("workflow")
     first_invoice_id = invoice_ids[0]
     wf_service.trg_validate(uid, 'account.invoice', first_invoice_id.id, 'invoice_cancel', cr)
 -
   I check order status in "Invoice Exception" and related invoice is in cancel state.
 -
-  !assert {model: sale.order, id: order7, string: Sale order should be in Invoice Exception state}:
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be in Invoice Exception state}:
     - state == "invoice_except", "Order should be in Invoice Exception state after cancel Invoice"
 -
   Then I click on the Ignore Exception button.
 -
-  !workflow {model: sale.order, action: invoice_corrected, ref: order7}
+  !workflow {model: sale.order, action: invoice_corrected, ref: sale_order_8}
