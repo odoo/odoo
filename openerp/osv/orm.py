@@ -2442,9 +2442,9 @@ class BaseModel(object):
                                                   context=context)
 
         result_template = dict.fromkeys(aggregated_fields, False)
-        result_template.update({groupby + '_count':0})
+        result_template[groupby + '_count'] = 0
         if groupby_list and len(groupby_list) > 1:
-            result_template.update(__context={'group_by': groupby_list[1:]})
+            result_template['__context'] = {'group_by': groupby_list[1:]}
 
         # Merge the left_side (current results as dicts) with the right_side (all
         # possible values as m2o pairs). Both lists are supposed to be using the
@@ -2463,10 +2463,8 @@ class BaseModel(object):
             grouped_value = right_side[0]
             if not grouped_value in known_values:
                 line = dict(result_template)
-                line.update({
-                    groupby: right_side,
-                    '__domain': [(groupby,'=',grouped_value)] + domain,
-                })
+                line[groupby] = right_side
+                line['__domain'] = [(groupby,'=',grouped_value)] + domain
                 result.append(line)
                 known_values[grouped_value] = line
         while read_group_result or all_groups:
@@ -4207,7 +4205,7 @@ class BaseModel(object):
             cr.execute("SELECT nextval('"+self._sequence+"')")
         except:
             raise except_orm(_('UserError'),
-                        _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
+                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
 
         id_new = cr.fetchone()[0]
         for table in tocreate:
