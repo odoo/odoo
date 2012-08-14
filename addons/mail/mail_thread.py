@@ -194,7 +194,7 @@ class mail_thread(osv.Model):
         notif_user_ids += self.message_parse_users(cr, uid, body, context=context)
         
         # add users requested to perform an action (need_action mechanism)
-        if hasattr(self, 'get_needaction_user_ids'):
+        if hasattr(self, 'get_needaction_user_ids') and self._columns.get('user_id'):
             user_ids_dict = self.get_needaction_user_ids(cr, uid, thread_ids, context=context)
             for id, user_ids in user_ids_dict.iteritems():
                 notif_user_ids += user_ids
@@ -334,7 +334,7 @@ class mail_thread(osv.Model):
 
             data = {
                 'subject': subject,
-                'body_text': body_text or (hasattr(thread, 'description') and thread.description or ''),
+                'body_text': body_text or thread._model._columns.get('description') and thread.description or '',
                 'body_html': body_html or '',
                 'parent_id': parent_id,
                 'date': email_date or fields.datetime.now(),
@@ -357,7 +357,7 @@ class mail_thread(osv.Model):
                 data.update({
                     'email_to': email_to,
                     'email_from': email_from or \
-                        (hasattr(thread, 'user_id') and thread.user_id and thread.user_id.user_email),
+                        thread._model._columns.get('user_id') and thread.user_id and thread.user_id.user_email,
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
                     'references': references,
@@ -827,7 +827,7 @@ class mail_thread(osv.Model):
             forward_to = [i for i in message_followers_emails if (i and (i not in message_recipients))]
             if forward_to:
                 # TODO: we need an interface for this for all types of objects, not just leads
-                if hasattr(res, 'section_id'):
+                if model_pool._columns.get('section_id'):
                     del msg['reply-to']
                     msg['reply-to'] = res.section_id.reply_to
 
@@ -1069,14 +1069,14 @@ class mail_thread(osv.Model):
         """ When creating a new message, set as unread if uid is not the
             object responsible. """
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.message_state and hasattr(obj, 'user_id') and (not obj.user_id or obj.user_id.id != uid):
+            if obj.message_state and self._columns.get('user_id') and (not obj.user_id or obj.user_id.id != uid):
                 self.message_mark_as_unread(cr, uid, [obj.id], context=context)
 
     def message_check_and_set_unread(self, cr, uid, ids, context=None):
         """ Set unread if uid is the object responsible or if the object has
             no responsible. """
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.message_state and hasattr(obj, 'user_id') and (not obj.user_id or obj.user_id.id == uid):
+            if obj.message_state and self._columns.get('user_id') and (not obj.user_id or obj.user_id.id == uid):
                 self.message_mark_as_unread(cr, uid, [obj.id], context=context)
 
     def message_mark_as_unread(self, cr, uid, ids, context=None):
@@ -1086,7 +1086,7 @@ class mail_thread(osv.Model):
     def message_check_and_set_read(self, cr, uid, ids, context=None):
         """ Set read if uid is the object responsible. """
         for obj in self.browse(cr, uid, ids, context=context):
-            if not obj.message_state and hasattr(obj, 'user_id') and obj.user_id and obj.user_id.id == uid:
+            if not obj.message_state and self._columns.get('user_id') and obj.user_id and obj.user_id.id == uid:
                 self.message_mark_as_read(cr, uid, [obj.id], context=context)
     
     def message_mark_as_read(self, cr, uid, ids, context=None):
