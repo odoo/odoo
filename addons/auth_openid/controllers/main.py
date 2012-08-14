@@ -28,6 +28,7 @@ import werkzeug.urls
 import werkzeug.exceptions
 
 from openerp.modules.registry import RegistryManager
+from openerp.addons.web.controllers.main import login_and_redirect, set_cookie_and_redirect
 try:
     import openerp.addons.web.common.http as openerpweb
 except ImportError:
@@ -159,7 +160,7 @@ class OpenIDController(openerpweb.Controller):
     def process(self, req, **kw):
         session = getattr(req.session, 'openid_session', None)
         if not session:
-            return werkzeug.utils.redirect('/')
+            return set_cookie_and_redirect(req, '/')
 
         oidconsumer = consumer.Consumer(session, self._store, consumer_class=GoogleAppsAwareConsumer)
 
@@ -168,7 +169,6 @@ class OpenIDController(openerpweb.Controller):
         display_identifier = info.getDisplayIdentifier()
 
         session['status'] = info.status
-        user_id = None
 
         if info.status == consumer.SUCCESS:
             dbname = session['dbname']
@@ -206,10 +206,9 @@ class OpenIDController(openerpweb.Controller):
                         # TODO fill empty fields with the ones from sreg/ax
                         cr.commit()
 
-                        req.session.authenticate(dbname, login, key, {})
+                        return login_and_redirect(req, dbname, login, key)
 
-            if not user_id:
-                session['message'] = 'This OpenID identifier is not associated to any active users'
+            session['message'] = 'This OpenID identifier is not associated to any active users'
 
         elif info.status == consumer.SETUP_NEEDED:
             session['message'] = info.setup_url
@@ -223,8 +222,7 @@ class OpenIDController(openerpweb.Controller):
             # information in a log.
             session['message'] = 'Verification failed.'
 
-        fragment = '#loginerror' if not user_id else ''
-        return werkzeug.utils.redirect('/' + fragment)
+        return set_cookie_and_redirect(req, '/#action=login&loginerror=1')
 
     @openerpweb.jsonrequest
     def status(self, req):
