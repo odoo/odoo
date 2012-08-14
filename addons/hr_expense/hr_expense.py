@@ -162,6 +162,11 @@ class hr_expense_expense(osv.osv):
                     total_amount = line.total_amount
                 if exp.journal_id:
                      journal = exp.journal_id
+                     if journal.currency:
+                         if exp.currency_id != journal.currency:
+                             total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, journal.currency.id, line.total_amount, context=ctx)
+                         else:
+                             total_amount = line.total_amount
                 else:
                     journal_id = voucher_obj._get_journal(cr, uid, context={'type': 'purchase', 'company_id': company_id})
                     if journal_id:
