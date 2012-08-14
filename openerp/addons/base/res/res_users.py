@@ -20,11 +20,9 @@
 #
 ##############################################################################
 
-import logging
+
 from functools import partial
-
-import pytz
-
+import logging
 from lxml import etree
 from lxml.builder import E
 import netsvc
@@ -33,6 +31,7 @@ import openerp.exceptions
 from osv import fields,osv
 from osv.orm import browse_record
 import pooler
+import random
 from service import security
 import tools
 from tools.translate import _
@@ -95,7 +94,7 @@ class groups(osv.osv):
 
 groups()
 
-class users(osv.osv):
+class res_users(osv.osv):
     """ User class. A res.users record models an OpenERP user and is different
         from an employee.
 
@@ -212,6 +211,11 @@ class users(osv.osv):
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
+
+    def _get_default_image(self, cr, uid, is_company, context=None):
+        """ Override of res.partner: multicolor avatars ! """
+        image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
