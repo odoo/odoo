@@ -32,8 +32,8 @@ class note_stage(osv.Model):
         'sequence': fields.integer('Sequence', help="Used to order the note stages"),
         'user_id': fields.many2one('res.users', 'Owner', help="Owner of the note stage.", required=True, readonly=True),
         'fold': fields.boolean('Folded'),
-
     }
+
     _sql_constraints = [
     ]
 
@@ -64,13 +64,13 @@ class note_note(osv.Model):
         for note in self.browse(cr, uid, ids, context=context):
             res[note.id] = note.note.split('\n')[0]
         return res
-        
+
     def _set_note_first_line(self, cr, uid, id, name, value, args, context=None):
         #
         # todo should set the pad first line (as title)
         #
         return self.write(cr, uid, [id], {'name': value}, context=context)
-    
+
     _columns = {
         'name': fields.function(_get_note_first_line,_fnct_inv=_set_note_first_line, string='Note Summary', type="text", store=True),
         'note': fields.text('Pad Content'),
@@ -79,8 +79,7 @@ class note_note(osv.Model):
         'stage_id': fields.many2one('note.stage', 'Stage'),
         'active': fields.boolean('Active'),
         'color': fields.integer('Color Index'),
-        #'follower_ids': fields.one2many('mail.subscription', 'res_id', 'Followers', domain=[('res_model','=', 'note.note')])
-        'follower_ids': fields.many2many('res.users', 'mail_subscription', 'res_id', 'user_id', 'Followers', join_filter="mail_subscription.res_model='note.note'")        
+        'follower_ids': fields.many2many('res.users', 'mail_subscription', 'res_id', 'user_id', 'Followers', join_filter="mail_subscription.res_model='note.note'")
     }
 
     _sql_constraints = [
@@ -97,18 +96,15 @@ class note_note(osv.Model):
         'note_pad': lambda self, cr, uid, context: self.pad_generate_url(cr, uid, context),
     }
 
-    
     _order = 'sequence asc'
-
-    
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('note.stage')
-        
+
         # only show stage groups not folded and owned by user
         search_domain = [('fold', '=', False),('user_id', '=', uid)]
-        
+
         stage_ids = stage_obj._search(cr, uid, search_domain, order=self._order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         return result
