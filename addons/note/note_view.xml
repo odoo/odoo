@@ -16,8 +16,6 @@
       </field>
     </record>
 
-
-
     <!-- Note Stage Tree View -->
     <record model="ir.ui.view" id="view_note_stage_tree">
       <field name="name">note.stage.tree</field>
@@ -77,18 +75,14 @@
 
 		<!-- kanban note -->
 		<div class="oe_kanban_content">
-
 		  <!-- title -->
 		  <field name="name" />
-		  
 		</div>
 		
 		<div class="oe_kanban_project_avatars">
-                  <!-- 
-			<t t-foreach="record.follower_ids.raw_value" t-as="follower">
+		  <t t-foreach="record.follower_ids.raw_value" t-as="follower">
                     <img t-att-src="kanban_image('res.users', 'image_small', follower)" t-att-data-member_id="follower"/>
-                  </t>
--->
+		  </t>
 		</div>
 		
 	      </div>
@@ -99,8 +93,6 @@
       </field>
     </record>
 
-
-    
     <!-- New Note Form View -->
     <record model="ir.ui.view" id="view_note_note_form">
       <field name="name">note.note.form</field>
@@ -112,7 +104,7 @@
 	    <!-- todo: remove domain -->
 	    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1" />
 	  </header>
-          <field name="note" widget="pad" />
+          <field name="note_pad" widget="pad" />
           <div class="oe_chatter">
             <field name="message_ids" widget="mail_thread"/>
           </div>
@@ -137,14 +129,12 @@
       </field>
     </record>
 
-
     <!-- New Note Tree View -->    
     <record model="ir.ui.view" id="view_note_note_tree">
       <field name="name">note.note.tree</field>
       <field name="model">note.note</field>
       <field name="type">tree</field>
     </record>
-
 
     <record model="ir.actions.act_window" id="action_note_note">
       <field name="name">Notes</field>

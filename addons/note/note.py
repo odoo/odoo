@@ -22,16 +22,6 @@
 from openerp.osv import osv, fields
 from tools.translate import _
 
-#
-# Todo :
-
-
-#  ** fix editable when in form view ** not atm
-#  fix search
-#  fix design
-#  rights
-
-
 class note_stage(osv.Model):
     """ Category of Note """
 
@@ -54,9 +44,6 @@ class note_stage(osv.Model):
         'user_id': lambda self, cr, uid, ctx: uid,
         'sequence' : 1,
     }
-
-    def __init__(self, pool, cr):
-        osv.Model.__init__(self,pool, cr)
 
 
 # class many2many_filter(fields.many2many)
@@ -93,7 +80,7 @@ class note_note(osv.Model):
         'active': fields.boolean('Active'),
         'color': fields.integer('Color Index'),
         #'follower_ids': fields.one2many('mail.subscription', 'res_id', 'Followers', domain=[('res_model','=', 'note.note')])
-        #'follower_ids': fields.many2many('res.users', 'mail_subscription', 'res_id', 'user_id', 'Followers', join_filter="mail_subscription.res_model='note.note'")        
+        'follower_ids': fields.many2many('res.users', 'mail_subscription', 'res_id', 'user_id', 'Followers', join_filter="mail_subscription.res_model='note.note'")        
     }
 
     _sql_constraints = [
