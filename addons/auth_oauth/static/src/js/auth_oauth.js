@@ -31,8 +31,9 @@ openerp.auth_oauth = function(instance) {
         start: function() {
             this._super.apply(this, arguments);
             var params = $.deparam(window.location.hash.substring(1));
+            // alert(JSON.stringify(params));
             if (params.hasOwnProperty('access_token')) {
-                var url = "/auth_oauth/signin" + '?' + $.param(params);//alert(JSON.stringify(params));
+                var url = "/auth_oauth/signin" + '?' + $.param(params);
                 window.location = url;
             }
         },

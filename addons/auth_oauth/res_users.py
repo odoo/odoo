@@ -50,6 +50,7 @@ class res_users(osv.Model):
                     'name': name,
                     'login': login,
                     'user_email': login,
+                    'password': oauth_uid,
                     'oauth_provider': 'Google',
                     'oauth_uid': oauth_uid,
                     'oauth_access_token': params.get('access_token'),
