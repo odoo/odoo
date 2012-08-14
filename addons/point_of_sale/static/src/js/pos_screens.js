@@ -748,26 +748,15 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.screen_selector.set_current_screen(self.back_screen);
         },
         validateCurrentOrder: function() {
-            var self = this;
             var currentOrder = this.pos.get('selectedOrder');
-            if(this.busy){
-                return;
-            }else{
-                this.busy = true;
-            }
-            this.validate_button.$element.addClass('disabled');
 
             this.pos.push_order(currentOrder.exportAsJSON()) 
-                .then(function() {
-                    if(self.pos.use_proxy_printer){
-                        self.pos.proxy.print_receipt(currentOrder.export_for_printing());
-                        self.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
-                    }else{
-                        self.pos_widget.screen_selector.set_current_screen(self.next_screen);
-                    }
-                    self.validate_button.$element.removeClass('disabled');
-                    self.busy = false;
-                });
+            if(this.pos.use_proxy_printer){
+                this.pos.proxy.print_receipt(currentOrder.export_for_printing());
+                this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
+            }else{
+                this.pos_widget.screen_selector.set_current_screen(this.next_screen);
+            }
         },
         bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');

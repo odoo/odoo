@@ -1,51 +1,6 @@
 function openerp_pos_models(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
-    module.LocalStorageDAO = instance.web.Class.extend({
-        add_operation: function(operation) {
-            var self = this;
-            return $.async_when().pipe(function() {
-                var tmp = self._get('oe_pos_operations', []);
-                var last_id = self._get('oe_pos_operations_sequence', 1);
-                tmp.push({'id': last_id, 'data': operation});
-                self._set('oe_pos_operations', tmp);
-                self._set('oe_pos_operations_sequence', last_id + 1);
-            });
-        },
-        remove_operation: function(id) {
-            var self = this;
-            return $.async_when().pipe(function() {
-                var tmp = self._get('oe_pos_operations', []);
-                tmp = _.filter(tmp, function(el) {
-                    return el.id !== id;
-                });
-                self._set('oe_pos_operations', tmp);
-            });
-        },
-        get_operations: function() {
-            var self = this;
-            return $.async_when().pipe(function() {
-                return self._get('oe_pos_operations', []);
-            });
-        },
-        _get: function(key, default_) {
-            var txt = localStorage['oe_pos_dao_'+key];
-            if (! txt)
-                return default_;
-            return JSON.parse(txt);
-        },
-        _set: function(key, value) {
-            localStorage['oe_pos_dao_'+key] = JSON.stringify(value);
-        },
-        reset_stored_data: function(){
-            for(key in localStorage){
-                if(key.indexOf('oe_pos_dao_') === 0){
-                    delete localStorage[key];
-                }
-            }
-        },
-    });
-
     var fetch = function(model, fields, domain, ctx){
         return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
     };
@@ -58,7 +13,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     // this is done asynchronously, a ready deferred alows the GUI to wait interactively 
     // for the loading to be completed 
     // There is a single instance of the PosModel for each Front-End instance, it is usually called
-    // 'pos' and is available to almost all widgets.
+    // 'pos' and is available to all widgets extending PosWidget.
 
     module.PosModel = Backbone.Model.extend({
         initialize: function(session, attributes) {
@@ -72,7 +27,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
             this.db = new module.PosLS();                       // a database used to store the products and categories
-            this.db.clear();
+            this.db.clear('products','categories');
 
             window.db = this.db;
 
@@ -309,10 +264,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         // saves the order locally and try to send it to the backend. 'record' is a bizzarely defined JSON version of the Order
         push_order: function(record) {
-            var self = this;
+            this.db.add_order(record);
+            this.flush();
+            /*
             return this.dao.add_operation(record).pipe(function(){
                 return self.flush();
             });
+            */
         },
 
         //creates a new empty order and sets it as the current order
@@ -322,47 +280,40 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.set('selectedOrder', order);
         },
 
-        // attemps to send all pending orders ( stored in the DAO ) to the server.
-        // it will do it one by one, and remove the successfully sent ones from the DAO once
-        // it has been confirmed that they have been received.
+        // attemps to send all pending orders ( stored in the pos_db ) to the server,
+        // and remove the successfully sent ones from the db once
+        // it has been confirmed that they have been sent correctly.
         flush: function() {
             //this makes sure only one _int_flush is called at the same time
             return this.flush_mutex.exec(_.bind(function() {
-                return this._int_flush();
+                return this._flush(0);
             }, this));
         },
-        _int_flush : function() {
+        // attempts to send an order of index 'index' in the list of order to send. The index
+        // is used to skip orders that failed. do not call this method outside the mutex provided
+        // by flush() 
+        _flush: function(index){
             var self = this;
+            var orders = this.db.get_orders();
+            self.set('nbr_pending_operations',orders.length);
 
-            this.dao.get_operations().pipe(function(operations) {
-                // operations are really Orders that are converted to json.
-                // they are saved to disk and then we attempt to send them to the backend so that they can
-                // be applied. 
-                // since the network is not reliable we potentially have many 'pending operations' that have not been sent.
-                self.set( {'nbr_pending_operations':operations.length} );
-                if(operations.length === 0){
-                    return $.when();
-                }
-                var order = operations[0];
-
-                 // we prevent the default error handler and assume errors
-                 // are a normal use case, except we stop the current iteration
-
-                 return (new instance.web.Model('pos.order')).get_func('create_from_ui')([order])
-                            .fail(function(unused, event){
-                                // wtf ask niv
-                                event.preventDefault();
-                            })
-                            .pipe(function(){
-                                // success: remove the successfully sent operation, and try to send the next one 
-                                self.dao.remove_operation(operations[0].id).pipe(function(){
-                                    return self._int_flush();
-                                });
-                            }, function(){
-                                // in case of error we just sit there and do nothing. wtf ask niv
-                                return $.when();
-                            });
-            });
+            var order  = orders[index];
+            if(!order){
+                return;
+            }
+            //try to push an order to the server
+            (new instance.web.Model('pos.order')).get_func('create_from_ui')([order])
+                .fail(function(unused, event){
+                    //don't show error popup if it fails (I guess, copy pasted from niv without understanding it completely)
+                    event.preventDefault();
+                    console.error('Failed to send order:',order);
+                    self._flush(index+1);
+                })
+                .done(function(){
+                    //remove from db if success
+                    self.db.remove_order(order.id);
+                    self._flush(index);
+                });
         },
 
         scan_product: function(parsed_ean){

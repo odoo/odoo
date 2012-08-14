@@ -136,9 +136,10 @@ function openerp_pos_db(instance, module){
             this.save('categories',stored_categories);
         },
         /* removes all the data from the database. TODO : being able to selectively remove data */
-        clear: function(){
-            localStorage.removeItem(this.name + '_products');
-            localStorage.removeItem(this.name + '_categories');
+        clear: function(stores){
+            for(var i = 0, len = arguments.length; i < len; i++){
+                localStorage.removeItem(this.name + '_' + arguments[i]);
+            }
         },
         /* this internal methods returns the count of properties in an object. */
         _count_props : function(obj){
@@ -226,53 +227,4 @@ function openerp_pos_db(instance, module){
             return this.load('orders',[]);
         },
     });
-    /*
-    module.LocalStorageDAO = instance.web.Class.extend({
-        add_operation: function(operation) {
-            var self = this;
-            return $.async_when().pipe(function() {
-                var tmp = self._get('oe_pos_operations', []);
-                var last_id = self._get('oe_pos_operations_sequence', 1);
-                tmp.push({'id': last_id, 'data': operation});
-                self._set('oe_pos_operations', tmp);
-                self._set('oe_pos_operations_sequence', last_id + 1);
-            });
-        },
-        remove_operation: function(id) {
-            var self = this;
-            return $.async_when().pipe(function() {
-                var tmp = self._get('oe_pos_operations', []);
-                tmp = _.filter(tmp, function(el) {
-                    return el.id !== id;
-                });
-                self._set('oe_pos_operations', tmp);
-            });
-        },
-        get_operations: function() {
-            var self = this;
-            return $.async_when().pipe(function() {
-                return self._get('oe_pos_operations', []);
-            });
-        },
-        _get: function(key, default_) {
-            var txt = localStorage['oe_pos_dao_'+key];
-            if (! txt)
-                return default_;
-            return JSON.parse(txt);
-        },
-        _set: function(key, value) {
-            localStorage['oe_pos_dao_'+key] = JSON.stringify(value);
-        },
-        reset_stored_data: function(){
-            for(key in localStorage){
-                if(key.indexOf('oe_pos_dao_') === 0){
-                    delete localStorage[key];
-                }
-            }
-            0497 53 82 88
-        },
-    });
-    */
-
-    window.PosLS = module.PosLS;
 }
