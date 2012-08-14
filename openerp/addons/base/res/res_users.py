@@ -185,7 +185,7 @@ class res_users(osv.osv):
             if 'password' in o and ( 'id' not in o or o['id'] != uid ):
                 o['password'] = '********'
             return o
-        result = super(users, self).read(cr, uid, ids, fields, context, load)
+        result = super(res_users, self).read(cr, uid, ids, fields, context, load)
         canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
         if not canwrite:
             if isinstance(ids, (int, float)):
@@ -265,7 +265,7 @@ class res_users(osv.osv):
         """
         if not view_id and view_type == 'form':
             return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
-        return super(users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        return super(res_users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
     # User can write to a few of her own fields (but not her groups for example)
     SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small']
@@ -283,7 +283,7 @@ class res_users(osv.osv):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
-        res = super(users, self).write(cr, uid, ids, values, context=context)
+        res = super(res_users, self).write(cr, uid, ids, values, context=context)
 
         # clear caches linked to the users
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
@@ -305,7 +305,7 @@ class res_users(osv.osv):
             for id in ids:
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
-        return super(users, self).unlink(cr, uid, ids, context=context)
+        return super(res_users, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -328,7 +328,7 @@ class res_users(osv.osv):
                        name=(copy_pattern % user2copy['name']),
                        )
         copydef.update(default)
-        return super(users, self).copy(cr, uid, id, copydef, context)
+        return super(res_users, self).copy(cr, uid, id, copydef, context)
 
     def context_get(self, cr, uid, context=None):
         user = self.browse(cr, uid, uid, context)
