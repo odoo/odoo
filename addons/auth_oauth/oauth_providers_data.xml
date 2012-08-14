@@ -1,0 +1,25 @@
+<?xml version="1.0"?>        
+<openerp>
+    <data noupdate="1">
+        <record id="1" model="oauth.providers">
+            <field name="name">Google OAuth2</field>
+            <field name="client_id">108010644258-duuhmp6pu7li4tsmnqg7j9rvdeklg0ki.apps.googleusercontent.com</field>
+            <field name="auth_endpoint">https://accounts.google.com/o/oauth2/auth</field>
+            <field name="scope">https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile</field>
+            <field name="validation_endpoint">https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=</field>
+            <field name="data_endpoint">https://www.googleapis.com/oauth2/v1/userinfo?access_token=</field>
+            <field name="redirect_uris">https://localhost/</field>
+            <field name="active">True</field>
+        </record>
+        <record id="2" model="oauth.providers">
+            <field name="name">Twitter OAuth2</field>
+            <field name="client_id">108010644258-duuhmp6pu7li4tsmnqg7j9rvdeklg0ki.apps.twitterusercontent.com</field>
+            <field name="auth_endpoint">https://api.twitter.com/oauth/request_token</field>
+            <field name="scope"></field>
+            <field name="validation_endpoint">https://api.twitter.com/oauth/authorize?oauth_token=</field>
+            <field name="data_endpoint"></field>
+            <field name="redirect_uris">https://localhost/</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</openerp>

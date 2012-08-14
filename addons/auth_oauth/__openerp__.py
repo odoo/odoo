@@ -30,6 +30,7 @@
     'website': 'http://www.openerp.com',
     'depends': ['base', 'web'],
     'data': [
+        'oauth_providers_data.xml'
     ],
     'update_xml': [
         'oauth_providers.xml'
