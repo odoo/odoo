@@ -129,7 +129,7 @@ class mail_message_common(osv.TransientModel):
             help="Type of message, usually 'html' or 'plain', used to select "\
                   "plain-text or rich-text contents accordingly"),
         'body_text': fields.text('Text Contents', help="Plain-text version of the message"),
-        'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML version of the message"),
+        'body_html': fields.html('Rich-text Contents', help="Rich-text/HTML version of the message"),
         'body': fields.function(get_body, fnct_search = search_body, type='text',
             string='Message Content', store=True,
             help="Content of the message. This content equals the body_text field "\
