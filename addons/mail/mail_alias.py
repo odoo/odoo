@@ -135,7 +135,7 @@ class mail_alias(osv.Model):
         make it unique, and the ``alias_model_id`` value will set to the
         model ID of the ``model_name`` value, if provided, 
         """
-        alias_name = re.sub(r'[^\w+]', '_', remove_accents(vals['alias_name'])).lower()
+        alias_name = re.sub(r'[^\w+]', '-', remove_accents(vals['alias_name'])).lower()
         alias_name = self._find_unique(cr, uid, alias_name, context=context)
         vals['alias_name'] = alias_name
         if model_name:
