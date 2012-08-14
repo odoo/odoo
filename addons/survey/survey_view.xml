@@ -16,7 +16,6 @@
         <record model="ir.ui.view" id="survey_form">
             <field name="name">survey_form</field>
             <field name="model">survey</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                 <header>
@@ -246,7 +245,6 @@
         <record model ="ir.ui.view" id= "survey_tree">
             <field name="name">survey_tree</field>
             <field name="model">survey</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="gray:state == 'close'" string="Survey">
                     <field name="title"/>
@@ -272,7 +270,6 @@
         <record id="survey_search" model="ir.ui.view">
             <field name="name">survey_search</field>
             <field name="model">survey</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Survey">
                     <field name="title" string="Survey"/>
@@ -294,7 +291,6 @@
         <record model="ir.ui.view" id="view_survey_kanban">
             <field name="name">event.survey.kanban</field>
             <field name="model">survey</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="title"/>
@@ -369,7 +365,6 @@
         <record model="ir.ui.view" id="survey_page_form">
             <field name="name">survey_page_form</field>
             <field name="model">survey.page</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Page" version="7.0">
                     <sheet>
@@ -539,7 +534,6 @@
         <record model="ir.ui.view" id="survey_page_tree">
             <field name="name">survey_page_tree</field>
             <field name="model">survey.page</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Page">
                     <field name="sequence" string="Seq"/>
@@ -553,7 +547,6 @@
         <record id="view_survey_page_filter" model="ir.ui.view">
             <field name="name">survey.page.list.select</field>
             <field name="model">survey.page</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Survey Page">
                     <field name="title" string="Page"/>
@@ -580,7 +573,6 @@
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
             <field name="model">survey.page</field>
-            <field name="type">form</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Survey Pages">
@@ -603,7 +595,6 @@
         <record model="ir.ui.view" id="survey_question_form">
             <field name="name">survey_question_form</field>
             <field name="model">survey.question</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Question">
                     <field name="question" colspan="4"/>
@@ -742,7 +733,6 @@
         <record model="ir.ui.view" id="survey_question_tree">
             <field name="name">survey_question_tree</field>
             <field name="model">survey.question</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Question">
                     <field name="sequence" string="Seq"/>
@@ -757,7 +747,6 @@
         <record id="survey_question_search" model="ir.ui.view">
             <field name="name">survey_question_search</field>
             <field name="model">survey.question</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Question">
                     <field name="question" string="Question"/>
@@ -784,7 +773,6 @@
             <field name="name">survey_question_wizard_test</field>
             <field name="model">survey.question</field>
             <field name="priority">20</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Question">
                     <field name="question" colspan="4"/>
@@ -930,7 +918,6 @@
         <record model ="ir.ui.view" id="survey_answer_form">
             <field name="name">survey_answer_form</field>
             <field name="model">survey.answer</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Answer">
                     <field name="answer" colspan="4"/>
@@ -951,7 +938,6 @@
         <record model="ir.ui.view" id= "survey_answer_tree">
             <field name="name">survey_answer_tree</field>
             <field name="model">survey.answer</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Survey Answer">
                     <field name="sequence" string="Seq"/>
@@ -968,7 +954,6 @@
         <record model ="ir.ui.view" id= "survey_response_line_form">
             <field name="name">survey_response_line_form</field>
             <field name="model">survey.response.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Answer">
                     <field name="question_id"/>
@@ -1009,7 +994,6 @@
         <record model="ir.ui.view" id="survey_response_line_tree">
             <field name="name">survey_response_line_tree</field>
             <field name="model">survey.response.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Answer Line">
                     <field name="page_id"/>
@@ -1027,7 +1011,6 @@
         <record model="ir.ui.view" id="survey_response_form">
             <field name="name">survey_response_form</field>
             <field name="model">survey.response</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Answer">
                     <field name="survey_id"/>
@@ -1043,7 +1026,6 @@
         <record model="ir.ui.view" id="survey_response_tree">
             <field name="name">survey_response_tree</field>
             <field name="model">survey.response</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Answer">
                     <field name="survey_id"/>
@@ -1062,7 +1044,6 @@
         <record model="ir.ui.view" id="survey_response_answer_form">
             <field name="name">survey_response_answer_form</field>
             <field name="model">survey.response.answer</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Answer">
                     <group colspan="4">
@@ -1082,7 +1063,6 @@
         <record model="ir.ui.view" id="survey_response_answer_tree">
             <field name="name">survey_response_answer_tree</field>
             <field name="model">survey.response.answer</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="top" string="Survey Answer">
                     <field name="answer_id"/>
@@ -1101,7 +1081,6 @@
         <record model="ir.ui.view" id="survey_question_column_heading_form">
             <field name="name">survey_question_column_heading_form</field>
             <field name="model">survey.question.column.heading</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Column Heading">
                     <field name="title"/>
@@ -1122,7 +1101,6 @@
         <record model="ir.ui.view" id="survey_question_column_heading_tree">
             <field name="name">survey_question_column_heading_tree</field>
             <field name="model">survey.question.column.heading</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Column Heading">
                     <field name="title"/>
@@ -1137,9 +1115,8 @@
         <record model="ir.ui.view" id="survey_request_form">
             <field name="name">survey_request_form</field>
             <field name="model">survey.request</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Request" version="7.0">
                 <header>
                     <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object"/>
                     <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object" class="oe_highlight"/>
@@ -1162,7 +1139,6 @@
         <record model="ir.ui.view" id="survey_request_tree">
             <field name="name">survey_request_tree</field>
             <field name="model">survey.request</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Evaluation Plan Phase" colors="red:date_deadline&lt;current_date">
                     <field name="date_deadline"/>
@@ -1177,7 +1153,6 @@
        <record id="survey_request_search" model="ir.ui.view">
             <field name="name">survey_request_search</field>
             <field name="model">survey.request</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Survey">
                     <field name="email" string="Survey"/>
@@ -1218,7 +1193,6 @@
         <record model="ir.ui.view" id="survey_type_form">
             <field name="name">survey_type_form</field>
             <field name="model">survey.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Type">
                     <field name="name"/>
@@ -1230,7 +1204,6 @@
         <record model="ir.ui.view" id="survey_type_tree">
             <field name="name">survey_type_tree</field>
             <field name="model">survey.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Type">
                     <field name="name"/>

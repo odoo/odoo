@@ -5,7 +5,6 @@
         <record model="ir.ui.view" id="crm_case_form_view_oppor">
             <field name="name">CRM - Opportunities - Quote Inherit</field>
             <field name="model">crm.lead</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <data>
@@ -20,7 +19,6 @@
         <record model="ir.ui.view" id="sale_view_inherit123">
             <field name="name">sale.order.inherit</field>
             <field name="model">sale.order</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
@@ -33,7 +31,6 @@
         <record id="view_sales_order_filter_inherit" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
             <field name="model">sale.order</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
