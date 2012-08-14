@@ -93,7 +93,7 @@ class note_note(osv.Model):
         'active': fields.boolean('Active'),
         'color': fields.integer('Color Index'),
         #'follower_ids': fields.one2many('mail.subscription', 'res_id', 'Followers', domain=[('res_model','=', 'note.note')])
-        'follower_ids': fields.many2many('res.users', 'mail_subscription', 'res_id', 'user_id', 'Followers', join_filter="mail_subscription.res_model='note.note'")        
+        #'follower_ids': fields.many2many('res.users', 'mail_subscription', 'res_id', 'user_id', 'Followers', join_filter="mail_subscription.res_model='note.note'")        
     }
 
     _sql_constraints = [

@@ -41,10 +41,9 @@ Notes can be found in the 'Home' main menu, under 'Tool' submenu.
         'security/note_security.xml',
         'security/ir.model.access.csv',
         'note_view.xml',
-        #'note_workflow.xml',
     ],
     'demo_xml': [
-        #"note_data.xml"
+        "note_data.xml"
     ],
     'test':[
     ],

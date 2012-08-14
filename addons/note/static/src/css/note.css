@@ -1,6 +1,6 @@
 
 
-.openerp .oe_webclient .oe_application .oe_view_manager .oe_view_manager_body .oe_view_manager_view_kanban .oe_kanban_view .oe_kanban_groups .oe_kanban_groups_records .oe_kanban_column .oe_fold_column .oe_kanban_card {
+.openerp .oe_fold_column .oe_kanban_card {
     text-decoration:none;
     color:#000;
     display:block;
@@ -14,35 +14,72 @@
 }
 
 
-.openerp .oe_webclient .oe_application .oe_view_manager .oe_view_manager_body .oe_view_manager_view_kanban .oe_kanban_view .oe_kanban_groups .oe_kanban_groups_records .oe_kanban_column .oe_fold_column .oe_kanban_card {
+
+.oe_kanban_record .oe_kanban_card   {
+    -webkit-transform: rotate(-2deg);
+    -o-transform: rotate(-2deg);
+    -moz-transform:rotate(-2deg);
+}
+
+.oe_kanban_record:nth-of-type(even) .oe_kanban_card   {
+    -webkit-transform: rotate(-1deg);
+    -o-transform: rotate(-1deg);
+    -moz-transform:rotate(-1deg);
+}
+
+
+.oe_kanban_record:nth-of-type(3n) .oe_kanban_card   {
+    -webkit-transform: rotate(4deg);
+    -o-transform: rotate(4deg);
+    -moz-transform:rotate(4deg);
+}
+
+.oe_kanban_column:nth-of-type(even) .oe_kanban_record .oe_kanban_card   {
+    -webkit-transform: rotate(2deg);
+    -o-transform: rotate(2deg);
+    -moz-transform:rotate(2deg);
+}
+
+.oe_kanban_column:nth-of-type(even) .oe_kanban_record:nth-of-type(even) .oe_kanban_card   {
     -webkit-transform: rotate(-3deg);
     -o-transform: rotate(-3deg);
     -moz-transform:rotate(-3deg);
 }
 
-.openerp .oe_webclient .oe_application .oe_view_manager .oe_view_manager_body .oe_view_manager_view_kanban .oe_kanban_view .oe_kanban_groups:nth-child(even) .oe_kanban_groups_records .oe_kanban_column .oe_fold_column .oe_kanban_card {
-    -o-transform:rotate(1deg);
-    -webkit-transform:rotate(1deg);
+.oe_kanban_column:nth-of-type(even) .oe_kanban_record:nth-of-type(3n) .oe_kanban_card   {
+    -webkit-transform: rotate(1deg);
+    -o-transform: rotate(1deg);
     -moz-transform:rotate(1deg);
-    position:relative;
-    top:3px;
 }
+/* .openerp .oe_fold_column:nth-child(even) .oe_kanban_card { */
+/*     -webkit-transform: rotate(-3deg); */
+/*     -o-transform: rotate(-3deg); */
+/*     -moz-transform:rotate(-3deg); */
+/* } */
 
-.openerp .oe_webclient .oe_application .oe_view_manager .oe_view_manager_body .oe_view_manager_view_kanban .oe_kanban_view .oe_kanban_groups:nth-child(2n) .oe_kanban_groups_records .oe_kanban_column .oe_fold_column .oe_kanban_card {
-    -o-transform:rotate(-2deg);
-    -webkit-transform:rotate(-2deg);
-    -moz-transform:rotate(-2deg);
-    position:relative;
-    top:-3px;
-}
+/* .openerp  .oe_kanban_groups_records .oe_kanban_column .oe_fold_column:nth-child(even) .oe_kanban_card { */
+/*     -o-transform:rotate(1deg); */
+/*     -webkit-transform:rotate(1deg); */
+/*     -moz-transform:rotate(1deg); */
+/*     position:relative; */
+/*     top:3px; */
+/* } */
 
-.openerp .oe_webclient .oe_application .oe_view_manager .oe_view_manager_body .oe_view_manager_view_kanban .oe_kanban_view .oe_kanban_groups:nth-child(2n) .oe_kanban_groups_records .oe_kanban_column .oe_fold_column .oe_kanban_card {
-    -o-transform:rotate(2deg);
-    -webkit-transform:rotate(2deg);
-    -moz-transform:rotate(2deg);
-    position:relative;
-    top:-5px;
-}
+/* .openerp  .oe_fold_column:nth-child(3n) .oe_kanban_card { */
+/*     -o-transform:rotate(-2deg); */
+/*     -webkit-transform:rotate(-2deg); */
+/*     -moz-transform:rotate(-2deg); */
+/*     position:relative; */
+/*     top:-3px; */
+/* } */
+
+/* .openerp.oe_fold_column:nth-child(5n) .oe_kanban_card { */
+/*     -o-transform:rotate(2deg); */
+/*     -webkit-transform:rotate(2deg); */
+/*     -moz-transform:rotate(2deg); */
+/*     position:relative; */
+/*     top:-5px; */
+/* } */
 
 .openerp .oe_webclient .oe_application .oe_view_manager .oe_view_manager_body .oe_view_manager_view_kanban .oe_kanban_view .oe_kanban_groups .oe_kanban_groups_records .oe_kanban_column .oe_fold_column .oe_kanban_card:hover, 
 .openerp .oe_webclient .oe_application .oe_view_manager .oe_view_manager_body .oe_view_manager_view_kanban .oe_kanban_view .oe_kanban_groups .oe_kanban_groups_records .oe_kanban_column .oe_fold_column .oe_kanban_card:focus

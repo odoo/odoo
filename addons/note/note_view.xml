@@ -84,9 +84,11 @@
 		</div>
 		
 		<div class="oe_kanban_project_avatars">
-                  <t t-foreach="record.follower_ids.raw_value" t-as="follower">
+                  <!-- 
+			<t t-foreach="record.follower_ids.raw_value" t-as="follower">
                     <img t-att-src="kanban_image('res.users', 'image_small', follower)" t-att-data-member_id="follower"/>
                   </t>
+-->
 		</div>
 		
 	      </div>
