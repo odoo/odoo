@@ -1,0 +1,49 @@
+<?xml version="1.0"?>        
+<openerp>
+    <data>
+        <menuitem id="menu_oauth_provider" parent="base.menu_administration" name="OAuth2 Settings" action="" sequence="100" />
+        <record model="ir.ui.view" id="view_oauth_provider_form">
+            <field name="name">oauth.provider.form</field>
+            <field name="model">oauth.providers</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="arch" version="7.0">
+                    <header>
+                        
+                    </header>
+                    <sheet>
+                        <group name="info1" string="" col="">
+                            <field name="name" />
+                            <field name="client_id" />
+                            <field name="active" />
+                        </group>
+                        <group name="info2" string="" col="">
+                            <field name="auth_endpoint" />
+                            <field name="scope" />
+                            <field name="validation_endpoint" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_oauth_provider_list">
+            <field name="name">oauth.provider.list</field>
+            <field name="model">oauth.providers</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="arch" version="7.0">
+                    <field name="name" />
+                    <field name="client_id" />
+                    <field name="active" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_oauth_provider">
+            <field name="name">Providers</field>
+            <field name="res_model">oauth.providers</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_oauth_providers" parent="menu_oauth_provider" name="OAuth2 Providers" action="action_oauth_provider" sequence="0" />
+    </data>
+</openerp>

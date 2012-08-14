@@ -31,6 +31,9 @@
     'depends': ['base', 'web'],
     'data': [
     ],
+    'update_xml': [
+        'oauth_providers.xml'
+    ],
     'js': [
         'static/src/js/auth_oauth.js',
     ],

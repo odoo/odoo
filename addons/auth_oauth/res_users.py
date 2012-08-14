@@ -55,7 +55,6 @@ class res_users(osv.Model):
         r = (cr.dbname, login, oauth_uid)
 
         res = self.search(cr, uid, [("oauth_uid", "=", oauth_uid)])
-        _logger.exception(res)
         if res:
             self.write(cr, uid, res[0], {'oauth_access_token':access_token})
         else:
@@ -63,7 +62,6 @@ class res_users(osv.Model):
             new_user = {
                 'name': name,
                 'login': login,
-                # 'password': oauth_uid,
                 'user_email': login,
                 'oauth_provider': 'Google',
                 'oauth_uid': oauth_uid,
