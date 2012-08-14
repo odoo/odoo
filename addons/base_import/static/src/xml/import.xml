@@ -1,0 +1,25 @@
+<templates>
+    <t t-name="ImportView">
+        <form action="" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="session_id"
+                   t-att-value="widget.session.session_id"/>
+            <input type="hidden" name="import_id"/>
+            <label for="csvfile">CSV File:</label>
+            <input type="file" id="csvfile" name="file" class="oe_import_file"/>
+
+            <table class="oe_import_grid" width="100%">
+            </table>
+        </form>
+    </t>
+    <!-- TODO: column matcher? -->
+    <t t-name="ImportView.preview">
+        <tr t-if="headers" class="oe_import_grid-header">
+            <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
+                ><t t-esc="header"/></td>
+        </tr>
+        <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
+            <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
+                ><t t-esc="cell"/></td>
+        </tr>
+    </t>
+</templates>
