@@ -2,13 +2,6 @@
     Testing for hierarchical search in M2M
 -
     !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('category_id', 'child_of',ref('res_partner_category_1'))])
-        assert len(ids) >= 1, ids
-
--
-    Test hierarchical search in M2M with child ID1
--
-    !python {model: res.partner }: |
         ids = self.search(cr, uid, [('category_id', 'child_of',ref('res_partner_category_0'))])
         assert len(ids) >= 1, ids
 -
