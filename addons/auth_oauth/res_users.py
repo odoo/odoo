@@ -1,9 +1,13 @@
+import logging
+
 import urllib2
 import simplejson
 
 import openerp
 
 from openerp.osv import osv, fields
+
+_logger = logging.getLogger(__name__)
 
 class res_users(osv.Model):
 
@@ -46,13 +50,14 @@ class res_users(osv.Model):
 
         login = validation['email']
         oauth_uid = validation['user_id']
-        name = self.auth_oauth_fetch_user_data(cr, uid, params)['name']
+        name = self.auth_oauth_fetch_user_data(cr, uid, access_token)['name']
 
         r = (cr.dbname, login, access_token)
-        
+
         res = self.search(cr, uid, [("oauth_uid", "=", oauth_uid)])
+        _logger.exception(res)
         if res:
-            self.write(cr, uid, res[0]['id'], {'oauth_access_token':access_token})
+            self.write(cr, uid, res[0], {'oauth_access_token':access_token})
         else:
             # New user
             new_user = {

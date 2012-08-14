@@ -31,11 +31,13 @@ class OAuthController(openerpweb.Controller):
                 return openerp.addons.web.controllers.main.login_and_redirect(req, *credentials)
             except AttributeError:
                 # auth_signup is not installed
+                _logger.exception("attribute error")
                 url = "/#action=auth_signup&error=1"
             except Exception,e:
                 # signup error
+                _logger.exception('oops')
                 url = "/#action=auth_signup&error=2"
-        return werkzeug.utils.redirect("http://localhost:8069")
+        return openerp.addons.web.controllers.main.set_cookie_and_redirect(req, "/")
 
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
