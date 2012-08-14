@@ -9,12 +9,12 @@
   !python {model: edi.document}: |
       import json
       partner_obj = self.pool.get('res.partner')
-      tokens = self.export_edi(cr, uid, [partner_obj.browse(cr, uid, ref('base.res_partner_agrolait'))])
+      tokens = self.export_edi(cr, uid, [partner_obj.browse(cr, uid, ref('base.res_partner_2'))])
       doc = self.get_document(cr, uid, tokens[0], context=context)
       edi_doc, = json.loads(doc)
 
       # check content of the document
-      assert edi_doc.get('__id').endswith('.res_partner_agrolait'), 'Incorrect external ID'
+      assert edi_doc.get('__id').endswith('.res_partner_2'), 'Incorrect external ID'
       assert edi_doc.get('__model') == 'res.partner', 'Incorrect/Missing __model'
       assert edi_doc.get('__module') == 'base', 'Incorrect/Missing __module'
       assert edi_doc.get('__last_update'), 'Missing __last_update'
@@ -32,8 +32,8 @@
       edi_doc['__attachments'] = [attachment]
       doc = json.dumps([edi_doc])
       result, = self.import_edi(cr, uid, edi_document=doc)
-      assert result[0] == 'res.partner' and result[1] > ref('base.res_partner_agrolait'),\
-         "Expected (%r,> %r) after import 1, got %r" % ('res.partner', ref('base.res_partner_agrolait'), result)
+      assert result[0] == 'res.partner' and result[1] > ref('base.res_partner_2'),\
+         "Expected (%r,> %r) after import 1, got %r" % ('res.partner', ref('base.res_partner_2'), result)
 
       # export the same partner we just created, and see if the output matches the input
       tokens = self.export_edi(cr, uid, [partner_obj.browse(cr, uid, result[1])])

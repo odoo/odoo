@@ -1,0 +1,83 @@
+@mixin radius($radius: 5px)
+  -moz-border-radius: $radius
+  -webkit-border-radius: $radius
+  border-radius: $radius
+
+@mixin box-shadow($bsval: 0px 1px 4px #777)
+  -moz-box-shadow: $bsval
+  -webkit-box-shadow: $bsval
+  box-shadow: $bsval
+
+.openerp
+  .oe_dashboard_links
+    text-align: right
+    margin: 0 4px 6px 0
+  .oe_dashboard
+    width: 100%
+    .oe_action
+      margin: 0 8px 8px 0
+      background-color: white
+      border: 1px solid
+      border-color: #e5e5e5 #dbdbdb #d2d2d2
+      @include radius(3px)
+      @include box-shadow(0 0 2px rgba(0,0,0,0.2))
+      .oe_header
+        font-size: 16px
+        vertical-align: middle
+        margin: 0
+        padding: 12px
+        @include radius(3px 3px 0 0)
+
+        //border-bottom: 1px dotted #dbdbdb
+        //@include radius(2px 2px 0 0)
+        //@include vertical-gradient(#FCFCFC, #DEDEDE)
+        &:hover
+          cursor: move
+        .oe_icon
+          float: right
+          cursor: pointer
+          color: #b3b3b3
+          &:hover
+            color: #666
+            text-decoration: none
+        .oe_close:after
+          content: "×"
+          margin-left: 4px
+        .oe_minimize:after
+          content: "-"
+          margin-left: 4px
+        .oe_maximize:after
+          content: "+"
+          margin-left: 4px
+      .oe_header_empty
+        padding-top: 0
+        padding-bottom: 2px
+      .oe_button_create
+        margin-left: 4px
+        padding: 0 4px 0 4px
+        height: 16px !important
+      //.oe_rename
+        //float: left
+        //padding-right: 4px
+        //position: relative
+        //top: 1px
+      //.oe_input
+          //height: 16px;
+          //position: relative;
+          //top: 2px;
+      //.ui-sortable-placeholder
+        //border: 1px dotted black;
+        //visibility: visible !important;
+        //height: 50px !important;
+        //*
+          //visibility: hidden;
+      .oe_content
+        padding: 0 12px 12px 12px
+        .oe_view_manager_header
+          display: none
+        .oe_list_content
+          > thead
+            border-bottom: 1px
+          > tbody
+            tr:nth-child(odd)
+              background: transparent
