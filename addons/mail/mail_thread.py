@@ -35,6 +35,10 @@ import xmlrpclib
 _logger = logging.getLogger(__name__)
 
 class many2many_reference(fields.many2many):
+    """ many2many_reference is an override of fields.many2many. It manages
+        many2many-like table where one id is given by two fields, res_model
+        and res_id.
+    """
     
     def _get_query_and_where_params(self, cr, model, ids, values, where_params):
         """ Add in where:
@@ -54,6 +58,7 @@ class many2many_reference(fields.many2many):
         return query, where_params
 
     def set(self, cr, model, id, name, values, user=None, context=None):
+        """ Override to add the res_model field in queries. """
         if not values: return
         rel, id1, id2 = self._sql_names(model)
         obj = model.pool.get(self._obj)
@@ -64,7 +69,7 @@ class many2many_reference(fields.many2many):
                 idnew = obj.create(cr, user, act[2], context=context)
                 cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, idnew, model._name))
             elif act[0] == 3:
-                cr.execute('DELETE FROM "'+rel+'" WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
+                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
             elif act[0] == 4:
                 # following queries are in the same transaction - so should be relatively safe
                 cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
@@ -80,7 +85,6 @@ class many2many_reference(fields.many2many):
                 for act_nbr in act[2]:
                     cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, act_nbr, model._name))
             else:
-                print act
                 return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
 
 class mail_thread(osv.Model):
@@ -160,18 +164,36 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        """ Automatically subscribe the creator """
+        """ Override of create to subscribe :
+            - the writer
+            - followers given by the monitored fields
+        """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
+        fields = self.message_get_follower_fields(cr, uid, [thread_id], context=context)
+        print fields
         if thread_id:
             self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
         return thread_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        """ Override of write to subscribe the writer, except if he has changed
-            the followers (to avoid unfollow-->follow). """
+        """ Override of write to subscribe :
+            - the writer
+            - followers given by the monitored fields
+        """
         if isinstance(ids, (int, long)):
             ids = [ids]
+        command = self.message_get_automatic_followers(cr, uid, ids, vals, context=context)
+        print command
+        if vals.get('message_follower_ids'):
+            vals['message_follower_ids'] += command
+        else:
+            vals['message_follower_ids'] = command
+        print vals
         write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context)
+        
+        
+        
+
         if write_res and not vals.get('message_follower_ids'):
             self.message_subscribe(cr, uid, ids, [uid], context=context)
         return write_res;
@@ -187,6 +209,39 @@ class mail_thread(osv.Model):
         msg_to_del_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
         msg_obj.unlink(cr, uid, msg_to_del_ids, context=context)
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
+
+    def message_get_automatic_followers(self, cr, uid, ids, record_vals, add_uid=True, fetch_missing=False, context=None):
+        """
+
+            :param record_vals: values given to the create method of the new
+                record, or values updated in a write.
+            :param monitored_fields: a list of fields that are monitored. Those
+                fields must be many2one fields to the res.users model.
+            :param fetch_missing: is set to True, the method will read the
+                record to find values that are not present in record_vals.
+
+            #TODO : UPDATE WHEN MERGING TO PARTNERS
+        """
+        # get monitored fields
+        monitored_fields = self.message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        print monitored_fields
+        # for each monitored field: if in record_vals, it has been modified
+        fields = [field for field in monitored_fields if field in record_vals.iterkeys()]
+        print fields
+
+        follower_ids = []
+        for field in fields:
+            value = record_vals.get(field)
+            if value:
+                follower_ids.append(value)
+            elif fetch_missing:
+                pass
+
+        print follower_ids
+        if add_uid and uid not in follower_ids:
+            follower_ids.append(uid)
+
+        return self.message_subscribe_get_command(cr, uid, follower_ids, context=context)
 
     #------------------------------------------------------
     # mail.message wrappers and tools
@@ -931,6 +986,12 @@ class mail_thread(osv.Model):
     # Subscription mechanism
     #------------------------------------------------------
 
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Returns a list of fields containing a res.user.id. Those fields
+            will be checked to automatically subscribe those users.
+        """
+        return []
+
     def message_get_subscribers(self, cr, uid, ids, context=None):
         """ Returns the current document followers. Basically this method
             checks in mail.followers for entries with matching res_model,
@@ -953,6 +1014,10 @@ class mail_thread(osv.Model):
         write_res = self.write(cr, uid, ids, {'message_follower_ids': [(4, id) for id in to_subscribe_uids]}, context=context)
         return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
+    def message_subscribe_get_command(self, cr, uid, follower_ids, context=None):
+        """ Generate the many2many command to add followers. """
+        return [(4, id) for id in follower_ids]
+
     def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
         """ Unsubscribe the user (or user_ids) from the current document.
             
@@ -962,6 +1027,10 @@ class mail_thread(osv.Model):
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
         write_res = self.write(cr, uid, ids, {'message_follower_ids': [(3, id) for id in to_unsubscribe_uids]}, context=context)
         return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
+
+    def message_unsubscribe_get_command(self, cr, uid, follower_ids, context=None):
+        """ Generate the many2many command to remove followers. """
+        return [(3, id) for id in follower_ids]
 
     #------------------------------------------------------
     # Notification API

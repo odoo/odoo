@@ -502,13 +502,10 @@ class project_issue(base_stage, osv.osv):
     # OpenChatter methods and notifications
     # -------------------------------------------------------
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        """ Override to add responsible user. """
-        user_ids = super(project_issue, self).message_get_subscribers(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id and not obj.user_id.id in user_ids:
-                user_ids.append(obj.user_id.id)
-        return user_ids
+    def message_get_follower_fields(self, cr, uid, ids, context=None):
+        """ Override to add 'user_id' field to automatic subscription. """
+        res = super(project_issue, self).message_get_follower_fields(cr, uid, ids, context=context)
+        return res.append('user_id')
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """

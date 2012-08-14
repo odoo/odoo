@@ -184,3 +184,12 @@ class mail_group(osv.Model):
 
     def action_group_leave(self, cr, uid, ids, context=None):
         return self.message_unsubscribe(cr, uid, ids, context=context)
+
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'responsible_id' to the monitored fields """
+        res = super(mail_group, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['responsible_id']
