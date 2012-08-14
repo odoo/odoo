@@ -3,6 +3,8 @@ from pyquery import PyQuery as pq
 import re
 
 def html_sanitize(x):
+    if not x:
+        return x
     root = pq("<div />")
     root.html(x)
     result = handle_element(root[0])
