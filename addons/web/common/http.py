@@ -568,6 +568,8 @@ class Root(object):
                         _logger.debug("Dispatching to %s %s %s", ps, c, meth)
                         return m
                 ps, _slash, meth = ps.rpartition('/')
+                if not ps and meth:
+                    ps = '/'
         return None
 
 class LibException(Exception):
