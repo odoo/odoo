@@ -61,7 +61,7 @@ openerp.base_import = function (instance) {
         file_update: function (e) {
             if (!this.$('input.oe_import_file').val()) { return; }
 
-            // TODO: hide preview before calling set_file
+            this.$element.removeClass('oe_import_preview oe_import_error');
             jsonp(this.$element, {
                 url: '/base_import/set_file'
             }, this.proxy('file_updated'));
@@ -76,7 +76,15 @@ openerp.base_import = function (instance) {
             }]).then(this.proxy('preview'));
         },
         preview: function (result) {
-            this.$('table').html(QWeb.render('ImportView.preview', result));
+            if (result.error) {
+                this.$element.addClass('oe_import_error');
+                this.$('.oe_import_error_report').html(
+                    QWeb.render('ImportView.error', result));
+            } else {
+                this.$element.addClass('oe_import_preview');
+                this.$('table').html(
+                    QWeb.render('ImportView.preview', result));
+            }
         },
     });
 };

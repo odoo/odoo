@@ -27,6 +27,7 @@ Re-implement openerp's file import system:
     'depends': ['base'],
     'installable': True,
     'auto_install': False, # set to true and allow uninstall?
+    'css': ['static/src/css/import.css'],
     'js': ['static/src/js/import.js'],
     'qweb': ['static/src/xml/import.xml'],
 }

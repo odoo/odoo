@@ -231,7 +231,7 @@ class ir_import(orm.TransientModel):
             # preview to a list in the return.
             _logger.debug("Error during CSV parsing preview", exc_info=True)
             return {
-                'error': _("Failed to parse CSV file: %s") % e,
+                'error': str(e),
                 # iso-8859-1 ensures decoding will always succeed,
                 # even if it yields non-printable characters. This is
                 # in case of UnicodeDecodeError (or csv.Error

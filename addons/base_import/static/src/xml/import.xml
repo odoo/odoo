@@ -1,6 +1,6 @@
 <templates>
     <t t-name="ImportView">
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="" method="post" enctype="multipart/form-data" class="oe_import">
             <input type="hidden" name="session_id"
                    t-att-value="widget.session.session_id"/>
             <input type="hidden" name="import_id"/>
@@ -9,6 +9,7 @@
 
             <table class="oe_import_grid" width="100%">
             </table>
+            <div class="oe_import_error_report"></div>
         </form>
     </t>
     <!-- TODO: column matcher? -->
@@ -21,5 +22,10 @@
             <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
                 ><t t-esc="cell"/></td>
         </tr>
+    </t>
+    <t t-name="ImportView.error">
+        <p>Import preview failed due to: <t t-esc="error"/></p>
+        <p>Here is the start of the file we could not import:</p>
+        <pre><t t-esc="preview"/></pre>
     </t>
 </templates>
