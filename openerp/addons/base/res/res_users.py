@@ -255,6 +255,7 @@ class res_users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
+        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
