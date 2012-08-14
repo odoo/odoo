@@ -907,8 +907,11 @@ openerp.mail = function(session) {
             this.params.limit = params.limit || 25;
             this.params.domain = params.domain || [];
             this.params.context = params.context || {};
+            this.params.res_model = params.res_model || false;
+            this.params.res_id = params.res_id || false;
             this.params.search_view_id = params.search_view_id || false;
             this.params.thread_level = params.thread_level || 1;
+	    this.params.title = params.title || false;
             this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             this.display_show_more = true;
             this.thread_list = [];
@@ -953,9 +956,10 @@ openerp.mail = function(session) {
             if (this.compose_message_widget) {
                 this.compose_message_widget.destroy();
             }
+	    debugger;
             this.compose_message_widget = new mail.ComposeMessage(this, {
-                'extended_mode': false, 'uid': this.session.uid, 'res_model': 'res.users',
-                'res_id': this.session.uid, 'mode': mode || 'comment', 'msg_id': msg_id });
+                'extended_mode': false, 'uid': this.session.uid, 'res_model': this.params.res_model,
+                'res_id': this.params.res_id, 'mode': mode || 'comment', 'msg_id': msg_id });
             var composition_node = this.$element.find('div.oe_mail_wall_action');
             composition_node.empty();
             var compose_done = this.compose_message_widget.appendTo(composition_node);
