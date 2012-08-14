@@ -1019,8 +1019,22 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     show_login: function() {
         this.$('.oe_topbar').hide();
-        this.action_manager.do_action("login");
-        this.action_manager.inner_widget.on('login_successful', this, this.show_application);
+        
+        var action = {
+            'type': 'ir.actions.client',
+            'tag': 'login',
+        };
+        var state = $.bbq.getState(true);
+        if (state.action === "login") {
+            action.params = state;
+        }
+
+        this.action_manager.do_action(action);
+        this.action_manager.inner_widget.on('login_successful', this, function() {
+            this.do_push_state(state);
+            this._current_state = null;     // ensure the state will be loaded
+            this.show_application();        // will load the state we just pushed
+        });
     },
     show_application: function() {
         var self = this;
