@@ -25,10 +25,8 @@ class knowledge_config_settings(osv.osv_memory):
     _name = 'knowledge.config.settings'
     _inherit = 'res.config.settings'
     _columns = {
-        'module_wiki_faq': fields.boolean('manage internal FAQ as a wiki',
-            help="""This installs the module wiki_faq."""),
-        'module_wiki_quality_manual': fields.boolean('use quality manual as a wiki',
-            help="""This installs the module wiki_quality_manual."""),
+        'module_document_page': fields.boolean('create static web pages',
+            help="""This installs the module document_page."""),
         'module_document': fields.boolean('manage documents',
             help="""This is a complete document management system, with: user authentication,
                 full document search (but pptx and docx are not supported), and a document dashboard.

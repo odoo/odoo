@@ -243,8 +243,9 @@ class procurement_order(osv.osv):
             ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
                 if op.procurement_id.state != 'exception':
-                    if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
-                        continue
+                    if op.procurement_id and hasattr(op.procurement_id, 'purchase_id'):
+                        if op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
+                            continue
                 prods = location_obj._product_virtual_get(cr, uid,
                         op.location_id.id, [op.product_id.id],
                         {'uom': op.product_uom.id})[op.product_id.id]
