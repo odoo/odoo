@@ -135,6 +135,7 @@ class mail_group(osv.osv):
         'public': True,
         'responsible_id': (lambda s, cr, uid, ctx: uid),
         'image': _get_default_image,
+        'alias_domain': False, # always hide alias during creation 
     }
 
     def _subscribe_user_with_group_m2m_command(self, cr, uid, ids, group_ids_command, context=None):

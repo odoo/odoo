@@ -132,9 +132,10 @@ class crm_case_section(osv.osv):
         return ids
 
     _defaults = {
-        'active': lambda *a: 1,
-        'allow_unlink': lambda *a: 1,
-        'stage_ids': _get_stage_common
+        'active': 1,
+        'allow_unlink': 1,
+        'stage_ids': _get_stage_common,
+        'alias_domain': False, # always hide alias during creation
     }
 
     _sql_constraints = [
