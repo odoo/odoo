@@ -56,15 +56,15 @@
                                 <field name="image_small" widget='image' class="oe_image_small" nolabel="1"/>
                             </group>
                             <group colspan="7" col="6">
-                                <div class="oe_edit_only">
-                                    <label for="name"/> 
-                                </div> 
                                 <div>
+                                    <div class="oe_edit_only">
+                                        <label for="name"/> 
+                                    </div> 
                                     <h2><field name="name" colspan="4"/></h2>
-                                    <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}" class="oe_edit_only">
-                                        <field name="alias_id" invisible="1" required="0"/>
-                                        <label for="alias_name" class="oe_edit_only"/>
-                                        <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                                    <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                            <field name="alias_id" invisible="1" required="0"/>
+                                            <label for="alias_name" class="oe_edit_only"/>
+                                            <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
                                     </div>
                                 </div>
                                 <newline/>
