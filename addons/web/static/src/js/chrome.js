@@ -316,7 +316,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     },
     do_render: function() {
         var self = this;
-        $('.oe_topbar,.oe_leftbar').show();
+        instance.webclient.toggle_bars(true);
         self.$element.html(QWeb.render("DatabaseManager", { widget : self }));
         $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
         $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
@@ -501,7 +501,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     },
     do_exit: function () {
         this.$element.remove();
-        $('.oe_topbar,.oe_leftbar').hide();
+        instance.webclient.toggle_bars(false);
         this.do_action('login');
     }
 });
@@ -611,8 +611,9 @@ instance.web.Login =  instance.web.Widget.extend({
             }
             self.trigger('login_successful');
         },function () {
-            self.$(".oe_login_pane").fadeIn("fast");
-            self.$element.addClass("oe_login_invalid");
+            self.$(".oe_login_pane").fadeIn("fast", function() {
+                self.$element.addClass("oe_login_invalid");
+            });
         });
     },
     show: function () {
@@ -977,6 +978,9 @@ instance.web.Client = instance.web.Widget.extend({
         self.action_manager = new instance.web.ActionManager(self);
         self.action_manager.appendTo(self.$('.oe_application'));
     },
+    toggle_bars: function(value) {
+        this.$('tr:has(td.oe_topbar),.oe_leftbar').toggle(value);
+    }
 });
 
 instance.web.WebClient = instance.web.Client.extend({
@@ -1018,11 +1022,11 @@ instance.web.WebClient = instance.web.Client.extend({
         };
     },
     show_login: function() {
-        this.$('.oe_topbar').hide();
+        this.toggle_bars(false);
         
         var action = {
             'type': 'ir.actions.client',
-            'tag': 'login',
+            'tag': 'login'
         };
         var state = $.bbq.getState(true);
         if (state.action === "login") {
@@ -1038,7 +1042,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     show_application: function() {
         var self = this;
-        self.$('.oe_topbar').show();
+        self.toggle_bars(true);
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
         self.menu.on('menu_click', this, this.on_menu_action);
