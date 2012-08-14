@@ -73,8 +73,7 @@ instance.web_view_editor.ViewEditor =   instance.web.OldWidget.extend({
         $.when(this.action_manager.do_action(action)).then(function() {
             var viewmanager = self.action_manager.inner_widget,
                 controller = viewmanager.views[viewmanager.active_view].controller;
-            self.action_manager.appendTo(self.view_edit_dialog.$element);
-            self.action_manager.renderElement(self.view_edit_dialog);
+            self.action_manager.$element.appendTo(self.view_edit_dialog.$element);
             controller.on_loaded.add_last(function(){
                 $(controller.groups).bind({
                     'selected': function(e, ids, records) {
