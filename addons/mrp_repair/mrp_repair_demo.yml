@@ -6,7 +6,7 @@
     location_dest_id: stock.stock_location_14
     location_id: stock.stock_location_stock
     name: '[PC1] Basic PC'
-    product_id: product.product_product_pc1
+    product_id: product.product_product_3
     product_qty: 1.0
     product_uom: product.product_uom_unit
     product_uos_qty: 1.0
@@ -25,7 +25,7 @@
         location_id: stock.stock_location_stock
         name: '[HDD1] HDD Seagate 7200.8 80GB'
         price_unit: 50.0
-        product_id: product.product_product_hdd1
+        product_id: product.product_product_11
         product_uom: product.product_uom_unit
         product_uom_qty: 1.0
         state: draft
@@ -33,12 +33,12 @@
         type: add
     fees_lines:
       - name: 'HDD1 Seagate repair fees'
-        product_id: product.product_product_hdd1
+        product_id: product.product_product_11
         product_uom_qty: 1.0
         product_uom: product.product_uom_unit
         price_unit: 50.0
     partner_id: base.res_partner_9
-    product_id: product.product_product_pc1
+    product_id: product.product_product_3
 -
   !record {model: stock.move, id: stock.stock_move_stockmvmrp1}:
     company_id: base.main_company
@@ -47,7 +47,7 @@
     location_dest_id: stock.stock_location_14
     location_id: stock.stock_location_stock
     name: '[PC3] Medium PC'
-    product_id: product.product_product_pc3
+    product_id: product.product_product_5
     product_qty: 1.0
     product_uom: product.product_uom_unit
     product_uos_qty: 1.0
@@ -66,7 +66,7 @@
         location_id: stock.stock_location_stock
         name: '[HDD2] HDD Seagate 7200.8 120GB'
         price_unit: 50.0
-        product_id: product.product_product_hdd2
+        product_id: product.product_product_12
         product_uom: product.product_uom_unit
         product_uom_qty: 1.0
         state: draft
@@ -74,12 +74,12 @@
         type: add
     fees_lines:
       - name: 'HDD2 Seagate repair fees'
-        product_id: product.product_product_hdd2
+        product_id: product.product_product_12
         product_uom_qty: 1.0
         product_uom: product.product_uom_unit
         price_unit: 50.0
     partner_id: base.res_partner_9
-    product_id: product.product_product_pc3
+    product_id: product.product_product_5
 -
   !record {model: stock.move, id: stock.stock_move_stockmvmrp2}:
     company_id: base.main_company
@@ -88,7 +88,7 @@
     location_dest_id: stock.stock_location_14
     location_id: stock.stock_location_stock
     name: '[PC4] Customizable PC'
-    product_id: product.product_product_pc4
+    product_id: product.product_product_6
     product_qty: 1.0
     product_uom: product.product_uom_unit
     product_uos_qty: 1.0
@@ -107,7 +107,7 @@
         location_id: stock.stock_location_stock
         name: '[HDD3] HDD Seagate 7200.8 160GB'
         price_unit: 50.0
-        product_id: product.product_product_hdd3
+        product_id: product.product_product_13
         product_uom: product.product_uom_unit
         product_uom_qty: 1.0
         state: draft
@@ -115,9 +115,9 @@
         type: add
     fees_lines:
       - name: 'HDD3 Seagate repair fees'
-        product_id: product.product_product_hdd3
+        product_id: product.product_product_13
         product_uom_qty: 1.0
         product_uom: product.product_uom_unit
         price_unit: 50.0
     partner_id: base.res_partner_9
-    product_id: product.product_product_pc4
+    product_id: product.product_product_6
