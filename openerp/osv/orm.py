@@ -666,6 +666,7 @@ class BaseModel(object):
     _order = 'id'
     _sequence = None
     _description = None
+    _needaction = False
 
     # dict of {field:method}, with method returning the name_get of records
     # to include in the _read_group, if grouped on this field
@@ -4960,37 +4961,7 @@ class BaseModel(object):
     # backwards compatibility
     get_xml_id = get_external_id
     _get_xml_ids = _get_external_ids
-    
-    def _get_needaction_info(self, cr, uid, user_id, limit=None, order=None, domain=False, context=None):
-        """Base method for needaction mechanism
-           - see ir.needaction for actual implementation
-           - if the model uses the need action mechanism
-             (hasattr(model_obj, 'needaction_get_record_ids')):
-              - get the record ids on which the user has actions to perform
-              - evaluate the menu domain
-              - compose a new domain: menu domain, limited to ids of
-                records requesting an action
-              - count the number of records maching that domain, that
-                is the number of actions the user has to perform
-           - this method returns default values
-           :param: model_name: the name of the model (ex: hr.holidays)
-           :param: user_id: the id of user
-           :return: [uses_needaction=True/False, needaction_uid_ctr=%d]
-        """
-        if hasattr(self, 'needaction_get_record_ids'):
-            # Arbitrary limit, but still much lower thant infinity, to avoid
-            # getting too much data.
-            ids = self.needaction_get_record_ids(cr, uid, user_id, limit=8192, context=context)
-            if not ids:
-                return [True, 0]
-            if domain:
-                new_domain = eval(domain, locals_dict={'uid': user_id}) + [('id', 'in', ids)]
-            else:
-                new_domain = [('id', 'in', ids)]
-            return [True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context)]
-        else:
-            return [False, 0]
-            
+
     # Transience
     def is_transient(self):
         """ Return whether the model is transient.

@@ -255,23 +255,23 @@ class ir_ui_menu(osv.osv):
 
         return res
 
-    def _get_needaction_info(self, cr, uid, id, domain=[], context={}):
-        return [False, 0]
-
     def _get_needaction(self, cr, uid, ids, field_names, args, context=None):
         if context is None:
             context = {}
         res = {}
         for menu in self.browse(cr, uid, ids, context=context):
+            res[menu.id]['needaction_enabled'] = False
+            res[menu.id]['needaction_counter'] = False
             res[menu.id] = {}
             if menu.action and menu.action.type == 'ir.actions.act_window' and menu.action.res_model:
-                menu_needaction_res = self.pool.get(menu.action.res_model)._get_needaction_info(cr, uid, uid, domain=menu.action.domain, context=context)
-            else:
-                menu_needaction_res = [False, 0]
-            res[menu.id]['needaction_enabled'] = menu_needaction_res[0]
-            res[menu.id]['needaction_counter'] = menu_needaction_res[1]
+                obj = self.pool.get(menu.action.res_model)
+                if obj._needaction_active:
+                    res[menu.id]['needaction_enabled'] = obj._needaction_active
+                    # check domain and context: should we evaluate the domain ?
+                    # and add context of the action ?
+                    res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, menu.action.domain, context=context)
         return res
-        
+
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
