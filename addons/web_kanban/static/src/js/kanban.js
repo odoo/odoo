@@ -24,6 +24,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.fields_view = {};
         this.fields_keys = [];
         this.group_by = null;
+        this.grouped_by_m2o = false;
         this.state = {
             groups : {},
             records : {}
@@ -54,7 +55,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             this.$element.find('.oe_kanban_buttons').replaceWith(this.$buttons);
         }
         this.$buttons
-            .on('click','button.oe_kanban_button_new', this.do_add_record);
+            .on('click', 'button.oe_kanban_button_new', this.do_add_record)
+            .on('click', '.oe_kanban_add_column', this.do_add_group);
         this.$groups = this.$element.find('.oe_kanban_groups tr');
         this.fields_keys = _.keys(this.fields_view.fields);
         this.add_qweb_template();
@@ -157,6 +159,27 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.dataset.index = null;
         this.do_switch_view('form');
     },
+    do_add_group: function() {
+        var self = this;
+        var group_by = self.fields_view.fields[self.group_by];
+        self.do_action({
+            name: _t("Add column"),
+            res_model: group_by.relation,
+            views: [[false, 'form']],
+            type: 'ir.actions.act_window',
+            target: "new",
+            flags: {
+                action_buttons: true,
+            }
+        });
+        var am = instance.webclient.action_manager;
+        var form = am.dialog_widget.views.form.controller;
+        form.on_button_cancel.add_last(am.dialog.on_close);
+        form.on_created.add_last(function() {
+            am.dialog.on_close();
+            self.do_reload();
+        });
+    },
     do_search: function(domain, context, group_by) {
         var self = this;
         this.$element.find('.oe_view_nocontent').remove();
@@ -165,6 +188,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.search_group_by = group_by;
         $.when(this.has_been_loaded).then(function() {
             self.group_by = group_by.length ? group_by[0] : self.fields_view.arch.attrs.default_group_by;
+            var group_by_field = self.fields_view.fields[self.group_by];
+            self.grouped_by_m2o = !!(group_by_field && group_by_field.type === 'many2one');
+            self.$buttons.find('.oe_alternative').toggle(self.grouped_by_m2o);
+            self.$element.toggleClass('oe_kanban_sortable_groups', self.grouped_by_m2o);
             self.datagroup = new instance.web.DataGroup(self, self.dataset.model, domain, context, self.group_by ? [self.group_by] : []);
             self.datagroup.list(self.fields_keys, self.do_process_groups, self.do_process_dataset);
         });
@@ -237,6 +264,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         this.compute_groups_width();
         if (this.group_by) {
+            // Kanban cards drag'n'drop
             this.$element.find('.oe_kanban_column').sortable({
                 connectWith: '.oe_kanban_column',
                 handle : '.oe_kanban_draghandle',
@@ -245,17 +273,48 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     self.currently_dragging.group = ui.item.parents('.oe_kanban_column:first').data('widget');
                 },
                 stop: function(event, ui) {
-                    var record = ui.item.data('widget'),
-                        old_index = self.currently_dragging.index,
-                        new_index = ui.item.index(),
-                        old_group = self.currently_dragging.group,
-                        new_group = ui.item.parents('.oe_kanban_column:first').data('widget');
+                    var record = ui.item.data('widget');
+                    var old_index = self.currently_dragging.index;
+                    var new_index = ui.item.index();
+                    var old_group = self.currently_dragging.group;
+                    var new_group = ui.item.parents('.oe_kanban_column:first').data('widget');
                     if (!(old_group.title === new_group.title && old_group.value === new_group.value && old_index == new_index)) {
                         self.on_record_moved(record, old_group, old_index, new_group, new_index);
                     }
                 },
                 scroll: false
             });
+            // Kanban groups drag'n'drop
+            var start_index;
+            if (this.grouped_by_m2o) {
+                this.$('.oe_kanban_groups_headers').sortable({
+                    helper: 'clone',
+                    axis: 'x',
+                    opacity: 0.5,
+                    scroll: false,
+                    start: function(event, ui) {
+                        start_index = ui.item.index();
+                        self.$('.oe_kanban_record').hide();
+                    },
+                    stop: function(event, ui) {
+                        var stop_index = ui.item.index();
+                        if (start_index !== stop_index) {
+                            var $start_column = $('.oe_kanban_groups_records .oe_kanban_column').eq(start_index);
+                            var $stop_column = $('.oe_kanban_groups_records .oe_kanban_column').eq(stop_index);
+                            var method = (start_index > stop_index) ? 'insertBefore' : 'insertAfter';
+                            $start_column[method]($stop_column);
+                            var tmp_group = self.groups.splice(start_index, 1)[0];
+                            self.groups.splice(stop_index, 0, tmp_group);
+                            var new_sequence = _.pluck(self.groups, 'value');
+                            var field = self.fields_view.fields[self.group_by]; //TODO: self.field should be the field definition
+                            (new instance.web.DataSet(self, field.relation)).resequence(new_sequence).then(function(r) {
+                                console.log(r);
+                            });
+                        }
+                        self.$('.oe_kanban_record').show();
+                    }
+                });
+            }
         } else {
             this.$element.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle');
         }

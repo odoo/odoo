@@ -805,6 +805,22 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend( /** @lends openerp.
     alter_ids: function(n_ids) {
         this.ids = n_ids;
     },
+    /**
+     * Resequence records.
+     *
+     * @param {Array} ids identifiers of the records to resequence
+     * @returns {$.Deferred}
+     */
+    resequence: function (ids, options) {
+        options = options || {};
+        return this.rpc('/web/dataset/resequence', {
+            model: this.model,
+            ids: ids,
+            context: this._model.context(options.context),
+        }).pipe(function (results) {
+            return results;
+        });
+    },
 });
 instance.web.DataSetStatic =  instance.web.DataSet.extend({
     init: function(parent, model, context, ids) {

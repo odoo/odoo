@@ -1136,6 +1136,12 @@ class DataSet(openerpweb.Controller):
     def exec_workflow(self, req, model, id, signal):
         return req.session.exec_workflow(model, id, signal)
 
+    @openerpweb.jsonrequest
+    def resequence(self, req, model, ids):
+        m = req.session.model(model)
+        print "TODO: write resequencing"
+        return True
+
 class DataGroup(openerpweb.Controller):
     _cp_path = "/web/group"
     @openerpweb.jsonrequest

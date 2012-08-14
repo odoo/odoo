@@ -18,6 +18,10 @@
             <button type="button" class="oe_kanban_button_new oe_highlight">
                 <t t-esc="widget.options.create_text || _t('Create')"/>
             </button>
+            <span class="oe_alternative" style="display: none">
+                <span class="oe_fade">or</span>
+                <a href="#" class="oe_bold oe_kanban_add_column">Add a new column</a>
+            </span>
         </t>
     </t>
 </div>
