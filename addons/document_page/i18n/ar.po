@@ -1,118 +1,125 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* document_page
+# Arabic translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-03-19 10:19+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2012-08-13 12:08+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-20 04:56+0000\n"
-"X-Generator: Launchpad (build 14969)\n"
+"X-Launchpad-Export-Date: 2012-08-14 04:45+0000\n"
+"X-Generator: Launchpad (build 15791)\n"
 
 #. module: document_page
 #: field:document.page.type,template:0
-msgid "Document Page Template"
-msgstr "نموذج ويكي"
+msgid "Document page Template"
+msgstr ""
 
 #. module: document_page
 #: model:ir.actions.act_window,name:document_page.action_wiki
 #: model:ir.ui.menu,name:document_page.menu_action_wiki_wiki
 msgid "Document Pages"
-msgstr "صفحات ويكي"
+msgstr ""
 
 #. module: document_page
 #: field:document.page.type,method:0
 msgid "Display Method"
-msgstr "طريقة العرض"
+msgstr ""
 
 #. module: document_page
 #: view:document.page:0 field:document.page,create_uid:0
 msgid "Author"
-msgstr "المؤلف"
+msgstr ""
 
 #. module: document_page
 #: model:ir.actions.act_window,name:document_page.action_view_wiki_wiki_page_open
 #: view:document.page.page.open:0
 msgid "Open Page"
-msgstr "صفحة عامة"
+msgstr ""
 
 #. module: document_page
-#: field:document.page.type,menu_id:0
+#: field:document.page,menu_id:0
 msgid "Menu"
-msgstr "قائمة"
+msgstr ""
 
 #. module: document_page
-#: help:document.page
+#: help:document.page,type:0
 msgid "Indicates that this pages have a table of contents or not"
-msgstr "يوضح ما اذا كانت هذه الصفحات تحتوى على جدول محتويات او لا تحتوى"
+msgstr ""
 
 #. module: document_page
-#: model:ir.model,name:document_page.model_document_page_history view:document.page.history:0
-msgid "Document Page History"
-msgstr "تاريخ ويكي"
+#: model:ir.model,name:document_page.model_wiki_wiki_history view:document.page.history:0
+msgid "Document page History"
+msgstr ""
 
 #. module: document_page
 #: field:document.page,minor_edit:0
 msgid "Minor edit"
-msgstr "تحرير ثانوى"
+msgstr ""
 
 #. module: document_page
 #: view:document.page:0 field:document.page,content:0
 msgid "Content"
-msgstr "محتوى"
+msgstr ""
 
 #. module: document_page
 #: field:document.page,child_ids:0
 msgid "Child Pages"
-msgstr "صفحات فرعية"
+msgstr ""
 
 #. module: document_page
 #: field:document.page,parent_id:0
 msgid "Parent Page"
-msgstr "صفحة رئيسية"
+msgstr ""
 
-#. module: wiki
-#: view:wiki.wiki:0 field:wiki.wiki,write_uid:0
+#. module: document_page
+#: view:document.page:0 field:document.page,write_uid:0
 msgid "Last Contributor"
-msgstr "المشارك الاخير"
+msgstr ""
 
 #. module: document_page
 #: field:document.page.create.menu,menu_parent_id:0
 msgid "Parent Menu"
-msgstr "القائمة الرئيسية"
+msgstr ""
 
 #. module: document_page
 #: field:document.page,name:0
 msgid "Title"
-msgstr "العنوان"
+msgstr ""
 
 #. module: document_page
 #: model:ir.model,name:document_page.model_wiki_create_menu
 msgid "Wizard Create Menu"
-msgstr "إنشائ قائمة بالمعالج"
+msgstr ""
 
 #. module: document_page
 #: field:document.page,history_id:0
 msgid "History Lines"
-msgstr "سطور التاريخ"
+msgstr ""
 
 #. module: document_page
 #: view:document.page:0
 msgid "Page Content"
-msgstr "محتوى الصفحة"
+msgstr ""
+
+#. module: document_page
+#: code:addons/document_page/document_page.py:237 code:addons/wiki/wizard/wiki_make_index.py:52
+#, python-format
+msgid "Warning !"
+msgstr ""
 
 #. module: document_page
 #: code:addons/document_page/document_page.py:237
 #, python-format
 msgid "There are no changes in revisions"
-msgstr "لا يوجد تغيير فى المراجعات"
+msgstr ""
 
 #. module: document_page
 #: field:document.page.create.menu,menu_name:0
@@ -215,7 +222,7 @@ msgstr ""
 
 #. module: document_page
 #: field:document.page.history,content:0
-msgid "Content"
+msgid "Text area"
 msgstr ""
 
 #. module: document_page
@@ -239,12 +246,12 @@ msgid "List"
 msgstr ""
 
 #. module: document_page
-#: field:document.page,edit_summary:0 field:document.page.history,edit_summary:0
+#: field:document.page,summary:0 field:document.page.history,edit_summary:0
 msgid "Summary"
 msgstr ""
 
 #. module: document_page
-#: field:document.page.type,create_date:0
+#: field:document.page.groups,create_date:0
 msgid "Created Date"
 msgstr ""
 
@@ -328,7 +335,7 @@ msgstr ""
 
 #. module: document_page
 #: model:ir.actions.act_window,name:document_page.action_wiki_create_menu
-#: view:document_page.create.menu:0 view:document.page.type:0 view:document.page.make.index:0
+#: view:document.page.create.menu:0 view:document.page.type:0 view:document.page.make.index:0
 msgid "Create Menu"
 msgstr ""
 
@@ -342,7 +349,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:document_page.action_wiki_groups_browse
 #: model:ir.model,name:document_page.model_wiki_groups
 #: model:ir.ui.menu,name:document_page.menu_action_wiki_groups view:document.page.type:0
-msgid "Wiki Groups"
+msgid "Document Types"
 msgstr ""
 
 #. module: document_page
@@ -359,12 +366,12 @@ msgstr ""
 #: code:addons/document_page/web/widgets/wikimarkup/__init__.py:1981
 #: field:document.page,type:0
 #, python-format
-msgid "Table of Contents"
+msgid "Type"
 msgstr ""
 
 #. module: document_page
 #: view:document.page.type:0 view:document.page.page.open:0
-msgid "Open Wiki Page"
+msgid "Open Document Page"
 msgstr ""
 
 #. module: document_page

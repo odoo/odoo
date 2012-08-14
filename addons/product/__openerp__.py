@@ -27,7 +27,7 @@
     'category': 'Sales Management',
     "depends" : ["base", "process", "decimal_precision", "mail"],
     "init_xml" : [],
-    "demo_xml" : ["product_demo.xml"],
+    "demo_xml" : ["product_demo.xml", "product_image_demo.xml"],
     "description": """
 This is the base module for managing products and pricelists in OpenERP.
 ========================================================================
