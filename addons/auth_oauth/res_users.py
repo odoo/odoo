@@ -52,7 +52,7 @@ class res_users(osv.Model):
         oauth_uid = validation['user_id']
         name = self.auth_oauth_fetch_user_data(cr, uid, access_token)['name']
 
-        r = (cr.dbname, login, access_token)
+        r = (cr.dbname, login, oauth_uid)
 
         res = self.search(cr, uid, [("oauth_uid", "=", oauth_uid)])
         _logger.exception(res)
@@ -63,6 +63,7 @@ class res_users(osv.Model):
             new_user = {
                 'name': name,
                 'login': login,
+                # 'password': oauth_uid,
                 'user_email': login,
                 'oauth_provider': 'Google',
                 'oauth_uid': oauth_uid,
@@ -94,5 +95,5 @@ class res_users(osv.Model):
             finally:
                 cr.close()
 
-
+res_users()
 #
