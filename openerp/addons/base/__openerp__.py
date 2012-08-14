@@ -95,9 +95,6 @@
         # in test/__init__.py.
         # 'test/test_ir_cron.yml', # <-- These tests perform a roolback.
     ],
-    'images': [
-        'static/src/img/company_icon.png',
-    ],
     'installable': True,
     'auto_install': True,
     'certificate': '0076807797149',
