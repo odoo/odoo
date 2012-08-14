@@ -579,6 +579,7 @@ class sale_order_line(osv.osv):
                         line.procurement_id.id, context=context)
         uosqty = _get_line_qty(line)
         uos_id = _get_line_uom(line)
+        pu = 0.0
         if uosqty:
                 pu = round(line.price_unit * line.product_uom_qty / uosqty,
                         self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price'))
