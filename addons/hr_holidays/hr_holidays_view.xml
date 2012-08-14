@@ -96,7 +96,7 @@
                 <header>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user,base.group_hr_manager" class="oe_highlight"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
@@ -122,16 +122,6 @@
                             <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                             <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                         </group>
-                    </group>
-                    <group colspan="4">
-                            <group>
-                                <group>
-                                    <field name="double_validation" invisible="1"/>
-                                </group>
-                                <group>
-                                    <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}" groups="base.group_no_one"/>
-                                </group>
-                            </group>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -163,17 +153,12 @@
                             <field name="number_of_days_temp"/>
                         </group>
                         <group>
-                            <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Mode" groups="base.group_hr_manager"/>
+                            <field name="holiday_type" on_change="onchange_type(holiday_type)"/>
                             <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}"/>
-                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')], 'invisible':[('holiday_type','=','employee')]}"/>
-                            <field name="department_id" attrs="{'readonly':['|', ('holiday_type','=','category'), ('state','not in' ,('draft', 'confirm'))]}"/>
+                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','=','employee')]}"/>
+                            <field name="department_id" attrs="{'invisible':[('holiday_type','=','category')]}"/>
                         </group>
                     </group>
-                    <group>
-                        <field name="double_validation" invisible="1"/>
-                        <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
-                    </group>
-                    <newline/>
                     <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..."/>
                 </sheet>
                 <div class="oe_chatter">
