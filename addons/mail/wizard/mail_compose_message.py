@@ -100,7 +100,7 @@ class mail_compose_message(osv.TransientModel):
         # Try to provide default email_from if not specified yet
         if not result.get('email_from'):
             current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            result['email_from'] = current_user.user_email or False
+            result['email_from'] = current_user.email or False
         return result
 
     _columns = {
@@ -133,7 +133,7 @@ class mail_compose_message(osv.TransientModel):
         result.update({
             'model': model,
             'res_id': res_id,
-            'email_from': user.user_email or tools.config.get('email_from', False),
+            'email_from': user.email or tools.config.get('email_from', False),
             'body_html': False,
             'body_text': False,
             'subject': False,
@@ -223,7 +223,7 @@ class mail_compose_message(osv.TransientModel):
             'dest_partner_ids': dest_partner_ids,
             'model': message_data.model or False,
             'res_id': message_data.res_id or False,
-            'email_from': current_user.user_email or message_data.email_to or False,
+            'email_from': current_user.email or message_data.email_to or False,
             'email_to': message_data.reply_to or message_data.email_from or False,
             'email_cc': message_data.email_cc or False,
             'user_id': uid,

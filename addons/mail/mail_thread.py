@@ -741,7 +741,7 @@ class mail_thread(osv.Model):
         for thread in self.browse(cr, uid, ids, context=context):
             l = set()
             for message in thread.message_ids:
-                l.add((message.user_id and message.user_id.user_email) or '')
+                l.add((message.user_id and message.user_id.email) or '')
                 l.add(message.email_from or '')
                 l.add(message.email_cc or '')
             res[thread.id] = filter(None, l)

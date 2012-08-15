@@ -245,7 +245,7 @@ class calendar_attendee(osv.osv):
                     continue
                 else:
                     result[id][name] = self._get_address(attdata.sent_by_uid.name, \
-                                        attdata.sent_by_uid.user_email)
+                                        attdata.sent_by_uid.email)
 
             if name == 'cn':
                 if attdata.user_id:
@@ -289,7 +289,7 @@ class calendar_attendee(osv.osv):
 
             if name == 'language':
                 user_obj = self.pool.get('res.users')
-                lang = user_obj.read(cr, uid, uid, ['context_lang'], context=context)['context_lang']
+                lang = user_obj.read(cr, uid, uid, ['lang'], context=context)['lang']
                 result[id][name] = lang.replace('_', '-')
 
         return result
@@ -434,7 +434,7 @@ property or property parameter."),
             if not organizer:
                 organizer = event_obj.user_id
             event_org.params['CN'] = [organizer.name]
-            event_org.value = 'MAILTO:' + (organizer.user_email or organizer.name)
+            event_org.value = 'MAILTO:' + (organizer.email or organizer.name)
 
         if event_obj.alarm_id:
             # computes alarm data
@@ -535,7 +535,7 @@ property or property parameter."),
             return {'value': {'email': ''}}
         usr_obj = self.pool.get('res.users')
         user = usr_obj.browse(cr, uid, user_id, *args)
-        return {'value': {'email': user.user_email, 'availability':user.availability}}
+        return {'value': {'email': user.email, 'availability':user.availability}}
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
         """ Makes event invitation as Tentative
@@ -891,9 +891,9 @@ From:
 
 """  % (alarm.name, alarm.trigger_date, alarm.description, \
                         alarm.user_id.name, alarm.user_id.signature)
-                    mail_to = [alarm.user_id.user_email]
+                    mail_to = [alarm.user_id.email]
                     for att in alarm.attendee_ids:
-                        mail_to.append(att.user_id.user_email)
+                        mail_to.append(att.user_id.email)
                     if mail_to:
                         mail_message.schedule_with_attach(cr, uid,
                             tools.config.get('email_from', False),
@@ -947,7 +947,7 @@ class calendar_event(osv.osv):
             value['duration'] = duration
             # change start_date's time to 00:00:00 in the user's timezone
             user = self.pool.get('res.users').browse(cr, uid, uid)
-            tz = pytz.timezone(user.context_tz) if user.context_tz else pytz.utc
+            tz = pytz.timezone(user.tz) if user.tz else pytz.utc
             start = pytz.utc.localize(start).astimezone(tz)     # convert start in user's timezone
             start = start.replace(hour=0, minute=0, second=0)   # change start's time to 00:00:00
             start = start.astimezone(pytz.utc)                  # convert start back to utc
@@ -1097,8 +1097,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         user_pool = self.pool.get('res.users')
         user = user_pool.browse(cr, uid, uid, context=context)
         res = user.name
-        if user.user_email:
-            res += " <%s>" %(user.user_email)
+        if user.email:
+            res += " <%s>" %(user.email)
         return res
 
     _defaults = {

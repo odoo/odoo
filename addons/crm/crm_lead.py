@@ -243,7 +243,7 @@ class crm_lead(base_stage, osv.osv):
         'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
         'partner_address_email': fields.related('partner_id', 'email', type='char', string='Partner Contact Email', readonly=True),
         'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
 
         # Fields for address, due to separation from crm and res.partner
@@ -692,11 +692,11 @@ class crm_lead(base_stage, osv.osv):
         """
         #TOFIX: mail template should be used here instead of fix subject, body text.
         message = self.pool.get('mail.message')
-        email_to = lead.user_id and lead.user_id.user_email
+        email_to = lead.user_id and lead.user_id.email
         if not email_to:
             return False
 
-        email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
+        email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.email or email_to
         partner = lead.partner_id and lead.partner_id.name or lead.partner_name
         subject = "lead %s converted into opportunity" % lead.name
         body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)

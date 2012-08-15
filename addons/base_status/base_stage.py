@@ -57,7 +57,7 @@ class base_stage(object):
         if not context or not context.get('portal'):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.user_email
+        return user.email
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
@@ -301,15 +301,15 @@ class base_stage(object):
         for case in self.browse(cr, uid, ids, context=context):
             if not destination and not case.email_from:
                 return False
-            if not case.user_id.user_email:
+            if not case.user_id.email:
                 return False
             if destination and case.section_id.user_id:
-                case_email = case.section_id.user_id.user_email
+                case_email = case.section_id.user_id.email
             else:
-                case_email = case.user_id.user_email
+                case_email = case.user_id.email
 
             src = case_email
-            dest = case.user_id.user_email or ""
+            dest = case.user_id.email or ""
             body = case.description or ""
             for message in case.message_ids:
                 if message.email_from and message.body_text:
@@ -366,8 +366,8 @@ class base_stage(object):
             l=[]
             if case.email_cc:
                 l.append(case.email_cc)
-            if case.user_id and case.user_id.user_email:
-                l.append(case.user_id.user_email)
+            if case.user_id and case.user_id.email:
+                l.append(case.user_id.email)
             res[case.id] = l
         return res
 

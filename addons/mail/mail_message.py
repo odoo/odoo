@@ -70,6 +70,9 @@ class mail_message(osv.Model):
         return result
 
     def name_get(self, cr, uid, ids, context=None):
+        # name_get may receive int id instead of an id list
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         res = []
         for message in self.browse(cr, uid, ids, context=context):
             name = ''
@@ -96,11 +99,10 @@ class mail_message(osv.Model):
 
         # this is redundant with notifications ? Yes
         'partner_ids': fields.many2many('res.partner',
-            'mail_message_destination_partner_rel',
+            'mail_message_res_partner_rel',
             'message_id', 'partner_id', 'Destination partners',
             help="When sending emails through the social network composition wizard"\
                  "you may choose to send a copy of the mail to partners."),
-
         'attachment_ids': fields.one2many('ir.attachment', 'res_id', 'Attachments'
             domain=[('res_model','=','mail.message')]),
 
@@ -204,7 +206,6 @@ class mail_message(osv.Model):
         self.check(cr, uid, ids, 'unlink', context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context)
 
-    # FP Note: to be simplified, mail.message fields only, not mail.mail
     def parse_message(self, message, save_original=False, context=None):
         """Parses a string or email.message.Message representing an
            RFC-2822 email, and returns a generic dict holding the

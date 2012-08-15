@@ -25,8 +25,8 @@ import mail_mail
 import mail_thread
 import mail_group
 import mail_subscription
-import res_users
 import res_partner
+import res_users
 import report
 import wizard
 import res_config
