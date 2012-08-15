@@ -45,6 +45,7 @@ import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_round, float_repr
 import simplejson
+from openerp.tools.html_sanitize import html_sanitize
 
 _logger = logging.getLogger(__name__)
 
@@ -227,6 +228,14 @@ class char(_column):
 
 class text(_column):
     _type = 'text'
+
+class html(text):
+    _type = 'html'
+    _symbol_c = '%s'
+    def _symbol_f(x):
+        return html_sanitize(x)
+        
+    _symbol_set = (_symbol_c, _symbol_f)
 
 import __builtin__
 

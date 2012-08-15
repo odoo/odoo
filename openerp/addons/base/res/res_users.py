@@ -20,11 +20,9 @@
 #
 ##############################################################################
 
-import logging
+
 from functools import partial
-
-import pytz
-
+import logging
 from lxml import etree
 from lxml.builder import E
 import netsvc
@@ -96,59 +94,22 @@ class groups(osv.osv):
 
 groups()
 
-def _lang_get(self, cr, uid, context=None):
-    obj = self.pool.get('res.lang')
-    ids = obj.search(cr, uid, [('translatable','=',True)])
-    res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
-    res = [(r['code'], r['name']) for r in res]
-    return res
+class res_users(osv.osv):
+    """ User class. A res.users record models an OpenERP user and is different
+        from an employee.
 
-def _tz_get(self,cr,uid, context=None):
-    return [(x, x) for x in pytz.all_timezones]
-
-class users(osv.osv):
+        res.users class now inherits from res.partner. The partner model is
+        used to store the data related to the partner: lang, name, address,
+        avatar, ... The user model is now dedicated to technical data.
+    """
     __admin_ids = {}
     _uid_cache = {}
+    _inherits = {
+        'res.partner': 'partner_id',
+    }
     _name = "res.users"
     _description = 'Users'
-    _order = 'name'
-
-    WELCOME_MAIL_SUBJECT = u"Welcome to OpenERP"
-    WELCOME_MAIL_BODY = u"An OpenERP account has been created for you, "\
-        "\"%(name)s\".\n\nYour login is %(login)s, "\
-        "you should ask your supervisor or system administrator if you "\
-        "haven't been given your password yet.\n\n"\
-        "If you aren't %(name)s, this email reached you errorneously, "\
-        "please delete it."
-
-    def get_welcome_mail_subject(self, cr, uid, context=None):
-        """ Returns the subject of the mail new users receive (when
-        created via the res.config.users wizard), default implementation
-        is to return config_users.WELCOME_MAIL_SUBJECT
-        """
-        return self.WELCOME_MAIL_SUBJECT
-    def get_welcome_mail_body(self, cr, uid, context=None):
-        """ Returns the subject of the mail new users receive (when
-        created via the res.config.users wizard), default implementation
-        is to return config_users.WELCOME_MAIL_BODY
-        """
-        return self.WELCOME_MAIL_BODY
-
-    def get_current_company(self, cr, uid):
-        cr.execute('select company_id, res_company.name from res_users left join res_company on res_company.id = company_id where res_users.id=%s' %uid)
-        return cr.fetchall()
-
-    def send_welcome_email(self, cr, uid, id, context=None):
-        if isinstance(id,list): id = id[0]
-        user = self.read(cr, uid, id, ['email','login','name', 'user_email'], context=context)
-        email = user['email'] or user['user_email']
-
-        ir_mail_server = self.pool.get('ir.mail_server')
-        msg = ir_mail_server.build_email(email_from=None, # take config default
-                                         email_to=[email],
-                                         subject=self.get_welcome_mail_subject(cr, uid, context=context),
-                                         body=(self.get_welcome_mail_body(cr, uid, context=context) % user))
-        return ir_mail_server.send_email(cr, uid, msg, context=context)
+    _order = 'login'
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
@@ -164,85 +125,67 @@ class users(osv.osv):
 
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
         return dict.fromkeys(ids, '')
-
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
-    
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
     
     _columns = {
         'id': fields.integer('ID'),
-        'name': fields.char('User Name', size=64, required=True, select=True,
-                            help="The new user's real name, used for searching"
-                                 " and most listings"),
+        'login_date': fields.date('Latest connection', select=1),
+        'partner_id': fields.many2one('res.partner', required=True,
+            string='Related Partner', ondelete='cascade',
+            help='Partner-related data of the user'),
         'login': fields.char('Login', size=64, required=True,
-                             help="Used to log into the system"),
-        'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
+            help="Used to log into the system"),
+        'password': fields.char('Password', size=64, invisible=True,
+            help="Keep empty if you don't want the user to be able to connect on the system."),
         'new_password': fields.function(_get_password, type='char', size=64,
-                                fnct_inv=_set_new_password,
-                                string='Set Password', help="Specify a value only when creating a user or if you're changing the user's password, "
-                                                            "otherwise leave empty. After a change of password, the user has to login again."),
-        'user_email': fields.char('Email', size=64),
+            fnct_inv=_set_new_password, string='Set Password',
+            help="Specify a value only when creating a user or if you're "\
+                 "changing the user's password, otherwise leave empty. After "\
+                 "a change of password, the user has to login again."),
         'signature': fields.text('Signature', size=64),
-        'image': fields.binary("Avatar",
-            help="This field holds the image used as avatar for the "\
-                 "user. The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 1024x1024 px image."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized avatar", type="binary", multi="_get_image",
-            store = {
-                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of the user. It is automatically "\
-                 "resized as a 180x180 px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized avatar", type="binary", multi="_get_image",
-            store = {
-                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of the user. It is automatically "\
-                 "resized as a 50x50 px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
-
         # Special behavior for this field: res.company.search() will only return the companies
         # available to the current user (should be the user's companies?), when the user_preference
         # context is set.
         'company_id': fields.many2one('res.company', 'Company', required=True,
-            help="The company this user is currently working for.", context={'user_preference': True}),
-
+            help='The company this user is currently working for.', context={'user_preference': True}),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
-        'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="The default language used in the graphical user interface, when translations are available. To add a new language, you can use the 'Load a Translation' wizard available from the 'Administration' menu."),
-        'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
-            help="The user's timezone, used to output proper date and time values inside printed reports. "
-                 "It is important to set a value for this field. You should use the same timezone "
-                 "that is otherwise used to pick and render date and time values: your computer's timezone."),
-        'date': fields.datetime('Latest Connection', readonly=True),
+        # backward compatibility fields
+        'user_email': fields.related('email', type='char',
+            deprecated='Use the email field instead of user_email. This field will be removed with OpenERP 7.1.'),
     }
 
     def on_change_company_id(self, cr, uid, ids, company_id):
-        return {
-                'warning' : {
+        return {'warning' : {
                     'title': _("Company Switch Warning"),
                     'message': _("Please keep in mind that documents currently displayed may not be relevant after switching to another company. If you have unsaved changes, please make sure to save and close all forms before switching to a different company. (You can click on Cancel in the User Preferences now)"),
                 }
         }
+
+    def onchange_type(self, cr, uid, ids, is_company, context=None):
+        """ Wrapper on the user.partner onchange_type, because some calls to the
+            partner form view applied to the user may trigger the
+            partner.onchange_type method, but applied to the user object.
+        """
+        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
+        return self.pool.get('res.partner').onchange_type(cr, uid, partner_ids, is_company, context=context)
+
+    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+        """ Wrapper on the user.partner onchange_address, because some calls to the
+            partner form view applied to the user may trigger the
+            partner.onchange_type method, but applied to the user object.
+        """
+        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
+        return self.pool.get('res.partner').onchange_address(cr, uid, partner_ids, use_parent_address, parent_id, context=context)
 
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
             if 'password' in o and ( 'id' not in o or o['id'] != uid ):
                 o['password'] = '********'
             return o
-        result = super(users, self).read(cr, uid, ids, fields, context, load)
+        result = super(res_users, self).read(cr, uid, ids, fields, context, load)
         canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
         if not canwrite:
             if isinstance(ids, (int, float)):
@@ -263,21 +206,10 @@ class users(osv.osv):
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
 
-    def _get_email_from(self, cr, uid, ids, context=None):
-        if not isinstance(ids, list):
-            ids = [ids]
-        res = dict.fromkeys(ids, False)
-        for user in self.browse(cr, uid, ids, context=context):
-            if user.user_email:
-                res[user.id] = "%s <%s>" % (user.name, user.user_email)
-        return res
-
-    def _get_admin_id(self, cr):
-        if self.__admin_ids.get(cr.dbname) is None:
-            ir_model_data_obj = self.pool.get('ir.model.data')
-            mdid = ir_model_data_obj._get_id(cr, 1, 'base', 'user_root')
-            self.__admin_ids[cr.dbname] = ir_model_data_obj.read(cr, 1, [mdid], ['res_id'])[0]['res_id']
-        return self.__admin_ids[cr.dbname]
+    def _get_default_image(self, cr, uid, context=None):
+        """ Override of res.partner: multicolor avatars ! """
+        image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
@@ -315,27 +247,29 @@ class users(osv.osv):
             pass
         return result
 
-    def _get_default_image(self, cr, uid, context=None):
-        # default image file name: avatar0 -> avatar6.png, choose randomly
-        image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
-
     _defaults = {
         'password' : '',
-        'context_lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
-        'context_tz': lambda self, cr, uid, context: context.get('tz', False),
-        'image': _get_default_image,
-        'image_small': _get_default_image,
-        'image_medium': _get_default_image,
         'active' : True,
+        'customer': False,
         'menu_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
+        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, context),
     }
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        """ Override of res.users fields_view_get.
+            - if the view is specified: resume with normal behavior
+            - else: the default view is overrided and redirected to the partner
+              view
+        """
+        if not view_id and view_type == 'form':
+            return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        return super(res_users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'user_email', 'name', 'image', 'image_medium', 'image_small']
+    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
@@ -350,7 +284,7 @@ class users(osv.osv):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
-        res = super(users, self).write(cr, uid, ids, values, context=context)
+        res = super(res_users, self).write(cr, uid, ids, values, context=context)
 
         # clear caches linked to the users
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
@@ -372,7 +306,7 @@ class users(osv.osv):
             for id in ids:
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
-        return super(users, self).unlink(cr, uid, ids, context=context)
+        return super(res_users, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -395,17 +329,23 @@ class users(osv.osv):
                        name=(copy_pattern % user2copy['name']),
                        )
         copydef.update(default)
-        return super(users, self).copy(cr, uid, id, copydef, context)
+        return super(res_users, self).copy(cr, uid, id, copydef, context)
 
     def context_get(self, cr, uid, context=None):
         user = self.browse(cr, uid, uid, context)
         result = {}
-        for k in self._columns.keys():
+        for k in self._all_columns.keys():
             if k.startswith('context_'):
+                context_key = k[8:]
+            elif k in ['lang', 'tz']:
+                context_key = k
+            else:
+                context_key = False
+            if context_key:
                 res = getattr(user,k) or False
                 if isinstance(res, browse_record):
                     res = res.id
-                result[k[8:]] = res or False
+                result[context_key] = res or False
         return result
 
     def action_get(self, cr, uid, context=None):
@@ -460,7 +400,7 @@ class users(osv.osv):
                                 AND active FOR UPDATE NOWAIT""",
                        (tools.ustr(login), tools.ustr(password)))
             cr.execute("""UPDATE res_users
-                            SET date = now() AT TIME ZONE 'UTC'
+                            SET login_date = now() AT TIME ZONE 'UTC'
                             WHERE login=%s AND password=%s AND active
                             RETURNING id""",
                        (tools.ustr(login), tools.ustr(password)))
@@ -564,9 +504,6 @@ class users(osv.osv):
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
-
-users()
-
 
 
 #

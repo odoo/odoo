@@ -14,7 +14,6 @@
         <record id="ir_filters_view_form" model="ir.ui.view">
             <field name="name">ir.filters.form</field>
             <field name="model">ir.filters</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Filters" version="7.0">
                   <sheet>
@@ -35,7 +34,6 @@
         <record id="ir_filters_view_tree" model="ir.ui.view">
              <field name="name">ir.filters.tree</field>
             <field name="model">ir.filters</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Filters">
                     <field name="name"/>
@@ -50,7 +48,6 @@
         <record id="ir_filters_view_search" model="ir.ui.view">
             <field name="name">ir.filters.search</field>
             <field name="model">ir.filters</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Filters">
                     <field name="name" string="Filter Name"/>
