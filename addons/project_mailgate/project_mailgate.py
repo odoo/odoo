@@ -73,7 +73,7 @@ class project_tasks(osv.osv):
         followers = super(project_tasks,self).message_thread_followers(cr, uid, ids, context=context)
         for task in self.browse(cr, uid, followers.keys(), context=context):
             task_followers = set(followers[task.id])
-            task_followers.add(task.user_id.user_email)
+            task_followers.add(task.user_id.email)
             followers[task.id] = filter(None, task_followers)
         return followers
 

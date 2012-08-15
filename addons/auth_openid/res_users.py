@@ -66,7 +66,7 @@ class res_users(osv.osv):
         else:
             with utils.cursor(db) as cr:
                 cr.execute("""UPDATE res_users
-                                SET date=now() AT TIME ZONE 'UTC'
+                                SET login_date=now() AT TIME ZONE 'UTC'
                                 WHERE login=%s AND openid_key=%s AND active=%s RETURNING id""",
                            (tools.ustr(login), tools.ustr(password), True))
                 res = cr.fetchone()
