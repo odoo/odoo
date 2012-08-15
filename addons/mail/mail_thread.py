@@ -142,8 +142,8 @@ class mail_thread(osv.Model):
         'message_ids': fields.function(_get_message_data,
 			fnct_search=_search_message_ids,
             type='one2many', obj='mail.message', _fields_id = 'res_id',
-            string='Temp messages', multi="_get_message_data",
-            help="Functional field holding messages related to the current document."),
+            string='Messages', multi="_get_message_data",
+            help="Field holding discussion about the current document."),
         'message_follower_ids': many2many_reference('res.users',
             rel='mail_followers', id1='res_id', id2='user_id', string="Followers",
             help="Followers of the document. The followers have full access to " \
@@ -159,7 +159,7 @@ class mail_thread(osv.Model):
                  "This summary is directly in html format in order to "\
                  "be inserted in kanban views."),
     }
-    
+
     _defaults = {
         'message_state': True,
     }
@@ -187,7 +187,7 @@ class mail_thread(osv.Model):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for id in ids:
-            # copy origin  al vals because we are going to modify it
+            # copy original vals because we are going to modify it
             specific_vals = dict(vals)
             # we modify followers: do not subscribe the uid
             if specific_vals.get('message_follower_ids'):
