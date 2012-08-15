@@ -137,6 +137,8 @@ class res_users(osv.Model):
 
     # --------------------------------------------------
     # Wrappers on partner methods for Chatter
+    # #FIXME: another branch holds a refactoring of mail.thread
+    # that should help cleaning those wrappers
     # --------------------------------------------------
 
     def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
@@ -154,11 +156,25 @@ class res_users(osv.Model):
     def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
                         limit=100, offset=0, domain=None, context=None):
         for user in self.browse(cr, uid, ids, context=context):
-            user.partner_id.message_read(ids, fetch_ancestors, ancestor_ids, limit, offset, domain)
+            return user.partner_id.message_read(fetch_ancestors, ancestor_ids, limit, offset, domain)
 
     def message_read_subscribers(self, cr, uid, ids, fields=['id', 'name', 'image_small'], context=None):
         for user in self.browse(cr, uid, ids, context=context):
-            user.partner_id.message_read_subscribers(ids, fields)
+            return user.partner_id.message_read_subscribers(fields)
+
+    def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, domain=None, count=False, context=None):
+        for user in self.browse(cr, uid, ids, context=context):
+            return user.partner_id.message_search(fetch_ancestors, ancestor_ids, limit, offset, domain, count)
+
+    def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
+        for user in self.browse(cr, uid, ids, context=context):
+            return user.partner_id.message_subscribe(user_ids)
+
+    def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
+        for user in self.browse(cr, uid, ids, context=context):
+            return user.partner_id.message_unsubscribe(user_ids)
+
 
 class res_users_mail_group(osv.Model):
     """ Update of res.groups class
