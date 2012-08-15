@@ -260,13 +260,14 @@ class ir_ui_menu(osv.osv):
             context = {}
         res = {}
         for menu in self.browse(cr, uid, ids, context=context):
+            res[menu.id] = {}
             res[menu.id]['needaction_enabled'] = False
             res[menu.id]['needaction_counter'] = False
             res[menu.id] = {}
             if menu.action and menu.action.type == 'ir.actions.act_window' and menu.action.res_model:
                 obj = self.pool.get(menu.action.res_model)
-                if obj._needaction_active:
-                    res[menu.id]['needaction_enabled'] = obj._needaction_active
+                if obj._needaction:
+                    res[menu.id]['needaction_enabled'] = obj._needaction
                     # check domain and context: should we evaluate the domain ?
                     # and add context of the action ?
                     res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, menu.action.domain, context=context)

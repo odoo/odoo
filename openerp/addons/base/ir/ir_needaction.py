@@ -38,38 +38,10 @@ class ir_needaction_mixin(osv.Model):
     - ``needaction_get_action_count``: as ``needaction_get_record_ids``
     but returns only the number of action, not the ids (performs a
     search with count=True)
-
-    The ``ir_needaction_mixin`` class adds a calculated field
-    ``needaction_pending``. This function field allows to state
-    whether a given record has a needaction for the current user.
-    This is usefull if you want to customize views according to the
-    needaction feature. For example, you may want to set records in
-    bold in a list view if the current user has an action to perform
-    on the record.
     '''
 
     _name = 'ir.needaction_mixin'
-    _description = 'Need Action Mixin'
     _needaction = True
-
-   def get_needaction_pending(self, cr, uid, ids, name, arg, context=None):
-       dom = self._needaction_domain_get(cr, uid, context=context)
-       result = dict.fromkeys(ids, False)
-       ids2 = self.search(cr, uid, [('id','in',ids)+dom], context=context)
-       for idna in ids2:
-           result[idna] = True
-       return result
-
-    def search_needaction_pending(self, cr, uid, field, field_name, criterion, context=None):
-        return self._needaction_domain_get(cr, uid, context=context)
-
-    _columns = {
-        'needaction_pending': fields.function(
-            get_needaction_pending, type='boolean',
-            fnct_search=search_needaction_pending,
-            string='Need an Action',
-            help="Do the current user requires to perform an action."),
-    }
 
     #------------------------------------------------------
     # Addon API
@@ -89,5 +61,7 @@ class ir_needaction_mixin(osv.Model):
         """Given the current model and a user_id
            get the number of actions it has to perform"""
         dom = self._needaction_domain_get(cr, uid, context=context)
+        if dom is False:
+            return 0
         return self.search(cr, uid, domain+dom, context=context, count=True)
 
