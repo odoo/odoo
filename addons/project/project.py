@@ -514,10 +514,10 @@ def Project():
     # OpenChatter methods and notifications
     # ------------------------------------------------
 
-    def message_get_follower_fields(self, cr, uid, ids, context=None):
-        """ Override to add 'user_id' field to automatic subscription. """
-        res = super(project, self).message_get_follower_fields(cr, uid, ids, context=context)
-        return res.append('user_id')
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' to the monitored fields """
+        res = super(project, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['user_id']
 
     def create(self, cr, uid, vals, context=None):
         if context is None: context = {}
@@ -1201,9 +1201,9 @@ class task(base_stage, osv.osv):
                 result[obj.id].append(obj.user_id.id)
         return result
 
-    def message_get_follower_fields(self, cr, uid, ids, context=None):
-        """ Override to add 'user_id' field to automatic subscription. """
-        res = super(task, self).message_get_follower_fields(cr, uid, ids, context=context)
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' and 'manager_id' to the monitored fields """
+        res = super(task, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
         return res + ['user_id', 'manager_id']
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):

@@ -1046,10 +1046,10 @@ class mrp_production(osv.osv):
     # OpenChatter methods and notifications
     # ---------------------------------------------------
 
-    def message_get_follower_fields(self, cr, uid, ids, context=None):
-        """ Override to add 'user_id' field to automatic subscription. """
-        res = super(mrp_production, self).message_get_follower_fields(cr, uid, ids, context=context)
-        return res.append('user_id')
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' to the monitored fields """
+        res = super(mrp_production, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['user_id']
 
     def create_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), context=context)

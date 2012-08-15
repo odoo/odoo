@@ -366,10 +366,11 @@ class hr_holidays(osv.osv):
                     result[obj.id] = hr_manager_group['users']
         return result
 
-    def message_get_follower_fields(self, cr, uid, ids, context=None):
-        """ Override to add 'user_id' field to automatic subscription. """
-        res = super(hr_holidays, self).message_get_follower_fields(cr, uid, ids, context=context)
-        return res + ['user_id', 'employee_id.parent_id.user_id']
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' and 'manager' to the monitored fields """
+        res = super(hr_holidays, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        # TODO: add manager
+        return res + ['user_id']
         
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
