@@ -7,7 +7,6 @@
         <record id="view_report_crm_phonecall_tree" model="ir.ui.view">
             <field name="name">crm.phonecall.report.tree</field>
             <field name="model">crm.phonecall.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Phone calls">
                     <field name="name" invisible="1"/>
@@ -33,7 +32,6 @@
         <record id="view_report_crm_phonecall_graph" model="ir.ui.view">
             <field name="name">crm.phonecall.report.graph</field>
             <field name="model">crm.phonecall.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Phone calls" type="bar">
                     <field name="state"/>
@@ -48,7 +46,6 @@
     <record id="view_report_crm_phonecall_filter" model="ir.ui.view">
             <field name="name">crm.phonecall.report.select</field>
             <field name="model">crm.phonecall.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
                     <filter icon="terp-gtk-go-back-rtl" string="Todo" domain="[('state','in',('draft','open'))]"

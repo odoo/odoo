@@ -51,7 +51,6 @@ openerp.auth_signup = function(instance) {
                 };
                 var url = "/auth_signup/signup?" + $.param(params);
                 window.location = url;
-                return false;
             });
             return this._super();
         }

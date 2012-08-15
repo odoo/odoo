@@ -414,8 +414,8 @@ class survey_question_wiz(osv.osv_memory):
                         file.close()
                         os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         
-                        user_email = user_obj.browse(cr, uid, uid, context).user_email
-                        resp_email = survey_data.responsible_id and survey_data.responsible_id.user_email or False
+                        user_email = user_obj.browse(cr, uid, uid, context).email
+                        resp_email = survey_data.responsible_id and survey_data.responsible_id.email or False
 
                         if user_email and resp_email:
                             user_name = user_obj.browse(cr, uid, uid, context=context).name

@@ -4,7 +4,6 @@
 
     <record model="ir.ui.view" id="purchase_order_form_inherit">
         <field name="name">purchase.order.form.inherit</field>
-        <field name="type">form</field>
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
@@ -16,7 +15,6 @@
 
     <record model="ir.ui.view" id="purchase_order_search_inherit">
         <field name="name">purchase.order.list.select.inherit</field>
-        <field name="type">form</field>
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
@@ -28,7 +26,6 @@
 
     <record model="ir.ui.view" id="view_purchase_requisition_form">
         <field name="name">purchase.requisition.form</field>
-        <field name="type">form</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <form string="Purchase Requisition" version="7.0">
@@ -112,7 +109,6 @@
     </record>
     <record model="ir.ui.view" id="view_purchase_requisition_tree">
         <field name="name">purchase.requisition.tree</field>
-        <field name="type">tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <tree fonts="bold:needaction_pending==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Purchase Requisition">
@@ -131,7 +127,6 @@
     <record id="view_purchase_requisition_filter" model="ir.ui.view">
             <field name="name">purchase.requisition.list.select</field>
             <field name="model">purchase.requisition</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
                     <field name="name" string="Purchase Requisition"/>
@@ -183,7 +178,6 @@
 
     <record model="ir.ui.view" id="product_normal_form_view_inherit">
         <field name="name">product.form.inherit</field>
-        <field name="type">form</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
@@ -197,7 +191,6 @@
 
     <record model="ir.ui.view" id="procurement_normal_form_view_inherit">
         <field name="name">procurement.form.inherit</field>
-        <field name="type">form</field>
         <field name="model">procurement.order</field>
         <field name="inherit_id" ref="procurement.procurement_form_view"/>
         <field name="arch" type="xml">

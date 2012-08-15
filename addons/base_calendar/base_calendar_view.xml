@@ -6,7 +6,6 @@
         <record id="base_calendar_attendee_form_view" model="ir.ui.view">
             <field name="name">calendar.attendee.form</field>
             <field name="model">calendar.attendee</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invitation details" version="7.0">
                     <header>
@@ -62,7 +61,6 @@
         <record id="base_calendar_attendee_tree_view" model="ir.ui.view">
             <field name="name">calendar.attendee.tree</field>
             <field name="model">calendar.attendee</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Invitation details">
                     <field name="sent_by_uid" string="Invitation From"/>
@@ -81,7 +79,6 @@
         <record id="base_calendar_attendee_search_view" model="ir.ui.view">
             <field name="name">calendar.attendee.search</field>
             <field name="model">calendar.attendee</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invitations">
                     <field name="email" string="Email"/>
@@ -129,7 +126,6 @@
         <record id="res_alarm_form_view" model="ir.ui.view">
             <field name="name">res.alarm.form</field>
             <field name="model">res.alarm</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Reminder details" version="7.0">
                     <group col="4">
@@ -150,7 +146,6 @@
         <record id="res_alarm_tree_view" model="ir.ui.view">
             <field name="name">res.alarm.tree</field>
             <field name="model">res.alarm</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Reminder details">
                 <field name="name"/>
@@ -189,7 +184,6 @@
         <record model="ir.ui.view" id="event_form_view">
             <field name="name">Event Form</field>
             <field name="model">calendar.event</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Events" version="7.0">
                 <header>
@@ -363,7 +357,6 @@
         <record model="ir.ui.view" id="event_tree_view">
             <field name="name">Event Tree</field>
             <field name="model">calendar.event</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Events">
                     <field name="name" string="Subject"/>
@@ -382,7 +375,6 @@
         <record model="ir.ui.view" id="event_calendar_view">
             <field name="name">Events Calendar</field>
             <field name="model">calendar.event</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Events" date_start="date" color="show_as" date_delay="duration">
@@ -398,7 +390,6 @@
         <record id="view_calendar_event_filter" model="ir.ui.view">
             <field name="name">Calendar Events Search</field>
             <field name="model">calendar.event</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Events">
                     <field name="name" filter_domain="['|',('name','ilike',self),('location','ilike',self)]" string="Event"/>

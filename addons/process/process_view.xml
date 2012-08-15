@@ -11,7 +11,6 @@
     <record model="ir.ui.view" id="view_process_form">
         <field name="name">process.process.form</field>
         <field name="model">process.process</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process" version="7.0">
                 <sheet>
@@ -97,7 +96,6 @@
     <record model="ir.ui.view" id="view_process_tree">
         <field name="name">process.process.tree</field>
         <field name="model">process.process</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Process">
                 <field name="name"/>
@@ -110,7 +108,6 @@
     <record id="view_process_filter" model="ir.ui.view">
             <field name="name">process.process.filter</field>
             <field name="model">process.process</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Process">
                     <field name="name" string="Process"/>
@@ -138,7 +135,6 @@
     <record model="ir.ui.view" id="view_process_node_tree">
         <field name="name">process.node.tree</field>
         <field name="model">process.node</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Process Nodes">
                 <field name="name"/>
@@ -153,7 +149,6 @@
     <record model="ir.ui.view" id="view_process_node_form">
         <field name="name">process.node.form</field>
         <field name="model">process.node</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Node" version="7.0">
                 <sheet layout="auto">
@@ -210,7 +205,6 @@
     <record id="view_process_node_filter" model="ir.ui.view">
         <field name="name">process.node.filter</field>
         <field name="model">process.node</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search ProcessNode">
                 <field name="name" string="Process Node"/>
@@ -242,7 +236,6 @@
     <record model="ir.ui.view" id="view_process_transition_tree">
         <field name="name">process.transition.tree</field>
         <field name="model">process.transition</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Process Transition">
                 <field name="name"/>
@@ -255,7 +248,6 @@
     <record model="ir.ui.view" id="view_process_transition_form">
         <field name="name">process.transition.form</field>
         <field name="model">process.transition</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Transition" version="7.0">
                 <sheet >
@@ -299,7 +291,6 @@
     <record id="view_process_transition_filter" model="ir.ui.view">
         <field name="name">process.transition.filter</field>
         <field name="model">process.transition</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Process Transition">
                 <field name="name" string="Process Transition"/>

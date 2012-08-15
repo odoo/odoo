@@ -45,7 +45,6 @@ Use the thread viewer widget inside your form view by using the mail_thread widg
   <record model="ir.ui.view" id="my_task_form_view">
     <field name="name">My Task</field>
     <field name="model">my.task</field>
-    <field name="type">form</field>
     <field name="priority">1</field>
     <field name="arch" type="xml">
       <form>

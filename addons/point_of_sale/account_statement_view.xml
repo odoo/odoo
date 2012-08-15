@@ -4,7 +4,6 @@
         <record model="ir.ui.view" id="view_account_journal_pos_user_form">
             <field name="name">POS Journal</field>
             <field name="model">account.journal</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
@@ -24,7 +23,6 @@
         <record id="view_pos_open_cash_statement_filter" model="ir.ui.view">
             <field name="name">account.bank.statement.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
                     <field name="name" string="Cash Statement"/>
@@ -43,7 +41,6 @@
         <record id="view_pos_confirm_cash_statement_filter" model="ir.ui.view">
             <field name="name">account.bank.statement.inherit2</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
                     <field name="name" string="Cash Statement"/>
@@ -86,7 +83,6 @@
         <record id="view_cash_statement_pos_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="account.view_cash_statement_tree"/>
             <field name="arch" type="xml">
                 <field name="journal_id" position="after">
