@@ -12,7 +12,9 @@
             <button type="button" class="oe_mail_button_followers">Show followers</button>
         </div>
         <div class="oe_mail_recthread_followers">
-            <h4>Followers</h4>
+            <t t-if="widget.params.title">
+                <h4><t t-raw="widget.params.title"/></h4>
+            </t>
             <ul class="oe_mail_followers_display"></ul>
         </div>
     </div>
