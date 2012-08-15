@@ -267,15 +267,16 @@ class mail_thread(osv.Model):
         if context is None:
             context = {}
 
-        notification_obj = self.pool.get('mail.notification')
-        
-        # automatically subscribe the writer of the message
-        if vals.get('user_id'):
-            self.message_subscribe(cr, uid, [thread_id], [vals['user_id']], context=context)
-        
         # create message
         msg_id = self.pool.get('mail.message').create(cr, uid, vals, context=context)
-        
+
+        # automatically subscribe the writer of the message
+        if vals.get('user_id'):
+            record = self.browse(cr, uid, thread_id, context=context)
+            follower_ids = [follower.id for follower in record.follower_ids]
+            if vals.get('user_id') not in follower_ids:
+                self.message_subscribe(cr, uid, [thread_id], [vals.get('user_id')], context=context)
+
         # Set as unread if writer is not the document responsible
         self.message_create_set_unread(cr, uid, [thread_id], context=context)
         
@@ -284,6 +285,7 @@ class mail_thread(osv.Model):
             return msg_id
         
         # get users that will get a notification pushed
+        notification_obj = self.pool.get('mail.notification')
         user_to_push_ids = self.message_get_user_ids_to_notify(cr, uid, [thread_id], vals, context=context)
         for id in user_to_push_ids:
             notification_obj.create(cr, uid, {'user_id': id, 'message_id': msg_id}, context=context)
