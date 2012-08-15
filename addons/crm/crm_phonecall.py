@@ -32,7 +32,7 @@ class crm_phonecall(base_state, osv.osv):
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread']
     _columns = {
         # base_state required fields
         'date_action_last': fields.datetime('Last Action', readonly=1),

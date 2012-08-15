@@ -70,6 +70,10 @@ class crm_meeting(base_state, osv.Model):
     # OpenChatter
     # ----------------------------------------
 
+    # shows events of the day for this user
+    def needaction_domain_get(self, cr, uid, domain=[], context={}):
+        return [('date','<=',time.strftime('%Y-%M-%D 23:59:59')), ('date_deadline','>=', time.strftime('%Y-%M-%D 00:00:00')), ('user_id','=',uid)]
+
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Meeting'
 

@@ -1022,12 +1022,8 @@ class sale_order(osv.osv):
     # OpenChatter methods and notifications
     # ------------------------------------------------
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if (obj.state == 'manual' or obj.state == 'progress'):
-                result[obj.id].append(obj.user_id.id)
-        return result
+    def needaction_domain_get(self, cr, uid, ids, context=None):
+        return [('state', '=', 'draft'), ('user_id','=',uid)]
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):

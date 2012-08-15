@@ -732,12 +732,8 @@ class purchase_order(osv.osv):
     # OpenChatter methods and notifications
     # --------------------------------------
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = super(purchase_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'approved':
-                result[obj.id].append(obj.validator.id)
-        return result
+    def needaction_domain_get(self, cr, uid, ids, context=None):
+        return [('state','=','draft')]
 
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Request for quotation <b>created</b>."), context=context)
