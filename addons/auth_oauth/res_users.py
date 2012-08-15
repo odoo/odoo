@@ -14,7 +14,7 @@ class res_users(osv.Model):
     _inherit = 'res.users'
 
     _columns = {
-        'oauth_provider': fields.many2one('auth.oauth.provider','OAuth Provider'),
+        'oauth_provider_id': fields.many2one('auth.oauth.provider','OAuth Provider'),
         'oauth_uid': fields.char('OAuth User ID', help="Oauth Provider user_id"),
         'oauth_access_token': fields.char('OAuth Token', readonly=True),
     }
@@ -59,7 +59,7 @@ class res_users(osv.Model):
                 'name': name,
                 'login': login,
                 'user_email': login,
-                'oauth_provider': 'Google',
+                'oauth_provider_id': 1,
                 'oauth_uid': oauth_uid,
                 'oauth_access_token': access_token,
                 'active': True,
@@ -67,25 +67,12 @@ class res_users(osv.Model):
             self.auth_signup_create(cr, uid, new_user)
         return credentials
 
-    def check(self, db, uid, passwd):
+    def check_credentials(self, cr, uid, password):
         try:
-            return super(res_users, self).check(db, uid, passwd)
-        except openerp.exceptions.AccesDenied:
-            if not passwd:
+            return super(res_users, self).check_credentials(cr, uid, password)
+        except openerp.exceptions.AccessDenied:
+            res = self.search(cr, 1, [('id','=',uid),('oauth_access_token','=',password)])
+            if not res:
                 raise
-            try:
-                registry = openerp.modules.registry.RegistryManager.get(db)
-                cr = registry.db.cursor()
-                cr.execute('''SELECT COUNT(1)
-                                FROM res_users
-                               WHERE id=%s
-                                 AND oauth_access_token=%s
-                                 AND active=%s''',
-                            (int(uid), passwd, True))
-                if not cr.fetchone()[0]:
-                    raise
-                self._uid_cache.setdefault(db, {})[uid] = passwd
-            finally:
-                cr.close()
 
 #
