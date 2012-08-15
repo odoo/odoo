@@ -4,6 +4,8 @@ import babel
 import dateutil.relativedelta
 import logging
 import time
+import sys
+
 import openerplib
 
 from . import nonliterals
