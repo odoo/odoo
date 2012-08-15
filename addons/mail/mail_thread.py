@@ -189,7 +189,7 @@ class mail_thread(osv.Model):
         for id in ids:
             # copy origin  al vals because we are going to modify it
             specific_vals = dict(vals)
-            followers_command = self.message_get_automatic_followers(cr, uid, ids, specific_vals, context=context)
+            followers_command = self.message_get_automatic_followers(cr, uid, id, specific_vals, context=context)
             if specific_vals.get('message_follower_ids'):
                 specific_vals['message_follower_ids'] += followers_command
             else:
