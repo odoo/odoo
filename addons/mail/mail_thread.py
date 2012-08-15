@@ -174,10 +174,9 @@ class mail_thread(osv.Model):
             - followers given by the monitored fields
         """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
-        #fields = self.message_get_follower_fields(cr, uid, [thread_id], context=context)
-        #print fields
-        #if thread_id:
-            #self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
+        followers_command = self.message_get_automatic_followers(cr, uid, [], vals, fetch_missing=True, context=context)
+        if followers_command:
+            self.write(cr, uid, [thread_id], {'message_follower_ids': followers_command}, context=context)
         return thread_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -187,21 +186,16 @@ class mail_thread(osv.Model):
         """
         if isinstance(ids, (int, long)):
             ids = [ids]
-        command = self.message_get_automatic_followers(cr, uid, ids, vals, context=context)
-        print command
-        if vals.get('message_follower_ids'):
-            vals['message_follower_ids'] += command
-        else:
-            vals['message_follower_ids'] = command
-        print vals
-        write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context)
-        
-        
-        
-
-        if write_res and not vals.get('message_follower_ids'):
-            self.message_subscribe(cr, uid, ids, [uid], context=context)
-        return write_res;
+        for id in ids:
+            # copy origin  al vals because we are going to modify it
+            specific_vals = dict(vals)
+            followers_command = self.message_get_automatic_followers(cr, uid, ids, specific_vals, context=context)
+            if specific_vals.get('message_follower_ids'):
+                specific_vals['message_follower_ids'] += followers_command
+            else:
+                specific_vals['message_follower_ids'] = followers_command
+            write_res = super(mail_thread, self).write(cr, uid, ids, specific_vals, context=context)
+        return True
 
     def unlink(self, cr, uid, ids, context=None):
         """Override unlink, to automatically delete messages
@@ -215,8 +209,20 @@ class mail_thread(osv.Model):
         msg_obj.unlink(cr, uid, msg_to_del_ids, context=context)
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
 
-    def message_get_automatic_followers(self, cr, uid, ids, record_vals, add_uid=True, fetch_missing=False, context=None):
-        """
+    def message_get_automatic_followers(self, cr, uid, id, record_vals, add_uid=True, fetch_missing=False, context=None):
+        """ Return the command for the many2many follower_ids field to manage
+            subscribers. Behavior :
+            - get the monitored fields (ex: ['user_id', 'responsible_id']); those
+              fields should be relationships to res.users (#TODO: res.partner)
+            - if this field is in the record_vals: it means it has been modified
+              thus add its value to the followers
+            - if this fields is not in record_vals, but fetch_missing paramter
+              is set to True: fetch the value in the record (use: at creation
+              for default values, not present in record_vals)
+            - if add_uid: add the current user (for example: writer is subscriber)
+            - generate the command and return it
+            This method has to be used on 1 id, because otherwise it would imply
+            to track which user.id is used for which record.id.
 
             :param record_vals: values given to the create method of the new
                 record, or values updated in a write.
@@ -228,24 +234,21 @@ class mail_thread(osv.Model):
             #TODO : UPDATE WHEN MERGING TO PARTNERS
         """
         # get monitored fields
-        monitored_fields = self.message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        print monitored_fields
+        monitored_fields = self.message_get_monitored_follower_fields(cr, uid, [id], context=context)
+        modified_fields = [field for field in monitored_fields if field in record_vals.iterkeys()]
+        other_fields = [field for field in monitored_fields if field not in record_vals.iterkeys()] if fetch_missing else []
         # for each monitored field: if in record_vals, it has been modified/added
-        fields = [field for field in monitored_fields if field in record_vals.iterkeys()]
-        print fields
-
         follower_ids = []
-        for field in fields:
-            value = record_vals.get(field)
-            if value:
-                follower_ids.append(value)
-            elif fetch_missing:
-                pass
-
-        print follower_ids
+        for field in modified_fields:
+            follower_ids.append(record_vals.get(field))
+        # for other fields: read in record if fetch_missing (otherwise list is void)
+        for field in other_fields:
+            record = self.browse(cr, uid, id, context=context)
+            value = getattr(record, field)
+            follower_ids.append(value)
+        # add uid if asked and not already present
         if add_uid and uid not in follower_ids:
             follower_ids.append(uid)
-
         return self.message_subscribe_get_command(cr, uid, follower_ids, context=context)
 
     #------------------------------------------------------
