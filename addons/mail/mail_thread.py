@@ -230,7 +230,7 @@ class mail_thread(osv.Model):
         # get monitored fields
         monitored_fields = self.message_get_monitored_follower_fields(cr, uid, ids, context=context)
         print monitored_fields
-        # for each monitored field: if in record_vals, it has been modified
+        # for each monitored field: if in record_vals, it has been modified/added
         fields = [field for field in monitored_fields if field in record_vals.iterkeys()]
         print fields
 
