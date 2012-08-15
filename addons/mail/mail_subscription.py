@@ -63,6 +63,12 @@ class mail_notification(osv.osv):
     _defaults = {
         'read': False,
     }
+
+    # FP Note: todo: check that we can not create a notification for
+    # a message we can not read.
+    # def create(self, ...)
+
+
     # Create notification in the wall of each user
     # Send by email the notification depending on the user preferences
     def notify(self, cr, uid, partner_ids, msg_id, context=context):
