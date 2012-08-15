@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:24+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:23+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -40,7 +40,7 @@ msgstr "Wybierz sposób płatności do zastosowania."
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupuj wg..."
 
 #. module: account_payment
 #: model:ir.module.module,description:account_payment.module_meta_information
@@ -71,6 +71,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"Kiedy polecenie jest w stanie 'Projekt'.\n"
+" Kiedy bank potwierdza to stan zmienia się na 'Potwierdzone'.\n"
+" Następnie kiedy jest zapłacone, to stan zmienia się na 'Wykonane'."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -86,7 +89,7 @@ msgstr ""
 #: field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -107,7 +110,7 @@ msgstr "Zapisy"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr ""
+msgstr "Stosowane konta"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -134,7 +137,7 @@ msgstr "_Dodaj do polecenia płatności"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "Płatności"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -145,7 +148,7 @@ msgstr "Kwota"
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Niepoprawna wartość Winien lub Ma w zapisie !"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -171,7 +174,7 @@ msgstr "Odnośnik"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr ""
+msgstr "Nazwa pozycji płatności musi być unikalna !"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -211,7 +214,7 @@ msgstr "Data realizacji faktury"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Execution Type"
-msgstr ""
+msgstr "Typ wykonania"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -279,7 +282,7 @@ msgstr "Data realizacji"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Dziennik bankowy lub gotówkowy dla trybu płatności"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -300,7 +303,7 @@ msgstr "Konto docelowe"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "Szukaj poleceń zapłaty"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -335,7 +338,7 @@ msgstr "Zarzędzanie płatnościami"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Pozycja wyciągu z konta"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -350,12 +353,12 @@ msgstr "Kwota do zapłaty"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
-msgstr ""
+msgstr "Waluta"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Yes"
-msgstr ""
+msgstr "Tak"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -374,7 +377,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "Polecenie płatności"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -384,7 +387,7 @@ msgstr "Sposób zapłaty"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "Data wartości"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -405,7 +408,7 @@ msgstr "Projekt"
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr ""
+msgstr "Wiadomość w komunikacji"
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
@@ -446,7 +449,7 @@ msgstr "Pozycje płatności"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Pozycje zapisów"
 
 #. module: account_payment
 #: constraint:account.move.line:0
@@ -464,7 +467,7 @@ msgstr ""
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search"
-msgstr ""
+msgstr "Szukaj"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
@@ -480,7 +483,7 @@ msgstr "Data płatności"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Total:"
-msgstr ""
+msgstr "Suma:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -520,7 +523,7 @@ msgstr ""
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Odnośnik faktury"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -552,7 +555,7 @@ msgstr "Wykonano"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -580,7 +583,7 @@ msgid ""
 "invoice or a customer credit note. Here you can register all payment orders "
 "that should be done, keep track of all payment orders and mention the "
 "invoice reference and the partner the payment should be done for."
-msgstr ""
+msgstr "Polecenie zapłaty służy do obsługi płatności."
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -610,7 +613,7 @@ msgstr "Docelowe konto bankowe"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "Jesteś pewien, że chcesz dokonać płatności?"
 
 #. module: account_payment
 #: view:payment.mode:0
@@ -644,7 +647,7 @@ msgstr "Płatności"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "Polecenie zapłaty / Płatność"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -668,7 +671,7 @@ msgstr "Nazwa"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Konto bankowe"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -695,7 +698,7 @@ msgstr "Suma"
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Wykonaj płatność"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0

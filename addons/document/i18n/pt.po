@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-05 04:52+0000\n"
-"X-Generator: Launchpad (build 15060)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:34+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -52,13 +52,13 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr ""
-"Campo a usar como nome nas pastas. Se vazio o campo \"name\" será o usado."
+"Campo a usar como nome nas pastas. Se vazio o campo \"nome\" será o usado."
 
 #. module: document
 #: code:addons/document/document_directory.py:276
 #, python-format
 msgid "Directory name contains special characters!"
-msgstr "O nome da pasta contém caracteres especiais!"
+msgstr "O nome da pasta contém carateres especiais!"
 
 #. module: document
 #: view:document.directory:0
@@ -127,8 +127,8 @@ msgid ""
 "to the current record, in dynamic folders"
 msgstr ""
 "Uma expressão python, usada para avaliar o campo\n"
-"Não pode usar 'dir_id' para a pasta actual, 'res_id', 'res_model' como "
-"referência para o registo actual em pastas dinâmicas"
+"Não pode usar 'dir_id' para a pasta atual, 'res_id', 'res_model' como "
+"referência para o registo atual em pastas dinâmicas"
 
 #. module: document
 #: view:report.document.user:0
@@ -304,7 +304,7 @@ msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
 msgstr ""
-"Seleccione um objecto, para criar uma pasta por cada registo dessa tabela."
+"Selecione um objeto, para criar uma pasta por cada registo dessa tabela."
 
 #. module: document
 #: help:document.directory,domain:0
@@ -337,7 +337,7 @@ msgstr "Modelo do registo"
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
-msgstr "Tipo de pasta"
+msgstr "Tipo de Directório"
 
 #. module: document
 #: field:document.directory.content,report_id:0
@@ -396,7 +396,7 @@ msgstr "Ficheiros gerados"
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
-msgstr "Pasta"
+msgstr "Directório"
 
 #. module: document
 #: view:board.board:0
@@ -436,7 +436,7 @@ msgstr "Data da modificação"
 #. module: document
 #: model:ir.model,name:document.model_report_document_file
 msgid "Files details by Directory"
-msgstr "Detalhes dos ficheiros por pasta"
+msgstr "Detalhes dos ficheiros por directório"
 
 #. module: document
 #: view:report.document.user:0
@@ -464,7 +464,7 @@ msgstr "Imagem"
 #. module: document
 #: selection:document.directory,type:0
 msgid "Static Directory"
-msgstr "Pasta estática"
+msgstr "Diretório estático"
 
 #. module: document
 #: field:document.directory,child_ids:0
@@ -475,7 +475,8 @@ msgstr "Descendentes"
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
 msgstr ""
-"Defina palavras no contexto, para todas as pastas e ficheiros descendentes"
+"Defina palavras no contexto, para todos os diretórios e ficheiros "
+"descendentes"
 
 #. module: document
 #: model:ir.module.module,description:document.module_meta_information
@@ -557,7 +558,7 @@ msgid ""
 msgstr ""
 "Assinale este campo se quer que o nome do ficheiro contenha o nome do "
 "registo.\n"
-"If set, the directory will have to be a resource one."
+"Se for definido, o diretório terá de ser um recurso."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
@@ -590,8 +591,8 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
-"Assinale aqui se quer usar a mesma estrutura em árvore como a do objecto "
-"seleccionado no sistema."
+"Assinale aqui se quer usar a mesma estrutura em árvore como a do objeto "
+"selecionado no sistema."
 
 #. module: document
 #: view:document.directory:0
@@ -639,7 +640,7 @@ msgstr "Grupos"
 #. module: document
 #: field:document.directory.content.type,active:0
 msgid "Active"
-msgstr "Activo"
+msgstr "Ativo"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -661,8 +662,8 @@ msgid ""
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
-"Se colocar um objecto aqui, este modelo de pasta irá aparecer abaixo de "
-"todos estes objectos. Pastas destas são anexadas ao modelo ou registo "
+"Se colocar um objeto aqui, este diretório do template irá aparecer por baixo "
+"de todos os objetos. Pastas destas são anexadas ao modelo ou registo "
 "específico, tal como os anexos. Não coloque uma pasta ascendente, se "
 "selecionar um modelo ascendente."
 
@@ -736,7 +737,7 @@ msgstr "Expressão"
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr "O nome da pasta tem de ser único !"
+msgstr "O nome do diretório tem de ser único !"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -871,7 +872,7 @@ msgid ""
 "project documents, invoices etc."
 msgstr ""
 "O repositório de documentos dá-lhe acesso a todos os anexos, tais como "
-"facturas, documentos dos projectos, mensagens de correio, etc."
+"faturas, documentos dos projetos, mensagens de correio, etc."
 
 #. module: document
 #: view:document.directory:0
@@ -942,8 +943,8 @@ msgid ""
 msgstr ""
 "Cada pasta pode ser do tipo estático ou estar ligada a uma tabela. Uma pasta "
 "estática é uma pasta que pode conter ficheiros, tal como no sistema "
-"operativo. As pastas ligadas a recursos do sistema, automaticamente contêm "
-"sub-pastas para cada recurso definido como descendente."
+"operativo. O diretórios ligados a recursos do sistema, automaticamente "
+"contêm sub-diretórios para cada recurso definido como descendente."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -1003,7 +1004,7 @@ msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
 msgstr ""
-"Apenas os membros deste grupo terão acesso a esta pasta e seus ficheiros."
+"Apenas os membros deste grupo terão acesso a este diretório e seus ficheiros."
 
 #. module: document
 #: view:document.directory:0

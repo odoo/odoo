@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-01 05:42+0000\n"
-"X-Generator: Launchpad (build 15342)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:45+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: point_of_sale
 #: field:pos.discount,discount_notes:0
@@ -25,7 +25,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
 msgid "Sales by day"
-msgstr "日毎の販売"
+msgstr "日毎売上"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
@@ -46,7 +46,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
 msgid "Product Nb."
-msgstr "製品番号"
+msgstr "商品番号"
 
 #. module: point_of_sale
 #: model:ir.module.module,shortdesc:point_of_sale.module_meta_information
@@ -71,7 +71,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.box.entries:0
 msgid "Put Money"
-msgstr ""
+msgstr "現金装填"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_cash_register_all
@@ -83,7 +83,7 @@ msgstr "レジスター分析"
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Details of Sales"
-msgstr "販売の詳細"
+msgstr "売上の詳細"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -111,7 +111,7 @@ msgstr "支払の追加："
 #. module: point_of_sale
 #: view:report.cash.register:0 view:report.pos.order:0
 msgid "My Sales"
-msgstr "私の販売"
+msgstr "私の売上"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_out
@@ -228,7 +228,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
 #: report:pos.sales.user:0
 msgid "Sales Report"
-msgstr "販売レポート"
+msgstr "売上レポート"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_discount.py:52
@@ -288,7 +288,7 @@ msgstr "合計数量"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
 msgid "Sales by user monthly"
-msgstr ""
+msgstr "月間ユーザ別売上"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:54
@@ -341,7 +341,7 @@ msgstr "6月"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
 msgid "Sales by User Monthly"
-msgstr "月間ユーザ別販売"
+msgstr "月間ユーザ別売上"
 
 #. module: point_of_sale
 #: field:pos.make.payment,payment_date:0
@@ -425,7 +425,7 @@ msgstr "レポートの印刷"
 #: report:pos.invoice:0 report:pos.lines:0 field:pos.order.line,price_unit:0
 #: report:pos.payment.report.user:0
 msgid "Unit Price"
-msgstr ""
+msgstr "単価"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:105
@@ -438,7 +438,7 @@ msgstr "その損益勘定が %s にセットされていることをチェッ�
 #: code:addons/point_of_sale/wizard/pos_return.py:240
 #, python-format
 msgid "Add Product"
-msgstr "製品追加"
+msgstr "商品追加"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_am:0
@@ -473,7 +473,7 @@ msgstr "支払"
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 msgid "Ending Balance"
-msgstr "期末残高"
+msgstr "終了残高"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.products_for_output_operations
@@ -523,7 +523,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Sales total(Revenue)"
-msgstr "販売合計（売上）"
+msgstr "売上合計"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
@@ -538,7 +538,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Qty of product"
-msgstr ""
+msgstr "商品の数量"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
@@ -559,7 +559,7 @@ msgstr "3月"
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
 #: report:pos.user.product:0
 msgid "User's Product"
-msgstr "ユーザ製品"
+msgstr "ユーザ商品"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:641
@@ -569,7 +569,7 @@ msgid ""
 "Please set one before choosing a product."
 msgstr ""
 "販売フォームの中の価格リストを選択する必要があります。\n"
-"製品を選択する前にそれをセットして下さい。"
+"商品を選択する前にそれをセットして下さい。"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal_incl:0
@@ -590,7 +590,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 msgid "Starting Balance"
-msgstr "期首残高"
+msgstr "開始残高"
 
 #. module: point_of_sale
 #: report:pos.payment.report.user:0
@@ -626,7 +626,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details_summary:0
 msgid "Sales total"
-msgstr "販売合計"
+msgstr "売上合計"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -649,7 +649,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,lines:0
 msgid "Order Lines"
-msgstr "受注行"
+msgstr "オーダー行"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
@@ -659,7 +659,7 @@ msgstr "作成日"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today
 msgid "Today's Sales"
-msgstr "本日の販売"
+msgstr "本日の売上"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
@@ -683,7 +683,7 @@ msgstr ""
 #: field:report.sales.by.margin.pos,product_name:0
 #: field:report.sales.by.margin.pos.month,product_name:0
 msgid "Product Name"
-msgstr "製品名"
+msgstr "商品名"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:69
@@ -760,7 +760,7 @@ msgstr "会計ポジションの注釈："
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "September"
-msgstr ""
+msgstr "9月"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
@@ -869,7 +869,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
 msgid "Sales (summary)"
-msgstr "販売（合計）"
+msgstr "売上（合計）"
 
 #. module: point_of_sale
 #: view:product.product:0
@@ -885,7 +885,7 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_report_cash_register
 #: view:report.cash.register:0
 msgid "Point of Sale Cash Register Analysis"
-msgstr ""
+msgstr "POSキャッシュレジスタ分析"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_sales_user_today
@@ -974,7 +974,7 @@ msgstr "名前"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_open_statement
 msgid "Open Cash Registers"
-msgstr ""
+msgstr "キャッシュレジスタを開く"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.lines:0 report:pos.payment.report.user:0
@@ -990,29 +990,29 @@ msgstr "仕訳帳の名前は会社ごとに固有でなければなりません
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "仕入先返金"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0 view:pos.order:0 view:report.cash.register:0
 #: view:report.pos.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "グループ化…"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "POS Orders"
-msgstr ""
+msgstr "POSオーダー"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.all_closed_cashbox_of_the_day
 msgid "All Closed CashBox"
-msgstr ""
+msgstr "全ての閉じた金庫"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:640
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "価格リストがありません。"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_get_sale
@@ -1028,7 +1028,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Base"
-msgstr ""
+msgstr "基本"
 
 #. module: point_of_sale
 #: view:product.product:0
@@ -1043,24 +1043,24 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Notes"
-msgstr ""
+msgstr "注記"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Sale Order"
-msgstr ""
+msgstr "販売オーダー"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.invoice:0 field:pos.order,amount_tax:0
 msgid "Taxes"
-msgstr ""
+msgstr "税金"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_day
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
-msgstr ""
+msgstr "販売行"
 
 #. module: point_of_sale
 #: field:pos.config.journal,code:0
@@ -1072,7 +1072,7 @@ msgstr "コード"
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_product
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
 msgid "Products"
-msgstr ""
+msgstr "商品"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report
@@ -1092,17 +1092,17 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Extra Info"
-msgstr ""
+msgstr "追加情報"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "FAX："
 
 #. module: point_of_sale
 #: field:pos.order,user_id:0
 msgid "Connected Salesman"
-msgstr ""
+msgstr "担当販売員"
 
 #. module: point_of_sale
 #: model:ir.module.module,description:point_of_sale.module_meta_information
@@ -1145,19 +1145,19 @@ msgstr ""
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:32
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:59
 msgid "Qty"
-msgstr ""
+msgstr "数量"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 view:report.pos.order:0
 msgid "Month -1"
-msgstr ""
+msgstr "月 -1"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_sale_user
 #: model:ir.model,name:point_of_sale.model_pos_sale_user
 #: view:pos.payment.report.user:0
 msgid "Sale by User"
-msgstr ""
+msgstr "ユーザ毎の販売"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:293
@@ -1180,7 +1180,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "state"
-msgstr ""
+msgstr "状態"
 
 #. module: point_of_sale
 #: view:product.product:0
@@ -1190,7 +1190,7 @@ msgstr ""
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "July"
-msgstr ""
+msgstr "7月"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:547
@@ -1201,27 +1201,27 @@ msgstr ""
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
 msgid "Delay Validation"
-msgstr ""
+msgstr "検証の遅延"
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
 msgid "Number of Print"
-msgstr ""
+msgstr "印刷数"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "POS支払"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "End Period"
-msgstr ""
+msgstr "期末日"
 
 #. module: point_of_sale
 #: field:account.journal,auto_cash:0
 msgid "Automatic Opening"
-msgstr ""
+msgstr "自動開始"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_ded:0
@@ -1243,7 +1243,7 @@ msgstr ""
 #: view:report.cash.register:0 field:report.cash.register,month:0
 #: view:report.pos.order:0 field:report.pos.order,month:0
 msgid "Month"
-msgstr ""
+msgstr "月"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1259,7 +1259,7 @@ msgstr "取引明細書名"
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
 #: field:pos.box.entries,journal_id:0 field:pos.box.out,journal_id:0
 msgid "Cash Register"
-msgstr ""
+msgstr "キャッシュレジスタ"
 
 #. module: point_of_sale
 #: field:pos.payment.report.date,date_start:0
@@ -1269,7 +1269,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_receipt
 msgid "Point of sale receipt"
-msgstr ""
+msgstr "販売レシート印刷"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_payment.py:91
@@ -1280,7 +1280,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_today
 msgid "Sales by User Daily margin"
-msgstr ""
+msgstr "ユーザの1日の利鞘別売上"
 
 #. module: point_of_sale
 #: field:pos.order,note_2:0
@@ -1296,22 +1296,22 @@ msgstr ""
 #. module: point_of_sale
 #: field:report.cash.register,balance_start:0
 msgid "Opening Balance"
-msgstr ""
+msgstr "開始残高"
 
 #. module: point_of_sale
 #: field:pos.order,amount_paid:0 selection:pos.order,state:0
 msgid "Paid"
-msgstr ""
+msgstr "支払済"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
 msgid "All sales lines"
-msgstr ""
+msgstr "全売上行"
 
 #. module: point_of_sale
 #: selection:report.cash.register,state:0
 msgid "Quotation"
-msgstr ""
+msgstr "見積"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1323,17 +1323,17 @@ msgstr ""
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:93
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:271
 msgid "Total:"
-msgstr ""
+msgstr "合計："
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos
 msgid "Sales by margin"
-msgstr ""
+msgstr "利鞘別売上"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config_journal
 msgid "Journal Configuration"
-msgstr ""
+msgstr "仕訳帳設定"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1345,12 +1345,12 @@ msgstr "取引明細書行"
 msgid ""
 "Person who uses the the cash register. It could be a reliever, a student or "
 "an interim employee."
-msgstr ""
+msgstr "キャッシュレジスタのユーザとなる人は救援者や学生、一時的な従業員かもしれません。"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_id:0
 msgid "Nbr Invoice"
-msgstr ""
+msgstr "請求書番号"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1359,7 +1359,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_receipt
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:231
 msgid "Receipt"
-msgstr ""
+msgstr "レシート"
 
 #. module: point_of_sale
 #: field:pos.order,invoice_wanted:0
@@ -1369,13 +1369,13 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Done"
-msgstr ""
+msgstr "完了"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
 #: report:pos.invoice:0 view:pos.order:0 field:pos.order,invoice_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "請求書"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_get_sale
@@ -1385,12 +1385,12 @@ msgstr ""
 #. module: point_of_sale
 #: view:account.bank.statement:0 selection:report.cash.register,state:0
 msgid "Open"
-msgstr ""
+msgstr "開く"
 
 #. module: point_of_sale
 #: field:pos.order,name:0 field:pos.order.line,order_id:0
 msgid "Order Ref"
-msgstr ""
+msgstr "オーダー参照"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment_repport_date
@@ -1418,17 +1418,17 @@ msgstr "1個当り正味利鞘"
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
 msgid "Sales by User Margin"
-msgstr ""
+msgstr "ユーザ利鞘別売上"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Taxes:"
-msgstr ""
+msgstr "税金："
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr ""
+msgstr "POSオーダー統計"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1440,12 +1440,12 @@ msgstr ""
 #: view:report.pos.order:0 field:report.pos.order,product_id:0
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:29
 msgid "Product"
-msgstr ""
+msgstr "商品"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
 msgid "Pos Lines"
-msgstr ""
+msgstr "POS行"
 
 #. module: point_of_sale
 #: field:product.product,disc_controle:0
@@ -1455,7 +1455,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:report.cash.register,balance_end_real:0
 msgid "Closing Balance"
-msgstr "期末残高"
+msgstr "締切残高"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -1471,13 +1471,13 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,date_order:0
 msgid "Date Ordered"
-msgstr ""
+msgstr "オーダー日"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment_report_user
 #: model:ir.model,name:point_of_sale.model_pos_payment_report_user
 msgid "Sales lines by Users"
-msgstr ""
+msgstr "ユーザ別売上傾向"
 
 #. module: point_of_sale
 #: field:res.company,max_diff:0
@@ -1487,13 +1487,13 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Order"
-msgstr ""
+msgstr "順番"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:472
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "この商品のために定義された損益勘定がありません：%s（ID：%d）"
 
 #. module: point_of_sale
 #: view:pos.make.payment:0
@@ -1503,7 +1503,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Net Total :"
-msgstr ""
+msgstr "合計："
 
 #. module: point_of_sale
 #: view:product.product:0
@@ -1513,7 +1513,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.details,date_start:0 field:pos.sale.user,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "開始日"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1524,23 +1524,23 @@ msgstr ""
 #: field:report.sales.by.user.pos.month,amount:0
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:33
 msgid "Total"
-msgstr ""
+msgstr "合計"
 
 #. module: point_of_sale
 #: view:pos.sale.user:0
 msgid "Sale By User"
-msgstr ""
+msgstr "ユーザ別販売"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
 msgid "Open Cash Register"
-msgstr ""
+msgstr "キャッシュレジスタを開く"
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: model:ir.actions.report.xml,name:point_of_sale.account_statement
 msgid "Statement"
-msgstr ""
+msgstr "取引明細書"
 
 #. module: point_of_sale
 #: field:pos.order,name:0
@@ -1557,7 +1557,7 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_pos_payment_report
 #: view:pos.payment.report:0
 msgid "Payment Report"
-msgstr ""
+msgstr "支払レポート"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_view_pos_return
@@ -1572,12 +1572,12 @@ msgstr ""
 #: report:pos.sales.user.today:0 report:pos.user.product:0
 #: field:report.pos.order,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "会社"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "請求日"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1058
@@ -1596,7 +1596,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Reprint"
-msgstr ""
+msgstr "再印刷"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:293
@@ -1604,12 +1604,12 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_out.py:88
 #, python-format
 msgid "You have to open at least one cashbox"
-msgstr ""
+msgstr "少なくとも1個の金庫を開く必要があります。"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report_user
 msgid "Today's Payment By User"
-msgstr ""
+msgstr "ユーザ別本日の支払"
 
 #. module: point_of_sale
 #: field:stock.picking,pos_order:0
@@ -1621,12 +1621,12 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:253
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "エラー"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "No. Of Articles"
-msgstr ""
+msgstr "品目数"
 
 #. module: point_of_sale
 #: field:pos.order,date_validity:0
@@ -1636,12 +1636,12 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,picking_id:0
 msgid "Picking"
-msgstr ""
+msgstr "集荷"
 
 #. module: point_of_sale
 #: field:pos.order,shop_id:0 field:report.pos.order,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "店"
 
 #. module: point_of_sale
 #: field:pos.order,picking_id:0
@@ -1651,7 +1651,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "銀行取引明細書行"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
@@ -1661,13 +1661,13 @@ msgstr "銀行取引明細書"
 #. module: point_of_sale
 #: report:pos.user.product:0
 msgid "Ending Date"
-msgstr ""
+msgstr "終了日"
 
 #. module: point_of_sale
 #: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS Report"
-msgstr ""
+msgstr "POSレポート"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
@@ -1677,7 +1677,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_close_statement
 msgid "Close Cash Register"
-msgstr ""
+msgstr "キャッシュレジスタを閉じる"
 
 #. module: point_of_sale
 #: field:pos.order.line,qty_rfd:0
@@ -1692,7 +1692,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.box.entries,product_id:0 field:pos.box.out,product_id:0
 msgid "Operation"
-msgstr ""
+msgstr "操作"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
@@ -1702,22 +1702,22 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,account_move:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "仕訳帳入力"
 
 #. module: point_of_sale
 #: selection:report.cash.register,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "確認済"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "キャンセル済請求書"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Confirm"
-msgstr ""
+msgstr "確認"
 
 #. module: point_of_sale
 #: report:pos.payment.report.date:0
@@ -1737,7 +1737,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "仕入先請求書"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1210
@@ -1753,7 +1753,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
 msgid "Reporting"
-msgstr ""
+msgstr "レポート"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.products_for_input_operations
@@ -1773,12 +1773,12 @@ msgstr "POSボックスアウト"
 #. module: point_of_sale
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "仕訳帳のコードは会社ごとに固有でなければなりません。"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
 msgid "Configuration"
-msgstr ""
+msgstr "設定"
 
 #. module: point_of_sale
 #: report:pos.user.product:0
@@ -1801,12 +1801,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
 msgid "Invoices"
-msgstr ""
+msgstr "請求書"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "December"
-msgstr ""
+msgstr "12月"
 
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,total_discount:0
@@ -1816,12 +1816,12 @@ msgstr "合計割引"
 #. module: point_of_sale
 #: view:pos.box.out:0
 msgid "Take Money"
-msgstr ""
+msgstr "現金取出"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details
 msgid "Sales Details"
-msgstr ""
+msgstr "売上詳細"
 
 #. module: point_of_sale
 #: field:product.product,am_out:0
@@ -1832,27 +1832,27 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_close_statement.py:50
 #, python-format
 msgid "Message"
-msgstr ""
+msgstr "メッセージ"
 
 #. module: point_of_sale
 #: view:account.journal:0 model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root_touchscreen
 #: view:product.product:0
 msgid "Point of Sale"
-msgstr ""
+msgstr "POS"
 
 #. module: point_of_sale
 #: view:pos.order:0 field:pos.payment.report.user,user_id:0
 #: field:pos.sale.user,user_id:0 field:pos.sales.user.today,user_id:0
 #: view:report.pos.order:0 field:report.pos.order,user_id:0
 msgid "Salesman"
-msgstr ""
+msgstr "販売員"
 
 #. module: point_of_sale
 #: report:pos.details:0 view:pos.order:0 selection:pos.order,state:0
 #: view:report.pos.order:0 selection:report.pos.order,state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "請求済"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -1862,7 +1862,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order.line,notice:0
 msgid "Discount Notice"
-msgstr ""
+msgstr "割引注記"
 
 #. module: point_of_sale
 #: view:pos.scan.product:0
@@ -1872,7 +1872,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Draft"
-msgstr ""
+msgstr "ドラフト"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -1892,13 +1892,13 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "PRO-FORMA"
-msgstr ""
+msgstr "プロフォーマ"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:358
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr ""
+msgstr "販売のためのパートナを提供して下さい。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:853
@@ -1930,7 +1930,7 @@ msgstr "ユーザ"
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos
 msgid "Sales by user"
-msgstr ""
+msgstr "ユーザ別売上"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
@@ -1940,45 +1940,45 @@ msgstr "11月"
 #. module: point_of_sale
 #: view:pos.receipt:0
 msgid "Print Receipt"
-msgstr ""
+msgstr "レシート印刷"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "January"
-msgstr ""
+msgstr "1月"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "POS Orders lines"
-msgstr ""
+msgstr "POSオーダー行"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:358
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "エラー"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,journal_id:0
 msgid "Sales Journal"
-msgstr ""
+msgstr "売上仕訳帳"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Refund"
-msgstr ""
+msgstr "返金"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/report/pos_invoice.py:46
 #, python-format
 msgid "Please create an invoice for this sale."
-msgstr ""
+msgstr "この販売の請求書を作成して下さい。"
 
 #. module: point_of_sale
 #: report:pos.sales.user:0 report:pos.sales.user.today:0
 #: field:report.pos.order,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "日付順"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_close_statement.py:66
@@ -1986,12 +1986,12 @@ msgstr ""
 #: view:pos.close.statement:0
 #, python-format
 msgid "Close Cash Registers"
-msgstr ""
+msgstr "キャッシュレジスタを閉じる"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.payment.report.user:0
 msgid "Disc(%)"
-msgstr ""
+msgstr "割引（%）"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -2001,17 +2001,17 @@ msgstr ""
 #: view:pos.payment.report.user:0 view:pos.sale.user:0
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:13
 msgid "Close"
-msgstr ""
+msgstr "閉じる"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Order lines"
-msgstr ""
+msgstr "オーダー行"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
 msgid "Subtotal w/o Tax"
-msgstr ""
+msgstr "税抜小計"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2021,12 +2021,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
 msgid "Pyament Report"
-msgstr ""
+msgstr "支払レポート"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,jl_id:0
 msgid "Cash Journals"
-msgstr ""
+msgstr "現金仕訳帳"
 
 #. module: point_of_sale
 #: view:pos.details:0
@@ -2036,7 +2036,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.sales.user.today:0
 msgid "Today's Sales By User"
-msgstr ""
+msgstr "ユーザ別本日売上"
 
 #. module: point_of_sale
 #: view:pos.box.entries:0
@@ -2048,27 +2048,27 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_out.py:86
 #, python-format
 msgid "please check that account is set to %s"
-msgstr ""
+msgstr "そのアカウントが %s にセットされていることを確認して下さい。"
 
 #. module: point_of_sale
 #: field:pos.config.journal,name:0 report:pos.invoice:0 report:pos.lines:0
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "May"
-msgstr ""
+msgstr "5月"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Sales lines"
-msgstr ""
+msgstr "売上行"
 
 #. module: point_of_sale
 #: field:pos.order,note:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "内部注記"
 
 #. module: point_of_sale
 #: view:pos.add.product:0
@@ -2090,12 +2090,12 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_report_pos_order_all
 #: view:report.pos.order:0
 msgid "Point of Sale Analysis"
-msgstr ""
+msgstr "POS分析"
 
 #. module: point_of_sale
 #: view:pos.order:0 field:pos.order,partner_id:0 view:report.pos.order:0
 msgid "Customer"
-msgstr ""
+msgstr "顧客"
 
 #. module: point_of_sale
 #: field:pos.make.payment,is_acc:0
@@ -2108,12 +2108,12 @@ msgstr ""
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "February"
-msgstr ""
+msgstr "2月"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "    Today    "
-msgstr ""
+msgstr "    本日    "
 
 #. module: point_of_sale
 #: field:pos.order,remboursed:0
@@ -2128,29 +2128,29 @@ msgstr ""
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "April"
-msgstr ""
+msgstr "4月"
 
 #. module: point_of_sale
 #: field:pos.order,statement_ids:0
 msgid "Payments"
-msgstr ""
+msgstr "支払"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0 report:pos.lines:0
 #: report:pos.payment.report.user:0 report:pos.sales.user:0
 #: report:pos.sales.user.today:0 report:pos.user.product:0
 msgid "Print Date"
-msgstr ""
+msgstr "印刷日"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_month
 msgid "Sales by User Monthly margin"
-msgstr ""
+msgstr "ユーザ月間利鞘別売上"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "受注オーダーの検索"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0
@@ -2161,18 +2161,18 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_return.py:316 view:pos.make.payment:0
 #, python-format
 msgid "Make Payment"
-msgstr ""
+msgstr "支払の作成"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_sales_user_today
 msgid "Sales User Today"
-msgstr ""
+msgstr "ユーザの本日売上"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 field:report.cash.register,year:0
 #: view:report.pos.order:0 field:report.pos.order,year:0
 msgid "Year"
-msgstr ""
+msgstr "年"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0

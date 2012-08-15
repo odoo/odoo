@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:46+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:36+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -24,7 +24,7 @@ msgstr "OpenERP användare"
 #. module: hr
 #: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Krav"
 
 #. module: hr
 #: constraint:hr.department:0
@@ -34,7 +34,7 @@ msgstr "Fel! Det går inte att skapa rekursiva avdelningar!"
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "Knyt anställd till information"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -51,7 +51,7 @@ msgstr "Personalresurser"
 #. module: hr
 #: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Gruppera på..."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -62,6 +62,11 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
+"Befattningar används för att definiera arbetsuppgifter och deras krav. Du "
+"kan hålla reda på antalet anställda du har per befattning och hur många du "
+"förväntar dig i framtiden. Du kan också bifoga en enkät till ett befattning "
+"som kommer att användas i rekryteringsprocessen för att utvärdera de sökande "
+"för denna befattning."
 
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
@@ -77,17 +82,17 @@ msgstr ""
 #. module: hr
 #: view:hr.job:0
 msgid "Mark as Old"
-msgstr ""
+msgstr "Märk som gammal"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr ""
+msgstr "Jobb"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "I anställningsprocessen"
 
 #. module: hr
 #: view:hr.installer:0
@@ -103,7 +108,7 @@ msgstr "Företag"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "Väntas i rekryteringen"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -126,11 +131,13 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"Företag som är knutet till den aktuella anställde. Bokföringstransaktioner "
+"kommer att registreras på detta företag som tillhör denna anställd."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "Länka en användare till anställd"
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
@@ -145,12 +152,12 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "Anställda på min avdelning"
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Married"
-msgstr ""
+msgstr "Gift"
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -170,6 +177,9 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Din bolags avdelningsstruktur används för att hantera alla handlingar som "
+"rör anställda per avdelningar: kostnader och tidrapport utvärderingar,  "
+"ledigheter och rekryteringar, etc."
 
 #. module: hr
 #: view:hr.employee:0
@@ -187,16 +197,18 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"I relationsfältet för i anställningsformuläret gör det möjligt att koppla "
+"OpenERP-användaren (och hennes rättigheter) till den anställde."
 
 #. module: hr
 #: view:hr.job:0 selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "I rekrytering"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "Identifikations nr"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
@@ -253,7 +265,7 @@ msgstr "Underkategori"
 #: view:hr.job:0 field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Arbetsbeskrivning"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -269,12 +281,12 @@ msgstr "Anställd"
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr ""
+msgstr "Annan information"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
-msgstr ""
+msgstr "E-post arbetet"
 
 #. module: hr
 #: field:hr.department,complete_name:0
@@ -285,7 +297,7 @@ msgstr "Namn"
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
-msgstr ""
+msgstr "Födelsedatum"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
@@ -295,18 +307,18 @@ msgstr "Rapportering"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Personalinfopanel"
 
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
-msgstr ""
+msgstr "Jobb"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -328,12 +340,12 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,category_ids:0
 msgid "Categories"
-msgstr ""
+msgstr "Kategorier"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "Väntade anställda"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -348,7 +360,7 @@ msgstr "Föräldrakategori"
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr ""
+msgstr "Fel! Du kan inte skapa rekursiva kategorier"
 
 #. module: hr
 #: view:hr.department:0
@@ -366,7 +378,7 @@ msgstr "Kontakt för den anställde"
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Min infopanel"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -398,7 +410,7 @@ msgstr ""
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr ""
+msgstr "Anställningskontrakt"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -441,11 +453,21 @@ msgid ""
 "they will be able to enter time through the system. In the note tab, you can "
 "enter text data that should be recorded for a specific employee."
 msgstr ""
+"Här kan du hantera din arbetsstyrka genom att skapa anställda och ge dem "
+"specifika egenskaper i systemet. Underhåll information om den anställde "
+"hålla koll på allt som måste registreras för dem. Den personliga "
+"informationsfliken hjälper dig att underhålla identitetsdata. Kategorifliken "
+"ger dig möjlighet att tilldela kategorier beroende på den anställdes "
+"befattning och verksamhet inom företaget. En kategori kan vara t ex ange "
+"senioritet inom företaget eller en avdelning. Tidrapportfliken kan tilldela "
+"dem en särskild tidrapport och objektjournal där de kommer att kunna mata in "
+"tid i systemet. I noteringsfliken kan du ange text data som ska registreras "
+"för en viss anställd."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Anställds lönekonto"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -455,7 +477,7 @@ msgstr "Anteckning"
 #. module: hr
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "Detta bolag är inte tillåtet för den här användaren"
 
 #. module: hr
 #: view:hr.employee:0
@@ -471,7 +493,7 @@ msgstr "adress"
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "Personalchefens infopanel"
 
 #. module: hr
 #: view:hr.employee:0
@@ -492,7 +514,7 @@ msgstr "Kategoristruktur"
 #. module: hr
 #: field:hr.employee,partner_id:0
 msgid "unknown"
-msgstr ""
+msgstr "Obekant"
 
 #. module: hr
 #: field:hr.installer,hr_holidays:0
@@ -512,12 +534,12 @@ msgstr "Aktiv"
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Fel! Du kan inte skapa omvänd rangordning av anställda."
+msgstr "Fel! Du kan inte skapa rekursiva hierarkier av anställda."
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account Number"
-msgstr ""
+msgstr "Bankkontonummer"
 
 #. module: hr
 #: view:hr.department:0
@@ -542,6 +564,8 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"I anställningsformuläret finns olika typer av information, t ex "
+"kontaktinformation."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -551,7 +575,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Old"
-msgstr ""
+msgstr "Gammal"
 
 #. module: hr
 #: field:hr.employee.marital.status,description:0
@@ -561,12 +585,12 @@ msgstr ""
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Du kan inte ha två användare med samma användarid !"
 
 #. module: hr
 #: view:hr.job:0 field:hr.job,state:0
 msgid "State"
-msgstr ""
+msgstr "Tillstånd"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -581,17 +605,17 @@ msgstr ""
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "Anställdsformulär och struktur"
 
 #. module: hr
 #: field:hr.employee,photo:0
 msgid "Photo"
-msgstr ""
+msgstr "Bild"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: hr
 #: field:hr.installer,hr_payroll_account:0
@@ -606,7 +630,7 @@ msgstr "Personlig information"
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "Passnummer"
 
 #. module: hr
 #: view:res.users:0
@@ -649,7 +673,7 @@ msgstr ""
 #. module: hr
 #: view:hr.job:0
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #. module: hr
 #: help:hr.installer,hr_contract:0
@@ -664,17 +688,17 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Single"
-msgstr ""
+msgstr "Enkel"
 
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "Jobbnamn"
 
 #. module: hr
 #: view:hr.job:0 selection:hr.job,state:0
 msgid "In Position"
-msgstr ""
+msgstr "I befattning"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -704,12 +728,12 @@ msgstr ""
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "Personaladministrationsinfopanel"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Resurs"
 
 #. module: hr
 #: view:hr.installer:0
@@ -737,7 +761,7 @@ msgstr "Anställda"
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Försäkringsnummer"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -747,12 +771,12 @@ msgstr "Avdelningsnamn"
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Personnummer"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "Skapa OpenERP-användare"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -763,12 +787,12 @@ msgstr "Underavdelning"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Platser"
 
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Tränare"
 
 #. module: hr
 #: view:hr.installer:0
@@ -789,7 +813,7 @@ msgstr "Chef"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr ""
+msgstr "Änkling"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0

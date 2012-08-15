@@ -9,13 +9,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
 "PO-Revision-Date: 2012-03-21 11:59+0000\n"
-"Last-Translator: Rolv Råen (adEgo) <Unknown>\n"
+"Last-Translator: Rolv Råen <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-22 05:47+0000\n"
-"X-Generator: Launchpad (build 14981)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:53+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -40,7 +40,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sales order."
-msgstr ""
+msgstr "Leveringsadresse for aktuell salgsordre."
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
@@ -108,6 +108,10 @@ msgid ""
 "sales orders partially, by lines of sales order. You do not need this list "
 "if you invoice from the delivery orders or if you invoice sales totally."
 msgstr ""
+"Her er en liste over salgsordrelinjer som skal faktureres. Du kan "
+"delfakturere salgsordre ved å fakturere enkeltlinjer. Du trenger ikke denne "
+"listen dersom du fakturerer på grunnlag av utleveringer eller hvis du "
+"fakturerer salgsordre samlet."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -117,7 +121,7 @@ msgstr "Innkjøpsordre"
 #. module: sale
 #: view:sale.report:0 field:sale.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: sale
 #: view:sale.order:0
@@ -135,6 +139,13 @@ msgid ""
 "configuration of the sales order, a draft invoice will be generated so that "
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
+"Salgsordre hjelper deg med å håndtere forespørsler og bestillinger fra dine "
+"kunder. OpenERP foreslår at du starter med å lage et tilbud. Når dette blir "
+"bekreftet vil det bli konvertert til en salgsordre. OpenERP kan håndtere "
+"ulike typer produkter slik at en salgsordre kan initere arbeidsoppgaver, "
+"utleveringer, produksjonsordre, bestillinger osv. Ut fra salgsordren vil det "
+"bli dannet et utkast til en faktura som du bare bekrefter når du ønsker å "
+"fakturere kunden."
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -180,7 +191,7 @@ msgstr "Tvangsfordeling"
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
+msgstr "Marker for å gruppere fakturaer for samme kunde"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -218,6 +229,8 @@ msgid ""
 "The invoice is created automatically if the shipping policy is 'Invoice from "
 "pick' or 'Invoice on order after delivery'."
 msgstr ""
+"Fakturaen blir dannet automatisk dersom grunnregelen er 'Fakturering etter "
+"plukk' eller 'Fakturering av ordre etter utlevering'."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -245,7 +258,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.open_board_sales_manager
 #: model:ir.ui.menu,name:sale.menu_board_sales_manager
 msgid "Sales Manager Dashboard"
-msgstr ""
+msgstr "Salgsledelses-dashbord"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -327,7 +340,7 @@ msgstr "Konfigurer"
 #. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Du forsøker å angi en lot som ikke tilhører samme produkt"
 
 #. module: sale
 #: code:addons/sale/sale.py:655
@@ -354,7 +367,7 @@ msgstr "Salgsordrestatistikk"
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr ""
+msgstr "Analytiske konto relatert til en salgsordre."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -369,7 +382,7 @@ msgstr "Tilbud"
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "Prisliste for aktuell salgsordre."
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -420,6 +433,8 @@ msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
 msgstr ""
+"Selgeren bekrefter tilbudet. Status for salgsordren blir 'I arbeid' eller 'I "
+"manuelt arbeid'."
 
 #. module: sale
 #: code:addons/sale/sale.py:1079
@@ -431,7 +446,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1147
 #, python-format
 msgid "(n/a)"
-msgstr ""
+msgstr "(n/a)"
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -497,7 +512,7 @@ msgstr "Ordrereferanse må være unik !"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Mars"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -894,7 +909,7 @@ msgstr "Ordrekontakt"
 #: model:ir.actions.act_window,name:sale.action_view_sale_open_invoice
 #: view:sale.open.invoice:0
 msgid "Open Invoice"
-msgstr ""
+msgstr "Åpne faktura"
 
 #. module: sale
 #: report:sale.order:0 view:sale.order.line:0
@@ -1209,7 +1224,7 @@ msgstr "Betalt"
 #: model:ir.actions.act_window,name:sale.action_order_report_all
 #: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
 msgid "Sales Analysis"
-msgstr ""
+msgstr "Salgsanalyse"
 
 #. module: sale
 #: view:sale.order:0 field:sale.order.line,property_ids:0

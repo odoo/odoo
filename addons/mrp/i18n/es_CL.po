@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:59+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:44+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -80,19 +80,19 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,picking_id:0
 msgid "Picking list"
-msgstr "Albarán"
+msgstr "Movimiento Interno"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Hourly Cost"
-msgstr "Coste horario"
+msgstr "Costo horario"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Uom"
-msgstr "Precio de coste pour Udm"
+msgstr "Precio de coste por Udm"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -316,7 +316,7 @@ msgstr "Cantidad en horas"
 #. module: mrp
 #: field:mrp.production,product_lines:0
 msgid "Scheduled goods"
-msgstr "Bienes planificados"
+msgstr "Insumos planificados"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -605,7 +605,7 @@ msgstr "Especificar costes del centro de trabajo por ciclo."
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Picking Exception"
-msgstr "Excepción albarán"
+msgstr "Excepción en movimiento"
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
@@ -907,7 +907,7 @@ msgstr "Buscar"
 #: code:addons/mrp/mrp.py:626
 #, python-format
 msgid "Could not cancel manufacturing order !"
-msgstr ""
+msgstr "No se puede cancelar la orden de producción!"
 
 #. module: mrp
 #: field:report.workcenter.load,cycle:0
@@ -926,6 +926,8 @@ msgid ""
 "You must first cancel related internal picking attached to this "
 "manufacturing order."
 msgstr ""
+"En primer lugar, debe cancelar la recolección interna pertinente, adjunto a "
+"la presente orden de producción."
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
@@ -1368,7 +1370,7 @@ msgstr "Prioridad"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
 msgid "Picking List"
-msgstr "Albarán"
+msgstr "Lista de empaque"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1384,7 +1386,7 @@ msgstr "Órden de producción '%s' planificada para el '%s'"
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Production Order N° :"
-msgstr "Núm. orden producción :"
+msgstr "Orden de producción N°:"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:647
@@ -1405,7 +1407,7 @@ msgstr "Días de seguridad para cada operación de fabricación."
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Component Name"
-msgstr ""
+msgstr "Nombre de Componente"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_mts0
@@ -1428,6 +1430,13 @@ msgid ""
 "product needs. You can either create a bill of materials to define specific "
 "production steps or define a single multi-level bill of materials."
 msgstr ""
+"Letras Maestra de Materiales le permite crear y administrar la lista de las "
+"materias primas necesarias utilizadas para fabricar un producto terminado. "
+"OpenERP utilizará estas listas de materiales para proponer de forma "
+"automática las órdenes de fabricación de acuerdo a las necesidades del "
+"producto. Puede crear una lista de materiales para definir los pasos "
+"específicos de producción o de definir una  lista de materiales única multi-"
+"nivel."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockrfq0
@@ -2012,7 +2021,7 @@ msgstr "Consumir únicamente"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Recreate Picking"
-msgstr "Volver a crear albarán"
+msgstr "Volver a crear lista de empaque"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -2216,7 +2225,7 @@ msgstr "Lista de materiales (LdM) padre"
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Component Product"
-msgstr ""
+msgstr "Componentes de productos"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2

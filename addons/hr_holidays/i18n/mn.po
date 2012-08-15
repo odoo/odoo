@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:48+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:37+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -59,12 +59,12 @@ msgstr "Хэлтэс"
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Refused"
-msgstr "Татгалзах"
+msgstr "Татгалзсан"
 
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
 msgid "Category of Employee"
-msgstr ""
+msgstr "Ажилчдын ангилал"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -87,8 +87,8 @@ msgid ""
 "Leave Manager can let this field empty if this leave request/allocation is "
 "for every employee"
 msgstr ""
-"Амралт/амралтын хуваарилахыг хүсэх нь ажилтан бүрийн хувьд байвал амралт, "
-"чөлөөг зөвшөөрөгч нь энэ талбарын хоосон үлдээж болно."
+"Амралт, чөлөө/амралт, чөлөө хуваарилахыг хүсэх нь ажилтан бүрийн хувьд "
+"байвал амралт, чөлөөг зөвшөөрөгч нь энэ талбарыг хоосон үлдээж болно."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -120,6 +120,10 @@ msgid ""
 "the employee. You can define several allowance types (paid holidays, "
 "sickness, etc.) and manage allowances per type."
 msgstr ""
+"Амралт, чөлөөний хүсэлт нь ажилтнаар бичигдэж менежерүүдээрээ хянагдаж "
+"болно. Амралт, чөлөөний хүсэлт хянагдаж батлагдмагц ажилтны цагийн хөтөлбөрт "
+"шууд орж харагдана. Зөвшөөрлийн хэд хэдэн төрлийг тодорхойлж болно (ж: "
+"цалинтай чөлөө, өвчтэй, гм) Төрөл тус бүрт цалинг менеж хийнэ."
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -143,6 +147,8 @@ msgstr "Татгалзах"
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
 msgstr ""
+"Ажилтан %s-д хэт урт хугацааны амралт, чөлөөг та зөвшөөрч чадахгүй: үлдэж "
+"байгаа хоног хэт цөөн байна (%s)."
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -150,7 +156,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
-msgstr "Чөлөө, амралтууд"
+msgstr "Амралт, чөлөө"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays
@@ -174,14 +180,14 @@ msgid ""
 "Choose 'Allocation Request' if you want to increase the number of leaves "
 "available for someone"
 msgstr ""
-"Амралт эсвэ ажлаас чөлөө авах бол 'Амралт, чөлөө хүсэх'-ийг, амралт, чөлөө "
+"Амрах эсвэл ажлаас чөлөө авах бол 'Амралт, чөлөө хүсэлт'-ийг, амралт, чөлөө "
 "авах боломжтой хоног хуваарилуулахын тулд 'Амралт, чөлөөг хуваарилах' -ыг "
 "сонгоно уу."
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Validation"
-msgstr ""
+msgstr "Хяналт"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -260,7 +266,7 @@ msgstr "Батлах"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The start date must be before the end date !"
-msgstr ""
+msgstr "Эхлэх өдөр нь дууах өдрөөс өмнө байх ёстой."
 
 #. module: hr_holidays
 #: model:ir.module.module,description:hr_holidays.module_meta_information
@@ -344,7 +350,7 @@ msgstr "Улаан"
 #. module: hr_holidays
 #: view:hr.holidays.remaining.leaves.user:0
 msgid "Leaves by Type"
-msgstr "Төрлөөр ангилсан амралт, чөлөө"
+msgstr "Амралт, чөлөө төрөлөөр"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -360,6 +366,7 @@ msgstr "Үр тарианы өнгө"
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
+"Алдаа! Амралт, чөлөө эхлэх огноо амралт дуусах огноогоос бага байх ёстой."
 
 #. module: hr_holidays
 #: view:hr.holidays:0 field:hr.holidays,number_of_days:0
@@ -370,12 +377,12 @@ msgstr "Хоногийн тоо"
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Search Leave Type"
-msgstr ""
+msgstr "Амралт, чөлөөний Төрөл хайх"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "You have to select an employee or a category"
-msgstr ""
+msgstr "Ажилчин эсвэл ангиллаас сонгох хэрэгтэй."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -389,7 +396,7 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Waiting Approval"
-msgstr "Зөвөөрөл хүлээгдэж байгаа"
+msgstr "Зөвшөөрөл хүлээж байгаа"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,emp:0
@@ -402,6 +409,8 @@ msgid ""
 "If you set a meeting type, OpenERP will create a meeting in the calendar "
 "once a leave is validated."
 msgstr ""
+"Хэрэв та уулзалтын төрөлийг тохируулбал OpenERP нь чөлөө шалгагдмагц "
+"цагалбар дээр уулзалтыг үүсгэдэг."
 
 #. module: hr_holidays
 #: field:hr.holidays,linked_request_ids:0
@@ -479,7 +488,7 @@ msgstr "Амралт, чөлөө"
 #. module: hr_holidays
 #: field:hr.holidays,case_id:0 field:hr.holidays.status,categ_id:0
 msgid "Meeting"
-msgstr ""
+msgstr "Уулзалт"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -511,7 +520,7 @@ msgstr "Идэвхтэй"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
 msgid "Leaves To Validate"
-msgstr ""
+msgstr "Шалгах амралт, чөлөөнүүд"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -521,7 +530,7 @@ msgstr "Өргөтгөсөн хайлт..."
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The number of days must be greater than 0 !"
-msgstr ""
+msgstr "Өдрийн тоо 0-ээс их байх естой."
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -568,7 +577,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Misc"
-msgstr ""
+msgstr "Бусад"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -614,7 +623,7 @@ msgstr "Амралт, чөлөө хуваарилах хүсэл"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Leave Detail"
-msgstr "Чөлөөний дэлгэрэнгүй"
+msgstr "Амралт, чөлөөний дэлгэрэнгүй"
 
 #. module: hr_holidays
 #: field:hr.holidays,double_validation:0
@@ -667,7 +676,7 @@ msgstr ""
 #: code:addons/hr_holidays/hr_holidays.py:199
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
-msgstr ""
+msgstr "Ноорог биш төлөвтэй амралт, чөлөөг устгах боломжгүй !"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -730,7 +739,7 @@ msgstr "Нил ягаан"
 #. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Allowed"
-msgstr ""
+msgstr "Зөвшөөрөгдөх хамгийн их"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id2:0

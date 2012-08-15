@@ -13,14 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:15+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:53+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_by_salesman
 msgid "Sales by Salesman in last 90 days"
-msgstr "Vânzări după Vânzător în ultimele 90 de zile"
+msgstr "Vanzari dupa Vanzator in ultimele 90 de zile"
 
 #. module: sale
 #: help:sale.installer,delivery:0
@@ -34,13 +34,13 @@ msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
 msgstr ""
-"Dacă nu aveți suficient stoc disponibil pentru a livra tot odată, acceptați "
-"transporturile parțiale sau nu?"
+"Daca nu aveai suficient stoc disponibil pentru a livra tot odata, acceptati "
+"expedierile partiale sau nu?"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sales order."
-msgstr "Adresa de expediere pentru comanda de vânzare curentă."
+msgstr "Adresa de expediere pentru comanda de vanzare curenta."
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
@@ -56,7 +56,7 @@ msgstr "Zi"
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
 #: view:sale.order:0
 msgid "Cancel Order"
-msgstr "Anulează comanda"
+msgstr "Anuleaza Comanda"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -67,7 +67,7 @@ msgstr "Configurează logistica comenzii de vânzare"
 #: code:addons/sale/sale.py:638
 #, python-format
 msgid "The quotation '%s' has been converted to a sales order."
-msgstr "Cotația '% s-a fost transformată într-o comandă de vânzare."
+msgstr "Cotația '%s' a fost schimbata intr-o comanda de vanzare."
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -78,7 +78,7 @@ msgstr "Plata înainte de livrare"
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #, python-format
 msgid "Warning !"
-msgstr "Avertisment !"
+msgstr "Avertizare !"
 
 #. module: sale
 #: report:sale.order:0
@@ -89,7 +89,7 @@ msgstr "TVA"
 #: model:process.node,note:sale.process_node_saleorderprocurement0
 msgid "Drives procurement orders for every sales order line."
 msgstr ""
-"Acţioneza ordinele de aprovizionare pentru fiecare linie a comenzi de "
+"Acţioneza ordinele de aprovizionare pentru fiecare linie a comenzii de "
 "vânzare."
 
 #. module: sale
@@ -110,10 +110,10 @@ msgid ""
 "sales orders partially, by lines of sales order. You do not need this list "
 "if you invoice from the delivery orders or if you invoice sales totally."
 msgstr ""
-"Aici este o listă cu fiecare linie a comenzii de vânzare care va fi "
-"facturată. Puteţi factura comenzile de vânzare parţial, prin linii ale "
-"comenzii de vânzare. Nu aveţi nevoie de această listă dacă facturaţi din "
-"ordinele de livrare sau dacă facturaţi vânzările total."
+"Aici este o lista cu liniile din comenzile de vanzare care vor fi facturate. "
+"Puteti factura comenzile de vanzare partial, prin linii ale comenzii de "
+"vanzare. Nu aveti nevoie de aceasta lista daca facturati pe baza livrarilor "
+"sau daca facturati total vanzarile."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -128,7 +128,7 @@ msgstr "Partener"
 #. module: sale
 #: view:sale.order:0
 msgid "Order Line"
-msgstr "Linie comandă"
+msgstr "Linie comanda"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_form
@@ -141,14 +141,14 @@ msgid ""
 "configuration of the sales order, a draft invoice will be generated so that "
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
-"Comenzile de vânzare vă ajută să gestionaţi cotatii şi comenzi de la "
-"clientii dumneavoastră. OpenERP sugerează să începeţi prin crearea unei "
-"cotatii. Odată ce este confirmată, cotatia va fi transformată într-o Comandă "
-"de vânzare. OpenERP poate gestiona mai multe tipuri de produse, astfel încât "
-"o comandă de vânzări poate declanşa sarcini, comenzi de livrare, comenzi de "
-"producţie, achiziţii şi aşa mai departe. Pe baza configuraţiei comenzii de "
-"vânzări, o factură ciornă va fi generată, iar dumneavoastră trebuie doar să "
-"o confirmaţi atunci când doriţi să emiteţi factura clientului."
+"Comenzile de vanzare va ajuta sa gestionati cotatiile si comenzile de la "
+"clientii dumneavoastra. OpenERP sugereaza sa incepeti prin crearea unei "
+"cotatii. Odata ce este confirmata, cotatia va fi transformata intr-o Comanda "
+"de vanzare. OpenERP poate gestiona mai multe tipuri de produse, astfel incat "
+"o comanda de vanzari poate declansa sarcini, comenzi de livrare, comenzi de "
+"productie, achizitii si asa mai departe. Pe baza configuratiei comenzii de "
+"vanzari, va fi generata o factura ciorna, iar d-voastra trebuie doar sa o "
+"confirmati atunci cand doriti sa emiteti factura clientului."
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -159,16 +159,16 @@ msgid ""
 "the product is a service, shipped quantities means hours spent on the "
 "associated tasks."
 msgstr ""
-"Ordinul de vânzare va crea automat factura proformă (factura ciornă). "
-"Cantităţile comandate şi cele livrate pot să nu fie aceleaşi. Trebuie să "
-"alegeţi dacă doriţi ca factura să fie pe baza cantităţilor comandate sau "
-"livrate. În cazul în care produsul este un serviciu, cantităţile livrate "
-"înseamnă ore petrecute pe sarcinile aferente."
+"Comanda de vanzare va crea automat factura proforma (factura ciorna). "
+"Cantitatile comandate si cele livrate pot sa nu fie aceleasi. Trebuie sa "
+"alegeti daca doriti ca factura sa fie pe baza cantitatilor comandate sau "
+"expediate. In cazul in care produsul este un serviciu, cantitatile livrate "
+"inseamna orele efectuate pentru sarcinile aferente."
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
 msgid "Default Payment Term"
-msgstr "Termen de plată implicit"
+msgstr "Termen de plata implicit"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
@@ -189,37 +189,37 @@ msgstr "Discount (%)"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
 msgid "Force Assignation"
-msgstr "Forțează atribuirea"
+msgstr "Forteaza atribuirea"
 
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr "Bifați căsuța pentru a grupa facturile pentru aceiași clienți"
+msgstr "Bifati casuta pentru a grupa facturile pentru aceiasi clienti"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
-msgstr "Cantităţi comandate"
+msgstr "Cantitatile comandate"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales by Salesman"
-msgstr "Vânzări după vânzător"
+msgstr "Vanzari dupa Vanzator"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
 msgid "Inventory Moves"
-msgstr "Mişcări inventar"
+msgstr "Miscari inventar"
 
 #. module: sale
 #: field:sale.order,name:0 field:sale.order.line,order_id:0
 msgid "Order Reference"
-msgstr "Referinţă comandă"
+msgstr "Referinta comanda"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Other Information"
-msgstr "Alte informaţii"
+msgstr "Alte informatii"
 
 #. module: sale
 #: view:sale.order:0
@@ -232,38 +232,37 @@ msgid ""
 "The invoice is created automatically if the shipping policy is 'Invoice from "
 "pick' or 'Invoice on order after delivery'."
 msgstr ""
-"Factura este creată în mod automat dacă politica de expediere este \"Factură "
-"din ridicare\" sau \"Factură din comanda după livrare\"."
+"Factura este creata in mod automat daca politica de expediere este \"Factura "
+"la ridicare\" sau \"Factura la comanda dupa livrare\"."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
-msgstr "Vânzări creează factura"
+msgstr "Vanzarile genereaza factura"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Recreate Packing"
-msgstr "Recreează livrarea"
+msgstr "Recreeaza Ambalarea"
 
 #. module: sale
 #: field:sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr "Discount (%)"
+msgstr "Reducere (%)"
 
 #. module: sale
 #: help:res.company,security_lead:0
 msgid ""
 "This is the days added to what you promise to customers for security purpose"
 msgstr ""
-"Aceasta sunt zilele adăugate la ceea ce ați promis clienților în scop de "
-"siguranță"
+"Acestea sunt zilele adaugate la cele promise clientilor in scop de siguranta"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.open_board_sales_manager
 #: model:ir.ui.menu,name:sale.menu_board_sales_manager
 msgid "Sales Manager Dashboard"
-msgstr "Tablou de bord Manager Vânzări"
+msgstr "Tablou de bord Manager Vanzari"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -273,7 +272,7 @@ msgstr "Ambalare"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr "Dintr-o comandă de vânzări"
+msgstr "Dintr-o comanda de vanzare"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -284,22 +283,22 @@ msgstr "Numele magazinului"
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "No Customer Defined !"
-msgstr "Nici un client definit !"
+msgstr "Niciun client definit !"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
 msgid "Sales in Exception"
-msgstr "Vânzări în stare de excepţie"
+msgstr "Vanzari in Stare de exceptie"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Set to Draft"
-msgstr "Setează ca Ciornă"
+msgstr "Seteaza ca ciorna"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Conditions"
-msgstr "Condiţii"
+msgstr "Conditii"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -335,8 +334,8 @@ msgid ""
 "There is no income category account defined in default Properties for "
 "Product Category or Fiscal Position is not defined !"
 msgstr ""
-"Nu există nici un cont al categoriei de venituri definit în mod implicit în "
-"Proprietăţi pentru Categoria de produse sau nu este definită Poziţia fiscală "
+"Nu exista niciun cont al categoriei de venituri definit in mod implicit in "
+"Proprietati pentru Categoria de produse sau nu este definita Pozitia fiscala "
 "!"
 
 #. module: sale
@@ -347,7 +346,7 @@ msgstr "Configurează"
 #. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr "Încercaţi să atribuiţi un lot care nu este din acelaşi produs"
+msgstr "Incercati sa atribuiti un lot care nu este din acelasi produs"
 
 #. module: sale
 #: code:addons/sale/sale.py:655
@@ -364,17 +363,17 @@ msgstr "Iunie"
 #: code:addons/sale/sale.py:617
 #, python-format
 msgid "Could not cancel this sales order !"
-msgstr "Nu se poate anula acest ordin de vânzare !"
+msgstr "Acest ordin de vanzare nu poate fi anulat !"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Statistici comenzi vânzări"
+msgstr "Statistici comenzi de vanzare"
 
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr "Contul analitic asociat unei comenzi de vânzare."
+msgstr "Contul analitic asociat unei comenzi de vanzare."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -384,12 +383,12 @@ msgstr "Octombrie"
 #. module: sale
 #: view:board.board:0 view:sale.order:0 view:sale.report:0
 msgid "Quotations"
-msgstr "Cotaţii"
+msgstr "Cotatii (oferte)"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr "Lista de preţuri pentru comanda curentă de vânzări."
+msgstr "Lista de preturi pentru comanda curenta de vanzari."
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -407,32 +406,32 @@ msgid ""
 "Number of days between the order confirmation the shipping of the products "
 "to the customer"
 msgstr ""
-"Numărul de zile între confirmarea comenzii și expedierea produselor la client"
+"Numarul de zile intre confirmarea comenzii si expedierea produselor la client"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation Date"
-msgstr "Dată cotatie"
+msgstr "Data cotatiei"
 
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "Poziţie fiscală"
+msgstr "Pozitie fiscala"
 
 #. module: sale
 #: view:sale.order:0 view:sale.order.line:0 field:sale.report,product_uom:0
 msgid "UoM"
-msgstr "UM"
+msgstr "UdeM"
 
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr "Numărul de pachete"
+msgstr "Numarul de pachete"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "In Progress"
-msgstr "În desfăsurare"
+msgstr "In desfasurare"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
@@ -440,16 +439,16 @@ msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
 msgstr ""
-"Agentul de vanzări confirmă cotatia. Starea comenzii de vânzări devine 'În "
-"curs' sau 'Manual în desfăşurare'."
+"Agentul de vanzari confirma cotatia. Starea comenzii de vanzare devine 'In "
+"curs' sau 'Manual în desfasurare'."
 
 #. module: sale
 #: code:addons/sale/sale.py:1079
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
-"Trebuie să anulaţi mai întâi miscările de stoc ataşate la această linie a "
-"comenzii de vânzare."
+"Trebuie sa anulati mai intai miscarile de stoc atasate la această linie a "
+"comenzii de vanzare."
 
 #. module: sale
 #: code:addons/sale/sale.py:1147
@@ -463,9 +462,9 @@ msgid ""
 "Select a product of type service which is called 'Advance Product'. You may "
 "have to create it and set it as a default value on this field."
 msgstr ""
-"Selectaţi un produs de tip serviciu care se numeşte 'Avans Produs'. Este "
-"posibil să trebuiască să il creaţi şi să il setaţi drept valoare a acestui "
-"câmp."
+"Selectati un produs de tip serviciu care se numeste 'Avans Produs'. Este "
+"posibil sa trebuiasca sa il creati si sa il setati drept valoare a acestui "
+"camp."
 
 #. module: sale
 #: report:sale.order:0
@@ -479,8 +478,8 @@ msgid ""
 "You cannot make an advance on a sales order                              "
 "that is defined as 'Automatic Invoice after delivery'."
 msgstr ""
-"Nu poti face un avans pe o comandă de vânzări care este definită ca "
-"'Facturare automată după livrare'."
+"Nu puteti face un avans la o comanda de vanzare care este definita ca "
+"'Facturare automata după livrare'."
 
 #. module: sale
 #: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
@@ -491,7 +490,7 @@ msgstr "Note"
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sales order."
-msgstr "Adresa de facturare pentru comanda curentă de vânzare."
+msgstr "Adresa de facturare pentru comanda curenta de vanzare."
 
 #. module: sale
 #: view:sale.installer:0
@@ -507,12 +506,12 @@ msgstr "Facturat"
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr "Comandă de livrare"
+msgstr "Comanda de livrare"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
 msgid "Confirmation Date"
-msgstr "Data confirmării"
+msgstr "Data confirmarii"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -532,7 +531,7 @@ msgstr "Martie"
 #. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount."
-msgstr "Suma totală."
+msgstr "Suma totala."
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -542,7 +541,7 @@ msgstr "Subtotal"
 #. module: sale
 #: report:sale.order:0
 msgid "Invoice address :"
-msgstr "Adresă facturare:"
+msgstr "Adresa de facturare:"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
@@ -550,8 +549,8 @@ msgid ""
 "For every sales order line, a procurement order is created to supply the "
 "sold product."
 msgstr ""
-"Pentru fiecare linie a comenzii vânzare, este creat un ordin de "
-"aprovizionare pentru a furniza produsul vândut."
+"Pentru fiecare linie a comenzii de vanzare este creat un ordin de "
+"aprovizionare pentru a furniza produsul vandut."
 
 #. module: sale
 #: help:sale.order,incoterm:0
@@ -560,7 +559,7 @@ msgid ""
 "series of sales terms which are used in the commercial transaction."
 msgstr ""
 "Incoterm care este prescurtarea de la \"Termeni Comerciali Internationali\" "
-"implică o serie de termeni de vânzări care sunt utilizaţi în tranzacţii "
+"implica o serie de termeni de vanzare care sunt folositi in tranzactiile "
 "comerciale."
 
 #. module: sale
@@ -571,12 +570,12 @@ msgstr "Adresa de facturare"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Search Uninvoiced Lines"
-msgstr "Căutare linii nefacturate"
+msgstr "Cauta Linii Nefacturate"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr "Cotație / Comandă"
+msgstr "Cotatie / Comanda"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,nbr:0
@@ -586,13 +585,13 @@ msgstr "# de Linii"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_open_invoice
 msgid "Sales Open Invoice"
-msgstr "Vânzări factură deschisă"
+msgstr "Factura vanzari deschisa"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr "Linie comandă de vânzare"
+msgstr "Linie comanda de vanzare"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -607,17 +606,17 @@ msgstr "Depozit"
 #. module: sale
 #: report:sale.order:0
 msgid "Order N°"
-msgstr "Nr Comandă"
+msgstr "Nr Comanda"
 
 #. module: sale
 #: field:sale.order,order_line:0
 msgid "Order Lines"
-msgstr "Linii comandă"
+msgstr "Linii comanda"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Untaxed amount"
-msgstr "Sumă neimpozitată"
+msgstr "Suma neimpozitata"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
@@ -628,17 +627,17 @@ msgstr "Linii de facturat"
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr "Cantitate (UM)"
+msgstr "Cantitate (UdM)"
 
 #. module: sale
 #: field:sale.order,create_date:0
 msgid "Creation Date"
-msgstr "Data creării"
+msgstr "Data Crearii"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
 msgid "Uninvoiced and Delivered Lines"
-msgstr "Linii nefacturate şi livrate"
+msgstr "Linii Nefacturate si Livrate"
 
 #. module: sale
 #: report:sale.order:0
@@ -648,25 +647,25 @@ msgstr "Total :"
 #. module: sale
 #: view:sale.report:0
 msgid "My Sales"
-msgstr "Vânzările mele"
+msgstr "Vanzarile mele"
 
 #. module: sale
 #: code:addons/sale/sale.py:295 code:addons/sale/sale.py:1074
 #: code:addons/sale/sale.py:1303
 #, python-format
 msgid "Invalid action !"
-msgstr "Acţiune invalidă !"
+msgstr "Actiune invalida !"
 
 #. module: sale
 #: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
 #: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
-msgstr "Listă de prețuri"
+msgstr "Lista de preturi"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr "# de cant."
+msgstr "# a cantitătii"
 
 #. module: sale
 #: view:sale.order:0
@@ -682,7 +681,7 @@ msgstr "Expediat"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
 msgid "All Quotations"
-msgstr "Toate cotațiile"
+msgstr "Toate Cotatiile"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -697,7 +696,7 @@ msgstr "Septembrie"
 #. module: sale
 #: view:sale.report:0 field:sale.report,categ_id:0
 msgid "Category of Product"
-msgstr "Categoria produsului"
+msgstr "Categoria Produsului"
 
 #. module: sale
 #: report:sale.order:0
@@ -707,7 +706,7 @@ msgstr "Taxe :"
 #. module: sale
 #: view:sale.order:0
 msgid "Stock Moves"
-msgstr "Mișcări stoc"
+msgstr "Miscari stoc"
 
 #. module: sale
 #: view:sale.report:0
@@ -722,33 +721,33 @@ msgstr "Starea comenzii"
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr "Chiar doriți să creați factura(ile)?"
+msgstr "Chiar doriti sa creati factura(ile)?"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales By Month"
-msgstr "Vânzările realizate per Lună"
+msgstr "Vanzari dupa Luna"
 
 #. module: sale
 #: code:addons/sale/sale.py:1078
 #, python-format
 msgid "Could not cancel sales order line!"
-msgstr "Nu se poate anula linie comenzii de vânzare!"
+msgstr "Nu se poate anula linia comenzii de vanzare!"
 
 #. module: sale
 #: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr "Zile de siguranță"
+msgstr "Zile de siguranta"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleorderprocurement0
 msgid "Procurement of sold material"
-msgstr "Aprovizionarea materiei vandute"
+msgstr "Aprovizionarea materialelor vandute"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Create Final Invoice"
-msgstr "Creează factura finală"
+msgstr "Creeaza Factura Finala"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -761,13 +760,13 @@ msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
 msgstr ""
-"Indică livrarea comenzii de vânzare. Acest câmp este actualizat numai după "
+"Indica livrarea comenzii de vanzare. Acest camp este actualizat numai dupa "
 "ce programatorul (le) a(u) fost lansat(e)."
 
 #. module: sale
 #: view:sale.report:0
 msgid "Extended Filters..."
-msgstr "Filtre extinse..."
+msgstr "Filtre Extinse..."
 
 #. module: sale
 #: model:ir.module.module,description:sale.module_meta_information
@@ -822,7 +821,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
 msgid "Sales Shop"
-msgstr "Magazin de vânzări"
+msgstr "Magazin Vanzari"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -851,20 +850,20 @@ msgid ""
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
 msgstr ""
-"Aceasta este lista de facturi care au fost generate pentru acestă comandă de "
-"vânzare. Aceeași comandă de vânzare poate să fi fost facturată în mai multe "
-"rânduri (pe linie, de exemplu)."
+"Aceasta este lista de facturi care au fost generate pentru acesta comanda de "
+"vanzare. Este posibil ca aceeasi comanda de vanzare sa fi fost facturata in "
+"mai multe randuri (dupa linie, de exemplu)."
 
 #. module: sale
 #: report:sale.order:0
 msgid "Your Reference"
-msgstr "Referinţa dvs."
+msgstr "Referinta dumneavoastra"
 
 #. module: sale
 #: help:sale.order,partner_order_id:0
 msgid ""
 "The name and address of the contact who requested the order or quotation."
-msgstr "Numele şi adresa contactului care a solicitat comanda sau cotatia."
+msgstr "Numele si adresa contactului care a solicitat comanda sau cotatia."
 
 #. module: sale
 #: code:addons/sale/sale.py:966
@@ -881,7 +880,7 @@ msgstr "Cantitate"
 #. module: sale
 #: view:sale.order:0
 msgid "References"
-msgstr "Referinţe"
+msgstr "Referinte"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
@@ -890,7 +889,7 @@ msgstr "Referinţe"
 #: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
 #: view:sale.order.line:0 view:sale.order.line.make.invoice:0
 msgid "Cancel"
-msgstr "Anulează"
+msgstr "Anuleaza"
 
 #. module: sale
 #: field:sale.installer,sale_order_dates:0
@@ -900,7 +899,7 @@ msgstr "Date comandă de vânzare"
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
-msgstr "Excepție"
+msgstr "Exceptie"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
@@ -908,7 +907,7 @@ msgstr "Excepție"
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0 view:sale.order.line:0
 msgid "Create Invoice"
-msgstr "Creează factura"
+msgstr "Creeaza Factura"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -918,33 +917,33 @@ msgstr "Marjă în comenzile de vanzare"
 #. module: sale
 #: view:sale.order:0
 msgid "Total Tax Excluded"
-msgstr "Total impozit exclus"
+msgstr "Impozit total exclus"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Compute"
-msgstr "Calculează"
+msgstr "Calculeaza"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales by Partner"
-msgstr "Vânzări după partener"
+msgstr "Vanzari dupa Partener"
 
 #. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
-msgstr "Contact comandă"
+msgstr "Contact comanda"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_open_invoice
 #: view:sale.open.invoice:0
 msgid "Open Invoice"
-msgstr "Deschide factura"
+msgstr "Deschide Facturare"
 
 #. module: sale
 #: report:sale.order:0 view:sale.order.line:0
 msgid "Price"
-msgstr "Preț"
+msgstr "Pret"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
@@ -956,22 +955,22 @@ msgstr "Configurația aplicației Vânzări"
 #. module: sale
 #: view:sale.report:0 field:sale.report,price_total:0
 msgid "Total Price"
-msgstr "Preț Total"
+msgstr "Pret total"
 
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr "la comandă"
+msgstr "la comanda"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
 msgid "Based on the shipped or on the ordered quantities."
-msgstr "Pe baza cantităţilor expediate sau comandate."
+msgstr "Bazat pe cantitatile expediate sau comandate."
 
 #. module: sale
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
-msgstr "Ridicări asociate"
+msgstr "Ridicari asociate"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -981,23 +980,23 @@ msgstr "Nume"
 #. module: sale
 #: report:sale.order:0
 msgid "Shipping address :"
-msgstr "Adresă de expediere:"
+msgstr "Adresa de expediere:"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_by_partner
 msgid "Sales per Customer in last 90 days"
-msgstr "Vânzări per Client în ultimele 90 de zile"
+msgstr "Vanzari per Client in ultimele 90 de zile"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Draft state of sales order"
-msgstr "Starea Ciornă a comenzii de vânzare"
+msgstr "Starea ciorna a comenzii de vanzare"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr "Creează comanda de livrare"
+msgstr "Creeaza Comanda de livrare"
 
 #. module: sale
 #: field:sale.installer,delivery:0
@@ -1007,17 +1006,17 @@ msgstr "Costuri livrare"
 #. module: sale
 #: view:sale.order:0
 msgid "Total Tax Included"
-msgstr "Taxe totale incluse"
+msgstr "Taxe Totale Incluse"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
 msgid "Create Pick List"
-msgstr "Creează lista de ridicare"
+msgstr "Creeaza Lista de ridicare"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales by Product Category"
-msgstr "Vânzările pe categorii de produse"
+msgstr "Vanzari pe Categorii de Produse"
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
@@ -1027,39 +1026,39 @@ msgstr "Livrare parţială"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
 msgid "Confirm Quotation"
-msgstr "Confirmare cotație"
+msgstr "Confirmare Cotatie"
 
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
 msgstr ""
-"Referinţa documentului care a generat această cerere de comandă de vânzare."
+"Referinta documentului care a generat aceasta cerere a comenzii de vanzare."
 
 #. module: sale
 #: view:sale.order:0 view:sale.order.line:0 view:sale.report:0
 msgid "Group By..."
-msgstr "Grupează după..."
+msgstr "Grupeaza dupa..."
 
 #. module: sale
 #: view:sale.order:0
 msgid "Recreate Invoice"
-msgstr "Recrează factura"
+msgstr "Recreeaza factura"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "Livrări  de facturat"
+msgstr "Livrari de Facturat"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Waiting Schedule"
-msgstr "Program de aşteptare"
+msgstr "Programul de asteptare"
 
 #. module: sale
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
-msgstr "Metodă procurare"
+msgstr "Metoda de aprovizionare"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1070,7 +1069,7 @@ msgstr "titlu"
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
 msgid "Pick List"
-msgstr "Listă de ridicare"
+msgstr "Lista de ridicare"
 
 #. module: sale
 #: view:sale.order:0
@@ -1080,22 +1079,22 @@ msgstr "Data comenzii"
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
 msgid "Document of the move to the output or to the customer."
-msgstr "Documentul mișcării către ieşire sau spre client."
+msgstr "Documentul miscarii catre iesire sau catre client."
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
 msgid "Validate"
-msgstr "Validează"
+msgstr "Valideaza"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Confirm Order"
-msgstr "Confirmă comanda"
+msgstr "Confirma Comanda"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleprocurement0
 msgid "Create Procurement Order"
-msgstr "Creează comanda de aprovizionare"
+msgstr "Creeaza Comanda de Aprovizionare"
 
 #. module: sale
 #: view:sale.order:0 field:sale.order,amount_tax:0
@@ -1111,22 +1110,22 @@ msgstr "Politica de expediere"
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sales order is created."
-msgstr "Data la care comanda de vânzări este creată."
+msgstr "Data la care comanda de vanzare este creata."
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_move
 msgid "Stock Move"
-msgstr "Mișcare stoc"
+msgstr "Miscare stoc"
 
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create Invoices"
-msgstr "Crează facturi"
+msgstr "Creeaza facturi"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Extra Info"
-msgstr "Informații suplimentare"
+msgstr "Informatii suplimentare"
 
 #. module: sale
 #: report:sale.order:0
@@ -1136,22 +1135,22 @@ msgstr "Fax :"
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr "Suma în avans"
+msgstr "Suma in avans"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Shipped Quantities"
-msgstr "Cantităţi expediate"
+msgstr "Cantitati expediate"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
-msgstr "Factură bazată pe Comenzile de vanzare"
+msgstr "Factura bazata pe Comenzile de vanzare"
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_picking
 msgid "Picking List"
-msgstr "Listă de ridicare"
+msgstr "Lista de ridicare"
 
 #. module: sale
 #: code:addons/sale/sale.py:412 code:addons/sale/sale.py:503
@@ -1165,7 +1164,7 @@ msgstr "Eroare !"
 #: code:addons/sale/sale.py:603
 #, python-format
 msgid "Could not cancel sales order !"
-msgstr "Nu se poate anula comanda de vânzare!"
+msgstr "Comanda de vanzare nu poate fi anulata !"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1180,12 +1179,12 @@ msgstr "Aprovizionare"
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Shipping Exception"
-msgstr "Excepţie la expediere"
+msgstr "Exceptie la expediere"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
 msgid "Group the invoices"
-msgstr "Grupează facturile"
+msgstr "Grupeaza facturile"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -1201,7 +1200,7 @@ msgstr "Informații ridicare !"
 #. module: sale
 #: view:sale.report:0 field:sale.report,month:0
 msgid "Month"
-msgstr "Lună"
+msgstr "Luna"
 
 #. module: sale
 #: model:ir.module.module,shortdesc:sale.module_meta_information
@@ -1216,17 +1215,17 @@ msgstr "Factură la livrare"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
-msgstr "Urmează a fi verificat(ă) de către contabil."
+msgstr "Urmeaza a fi verificat(a) de catre contabil."
 
 #. module: sale
 #: view:sale.report:0
 msgid "Reference UoM"
-msgstr "UM referință"
+msgstr "Referinta UdM"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr "Linie comandă de vânzare Creează_factura"
+msgstr "Linie comanda de vanzare Creeaza_factura"
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1244,29 +1243,29 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
 msgid "Old Quotations"
-msgstr "Cotații vechi"
+msgstr "Cotatii vechi"
 
 #. module: sale
 #: field:sale.order,invoiced:0
 msgid "Paid"
-msgstr "Plătit"
+msgstr "Platit"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
 #: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
 msgid "Sales Analysis"
-msgstr "Analiza vânzărilor"
+msgstr "Analiza vanzarilor"
 
 #. module: sale
 #: view:sale.order:0 field:sale.order.line,property_ids:0
 msgid "Properties"
-msgstr "Proprietăți"
+msgstr "Proprietati"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Quotation"
-msgstr "Cotație"
+msgstr "Cotatie"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
@@ -1275,28 +1274,28 @@ msgid ""
 "is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
 msgstr ""
-"Agentul de vânzări creează manual o factură, dacă politica de expediere a "
-"comenzii de vânzare este 'Livrare si Facturare Manuală in desfăsurare'. "
-"Factura este creată în mod automat dacă politica de expediere este 'Plata "
-"înainte de livrare'."
+"Agentul de vanzari creeaza manual o factura, dacă politica de expediere a "
+"comenzii de vanzare este 'Expediere și Facturare Manuala in desfasurare'. "
+"Factura este creata in mod automat daca politica de expediere este 'Plata "
+"inainte de Livrare'."
 
 #. module: sale
 #: help:sale.config.picking_policy,order_policy:0
 msgid ""
 "You can generate invoices based on sales orders or based on shippings."
 msgstr ""
-"Puteţi genera facturi pe baza comenzilor de vânzări sau pe baza livrărilor."
+"Puteti genera facturi pe baza comenzilor de vanzare sau pe baza expedierilor."
 
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
 #: view:sale.order:0 view:sale.report:0
 msgid "Sales"
-msgstr "Vânzări"
+msgstr "Vanzari"
 
 #. module: sale
 #: report:sale.order:0 field:sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr "Preţ unitar"
+msgstr "Pret unitar"
 
 #. module: sale
 #: selection:sale.order,state:0 view:sale.order.line:0
@@ -1313,7 +1312,7 @@ msgstr "sale.installer"
 #: model:process.node,name:sale.process_node_invoice0
 #: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Invoice"
-msgstr "Factură"
+msgstr "Factura"
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
@@ -1322,8 +1321,8 @@ msgid ""
 "You have to select a customer in the sales form !\n"
 "Please set one customer before choosing a product."
 msgstr ""
-"Trebuie să selectaţi un client în formularul de vânzare!\n"
-"Vă rugăm să setaţi un client înainte de a alege un produs."
+"Trebuie sa selectati un client in formularul de vanzare!\n"
+"Va rugam sa setati un client inainte de a alege un produs."
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -1333,7 +1332,7 @@ msgstr "Lista de ridicare & Comanda de livrare"
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source Document"
-msgstr "Document sursă"
+msgstr "Document sursa"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1348,30 +1347,30 @@ msgstr "Politica de ridicare"
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
 msgid "Document of the move to the customer."
-msgstr "Documentul mişcării către client."
+msgstr "Documentul miscarii catre client."
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr "Suma fără taxă."
+msgstr "Suma neimpozitata."
 
 #. module: sale
 #: code:addons/sale/sale.py:604
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
 msgstr ""
-"Trebuie să anulați mai întâi toate livrările asociate acestei comenzi de "
-"vânzare."
+"Trebuie sa anulati mai intai toate ridicarile atasate acestei comenzi de "
+"vanzare."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "Vânzări Factură cu Plata în avans"
+msgstr "Factura Vanzare cu Plata in Avans"
 
 #. module: sale
 #: field:sale.order,incoterm:0
 msgid "Incoterm"
-msgstr "INCOTERM"
+msgstr "Incoterm"
 
 #. module: sale
 #: view:sale.order.line:0 field:sale.order.line,product_id:0
@@ -1387,12 +1386,12 @@ msgstr "Facturare"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
 msgid "Cancel Assignation"
-msgstr "Anulare atribuire"
+msgstr "Anulare Atribuire"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_picking_policy
 msgid "sale.config.picking_policy"
-msgstr "sale.config.picking_policy"
+msgstr "vanzare.config.politica_de_ridicare"
 
 #. module: sale
 #: help:sale.order,state:0
@@ -1414,7 +1413,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
-msgstr "Factură în"
+msgstr "Facturare pe"
 
 #. module: sale
 #: report:sale.order:0
@@ -1429,22 +1428,22 @@ msgstr "UdV produs"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
-msgstr "Manual - în curs"
+msgstr "Manual in Desfasurare"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Product UoM"
-msgstr "UM produs"
+msgstr "UdeM produs"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Logistic"
-msgstr "Logistică"
+msgstr "Logistica"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Order"
-msgstr "Comandă"
+msgstr "Comanda"
 
 #. module: sale
 #: code:addons/sale/sale.py:1017
@@ -1452,13 +1451,13 @@ msgstr "Comandă"
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
-"Nu există nici un cont de venituri definit pentru acest produs: \"%s\" "
+"Nu exista nici un cont de venituri definit pentru acest produs: \"%s\" "
 "(id:%d)"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Ignore Exception"
-msgstr "Ignoră exceptia"
+msgstr "Ignora exceptia"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -1468,10 +1467,10 @@ msgid ""
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
 msgstr ""
-"În funcţie de Controlul facturării comenzii de vânzare, factura se poate "
-"baza pe cantităţile livrate sau comandate. Astfel, o comandă de vânzare "
-"poate genera o factură sau un ordin de livrare de îndată ce este confirmată "
-"de agentul de vânzări."
+"In functie de Controlul factuaării comenzii de aânzare, factura se poate "
+"baza pe cantitatile livrate sau comandate. Astfel, o comanda de vanzare "
+"poate genera o factura sau o comanda de livrare de indata ce este confirmata "
+"de catre agentul de vanzari."
 
 #. module: sale
 #: code:addons/sale/sale.py:1251
@@ -1480,23 +1479,23 @@ msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
 msgstr ""
-"Intentionaţi să vindeţi %.2f%s, dar aveţi doar %.2f%s disponibil !\n"
-"Stocul real este %.2f%s. (fără rezerve)"
+"Intentionati sa vindeti %.2f%s, dar aveti doar %.2f%s disponibil !\n"
+"Stocul real este %.2f%s. (fara rezerve)"
 
 #. module: sale
 #: view:sale.order:0
 msgid "States"
-msgstr "Stări"
+msgstr "Stari"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "res_config_contents"
-msgstr "res_config_contents"
+msgstr "res_config_continuturi"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Reference"
-msgstr "Referință client"
+msgstr "Referinta Client"
 
 #. module: sale
 #: field:sale.order,amount_total:0 view:sale.order.line:0
@@ -1508,7 +1507,7 @@ msgstr "Total"
 #, python-format
 msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
-"Nu există nici un jurnal de vânzări definit pentru această companie: \"%s\" "
+"Nu exista niciun jurnal de vanzari definit pentru aceasta companie: \"%s\" "
 "(id:%d)"
 
 #. module: sale
@@ -1518,8 +1517,8 @@ msgid ""
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
 msgstr ""
-"În funcţie de configuraţia locaţiei de ieşire, mişcarea între zona de ieşire "
-"şi client se face manual sau automat prin Ordinul de  livrare."
+"In functie de configuratia locatiei de iesire, miscarea intre zona de iesire "
+"si client se face manual sau automat prin Comanda de  Livrare."
 
 #. module: sale
 #: code:addons/sale/sale.py:1165
@@ -1532,7 +1531,7 @@ msgstr "Nu se poate şterge o linie a comenzii de vânzări, care este %s !"
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
 #: view:sale.order:0
 msgid "Make Invoices"
-msgstr "Creează facturi"
+msgstr "Creeaza Facturi"
 
 #. module: sale
 #: view:sale.order:0 selection:sale.order,state:0 view:sale.order.line:0
@@ -1542,7 +1541,7 @@ msgstr "De facturat"
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr "Data la care comanda de vânzare este confirmată."
+msgstr "Data la care comanda de vanzare este confirmata."
 
 #. module: sale
 #: field:sale.order,company_id:0 field:sale.order.line,company_id:0
@@ -1559,20 +1558,20 @@ msgstr "Data facturii"
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
 msgid "The amount to be invoiced in advance."
-msgstr "Suma care va fi facturată în avans."
+msgstr "Suma care va fi facturata in avans."
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Invoice Exception"
-msgstr "Excepţie factură"
+msgstr "Exceptie factura"
 
 #. module: sale
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is a list of picking that has been generated for this sales order."
 msgstr ""
-"Aceasta este o listă de ridicare care a fost generată pentru această comandă "
-"de vânzări."
+"Aceasta este o lista de ridicare care a fost generata pentru aceasta comanda "
+"de vanzare."
 
 #. module: sale
 #: help:sale.installer,sale_margin:0
@@ -1586,7 +1585,7 @@ msgstr ""
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create invoices"
-msgstr "Creează facturi"
+msgstr "Creeaza facturi"
 
 #. module: sale
 #: report:sale.order:0
@@ -1597,7 +1596,7 @@ msgstr "Total Net:"
 #: selection:sale.order,state:0 selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Cancelled"
-msgstr "Anulat(ă)"
+msgstr "Anulat(a)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
@@ -1620,13 +1619,13 @@ msgstr "Confirmarea datei"
 #: code:addons/sale/wizard/sale_line_invoice.py:113
 #, python-format
 msgid "Warning"
-msgstr "Avertisment"
+msgstr "Atentionare"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 msgid "Sales by Month"
-msgstr "Vânzări după lună"
+msgstr "Vanzari dupa Luna"
 
 #. module: sale
 #: code:addons/sale/sale.py:1045
@@ -1651,7 +1650,7 @@ msgstr ""
 #: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
 #: field:stock.picking,sale_id:0
 msgid "Sales Order"
-msgstr "Comandă de vânzare"
+msgstr "Comanda de vanzare"
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
@@ -1666,42 +1665,42 @@ msgid ""
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
 msgstr ""
-"Formularul Listă Ridicare este creat de îndată ce comanda de vânzări este "
-"confirmată, în acelaşi timp cu ordinul de aprovizionare. Reprezintă "
-"atribuirea de piese la comanda de vânzări. Există o listă de ridicare per "
-"linie comandă de vânzări care evoluează cu disponibilitatea pieselor."
+"Formularul Lista de Ridicare este creat de indata ce comanda de vanzare este "
+"confirmata in acelasi timp cu ordinul de aprovizionare. Reprezinta "
+"atribuirea de piese la comanda de vanzare. Exista o lista de ridicare per "
+"linie comanda de vanzare care evolueaza odata cu disponibilitatea pieselor."
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
-msgstr "Confirmat"
+msgstr "Confirmat(a)"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
-msgstr "Confirmă"
+msgstr "Confirma"
 
 #. module: sale
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Eroare! Nu puteți crea companii recursive."
+msgstr "Eroare! Nu puteti crea companii recursive."
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_product_total_price
 msgid "Sales by Product's Category in last 90 days"
-msgstr "Vânzările pe categorii de produse în ultimele 90 de zile"
+msgstr "Vanzari pe Categorii de produse in ultimele 90 de zile"
 
 #. module: sale
 #: view:sale.order:0 field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr "Linii factură"
+msgstr "Linii factura"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0 view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr "Linii comandă vânzare"
+msgstr "Linii comanda de vanzare"
 
 #. module: sale
 #: field:sale.order.line,delay:0
@@ -1749,11 +1748,11 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
-"Factura nu poate fi creată pentru această Linie a Comenzii de Vânzări "
-"datorită unuia dintre următoarele motive:\n"
-"1. Starea acestei linii a comenzii de vânzare este sau \"ciornă\" sau "
-"\"anulată\"!\n"
-"2. Linia Comenzii de Vânzare este facturată!"
+"Factura nu poate fi creata pentru aceasta Linie a Comenzii de Vanzare "
+"datorita unuia dintre urmatoarele motive:\n"
+"1. Starea acestei linii a comenzii de vanzare este sau \"ciorna\" sau "
+"\"anulata\"!\n"
+"2. Linia Comenzii de Vanzare este facturata!"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -1783,9 +1782,9 @@ msgid ""
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
 msgstr ""
-"O comandă de aprovizionare este creată automat, de îndată ce o comandă de "
-"vânzări este confirmată sau factura este plătită. Ea conduce achiziția și "
-"producţia produselor după norme şi la parametrii comenzii de vânzări. "
+"O comanda de aprovizionare este creata automat de indata ce o comanda de "
+"vanzare este confirmata sau factura este platita. Ea conduce achizitionarea "
+"si productia produselor dupa norme si la parametrii comenzii de vanzare. "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1797,17 +1796,17 @@ msgstr "Nefacturat"
 #: view:sale.order.line:0 field:sale.order.line,salesman_id:0
 #: view:sale.report:0 field:sale.report,user_id:0
 msgid "Salesman"
-msgstr "Agent de vânzări"
+msgstr "Agent de vanzari"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
 msgid "Drives procurement and invoicing"
-msgstr "Conduce aprovizionarea şi facturarea"
+msgstr "Conduce aprovizionarea si facturarea"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Suma neimpozitată"
+msgstr "Suma neimpozitata"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:170
@@ -1815,18 +1814,18 @@ msgstr "Suma neimpozitată"
 #: view:sale.advance.payment.inv:0 view:sale.order:0
 #, python-format
 msgid "Advance Invoice"
-msgstr "Factură in avans"
+msgstr "Factura in avans"
 
 #. module: sale
 #: code:addons/sale/sale.py:624
 #, python-format
 msgid "The sales order '%s' has been cancelled."
-msgstr "Comanda de vânzare '%s'  a fost anulată."
+msgstr "Comanda de vanzare '%s'  a fost anulata."
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Draft"
-msgstr "Ciornă"
+msgstr "Ciorna"
 
 #. module: sale
 #: help:sale.order.line,state:0
@@ -1841,16 +1840,16 @@ msgid ""
 "            \n"
 "* The 'Cancelled' state is set when a user cancel the sales order related."
 msgstr ""
-"* Starea 'Ciornă' este setată atunci când comanda de vânzări asociată este "
-"în stare de ciornă.                     \n"
-"* Starea 'Confirmat' este setată atunci când comanda de vânzări asociată "
-"este confirmată.                     \n"
-"* Starea 'Excepţie' este setată atunci când comanda de vânzări asociată este "
-"setată ca excepţie.                      \n"
-"* Starea 'Efectuat' este setată atunci când linia comenzii de vânzări "
-"asociată a fost ridicată.                      \n"
-"* Starea 'Anulată' este setată atunci când un utilizator anulează comanda de "
-"vânzări asociată."
+"* Starea 'Ciorna' este setata atunci cand comanda de vanzari asociata se "
+"afla in starea de ciorna.                     \n"
+"* Starea 'Confirmat' este setata atunci cand comanda de vanzari asociata "
+"este confirmata.                     \n"
+"* Starea 'Exceptie' este setata atunci cand comanda de vanzari asociata este "
+"setata ca exceptie.                      \n"
+"* Starea 'Efectuat' este setata atunci cand linia comenzii de vanzari "
+"asociata a fost ridicata.                      \n"
+"* Starea 'Anulata' este setata atunci cand un utilizator anuleaza comanda de "
+"vanzari asociata."
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -1860,7 +1859,7 @@ msgstr "Valoarea taxei."
 #. module: sale
 #: view:sale.order:0
 msgid "Packings"
-msgstr "Pachete"
+msgstr "Ambalaje"
 
 #. module: sale
 #: field:sale.config.picking_policy,progress:0
@@ -1882,7 +1881,7 @@ msgstr "Data comenzii"
 #: model:ir.actions.act_window,name:sale.action_order_form
 #: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
 msgid "Sales Orders"
-msgstr "Comenzi vânzare"
+msgstr "Comenzi de vanzare"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -1897,7 +1896,7 @@ msgstr "Jurnale facturare"
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
 msgid "Advance Product"
-msgstr "Avans mărfuri"
+msgstr "Avans Produse"
 
 #. module: sale
 #: view:sale.report:0
@@ -1908,15 +1907,15 @@ msgstr "Cantitate expediată"
 #. module: sale
 #: view:sale.open.invoice:0
 msgid "You invoice has been successfully created!"
-msgstr "Factura dvs. a fost creată cu succes!"
+msgstr "Factura dumneavoastra a fost creata cu succes!"
 
 #. module: sale
 #: code:addons/sale/sale.py:618
 #, python-format
 msgid "You must first cancel all invoices attached to this sales order."
 msgstr ""
-"Trebuie să anulaţi mai întâi toate facturile anexate la această comandă de "
-"vânzare."
+"Trebuie sa anulati mai intai toate facturile anexate la aceasta comanda de "
+"vanzare."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1931,7 +1930,7 @@ msgstr "Configurează Aplicatia Managementului Vânzărilor"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
 msgid "Sales Order in Progress"
-msgstr "Comandă de vânzare în desfăsurare"
+msgstr "Comanda de vanzare in desfasurare"
 
 #. module: sale
 #: field:sale.installer,sale_layout:0
@@ -1955,7 +1954,7 @@ msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
 msgstr ""
-"O comandă de aprovizionare pentru fiecare linie a comenzii de vânzare şi "
+"O comanda de aprovizionare pentru fiecare linie a comenzii de vanzare si "
 "pentru fiecare dintre componente."
 
 #. module: sale
@@ -1971,7 +1970,7 @@ msgstr "Data comenzii"
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "Confirmed sales order to invoice."
-msgstr "Comandă de vânzări confirmată pentru a fi facturată."
+msgstr "Comanda de vanzare confirmata pentru facturare."
 
 #. module: sale
 #: code:addons/sale/sale.py:290
@@ -1985,7 +1984,7 @@ msgstr ""
 #: code:addons/sale/sale.py:322
 #, python-format
 msgid "The sales order '%s' has been set in draft state."
-msgstr "Comanda de vânzare '%s' a fost setată pe starea de ciornă."
+msgstr "Comanda de vanzare '%s' a fost setata pe starea de ciorna."
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -2000,7 +1999,7 @@ msgstr "Politica implicită de livrare"
 #. module: sale
 #: view:sale.open.invoice:0
 msgid "Close"
-msgstr "Închide"
+msgstr "Inchide"
 
 #. module: sale
 #: field:sale.order,shipped:0
@@ -2016,7 +2015,7 @@ msgstr "Stoc insuficient!"
 #. module: sale
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr "Trebuie să atribuiţi un lot de producţie pentru acest produs"
+msgstr "Trebuie sa atribuiti un lot de productie pentru acest produs"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -2032,16 +2031,16 @@ msgid ""
 "warehouse from which the products will be delivered for each particular "
 "sales."
 msgstr ""
-"Dacă aveţi mai mult de un magazin pentru revânzarea produselor companiei "
-"dumneavoastră, puteți crea și gestiona aceasta de aici. Ori de câte ori veti "
-"înregistra o cotatie sau o comandă de vânzare nouă, aceasta trebuie să fie "
-"asociată unui magazin. Magazinul definește, de asemenea, depozitul de unde "
-"vor fi livrate produsele pentru fiecare vânzare specifică."
+"Daca aveti mai mult de un magazin pentru a revinde produsele companiei "
+"dumneavoastra, le puteti crea si gestiona de aici. Ori de cate ori veti "
+"inregistra o cotatie sau o comanda de vanzare noua, aceasta trebuie sa fie "
+"asociata unui magazin. Magazinul defineste, de asemenea, depozitul de unde "
+"vor fi livrate produsele pentru fiecare vanzare specifica."
 
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid."
-msgstr "Indică faptul că o factură a fost platită."
+msgstr "Indica faptul ca o factura a fost platita."
 
 #. module: sale
 #: report:sale.order:0 field:sale.order.line,name:0
@@ -2102,17 +2101,17 @@ msgstr "Paşi pentru livrarea unei comenzi de vânzare"
 #. module: sale
 #: view:sale.order:0 view:sale.order.line:0
 msgid "Search Sales Order"
-msgstr "Caută comanda de vânzare"
+msgstr "Cauta comanda de vanzare"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
 msgid "Sales Order Requisition"
-msgstr "Necesar comandă de vânzare"
+msgstr "Cerere Comanda de vanzare"
 
 #. module: sale
 #: report:sale.order:0 field:sale.order,payment_term:0
 msgid "Payment Term"
-msgstr "Termen de plată"
+msgstr "Termen de plata"
 
 #. module: sale
 #: help:sale.installer,sale_layout:0
@@ -2131,23 +2130,23 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"Acest raport efectuează analiza cotatiilor si comenzilor de vanzare ale "
-"dumneavoastră. Analiza verifică veniturile din vânzări şi le sortează după "
-"diferite criterii de grup (agent de vânzări, partener, produs, etc). "
-"Folosiţi acest raport pentru a efectua analiza vânzărilor care nu au fost "
-"facturate încă. Dacă doriţi să analizaţi cifra dumneavoastră de afaceri, "
-"trebuie să utilizaţi Raportul de Analiză a Facturilor din Aplicaţia de "
+"Acest raport efectueaza analiza cotatiilor și a comenzilor de vanzare ale "
+"dumneavoastra. Analiza verifica veniturile din vanzari si le sorteaza dupa "
+"diferite criterii de grup (agent de vanzari, partener, produs, etc). "
+"Folositi acest raport pentru a efectua analiza vanzarilor care nu au fost "
+"facturate inca. Daca doriti sa analizați cifra dumneavoastra de afaceri, "
+"trebuie sa utilizati raportul Analiza Facturilor din Aplicatia de "
 "contabilitate."
 
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation N°"
-msgstr "Număr cotație"
+msgstr "Numar cotatie"
 
 #. module: sale
 #: field:sale.order,picked_rate:0 view:sale.report:0
 msgid "Picked"
-msgstr "Ridicat(ă)"
+msgstr "Ridicat(a)"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,year:0
@@ -2157,4 +2156,4 @@ msgstr "An"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr "Factură bazată pe livrări"
+msgstr "Factura pe baza Livrarilor"

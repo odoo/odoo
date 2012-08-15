@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-12-05 18:10+0000\n"
-"Last-Translator: Joshua Jan <popkar77@gmail.com>\n"
+"Last-Translator: Joshua Jan(SHINEIT) <popkar77@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:05+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:48+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -73,7 +73,7 @@ msgstr "基本配置 PC 组装订单"
 #. module: product
 #: field:product.product,incoming_qty:0
 msgid "Incoming"
-msgstr "接收"
+msgstr "入库"
 
 #. module: product
 #: field:product.template,mes_type:0
@@ -134,7 +134,7 @@ msgstr "规则名称"
 #: field:product.product,code:0
 #: field:product.product,default_code:0
 msgid "Reference"
-msgstr "编号"
+msgstr "相关单号"
 
 #. module: product
 #: constraint:product.category:0
@@ -209,12 +209,12 @@ msgstr "个"
 #. module: product
 #: view:product.template:0
 msgid "Miscelleanous"
-msgstr "其他"
+msgstr "杂项"
 
 #. module: product
 #: model:product.template,name:product.product_product_worker0_product_template
 msgid "Worker"
-msgstr "作业员"
+msgstr "员工"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -259,7 +259,7 @@ msgstr "产品： "
 #. module: product
 #: field:product.category,parent_id:0
 msgid "Parent Category"
-msgstr "上级分类"
+msgstr "上级类别"
 
 #. module: product
 #: help:product.product,outgoing_qty:0
@@ -274,7 +274,9 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr "按库存生产:  在仓库或等待重新供应时得到需求。按订单生产:  在采购或产品获得请求时得到需求。"
+msgstr ""
+"按库存生产:  在库存或等待重新供应时得到需求。\r\n"
+"按订单生产:  被采购或产品有需求时。"
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -289,7 +291,7 @@ msgstr "希捷 7200.8 160GB 硬盘"
 #. module: product
 #: field:product.product,ean13:0
 msgid "EAN13"
-msgstr "条形码"
+msgstr "条形码（EAN13）"
 
 #. module: product
 #: field:product.template,seller_id:0
@@ -310,7 +312,7 @@ msgstr "包装"
 #: view:product.product:0
 #: field:product.template,categ_id:0
 msgid "Category"
-msgstr "分类"
+msgstr "类别"
 
 #. module: product
 #: help:product.pricelist.item,min_quantity:0
@@ -326,7 +328,7 @@ msgstr "木材 2mm"
 #. module: product
 #: field:product.price_list,qty1:0
 msgid "Quantity-1"
-msgstr "数量1"
+msgstr "数量-1"
 
 #. module: product
 #: help:product.packaging,ul_qty:0
@@ -348,17 +350,17 @@ msgstr "状态"
 #. module: product
 #: help:product.template,categ_id:0
 msgid "Select category for the current product"
-msgstr "为当前产品选择一个分类"
+msgstr "为当前产品选择一个类别"
 
 #. module: product
 #: field:product.product,outgoing_qty:0
 msgid "Outgoing"
-msgstr "发出"
+msgstr "出仓"
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference UoM for this category"
-msgstr "参考此分类的计量单位"
+msgstr "此类别的计量单位"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
@@ -369,7 +371,7 @@ msgstr "公开价格"
 #. module: product
 #: field:product.price_list,qty5:0
 msgid "Quantity-5"
-msgstr "数量5"
+msgstr "数量-5"
 
 #. module: product
 #: model:product.category,name:product.product_category_10
@@ -462,12 +464,12 @@ msgstr "业务伙伴信息"
 #. module: product
 #: field:product.price_list,qty2:0
 msgid "Quantity-2"
-msgstr "数量2"
+msgstr "数量-2"
 
 #. module: product
 #: field:product.price_list,qty3:0
 msgid "Quantity-3"
-msgstr "数量3"
+msgstr "数量-3"
 
 #. module: product
 #: view:product.product:0
@@ -484,7 +486,7 @@ msgstr "选择用于表示下面的价格和数量的计量单位。"
 #. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
-msgstr "数量4"
+msgstr "数量-4"
 
 #. module: product
 #: view:res.partner:0
@@ -534,7 +536,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product uom categ"
-msgstr "产品计量单位分类"
+msgstr "产品计量单位类别"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_box
@@ -549,7 +551,7 @@ msgstr "价格计算"
 #. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr "可被采购"
+msgstr "可采购"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu2_product_template
@@ -568,7 +570,7 @@ msgstr "1个或多个供应商能关联到一个产品,所有信息委员产品�
 msgid ""
 "Quantity conversions may happen automatically between Units of Measure in "
 "the same category, according to their respective ratios."
-msgstr "同一分组内的计量单位按照各自的比率自动发生转换."
+msgstr "同一类别内的计量单位按照各自的比率自动发生转换。"
 
 #. module: product
 #: help:product.packaging,width:0
@@ -741,7 +743,7 @@ msgstr "最小上浮金额"
 #. module: product
 #: field:product.category,child_id:0
 msgid "Child Categories"
-msgstr "子类"
+msgstr "子类别"
 
 #. module: product
 #: field:product.pricelist.version,date_end:0
@@ -864,7 +866,7 @@ msgstr "DDR 256MB PC400"
 #: model:ir.ui.menu,name:product.menu_product_category_action_form
 #: view:product.category:0
 msgid "Product Categories"
-msgstr "产品分类"
+msgstr "产品类别"
 
 #. module: product
 #: view:product.uom:0
@@ -877,7 +879,7 @@ msgid ""
 "Create and manage the units of measure you want to be used in your system. "
 "You can define a conversion rate between several Units of Measure within the "
 "same category."
-msgstr "创建与管理系统中的计量单位信息。您可以定义统一分类下单位之间的转换比率。"
+msgstr "创建与管理系统中的计量单位信息。您可以定义同一类别下几个计量单位之间的转换比率。"
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -1013,7 +1015,7 @@ msgid ""
 "your system. If several units of measure are in the same category, they can "
 "be converted to each other. For example, in the unit of measure category "
 "\"Time\", you will have the following UoM: Hours, Days."
-msgstr "创建与管理系统中的计量单位分类信息。统一分类的计量单位可以互相转换，比如，“时间”分类下的计量单位包含：小时、天等等"
+msgstr "创建与管理系统中的计量单位类别信息。同一类别下的计量单位可以互相转换，比如，“时间”类别下的计量单位包含：小时、天等等"
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1083,7 +1085,7 @@ msgid ""
 "contains detailed information about your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
-"您必须定义产品信息用于您的销售或采购。产品可以是原材料、可库存商品、消耗品或服务。产品表单包含产品相关的生产物流、售价、分类、供应商等等信息。"
+"您必须定义产品信息用于您的销售或采购。产品可以是原材料、可库存商品、消耗品或服务。产品表单包含产品相关的生产物流、售价、类别、供应商等等信息。"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -1366,7 +1368,7 @@ msgstr "重量"
 #. module: product
 #: field:product.uom,category_id:0
 msgid "UoM Category"
-msgstr "计量单位分类"
+msgstr "计量单位类别"
 
 #. module: product
 #: field:product.template,loc_rack:0
@@ -1389,7 +1391,7 @@ msgid ""
 "Here is a list of all your products classified by category. You can click a "
 "category to get the list of all products linked to this category or to a "
 "child of this category."
-msgstr "此处是所有产品的分类表。您可以单击一个分类来查看该分类下的所有产品或下级分类。"
+msgstr "此处是所有产品的类别表。您可以单击一个类别来查看该类别下的所有产品或下级类别。"
 
 #. module: product
 #: view:product.product:0
@@ -1462,7 +1464,7 @@ msgstr "产品计量单位"
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "错误：默认计量单位和采购计量单位必须在同一分类中。"
+msgstr "错误：默认计量单位和采购计量单位必须是同一类别中。"
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1487,7 +1489,7 @@ msgstr "购买"
 #. module: product
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
-msgstr "计量单位分类"
+msgstr "计量单位类别"
 
 #. module: product
 #: help:product.packaging,weight_ul:0
@@ -1620,7 +1622,7 @@ msgstr "保证期(月)"
 msgid ""
 "Set a category of product if this rule only apply to products of a category "
 "and his children. Keep empty for all products"
-msgstr "指定此规则要应用到的产品分类及其下级分类，如果为空则应用于所有产品。"
+msgstr "指定此规则要应用到的产品类别及其下级类别，如果为空则应用于所有产品。"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1658,7 +1660,7 @@ msgstr "系列型号"
 #: model:ir.actions.act_window,name:product.product_category_action
 #: model:ir.ui.menu,name:product.menu_products_category
 msgid "Products by Category"
-msgstr "产品分类"
+msgstr "产品类别"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -1764,7 +1766,7 @@ msgstr "价格表版本生效的开始日期"
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr "采购单默认使用的计量单位。必须与默认计量单位位于相同分类中。"
+msgstr "采购单默认使用的计量单位。必须与默认计量单位位于同一类别。"
 
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
@@ -1805,7 +1807,7 @@ msgstr "特征"
 #. module: product
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr "可以卖出"
+msgstr "可销售"
 
 #. module: product
 #: field:product.template,produce_delay:0
@@ -1876,7 +1878,7 @@ msgstr "100cm 架子"
 #: model:ir.model,name:product.model_product_category
 #: field:product.pricelist.item,categ_id:0
 msgid "Product Category"
-msgstr "产品分类"
+msgstr "产品类别"
 
 #. module: product
 #: report:product.pricelist:0
@@ -2259,7 +2261,7 @@ msgstr "标价"
 #. module: product
 #: field:product.category,type:0
 msgid "Category Type"
-msgstr "分类类型"
+msgstr "类属"
 
 #. module: product
 #: model:product.category,name:product.cat2

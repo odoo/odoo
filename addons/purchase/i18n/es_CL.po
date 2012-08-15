@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:13+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:52+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -72,6 +72,14 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Puede crear una petición de presupuesto cuando quiera obtener productos de "
+"un proveedor pero la compra todavía no se haya confirmado. Utilice este menú "
+"para revisar las peticiones de compra creadas automáticamente en base a sus "
+"reglas de logística (stock mínimo, obtener bajo pedido, etc). Puede "
+"convertir la petición en una compra, una vez que el pedido se haya "
+"confirmado. Si utiliza la interfaz extendida (desde las Preferencias de "
+"Usuario), puede elegir la forma de controlar sus facturas de proveedor: "
+"basadas en pedido, basadas en recepciones o codificación manual."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -335,8 +343,9 @@ msgid ""
 "A Pick list generates an invoice. Depending on the Invoicing control of the "
 "sale order, the invoice is based on delivered or on ordered quantities."
 msgstr ""
-"Un albarán genera una factura. Según el control de facturación en el pedido "
-"de venta, la factura se basa en las cantidades enviadas u ordenadas."
+"Un ingreso de productos genera una factura. Según el control de facturación "
+"en el pedido de venta, la factura se basa en las cantidades enviadas u "
+"ordenadas."
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.order.line,state:0
@@ -527,9 +536,9 @@ msgid ""
 "of the purchase order, the invoice is based on received or on ordered "
 "quantities."
 msgstr ""
-"Un albarán genera una factura de proveedor. Según el control de facturación "
-"del pedido de compra, la factura se basa en las cantidades recibidas o "
-"pedidas."
+"Un ingreso de productos genera una factura de proveedor. Según el control de "
+"facturación del pedido de compra, la factura se basa en las cantidades "
+"recibidas o pedidas."
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,state:0

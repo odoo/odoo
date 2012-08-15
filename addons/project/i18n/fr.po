@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:07+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:48+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -95,7 +95,7 @@ msgstr "Délégations"
 #. module: project
 #: field:project.task.delegate,planned_hours_me:0
 msgid "Hours to Validate"
-msgstr "Temps à valider"
+msgstr "Temps pour validation"
 
 #. module: project
 #: field:project.project,progress_rate:0 view:report.project.task.user:0
@@ -501,7 +501,7 @@ msgstr "Nb de tâches"
 #. module: project
 #: view:project.task:0
 msgid "Previous"
-msgstr "Précédent"
+msgstr "Précédente"
 
 #. module: project
 #: view:project.task.reevaluate:0
@@ -552,7 +552,7 @@ msgstr "Erreur ! Vous ne pouvez pas créer de sociétés récursives."
 #. module: project
 #: view:project.task:0
 msgid "Next"
-msgstr "Suivant"
+msgstr "Suivante"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
@@ -600,7 +600,7 @@ msgstr "Méthodologies"
 #. module: project
 #: help:project.task,total_hours:0
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr "Calculer comme: Temps passé + Temps restant"
+msgstr "Calculé comme : Temps passé + Temps restant."
 
 #. module: project
 #: help:project.task.close,partner_email:0
@@ -688,7 +688,7 @@ msgstr ""
 #. module: project
 #: field:project.task.delegate,name:0
 msgid "Delegated Title"
-msgstr "Titre délégué"
+msgstr "Intitulé"
 
 #. module: project
 #: view:project.task:0 view:project.task.history.cumulative:0
@@ -699,7 +699,7 @@ msgstr "Mes projets"
 #. module: project
 #: view:project.task:0
 msgid "Extra Info"
-msgstr "Infos Complémentaires"
+msgstr "Informations complémentaires"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -811,7 +811,7 @@ msgstr "Tâches par utilisateur et par projet"
 #: model:process.transition,name:project.process_transition_delegate0
 #: view:project.task:0
 msgid "Delegate"
-msgstr "Délégué"
+msgstr "Déléguer"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
@@ -938,11 +938,11 @@ msgid ""
 "         \n"
 " If the task is over, the states is set to 'Done'."
 msgstr ""
-"Si la tâche est créée, le statut est 'Brouillon'.\n"
-" Si la tâche est démarrée, le statut devient 'En cours'.\n"
-" Si une revue est nécessaire, la tâche est en statut 'En attente'.           "
-"                       \n"
-" Si la tâche est terminée, le statut est 'Effectuée'."
+"Si la tâche est créée, son état est 'Brouillon'.\n"
+" Si la tâche est démarrée, l'état devient 'En cours'.\n"
+" Si une revue est nécessaire, l'état de la tâche est  'En attente'.          "
+"                        \n"
+" Si la tâche est terminée, l'état est 'Terminé'."
 
 #. module: project
 #: help:project.task,progress:0
@@ -982,7 +982,7 @@ msgstr "Mettre en modèle"
 #. module: project
 #: view:project.project:0
 msgid "Status: %(state)s"
-msgstr "Statut: %(state)s"
+msgstr "État: %(state)s"
 
 #. module: project
 #: field:project.installer,project_long_term:0
@@ -1017,7 +1017,7 @@ msgstr "Facturation"
 #. module: project
 #: view:project.task:0
 msgid "Information"
-msgstr "Information"
+msgstr "Suivi"
 
 #. module: project
 #: help:project.installer,account_budget:0
@@ -1095,7 +1095,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0 field:project.task,manager_id:0
 msgid "Project Manager"
-msgstr "Responsable du projet"
+msgstr "Responsable"
 
 #. module: project
 #: view:project.project:0 view:project.task:0 selection:project.task,state:0
@@ -1290,7 +1290,7 @@ msgstr "Progression de la Configuration"
 #. module: project
 #: view:project.task.delegate:0
 msgid "_Delegate"
-msgstr "_Déleguer"
+msgstr "_Déléguer"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:91
@@ -1416,7 +1416,7 @@ msgstr ""
 #: view:report.project.task.user:0 selection:report.project.task.user,state:0
 #: view:res.partner:0 selection:task.by.days,state:0
 msgid "Done"
-msgstr "Effectué"
+msgstr "Terminé"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
@@ -1827,8 +1827,8 @@ msgid ""
 "Footer added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
 msgstr ""
-"Le pied de page est ajouté à la fin de l'email pour le message "
-"d'avertissement envoyé au client lorsque la tâche est fermée"
+"Le pied de page est ajouté à la fin du courriel du message d'avertissement "
+"envoyé au client lorsque la tâche est fermée"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -1842,15 +1842,15 @@ msgid ""
 "to invoice the time spent on a project task, you can find project tasks to "
 "be invoiced in the billing section."
 msgstr ""
-"Un projet contient des tâches ou des incidents qui seront effectués par vos "
-"ressources auxquels ils sont assignés. Un projet peut avoir une structure "
-"hiérarchique, comme être le fils d'un projet parent.Ceci vous permet de "
-"concevoir des structures de projet large avec différentes phases qui "
+"Un projet contient des tâches ou des incidents qui seront effectués ou "
+"traités par vos ressources auxquels ils sont assignés. Un projet peut avoir "
+"une structure hiérarchique, comme être le fils d'un projet parent. Ceci vous "
+"permet de concevoir des structures de projet avec différentes phases qui "
 "s'étalent pendant toute la durée d'un cycle. Chaque utilisateur peut "
 "s'attribuer un projet par défaut dans ces préférences pour automatiquement "
-"filtrer les tâches et les problèmes sur lesquels ils travaillent. Si vous "
+"filtrer les tâches et les incidents sur lesquels il travaille. Si vous "
 "choisissez de facturer le temps passé sur une tâche d'un projet, vous pouvez "
-"trouver les tâches de projet à facturer dans la section facturation."
+"retrouver les tâches de projet à facturer dans la section facturation."
 
 #. module: project
 #: field:project.project,total_hours:0
@@ -1860,7 +1860,7 @@ msgstr "Temps total"
 #. module: project
 #: field:project.task.delegate,state:0
 msgid "Validation State"
-msgstr "État de Validation"
+msgstr "État de la validation"
 
 #. module: project
 #: code:addons/project/project.py:882
@@ -1923,7 +1923,7 @@ msgstr ""
 #: view:project.project:0 field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
-msgstr "Etapes des tâches"
+msgstr "Étapes des tâches"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0

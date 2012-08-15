@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-03 13:39+0000\n"
-"Last-Translator: Özge Altınışık <Unknown>\n"
+"PO-Revision-Date: 2012-07-30 18:57+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:06+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-31 05:14+0000\n"
+"X-Generator: Launchpad (build 15702)\n"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -25,7 +25,7 @@ msgstr "Üretim kısmı"
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_from_product_template
 msgid "Ham"
-msgstr ""
+msgstr "Jambon"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_lait_product_template
@@ -57,12 +57,12 @@ msgstr "Ürün kullanım süresi"
 #: sql_constraint:stock.production.lot:0
 msgid ""
 "The combination of serial number and internal reference must be unique !"
-msgstr ""
+msgstr "Seri numarası ve iç ilişki birleşimi benzersiz olmalıdır!"
 
 #. module: product_expiry
 #: help:stock.production.lot,removal_date:0
 msgid "The date on which the lot should be removed."
-msgstr ""
+msgstr "Partinin kaldırılacağı tarih."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_product
@@ -74,23 +74,23 @@ msgstr "Ürün"
 msgid ""
 "The number of days after which an alert should be notified about the "
 "production lot."
-msgstr ""
+msgstr "Üretim partisi uyarısı bildirimi için geçecek gün sayısı."
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Ürün Kaldırma Süresi"
 
 #. module: product_expiry
 #: field:stock.production.lot,removal_date:0
 msgid "Removal Date"
-msgstr ""
+msgstr "Kaldırma Tarihi"
 
 #. module: product_expiry
 #: help:stock.production.lot,life_date:0
 msgid ""
 "The date on which the lot may become dangerous and should not be consumed."
-msgstr ""
+msgstr "Ürün partisinin tehlikeli olacağı ve tüketilmemesi gereken tarih."
 
 #. module: product_expiry
 #: model:ir.module.module,description:product_expiry.module_meta_information
@@ -102,48 +102,54 @@ msgid ""
 " - alert date\n"
 "Used, for example, in food industries."
 msgstr ""
+"Ürünler ve ürün partileri için değişik tarihleri izle:\n"
+" -ömür sonu\n"
+" -son kullanma tarihi\n"
+" -kaldırma tarihi\n"
+" -uyarı tarihi\n"
+"Örneğin, gıda sanayinde kullanıldı."
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_pain_product_template
 msgid "Bread"
-msgstr ""
+msgstr "Ekmek"
 
 #. module: product_expiry
 #: model:product.uom,name:product_expiry.product_uom_ltr
 #: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
 msgid "LTR"
-msgstr ""
+msgstr "LTR"
 
 #. module: product_expiry
 #: view:product.product:0
 #: view:stock.production.lot:0
 msgid "Dates"
-msgstr ""
+msgstr "Tarihler"
 
 #. module: product_expiry
 #: field:stock.production.lot,life_date:0
 msgid "End of Life Date"
-msgstr ""
+msgstr "Ömür Sonu Tarihi"
 
 #. module: product_expiry
 #: field:stock.production.lot,use_date:0
 msgid "Best before Date"
-msgstr ""
+msgstr "Son kullanım Tarihi"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
 msgid "French cheese Camenbert"
-msgstr ""
+msgstr "Fransız Camenbert peyniri"
 
 #. module: product_expiry
 #: help:product.product,removal_time:0
 msgid "The number of days before a production lot should be removed."
-msgstr ""
+msgstr "Bir ürün partisinin kaldırılmasından önceki gün sayısı."
 
 #. module: product_expiry
 #: field:stock.production.lot,alert_date:0
 msgid "Alert Date"
-msgstr ""
+msgstr "Uyarı Tarihi"
 
 #. module: product_expiry
 #: help:product.product,use_time:0
@@ -151,11 +157,13 @@ msgid ""
 "The number of days before a production lot starts deteriorating without "
 "becoming dangerous."
 msgstr ""
+"Bir ürün partisinin tehlikeli olmadan bozulmaya başlamasından önceki gün "
+"sayısı."
 
 #. module: product_expiry
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Hata: Geçersizean kodu"
 
 #. module: product_expiry
 #: help:product.product,life_time:0
@@ -163,14 +171,16 @@ msgid ""
 "The number of days before a production lot may become dangerous and should "
 "not be consumed."
 msgstr ""
+"Bir ürün lotunun tehlikeli duruma gelmesi ve tüketilmemesinden önceki gün "
+"sayısı."
 
 #. module: product_expiry
 #: help:stock.production.lot,alert_date:0
 msgid ""
 "The date on which an alert should be notified about the production lot."
-msgstr ""
+msgstr "Bir ürün partisi için uyarı yapılacağı tarih."
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Ürün Uyarı Zamanı"

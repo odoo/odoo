@@ -13,23 +13,23 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-05 04:52+0000\n"
-"X-Generator: Launchpad (build 15060)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:24+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "?!?!?!?!Sub-Conta"
+msgstr "Conta Descendente"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account Name"
-msgstr "Nome da conta"
+msgstr "Nome da Conta"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr "Especifica a quantidade do valor a contar"
+msgstr "Especifica o montante do valor a contar"
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -58,7 +58,7 @@ msgstr "Esboço"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
-msgstr "Encerrada"
+msgstr "Encerrado"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -83,32 +83,31 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
-"* Quando uma conta é criada no estado \"Rascunho\".                          "
-"        \n"
+"* Quando uma conta é criada no estado 'Rascunho'.                            "
+"      \n"
 "* Se algum parceiro associado estiver lá, poderá estar em estado 'Aberto'.   "
 "                               \n"
 "* Se houver algum saldo pendente, poderá estar no estado 'Pendente'.         "
 "                          \n"
-"* E, finalmente, quando todas as transacções terminaram, poderá estar no "
-"estado \"Fechar\".                                   \n"
-"* O projecto também pode estar em qualquer caso nos estados 'Modelo' e 'Em "
+"* E, finalmente, quando todas as transações terminaram, poderá estar no "
+"estado 'Fechado'.                                   \n"
+"* O projeto também pode estar em qualquer caso nos estados 'Template' e 'Em "
 "Movimento'.\n"
-" Se for um modelo então podemos fazer projectos baseados no modelo de "
-"projectos. Se for 'Em Movimento' será um projecto normal.                    "
-"             \n"
-" Se é para ser revisto,então o estado é \"Pendente\".\n"
-" Quando o projecto estiver concluído, o estado está definido como "
-"'Terminado'."
+" Se for um template então podemos fazer projetos baseados no template de "
+"projetos. Se for 'Em Movimento' será um projeto normal.                      "
+"           \n"
+" Se é para ser revisto,então o estado é 'Pendente'.\n"
+" Quando o projeto estiver concluído, o estado está definido como 'Concluído'."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
-msgstr "Tipo de conta"
+msgstr "Tipo de Conta"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Template"
-msgstr "Modelo"
+msgstr "Template"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -150,7 +149,7 @@ msgstr "Utilizador"
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
 msgid "Parent Analytic Account"
-msgstr "Conta analítica mãe"
+msgstr "Conta Analítica Ascendente"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -175,7 +174,7 @@ msgid ""
 "cost price. Always expressed in the company main currency."
 msgstr ""
 "Calculado multiplicando a quantidade pelo preço de custo do artigo. Sempre "
-"expresso na Divisa da principal da empresa."
+"expresso na Moeda da principal da empresa."
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
@@ -200,7 +199,7 @@ msgstr "Montante"
 #. module: analytic
 #: field:account.analytic.account,contact_id:0
 msgid "Contact"
-msgstr "Contacto"
+msgstr "Contato"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
@@ -230,13 +229,13 @@ msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
-"Se seleccionar o tipo vista, isso significa que não irá permitir criar "
+"Se selecionar o tipo vista, isso significa que não irá permitir criar "
 "movimentos no diário ao usar esta conta."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Date End"
-msgstr "Data final"
+msgstr "Data Final"
 
 #. module: analytic
 #: field:account.analytic.account,code:0
@@ -267,7 +266,7 @@ msgstr "Parceiro"
 #. module: analytic
 #: field:account.analytic.account,date_start:0
 msgid "Date Start"
-msgstr "Data de início"
+msgstr "Data Inicial"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0

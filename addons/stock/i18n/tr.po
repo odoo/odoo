@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-10-03 14:08+0000\n"
-"PO-Revision-Date: 2011-08-02 09:14+0000\n"
+"PO-Revision-Date: 2012-08-01 18:06+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:19+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-08-02 05:08+0000\n"
+"X-Generator: Launchpad (build 15719)\n"
 "X-Poedit-Bookmarks: -1,-1,-1,-1,-1,0,-1,-1,-1,-1\n"
 
 #. module: stock
@@ -313,6 +313,8 @@ msgid ""
 "This account will be used to value stock moves that have this location as "
 "source, instead of the stock input account from the product."
 msgstr ""
+"Üründen stok giriş hesabı yapmak yerinde, bu konumu kaynak olarak kullanan "
+"stok hareketlerini değerlendirmek için bu hesap kullanılacaktır."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -759,7 +761,7 @@ msgstr "Üretim lotu ürüne bir seri numarası vermek için kullanılır"
 #, python-format
 msgid ""
 "Processing quantity %s for %s is larger than the available quantity %s!"
-msgstr ""
+msgstr "%s için %s işlem miktarı  %s mevcut miktarından  ten fazladır!"
 
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
@@ -845,6 +847,8 @@ msgid ""
 "Either there are no moves linked to the picking or Accounting Journals are "
 "misconfigured!"
 msgstr ""
+"Ne toplamaya ne de Hesap Günlüklerine bağlantılı yanlış ayarlanmış hareket "
+"yoktur!"
 
 #. module: stock
 #: view:stock.location:0
@@ -1681,6 +1685,12 @@ msgid ""
 "Would your payment have been carried out after this mail was sent, please "
 "consider the present one as void."
 msgstr ""
+"Lütfen aşağıdaki vadesi gelen ödemelerinize göz atın. Eğer ödemenizi zaten "
+"yaptıysanız lütfen ödeme ayrıntılarını bize gönderin. Eğer ödemeyi daha da "
+"geciktirecekseniz lütfen konuyu görüşmek için bizi arayın.                   "
+"      \n"
+"Eğer ödemenizi bu mesajı aldıktan sonra gerçekleştirdiyseniz, lütfen bu "
+"uyarıyı dikkate almayın."
 
 #. module: stock
 #: code:addons/stock/stock.py:513
@@ -1827,7 +1837,7 @@ msgstr "Fiyat"
 #. module: stock
 #: view:stock.location:0
 msgid "Chained Location"
-msgstr ""
+msgstr "Zincirli Konum"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2873,6 +2883,8 @@ msgid ""
 "You cannot add any new move while validating the picking, rather you can "
 "split the lines prior to validation!"
 msgstr ""
+"Toplama doğrularken yeni hareket ekleyemezsiniz, bunun yerine doğrulamadan "
+"önce satırları bölebilirsiniz!"
 
 #. module: stock
 #: field:stock.return.picking,invoice_state:0
@@ -3070,7 +3082,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:180
 #, python-format
 msgid "Can not process quantity %s for Product %s !"
-msgstr ""
+msgstr "Ürün %s için %s miktarı işlenemiyor!"
 
 #. module: stock
 #: code:addons/stock/product.py:445
@@ -3229,7 +3241,7 @@ msgstr "Bu alım listesi faturalandırma gerektirmez."
 msgid ""
 "Processing quantity %s %s for %s is larger than the available quantity %s %s "
 "!"
-msgstr ""
+msgstr "%s için işlem miktarı %s%s mevcut miktar %s%s ten fazladır!"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -3547,7 +3559,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
 #, python-format
 msgid "Stock Inventory is already Validated."
-msgstr ""
+msgstr "Mal Stoğu zaten Doğrulanmış."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -3876,6 +3888,8 @@ msgid ""
 "This account will be used to value stock moves that have this location as "
 "destination, instead of the stock output account from the product."
 msgstr ""
+"Üründen stok çıkış hesabı yapmak yerinde, bu konumu hedef olarak kullanan "
+"stok hareketlerini değerlendirmek için bu hesap kullanılacaktır."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
@@ -3886,7 +3900,7 @@ msgstr "Üreitm lotlarına ayır"
 #: code:addons/stock/wizard/stock_move.py:213
 #, python-format
 msgid "Processing Error"
-msgstr ""
+msgstr "İşleme Hatası"
 
 #. module: stock
 #: view:report.stock.inventory:0

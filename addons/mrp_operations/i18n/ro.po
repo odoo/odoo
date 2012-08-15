@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2012-01-11 11:20+0000\n"
-"Last-Translator: Fekete Mihai <mihai.fekete@etotalpc.ro>\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:00+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:44+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -28,12 +28,12 @@ msgstr "Comenzi de lucru"
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
 msgid "Cancel the operation."
-msgstr "Anulează operațiunea."
+msgstr "Anuleaza operatiunea."
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
-msgstr "mrp_operations.operation.code"
+msgstr "cod.operatiune.operatiuni_mrp"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:133
@@ -45,12 +45,12 @@ msgstr "Comanda de Productie nu poate incepe in starea [%s]"
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
 msgid "Group By..."
-msgstr "Grupează după..."
+msgstr "Grupeaza dupa..."
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_workorder0
 msgid "Information from the routing definition."
-msgstr "Informatii din definirea rutării."
+msgstr "Informatii din definirea rutarii."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -68,7 +68,7 @@ msgstr "Centre de lucru"
 #: view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
-msgstr "Reluare"
+msgstr "Reluati"
 
 #. module: mrp_operations
 #: report:mrp.code.barcode:0
@@ -83,12 +83,12 @@ msgstr "Produsul care va fi fabricat"
 #. module: mrp_operations
 #: view:mrp_operations.operation:0
 msgid "Production Operation"
-msgstr "Operaţiune de producţie"
+msgstr "Operatiune Productie"
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
-msgstr "Serializare liberă"
+msgstr "Serializare gratuita"
 
 #. module: mrp_operations
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
@@ -104,12 +104,12 @@ msgstr "Zi"
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_productionorder0
 msgid "Production Order"
-msgstr "Comandă de producție"
+msgstr "Comanda de Productie"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Picking Exception"
-msgstr "Excepţie ridicare"
+msgstr "Exceptie Ridicare"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_productionstart0
@@ -149,23 +149,23 @@ msgstr "Eroare!"
 #: selection:mrp.workorder,state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Cancelled"
-msgstr "Anulat(ă)"
+msgstr "Anulat(a)"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
 msgid "Confirmed Work Orders"
-msgstr "Comenzi de lucru confirmate"
+msgstr "Comenzi de lucru Confirmate"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
 #: view:mrp.production.workcenter.line:0
 msgid "Operations"
-msgstr "Operaţiuni"
+msgstr "Operatiuni"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_stock_move
 msgid "Stock Move"
-msgstr "Mişcare stoc"
+msgstr "Miscare stoc"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -178,12 +178,12 @@ msgstr "# de Linii"
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Draft"
-msgstr "Ciornă"
+msgstr "Ciorna"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "In Production"
-msgstr "În producţie"
+msgstr "In productie"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -197,7 +197,7 @@ msgstr "Stare"
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
 #: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
 msgid "Work Order"
-msgstr "Comandă de lucru"
+msgstr "Comanda de Lucru"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_workstartoperation0
@@ -205,8 +205,8 @@ msgid ""
 "There is 1 work order per work center. The information about the number of "
 "cycles or the cycle time."
 msgstr ""
-"Există o comandă de lucru per centru de lucru. Informatiile referitoare la "
-"numărul de cicluri sau durata ciclului."
+"Exista o comanda de lucru pentru fiecare centru de lucru. Informatiile "
+"referitoare la numarul de cicluri sau durata ciclului."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -243,7 +243,7 @@ msgstr "Nu puteți termina operațiunea fără a o Începe/Relua !"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Planned Date"
-msgstr "Dată planificată"
+msgstr "Data Planificata"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:479
@@ -265,7 +265,7 @@ msgstr "Iulie"
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,name:0
 msgid "Operation Name"
-msgstr "Nume operaţiune"
+msgstr "Nume operatiune"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,start_stop:0
@@ -281,11 +281,11 @@ msgid ""
 "different impacts on the costs of manufacturing and planning depending on "
 "the available workload."
 msgstr ""
-"Pentru producerea sau asamblarea produselor, și utilizarea materiilor prime "
-"și a produselor finite trebuie să gestionaţi, de asemenea, operațiunile de "
-"fabricație. Operațiunile de fabricație sunt adesea numite comenzi de lucru. "
-"Diferitele operațiuni vor avea efecte diferite asupra costurilor de "
-"producție și de planificare în funcție de volumul de muncă disponibil."
+"Pentru producerea sau asamblarea produselor, si utilizarea materiilor prime "
+"si a produselor finite trebuie sa gestionati, de asemenea, operatiunile de "
+"fabricatie. Operatiunile de fabricatie sunt adesea numite comenzi de lucru. "
+"Diverse operatiuni vor avea efecte diferite asupra costurilor de productie "
+"si de planificare in functie de volumul de munca disponibil."
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
@@ -310,7 +310,7 @@ msgstr ""
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
 msgid "Operation Cancelled"
-msgstr "Operaţiune anulată"
+msgstr "Operatiune anulata"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -331,54 +331,54 @@ msgstr "Lună"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Canceled"
-msgstr "Anulat(ă)"
+msgstr "Anulat(a)"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation
 msgid "mrp_operations.operation"
-msgstr "mrp_operations.operation"
+msgstr "operatiune.operatiuni_mrp"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_workorder
 msgid "Work Order Report"
-msgstr "Raport Comandă de lucru"
+msgstr "Raport Comanda de lucru"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
 #: field:mrp.production.workcenter.line,date_start_date:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
-msgstr "Data de început"
+msgstr "Data de incepere"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Waiting Goods"
-msgstr "Bunuri în aşteptare"
+msgstr "In asteptare bunuri"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Pause"
-msgstr "Pauză"
+msgstr "Pauza"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "In Progress"
-msgstr "În desfăsurare"
+msgstr "In curs de desfasurare"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_production
 msgid "Manufacturing Order"
-msgstr "Comandă de fabricație"
+msgstr "Comanda de productie"
 
 #. module: mrp_operations
 #: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Start"
-msgstr "Începe"
+msgstr "Incepe"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation:0
@@ -391,32 +391,32 @@ msgid ""
 "When the operation needs to be cancelled, you can do it in the work order "
 "form."
 msgstr ""
-"Atunci cand este necesară anularea operatiunii, puteti face acest lucru in "
+"Atunci cand este necesara anularea operatiunii, puteti face acest lucru in "
 "formularul comenzii de lucru."
 
 #. module: mrp_operations
 #: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
 msgid "Set Draft"
-msgstr "Setează ca ciornă"
+msgstr "Seteaza ca Ciorna"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 #: field:mrp.workorder,total_cycles:0
 msgid "Total Cycles"
-msgstr "Total cicluri"
+msgstr "Total Cicluri"
 
 #. module: mrp_operations
 #: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
-msgstr "În așteptare"
+msgstr "In asteptare"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation.code:0
 msgid "Production Operation Code"
-msgstr "Cod operatiune de producţie"
+msgstr "Cod Operatiune de Productie"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:467
@@ -432,7 +432,7 @@ msgstr "August"
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Started"
-msgstr "Început"
+msgstr "Inceput"
 
 #. module: mrp_operations
 #: model:ir.module.module,description:mrp_operations.module_meta_information
@@ -514,23 +514,23 @@ msgstr "Operatiunea este deja incheiată !"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Ready to Produce"
-msgstr "Pregătit de producţie"
+msgstr "Pregatit de productie"
 
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
 msgid "Children Moves"
-msgstr "Mişcări subordonate"
+msgstr "Miscari Subordonate"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
 msgid "Work Orders Planning"
-msgstr "Planificare ordine de lucru"
+msgstr "Planificare Comenzi de Lucru"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 #: field:mrp.workorder,date:0
 msgid "Date"
-msgstr "Dată"
+msgstr "Data"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -547,7 +547,7 @@ msgstr ""
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Search"
-msgstr "Caută"
+msgstr "Cauta"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -562,13 +562,13 @@ msgstr "Ianuarie"
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_doneoperation0
 msgid "Finish the operation."
-msgstr "Finalizează operaţiunea."
+msgstr "Finalizeaza Operatiunea."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:459
 #, python-format
 msgid "Operation is not started yet !"
-msgstr "Operaşiunea nu a inceput incă !"
+msgstr "Operatiunea nu a inceput inca !"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
@@ -582,12 +582,12 @@ msgstr "Informatii din comanda de productie."
 #: code:addons/mrp_operations/mrp_operations.py:482
 #, python-format
 msgid "Sorry!"
-msgstr "Ne pare rău!"
+msgstr "Ne pare rau!"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Current"
-msgstr "Curent"
+msgstr "Actual(a)"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
@@ -614,12 +614,12 @@ msgstr "Coduri Operatiune"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
 msgid "Qty"
-msgstr "Cantitate"
+msgstr "Cant"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_doneoperation0
 msgid "Operation Done"
-msgstr "Operaţiune finalizată"
+msgstr "Operatiune Finalizata"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -631,13 +631,13 @@ msgstr "Efectuat"
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
 msgid "Start/Stop Barcode"
-msgstr "Cod de bare start/stop"
+msgstr "Cod de bare Start/Stop"
 
 #. module: mrp_operations
 #: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
 msgid "Cancel"
-msgstr "Anulează"
+msgstr "Anuleaza"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
@@ -648,42 +648,42 @@ msgid ""
 "latest operation of a manufacturing order, the MO is automatically done and "
 "the related products are produced."
 msgstr ""
-"Comenzile de lucru sunt listele de operațiuni care urmează să fie efectuate "
-"pentru fiecare comandă de fabricație. Odată ce ați început prima comandă de "
-"lucru de pe o comandă de fabricație, comanda de fabricație este marcată "
-"automat ca începută. După ce ați terminat ultima operațiune a unei comenzi "
-"de fabricație, CF este finalizată în mod automat, iar produsele asociate "
-"sunt produse."
+"Comenzile de lucru sunt listele de operatiuni care urmeaza sa fie efectuate "
+"pentru fiecare comanda de fabricatie. Odata ce ati inceput prima comanda de "
+"lucru a unei comenzi de fabricatie, comanda de fabricatie este marcata "
+"automat ca inceputa. Dupa ce ati terminat ultima operatiune a unei comenzi "
+"de fabricatie, CF este finalizata in mod automat, iar produsele asociate "
+"sunt fabricate."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
 msgid "Start Operation"
-msgstr "Incepe operațiunea"
+msgstr "Incepe Operatiunea"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Information"
-msgstr "Informaţii"
+msgstr "Informatii"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
-msgstr "Cod de bare centre de lucru"
+msgstr "Cod de bare Centre de lucru"
 
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr "Trebuie să atribuiţi un lot de producţie pentru acest produs"
+msgstr "Trebuie sa atribuiti un lot de productie pentru acest produs"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Late"
-msgstr "Târziu"
+msgstr "Tarziu"
 
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
 msgid "Delay"
-msgstr "Întârziere"
+msgstr "Intarziere"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -691,12 +691,12 @@ msgstr "Întârziere"
 #: field:mrp.workorder,production_id:0
 #: field:mrp_operations.operation,production_id:0
 msgid "Production"
-msgstr "Producţie"
+msgstr "Productie"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Search Work Orders"
-msgstr "Caută Comenzi de lucru"
+msgstr "Cauta Comenzi de lucru"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -715,7 +715,7 @@ msgstr "Real"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
 msgid "Scheduled Date"
-msgstr "Dată programată"
+msgstr "Data programata"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,product:0
@@ -728,7 +728,7 @@ msgstr "Produs"
 #: view:mrp.workorder:0
 #: field:mrp.workorder,total_hours:0
 msgid "Total Hours"
-msgstr "Total ore"
+msgstr "Total Ore"
 
 #. module: mrp_operations
 #: help:mrp.production,allow_reorder:0
@@ -736,7 +736,7 @@ msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
 msgstr ""
-"Bifaţi pentru a putea muta toate comenzile de producţie independent, fără a "
+"Bifati pentru a putea muta toate comenzile de productie independent, fara a "
 "le muta pe cele dependente."
 
 #. module: mrp_operations
@@ -747,7 +747,7 @@ msgstr ")"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
 msgid "Work Order Analysis"
-msgstr "Analiză Centru de lucru"
+msgstr "Analiza Centru de lucru"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -755,7 +755,7 @@ msgstr "Analiză Centru de lucru"
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Finished"
-msgstr "Finalizat(ă)"
+msgstr "Finalizat(a)"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
@@ -765,7 +765,7 @@ msgstr "UdeM"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Hours by Work Center"
-msgstr "Ore per Centru de lucru"
+msgstr "Ore dupa Centrul de lucru"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
@@ -777,7 +777,7 @@ msgstr "Program de lucru"
 #: field:mrp.production.workcenter.line,date_planned_end:0
 #: field:mrp_operations.operation,date_finished:0
 msgid "End Date"
-msgstr "Data de sfârșit"
+msgstr "Data de sfarsit"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -787,12 +787,12 @@ msgstr "Februarie"
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
 msgid "Operation cancelled"
-msgstr "Operațiune anulată"
+msgstr "Operatiune anulata"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_startoperation0
 msgid "Start the operation."
-msgstr "Începe operaţiunea."
+msgstr "Incepe operatiunea."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -802,12 +802,12 @@ msgstr "Aprilie"
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
 msgid "Operation done"
-msgstr "Operaţiune efectuată"
+msgstr "Operatiune efectuata"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "#Line Orders"
-msgstr "# linii comenzi"
+msgstr "# Linie Comenzi"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
@@ -815,7 +815,7 @@ msgid ""
 "When the operation is finished, the operator updates the system by finishing "
 "the work order."
 msgstr ""
-"Atunci când operațiunea este finalizată, operatorul actualizează sistemul "
+"Atunci cand operatiunea este finalizata, operatorul actualizeaza sistemul "
 "prin finalizarea comenzii de lucru."
 
 #. module: mrp_operations
@@ -842,7 +842,7 @@ msgstr "An"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
-msgstr "Durată"
+msgstr "Durata"
 
 #. module: mrp_operations
 #: constraint:mrp.production:0
@@ -852,4 +852,4 @@ msgstr "Cantitatea comandată nu poate fi negativă sau zero !"
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr "Încercaţi să atribuiţi un lot care nu este din acelaşi produs"
+msgstr "Incercati sa atribuiti un lot care nu este din acelasi produs"

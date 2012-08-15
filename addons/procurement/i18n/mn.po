@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:03+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:46+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -24,12 +24,12 @@ msgstr "Шинэ бараа асуух"
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
 msgid "Schedulers"
-msgstr "Төлөвлөгч"
+msgstr "Товлогчууд"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_make_procurement
 msgid "Make Procurements"
-msgstr "Нөхөн дүүргэлт үүсгэх"
+msgstr "Татан авалт үүсгэх"
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -39,7 +39,7 @@ msgid ""
 "configuration on products."
 msgstr ""
 "Агуулахууд дээрх ирээдүйн нөөц нь тэгээс бага болсон байвал хасах утгатай "
-"үлдэгдлүүдийг тэг болгохын тулд автоматаар нөхөн дүүргэлтийн захиалга үүсгэн "
+"үлдэгдлүүдийг тэг болгохын тулд автоматаар татан авалтын захиалга үүсгэн "
 "гүйцэлдүүлнэ."
 
 #. module: procurement
@@ -50,7 +50,7 @@ msgstr "Бүлэглэх..."
 #. module: procurement
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Draft procurement of the product and location of that orderpoint"
-msgstr ""
+msgstr "Тэрхүү захиалгын цэг дээрх байрлал болон барааны ноорог татан авалт"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:291
@@ -66,7 +66,7 @@ msgstr "Хэмжих нэгж"
 #. module: procurement
 #: field:procurement.order,procure_method:0
 msgid "Procurement Method"
-msgstr "Нөхөн дүүргэх хэлбэр"
+msgstr "Татан авах арга"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:307
@@ -99,7 +99,7 @@ msgstr "Шалтгаан"
 #. module: procurement
 #: view:procurement.order.compute:0
 msgid "Compute Procurements"
-msgstr "Нөхөн дүүргэлт төлөвлөх"
+msgstr "Татан авалтыг тооцоолох"
 
 #. module: procurement
 #: field:procurement.order,message:0
@@ -114,7 +114,7 @@ msgstr "Тооцоололд ашиглагдахгүй, зөвхөн мэдээ
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
-msgstr "Сүүлийн нөхөн дүүргэлт"
+msgstr "Сүүлийн татан авалт"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -129,7 +129,7 @@ msgstr "Захиалга хийх"
 #. module: procurement
 #: help:procurement.order,message:0
 msgid "Exception occurred while computing procurement orders."
-msgstr "Нөхөн дүүргэлтийн захиалгыг биелүүлэхэд гарсан хүндрэл, саатал."
+msgstr "Татан авалтын захиалгуудыг тооцоолоход сондгой зүйлс тохиолдлоо."
 
 #. module: procurement
 #: help:procurement.order,state:0
@@ -145,8 +145,8 @@ msgid ""
 msgstr ""
 "Нөхөн дүүргэлтийн захиалга 'Ноорог' төлөвтэйгээр үүснэ.\n"
 "Хэрэв захиалгыг батлавал төлөв нь 'Батлагдсан' болно.\n"
-"Баталгаажсаны дараа 'Ажиллаж байна' төлөвт шилжинэ.\n"
-"Хэрэв ямар нэгэн алдаа, саатал гарвал захиалгын төлөв нь 'Алдаа' болно.\n"
+"Баталгаажсаны дараа 'Ажиллаж байгаа' төлөвт шилжинэ.\n"
+"Хэрэв ямар нэгэн алдаа, саатал гарвал захиалгын төлөв нь 'Сондгой' болно.\n"
 "Харин гарсан алдаа арилсан бол захиалга 'Бэлэн' төлөвт шилжинэ.\n"
 "Нэг нөхөн дүүргэлт өөр нэг нөхөн дүүргэлтийг хүлээсэн үед захиалга 'Хүлээж "
 "байна' төлөвт шилжинэ."
@@ -169,7 +169,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order.compute.all:0
 msgid "Scheduler Parameters"
-msgstr "Төлөвлөгчийн тохиргоо"
+msgstr "Товлогчийн тохиргоо"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_move
@@ -179,7 +179,7 @@ msgstr "Барааны хөдөлгөөн"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr "Бүх хуваарийг тооцоолох"
+msgstr "Бүх товлогчдийг тооцоолуулах"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -234,18 +234,18 @@ msgstr ""
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr ""
+msgstr "Боловсруулах Татан авалтын захиалгууд"
 
 #. module: procurement
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Алдаа! Тойрог хамааралтай компани үүсгэж болохгүй."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:386
 #, python-format
 msgid "Procurement '%s' is in exception: "
-msgstr ""
+msgstr "Татан авалт '%s'-н сондгойрол: "
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -295,12 +295,12 @@ msgstr "Татан авалт бодох"
 #. module: procurement
 #: field:stock.move,procurements:0
 msgid "Procurements"
-msgstr "Нийлүүлэлт"
+msgstr "Татан авалт"
 
 #. module: procurement
 #: field:res.company,schedule_range:0
 msgid "Scheduler Range Days"
-msgstr "Төлөвлөлтийн цар хүрээ"
+msgstr "Товлогчийн Хүрээ Өдөрөөр"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -312,6 +312,12 @@ msgid ""
 "operations to fullfil the need: purchase order proposition, manufacturing "
 "order, etc."
 msgstr ""
+"Татан авалтын захиалга нь тодорхой бараа, тодорхой байрлалд хэрэгцээтэй "
+"байгааг хөтлөхөд ашиглагддаг. Татан авалтын захиалга нь ихэнхдээ Татах "
+"Логистикийн дүрэм болон Хамгийн Бага Нөөцийн дүрэмээр автоматаар үүсдэг. "
+"Татан авалтын захиалга нь батлагдмагц хэрэгцээг хангах үйлдлийг үүсгэдэг. "
+"Худалдан авах захиалга үүсгэх, үйлдвэрлэх захиалга үүсгэх гэх мэт үйлдлүүд "
+"байж болно."
 
 #. module: procurement
 #: field:make.procurement,date_planned:0
@@ -362,8 +368,8 @@ msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
 msgstr ""
-"Татан авалтыг гараар кодлохоор бол, методуудыг цэгцлэхийн тулд загвар харах "
-"болно."
+"Татан авалтыг гараар боловсруулахаар бол, захиалуулах аргыг сонгосон нь "
+"зохимжтой байж болох юм."
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -395,7 +401,7 @@ msgstr "Засах"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Exceptions"
-msgstr "Алдаанууд"
+msgstr "Сондгойролууд"
 
 #. module: procurement
 #: model:process.node,note:procurement.process_node_serviceonorder0
@@ -437,7 +443,7 @@ msgstr ""
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Related Procurement Orders"
-msgstr ""
+msgstr "Холбогдох Татан Авалтын Захиалгууд"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
@@ -478,6 +484,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
+"Хэрэв энэ талбарын тэмдэглэгээг арилгавал захиалгын цэгийг устгалгүйгээр "
+"нуудаг."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -509,12 +517,12 @@ msgid ""
 "background, you may have to wait for a few minutes until it has finished "
 "computing."
 msgstr ""
-"Энэ визард батлагдсан төлөвтэй бүх нөхөн дүүргэлтийн захиалгыг гүйцэлдүүлэх "
-"бөгөөд нөхөн дүүргэлтийн тохиргооноос хамаарч үйлдвэрлэлийн эсвэл худалдан "
-"авалтын захиалгууд автоматаар үүснэ. Мөн систем өөрөө шөнө бүр уг "
-"төлөвлөлтийг нэг удаа автоматаар ачааллаж байхаар тохируулагдсан. Төлөвлөгч "
-"нь далд ачааллах бөгөөд хэсэг хугацааны дараа ачааллалтын үр дүн бүхий "
-"зурвасыг танд илгээх болно."
+"Энэ визард батлагдсан төлөвтэй бүх татан авалтын захиалгыг гүйцэлдүүлэх "
+"бөгөөд татан авах тохиргооноос хамаарч үйлдвэрлэлийн эсвэл худалдан авалтын "
+"захиалгууд автоматаар үүснэ. Мөн систем өөрөө шөнө бүр уг төлөвлөлтийг нэг "
+"удаа автоматаар ачааллаж байхаар тохируулагдсан. Төлөвлөгч нь далд ачааллах "
+"бөгөөд хэсэг хугацааны дараа ачааллалтын үр дүн бүхий зурвасыг танд илгээх "
+"болно."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -530,7 +538,7 @@ msgstr "Ноорог"
 #. module: procurement
 #: view:procurement.order.compute:0
 msgid "This wizard will schedule procurements."
-msgstr "Энэ визард нь нөхөн дүүргэлтийн төлөвлөнө."
+msgstr "Энэ харилцах цонх нь татан авалтуудыг товлоно."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -545,13 +553,13 @@ msgstr "Ердийн"
 #. module: procurement
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Ижил биш бүтээгдэхүүний цувралыг олгох гэж байна"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:383
 #, python-format
 msgid "Not enough stock."
-msgstr ""
+msgstr "Хангалттай нөөц алга"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
@@ -566,18 +574,18 @@ msgstr "Бараа татах"
 #. module: procurement
 #: field:procurement.order,date_planned:0
 msgid "Scheduled date"
-msgstr "Төлөвлөсөн огноо"
+msgstr "Товлосон огноо"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Exception"
-msgstr "Алдаа"
+msgstr "Сондгойрол"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:381
 #, python-format
 msgid "No minimum orderpoint rule defined."
-msgstr ""
+msgstr "Захиалгын цэгийн хамгийн багын дүрэм тодорхойлогдоогүй байна."
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:151
@@ -593,7 +601,7 @@ msgstr "Автоматаар үлдэгдэл нөхөх"
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Хамгийн бага эрхтэй оролцогч"
+msgstr "Зохистой нөөцийн дүрэм"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -608,17 +616,17 @@ msgstr "Нэмэлт мэдээлэл"
 #. module: procurement
 #: help:procurement.order,name:0
 msgid "Procurement name."
-msgstr "Нөхөн дүүргэлтийн нэр."
+msgstr "Татан авалтын нэр."
 
 #. module: procurement
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Бараанд цувралыг оноох ёстой."
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Reason"
-msgstr "Нөхөн дүүргэх шалтгаан"
+msgstr "Татан авах шалтгаан"
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
@@ -682,7 +690,7 @@ msgstr "Ерөнхий мэдээлэл"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Run Procurement"
-msgstr "Нөхөн дүүргэлт хийх"
+msgstr "Татан авалтыг хийх"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -725,7 +733,7 @@ msgstr "Яаралтай бус"
 #: code:addons/procurement/procurement.py:297
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr ""
+msgstr "Энэ бараанд нийлүүлэгч анхны утгаар тодорхойлогдоогүй байна"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -735,7 +743,7 @@ msgstr "Одоо"
 #. module: procurement
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr ""
+msgstr "Сондгойрсон Татан авалтууд"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -749,7 +757,7 @@ msgstr "Дэлгэрэнгүй"
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
 #: view:procurement.order:0
 msgid "Procurement Exceptions"
-msgstr "Нөхөн дүүргэлтийн саналууд"
+msgstr "Татан авалтын Сондгойрол"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.act_procurement_2_stock_warehouse_orderpoint
@@ -770,7 +778,7 @@ msgstr "Эцэст нь хөдөлгөөнийг дуусгах"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Scheduled Date"
-msgstr "Төлөвлөгдсөн огноо"
+msgstr "Товлогдсон огноо"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_product
@@ -837,6 +845,9 @@ msgid ""
 "will generate a procurement request to increase the stock up to the maximum "
 "quantity."
 msgstr ""
+"Хамгийн бага нөөцийн дүрмийг тодорхойлж болно. Ингэснээр OpenERP нь барааны "
+"нөөцөөс хамааруулан үйлдвэрлэх ноорог захиалга, худалдан авах ноорог "
+"захиалгыг автоматаар үүсгэдэг."
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -861,7 +872,7 @@ msgstr ""
 #. module: procurement
 #: view:res.company:0
 msgid "MRP & Logistics Scheduler"
-msgstr "Үйлдвэрлэл & Логистик"
+msgstr "Үйлдвэрлэл болон Логистикийн товлогч"
 
 #. module: procurement
 #: field:mrp.property,name:0
@@ -890,7 +901,7 @@ msgstr "агуулахаас: бараа хувиарлагдсан."
 #: model:ir.ui.menu,name:procurement.menu_stock_proc_schedulers
 #: view:procurement.order.compute.all:0
 msgid "Compute Schedulers"
-msgstr "Төлөвлөгчийг ачааллах"
+msgstr "Товлогчдийг Тооцоолуулах"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -906,6 +917,15 @@ msgid ""
 "others require manual intervention (those are identified by a specific error "
 "message)."
 msgstr ""
+"Татан авалтын захиалга нь тодорхой бараа, тодорхой хугацаанд, тодорхой "
+"байрлалд хэрэгтэй болохыг илэрхийлдэг. Борлуулалтын захиалга нь Татан "
+"авалтын захиалгын нэгэн түгээмэл эх үүсвэр байдаг (гэхдээ эдгээр нь ялгаатай "
+"баримтууд). Татан авалтын тохиргоонуудаас хамааран татан авалтын систем нь "
+"барааг агуулахаас татах, нийлүүлэгчээс худалдаж авах, үйлдвэрлэлийн захиалга "
+"үүсгэх зэрэгээр хангахыг эрмэлздэг. Систем яаж хангах аргаа олохгүй "
+"тохиолдолд Татан авалтын сондгойрол үүсдэг. Зарим сондгойрол нь өөрөө аяндаа "
+"шийдэгддэг, гэхдээ зарим нь гараар шийдвэрлэхийг шаарддаг (эдгээр нь тусгай "
+"алдааны мэдэгдлээр танигддаг)"
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
@@ -915,7 +935,7 @@ msgstr "Барааны х.н"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Search Procurement"
-msgstr "Нөхөн дүүргэлт хайх"
+msgstr "Татан авалт хайх"
 
 #. module: procurement
 #: help:res.company,schedule_range:0
@@ -924,6 +944,9 @@ msgid ""
 "procurements. All procurements that are not between today and today+range "
 "are skipped for future computation."
 msgstr ""
+"Энэ нь товлогч татан авалтыг тооцоолоход хамарсан хугацааны хүрээ. Өнөөдөр "
+"болон өнөөдөр+хамрах хүрээний гадна байгаа татан авалтууд нь ирээдүйд "
+"тооцоологдохоор алгасагдсан болно."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -938,10 +961,10 @@ msgstr "Автоматаар үлдэгдэл нөхөх"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Details"
-msgstr "Нөхөн дүүргэлтийн дэлгэрэнгүй"
+msgstr "Татан авалтын дэлгэрэнгүй"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:152
 #, python-format
 msgid "SCHEDULER"
-msgstr "ТӨЛӨВЛӨГЧ"
+msgstr "ТОВЛОГЧ"

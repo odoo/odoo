@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-03 05:12+0000\n"
-"X-Generator: Launchpad (build 15342)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:46+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -308,8 +308,8 @@ msgid ""
 "operations to fullfil the need: purchase order proposition, manufacturing "
 "order, etc."
 msgstr ""
-"調達オーダーは特定の場所で特定の製品のためのニーズを記録するために使われます。調達オーダーは通常、仕入オーダー、プル型物流ルールまたは最小在庫ルールから自"
-"動的に作成されます。調達オーダーが確認された時、ニーズを埋めるために必要な操作を自動的に作成します：仕入オーダーの提案、製造オーダーなど。"
+"調達オーダーは特定の場所で特定の製品のためのニーズを記録するために使われます。調達オーダーは通常、受注オーダー、プル型物流ルールまたは最小在庫ルールから自"
+"動的に作成されます。調達オーダーが確認された時、ニーズを埋めるために必要な操作を自動的に作成します：発注オーダーの提案、製造オーダーなど。"
 
 #. module: procurement
 #: field:make.procurement,date_planned:0
@@ -396,7 +396,7 @@ msgstr "例外"
 #. module: procurement
 #: model:process.node,note:procurement.process_node_serviceonorder0
 msgid "Assignment from Production or Purchase Order."
-msgstr "生産または仕入オーダーから割り当てて下さい。"
+msgstr "製造または発注オーダーから割り当てます。"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property
@@ -495,9 +495,9 @@ msgid ""
 "background, you may have to wait for a few minutes until it has finished "
 "computing."
 msgstr ""
-"このウィザードはそれらの設定に基づき実行されるべき全ての調達、生産や仕入オーダーを実行することができます。デフォルトでは、スケジューラはOpenERPによ"
-"って毎夜自動的に起動されます。このメニューを使うと強制的に今起動することができます。ただ、それはバックグラウンドで実行されるので、計算が終わるまで数分待た"
-"されるかもしれません。"
+"このウィザードはそれらの設定に基づき実行されるべき全ての調達、製造や発注オーダーを実行することができます。デフォルトでは、スケジューラはOpenERPによ"
+"って毎夜自動的に起動されます。このメニューを使えば、強制的に今、起動することができます。ただ、それはバックグラウンドで実行されるので、計算が終わるまで数分"
+"待たされるかもしれません。"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -596,7 +596,7 @@ msgstr "調達名"
 #. module: procurement
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr "この製品に生産ロットを割り当てて下さい。"
+msgstr "この製品に製造ロットを割り当てる必要があります。"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -818,7 +818,7 @@ msgid ""
 "will generate a procurement request to increase the stock up to the maximum "
 "quantity."
 msgstr ""
-"最小在庫ルールを定義できます。それによってOpenERPは自動的に在庫レベルに応じて、ドラフトの製造オーダーまたは仕入見積を作成します。ひとたび、製品の実"
+"最小在庫ルールを定義できます。それによってOpenERPは自動的に在庫レベルに応じて、ドラフトの製造オーダーまたは発注見積を作成します。ひとたび、製品の実"
 "質上の在庫（全ての確認済オーダーと予約を在庫から差し引く）が最小在庫を下回ったなら、OpenERPは在庫を最大数量まで増加させるための調達要求を生成します"
 "。"
 
@@ -837,7 +837,7 @@ msgstr "調達方法は製品タイプに依存します。"
 msgid ""
 "This wizard will plan the procurement for this product. This procurement may "
 "generate task, production orders or purchase orders."
-msgstr "このウィザードはこの製品のための調達を計画します。この調達は生産オーダーまたは仕入オーダーのタスクを生成します。"
+msgstr "このウィザードはこの製品のための調達を計画します。この調達は製造オーダーまたは発注オーダーのタスクを生成します。"
 
 #. module: procurement
 #: view:res.company:0
@@ -887,10 +887,10 @@ msgid ""
 "others require manual intervention (those are identified by a specific error "
 "message)."
 msgstr ""
-"調達オーダーは与えられた時間と場所において製品の確かなすうりょおうのためのニーズを表しています。販売オーダーは調達オーダーのひとつの典型的な元（しかし、こ"
-"れらは別個のドキュメントです）となっています。調達パラメータ、製品の設定に依存して、調達エンジンは在庫から製品を予約する、仕入先に製品をオーダーする、製造"
-"オーダーを出すなどによりニーズを満たそうとします。システムが調達を満たす方法を見つけることができない場合、調達の例外が発生します。幾つかの例外は自動的に自"
-"分自身で解決します。しかし、他は手動による介入を要求します（それらは特定のエラーメッセージにより識別されます）。"
+"調達オーダーは与えられた時間と場所において製品の確かな数量のためのニーズを表しています。受注オーダーは調達オーダーのひとつの典型的な元（しかし、これらは別"
+"個のドキュメントです）となっています。調達パラメータ、製品の設定に依存して、調達エンジンは在庫から製品を予約する、仕入先に製品をオーダーする、製造オーダー"
+"を出すなどによりニーズを満たそうとします。システムが調達を満たす方法を見つけることができない場合、調達の例外が発生します。幾つかの例外は自動的に自分自身で"
+"解決します。しかし、他は手動による介入を要求します（それらは特定のエラーメッセージにより識別されます）。"
 
 #. module: procurement
 #: field:procurement.order,product_uom:0

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-07 05:34+0000\n"
-"X-Generator: Launchpad (build 15558)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:12+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: base
 #: view:ir.filters:0
@@ -628,7 +628,7 @@ msgstr "Albanien / Shqip"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr "Opportunities"
+msgstr "Affärsmöjligheter"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -1197,8 +1197,8 @@ msgid ""
 "Access all the fields related to the current object using expressions, i.e. "
 "object.partner_id.name "
 msgstr ""
-"represenrerar ett blanksteg. Skriver in ett blanksteg i motsvarande position "
-"i översättningen "
+"Tillgång till alla fält relaterade till aktuellt objekt via uttryck, "
+"exempelvis object.partner_id.name "
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -1338,7 +1338,7 @@ msgstr "7.  %H:%M:%S      ==> 18:25:20"
 #: view:res.partner.category:0
 #: field:res.partner.category,partner_ids:0
 msgid "Partners"
-msgstr "Partners"
+msgstr "Företag"
 
 #. module: base
 #: field:res.partner.category,parent_left:0
@@ -1560,7 +1560,7 @@ msgstr "Bahamas"
 #, python-format
 msgid ""
 "Couldn't generate the next id because some partners have an alphabetic id !"
-msgstr "Kan inte skapa nästa id eftersom partnern har ett alfanumeriskt id."
+msgstr "Kan inte skapa nästa id eftersom företaget har ett alfanumeriskt id."
 
 #. module: base
 #: view:ir.attachment:0
@@ -1993,9 +1993,9 @@ msgid ""
 "partner records. You can create or delete countries to make sure the ones "
 "you are working on will be maintained."
 msgstr ""
-"Visa och hantera listan av alla länder som kan bli tilldelade dina partners "
-"uppgifter. Du kan skapa eller ta bort länder så att du är säker på att de "
-"som du jobbar på kommer att underhållas."
+"Visa och hantera listan av alla länder som kan bli tilldelade dina "
+"företagsuppgifter. Du kan skapa eller ta bort länder så att du är säker på "
+"att de som du jobbar på kommer att underhållas."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
@@ -2152,7 +2152,7 @@ msgstr "Kalender"
 #. module: base
 #: field:res.partner.address,partner_id:0
 msgid "Partner Name"
-msgstr "Partnernamn"
+msgstr "Företagsnamn"
 
 #. module: base
 #: field:workflow.activity,signal_send:0
@@ -2500,9 +2500,9 @@ msgid ""
 "loading a new language it becomes available as default interface language "
 "for users and partners."
 msgstr ""
-"Den har wizarden hjälper dig med att lägga till ett nytt språk i ditt "
-"OpenERP system. Efter att språket laddats in blir det tillgängligt för "
-"användare och partners."
+"Den har guiden hjälper dig med att lägga till ett nytt språk i ditt OpenERP-"
+"system. Efter att språket laddats in blir det tillgängligt för användare och "
+"företag."
 
 #. module: base
 #: view:ir.model:0
@@ -2515,7 +2515,7 @@ msgid ""
 "Value Added Tax number. Check the box if the partner is subjected to the "
 "VAT. Used by the VAT legal statement."
 msgstr ""
-"Momsnummer. Markera denna om partnern skall ha moms. Används av "
+"Momsnummer. Markera denna om företaget skall debiteras moms. Används av "
 "momsrapporten."
 
 #. module: base
@@ -2754,7 +2754,7 @@ msgstr "Åtgärdsbeskriivning"
 #. module: base
 #: help:res.partner,customer:0
 msgid "Check this box if the partner is a customer."
-msgstr "Markera denna om partnern är en kund."
+msgstr "Markera denna om företaget är en kund."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_lang_act_window
@@ -2806,8 +2806,8 @@ msgid ""
 "If the selected language is loaded in the system, all documents related to "
 "this partner will be printed in this language. If not, it will be english."
 msgstr ""
-"Om det valda språket has installerats i systemet skriva alla dokumnet "
-"relaterade till partnern i detta språk. Annars används engelska."
+"Om det valda språket has installerats i systemet används detta språk för "
+"alla dokument till företaget. Annars används engelska."
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -3587,13 +3587,13 @@ msgid ""
 "The internal user that is in charge of communicating with this partner if "
 "any."
 msgstr ""
-"Den interna användare som hanterar kommunikationen med denna partner, om "
+"Den interna användare som hanterar kommunikationen med detta företag, om "
 "sådan finns."
 
 #. module: base
 #: field:res.partner,parent_id:0
 msgid "Parent Partner"
-msgstr "Överliggande partner"
+msgstr "Överliggande företag"
 
 #. module: base
 #: view:ir.module.module:0
@@ -3723,7 +3723,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Starter Partner"
-msgstr ""
+msgstr "Startföretag"
 
 #. module: base
 #: help:ir.model.fields,relation_field:0
@@ -4295,7 +4295,7 @@ msgstr "Botswana"
 #: model:ir.ui.menu,name:base.menu_partner_title_partner
 #: view:res.partner.title:0
 msgid "Partner Titles"
-msgstr "Partnertitlar"
+msgstr "Företagstitlar"
 
 #. module: base
 #: help:ir.actions.act_window,auto_refresh:0
@@ -4305,7 +4305,7 @@ msgstr "Lägg till autouppdatering till vyn."
 #. module: base
 #: help:res.partner,employee:0
 msgid "Check this box if the partner is an Employee."
-msgstr "Markera denna om partnern är en anställd."
+msgstr "Markera denna om företaget också är en anställd."
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
@@ -6484,8 +6484,8 @@ msgid ""
 "Manage the partner titles you want to have available in your system. The "
 "partner titles is the legal status of the company: Private Limited, SA, etc."
 msgstr ""
-"Hantera titlarna på systemets partner, som avspeglar deras legala status: "
-"AB, kommun, stiftelse etc."
+"Hantera systemets företagsformer, som avspeglar deras legala status: AB, "
+"kommun, stiftelse etc."
 
 #. module: base
 #: view:base.language.export:0
@@ -6914,7 +6914,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "OpenERP Partners"
-msgstr "OpenERP Partners"
+msgstr "OpenERP-partner"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_hr_manager
@@ -7416,7 +7416,7 @@ msgstr "Guldpartner"
 #: selection:res.partner.title,domain:0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
-msgstr "Partner"
+msgstr "Företag"
 
 #. module: base
 #: model:res.country,name:base.tr
@@ -7617,7 +7617,7 @@ msgstr "Villkor"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_other_form
 msgid "Other Partners"
-msgstr "Övriga partners"
+msgstr "Övriga företag"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_form
@@ -7846,7 +7846,7 @@ msgstr "Ej installerabar"
 #. module: base
 #: view:res.partner.category:0
 msgid "Partner Category"
-msgstr "Partnerkategori"
+msgstr "Företagskategori"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -7904,7 +7904,7 @@ msgstr ""
 #: field:res.partner,child_ids:0
 #: field:res.request,ref_partner_id:0
 msgid "Partner Ref."
-msgstr "Partnerref."
+msgstr "Företagsreferense"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -8557,7 +8557,7 @@ msgstr "Källa"
 #: help:res.partner.address,partner_id:0
 msgid "Keep empty for a private address, not related to partner."
 msgstr ""
-"Lämna blank om det är en privat adress som inte ska kopplas till en partner."
+"Lämna blank om det är en privatadress som inte ska kopplas till ett företag."
 
 #. module: base
 #: model:res.country,name:base.vu
@@ -8630,8 +8630,8 @@ msgid ""
 "Check this box if the partner is a supplier. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
 msgstr ""
-"Markera den här rutan om partnern är en leverantör. Om den inte är markerar "
-"så kommer partnern inte visas när man väljer leverantör på en inköpsorder."
+"Markera den här rutan om företaget är en leverantör. Om den inte är markerar "
+"så kommer företaget inte visas när man väljer leverantör på en inköpsorder."
 
 #. module: base
 #: field:ir.actions.server,trigger_obj_id:0
@@ -8757,7 +8757,7 @@ msgstr "Thailand"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr "Leads & Opportunities"
+msgstr "Kundämnen och affärsmöjligheter"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9034,6 +9034,10 @@ msgid ""
 "categories have a hierarchy structure: a partner belonging to a category "
 "also belong to his parent category."
 msgstr ""
+"Hantera företagskategorier för att bättre klassificera dem för spårning och "
+"analyssyften. Ett företag kan tillhöra flera kategorier och kategorier har "
+"en hierarkisk struktur: en företag som tillhör en kategori hör också till "
+"överordnade kategorin."
 
 #. module: base
 #: model:res.country,name:base.az
@@ -9081,6 +9085,10 @@ msgid ""
 "uncheck the 'Suppliers' filter button in order to search in all your "
 "partners, including customers and prospects."
 msgstr ""
+"Du kan komma åt all information om dina leverantörer från "
+"leverantörsformuläret: redovisningsdata, historik av e-post, möten, inköp "
+"etc. Du kan avmarkera  leverantörsfilterknappen för att söka i alla dina "
+"företag, däribland kunder och kundämnen."
 
 #. module: base
 #: model:res.country,name:base.rw
@@ -9334,7 +9342,7 @@ msgstr "Mobilnr"
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 #: view:res.partner.category:0
 msgid "Partner Categories"
-msgstr "Partnerkategorier"
+msgstr "Företagskategorier"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -9450,7 +9458,7 @@ msgstr "Arbetsflödeinstanser"
 #: code:addons/base/res/res_partner.py:284
 #, python-format
 msgid "Partners: "
-msgstr "Partners "
+msgstr "Företag: "
 
 #. module: base
 #: model:res.country,name:base.kp

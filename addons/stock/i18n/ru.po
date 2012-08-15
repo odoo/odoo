@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:19+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:56+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -2727,6 +2727,8 @@ msgid ""
 "filter all resources of the day for the 'From' date and 23:59:59 for the "
 "'To' date)"
 msgstr ""
+"(оставьте пустым для открытия текущей ситуации. Установите HH:MM:SS на "
+"00:00:00 для фильтрации всех ресурсов дня с"
 
 #. module: stock
 #: view:product.category:0
@@ -3208,6 +3210,16 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
+"Определяет, является ли это место хранения связанным с другим местом, то "
+"есть любые поступающие в это место товары\n"
+"в дальнейшем должны перемещаться в связанное место хранения. Имеются "
+"следующие типы связанных мест хранения:\n"
+"* Нет: связанные места хранения отсутствуют\n"
+"* Заказчик: связанное место хранения должно быть выбрано из поля \"Место "
+"хранения заказчика\" на форме партнера, который указан в списке получателей "
+"товара.\n"
+"* Определенное место хранения: Связанное место хранения, полученное из поля: "
+"\"Связанное место хранения, если определено\" этой же формы."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:43

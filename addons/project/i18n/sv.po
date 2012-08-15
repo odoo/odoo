@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-26 05:40+0000\n"
-"X-Generator: Launchpad (build 15482)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:49+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -51,7 +51,7 @@ msgstr "Detta bolag är inte tillåtet för den här användaren"
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
-msgstr "Ange kvarvarande timmar som krävs för att avsluta uppgiften"
+msgstr "Ange kvarvarande timmar som krävs för att avsluta aktiviteten"
 
 #. module: project
 #: view:project.task:0
@@ -121,7 +121,7 @@ msgstr "Fel! projektets startdatum måste föregå projekets slutdatum."
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluation Task"
-msgstr "Omvärdering av uppgift"
+msgstr "Omvärdering av aktiviteten"
 
 #. module: project
 #: field:project.project,members:0
@@ -155,7 +155,7 @@ msgid ""
 "the customer when a task is closed."
 msgstr ""
 "Huvud som läggs till i början av det epost-meddelande som skickas till "
-"kunden när en aktivtet är avslutad."
+"uppdragsgivaren när en aktivtet är avslutad."
 
 #. module: project
 #: view:project.task:0 view:project.task.history.cumulative:0
@@ -297,12 +297,12 @@ msgstr ""
 #. module: project
 #: field:project.task,name:0 field:report.project.task.user,name:0
 msgid "Task Summary"
-msgstr "Uppgiftssammanfattning"
+msgstr "Aktivitetssammanfattning"
 
 #. module: project
 #: field:project.task,active:0
 msgid "Not a Template Task"
-msgstr "Inte en uppgiftsmall"
+msgstr "Inte en aktivitetsmall"
 
 #. module: project
 #: view:project.task:0 view:res.partner:0
@@ -400,7 +400,7 @@ msgid ""
 "propose a message to send by email to the customer."
 msgstr ""
 "Om du kryssar i denna kommer användaren att för möjlighet att skicka ett "
-"epostmeddelande till kunden när en aktivitet avslutas."
+"epostmeddelande till uppdragsgivaren när en aktivitet avslutas."
 
 #. module: project
 #: model:ir.model,name:project.model_res_users
@@ -449,7 +449,7 @@ msgstr "Planering"
 #: view:project.task:0 field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
-msgstr "Slutdatum"
+msgstr "Tidsfrist"
 
 #. module: project
 #: view:project.task.delegate:0 view:project.task.reevaluate:0
@@ -558,7 +558,7 @@ msgid ""
 "project, it will be hidden unless specifically asked."
 msgstr ""
 "Detta fält beräknas automatiskt och har samma beteende som \"aktiva\" "
-"fältet: om uppgiften är kopplad till en mall eller inaktiverat projektet "
+"fältet: om aktiviteten är kopplad till en mall eller inaktiverat projektet "
 "kommer det att döljas om den inte uttryckligen erterfrågas."
 
 #. module: project
@@ -726,9 +726,9 @@ msgid ""
 "order to track the progress in solving a task or an issue."
 msgstr ""
 "Definiera de etapper som kommer att användas i projektet från skapandet av "
-"aktiviteten fram till avslutandet av uppgiften eller ärendet. Du kommer att "
-"använda dessa etapper för att följa utvecklingen för att utföra en aktivitet "
-"eller ett ärende."
+"aktiviteten fram till avslutandet av aktiviteten, uppgiften eller ärendet. "
+"Du kommer att använda dessa etapper för att följa utvecklingen för att "
+"utföra en aktivitet eller ett ärende."
 
 #. module: project
 #: code:addons/project/project.py:903
@@ -867,7 +867,7 @@ msgstr "Överliggande"
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
-msgstr "Uppgiftsdelegering"
+msgstr "Aktivitetsdelegering"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_view_task
@@ -885,8 +885,8 @@ msgstr ""
 "användare arbetar i sin egen lista över aktiviteter där användaren själv kan "
 "rapportera nedlagd tid och framsteg. Han kan arbeta och stänga uppgiften "
 "själv eller delegera den till en annan användare. När en aktivitet "
-"delegeras, sätts aktiviteten i vänteläge och öppnas igen när resultatet av "
-"delegeringen är granskat och målet med aktiviteten uppnått.  Om du "
+"delegeras, försätts aktiviteten i vänteläge och öppnas igen när resultatet "
+"av delegeringen är granskat och målet med aktiviteten uppnått.  Om du "
 "installerar project_timesheet-modulen kan nedlagt arbete faktureras på "
 "grundval av projektet. Med project_mrp-modulen kan säljorder skapa uppgifter "
 "automatiskt när de bekräftas."
@@ -1086,7 +1086,7 @@ msgstr "Projektledare"
 #: selection:project.vs.hours,state:0 view:report.project.task.user:0
 #: selection:report.project.task.user,state:0 selection:task.by.days,state:0
 msgid "Pending"
-msgstr "Väntande"
+msgstr "Vilande"
 
 #. module: project
 #: view:project.task:0
@@ -1581,7 +1581,7 @@ msgstr "Mina delegerade aktiviteter"
 #. module: project
 #: view:project.project:0
 msgid "Task: %(name)s"
-msgstr "Uppgift: %(name)s"
+msgstr "Aktivitet: %(name)s"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
@@ -1640,7 +1640,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Customer"
-msgstr "Kund"
+msgstr "Uppdragsgivare"
 
 #. module: project
 #: view:project.project:0 view:project.task:0
@@ -1782,8 +1782,8 @@ msgid ""
 "Footer added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
 msgstr ""
-"For tillagd i slutet av det epostmeddelande som skickas till kunden när en "
-"aktivitet är avslutad."
+"Fot tillagd i slutet av det epostmeddelande som skickas till uppdragsgivaren "
+"när en aktivitet är avslutad."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all

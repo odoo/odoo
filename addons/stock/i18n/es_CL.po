@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:20+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:56+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -365,7 +365,7 @@ msgstr "Estado"
 #. module: stock
 #: view:stock.location:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "Información contable"
 
 #. module: stock
 #: field:stock.location,stock_real_value:0
@@ -415,7 +415,7 @@ msgstr "Albarán de salida"
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid ""
 "Create and manage your warehouses and assign them a location from here"
-msgstr "Crea y gestiona sus almacenes y les asigna una ubicación desde aquí"
+msgstr "Crea y gestiona sus bodegas y les asigna una ubicación desde aquí"
 
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
@@ -501,7 +501,7 @@ msgid ""
 "company warehouses"
 msgstr ""
 "Cantidad actual de productos con este número de lote de producción "
-"disponible en almacenes de la compañía."
+"disponible en bodegas de la compañía."
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
@@ -523,7 +523,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree6
 #: field:stock.picking,move_lines:0
 msgid "Internal Moves"
-msgstr "Guías de despacho internas"
+msgstr "Movimientos internos"
 
 #. module: stock
 #: field:stock.move,location_dest_id:0
@@ -940,7 +940,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
 msgid "Packing list"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -1027,7 +1027,7 @@ msgstr ""
 "almacén, agregando sus ubicaciones hijas. No puede contener los productos "
 "directamente.\n"
 "\n"
-"* Ubicación interna: Ubicación física dentro de su propios almacenes.\n"
+"* Ubicación interna: Ubicación física dentro de su propios bodegas.\n"
 "\n"
 "* Ubicación cliente: Ubicación virtual que representa la ubicación de "
 "destino para los productos enviados a sus clientes.\n"
@@ -1358,7 +1358,7 @@ msgstr "Dirección del cliente o proveedor."
 #. module: stock
 #: view:report.stock.move:0 field:report.stock.move,picking_id:0
 msgid "Packing"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1499,9 +1499,9 @@ msgid ""
 " When the picking is done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
-"Cuando un movimiento de almacén es creado queda en estado 'Borrador'.\n"
-" Luego, se establece en estado 'No Disponible' si el ... no ha encontrado "
-"los productos.\n"
+"Cuando un movimiento de stock es creado queda en estado 'Borrador'.\n"
+" Luego, se establece en estado 'No Disponible' si el planificador no ha "
+"encontrado los productos.\n"
 " Cuando los productos se han reservado es puesto en 'Disponible'.\n"
 " Cuando el retiro es realizado el estado es puesto en 'Realizado'.           "
 "   \n"
@@ -1686,7 +1686,7 @@ msgstr "Número lotes"
 #: model:ir.actions.act_window,name:stock.open_board_warehouse
 #: model:ir.ui.menu,name:stock.menu_board_warehouse
 msgid "Warehouse Dashboard"
-msgstr "Tablero almacén"
+msgstr "Tablero Inventario"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_shop0
@@ -2038,7 +2038,7 @@ msgstr "Cuenta entrada stock"
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
-msgstr "Gestión de almacenes"
+msgstr "Gestión de bodegas"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -2183,7 +2183,7 @@ msgstr "Lotes de seguimiento de entrada"
 #. module: stock
 #: view:board.board:0
 msgid "Warehouse board"
-msgstr "Tablero almacén"
+msgstr "Tablero Inventario"
 
 #. module: stock
 #: code:addons/stock/product.py:439
@@ -2354,8 +2354,8 @@ msgid ""
 "location to the Stock location. Each report can be performed on physical, "
 "partner or virtual locations."
 msgstr ""
-"Defina sus posiciones para reflejar su estructura de almacén y organización. "
-"OpenERP es capaz de manejar ubicaciones físicas (almacén, estante, caja, "
+"Defina sus posiciones para reflejar su estructura de bodegas y organización. "
+"OpenERP es capaz de manejar ubicaciones físicas (bodega, estante, caja, "
 "etc.), ubicaciones de entidades (clientes, proveedores) y ubicaciones "
 "virtuales que son el equivalente de las operaciones de stock como los "
 "consumos por órdenes de la fabricación, inventarios, etc. Cada operación de "
@@ -2701,7 +2701,7 @@ msgstr "¡Error, sin empresa!"
 #: code:addons/stock/wizard/stock_fill_inventory.py:47
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
-msgstr ""
+msgstr "No puedes realizar esta operación en más de un Inventario de Stock."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -2751,7 +2751,7 @@ msgstr "Referencia inventario"
 #: code:addons/stock/stock.py:1334
 #, python-format
 msgid "Internal picking"
-msgstr "Albarán interno"
+msgstr "Movimiento interno"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2778,7 +2778,7 @@ msgstr "Nombre de revisión"
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: field:product.product,warehouse_id:0 view:stock.warehouse:0
 msgid "Warehouse"
-msgstr "Almacén"
+msgstr "Inventario"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2854,7 +2854,7 @@ msgstr "Para hacer"
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 msgid "Warehouses"
-msgstr "Almacenes"
+msgstr "Bodegas"
 
 #. module: stock
 #: field:stock.journal,user_id:0
@@ -3020,7 +3020,7 @@ msgid ""
 "operations."
 msgstr ""
 "Los movimientos internos muestran todas las operaciones de inventario que se "
-"deben realizar en su almacén. Todas las operaciones pueden ser clasificadas "
+"deben realizar en su bodega. Todas las operaciones pueden ser clasificadas "
 "en stocks diarios, para que cada trabajador tenga su propia lista de "
 "operaciones a realizar en su propio diario. La mayor parte de operaciones "
 "son preparadas automáticamente por OpenERP según sus reglas de logística "
@@ -3177,7 +3177,7 @@ msgstr ""
 "Esta es la lista de todos los lotes de producción (números de serie) que "
 "registró. Cuando selecciona un lote, puede obtener la trazabilidad hacia "
 "arriba o hacia abajo de los productos que componen el lote. Por defecto, la "
-"lista es filtrada según los números de serie disponibles en su almacén, pero "
+"lista es filtrada según los números de serie disponibles en su bodega, pero "
 "puede desmarcar el botón 'Disponible' para obtener todos los lotes que "
 "produjo, recibió o entregó a sus clientes."
 
@@ -3244,7 +3244,7 @@ msgstr "Cancelado"
 #: view:stock.move:0 field:stock.partial.move,picking_id:0
 #: field:stock.partial.picking,picking_id:0
 msgid "Picking"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -3373,7 +3373,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
 msgid "Related Picking"
-msgstr "Albarán relacionado"
+msgstr "Guía de despacho"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -3584,7 +3584,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
 #, python-format
 msgid "Stock Inventory is already Validated."
-msgstr ""
+msgstr "El Inventario de Stock está ya Validado."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -3609,7 +3609,7 @@ msgstr "Fecha prevista máx."
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Picking"
-msgstr "Auto-Albarán"
+msgstr "Auto-Guía de despacho"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
@@ -3650,6 +3650,11 @@ msgid ""
 " When the picking it done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Cuando se crea un movimiento de stock está en estado 'Borrador'.\n"
+"Después se establece en estado 'Confirmado'.\n"
+"Si está reservado en stock se establece como 'Reservado'.\n"
+"Cuando la guía de despacho se envía el estado es 'Realizado'.\n"
+"El estado es 'En espera' si el movimiento está a la espera de otro."
 
 #. module: stock
 #: view:board.board:0
@@ -3789,7 +3794,7 @@ msgid ""
 "click on a location to get the list of the products and their stock level in "
 "this particular location and all its children."
 msgstr ""
-"Esto es la estructura de los almacenes y ubicaciones de su empresa. Puede "
+"Esto es la estructura de las bodegas y ubicaciones de su empresa. Puede "
 "pulsar sobre una ubicación para obtener la lista de los productos y su nivel "
 "de stock en esta ubicación específica y todos sus hijos."
 
@@ -3921,7 +3926,7 @@ msgstr "Dividir en lotes de producción"
 #: code:addons/stock/wizard/stock_move.py:213
 #, python-format
 msgid "Processing Error"
-msgstr ""
+msgstr "Error al procesar"
 
 #. module: stock
 #: view:report.stock.inventory:0

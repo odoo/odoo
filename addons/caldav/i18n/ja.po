@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-26 05:02+0000\n"
-"X-Generator: Launchpad (build 15149)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:29+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -35,7 +35,7 @@ msgstr "ファイル名"
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_export
 msgid "Event Export"
-msgstr ""
+msgstr "イベントのエクスポート"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
@@ -45,7 +45,7 @@ msgstr "遠隔カレンダーへの経路を指定して下さい。"
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_import_values
 msgid "Import .ics File"
-msgstr ".ics ファイルをインポートして下さい。"
+msgstr ".ics ファイルのインポート"
 
 #. module: caldav
 #: view:caldav.browse:0
@@ -73,6 +73,9 @@ msgid ""
 "to synchronize Meeting with Calendars client.You can access Calendars using "
 "CalDAV clients, like sunbird, Calendar Evaluation, Mobile."
 msgstr ""
+"カレンダーはOpenERPモデルの全てとともにカレンダーイベントとToDo属性のカスタマイズが可能です。カレンダーはiCalのインポート / "
+"エクスポートを提供します。WebDAVサーバはカレンダーへのリモートアクセスを提供します。カレンダークライアントとともにミーティングの同期を手伝います。S"
+"unbird、Calendar Evaluation、MobileのようにCalDAVクライアントを使ってカレンダーにアクセスできます。"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:789
@@ -95,7 +98,7 @@ msgstr "作業項目"
 #. module: caldav
 #: model:ir.model,name:caldav.model_user_preference
 msgid "User preference Form"
-msgstr ""
+msgstr "ユーザ参照票"
 
 #. module: caldav
 #: field:user.preference,service:0
@@ -122,17 +125,17 @@ msgstr "OK"
 #: code:addons/caldav/calendar.py:879
 #, python-format
 msgid "Please provide proper configuration of \"%s\" in Calendar Lines"
-msgstr ""
+msgstr "カレンダー行の \"%s\" を正しく設定して下さい。"
 
 #. module: caldav
 #: field:calendar.event.export,name:0
 msgid "File name"
-msgstr ""
+msgstr "ファイル名"
 
 #. module: caldav
 #: field:caldav.browse,url:0
 msgid "Caldav Server"
-msgstr ""
+msgstr "Caldav サーバ"
 
 #. module: caldav
 #: model:ir.module.module,shortdesc:caldav.module_meta_information
@@ -142,7 +145,7 @@ msgstr ""
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "iPhone"
-msgstr ""
+msgstr "i フォン"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:32
@@ -210,23 +213,23 @@ msgstr ""
 #: selection:basic.calendar.attributes,type:0
 #: selection:basic.calendar.lines,name:0
 msgid "TODO"
-msgstr ""
+msgstr "実行すべきこと"
 
 #. module: caldav
 #: view:calendar.event.export:0
 msgid "Export ICS"
-msgstr ""
+msgstr "ICS をエクスポートする"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Use the field"
-msgstr ""
+msgstr "この項目を使用"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:789
 #, python-format
 msgid "Can not create line \"%s\" more than once"
-msgstr ""
+msgstr "複数の \"%s\" 行を作ることはできません。"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -292,7 +295,7 @@ msgstr "タイプ"
 #. module: caldav
 #: help:calendar.event.export,name:0
 msgid "Save in .ics format"
-msgstr ""
+msgstr ".ics 形式で保存"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:1293
@@ -378,7 +381,7 @@ msgstr "作成日"
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Attributes Mapping"
-msgstr ""
+msgstr "特性のマッピング"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_document_directory
@@ -420,7 +423,7 @@ msgstr "カレンダー"
 msgid ""
 "Please install python-vobject from http://vobject.skyhouseconsulting.com/"
 msgstr ""
-"http://vobject.skyhouseconsulting.com/ からpython-vobjectをダウンロードして、インストールしてください"
+"http://vobject.skyhouseconsulting.com/ からpython-vobjectをダウンロードして、インストールして下さい。"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_import.py:63
@@ -466,7 +469,7 @@ msgstr "カレンダー収集"
 #: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
-msgstr ""
+msgstr "同じファイル名を2つのレコードに適用することはできません。"
 
 #. module: caldav
 #: sql_constraint:document.directory:0
@@ -489,7 +492,7 @@ msgstr "集合"
 #. module: caldav
 #: field:basic.calendar,write_date:0
 msgid "Write Date"
-msgstr "日付を入れて下さい。"
+msgstr "記入日"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:104
@@ -587,86 +590,86 @@ msgstr ""
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr ""
+msgstr "ディレクトリ名は固有でなければいけません。"
 
 #. module: caldav
 #: view:user.preference:0
 msgid "User Preference"
-msgstr ""
+msgstr "ユーザ参照"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
 #, python-format
 msgid "Please provide Proper URL !"
-msgstr ""
+msgstr "正しいURLを指定して下さい。"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_timezone
 msgid "basic.calendar.timezone"
-msgstr ""
+msgstr "basic.calendar.timezone"
 
 #. module: caldav
 #: field:basic.calendar.fields,expr:0
 msgid "Expression"
-msgstr ""
+msgstr "表現"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attendee
 msgid "basic.calendar.attendee"
-msgstr ""
+msgstr "basic.calendar.attendee"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_alias
 msgid "basic.calendar.alias"
-msgstr ""
+msgstr "basic.calendar.alias"
 
 #. module: caldav
 #: view:calendar.event.import:0
 #: field:calendar.event.import,file_path:0
 msgid "Select ICS file"
-msgstr ""
+msgstr "ICS ファイルを選んで下さい。"
 
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Other"
-msgstr ""
+msgstr "その他"
 
 #. module: caldav
 #: field:basic.calendar.lines,mapping_ids:0
 msgid "Fields Mapping"
-msgstr ""
+msgstr "項目マッピング"
 
 #. module: caldav
 #: view:caldav.browse:0
 msgid "Browse caldav"
-msgstr ""
+msgstr "caldav を表示する"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar
 msgid "basic.calendar"
-msgstr ""
+msgstr "basic.calendar"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Other Info"
-msgstr ""
+msgstr "他の情報"
 
 #. module: caldav
 #: field:user.preference,device:0
 msgid "Software/Devices"
-msgstr ""
+msgstr "ソフトウェア / デバイス"
 
 #. module: caldav
 #: help:basic.calendar,has_webcal:0
 msgid ""
 "Also export a <name>.ics entry next to the calendar folder, with WebCal "
 "content."
-msgstr ""
+msgstr "また、<name>.ics エントリーを隣のカレンダーフォルダにWebCalコンテンツとともにインポートします。"
 
 #. module: caldav
 #: field:basic.calendar.fields,fn:0
 msgid "Function"
-msgstr ""
+msgstr "機能"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -674,94 +677,94 @@ msgstr ""
 #: view:caldav.browse:0
 #: field:caldav.browse,description:0
 msgid "Description"
-msgstr ""
+msgstr "詳細"
 
 #. module: caldav
 #: help:basic.calendar.alias,cal_line_id:0
 msgid "The calendar/line this mapping applies to"
-msgstr ""
+msgstr "このマッピングのカレンダー / 行の適用先"
 
 #. module: caldav
 #: field:basic.calendar.fields,mapping:0
 msgid "Mapping"
-msgstr ""
+msgstr "マッピング"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_import.py:86
 #, python-format
 msgid "Import Sucessful"
-msgstr ""
+msgstr "正しくインポートしました。"
 
 #. module: caldav
 #: view:calendar.event.import:0
 msgid "_Import"
-msgstr ""
+msgstr "インポート( _I )"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "エラー"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_import
 msgid "Event Import"
-msgstr ""
+msgstr "イベントのインポート"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Interval in hours"
-msgstr ""
+msgstr "時間間隔"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "Subscribe to Remote Calendar"
-msgstr ""
+msgstr "遠隔カレンダを継読する。"
 
 #. module: caldav
 #: help:basic.calendar,calendar_color:0
 msgid "For supporting clients, the color of the calendar entries"
-msgstr ""
+msgstr "サポートするクライアントのカレンダーエントリーの色"
 
 #. module: caldav
 #: field:basic.calendar,name:0
 #: field:basic.calendar.attributes,name:0
 #: field:basic.calendar.fields,name:0
 msgid "Name"
-msgstr ""
+msgstr "氏名"
 
 #. module: caldav
 #: selection:basic.calendar.attributes,type:0
 #: selection:basic.calendar.lines,name:0
 msgid "Alarm"
-msgstr ""
+msgstr "警報"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_alarm
 msgid "basic.calendar.alarm"
-msgstr ""
+msgstr "basic.calendar.alarm"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:1293
 #, python-format
 msgid "Attendee must have an Email Id"
-msgstr ""
+msgstr "出席者はEメールIDを持っていなければいけません。"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_export_values
 msgid "Export .ics File"
-msgstr ""
+msgstr ".ics ファイルをエクスポートする。"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:41
 #, python-format
 msgid "vobject Import Error!"
-msgstr ""
+msgstr "vobject のインポートエラー"
 
 #. module: caldav
 #: field:calendar.event.export,file_path:0
 msgid "Save ICS file"
-msgstr ""
+msgstr "ICS ファイルを保存する"
 
 #. module: caldav
 #: selection:user.preference,device:0
@@ -771,17 +774,17 @@ msgstr ""
 #. module: caldav
 #: field:basic.calendar,calendar_order:0
 msgid "Order"
-msgstr ""
+msgstr "順序"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Datetime In UTC"
-msgstr ""
+msgstr "協定世界時の日付と時間"
 
 #. module: caldav
 #: field:basic.calendar,calendar_color:0
 msgid "Color"
-msgstr ""
+msgstr "色"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -791,30 +794,30 @@ msgstr ""
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_fields
 msgid "Calendar fields"
-msgstr ""
+msgstr "カレンダー項目"
 
 #. module: caldav
 #: view:calendar.event.import:0
 msgid "Import Message"
-msgstr ""
+msgstr "インポートメッセージ"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_subscribe
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_subscribe_values
 msgid "Subscribe"
-msgstr ""
+msgstr "継読する"
 
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "Directory must have a parent or a storage"
-msgstr ""
+msgstr "ディレクトリは親あるいはストレージを持っていなければいけません。"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_todo
 msgid "basic.calendar.todo"
-msgstr ""
+msgstr "basic.calendar.todo"
 
 #. module: caldav
 #: help:basic.calendar,calendar_order:0
 msgid "For supporting clients, the order of this folder among the calendars"
-msgstr ""
+msgstr "サポートするクライアントのカレンダー中のフォルダ並び順"

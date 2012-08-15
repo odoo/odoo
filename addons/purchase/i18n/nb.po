@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:12+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-07-24 05:52+0000\n"
+"X-Generator: Launchpad (build 15668)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -52,7 +52,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Dato for når dokumentet ble laget"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -116,7 +116,7 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_line_invoice.py:145
 #, python-format
 msgid "Supplier Invoices"
-msgstr "Leverandørfaktura"
+msgstr "Leverandørfakturaer"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
@@ -156,7 +156,7 @@ msgstr "Firma"
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
-msgstr ""
+msgstr "Månedlig kjøp pr. kategori"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -192,11 +192,13 @@ msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
+"Denne prislisten vil bli brukt, i stedet for default, for innkjøp fra denne "
+"leverandøren"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Fax :"
-msgstr "Faks:"
+msgstr "Fax"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -243,7 +245,7 @@ msgstr "Opprinnelse"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referanse måleenhet"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -263,6 +265,8 @@ msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Du må velge en prisliste eller en leverandør fra fakturaformatet!\n"
+"Vennligst velg en før du velger prosukt."
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -350,7 +354,7 @@ msgstr "Forendelsesunntak"
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Fakturalinjer"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
@@ -366,7 +370,7 @@ msgstr "Utgående produkter"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Manually Corrected"
-msgstr "Endret manuellt"
+msgstr "Endret manuelt"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -451,7 +455,7 @@ msgstr "Ordrelinje"
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr ""
+msgstr "det indikerer at en plukking har blitt utført"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:772
@@ -468,7 +472,7 @@ msgstr "Bekreftet"
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,price_average:0
 msgid "Average Price"
-msgstr "Gjennomsnittlig pris"
+msgstr "Gjennomsnittspris"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -490,7 +494,7 @@ msgstr "Fakturakontroll"
 #. module: purchase
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Feil ! Du kan ikke lage rekursive firmaer."
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
@@ -500,7 +504,7 @@ msgstr "Leverandør referanse"
 #. module: purchase
 #: help:purchase.order,amount_tax:0
 msgid "The tax amount"
-msgstr ""
+msgstr "Avgiftsbeløp"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -580,7 +584,7 @@ msgstr "Prislister"
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
-msgstr ""
+msgstr "Adresse Kontakt Navn"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
@@ -638,7 +642,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:769
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "Den valgte leverandøren selger dette produktet bare som %s"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -701,7 +705,7 @@ msgstr "Totalsum"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
 msgid "Receptions"
-msgstr ""
+msgstr "Mottak"
 
 #. module: purchase
 #: field:purchase.order,validator:0 view:purchase.report:0
@@ -750,7 +754,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Avventer godkjenning"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -773,7 +777,7 @@ msgstr "Ordredato"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Incoming products to control"
-msgstr ""
+msgstr "Inngående varer til kontroll"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
@@ -830,7 +834,7 @@ msgstr "Måleenhet kategorier"
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr ""
+msgstr "Dager til levering"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -841,7 +845,7 @@ msgstr "Motta produkter"
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr "Anskaffelse"
+msgstr "Innkjøp"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,invoice_ids:0
@@ -856,12 +860,12 @@ msgstr "Bekreftede innkjøpsordre å fakturere"
 #. module: purchase
 #: field:purchase.config.wizard,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Bilde"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Total Orders Lines by User per month"
-msgstr ""
+msgstr "Total ant. ordrelinjer pr bruker pr måned"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,month:0
@@ -871,7 +875,7 @@ msgstr "Måned"
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
-msgstr ""
+msgstr "Avventer leverandørgodkj."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -896,7 +900,7 @@ msgstr "Mottatt"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "List of ordered products."
-msgstr ""
+msgstr "Liste over bestilte produkter"
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
@@ -914,7 +918,7 @@ msgstr "Innkjøp"
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "For gjennomgang av regnskap."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
@@ -1006,17 +1010,17 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Ikke avgiftsberegnet beløp"
+msgstr "Ikke avg.ber. beløp"
 
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr ""
+msgstr "Det indikerer at en faktura har blitt betalt"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Outgoing products to invoice"
-msgstr ""
+msgstr "Utgående produkter til fakturering"
 
 #. module: purchase
 #: view:purchase.installer:0
@@ -1032,12 +1036,12 @@ msgstr "Ant. pr. produkt"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Du forsøker å angi en lot som ikke tilhører samme produkt"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Dato for når dokumentet er opprettet"
 
 #. module: purchase
 #: view:res.partner:0
@@ -1057,7 +1061,7 @@ msgstr "Innkjøpsordre"
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Manual Invoices"
-msgstr ""
+msgstr "Manuelle fakturaer"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:318
@@ -1074,7 +1078,7 @@ msgstr "November"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Extended Filters..."
-msgstr "Utvidede filter..."
+msgstr "Utvidede filtre ..."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:359
@@ -1100,7 +1104,7 @@ msgstr ""
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Pick list generated"
-msgstr ""
+msgstr "Plukkliste er dannet"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1158,7 +1162,7 @@ msgstr "Annuller innkjøpsordre"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Du må velge en produksjonslot/batch for dette produktet"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -1168,12 +1172,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Konsoll"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,price_standard:0
 msgid "Products Value"
-msgstr ""
+msgstr "Produktverdi"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
@@ -1199,7 +1203,7 @@ msgstr "historikk"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produktkategorier"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,delay:0
@@ -1236,7 +1240,7 @@ msgstr "Tilbudsforespørsel"
 #. module: purchase
 #: help:purchase.order,date_approve:0
 msgid "Date on which purchase order has been approved"
-msgstr ""
+msgstr "Dato for godkjenning av innkjøpsordre"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
@@ -1246,7 +1250,7 @@ msgstr "Venter"
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
-msgstr ""
+msgstr "Deafult innkjøpsprisliste verjson"
 
 #. module: purchase
 #: view:purchase.installer:0
@@ -1263,12 +1267,12 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Regnskapsstatus"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr "Tilbud N°"
+msgstr "Tilbudsforespørsels nr."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
@@ -1297,7 +1301,7 @@ msgstr "Innkjøpsordrelinjer"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
 msgid "The supplier approves the Purchase Order."
-msgstr ""
+msgstr "Leverandør godkjenner innkjøpsordren."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:80
@@ -1312,7 +1316,7 @@ msgstr "Innkjøpsordre"
 #. module: purchase
 #: field:purchase.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Kildedokument"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1322,17 +1326,17 @@ msgstr "Slå sammen ordre"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
 msgid "Purchase Order Line Make Invoice"
-msgstr ""
+msgstr "Innkjøpsordrelinjer danner faktura"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Innkommende forsendelser"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
 msgid "Total Orders by User per month"
-msgstr ""
+msgstr "Totalt antall ordre pr bruker pr månded"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
@@ -1359,7 +1363,7 @@ msgstr "Vår ordrereferanse"
 #. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0
 msgid "Search Purchase Order"
-msgstr ""
+msgstr "Søk innkjøpsordre"
 
 #. module: purchase
 #: field:purchase.order,warehouse_id:0 view:purchase.report:0
@@ -1371,12 +1375,12 @@ msgstr "Lager"
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
 msgid "Request for Quotations."
-msgstr ""
+msgstr "Innkjøpsforespørsel"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
-msgstr ""
+msgstr "Foresp. dato"
 
 #. module: purchase
 #: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
@@ -1426,7 +1430,7 @@ msgstr "Beskrivelse"
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr ""
+msgstr "Dette er lede/sikkerhetstid for hver og en innkjøpsordre"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1437,12 +1441,12 @@ msgstr "Forventet leveringsadresse:"
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
 #: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
 msgid "Receptions Analysis"
-msgstr ""
+msgstr "Analyse av varemottak"
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr ""
+msgstr "Beløpet uten avgift"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_supplier_address_form
@@ -1460,7 +1464,7 @@ msgstr "Leveranse"
 #. module: purchase
 #: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr ""
+msgstr "Tilbudsforespørsler"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
@@ -1486,7 +1490,7 @@ msgstr "Reservasjon"
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
 #: view:purchase.report:0
 msgid "Total Qty and Amount by month"
-msgstr ""
+msgstr "Totalkvantum og beløp pr. måned"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:409
@@ -1515,7 +1519,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr ""
+msgstr "Innkjøpsanalyse"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1590,7 +1594,7 @@ msgstr "År"
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "Innkjøp-standard pris"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
@@ -1611,7 +1615,7 @@ msgstr "Godkjenn"
 #. module: purchase
 #: view:purchase.order:0
 msgid "To Approve"
-msgstr "Å godkjenne"
+msgstr "Til Godkjenning"
 
 #. module: purchase
 #: view:purchase.order.line:0
