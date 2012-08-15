@@ -149,11 +149,9 @@ class res_company(osv.osv):
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
-
         if context is None:
             context = {}
-        user_preference = context.get('user_preference', False)
-        if user_preference:
+        if context.get('user_preference'):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
