@@ -11,7 +11,6 @@
         <record model="ir.ui.view" id="view_group_kanban">
             <field name="name">mail.group.kanban</field>
             <field name="model">mail.group</field>
-            <field name="type">kanban</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
@@ -55,7 +54,6 @@
         <record  model="ir.ui.view" id="view_group_form">
             <field name="name">mail.group.form</field>
             <field name="model">mail.group</field>
-            <field name="type">form</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Group Form" version="7.0">
@@ -66,6 +64,11 @@
                                 <label for="name" string="Group Name"/> 
                             </div> 
                             <h1><field name="name"/></h1>
+                            <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_id" invisible="1" required="0"/>
+                                    <label for="alias_name" class="oe_edit_only"/>
+                                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                            </div>
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </div>
                         <div class="oe_clear"/>
@@ -96,7 +99,6 @@
         <record  model="ir.ui.view" id="view_group_tree">
             <field name="name">mail.group.tree</field>
             <field name="model">mail.group</field>
-            <field name="type">tree</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Groups">
@@ -110,7 +112,6 @@
         <record  model="ir.ui.view" id="view_group_search">
             <field name="name">mail.group.search</field>
             <field name="model">mail.group</field>
-            <field name="type">search</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <search string="Search Groups">

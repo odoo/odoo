@@ -12,7 +12,7 @@ openerp.auth_signup = function(instance) {
                     return false;
                 }
 
-                var cnx = instance.connection;
+                var cnx = instance.session;
                 if (cnx.session_is_valid()) {
                     self._signup();
                 } else {
@@ -83,7 +83,7 @@ openerp.auth_signup = function(instance) {
                         type: 'ir.actions.client',
                         tag: 'login',
                         params: {
-                            db: instance.connection.db,
+                            db: instance.session.db,
                             login: email,
                             password: password,
                             login_successful: function() {

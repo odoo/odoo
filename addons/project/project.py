@@ -267,6 +267,7 @@ class project(osv.osv):
         'type_ids': _get_type_common,
         'alias_model': 'project.task',
         'privacy_visibility': 'public',
+        'alias_domain': False, # always hide alias during creation
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -337,11 +338,11 @@ class project(osv.osv):
         context['active_test'] = False
         default['state'] = 'open'
         default['tasks'] = []
-        default['alias_id'] = False
+        default.pop('alias_name', None)
+        default.pop('alias_id', None)
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default['name'] = proj.name + _(' (copy)')
-        default['alias_name'] = default['name']
         res = super(project, self).copy(cr, uid, id, default, context)
         self.map_tasks(cr,uid,id,res,context)
         return res
@@ -524,11 +525,13 @@ def Project():
         context = dict(context, project_creation_in_progress=True)
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            name = vals.pop('alias_name', None) or vals['name']
-            alias_id = mail_alias.create_unique_alias(cr, uid,
-                    {'alias_name': "project_"+short_name(name)},
-                    model_name=vals.get('alias_model', 'project.task'),
-                    context=context)
+            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_id = mail_alias.create_unique_alias(cr, uid, 
+                          # Using '+' allows using subaddressing for those who don't
+                          # have a catchall domain setup.
+                          {'alias_name': "project+"+short_name(vals['name'])},
+                          model_name=vals.get('alias_model', 'project.task'),
+                          context=context)
             vals['alias_id'] = alias_id
         project_id = super(project, self).create(cr, uid, vals, context)
         mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)
@@ -791,7 +794,7 @@ class task(base_stage, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'id': fields.integer('ID', readonly=True),
         'color': fields.integer('Color Index'),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }
 
     _defaults = {

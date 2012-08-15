@@ -228,7 +228,7 @@ class hr_applicant(base_stage, osv.Model):
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
         'emp_id': fields.many2one('hr.employee', 'employee'),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }
 
     _defaults = {
@@ -515,37 +515,55 @@ class hr_job(osv.osv):
                                          "create new applicants for this job position."),
     }
 
-    def init(self, cr):
-        # Installation hook to create aliases for all jobs, right after _auto_init
+    _defaults = {
+        'alias_domain': False, # always hide alias during creation
+    }
+
+    def _auto_init(self, cr, context=None):
+        """Installation hook to create aliases for all jobs and avoid constraint errors."""
+        
+        # disable the unique alias_id not null constraint, to avoid spurious warning during 
+        # super.auto_init. We'll reinstall it afterwards.
+        self._columns['alias_id'].required = False
+
+        super(hr_job,self)._auto_init(cr, context=context)
+        
         registry = RegistryManager.get(cr.dbname)
         mail_alias = registry.get('mail.alias')
-        hr_job = registry.get('hr.job')
-        jobs_no_alias = hr_job.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
+        hr_jobs = registry.get('hr.job')
+        jobs_no_alias = hr_jobs.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
         # Use read() not browse(), to avoid prefetching uninitialized inherited fields
-        for job_data in hr_job.read(cr, SUPERUSER_ID, jobs_no_alias, ['name']):
-            alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, {'alias_name': 'job_'+job_data['name'],
-                                                                         'alias_force_id': job_data['id']},
-                                                      model_name=self._name)
-            hr_job.write(cr, SUPERUSER_ID, job_data['id'], {'alias_id': alias_id})
+        for job_data in hr_jobs.read(cr, SUPERUSER_ID, jobs_no_alias, ['name']):
+            alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, {'alias_name': 'job+'+job_data['name'],
+                                                                         'alias_defaults': {'job_id': job_data['id']}},
+                                                      model_name='hr.applicant')
+            hr_jobs.write(cr, SUPERUSER_ID, job_data['id'], {'alias_id': alias_id})
             _logger.info('Mail alias created for hr.job %s (uid %s)', job_data['name'], job_data['id'])
 
         # Finally attempt to reinstate the missing constraint
         try:
             cr.execute('ALTER TABLE hr_job ALTER COLUMN alias_id SET NOT NULL')
         except Exception:
-            pass
-    
+            _logger.warning("Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
+                            "If you want to have it, you should update the records and execute manually:\n"\
+                            "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL",
+                            self._table, 'alias_id', self._table, 'alias_id')
+
+        self._columns['alias_id'].required = True
+
     def create(self, cr, uid, vals, context=None):
-        alias_pool = self.pool.get('mail.alias')
+        mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            name = vals.pop('alias_name', None) or vals['name']
-            alias_id = alias_pool.create_unique_alias(cr, uid, 
-                          {'alias_name': "job_"+name},
+            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_id = mail_alias.create_unique_alias(cr, uid, 
+                          # Using '+' allows using subaddressing for those who don't
+                          # have a catchall domain setup.
+                          {'alias_name': 'jobs+'+vals['name']},
                           model_name="hr.applicant",
                           context=context)
             vals['alias_id'] = alias_id
-        res = super( hr_job, self).create(cr, uid, vals, context)
-        alias_pool.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
+        res = super(hr_job, self).create(cr, uid, vals, context)
+        mail_alias.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
