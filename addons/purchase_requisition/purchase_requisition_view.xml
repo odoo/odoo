@@ -111,8 +111,8 @@
         <field name="name">purchase.requisition.tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree fonts="bold:needaction_pending==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Purchase Requisition">
-                <field name="needaction_pending" invisible="1"/>
+            <tree fonts="bold:message_state==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Purchase Requisition">
+                <field name="message_state" invisible="1"/>
                 <field name="name"/>
                 <field name="date_start"/>
                 <field name="user_id"/>

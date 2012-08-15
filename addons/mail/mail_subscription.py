@@ -65,3 +65,43 @@ class mail_notification(osv.osv):
     _defaults = {
         'read': False,
     }
+    # Create notification in the wall of each user
+    # Send by email the notification depending on the user preferences
+    def notify(self, cr, uid, user_ids, msg_id, context=context):
+        user_obj = self.pool.get('res.users')
+        msg_obj = self.pool.get('mail.message')
+        msg = msg_obj.browse(cr, uid, msg_id, context=context)
+
+        towrite = {
+            'email_to': msg.email_to,
+            'subject': msg.subject
+        }
+        for user in user_obj.browse(cr, uid, user_ids, context=context):
+            notification_obj.create(cr, uid, {
+                'user_id': user.id,
+                'message_id': msg_id
+            }, context=context)
+            if user.notification_email_pref=='none' or not user.user_email:
+                continue
+
+            if user.notification_email_pref=='comment' and msg.type in ('email','comment'):
+                continue
+
+            if not msg.email_from:
+                current_user = res_users_obj.browse(cr, uid, uid, context=context)
+                towrite['email_from'] = current_user.user_email
+
+            towrite['state'] = 'outgoing'
+            if not towrite.get('email_to', False):
+                towrite['email_to'] = email_to
+            else:
+                if email_to not in towrite['email_to']:
+                    towrite['email_to'] = towrite['email_to'] + ', ' + email_to
+
+            if towrite.get('subject', False):
+                towrite['subject'] = msg.name_get(cr, uid, [msg.id], context=context)[0][1]
+        if towrite.get('state', False):
+            msg_obj.write(cr, uid, [msg.id], towrite, context=context)
+        return True
+
+

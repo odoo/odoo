@@ -41,8 +41,7 @@ class res_users(osv.osv):
     _columns = {
         'notification_email_pref': fields.selection([
             ('all', 'All feeds'),
-            ('comments', 'Only comments'),
-            ('to_me', 'Only when sent directly to me'),
+            ('comment', 'Comments and emails'),
             ('none', 'Never')
             ], 'Receive Feeds by Email', required=True,
             help="Choose in which case you want to receive an email when you "\

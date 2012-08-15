@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+# FP Note: can we remove some dependencies ? Use lint
+
 import ast
 import base64
 import dateutil.parser
@@ -56,6 +58,9 @@ def mail_tools_to_email(text):
 def to_email(text):
     return mail_tools_to_email(text)
 
+# FP Note: I propose to merge mail.message and mail.message.common
+# there is a conflict for the field parent_id
+# I don't understand the usage of mail.message.common
 class mail_message_common(osv.TransientModel):
     """ Common abstract class for holding the main attributes of a 
         message object. It could be reused as parent model for any
@@ -65,25 +70,6 @@ class mail_message_common(osv.TransientModel):
         model holds the basics of a message. For example, a wizard for writing
         emails should inherit from this class and not from mail.message."""
 
-    def get_body(self, cr, uid, ids, name, arg, context=None):
-        """ get correct body version: body_html for html messages, and
-            body_text for plain text messages
-        """
-        result = dict.fromkeys(ids, '')
-        for message in self.browse(cr, uid, ids, context=context):
-            if message.content_subtype == 'html':
-                result[message.id] = message.body_html
-            else:
-                result[message.id] = message.body_text
-        return result
-    
-    def search_body(self, cr, uid, obj, name, args, context=None):
-        # will receive:
-        #   - obj: mail.message object
-        #   - name: 'body'
-        #   - args: [('body', 'ilike', 'blah')]
-        return ['|', '&', ('content_subtype', '=', 'html'), ('body_html', args[0][1], args[0][2]), ('body_text', args[0][1], args[0][2])]
-    
     def get_record_name(self, cr, uid, ids, name, arg, context=None):
         result = dict.fromkeys(ids, '')
         for message in self.browse(cr, uid, ids, context=context):
@@ -99,43 +85,41 @@ class mail_message_common(osv.TransientModel):
             if message.subject:
                 name = '%s: ' % (message.subject)
             if message.body_text:
-                name = '%s%s ' % (name, message.body_text[0:20])
-            if message.date:
-                name = '%s(%s)' % (name, message.date)
+                name = name + message.body_text[0:20]
             res.append((message.id, name))
         return res
 
     _name = 'mail.message.common'
     _rec_name = 'subject'
     _columns = {
-        'subject': fields.char('Subject', size=512),
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.function(get_record_name, type='string',
             string='Message Record Name',
             help="Name get of the related document."),
+
+        'subject': fields.char('Subject', size=128),
         'date': fields.datetime('Date'),
+
+        # FP Note: I propose to remove these fields and put email in attachment as an option
         'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
-        'email_to': fields.char('To', size=256, help='Message recipients'),
+        'email_to': fields.text('To', help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
         'headers': fields.text('Message Headers', readonly=1,
             help="Full message headers, e.g. SMTP session headers (usually available on inbound messages only)"),
-        'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'content_subtype': fields.char('Message content subtype', size=32,
             oldname="subtype", readonly=1,
             help="Type of message, usually 'html' or 'plain', used to select "\
                   "plain-text or rich-text contents accordingly"),
-        'body_text': fields.text('Text Contents', help="Plain-text version of the message"),
         'body_html': fields.html('Rich-text Contents', help="Rich-text/HTML version of the message"),
-        'body': fields.function(get_body, fnct_search = search_body, type='text',
-            string='Message Content', store=True,
-            help="Content of the message. This content equals the body_text field "\
-                 "for plain-test messages, and body_html for rich-text/HTML "\
-                 "messages. This allows having one field if we want to access "\
-                 "the content matching the message content_subtype."),
+        # END FP Note
+
+        'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
+        'body': fields.text('Text Contents', help="Plain-text version of the message", required=True),
+
         'parent_id': fields.many2one('mail.message.common', 'Parent Message',
             select=True, ondelete='set null',
             help="Parent message, used for displaying as threads with hierarchy"),
@@ -158,6 +142,7 @@ class mail_message(osv.Model):
     _description = 'Mail Message (email, comment, notification)'
     _order = 'date desc'
 
+    # FP Note: can we remove these two methods ?
     def open_document(self, cr, uid, ids, context=None):
         """ Open the message related document. Note that only the document of
             ids[0] will be opened.
@@ -196,7 +181,8 @@ class mail_message(osv.Model):
                 'nodestroy': True
                 })
         return action_data
-    
+    # END FP Note
+
     _columns = {
         'type': fields.selection([
                         ('email', 'email'),
@@ -205,14 +191,17 @@ class mail_message(osv.Model):
                         ], 'Type',
             help="Message type: email for email message, notification for system "\
                   "message, comment for other messages such as user replies"),
+        # FP Note: ro be removed
         'partner_id': fields.many2one('res.partner', 'Related partner',
             help="Deprecated field. Use partner_ids instead."),
+        # END FP Note
+
         'partner_ids': fields.many2many('res.partner',
             'mail_message_destination_partner_rel',
             'message_id', 'partner_id', 'Destination partners',
             help="When sending emails through the social network composition wizard"\
                  "you may choose to send a copy of the mail to partners."),
-        'user_id': fields.many2one('res.users', 'Related User', readonly=1),
+        'user_id': fields.many2one('res.users', 'Author', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
         'state': fields.selection([
@@ -224,8 +213,12 @@ class mail_message(osv.Model):
                         ], 'Status', readonly=True),
         'auto_delete': fields.boolean('Auto Delete',
             help="Permanently delete this email after sending it, to save space"),
+
+        # FP Note: to be removed, in attachment if needed
         'original': fields.binary('Original', readonly=1,
             help="Original version of the message, as it was sent on the network"),
+        # End FP Note
+
         'parent_id': fields.many2one('mail.message', 'Parent Message',
             select=True, ondelete='set null',
             help="Parent message, used for displaying as threads with hierarchy"),
@@ -246,7 +239,7 @@ class mail_message(osv.Model):
         if not cr.fetchone():
             cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
 
-    def check(self, cr, uid, ids, mode, context=None, values=None):
+    def check(self, cr, uid, ids, mode, context=None):
         """Restricts the access to a mail.message, according to referred model
         """
         if not ids:
@@ -259,9 +252,6 @@ class mail_message(osv.Model):
             if not (rmod and rid):
                 continue
             res_ids.setdefault(rmod,set()).add(rid)
-        if values:
-            if 'res_model' in values and 'res_id' in values:
-                res_ids.setdefault(values['res_model'],set()).add(values['res_id'])
 
         ima_obj = self.pool.get('ir.model.access')
         for model, mids in res_ids.items():
@@ -272,8 +262,21 @@ class mail_message(osv.Model):
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
     
     def create(self, cr, uid, values, context=None):
-        self.check(cr, uid, [], mode='create', context=context, values=values)
-        return super(mail_message, self).create(cr, uid, values, context)
+        newid = super(mail_message, self).create(cr, uid, values, context)
+        self.check(cr, uid, [newid], mode='create', context=context)
+
+        # notify all followers
+        if values.get('model') and values.get('res_id'):
+            notification_obj = self.pool.get('mail.notification')
+            modobj = self.pool.get(values.get('model'))
+            follower_notify = []
+            for follower in modobj.follower_ids:
+                if follower.id <> uid:
+                    follower_notify.append(follower.id)
+
+            self.pool.get('mail.notification').notify(cr, uid, follower_notify, newid, context=context)
+
+        return newid
 
     def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
         self.check(cr, uid, ids, 'read', context=context)
@@ -288,13 +291,16 @@ class mail_message(osv.Model):
         return super(mail_message,self).copy(cr, uid, id, default=default, context=context)
     
     def write(self, cr, uid, ids, vals, context=None):
-        self.check(cr, uid, ids, 'write', context=context, values=vals)
-        return super(mail_message, self).write(cr, uid, ids, vals, context)
+        result = super(mail_message, self).write(cr, uid, ids, vals, context)
+        self.check(cr, uid, ids, 'write', context=context)
+        return result
 
     def unlink(self, cr, uid, ids, context=None):
         self.check(cr, uid, ids, 'unlink', context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context)
 
+    # FP Note: do we need this method ?
+    # We should just ask to create the message before scheduling it
     def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, type='email',
                              email_cc=None, email_bcc=None, reply_to=False, partner_ids=None, attachments=None,
                              message_id=False, references=False, res_id=False, content_subtype='plain',
