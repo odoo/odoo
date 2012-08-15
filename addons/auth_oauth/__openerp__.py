@@ -2,39 +2,48 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2009-today OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
+#    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
+
 {
-    'name': 'Signup',
-    'description': 'Allow users to sign up',
-    'author': 'OpenERP SA',
+    'name': 'OAuth2 Authentication',
     'version': '1.0',
-    'category': 'Authentication',
+    'category': 'Tools',
+    'description': """Allow users to login through Google OAuth2.""",
+    'author': 'Victor Tabuenca',
+    'maintainer': 'OpenERP s.a.',
     'website': 'http://www.openerp.com',
-    'installable': True,
-    'depends': ['base_setup'],
+    'depends': ['base', 'web'],
     'data': [
-        'res_config.xml',
+        'auth_oauth_data.xml'
+    ],
+    'update_xml': [
+        'auth_oauth_view.xml'
     ],
     'js': [
-        'static/src/js/auth_signup.js',
+        'static/src/js/auth_oauth.js',
+    ],
+    'css': [
+        'static/lib/zocial/css/zocial.css',
     ],
     'qweb': [
-        'static/src/xml/auth_signup.xml',
+        'static/src/xml/auth_oauth.xml',
     ],
+    'installable': True,
+    'auto_install': False,
 }

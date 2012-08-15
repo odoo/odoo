@@ -19,5 +19,6 @@
 #
 ##############################################################################
 
+import controllers
 import res_config
-import auth_signup
+import res_users
