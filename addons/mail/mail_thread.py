@@ -273,7 +273,7 @@ class mail_thread(osv.Model):
         # automatically subscribe the writer of the message
         if vals.get('user_id'):
             record = self.browse(cr, uid, thread_id, context=context)
-            follower_ids = [follower.id for follower in record.follower_ids]
+            follower_ids = [follower.id for follower in record.message_follower_ids]
             if vals.get('user_id') not in follower_ids:
                 self.message_subscribe(cr, uid, [thread_id], [vals.get('user_id')], context=context)
 
