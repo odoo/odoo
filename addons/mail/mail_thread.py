@@ -1064,8 +1064,8 @@ class mail_thread(osv.Model):
         # try to find an email_to
         email_to = ''
         for user in res_users_obj.browse(cr, uid, user_to_notify_ids, context=context):
-            if not user.notification_email_pref == 'all' and \
-                not (user.notification_email_pref == 'to_me' and user.id in user_to_push_from_parse_ids):
+            # TO BE REFACTORED BY FP, JUSTE REMOVED TO_ME, NOT SURE WHAT S NEW BEHAVIOR
+            if not user.notification_email_pref == 'all':
                 continue
             if not user.email:
                 continue
