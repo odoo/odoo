@@ -1,5 +1,6 @@
 import logging
 
+import simplejson
 import werkzeug.urls
 import werkzeug.utils
 
@@ -22,12 +23,14 @@ class OAuthController(openerpweb.Controller):
 
     @openerpweb.httprequest
     def signin(self, req, **kw):
-        dbname = kw.get("state")
+        state = simplejson.loads(kw['state'])
+        dbname = state['d']
+        provider = state['p']
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
             try:
                 u = registry.get('res.users')
-                credentials = u.auth_oauth(cr, 1, {}, kw)
+                credentials = u.auth_oauth(cr, 1, provider, kw)
                 cr.commit()
                 return openerp.addons.web.controllers.main.login_and_redirect(req, *credentials)
             except AttributeError:

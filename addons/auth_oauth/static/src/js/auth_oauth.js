@@ -4,7 +4,7 @@ openerp.auth_oauth = function(instance) {
     instance.web.Login = instance.web.Login.extend({
         start: function(parent, params) {
             var d = this._super.apply(this, arguments);
-            this.$element.on('click', 'a.oe_oauth_sign_in', this.on_oauth_sign_in);
+            this.$element.on('click', 'a.zocial', this.on_oauth_sign_in);
             this.oauth_providers = [];
             if(this.params.oauth_error === 1) {
                 this.do_warn("Sign up error.","Sign up is not allowed on this database.");
@@ -26,20 +26,23 @@ openerp.auth_oauth = function(instance) {
             console.log(buttons);
             this.$(".oe_login_pane form ul").after(buttons);
         },
-        oauth_url: function(state) {
-        },
         on_oauth_sign_in: function(ev) {
             ev.preventDefault();
             var index = $(ev.target).data('index');
             var p = this.oauth_providers[index];
             var ret = location.protocol+"//"+location.host+"/";
             var dbname = self.$("form [name=db]").val();
+            var state_object = {
+                d: dbname,
+                p: p.id
+            }
+            var state = JSON.stringify(state_object);
             var params = {
                 response_type: 'token',
                 client_id: p.client_id,
                 redirect_uri: ret,
                 scope: p.scope,
-                state: dbname,
+                state: state,
             };
             var url = p.auth_endpoint + '?' + $.param(params);
             window.location = url;

@@ -39,7 +39,7 @@
         'static/src/js/auth_oauth.js',
     ],
     'css': [
-        'static/src/css/auth_oauth.css',
+        'static/lib/zocial/css/zocial.css',
     ],
     'qweb': [
         'static/src/xml/auth_oauth.xml',

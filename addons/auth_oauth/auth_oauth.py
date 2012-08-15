@@ -14,7 +14,8 @@ class auth_oauth_providers(osv.osv):
         'scope' : fields.char('Scope'),                                     # OAUth user data desired to access
         'validation_endpoint' : fields.char('Validation URL'),              # OAuth provider URL to validate tokens
         'data_endpoint' : fields.char('Data URL'),
-        'icon_url' : fields.char('Icon'),                                   # URL of the icon's provider
+        'css_class' : fields.char('CSS class'),
+        'body' : fields.char('Body'),
         'active' : fields.boolean('Active'),
         'sequence' : fields.integer(),
     }

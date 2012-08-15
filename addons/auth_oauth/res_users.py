@@ -5,7 +5,6 @@ import urllib2
 import simplejson
 
 import openerp
-
 from openerp.osv import osv, fields
 
 _logger = logging.getLogger(__name__)
@@ -26,30 +25,23 @@ class res_users(osv.Model):
         response = f.read()
         return simplejson.loads(response)
 
-    def auth_oauth_fetch_user_validation(self, cr, uid, access_token, context=None):
-        endpoint = 'https://www.googleapis.com/oauth2/v1/tokeninfo'
-        return self.auth_oauth_rpc(cr, uid, endpoint, access_token)
-
-    def auth_oauth_fetch_user_data(self, cr, uid, access_token, context=None):
-        endpoint = 'https://www.googleapis.com/oauth2/v1/userinfo'
-        return self.auth_oauth_rpc(cr, uid, endpoint, access_token)
-
-    def auth_oauth(self, cr, uid, config, params, context=None):
+    def auth_oauth(self, cr, uid, provider, params, context=None):
         # Advice by Google (to avoid Confused Deputy Problem)
         # if validation.audience != OUR_CLIENT_ID:
         #   abort()
         # else:
         #   continue with the process
         access_token = params.get('access_token')
-        validation = self.auth_oauth_fetch_user_validation(cr, uid, access_token, context=context)
+        p = self.pool.get('auth.oauth.provider').browse(cr, uid, provider, context=context)
+
+        validation = self.auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token)
         if validation.get("error"):
             raise openerp.exceptions.AccessDenied
-
         login = validation['email']
         oauth_uid = validation['user_id']
-        name = self.auth_oauth_fetch_user_data(cr, uid, access_token)['name']
-        credentials = (cr.dbname, login, access_token)
+        name = self.auth_oauth_rpc(cr, uid, p.data_endpoint, access_token)['name']
 
+        credentials = (cr.dbname, login, access_token)
         res = self.search(cr, uid, [("oauth_uid", "=", oauth_uid)])
         if res:
             self.write(cr, uid, res[0], {'oauth_access_token':access_token})
