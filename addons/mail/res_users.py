@@ -112,25 +112,15 @@ class res_users(osv.Model):
         # alias
         mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
         # create a welcome message
-        self.create_welcome_message_and_email(cr, uid, user, context=context)
+        self.create_welcome_message(cr, uid, user, context=context)
         return user_id
 
-    def create_welcome_message_and_email(self, cr, uid, user, context=None):
-        """ Method to :
-            - create a welcome message on the partner wall
-            - send an email to the user with the instance URL / login (#TODO)
-            :param user: res_users browse_record
-        """
+    def create_welcome_message(self, cr, uid, user, context=None):
         company_name = user.company_id.name if user.company_id else _('the company')
-        message = '''%s has joined %s! Welcome in OpenERP !
-
-Your homepage is a summary of messages you received and key information about documents you follow.
-
-The top menu bar contains all applications you installed. You can use this <i>Settings</i> menu to install more applications, activate others features or give access to new users.
-
-To setup your preferences (name, email signature, avatar), click on the top right corner.''' % (user.name, company_name)
-        return self.pool.get('res.partner').message_append_note(cr, uid, [user.partner_id.id],
-            subject='Welcome to OpenERP', body=message, type='comment', content_subtype='html', context=context)
+        subject = '''%s has joined %s.''' % (user.name, company_name)
+        body = '''Welcome to OpenERP !''' 
+        return self.pool.get('res.partner').message_append_note(cr, user.id, [user.partner_id.id],
+            subject=subject, body=body, type='comment', content_subtype='html', context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         # User alias is sync'ed with login
@@ -189,7 +179,6 @@ class res_users_mail_group(osv.Model):
             mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', user_group_ids)], context=context)
             mail_group_obj.message_subscribe(cr, uid, mail_group_ids, ids, context=context)
         return write_res
-        
 
 class res_groups_mail_group(osv.Model):
     """ Update of res.groups class
@@ -209,3 +198,5 @@ class res_groups_mail_group(osv.Model):
             mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', ids)], context=context)
             mail_group_obj.message_subscribe(cr, uid, mail_group_ids, user_ids, context=context)
         return super(res_groups_mail_group, self).write(cr, uid, ids, vals, context=context)
+
+# vim:et:
