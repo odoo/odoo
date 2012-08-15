@@ -1006,12 +1006,10 @@ class mail_thread(osv.Model):
             
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
+            :param return: new value of followers, for Chatter
         """
-        follower_ids = [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
         to_subscribe_uids = [uid] if user_ids is None else user_ids
-        if all(follower_id in follower_ids for follower_id in to_subscribe_uids):
-            return follower_ids
-        write_res = self.write(cr, uid, ids, {'message_follower_ids': [(4, id) for id in to_subscribe_uids]}, context=context)
+        write_res = self.write(cr, uid, ids, {'message_follower_ids': self.message_subscribe_get_command(cr, uid, to_subscribe_uids, context)}, context=context)
         return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
     def message_subscribe_get_command(self, cr, uid, follower_ids, context=None):
@@ -1023,9 +1021,10 @@ class mail_thread(osv.Model):
             
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
+            :param return: new value of followers, for Chatter
         """
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
-        write_res = self.write(cr, uid, ids, {'message_follower_ids': [(3, id) for id in to_unsubscribe_uids]}, context=context)
+        write_res = self.write(cr, uid, ids, {'message_follower_ids': self.message_unsubscribe_get_command(cr, uid, to_unsubscribe_uids, context)}, context=context)
         return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
     def message_unsubscribe_get_command(self, cr, uid, follower_ids, context=None):
