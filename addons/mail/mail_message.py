@@ -94,9 +94,7 @@ class mail_message(osv.Model):
             help="Message type: email for email message, notification for system "\
                   "message, comment for other messages such as user replies"),
 
-        # partner_id should be renamed into author_id, user_id removed
         'author_id': fields.many2one('res.partner', 'Author', required=True),
-
         # this is redundant with notifications ? Yes
         'partner_ids': fields.many2many('res.partner',
             'mail_message_res_partner_rel',
@@ -179,7 +177,7 @@ class mail_message(osv.Model):
             notification_obj = self.pool.get('mail.notification')
             modobj = self.pool.get(values.get('model'))
             follower_notify = []
-            for follower in modobj.follower_ids:
+            for follower in modobj.message_follower_ids:
                 if follower.id <> uid:
                     follower_notify.append(follower.id)
             self.pool.get('mail.notification').notify(cr, uid, follower_notify, newid, context=context)

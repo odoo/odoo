@@ -28,7 +28,6 @@ class mail_subscription(osv.osv):
     A subscription is characterized by:
         :param: res_model: model of the followed objects
         :param: res_id: ID of resource (may be 0 for every objects)
-        :param: user_id: user_id of the follower
     """
     _name = 'mail.subscription'
     _rec_name = 'id'
@@ -40,7 +39,7 @@ class mail_subscription(osv.osv):
                         help='Model of the followed resource'),
         'res_id': fields.integer('Related Document ID', select=1,
                         help='Id of the followed resource'),
-        'user_id': fields.many2one('res.users', string='Related User',
+        'partner_id': fields.many2one('res.partner', string='Related User',
                         ondelete='cascade', required=True, select=1),
     }
 
@@ -77,10 +76,10 @@ class mail_notification(osv.osv):
         }
         for partner in partner_obj.browse(cr, uid, partner_ids, context=context):
             notification_obj.create(cr, uid, {
-                'partner_id': user.id,
+                'partner_id': partner.id,
                 'message_id': msg_id
             }, context=context)
-            if partner.notification_email_pref=='none' or not partner.user_email:
+            if partner.notification_email_pref=='none' or not partner.email:
                 continue
 
             if partner.notification_email_pref=='comment' and msg.type in ('email','comment'):
@@ -88,7 +87,7 @@ class mail_notification(osv.osv):
 
             if not msg.email_from:
                 current_user = res_users_obj.browse(cr, uid, uid, context=context)
-                towrite['email_from'] = current_user.user_email
+                towrite['email_from'] = current_user.email
 
             towrite['state'] = 'outgoing'
             if not towrite.get('email_to', False):

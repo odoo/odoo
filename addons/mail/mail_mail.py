@@ -23,12 +23,12 @@ class mail_mail(osv.Model):
         'message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
         'state': fields.selection([
-                        ('outgoing', 'Outgoing'),
-                        ('sent', 'Sent'),
-                        ('received', 'Received'),
-                        ('exception', 'Delivery Failed'),
-                        ('cancel', 'Cancelled'),
-                        ], 'Status', readonly=True),
+            ('outgoing', 'Outgoing'),
+            ('sent', 'Sent'),
+            ('received', 'Received'),
+            ('exception', 'Delivery Failed'),
+            ('cancel', 'Cancelled'),
+        ], 'Status', readonly=True),
         'auto_delete': fields.boolean('Auto Delete',
             help="Permanently delete this email after sending it, to save space"),
 
@@ -97,10 +97,11 @@ class mail_mail(osv.Model):
         for param in (email_to, email_cc):
             if param and not isinstance(param, list):
                 param = [param]
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         msg_vals = {
                 'subject': subject,
                 'date': fields.datetime.now(),
-                'user_id': uid,
+                'author_id': partner_id,
                 'model': model,
                 'res_id': res_id,
                 'type': type,
