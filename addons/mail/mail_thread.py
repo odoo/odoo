@@ -293,10 +293,7 @@ class mail_thread(osv.Model):
         
         # get subscribers
         notif_user_ids = self.message_get_subscribers(cr, uid, thread_ids, context=context)
-        
-        # add users requested via parsing message (@login)
-        notif_user_ids += self.message_parse_users(cr, uid, body, context=context)
-        
+
         # add users requested to perform an action (need_action mechanism)
         if hasattr(self, 'get_needaction_user_ids') and self._columns.get('user_id'):
             user_ids_dict = self.get_needaction_user_ids(cr, uid, thread_ids, context=context)
@@ -313,17 +310,6 @@ class mail_thread(osv.Model):
         # remove duplicate entries
         notif_user_ids = list(set(notif_user_ids))
         return notif_user_ids
-
-    def message_parse_users(self, cr, uid, string, context=None):
-        """Parse message content
-           - if find @login -(^|\s)@((\w|@|\.)*)-: returns the related ids
-             this supports login that are emails (such as @raoul@grobedon.net)
-        """
-        regex = re.compile('(^|\s)@((\w|@|\.)*)')
-        login_lst = [item[1] for item in regex.findall(string)]
-        if not login_lst: return []
-        user_ids = self.pool.get('res.users').search(cr, uid, [('login', 'in', login_lst)], context=context)
-        return user_ids
 
     #------------------------------------------------------
     # Generic message api
@@ -1082,10 +1068,7 @@ class mail_thread(osv.Model):
         # remove message writer
         if user_to_notify_ids.count(new_msg_values.get('user_id')) > 0:
             user_to_notify_ids.remove(new_msg_values.get('user_id'))
-        
-        # get user_ids directly asked
-        user_to_push_from_parse_ids = self.message_parse_users(cr, uid, body, context=context)
-        
+
         # try to find an email_to
         email_to = ''
         for user in res_users_obj.browse(cr, uid, user_to_notify_ids, context=context):
