@@ -879,7 +879,6 @@ class mail_thread(osv.Model):
                              uid instead
         """
         subscription_obj = self.pool.get('mail.subscription')
-        to_subscribe_uids = [uid] if user_ids is None else user_ids
         create_ids = []
         for id in ids:
             already_subscribed_user_ids = self.message_get_subscribers(cr, uid, [id], context=context)
