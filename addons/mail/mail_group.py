@@ -35,10 +35,9 @@ class mail_group(osv.osv):
     in common with res.users.group.
     Additional information on fields:
     """
-
     _description = 'Discussion group'
     _name = 'mail.group'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread','ir.needaction']
     _inherits = {'mail.alias': 'alias_id', 'ir.ui.menu': 'menu_id'}
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
@@ -57,9 +56,6 @@ class mail_group(osv.osv):
     _columns = {
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
-        'responsible_id': fields.many2one('res.users', string='Responsible',
-            ondelete='set null', required=True, select=1,
-            help="Responsible of the group that has all rights on the record."),
         'public': fields.selection([('public','Public'),('private','Private'),('groups','Selected Group Only')], 'Privacy', required=True,
             help='This group is visible by non members. \
             Invisible groups can add members through the invite button.'),
@@ -105,7 +101,6 @@ class mail_group(osv.osv):
     _defaults = {
         'public': 'groups',
         'group_public_id': _get_default_employee_group,
-        'responsible_id': (lambda s, cr, uid, ctx: uid),
         'image': _get_default_image,
         'parent_id': _get_menu_parent,
         'alias_domain': False, # always hide alias during creation
@@ -116,12 +111,12 @@ class mail_group(osv.osv):
         user_group_ids = [command[1] for command in group_ids_command if command[0] == 4]
         user_group_ids += [id for command in group_ids_command if command[0] == 6 for id in command[2]]
         # retrieve the user member of those groups
-        user_ids = []
+        partner_ids = []
         res_groups_obj = self.pool.get('res.groups')
         for group in res_groups_obj.browse(cr, uid, user_group_ids, context=context):
-            user_ids += [user.id for user in group.users]
+            partner_ids += [user.partner_id.id for user in group.users]
         # subscribe the users
-        return self.message_subscribe(cr, uid, ids, user_ids, context=context)
+        return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
         mail_alias = self.pool.get('mail.alias')

@@ -31,11 +31,12 @@ class ir_ui_menu(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0, limit=None, order=order, context=context, count=False)
 
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         subs = self.pool.get('mail.subscription')
         for menu in self.browse(cr, uid, ids, context=context):
             if menu.mail_group_id:
                 sub_ids = subs.search(cr, uid, [
-                    ('user_id','=',uid),('res_model','=','mail.group'),
+                    ('partner_id','=',partner_id),('res_model','=','mail.group'),
                     ('res_id','=',menu.mail_group_id.id)
                     ], context=context)
                 if not sub_ids:

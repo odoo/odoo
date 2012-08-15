@@ -21,7 +21,6 @@
 
 # FP Note: can we remove some dependencies ? Use lint
 
-import ast
 import base64
 import dateutil.parser
 import email
@@ -32,12 +31,10 @@ import datetime
 from email.header import decode_header
 from email.message import Message
 
-from openerp import SUPERUSER_ID
 from osv import osv
 from osv import fields
 import pytz
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
-from tools.translate import _
 import tools
 
 _logger = logging.getLogger(__name__)
@@ -63,47 +60,6 @@ class mail_message(osv.Model):
     _name = 'mail.message'
     _description = 'Message'
     _order = 'id desc'
-
-    # FP Note: can we remove these two methods ?
-    def open_document(self, cr, uid, ids, context=None):
-        """ Open the message related document. Note that only the document of
-            ids[0] will be opened.
-            TODO: how to determine the action to use ?
-        """
-        action_data = False
-        if not ids:
-            return action_data
-        msg = self.browse(cr, uid, ids[0], context=context)
-        ir_act_window = self.pool.get('ir.actions.act_window')
-        action_ids = ir_act_window.search(cr, uid, [('res_model', '=', msg.model)], context=context)
-        if action_ids:
-            action_data = ir_act_window.read(cr, uid, action_ids[0], context=context)
-            action_data.update({
-                    'domain' : "[('id', '=', %d)]" % (msg.res_id),
-                    'nodestroy': True,
-                    'context': {}
-                    })
-        return action_data
-
-    def open_attachment(self, cr, uid, ids, context=None):
-        """ Open the message related attachments.
-            TODO: how to determine the action to use ?
-        """
-        action_data = False
-        if not ids:
-            return action_data
-        action_pool = self.pool.get('ir.actions.act_window')
-        messages = self.browse(cr, uid, ids, context=context)
-        att_ids = [x.id for message in messages for x in message.attachment_ids]
-        action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')], context=context)
-        if action_ids:
-            action_data = action_pool.read(cr, uid, action_ids[0], context=context)
-            action_data.update({
-                'domain': [('id', 'in', att_ids)],
-                'nodestroy': True
-                })
-        return action_data
-    # END FP Note
 
     def get_record_name(self, cr, uid, ids, name, arg, context=None):
         result = dict.fromkeys(ids, '')
@@ -135,20 +91,18 @@ class mail_message(osv.Model):
             help="Message type: email for email message, notification for system "\
                   "message, comment for other messages such as user replies"),
 
-        # partner_id should be renamed into author_id
+        # partner_id should be renamed into author_id, user_id removed
         'author_id': fields.many2one('res.partner', 'Author', required=True),
 
-        # this is redundant with notifications ?
+        # this is redundant with notifications ? Yes
         'partner_ids': fields.many2many('res.partner',
             'mail_message_destination_partner_rel',
             'message_id', 'partner_id', 'Destination partners',
             help="When sending emails through the social network composition wizard"\
                  "you may choose to send a copy of the mail to partners."),
 
-        # 'user_id': fields.many2one('res.users', 'Author', readonly=1),
-
-        # why don't we attach the file to the message using res_id, res_model of the attachment ?
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
+        'attachment_ids': fields.one2many('ir.attachment', 'res_id', 'Attachments'
+            domain=[('res_model','=','mail.message')]),
 
         'parent_id': fields.many2one('mail.message', 'Parent Message',
             select=True, ondelete='set null',
@@ -189,7 +143,11 @@ class mail_message(osv.Model):
             cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
 
     def check(self, cr, uid, ids, mode, context=None):
-        """Restricts the access to a mail.message, according to referred model
+        """
+        You can access a message if:
+          - you received it (a notification exists) or
+          - you can read the related document (res_model, res_id)
+        If a message is not attached to a document, normal access rights apply.
         """
         if not ids:
             return
@@ -234,7 +192,7 @@ class mail_message(osv.Model):
         if default is None:
             default = {}
         self.check(cr, uid, [id], 'read', context=context)
-        default.update(message_id=False, original=False, headers=False)
+        default.update(message_id=False, headers=False)
         return super(mail_message,self).copy(cr, uid, id, default=default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):

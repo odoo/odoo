@@ -35,5 +35,14 @@ class res_partner_mail(osv.osv):
         if self._name == 'res.partner': # to avoid models inheriting from res.partner
             search_domain = ['|'] + initial_domain + ['|', ('partner_id', 'in', ids), ('partner_ids', 'in', ids)]
         return search_domain
+    _columns = {
+        'notification_email_pref': fields.selection([
+            ('all', 'All feeds'),
+            ('comment', 'Comments and emails'),
+            ('none', 'Never')
+            ], 'Receive Feeds by Email', required=True,
+            help="Choose in which case you want to receive an email when you "\
+                  "receive new feeds."),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

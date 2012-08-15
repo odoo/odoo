@@ -75,9 +75,6 @@
                                     />
                                 <field name="group_ids" widget="many2many_tags" class="oe_inline"/>
                             </group>
-                            <group class="oe_edit_only">
-                                <field name="responsible_id" class="oe_inline"/>
-                            </group>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -96,7 +93,6 @@
             <field name="arch" type="xml">
                 <tree string="Groups">
                     <field name="name" string="Group Name"/>
-                    <field name="responsible_id"/>
                 </tree>
             </field>
         </record>
@@ -109,7 +105,6 @@
             <field name="arch" type="xml">
                 <search string="Search Groups">
                     <field name="name" string="Group"/>
-                    <field name="responsible_id"/>
                 </search>
             </field>
         </record>

@@ -55,36 +55,35 @@ class mail_notification(osv.osv):
     _order = 'message_id desc'
     _description = 'Mail notification'
     _columns = {
-        'user_id': fields.many2one('res.users', string='User',
+        'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
         'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True, select=1),
-        'read': fields.boolean('Read', help="Not used currently",),
-        # TODO: add a timestamp ? or use message date ?
+        'read': fields.boolean('Read'),
     }
     _defaults = {
         'read': False,
     }
     # Create notification in the wall of each user
     # Send by email the notification depending on the user preferences
-    def notify(self, cr, uid, user_ids, msg_id, context=context):
-        user_obj = self.pool.get('res.users')
+    def notify(self, cr, uid, partner_ids, msg_id, context=context):
+        partner_obj = self.pool.get('res.partner')
         msg_obj = self.pool.get('mail.message')
         msg = msg_obj.browse(cr, uid, msg_id, context=context)
 
         towrite = {
-            'email_to': msg.email_to,
+            'email_to': '',
             'subject': msg.subject
         }
-        for user in user_obj.browse(cr, uid, user_ids, context=context):
+        for partner in partner_obj.browse(cr, uid, partner_ids, context=context):
             notification_obj.create(cr, uid, {
-                'user_id': user.id,
+                'partner_id': user.id,
                 'message_id': msg_id
             }, context=context)
-            if user.notification_email_pref=='none' or not user.user_email:
+            if partner.notification_email_pref=='none' or not partner.user_email:
                 continue
 
-            if user.notification_email_pref=='comment' and msg.type in ('email','comment'):
+            if partner.notification_email_pref=='comment' and msg.type in ('email','comment'):
                 continue
 
             if not msg.email_from:
@@ -101,7 +100,8 @@ class mail_notification(osv.osv):
             if towrite.get('subject', False):
                 towrite['subject'] = msg.name_get(cr, uid, [msg.id], context=context)[0][1]
         if towrite.get('state', False):
-            msg_obj.write(cr, uid, [msg.id], towrite, context=context)
+            towrite['message_id'] = msg.id
+            self.pool.get('mail.mail').create(cr, uid, towrite, context=context)
         return True
 
 

@@ -35,17 +35,10 @@ class res_users(osv.osv):
         - add a welcome message
     """
     _name = 'res.users'
-    _inherit = ['res.users', 'mail.thread']
+    _inherit = ['res.users']
     _inherits = {'mail.alias': 'alias_id'}
     
     _columns = {
-        'notification_email_pref': fields.selection([
-            ('all', 'All feeds'),
-            ('comment', 'Comments and emails'),
-            ('none', 'Never')
-            ], 'Receive Feeds by Email', required=True,
-            help="Choose in which case you want to receive an email when you "\
-                  "receive new feeds."),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
                                     help="Email address internally associated with this user. Incoming emails will appear "
                                          "in the user's notifications."),

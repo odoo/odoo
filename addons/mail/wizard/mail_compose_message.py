@@ -294,7 +294,6 @@ class mail_compose_message(osv.TransientModel):
                     email_from = self.render_template(cr, uid, mail_wiz.email_from, active_model, active_id)
                     email_to = self.render_template(cr, uid, mail_wiz.email_to, active_model, active_id)
                     email_cc = self.render_template(cr, uid, mail_wiz.email_cc, active_model, active_id)
-                    email_bcc = self.render_template(cr, uid, mail_wiz.email_bcc, active_model, active_id)
                     reply_to = self.render_template(cr, uid, mail_wiz.reply_to, active_model, active_id)
 
                     # in mass-mailing mode we only schedule the mail for sending, it will be 
@@ -302,11 +301,11 @@ class mail_compose_message(osv.TransientModel):
                     if mail_thread_enabled:
                         active_model_pool.message_append(cr, uid, [active_id], rendered_subject, rendered_body_text, rendered_body_html,
                             type=type, content_subtype=content_subtype, state=state, partner_ids=partner_ids,
-                            email_from=email_from, email_to=email_to, email_cc=email_cc, email_bcc=email_bcc,
+                            email_from=email_from, email_to=email_to, email_cc=email_cc, 
                             reply_to=reply_to, references=references, attachments=attachment, headers=headers, context=context)
                     else:
                         mail_message_obj.schedule_with_attach(cr, uid, email_from, to_email(email_to), subject, rendered_body_text,
-                            model=mail_wiz.model, email_cc=to_email(email_cc), email_bcc=to_email(email_bcc), reply_to=reply_to,
+                            model=mail_wiz.model, email_cc=to_email(email_cc), reply_to=reply_to,
                             attachments=attachment, references=references, res_id=active_id, partner_ids=partner_ids,
                             content_subtype=mail_wiz.content_subtype, headers=headers, context=context)
             else:
@@ -314,11 +313,11 @@ class mail_compose_message(osv.TransientModel):
                 if mail_thread_enabled:
                     msg_ids = active_model_pool.message_append(cr, uid, active_ids, subject, mail_wiz.body_text, mail_wiz.body_html,
                         type=type, content_subtype=content_subtype, state=state, partner_ids=partner_ids,
-                        email_from=mail_wiz.email_from, email_to=mail_wiz.email_to, email_cc=mail_wiz.email_cc, email_bcc=mail_wiz.email_bcc,
+                        email_from=mail_wiz.email_from, email_to=mail_wiz.email_to, email_cc=mail_wiz.email_cc, 
                         reply_to=mail_wiz.reply_to, references=references, attachments=attachment, headers=headers, context=context)
                 else:
                     msg_ids = [mail_message_obj.schedule_with_attach(cr, uid, mail_wiz.email_from, to_email(mail_wiz.email_to), subject, mail_wiz.body_text,
-                        type=type, model=mail_wiz.model, email_cc=to_email(mail_wiz.email_cc), email_bcc=to_email(mail_wiz.email_bcc), reply_to=mail_wiz.reply_to,
+                        type=type, model=mail_wiz.model, email_cc=to_email(mail_wiz.email_cc), reply_to=mail_wiz.reply_to,
                         attachments=attachment, references=references, res_id=int(mail_wiz.res_id), partner_ids=partner_ids,
                         content_subtype=mail_wiz.content_subtype, headers=headers, context=context)]
                 # in normal mode, we send the email immediately, as the user expects us to (delay should be sufficiently small)

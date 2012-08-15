@@ -196,9 +196,9 @@ class mail_thread(osv.Model):
                         type='email', email_date=None, parent_id=False,
                         content_subtype='plain', state=None,
                         partner_ids=None, email_from=False, email_to=False,
-                        email_cc=None, email_bcc=None, reply_to=None,
+                        email_cc=None, reply_to=None,
                         headers=None, message_id=False, references=None,
-                        attachments=None, original=None, context=None):
+                        attachments=None, context=None):
         """ Creates a new mail.message through message_create. The new message
             is attached to the current mail.thread, containing all the details
             passed as parameters. All attachments will be attached to the
@@ -235,16 +235,12 @@ class mail_thread(osv.Model):
             :param email_to: Email-To / Recipient address
             :param email_cc: Comma-Separated list of Carbon Copy Emails To
                 addresses if any
-            :param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To
-                addresses if any
             :param reply_to: reply_to header
             :param headers: mail headers to store
             :param message_id: optional email identifier
             :param references: optional email references
             :param dict attachments: map of attachment filenames to binary
                 contents, if any.
-            :param str original: optional full source of the RFC2822 email, for
-                reference
             :param dict context: if a ``thread_model`` value is present in the
                 context, its value will be used to determine the model of the
                 thread to update (instead of the current model).
@@ -278,8 +274,6 @@ class mail_thread(osv.Model):
                     'datas': base64.b64encode(str(fcontent)),
                     'datas_fname': fname,
                     'description': _('Mail attachment'),
-                    'res_model': thread._name,
-                    'res_id': thread.id,
                 }
                 to_attach.append(ir_attachment.create(cr, uid, data_attach, context=context))
             # find related partner: partner_id column in thread object, or self is res.partner model
@@ -310,7 +304,7 @@ class mail_thread(osv.Model):
             }
 
             if email_from or type == 'email':
-                for param in (email_to, email_cc, email_bcc):
+                for param in (email_to, email_cc):
                     if isinstance(param, list):
                         param = ", ".join(param)
                 data.update({
@@ -318,11 +312,10 @@ class mail_thread(osv.Model):
                     'email_from': email_from or \
                         thread._model._columns.get('user_id') and thread.user_id and thread.user_id.user_email,
                     'email_cc': email_cc,
-                    'email_bcc': email_bcc,
                     'references': references,
                     'headers': headers,
                     'reply_to': reply_to,
-                    'original': original, })
+                    })
 
             new_msg_ids.append(self.message_create(cr, uid, thread.id, data, context=context))
         return new_msg_ids
@@ -355,7 +348,6 @@ class mail_thread(osv.Model):
                             email_from = msg_dict.get('from', msg_dict.get('email_from')),
                             email_to = msg_dict.get('to', msg_dict.get('email_to')),
                             email_cc = msg_dict.get('cc', msg_dict.get('email_cc')),
-                            email_bcc = msg_dict.get('bcc', msg_dict.get('email_bcc')),
                             reply_to = msg_dict.get('reply', msg_dict.get('reply_to')),
                             email_date = msg_dict.get('date'),
                             message_id = msg_dict.get('message-id', msg_dict.get('message_id')),
@@ -363,7 +355,6 @@ class mail_thread(osv.Model):
                                       or msg_dict.get('in-reply-to'),
                             attachments = msg_dict.get('attachments'),
                             headers = msg_dict.get('headers'),
-                            original = msg_dict.get('original'),
                             context = context)
 
     #------------------------------------------------------
@@ -480,7 +471,7 @@ class mail_thread(osv.Model):
                 msg["attachments"].append({'id': attach_id, 'name': map_id_to_name[attach_id]})
 
         # Set the threads as read
-        self.message_check_and_set_read(cr, uid, ids, context=context)
+        self.message_mark_as_read(cr, uid, ids, context=context)
         # Sort and return the messages
         messages = sorted(messages, key=lambda d: (-d['id']))
         return messages
@@ -680,9 +671,6 @@ class mail_thread(osv.Model):
             else:
                 thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
 
-            # Forward the email to other followers
-            self.message_forward(cr, uid, model, [thread_id], msg_txt, context=context)
-            model_pool.message_mark_as_unread(cr, uid, [thread_id], context=context)
         return True
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
@@ -885,9 +873,8 @@ class mail_thread(osv.Model):
             return True
         return False
 
-    def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
-        """ Subscribe the user (or user_ids) to the current document.
-
+    def message_subscribe(self, cr, uid, ids, partner_ids=None, context=None):
+        """
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
         """
@@ -936,28 +923,9 @@ class mail_thread(osv.Model):
     # Thread_state
     #------------------------------------------------------
 
-    # FP Note: should be removed ?
-    # def message_check_and_set_unread(self, cr, uid, ids, context=None):
-    #    """ Set unread if uid is the object responsible or if the object has
-    #        no responsible. """
-    #    for obj in self.browse(cr, uid, ids, context=context):
-    #        if obj.message_state and self._columns.get('user_id') and (not obj.user_id or obj.user_id.id == uid):
-    #            self.message_mark_as_unread(cr, uid, [obj.id], context=context)
-
-    # FP Note: should be removed ?
-    # def message_check_and_set_read(self, cr, uid, ids, context=None):
-    #    """ Set read if uid is the object responsible. """
-    #    for obj in self.browse(cr, uid, ids, context=context):
-    #        if not obj.message_state and self._columns.get('user_id') and obj.user_id and obj.user_id.id == uid:
-    #            self.message_mark_as_read(cr, uid, [obj.id], context=context)
-
     # FP Note: this should be a invert function on message_state field
     def message_mark_as_read(self, cr, uid, ids, context=None):
         """ Set as read. """
-        return self.write(cr, uid, ids, {'message_state': True}, context=context)
-
-    def message_mark_as_unread(self, cr, uid, ids, context=None):
-        """ Set as unread. """
         notobj = self.pool.get('mail.notification')
         cr.execute('''
             update mail_notification set 
@@ -967,6 +935,4 @@ class mail_thread(osv.Model):
                 user_id = %s
         ''', (ids, self._name, uid)
         return True
-    # END FP note
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

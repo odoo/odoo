@@ -1,4 +1,15 @@
 
+import ast
+import base64
+import email
+import logging
+import re
+import time
+import datetime
+
+from osv import osv
+from osv import fields
+
 class mail_mail(osv.Model):
     """
     Model holding RFC2822 email messages to send. This model also provides
@@ -9,8 +20,7 @@ class mail_mail(osv.Model):
     _description = 'Outgoing Mails'
     _inherits = {'mail.message': 'message_id'}
     _columns = {
-        'message_id': fields.many2one('mail.message', 'Message', required=True),
-        # why do we need this on the mail, why not on the company?
+        'message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
         'state': fields.selection([
                         ('outgoing', 'Outgoing'),
@@ -22,34 +32,24 @@ class mail_mail(osv.Model):
         'auto_delete': fields.boolean('Auto Delete',
             help="Permanently delete this email after sending it, to save space"),
 
-        # FP Note: to be removed, in attachment if needed
-        'original': fields.binary('Original', readonly=1,
-            help="Original version of the message, as it was sent on the network"),
-        # End FP Note
-
-        # FP Note: I propose to remove these fields and put email in attachment as an option
         'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
         'email_to': fields.text('To', help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
-        'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
         'content_subtype': fields.char('Message content subtype', size=32,
             oldname="subtype", readonly=1,
             help="Type of message, usually 'html' or 'plain', used to select "\
                   "plain-text or rich-text contents accordingly"),
         'body_html': fields.html('Rich-text Contents', help="Rich-text/HTML version of the message"),
-
     }
 
     _defaults = {
-        'state': 'received',
+        'state': 'outgoing',
         'content_subtype': 'plain',
     }
 
-    # FP Note: do we need this method ?
-    # We should just ask to create the message before scheduling it
     def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, type='email',
-                             email_cc=None, email_bcc=None, reply_to=False, partner_ids=None, attachments=None,
+                             email_cc=None, reply_to=False, partner_ids=None, attachments=None,
                              message_id=False, references=False, res_id=False, content_subtype='plain',
                              headers=None, mail_server_id=False, auto_delete=False, context=None):
         """ Schedule sending a new email message, to be sent the next time the
@@ -64,8 +64,6 @@ class mail_mail(osv.Model):
                 message will be automatically converted to plaintext and wrapped
                 in multipart/alternative.
             :param list email_cc: optional list of string values for CC header
-                (to be joined with commas)
-            :param list email_bcc: optional list of string values for BCC header
                 (to be joined with commas)
             :param string model: optional model name of the document this mail
                 is related to (this will also be used to generate a tracking id,
@@ -96,7 +94,7 @@ class mail_mail(osv.Model):
         if partner_ids is None:
             partner_ids = []
         attachment_obj = self.pool.get('ir.attachment')
-        for param in (email_to, email_cc, email_bcc):
+        for param in (email_to, email_cc):
             if param and not isinstance(param, list):
                 param = [param]
         msg_vals = {
@@ -111,7 +109,6 @@ class mail_mail(osv.Model):
                 'email_from': email_from,
                 'email_to': email_to and ','.join(email_to) or '',
                 'email_cc': email_cc and ','.join(email_cc) or '',
-                'email_bcc': email_bcc and ','.join(email_bcc) or '',
                 'partner_ids': partner_ids,
                 'reply_to': reply_to,
                 'message_id': message_id,
@@ -123,20 +120,18 @@ class mail_mail(osv.Model):
                 'auto_delete': auto_delete
             }
         email_msg_id = self.create(cr, uid, msg_vals, context)
-        attachment_ids = []
+        msg = self.browse(cr, uid, email_msg_id, context)
         for fname, fcontent in attachments.iteritems():
             attachment_data = {
                     'name': fname,
                     'datas_fname': fname,
                     'datas': fcontent and fcontent.encode('base64'),
-                    'res_model': self._name,
-                    'res_id': email_msg_id,
+                    'res_model': 'mail.message',
+                    'res_id': msg.message_id.id,
             }
-            if context.has_key('default_type'):
-                del context['default_type']
-            attachment_ids.append(attachment_obj.create(cr, uid, attachment_data, context))
-        if attachment_ids:
-            self.write(cr, uid, email_msg_id, { 'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
+            # FP Note: what's this ???
+            # if context.has_key('default_type'):
+            #     del context['default_type']
         return email_msg_id
 
     def mark_outgoing(self, cr, uid, ids, context=None):
@@ -187,8 +182,7 @@ class mail_mail(osv.Model):
         """
         if message.auto_delete:
             self.pool.get('ir.attachment').unlink(cr, uid,
-                [x.id for x in message.attachment_ids
-                    if x.res_model == self._name and x.res_id == message.id],
+                [x.id for x in message.attachment_ids],
                 context=context)
             message.unlink()
         return True
@@ -240,7 +234,6 @@ class mail_mail(osv.Model):
                     body=body,
                     body_alternative=body_alternative,
                     email_cc=mail_tools_to_email(message.email_cc),
-                    email_bcc=mail_tools_to_email(message.email_bcc),
                     reply_to=message.reply_to,
                     attachments=attachments, message_id=message.message_id,
                     references = message.references,

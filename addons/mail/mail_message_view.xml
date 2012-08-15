@@ -123,7 +123,6 @@
                                         <field name="email_from"/>
                                         <field name="email_to"/>
                                         <field name="email_cc"/>
-                                        <field name="email_bcc"/>
                                         <field name="reply_to"/>
                                     </group>
                                     <group>
@@ -148,11 +147,8 @@
                                         <field name="content_subtype"/>
                                         <field name="state" colspan="2"/>
                                         <field name="mail_server_id"/>
-                                        <field name="original"/>
                                         <field name="model"/>
                                         <field name="res_id"/>
-                                        <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"
-                                            attrs="{'invisible':['|', ('model', '=', ''), ('res_id', '=', False)]}"/>
                                     </group>
                                     <group>
                                         <field name="message_id"/>
@@ -187,8 +183,6 @@
                     <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
                     <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
                     <button name="cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
-                    <button name="open_document" string="Open Related Document" type="object" icon="gtk-jump-to"/>
-                    <button name="open_attachment" string="Open Attachments" type="object" icon="gtk-jump-to"/>
                 </tree>
             </field>
         </record>
