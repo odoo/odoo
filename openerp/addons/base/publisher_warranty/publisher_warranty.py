@@ -86,7 +86,7 @@ class publisher_warranty_contract(osv.osv):
             db_create_date = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.create_date')
             user = self.pool.get("res.users").browse(cr, uid, uid)
             user_name = user.name
-            email = user.user_email
+            email = user.email
 
             msg = {'contract_name': valid_contract.name,
                 'tb': tb,
@@ -333,7 +333,7 @@ def get_sys_logs(cr, uid):
         "db_create_date": db_create_date,
         "version": release.version,
         "contracts": [c.name for c in contracts],
-        "language": user.context_lang,
+        "language": user.lang,
     }
 
     add_arg = {"timeout":30} if sys.version_info >= (2,6) else {}

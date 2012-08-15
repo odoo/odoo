@@ -625,8 +625,8 @@ class actions_server(osv.osv):
 
                 if not email_from:
                     _logger.debug('--email-from command line option is not specified, using a fallback value instead.')
-                    if user.user_email:
-                        email_from = user.user_email
+                    if user.email:
+                        email_from = user.email
                     else:
                         email_from = "%s@%s" % (user.login, gethostname())
 
