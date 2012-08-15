@@ -83,6 +83,9 @@ openerp_mail_followers = function(session, mail) {
             return this.ds_follow.call('read', [value_ || this.get_value(), ['name', this.params.image]]).then(this.proxy('display_subscribers'));
         },
 
+        /**
+         * Display the followers.
+         * TODO: replace the is_subscriber check by fields read */
         display_subscribers: function (records) {
             var self = this;
             this.is_subscriber = false;
