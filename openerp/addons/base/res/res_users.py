@@ -353,6 +353,57 @@ class res_users(osv.osv):
         data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
         return dataobj.browse(cr, uid, data_id, context=context).res_id
 
+    def check_super(self, passwd):
+        if passwd == tools.config['admin_passwd']:
+            return True
+        else:
+            raise openerp.exceptions.AccessDenied()
+
+    def check_credentials(self, cr, uid, password):
+        """ Override this method to plug additional authentication methods"""
+        res = self.search(cr, 1, [('id','=',uid),('password','=',password)])
+        if not res:
+            raise openerp.exceptions.AccessDenied()
+
+    def login(self, db, login, password):
+        if not password:
+            return False
+        user_id = False
+        cr = pooler.get_db(db).cursor()
+        try:
+            # autocommit: our single update request will be performed atomically.
+            # (In this way, there is no opportunity to have two transactions
+            # interleaving their cr.execute()..cr.commit() calls and have one
+            # of them rolled back due to a concurrent access.)
+            cr.autocommit(True)
+            # check if user exists
+            res = self.search(cr, 1, [('login','=',login)])
+            if res:
+                user_id = res[0]
+                # check credentials
+                self.check_credentials(cr, user_id, password)
+                # We effectively unconditionally write the res_users line.
+                # Even w/ autocommit there's a chance the user row will be locked,
+                # in which case we can't delay the login just for the purpose of
+                # update the last login date - hence we use FOR UPDATE NOWAIT to
+                # try to get the lock - fail-fast
+                # Failing to acquire the lock on the res_users row probably means
+                # another request is holding it. No big deal, we don't want to
+                # prevent/delay login in that case. It will also have been logged
+                # as a SQL error, if anyone cares.
+                try:
+                    cr.execute("SELECT id FROM res_users WHERE id=%s FOR UPDATE NOWAIT", str(user_id))
+                    cr.execute("UPDATE res_users SET login_date = now() AT TIME ZONE 'UTC' WHERE id=%s", str(user_id))
+                except Exception, e:
+                    _logger.exception("Failed to update last_login for db:%s login:%s", db, login)
+        except openerp.exceptions.AccessDenied:
+            _logger.info("Login failed for db:%s login:%s", db, login)
+            user_id = False
+        finally:
+            cr.close()
+
+        return user_id
+
     def authenticate(self, db, login, password, user_agent_env):
         """Verifies and returns the user ID corresponding to the given
           ``login`` and ``password`` combination, or False if there was
@@ -371,8 +422,8 @@ class res_users(osv.osv):
             if user_agent_env and user_agent_env.get('base_location'):
                 cr = pooler.get_db(db).cursor()
                 try:
-                    self.pool.get('ir.config_parameter').set_param(cr, uid, 'web.base.url',
-                                                                   user_agent_env['base_location'])
+                    base = user_agent_env['base_location']
+                    self.pool.get('ir.config_parameter').set_param(cr, uid, 'web.base.url', base)
                     cr.commit()
                 except Exception:
                     _logger.exception("Failed to update web.base.url configuration parameter")
@@ -380,54 +431,8 @@ class res_users(osv.osv):
                     cr.close()
         return uid
 
-    def login(self, db, login, password):
-        if not password:
-            return False
-        cr = pooler.get_db(db).cursor()
-        try:
-            # autocommit: our single request will be performed atomically.
-            # (In this way, there is no opportunity to have two transactions
-            # interleaving their cr.execute()..cr.commit() calls and have one
-            # of them rolled back due to a concurrent access.)
-            # We effectively unconditionally write the res_users line.
-            cr.autocommit(True)
-            # Even w/ autocommit there's a chance the user row will be locked,
-            # in which case we can't delay the login just for the purpose of
-            # update the last login date - hence we use FOR UPDATE NOWAIT to
-            # try to get the lock - fail-fast
-            cr.execute("""SELECT id from res_users
-                          WHERE login=%s AND password=%s
-                                AND active FOR UPDATE NOWAIT""",
-                       (tools.ustr(login), tools.ustr(password)))
-            cr.execute("""UPDATE res_users
-                            SET login_date = now() AT TIME ZONE 'UTC'
-                            WHERE login=%s AND password=%s AND active
-                            RETURNING id""",
-                       (tools.ustr(login), tools.ustr(password)))
-        except Exception:
-            # Failing to acquire the lock on the res_users row probably means
-            # another request is holding it. No big deal, we don't want to
-            # prevent/delay login in that case. It will also have been logged
-            # as a SQL error, if anyone cares.
-            cr.execute("""SELECT id from res_users
-                          WHERE login=%s AND password=%s
-                                AND active""",
-                       (tools.ustr(login), tools.ustr(password)))
-        finally:
-            res = cr.fetchone()
-            cr.close()
-            if res:
-                return res[0]
-        return False
-
-    def check_super(self, passwd):
-        if passwd == tools.config['admin_passwd']:
-            return True
-        else:
-            raise openerp.exceptions.AccessDenied()
-
     def check(self, db, uid, passwd):
-        """Verifies that the given (uid, password) pair is authorized for the database ``db`` and
+        """Verifies that the given (uid, password) is authorized for the database ``db`` and
            raise an exception if it is not."""
         if not passwd:
             # empty passwords disallowed for obvious security reasons
@@ -436,29 +441,11 @@ class res_users(osv.osv):
             return
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s',
-                        (int(uid), passwd, True))
-            res = cr.fetchone()[0]
-            if not res:
-                raise openerp.exceptions.AccessDenied()
+            self.check_credentials(cr, uid, passwd)
             if self._uid_cache.has_key(db):
-                ulist = self._uid_cache[db]
-                ulist[uid] = passwd
+                self._uid_cache[db][uid] = passwd
             else:
                 self._uid_cache[db] = {uid:passwd}
-        finally:
-            cr.close()
-
-    def access(self, db, uid, passwd, sec_level, ids):
-        if not passwd:
-            return False
-        cr = pooler.get_db(db).cursor()
-        try:
-            cr.execute('SELECT id FROM res_users WHERE id=%s AND password=%s', (uid, passwd))
-            res = cr.fetchone()
-            if not res:
-                raise openerp.exceptions.AccessDenied()
-            return res[0]
         finally:
             cr.close()
 
@@ -584,8 +571,6 @@ class groups_implied(osv.osv):
                 super(groups_implied, self).write(cr, uid, gids, vals, context)
         return res
 
-groups_implied()
-
 class users_implied(osv.osv):
     _inherit = 'res.users'
 
@@ -608,10 +593,6 @@ class users_implied(osv.osv):
                 vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(users_implied, self).write(cr, uid, [user.id], vals, context)
         return res
-
-users_implied()
-
-
 
 #
 # Extension of res.groups and res.users for the special groups view in the users
@@ -755,8 +736,6 @@ class groups_view(osv.osv):
             res.append((False, 'boolean', others))
         return res
 
-groups_view()
-
 class users_view(osv.osv):
     _inherit = 'res.users'
 
@@ -847,7 +826,5 @@ class users_view(osv.osv):
                         'help': g.comment,
                     }
         return res
-
-users_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
