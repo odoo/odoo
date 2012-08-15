@@ -189,10 +189,12 @@ class mail_thread(osv.Model):
         for id in ids:
             # copy origin  al vals because we are going to modify it
             specific_vals = dict(vals)
-            followers_command = self.message_get_automatic_followers(cr, uid, id, specific_vals, context=context)
+            # we modify followers: do not subscribe the uid
             if specific_vals.get('message_follower_ids'):
+                followers_command = self.message_get_automatic_followers(cr, uid, id, specific_vals, add_uid=False, context=context)
                 specific_vals['message_follower_ids'] += followers_command
             else:
+                followers_command = self.message_get_automatic_followers(cr, uid, id, specific_vals, context=context)
                 specific_vals['message_follower_ids'] = followers_command
             write_res = super(mail_thread, self).write(cr, uid, ids, specific_vals, context=context)
         return True
