@@ -292,8 +292,10 @@ class mail_thread(osv.Model):
         body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
         
         # get subscribers
-        notif_user_ids = self.message_get_subscribers(cr, uid, thread_ids, context=context)
-
+        subscr_obj = self.pool.get('mail.followers')
+        subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
+        notif_user_ids = [sub['user_id'][0] for sub in subscr_obj.read(cr, uid, subscr_ids, ['user_id'], context=context)]
+    
         # add users requested to perform an action (need_action mechanism)
         if hasattr(self, 'get_needaction_user_ids') and self._columns.get('user_id'):
             user_ids_dict = self.get_needaction_user_ids(cr, uid, thread_ids, context=context)
@@ -998,15 +1000,6 @@ class mail_thread(osv.Model):
             will be checked to automatically subscribe those users.
         """
         return []
-
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        """ Returns the current document followers. Basically this method
-            checks in mail.followers for entries with matching res_model,
-            res_id.
-        """
-        subscr_obj = self.pool.get('mail.followers')
-        subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        return [sub['user_id'][0] for sub in subscr_obj.read(cr, uid, subscr_ids, ['user_id'], context=context)]
 
     def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
         """ Subscribe the user (or user_ids) to the current document.
