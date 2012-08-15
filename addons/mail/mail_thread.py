@@ -293,7 +293,7 @@ class mail_thread(osv.Model):
         
         # get subscribers
         subscr_obj = self.pool.get('mail.followers')
-        subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
+        subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', thread_ids)], context=context)
         notif_user_ids = [sub['user_id'][0] for sub in subscr_obj.read(cr, uid, subscr_ids, ['user_id'], context=context)]
     
         # add users requested to perform an action (need_action mechanism)
