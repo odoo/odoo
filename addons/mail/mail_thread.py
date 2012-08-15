@@ -240,12 +240,15 @@ class mail_thread(osv.Model):
         # for each monitored field: if in record_vals, it has been modified/added
         follower_ids = []
         for field in modified_fields:
-            follower_ids.append(record_vals.get(field))
+            # do not add 'False'
+            if record_vals.get(fields):
+                follower_ids.append(record_vals.get(field))
         # for other fields: read in record if fetch_missing (otherwise list is void)
         for field in other_fields:
             record = self.browse(cr, uid, id, context=context)
             value = getattr(record, field)
-            follower_ids.append(value)
+            if value:
+                follower_ids.append(value)
         # add uid if asked and not already present
         if add_uid and uid not in follower_ids:
             follower_ids.append(uid)
