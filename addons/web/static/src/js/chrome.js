@@ -510,11 +510,11 @@ instance.web.client_actions.add("database_manager", "instance.web.DatabaseManage
 instance.web.Login =  instance.web.Widget.extend({
     template: "Login",
     remember_credentials: true,
-    _db_list: null,
 
     init: function(parent, params) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
+        this.db_list = null;
         this.selected_db = null;
         this.selected_login = null;
         this.params = params || {};
@@ -537,50 +537,41 @@ instance.web.Login =  instance.web.Widget.extend({
         self.$element.find('.oe_login_manage_db').click(function() {
             self.do_action("database_manager");
         });
-        return self.load_db_list().then(self.on_db_list_loaded).then(function() {
-            if (self.params.db) {
-                self.do_login(self.params.db, self.params.login, self.params.password);
-            }
-        });
-    },
-    load_db_list: function (force) {
-        var d = $.when(), self = this;
-        if (_.isNull(this._db_list) || force) {
-            d = self.rpc("/web/database/get_list", {}, function(result) {
-                self._db_list = _.clone(result.db_list);
-            }, function(error, event) {
-                if (error.data.fault_code === 'AccessDenied') {
-                    event.preventDefault();
-                }
-            });
+        var d;
+        if (self.params.db) {
+            d = self.do_login(self.params.db, self.params.login, self.params.password);
+        } else {
+            d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
         }
         return d;
     },
-    on_db_list_loaded: function () {
-        var self = this;
-        var list = this._db_list;
-        var dbdiv = this.$element.find('div.oe_login_dbpane');
-        this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}));
-        if(list.length === 0) {
+    on_db_loaded: function (result) {
+        this.db_list = result.db_list;
+        this.$("[name=db]").replaceWith(QWeb.render('Login.dblist', { db_list: this.db_list, selected_db: this.selected_db}));
+        if(this.db_list.length === 0) {
             this.do_action("database_manager");
-        } else if(list && list.length === 1) {
-            dbdiv.hide();
+        } else if(this.db_list.length === 1) {
+            this.$('div.oe_login_dbpane').hide();
         } else {
-            dbdiv.show();
+            this.$('div.oe_login_dbpane').show();
+        }
+    },
+    on_db_failed: function (error, event) {
+        if (error.data.fault_code === 'AccessDenied') {
+            event.preventDefault();
         }
     },
     on_submit: function(ev) {
         if(ev) {
             ev.preventDefault();
         }
-        var $e = this.$element;
-        var db = $e.find("form [name=db]").val();
+        var db = this.$("form [name=db]").val();
         if (!db) {
             this.do_warn("Login", "No database selected !");
             return false;
         }
-        var login = $e.find("form input[name=login]").val();
-        var password = $e.find("form input[name=password]").val();
+        var login = this.$("form input[name=login]").val();
+        var password = this.$("form input[name=password]").val();
 
         this.do_login(db, login, password);
     },
@@ -616,12 +607,6 @@ instance.web.Login =  instance.web.Widget.extend({
             });
         });
     },
-    show: function () {
-        this.$element.show();
-    },
-    hide: function () {
-        this.$element.hide();
-    }
 });
 instance.web.client_actions.add("login", "instance.web.Login");
 
@@ -1084,8 +1069,6 @@ instance.web.WebClient = instance.web.Client.extend({
         this.session.session_logout().then(function () {
             $(window).unbind('hashchange', self.on_hashchange);
             self.do_push_state({});
-            //would be cool to be able to do this, but I think it will make addons do strange things
-            //this.show_login();
             window.location.reload();
         });
     },
