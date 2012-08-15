@@ -95,20 +95,18 @@ class mail_message(osv.Model):
                   "message, comment for other messages such as user replies"),
 
         'author_id': fields.many2one('res.partner', 'Author', required=True),
-        # this is redundant with notifications ? Yes
         'partner_ids': fields.many2many('res.partner',
-            'mail_message_res_partner_rel',
-            'message_id', 'partner_id', 'Destination partners',
-            help="When sending emails through the social network composition wizard"\
-                 "you may choose to send a copy of the mail to partners."),
-        'attachment_ids': fields.one2many('ir.attachment', 'res_id', 'Attachments'
-            domain=[('res_model','=','mail.message')]),
+            'mail_notification', 'message_id', 'partner_id', 
+            'Recipients'),
+
+        'attachment_ids': fields.one2many('ir.attachment', 'res_id',
+            'Attachments' domain=[('res_model','=','mail.message')]),
 
         'parent_id': fields.many2one('mail.message', 'Parent Message',
             select=True, ondelete='set null',
-            help="Parent message, used for displaying as threads with hierarchy"),
-        'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
+            help="Initial thread message."),
 
+        'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
 
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
@@ -119,14 +117,10 @@ class mail_message(osv.Model):
         'subject': fields.char('Subject', size=128),
         'date': fields.datetime('Date'),
 
-        # FP Note: do we need this ?
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
-
-        # END FP Note
-
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
-        'body': fields.text('Content', help="Content of Message", required=True),
 
+        'body': fields.text('Content', required=True),
     }
     _defaults = {
         'type': 'email',
@@ -144,16 +138,31 @@ class mail_message(osv.Model):
 
     def check(self, cr, uid, ids, mode, context=None):
         """
-        You can access a message if:
+        You can read/write a message if:
           - you received it (a notification exists) or
           - you can read the related document (res_model, res_id)
-        If a message is not attached to a document, normal access rights apply.
+        If a message is not attached to a document, normal access rights on
+        the mail.message object apply.
         """
         if not ids:
             return
-        res_ids = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
+
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+
+        # check messages for which you have a notification
+        not_obj = self.pool.get('mail.notification')
+        not_ids = not_obj.search(cr, uid, [
+            ('partner_id', '=', partner_id),
+            ('message_id', 'in', ids),
+        ], context=context)
+        notifications = {}
+        for notification in not_obj.browse(cr, uid, not_ids, context=context):
+            ids.remove(notification.message_id.id)
+
+        # check messages according to related documents
+        res_ids = {}
         cr.execute('SELECT DISTINCT model, res_id FROM mail_message WHERE id = ANY (%s)', (ids,))
         for rmod, rid in cr.fetchall():
             if not (rmod and rid):
@@ -162,8 +171,6 @@ class mail_message(osv.Model):
 
         ima_obj = self.pool.get('ir.model.access')
         for model, mids in res_ids.items():
-            # ignore mail messages that are not attached to a resource anymore when checking access rights
-            # (resource was deleted but message was not)
             mids = self.pool.get(model).exists(cr, uid, mids)
             ima_obj.check(cr, uid, model, mode)
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
