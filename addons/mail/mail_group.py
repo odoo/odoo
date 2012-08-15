@@ -34,13 +34,8 @@ class mail_group(osv.osv):
     subscription/follow mechanism of OpenSocial. A mail group has nothing
     in common with res.users.group.
     Additional information on fields:
-        - ``member_ids``: user member of the groups are calculated with
-          ``message_get_subscribers`` method from mail.thread
-        - ``member_count``: calculated with member_ids
-        - ``is_subscriber``: calculated with member_ids
-        
     """
-    
+
     _description = 'Discussion group'
     _name = 'mail.group'
     _inherit = ['mail.thread']
@@ -51,42 +46,15 @@ class mail_group(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
-    
+
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-    
-    def get_member_ids(self, cr, uid, ids, field_names, args, context=None):
-        if context is None:
-            context = {}
-        result = dict.fromkeys(ids)
-        for id in ids:
-            result[id] = {}
-            result[id]['member_ids'] = self.message_get_subscribers(cr, uid, [id], context=context)
-            result[id]['member_count'] = len(result[id]['member_ids'])
-            result[id]['is_subscriber'] = uid in result[id]['member_ids']
-        return result
-    
-    def search_member_ids(self, cr, uid, obj, name, args, context=None):
-        if context is None:
-            context = {}
-        sub_obj = self.pool.get('mail.subscription')
-        sub_ids = sub_obj.search(cr, uid, ['&', ('res_model', '=', obj._name), ('user_id', '=', args[0][2])], context=context)
-        subs = sub_obj.read(cr, uid, sub_ids, context=context)
-        return [('id', 'in', map(itemgetter('res_id'), subs))]
-    
-    def get_last_month_msg_nbr(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        for id in ids:
-            lower_date = (DT.datetime.now() - DT.timedelta(days=30)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            result[id] = self.message_search(cr, uid, [id], limit=None, domain=[('date', '>=', lower_date)], count=True, context=context)
-        return result
-    
+
     def _get_default_image(self, cr, uid, context=None):
         image_path = openerp.modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
-    
+
     _columns = {
-        #'name': fields.char('Group Name', size=64, required=True),
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
         'responsible_id': fields.many2one('res.users', string='Responsible',
@@ -121,17 +89,7 @@ class mail_group(osv.osv):
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 50x50px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids,
-            type='many2many', relation='res.users', string='Group members', multi='get_member_ids',
-            deprecated='This field will be deleted in a few hours or days, so please do not use it.'),
-        'member_count': fields.function(get_member_ids, type='integer',
-            string='Member count', multi='get_member_ids',
-            deprecated='This field will be deleted in a few hours or days, so please do not use it.'),
-        'is_subscriber': fields.function(get_member_ids, type='boolean',
-            string='Joined', multi='get_member_ids'),
-        'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer',
-            string='Messages count for last month'),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", 
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade",
                                     help="The email address associated with this group. New emails received will automatically "
                                          "create new topics."),
     }
@@ -150,7 +108,7 @@ class mail_group(osv.osv):
         'responsible_id': (lambda s, cr, uid, ctx: uid),
         'image': _get_default_image,
         'parent_id': _get_menu_parent,
-        'alias_domain': False, # always hide alias during creation 
+        'alias_domain': False, # always hide alias during creation
     }
 
     def _subscribe_user_with_group_m2m_command(self, cr, uid, ids, group_ids_command, context=None):
@@ -169,7 +127,7 @@ class mail_group(osv.osv):
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
             vals.pop('alias_name', None) # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid, 
+            alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
                           # have a catchall domain setup.
                           {'alias_name': "group+"+vals['name']},
@@ -194,7 +152,7 @@ class mail_group(osv.osv):
             self.write(cr, uid, [mail_group_id], {'action': 'ir.actions.client,'+str(newref), 'mail_group_id': mail_group_id}, context=context)
 
         mail_alias.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
-       
+
         if vals.get('group_ids'):
             self._subscribe_user_with_group_m2m_command(cr, uid, [mail_group_id], vals.get('group_ids'), context=context)
 

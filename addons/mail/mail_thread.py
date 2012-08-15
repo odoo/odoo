@@ -70,6 +70,19 @@ class mail_thread(osv.Model):
     _description = 'Email Thread'
     # TODO: may be we should make it _inherit ir.needaction
 
+    def _get_is_subscriber(self, cr, uid, ids, name, args, context=None):
+        subobj = self.pool.get('mail.subscription')
+        subids = subobj.search(cr, uid, [
+            ('res_model','=',self._name),
+            ('res_id', 'in', ids),
+            ('user_id','=',uid)], context=context)
+        result = dict.fromkeys(ids, False)
+        for sub in subobj.browse(cr, uid, subids, context=context):
+            result[res_id] = True
+        return result
+
+
+
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         res = {}
         for id in ids:
@@ -98,6 +111,8 @@ class mail_thread(osv.Model):
         return [('id','in',[])]
 
     _columns = {
+        'message_is_subscriber': fields.function(_get_is_subscriber,
+            type='boolean', string='Is a Follower'),
         'message_follower_ids': fields.one2many('mail.subscription', 'res_id',
             domain=lambda self: [('res_model','=',self._name)],
             string='Followers')
