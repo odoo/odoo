@@ -174,10 +174,10 @@ class mail_thread(osv.Model):
             - followers given by the monitored fields
         """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
-        fields = self.message_get_follower_fields(cr, uid, [thread_id], context=context)
-        print fields
-        if thread_id:
-            self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
+        #fields = self.message_get_follower_fields(cr, uid, [thread_id], context=context)
+        #print fields
+        #if thread_id:
+            #self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
         return thread_id
 
     def write(self, cr, uid, ids, vals, context=None):
