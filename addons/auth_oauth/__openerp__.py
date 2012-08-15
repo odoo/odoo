@@ -30,10 +30,10 @@
     'website': 'http://www.openerp.com',
     'depends': ['base', 'web'],
     'data': [
-        'oauth_providers_data.xml'
+        'auth_oauth_data.xml'
     ],
     'update_xml': [
-        'oauth_providers.xml'
+        'auth_oauth_view.xml'
     ],
     'js': [
         'static/src/js/auth_oauth.js',

@@ -1,10 +1,9 @@
 from openerp.osv import osv, fields
 
-class oauth_providers(osv.osv):
-
+class auth_oauth_providers(osv.osv):
     """Class defining the configuration values of an OAuth2 provider"""
 
-    _name = 'oauth.providers'
+    _name = 'auth.oauth.provider'
     _description = 'OAuth2 provider'
     _order = 'name'
 
@@ -15,14 +14,8 @@ class oauth_providers(osv.osv):
         'scope' : fields.char('Scope'),                                     # OAUth user data desired to access
         'validation_endpoint' : fields.char('Validation URL'),              # OAuth provider URL to validate tokens
         'data_endpoint' : fields.char('Data URL'),
-        'redirect_uris' : fields.char('Redirect URIs'),
         'icon_url' : fields.char('Icon'),                                   # URL of the icon's provider
         'active' : fields.boolean('Active'),
         'sequence' : fields.integer(),
     }
 
-    _sql_constraints = [
-        ('name', 'unique(name)', 'The name of the OAuth provider must be unique')
-    ]
-
-oauth_providers()

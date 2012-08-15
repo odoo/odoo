@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
-    <t t-extend="Login">
-        <t t-jquery=".oe_login_pane form ul" t-operation="after">
-            <ul class="oe_login_oauth">
-                <li>OR</li>
-                <li><a href="#">Login with Google</a></li>
-            </ul>
-        </t>
+<t t-name="auth_oauth.Login.button">
+    <t t-foreach="widget.oauth_providers" t-as="p">
+        <a href="#" class="oe_oauth_sign_in" t-att-data-index="p_index">
+            Login with <t t-esc="p.name"/> icon <t t-esc="p.icon_url"/>
+        </a>
+        <br/>
     </t>
-
+</t>
 </templates>
