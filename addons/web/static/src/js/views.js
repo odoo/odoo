@@ -159,7 +159,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     //state = _.extend(this.inner_action.params || {}, state);
                 }
             }
-            this.getParent().do_push_state(state);
+            if(!this.dialog) {
+                this.getParent().do_push_state(state);
+            }
         }
     },
     do_load_state: function(state, warm) {
