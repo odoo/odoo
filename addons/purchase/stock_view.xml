@@ -4,7 +4,6 @@
         <record id="stock_move_purchase" model="ir.ui.view">
             <field name="name">stock.move.form</field>
             <field name="model">stock.move</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
                  <xpath expr="//group[@name='destination_grp']" position="inside">
@@ -15,7 +14,6 @@
         <record id="stock_picking_inherit_purchase" model="ir.ui.view">
             <field name="name">Picking list</field>
             <field name="model">stock.picking</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="auto_picking" position="after">
@@ -27,7 +25,6 @@
         <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
             <field name="name">Incoming Picking Inherited</field>
             <field name="model">stock.picking.in</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="before">
@@ -43,7 +40,6 @@
         <record id="view_picking_in_search_picking_to_invoice" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
             <field name="model">stock.picking.in</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Picking to Invoice">
                     <field name="name" string="Picking to Invoice" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
@@ -100,7 +96,6 @@
         <record id="purchase_order_2_stock_picking" model="ir.ui.view">
             <field name="name">Purchase Picking Inherited</field>
             <field name="model">purchase.order</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
                  <xpath expr="//div[contains(@class, 'oe_title')]" position="before">

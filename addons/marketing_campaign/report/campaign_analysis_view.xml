@@ -4,7 +4,6 @@
     <record id="view_campaign_analysis_tree" model="ir.ui.view">
         <field name="name">campaign.analysis.tree</field>
         <field name="model">campaign.analysis</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Marketing Reports">
                 <field name="year" invisible="1"/>
@@ -28,7 +27,6 @@
     <record id="view_campaign_analysis_search" model="ir.ui.view">
         <field name="name">campaign.analysis.search</field>
         <field name="model">campaign.analysis</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Campaign Analysis">
                 <field name="date"/>

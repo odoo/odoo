@@ -52,7 +52,7 @@ Note that:
         'res_partner_view.xml',
         'email_template.xml',
     ],
-    'demo_xml': ['event_demo.yml'],
+    'demo_xml': ['event_demo.xml'],
     'test': ['test/process/event_draft2done.yml'],
     'css': ['static/src/css/event.css'],
     'installable': True,

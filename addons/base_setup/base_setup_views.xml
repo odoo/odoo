@@ -6,9 +6,6 @@
         <record id="base.menu_res_company_global" model="ir.ui.menu">
             <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
         </record>
-        <record id="base.menu_users" model="ir.ui.menu">
-            <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
-        </record>
         <record id="base.menu_publisher_warranty" model="ir.ui.menu">
             <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
         </record>
@@ -17,7 +14,6 @@
         <record id="base_setup_terminology_form" model="ir.ui.view">
             <field name="name">Specify Your Terminology</field>
             <field name="model">base.setup.terminology</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
                 <data>
