@@ -279,7 +279,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         // returns the url of the product thumbnail
         get_image_url: function() {
-            return '/web/binary/image?session_id='+instance.connection.session_id+'&model=product.product&field=image&id='+this.model.get('id');
+            return '/web/binary/image?session_id='+instance.session.session_id+'&model=product.product&field=image&id='+this.model.get('id');
         },
         renderElement: function() {
             this._super();

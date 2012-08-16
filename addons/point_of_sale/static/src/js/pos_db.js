@@ -155,7 +155,6 @@ function openerp_pos_db(instance, module){
                 }
                 stored_products[product.id] = product;
             }
-            console.log(this.category_search_string);
             this.save('products',stored_products);
             this.save('categories',stored_categories);
         },
