@@ -632,8 +632,49 @@ class sale_order_line(osv.osv):
             result['product_uom_qty'] = qty
 
         return {'value': result, 'warning': warning}
-                              
-                              
+
+    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+        context = context or {}
+        product_uom_obj = self.pool.get('product.uom')
+        partner_obj = self.pool.get('res.partner')
+        product_obj = self.pool.get('product.product') 
+        warning = {}
+        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
+            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
+            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+        
+        if not product:
+            return {'value': {'th_weight': 0, 'product_packaging': False,
+                'product_uos_qty': qty}, 'domain': {'product_uom': [],
+                   'product_uos': []}}
+        res = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
+        result = res.get('value', {})
+        warning_msgs = res.get('warning') and res['warning']['message'] or ''
+        product_obj = product_obj.browse(cr, uid, product, context=context)
+        uom2 = False
+        if uom:
+            uom2 = product_uom_obj.browse(cr, uid, uom)
+            if product_obj.uom_id.category_id.id != uom2.category_id.id:
+                uom = False
+        if not uom2:
+            uom2 = product_obj.uom_id
+            
+        compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
+        if (product_obj.type=='product') and int(compare_qty) == -1 \
+          and (product_obj.procure_method=='make_to_stock'):
+            warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
+                    (qty, uom2 and uom2.name or product_obj.uom_id.name,
+                     max(0,product_obj.virtual_available), product_obj.uom_id.name,
+                     max(0,product_obj.qty_available), product_obj.uom_id.name)
+            warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
+        # get unit price
+        if warning_msgs:
+            warning.update({'message': warning_msgs})
+        res.update({'warning': warning})
+        return res
+
     def button_cancel(self, cr, uid, ids, context=None):
         res = super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)
         for line in self.browse(cr, uid, ids, context=context):
