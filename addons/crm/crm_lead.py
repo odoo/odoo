@@ -23,7 +23,6 @@ import binascii
 from base_status.base_stage import base_stage
 import crm
 from datetime import datetime
-from mail.mail_message import to_email
 from osv import fields, osv
 import time
 import tools
@@ -629,7 +628,7 @@ class crm_lead(base_stage, osv.osv):
             'parent_id': parent_id,
             'phone': lead.phone,
             'mobile': lead.mobile,
-            'email': lead.email_from and to_email(lead.email_from)[0],
+            'email': lead.email_from and tools.email_split(lead.email_from)[0],
             'fax': lead.fax,
             'title': lead.title and lead.title.id or False,
             'function': lead.function,

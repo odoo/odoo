@@ -70,7 +70,8 @@ class mail_notification(osv.Model):
 
     # Create notification in the wall of each user
     # Send by email the notification depending on the user preferences
-    def notify(self, cr, uid, partner_ids, msg_id, context=context):
+    def notify(self, cr, uid, partner_ids, msg_id, context=None):
+        context = context or {}
         partner_obj = self.pool.get('res.partner')
         msg_obj = self.pool.get('mail.message')
         msg = msg_obj.browse(cr, uid, msg_id, context=context)
@@ -101,7 +102,7 @@ class mail_notification(osv.Model):
                 if email_to not in towrite['email_to']:
                     towrite['email_to'] = towrite['email_to'] + ', ' + email_to
 
-        if towrite.get('state', False):
+        if towrite.get('state', False) and not context.get('noemail', False):
             if towrite.get('subject', False):
                 towrite['subject'] = msg.name_get(cr, uid, [msg.id], context=context)[0][1]
             towrite['message_id'] = msg.id

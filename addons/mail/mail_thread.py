@@ -29,7 +29,7 @@ from email.utils import parsedate
 from email.message import Message
 
 from osv import osv, fields
-from mail_message import decode, mail_tools_to_email
+from mail_message import decode
 import tools
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
@@ -111,12 +111,13 @@ class mail_thread(osv.Model):
             type='boolean', string='Is a Follower'),
         'message_follower_ids': fields.one2many('mail.subscription', 'res_id',
             domain=lambda self: [('res_model','=',self._name)],
-            string='Followers')
+            string='Followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model','=',self._name)],
             string='Related Messages', 
             help="All messages related to the current document."),
-        'message_unread': fields.function(_get_message_data, fnct_search=_search_unread, 'Has Unread Messages',
+        'message_unread': fields.function(_get_message_data, fnct_search=_search_unread, 
+            string='Has Unread Messages',
             help="When checked, new messages require your attention.",
             multi="_get_message_data"),
         'message_summary': fields.function(_get_message_data, method=True,
@@ -498,15 +499,15 @@ class mail_thread(osv.Model):
         return msgs
 
     def _message_find_partners(self, cr, uid, message, headers=['From'], context=None):
-        s = ', '.join([decode(message.get(h)) for h in headers)
-        mails = mail_tools_to_email(s)
+        s = ', '.join([decode(message.get(h)) for h in headers])
+        mails = tools.email_split(s)
         result = []
         for m in mails:
             result += self.pool.get('res.partner').search(cr, uid, [('email','ilike',m)], context=context)
         return result
 
     def _message_find_user_id(self, cr, uid, message, context=None):
-        from_local_part = mail_tools_to_email(decode(message.get('From')))[0]
+        from_local_part = tools.email_split(decode(message.get('From')))[0]
         user_ids = self.pool.get('res.users').search(cr, uid, [('login', '=', from_local_part)], context=context)
         return user_ids[0] if user_ids else uid
 
@@ -571,7 +572,7 @@ class mail_thread(osv.Model):
                        decode_header(message, 'Cc'),
                        decode_header(message, 'Resent-To'),
                        decode_header(message, 'Resent-Cc')])
-        local_parts = [e.split('@')[0] for e in to_email(rcpt_tos)]
+        local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
         if local_parts:
             mail_alias = self.pool.get('mail.alias')
             alias_ids = mail_alias.search(cr, uid, [('alias_name', 'in', local_parts)])
@@ -760,8 +761,8 @@ class mail_thread(osv.Model):
                 followers = model_pool.message_thread_followers(cr, uid, [res.id])[res.id]
             else:
                 followers = self.message_thread_followers(cr, uid, [res.id])[res.id]
-            message_followers_emails = mail_tools_to_email(','.join(filter(None, followers)))
-            message_recipients = mail_tools_to_email(','.join(filter(None,
+            message_followers_emails = tools.email_split(','.join(filter(None, followers)))
+            message_recipients = tools.email_split(','.join(filter(None,
                                                                        [decode(msg['from']),
                                                                         decode(msg['to']),
                                                                         decode(msg['cc'])])))
@@ -772,7 +773,7 @@ class mail_thread(osv.Model):
                     del msg['reply-to']
                     msg['reply-to'] = res.section_id.reply_to
 
-                smtp_from, = mail_tools_to_email(msg['from'])
+                smtp_from, = tools.email_split(msg['from'])
                 msg['from'] = smtp_from
                 msg['to'] =  ", ".join(forward_to)
                 msg['message-id'] = tools.generate_tracking_message_id(res.id)
@@ -839,7 +840,7 @@ class mail_thread(osv.Model):
                 'datas_fname': 'email.msg',
                 'res_model': 'mail.message',
                 'description': _('original email'),
-            })
+            }))
 
         if not message_id:
             # Very unusual situation, be we should be fault-tolerant here
@@ -1037,7 +1038,7 @@ class mail_thread(osv.Model):
             ('partner_id', 'in', partner_ids),
             ], context=context)
         followers = {}
-        for follow in obj.browse(cr, uid, objids, context=context)
+        for follow in obj.browse(cr, uid, objids, context=context):
             followers.setdefault(follow.partner_id.id, {})[follow.res_id] = True
         create_ids = []
         for res_id in ids:
@@ -1093,6 +1094,6 @@ class mail_thread(osv.Model):
             where
                 message_id in (select id from mail_message where res_id in %s and model=%s)
                 user_id = %s
-        ''', (ids, self._name, uid)
+        ''', (ids, self._name, uid))
         return True
 

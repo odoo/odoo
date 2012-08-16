@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import osv, fields
 
 class res_partner_mail(osv.Model):
     """ Inherits partner and adds CRM information in the partner form """

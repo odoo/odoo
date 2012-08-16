@@ -28,7 +28,11 @@ from osv import fields
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 
-from ..mail_message import to_email
+# FP Note: refactor in tools ?
+def mail_tools_to_email(text):
+    """Return a list of the email addresses found in ``text``"""
+    if not text: return []
+    return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
 
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
@@ -56,7 +60,7 @@ class mail_compose_message(osv.TransientModel):
                       related, in case ``mail.compose.message.mode == 'mass_mail'``.
     """
     _name = 'mail.compose.message'
-    _inherit = 'mail.message.common'
+    _inherit = 'mail.message'
     _description = 'Email composition wizard'
 
     def default_get(self, cr, uid, fields, context=None):
@@ -304,8 +308,8 @@ class mail_compose_message(osv.TransientModel):
                             email_from=email_from, email_to=email_to, email_cc=email_cc, 
                             reply_to=reply_to, references=references, attachments=attachment, headers=headers, context=context)
                     else:
-                        mail_message_obj.schedule_with_attach(cr, uid, email_from, to_email(email_to), subject, rendered_body_text,
-                            model=mail_wiz.model, email_cc=to_email(email_cc), reply_to=reply_to,
+                        mail_message_obj.schedule_with_attach(cr, uid, email_from, mail_tools_to_email(email_to), subject, rendered_body_text,
+                            model=mail_wiz.model, email_cc=mail_tools_to_email(email_cc), reply_to=reply_to,
                             attachments=attachment, references=references, res_id=active_id, partner_ids=partner_ids,
                             content_subtype=mail_wiz.content_subtype, headers=headers, context=context)
             else:
@@ -316,8 +320,8 @@ class mail_compose_message(osv.TransientModel):
                         email_from=mail_wiz.email_from, email_to=mail_wiz.email_to, email_cc=mail_wiz.email_cc, 
                         reply_to=mail_wiz.reply_to, references=references, attachments=attachment, headers=headers, context=context)
                 else:
-                    msg_ids = [mail_message_obj.schedule_with_attach(cr, uid, mail_wiz.email_from, to_email(mail_wiz.email_to), subject, mail_wiz.body_text,
-                        type=type, model=mail_wiz.model, email_cc=to_email(mail_wiz.email_cc), reply_to=mail_wiz.reply_to,
+                    msg_ids = [mail_message_obj.schedule_with_attach(cr, uid, mail_wiz.email_from, mail_tools_to_email(mail_wiz.email_to), subject, mail_wiz.body_text,
+                        type=type, model=mail_wiz.model, email_cc=mail_tools_to_email(mail_wiz.email_cc), reply_to=mail_wiz.reply_to,
                         attachments=attachment, references=references, res_id=int(mail_wiz.res_id), partner_ids=partner_ids,
                         content_subtype=mail_wiz.content_subtype, headers=headers, context=context)]
                 # in normal mode, we send the email immediately, as the user expects us to (delay should be sufficiently small)

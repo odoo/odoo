@@ -46,11 +46,6 @@ def decode(text):
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
 
-def mail_tools_to_email(text):
-    """Return a list of the email addresses found in ``text``"""
-    if not text: return []
-    return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
-
 class mail_message(osv.Model):
     """Model holding messages: system notification (replacing res.log
     notifications), comments (for OpenChatter feature). This model also
@@ -99,7 +94,7 @@ class mail_message(osv.Model):
             'Recipients'),
 
         'attachment_ids': fields.one2many('ir.attachment', 'res_id',
-            'Attachments' domain=[('res_model','=','mail.message')]),
+            'Attachments', domain=[('res_model','=','mail.message')]),
 
         'parent_id': fields.many2one('mail.message', 'Parent Message',
             select=True, ondelete='set null',

@@ -233,11 +233,11 @@ class mail_mail(osv.Model):
                 # without queuing
                 msg = ir_mail_server.build_email(
                     email_from=message.email_from,
-                    email_to=mail_tools_to_email(message_email_to),
+                    email_to=tools.email_split(message_email_to),
                     subject=message.subject,
                     body=body,
                     body_alternative=body_alternative,
-                    email_cc=mail_tools_to_email(message.email_cc),
+                    email_cc=tools.email_split(message.email_cc),
                     reply_to=message.reply_to,
                     attachments=attachments, message_id=message.message_id,
                     references = message.references,
