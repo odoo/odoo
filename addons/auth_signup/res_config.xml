@@ -7,8 +7,8 @@
             <field name="model">base.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_general_configuration"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='module_auth_signup']/.." position="after">
-                    <div attrs="{'invisible':[('module_auth_signup','=',False)]}">
+                <xpath expr="//field[@name='module_auth_anonymous']/.." position="after">
+                    <div>
                         <label for="auth_signup_template_user_id"/>
                         <field name="auth_signup_template_user_id" class="oe_inline"/>
                     </div>

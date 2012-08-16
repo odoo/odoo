@@ -38,16 +38,21 @@
                         </div>
                     </group>
                     <group>
-                        <label for="id" string="Access"/>
+                        <label for="id" string="Portal access"/>
                         <div>
                             <div>
                                 <field name="module_portal" class="oe_inline"/>
                                 <label for="module_portal"/>
                             </div>
                             <div>
-                                <field name="module_auth_signup" class="oe_inline"/>
-                                <label for="module_auth_signup"/>
+                                <field name="module_auth_anonymous" class="oe_inline"/>
+                                <label for="module_auth_anonymous"/>
                             </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Authentication"/>
+                        <div>
                             <div>
                                 <field name="module_auth_oauth" class="oe_inline"/>
                                 <label for="module_auth_oauth"/>
