@@ -562,6 +562,36 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.do_toggle_fold();
         this.view.compute_groups_width();
     },
+    do_action_edit: function() {
+        var self = this;
+        self.do_action({
+            res_id: this.group.value[0],
+            name: _t("Edit column"),
+            res_model: self.view.group_by_field.relation,
+            views: [[false, 'form']],
+            type: 'ir.actions.act_window',
+            target: "new",
+            flags: {
+                action_buttons: true,
+            }
+        });
+        var am = instance.webclient.action_manager;
+        var form = am.dialog_widget.views.form.controller;
+        form.on_button_cancel.add_last(am.dialog.on_close);
+        form.on_saved.add_last(function() {
+            am.dialog.on_close();
+            self.view.do_reload();
+        });
+    },
+    do_action_delete: function() {
+        var self = this;
+        if (confirm(_t("Are you sure to remove this column ?"))) {
+            (new instance.web.DataSet(self, self.view.group_by_field.relation)).unlink([self.group.value[0]]).then(function(r) {
+                self.group.destroy();
+                self.view.do_reload();
+            });
+        }
+    },
     do_save_sequences: function() {
         var self = this;
         if (_.indexOf(this.view.fields_keys, 'sequence') > -1) {
