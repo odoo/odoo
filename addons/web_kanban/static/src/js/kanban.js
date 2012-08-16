@@ -68,11 +68,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             return JSON.parse(this.fields_view.arch.attrs.quick_create);
         return !! this.group_by;
     },
-    _is_create_enabled: function() {
+    _is_action_enabled: function(action) {
         if (! this.options.creatable)
             return false;
-        if (this.fields_view.arch.attrs.create !== undefined)
-            return JSON.parse(this.fields_view.arch.attrs.create);
+        if (_.has(this.fields_view.arch.attrs, action))
+            return JSON.parse(this.fields_view.arch.attrs[action]);
         return true;
     },
     add_qweb_template: function() {

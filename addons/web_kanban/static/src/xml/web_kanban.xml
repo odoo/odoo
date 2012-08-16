@@ -14,7 +14,7 @@
 </t>
 <div t-name="KanbanView.buttons" class="oe_kanban_buttons">
     <t t-if="widget.options.action_buttons !== false">
-        <t t-if="widget._is_create_enabled()">
+        <t t-if="widget._is_action_enabled('create')">
             <button type="button" class="oe_kanban_button_new oe_highlight">
                 <t t-esc="widget.options.create_text || _t('Create')"/>
             </button>
