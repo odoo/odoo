@@ -184,6 +184,7 @@
 
     <rng:define name="diagram">
         <rng:element name="diagram">
+            <rng:optional><rng:attribute name="create" /></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:ref name="node"/>
             <rng:ref name="arrow"/>
@@ -381,6 +382,9 @@
                  <rng:value>5years</rng:value>
               </rng:choice></rng:attribute>
             </rng:optional>
+            <rng:optional><rng:attribute name="create"/></rng:optional>
+            <rng:optional><rng:attribute name="delete"/></rng:optional>
+            <rng:optional><rng:attribute name="edit"/></rng:optional>
             <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:optional><rng:attribute name="date_delay"/></rng:optional>
             <rng:optional><rng:attribute name="day_length"/></rng:optional>
