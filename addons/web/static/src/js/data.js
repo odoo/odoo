@@ -706,7 +706,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend( /** @lends openerp.
      * @returns {$.Deferred}
      */
     call_and_eval: function (method, args, domain_index, context_index, callback, error_callback) {
-        return this.rpc('/web/dataset/call', {
+        return instance.session.rpc('/web/dataset/call', {
             model: this.model,
             method: method,
             domain_id: domain_index == undefined ? null : domain_index,
