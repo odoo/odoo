@@ -514,7 +514,12 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                 self.view.dataset.ids.push(id);
                 self.do_add_records(records, true);
             });
-    }
+    },
+    _is_action_enabled: function(action) {
+        if (_.has(this.fields_view.arch.attrs, action))
+            return JSON.parse(this.fields_view.arch.attrs[action]);
+        return true;
+    }    
 });
 
 instance.web_kanban.KanbanRecord = instance.web.Widget.extend({

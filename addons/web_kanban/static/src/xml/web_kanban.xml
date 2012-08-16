@@ -25,7 +25,7 @@
     <td class="oe_kanban_group_header">
         <t t-if="widget.view.group_by">
             <div class="oe_kanban_header">
-                <t t-if="widget.view._is_quick_create_enabled()">
+                <t t-if="widget.view._is_quick_create_enabled() and widget.view._is_action_enabled('create')">
                     <div class="oe_kanban_add oe_e">]</div>
                 </t>
                 <div class="oe_fold_column">
