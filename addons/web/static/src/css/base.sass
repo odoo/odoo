@@ -1498,11 +1498,9 @@ $sheet-max-width: 860px
         .oe_form .oe_form_field_date
             width: auto
     .oe_form_nosheet
-        margin: 8px
-    .oe_form_nosheet > header
-        margin-top: -20px
-        margin-left: -20px
-        margin-right: -20px
+        margin: 16px
+        > header
+            margin: -16px -16px 0 -16px
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form
@@ -1510,7 +1508,7 @@ $sheet-max-width: 860px
             position: relative
             border-bottom: 1px solid #cacaca
             @include vertical-gradient(#fcfcfc, #dedede)
-            padding: 0 8px
+            padding: 8px
             //line-height: 30px
             ul
                 display: inline-block
