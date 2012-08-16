@@ -5,37 +5,19 @@
         <record id="view_base_import_language" model="ir.ui.view">
             <field name="name">Import Translation</field>
             <field name="model">base.language.import</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Import Translation">
-                    <group col="8">
-                        <group colspan="3">
-                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
-                            <newline/>
-                            <label colspan="4" width="220" string="Supported file formats: *.csv (Comma-separated values) or *.po (GetText Portable Objects)"/>
-                            <label colspan="4" width="220" string="Please double-check that the file encoding is set to UTF-8 (sometimes called Unicode) when the translator exports it."/>
-                            <label colspan="4" width="220"/>
-                            <label colspan="4" width="220" string="When using CSV format, please also check that the first line of your file is one of the following:"/>
-                            <label colspan="4" width="220" string="- type,name,res_id,src,value"/>
-                            <label colspan="4" width="220" string="- module,type,name,res_id,src,value"/>
-                        </group>
-                        <separator orientation="vertical" rowspan="15"/>
-                        <group colspan="4" col="4">
-                            <separator string="Import Translation" colspan="4"/>
-                            <label colspan="4" nolabel="1" string="If you need another language than the official ones available, you can import a language pack from here. Other OpenERP languages than the official ones can be found on launchpad."/>
-                            <newline/>
-                            <field name="name" width="200"/>
-                            <field name="code"/>
-                            <field name="data" colspan="4"/>
-                            <field name="overwrite"/>
-                        </group>
-                        <group colspan="8" col="8">
-                            <separator string="" colspan="8"/>
-                            <label colspan="6" width="220"/>
-                                <button special="cancel" string="_Close" icon="gtk-cancel"/>
-                                <button name="import_lang" string="_Import" type="object" icon="gtk-ok"/>
-                        </group>
+                <form string="Import Translation" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="code" string="Code" placeholder="e.g. en_US"/>
+                        <field name="data"/>
+                        <field name="overwrite"/>
                     </group>
+                    <footer>
+                        <button name="import_lang" string="_Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

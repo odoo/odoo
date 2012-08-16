@@ -70,7 +70,7 @@ class base_language_export(osv.osv_memory):
     _name = "base.language.export"
     _inherit = "ir.wizard.screen"
     _columns = {
-            'name': fields.char('Filename', 16, readonly=True),
+            'name': fields.char('File Name', 16, readonly=True),
             'lang': fields.selection(_get_languages, 'Language', help='To export a new language, do not select a language.'), # not required: unset = new language
             'format': fields.selection( ( ('csv','CSV File'), ('po','PO File'), ('tgz', 'TGZ Archive')), 'File Format', required=True),
             'modules': fields.many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id', 'Modules', domain=[('state','=','installed')]),

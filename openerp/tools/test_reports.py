@@ -34,15 +34,13 @@ from subprocess import Popen, PIPE
 import os
 import tempfile
 
+_logger = logging.getLogger(__name__)
+
 def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
     """ Try to render a report <rname> with contents of ids
     
         This function should also check for common pitfalls of reports.
     """
-    if our_module:
-        log = logging.getLogger('tests.%s' % our_module)
-    else:
-        log = logging.getLogger('tools.test_reports')
     if data is None:
         data = {}
     if context is None:
@@ -51,7 +49,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
         rname_s = rname[7:]
     else:
         rname_s = rname
-    log.log(netsvc.logging.TEST, "  - Trying %s.create(%r)", rname, ids)
+    _logger.log(netsvc.logging.TEST, "  - Trying %s.create(%r)", rname, ids)
     res = netsvc.LocalService(rname).create(cr, uid, ids, data, context)
     if not isinstance(res, tuple):
         raise RuntimeError("Result of %s.create() should be a (data,format) tuple, now it is a %s" % \
@@ -64,7 +62,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], rname+ '.'+res_format), 'wb+').write(res_data)
 
-    log.debug("Have a %s report for %s, will examine it", res_format, rname)
+    _logger.debug("Have a %s report for %s, will examine it", res_format, rname)
     if res_format == 'pdf':
         if res_data[:5] != '%PDF-':
             raise ValueError("Report %s produced a non-pdf header, %r" % (rname, res_data[:10]))
@@ -79,21 +77,21 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
             res_text = tools.ustr(fp.read())
             os.unlink(rfname)
         except Exception:
-            log.debug("Unable to parse PDF report: install pdftotext to perform automated tests.")
+            _logger.debug("Unable to parse PDF report: install pdftotext to perform automated tests.")
 
         if res_text is not False:
             for line in res_text.split('\n'):
                 if ('[[' in line) or ('[ [' in line):
-                    log.error("Report %s may have bad expression near: \"%s\".", rname, line[80:])
+                    _logger.error("Report %s may have bad expression near: \"%s\".", rname, line[80:])
             # TODO more checks, what else can be a sign of a faulty report?
     elif res_format == 'foobar':
         # TODO
         pass
     else:
-        log.warning("Report %s produced a \"%s\" chunk, cannot examine it", rname, res_format)
+        _logger.warning("Report %s produced a \"%s\" chunk, cannot examine it", rname, res_format)
         return False
 
-    log.log(netsvc.logging.TEST, "  + Report %s produced correctly.", rname)
+    _logger.log(netsvc.logging.TEST, "  + Report %s produced correctly.", rname)
     return True
 
 def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
@@ -125,13 +123,9 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
     # TODO context fill-up
 
     pool = pooler.get_pool(cr.dbname)
-    if our_module:
-        log = logging.getLogger('tests.%s' % our_module)
-    else:
-        log = logging.getLogger('tools.test_reports')
 
     def log_test(msg, *args):
-        log.log(netsvc.logging.TEST, "  - " + msg, *args)
+        _logger.log(netsvc.logging.TEST, "  - " + msg, *args)
 
     datas = {}
     if active_model:
@@ -195,7 +189,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 view_data.update(datas.get('form'))
             if wiz_data:
                 view_data.update(wiz_data)
-            log.debug("View data is: %r", view_data)
+            _logger.debug("View data is: %r", view_data)
 
             for fk, field in view_res.get('fields',{}).items():
                 # Default fields returns list of int, while at create()
@@ -237,7 +231,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                                 'weight': button_weight,
                                 })
             except Exception, e:
-                log.warning("Cannot resolve the view arch and locate the buttons!", exc_info=True)
+                _logger.warning("Cannot resolve the view arch and locate the buttons!", exc_info=True)
                 raise AssertionError(e.args[0])
 
             if not datas['res_id']:
@@ -249,7 +243,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 raise AssertionError("view form doesn't have any buttons to press!")
 
             buttons.sort(key=lambda b: b['weight'])
-            log.debug('Buttons are: %s', ', '.join([ '%s: %d' % (b['string'], b['weight']) for b in buttons]))
+            _logger.debug('Buttons are: %s', ', '.join([ '%s: %d' % (b['string'], b['weight']) for b in buttons]))
 
             res = None
             while buttons and not res:
@@ -262,12 +256,12 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                     #there we are! press the button!
                     fn =  getattr(pool.get(datas['res_model']), b['name'])
                     if not fn:
-                        log.error("The %s model doesn't have a %s attribute!", datas['res_model'], b['name'])
+                        _logger.error("The %s model doesn't have a %s attribute!", datas['res_model'], b['name'])
                         continue
                     res = fn(cr, uid, [datas['res_id'],], context)
                     break
                 else:
-                    log.warning("in the \"%s\" form, the \"%s\" button has unknown type %s",
+                    _logger.warning("in the \"%s\" form, the \"%s\" button has unknown type %s",
                         action_name, b['string'], b['type'])
             return res
 
@@ -293,7 +287,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         loop += 1
         # This part tries to emulate the loop of the Gtk client
         if loop > 100:
-            log.error("Passed %d loops, giving up", loop)
+            _logger.error("Passed %d loops, giving up", loop)
             raise Exception("Too many loops at action")
         log_test("it is an %s action at loop #%d", action.get('type', 'unknown'), loop)
         result = _exec_action(action, datas, context)

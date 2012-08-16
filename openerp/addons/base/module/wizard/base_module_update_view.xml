@@ -5,45 +5,30 @@
         <record id="view_base_module_update" model="ir.ui.view">
             <field name="name">Module Update</field>
             <field name="model">base.module.update</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Update Module List">
-                    <group col="8">
-                        <group colspan="3">
-                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
-                            <newline/>
-                            <label colspan="4" width="220" string="This wizard will scan all module repositories on the server side to detect newly added modules as well as any change to existing modules."/>
-                            <label colspan="4" width="220"/>
-                            <label colspan="4" width="220" string="Please be patient, as this operation may take a few seconds..."/>
-                            <field name="state" invisible="1"/>
-                        </group>
-                        <separator orientation="vertical" rowspan="15"/>
-                        <group colspan="4">
-                            <separator string="Module update result" colspan="4"/>
-                            <group states="init" colspan="4">
-                                <label string="Click on Update below to start the process..." colspan="4"/>
-                            </group>
-                            <group states="done" colspan="4">
-                                <field name="update" colspan="4"/>
-                                <field name="add" colspan="4"/>
-                            </group>
-                        </group>
-                        <group colspan="8" col="8" states="init">
-                            <separator string="" colspan="8"/>
-                            <label colspan="6" width="220"/>
-                            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                            <button name="update_module" string="Update" type="object" icon="gtk-ok"/>
-                        </group>
-                        <group colspan="8" col="8" states="done">
-                            <separator string="" colspan="8"/>
-                            <label colspan="6" width="220"/>
-                            <button special="cancel" string="Close" icon="gtk-ok"/>
-                            <button name="action_module_open" string="Open Modules" type="object" icon="gtk-go-forward"/>
-                        </group>
+                <form string="Update Module List" version="7.0">
+                    <field name="state" invisible="1"/>
+                    <separator string="Module Update Result"/>
+                    <group states="init">
+                        <label string="Click on Update below to start the process..." />
                     </group>
+                    <group states="done" >
+                        <field name="update"/>
+                        <field name="add" />
+                    </group>
+                    <footer>
+                        <div states="init">
+                            <button name="update_module" string="Update" type="object" class="oe_highlight"/> or 
+                            <button special="cancel" string="Cancel" class="oe_link"/>
+                        </div>
+                        <div states="done">
+                            <button name="action_module_open" string="Open Modules" type="object" class="oe_highlight"/> or 
+                            <button special="cancel" string="Close" class="oe_link"/>
+                        </div>
+                    </footer>
                 </form>
             </field>
-        </record>
+        </record>        
 
         <record id="action_view_base_module_update" model="ir.actions.act_window">
             <field name="name">Module Update</field>
@@ -58,7 +43,7 @@
             name="Update Modules List"
             action="action_view_base_module_update"
             id="menu_view_base_module_update"
-            groups="base.group_extended"
+            groups="base.group_no_one"
             parent="menu_management"
             sequence="2"
             icon="STOCK_CONVERT"/>

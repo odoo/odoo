@@ -13,17 +13,17 @@
     2. Try simple literal definition to verify it works with literal_eval
 -
     !python {model: ir.model}: |
-        from tools.safe_eval import literal_eval
+        import ast
         expected = (1, {"a": 9}, (True, False, None))
-        actual = literal_eval('(1, {"a": 9}, (True, False, None))')
+        actual = ast.literal_eval('(1, {"a": 9}, (True, False, None))')
         assert actual == expected, "Simple python expressions are not working with literal_eval"
 -
     3. Try arithmetic expression in literal_eval to verify it does not work
 -
     !python {model: ir.model}: |
-        from tools.safe_eval import literal_eval
+        import ast
         try:
-           literal_eval('(1, {"a": 2*9}, (True, False, None))')
+           ast.literal_eval('(1, {"a": 2*9}, (True, False, None))')
            assert False, "literal_eval should not accept arithmetic expressions"
         except ValueError:
            pass
@@ -31,9 +31,9 @@
     4. Try forbidden expressions in literal_eval to verify they are not allowed
 -
     !python {model: ir.model}: |
-        from tools.safe_eval import literal_eval
+        import ast
         try:
-           literal_eval('{"a": True.__class__}')
+           ast.literal_eval('{"a": True.__class__}')
            assert False, "literal_eval should accept only literals"
         except ValueError:
            pass

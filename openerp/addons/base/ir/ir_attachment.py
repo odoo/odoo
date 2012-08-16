@@ -54,11 +54,11 @@ class ir_attachment(osv.osv):
             ima.check(cr, uid, model, mode)
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        ids = super(ir_attachment, self).search(cr, uid, args, offset=offset,
-                                                limit=limit, order=order,
-                                                context=context, count=False)
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        ids = super(ir_attachment, self)._search(cr, uid, args, offset=offset,
+                                                 limit=limit, order=order,
+                                                 context=context, count=count,
+                                                 access_rights_uid=access_rights_uid)
         if not ids:
             if count:
                 return 0
@@ -142,10 +142,10 @@ class ir_attachment(osv.osv):
     _columns = {
         'name': fields.char('Attachment Name',size=256, required=True),
         'datas': fields.binary('Data'),
-        'datas_fname': fields.char('Filename',size=256),
+        'datas_fname': fields.char('File Name',size=256),
         'description': fields.text('Description'),
         'res_name': fields.function(_name_get_resname, type='char', size=128,
-                string='Resource Name', method=True, store=True),
+                string='Resource Name', store=True),
         'res_model': fields.char('Resource Object',size=64, readonly=True,
                 help="The database object this attachment will be attached to"),
         'res_id': fields.integer('Resource ID', readonly=True,

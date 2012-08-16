@@ -22,9 +22,9 @@
 """ Models registries.
 
 """
-import threading
-
+from contextlib import contextmanager
 import logging
+import threading
 
 import openerp.sql_db
 import openerp.osv.orm
@@ -32,6 +32,8 @@ import openerp.cron
 import openerp.tools
 import openerp.modules.db
 import openerp.tools.config
+
+_logger = logging.getLogger(__name__)
 
 class Registry(object):
     """ Model registry for a particular database.
@@ -42,19 +44,22 @@ class Registry(object):
     """
 
     def __init__(self, db_name):
-        self.models = {} # model name/model instance mapping
+        self.models = {}    # model name/model instance mapping
         self._sql_error = {}
         self._store_function = {}
         self._init = True
         self._init_parent = {}
+
+        # modules fully loaded (maintained during init phase by `loading` module)
+        self._init_modules = set()
+
         self.db_name = db_name
         self.db = openerp.sql_db.db_connect(db_name)
 
         cr = self.db.cursor()
         has_unaccent = openerp.modules.db.has_unaccent(cr)
         if openerp.tools.config['unaccent'] and not has_unaccent:
-            logger = logging.getLogger('unaccent')
-            logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
+            _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
         self.has_unaccent = openerp.tools.config['unaccent'] and has_unaccent
         cr.close()
 
@@ -114,6 +119,17 @@ class Registry(object):
         """
         for model in self.models.itervalues():
             model.clear_caches()
+
+    @contextmanager
+    def cursor(self, auto_commit=True):
+        cr = self.db.cursor()
+        try:
+            yield cr
+            if auto_commit:
+                cr.commit()
+        finally:
+            cr.close()
+
 
 class RegistryManager(object):
     """ Model registries manager.
@@ -191,7 +207,6 @@ class RegistryManager(object):
                 cls.registries[db_name].clear_caches()
                 del cls.registries[db_name]
                 openerp.cron.cancel(db_name)
-
 
     @classmethod
     def delete_all(cls):

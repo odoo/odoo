@@ -4,7 +4,6 @@
         <record id="view_menu" model="ir.ui.view">
             <field name="name">ir.ui.menu.tree</field>
             <field name="model">ir.ui.menu</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Menu" toolbar="1">
                     <field icon="icon" name="name"/>
@@ -91,6 +90,10 @@
             <field name="name">Aruba</field>
             <field name="code">aw</field>
         </record>
+        <record id="ax" model="res.country">
+            <field name="name">Åland Islands</field>
+            <field name="code">ax</field>
+        </record>
         <record id="az" model="res.country">
             <field name="name">Azerbaijan</field>
             <field name="code">az</field>
@@ -132,6 +135,10 @@
             <field name="name">Benin</field>
             <field name="code">bj</field>
         </record>
+        <record id="bl" model="res.country">
+            <field name="name">Saint Barthélémy</field>
+            <field name="code">bl</field>
+        </record>
         <record id="bm" model="res.country">
             <field name="name">Bermuda</field>
             <field name="code">bm</field>
@@ -143,6 +150,10 @@
         <record id="bo" model="res.country">
             <field name="name">Bolivia</field>
             <field name="code">bo</field>
+        </record>
+        <record id="bq" model="res.country">
+            <field name="name">Bonaire, Sint Eustatius and Saba</field>
+            <field name="code">bq</field>
         </record>
         <record id="br" model="res.country">
             <field name="name">Brazil</field>
@@ -187,7 +198,7 @@
             <field name="code">cf</field>
         </record>
         <record id="cd" model="res.country">
-            <field name="name">Congo, The Democratic Republic of the</field>
+            <field name="name">Congo, Democratic Republic of the</field>
             <field name="code">cd</field>
         </record>
         <record id="cg" model="res.country">
@@ -226,15 +237,6 @@
             <field name="name">Costa Rica</field>
             <field name="code">cr</field>
         </record>
-        <record id="rs" model="res.country">
-            <field name="name">Serbia</field>
-            <field name="code">rs</field>
-        </record>
-        <record id="me" model="res.country">
-            <field name="name">Montenegro</field>
-            <field name="code">me</field>
-        </record>
-
         <record id="cu" model="res.country">
             <field name="name">Cuba</field>
             <field name="code">cu</field>
@@ -242,6 +244,10 @@
         <record id="cv" model="res.country">
             <field name="name">Cape Verde</field>
             <field name="code">cv</field>
+        </record>
+        <record id="cw" model="res.country">
+            <field name="name">Curaçao</field>
+            <field name="code">cw</field>
         </record>
         <record id="cx" model="res.country">
             <field name="name">Christmas Island</field>
@@ -358,6 +364,10 @@
             <field name="name">Gibraltar</field>
             <field name="code">gi</field>
         </record>
+        <record id="gg" model="res.country">
+            <field name="name">Guernsey</field>
+            <field name="code">gg</field>
+        </record>
         <record id="gl" model="res.country">
             <field name="name">Greenland</field>
             <field name="code">gl</field>
@@ -383,7 +393,7 @@
             <field name="code">gr</field>
         </record>
         <record id="gs" model="res.country">
-            <field name="name">S. Georgia &amp; S. Sandwich Isls.</field>
+            <field name="name">South Georgia and the South Sandwich Islands</field>
             <field name="code">gs</field>
         </record>
         <record id="gt" model="res.country">
@@ -438,6 +448,10 @@
             <field name="name">Israel</field>
             <field name="code">il</field>
         </record>
+        <record id="im" model="res.country">
+            <field name="name">Isle of Man</field>
+            <field name="code">im</field>
+        </record>
         <record id="in" model="res.country">
             <field name="name">India</field>
             <field name="code">in</field>
@@ -462,6 +476,10 @@
         <record id="it" model="res.country">
             <field name="name">Italy</field>
             <field name="code">it</field>
+        </record>
+        <record id="je" model="res.country">
+            <field name="name">Jersey</field>
+            <field name="code">je</field>
         </record>
         <record id="jm" model="res.country">
             <field name="name">Jamaica</field>
@@ -575,6 +593,14 @@
             <field name="name">Moldavia</field>
             <field name="code">md</field>
         </record>
+        <record id="me" model="res.country">
+            <field name="name">Montenegro</field>
+            <field name="code">me</field>
+        </record>
+        <record id="mf" model="res.country">
+            <field name="name">Saint Martin (French part)</field>
+            <field name="code">mf</field>
+        </record>
         <record id="mg" model="res.country">
             <field name="name">Madagascar</field>
             <field name="code">mg</field>
@@ -584,7 +610,7 @@
             <field name="code">mh</field>
         </record>
         <record id="mk" model="res.country">
-            <field name="name">FYROM</field>
+            <field name="name">Macedonia, the former Yugoslav Republic of</field>
             <field name="code">mk</field>
         </record>
         <record id="ml" model="res.country">
@@ -674,6 +700,7 @@
         <record id="nl" model="res.country">
             <field name="name">Netherlands</field>
             <field name="code">nl</field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />            
         </record>
         <record id="no" model="res.country">
             <field name="name">Norway</field>
@@ -743,6 +770,10 @@
             <field name="name">Puerto Rico</field>
             <field name="code">pr</field>
         </record>
+        <record id="ps" model="res.country">
+            <field name="name">Palestinian Territory, Occupied</field>
+            <field name="code">ps</field>
+        </record>
         <record id="pt" model="res.country">
             <field name="name">Portugal</field>
             <field name="code">pt</field>
@@ -766,6 +797,10 @@
         <record id="ro" model="res.country">
             <field name="name">Romania</field>
             <field name="code">ro</field>
+        </record>
+        <record id="rs" model="res.country">
+            <field name="name">Serbia</field>
+            <field name="code">rs</field>
         </record>
         <record id="ru" model="res.country">
             <field name="name">Russian Federation</field>
@@ -812,7 +847,7 @@
             <field name="code">sj</field>
         </record>
         <record id="sk" model="res.country">
-            <field name="name">Slovak Republic</field>
+            <field name="name">Slovakia</field>
             <field name="code">sk</field>
         </record>
         <record id="sl" model="res.country">
@@ -835,6 +870,10 @@
             <field name="name">Suriname</field>
             <field name="code">sr</field>
         </record>
+        <record id="ss" model="res.country">
+            <field name="name">South Sudan</field>
+            <field name="code">ss</field>
+        </record>
         <record id="st" model="res.country">
             <field name="name">Saint Tome (Sao Tome) and Principe</field>
             <field name="code">st</field>
@@ -842,6 +881,10 @@
         <record id="sv" model="res.country">
             <field name="name">El Salvador</field>
             <field name="code">sv</field>
+        </record>
+        <record id="sx" model="res.country">
+            <field name="name">Sint Maarten (Dutch part)</field>
+            <field name="code">sx</field>
         </record>
         <record id="sy" model="res.country">
             <field name="name">Syria</field>
@@ -1014,14 +1057,16 @@
         <record id="main_partner" model="res.partner">
             <field name="name">Your Company</field>
             <!-- Address and Company ID will be set later -->
-            <field name="address" eval="[]"/>
             <field name="company_id" eval="None"/>
             <field name="customer" eval="False"/>
-        </record>
-        <record id="main_address" model="res.partner.address">
-            <field name="partner_id" ref="main_partner"/>
-            <field name="type">default</field>
-            <field name="company_id" eval="None"/>
+            <field name="is_company" eval="True"/>
+            <field name="street">45, Rue du Palais</field>
+            <field name="city">Paris</field>
+            <field name="zip">75016</field>
+            <field ref="base.fr" name="country_id"/>
+            <field name="phone">+33 1 49 51 23 94</field>
+            <field name="email">info@yourcompany.com</field>
+            <field name="website">www.yourcompany.com</field>
         </record>
 
         <!-- Currencies -->
@@ -1043,25 +1088,27 @@
         <record id="main_company" model="res.company">
             <field name="name">Your Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_footer1">Web: www.companyname.com - Tel: +1-212-555-12345</field>
-            <field name="rml_footer2">IBAN: XX12 3456 7890 1234 5678 - SWIFT: SWIFTCODE - VAT: Company vat number</field>
+            <field name="rml_header1">Your Company Slogan</field>
+            <field name="rml_footer1">Web: http://www.yourcompany.com - Tel: +33 1 49 51 23 94</field>
+            <field name="rml_footer2">Bank Accounts... to be configured in menu Settings > Accounting/Invoicing.</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
-        <record model="res.users" id="base.user_root">
-            <field name="signature">Administrator</field>
+        <record model="res.partner" id="base.partner_root">
+            <field name="name">Administrator</field>
             <field name="company_id" ref="main_company"/>
-            <field name="menu_id" ref="action_menu_admin"/>
+            <field name="customer" eval="False"/>
+        </record>
+
+        <record model="res.users" id="base.user_root">
+            <field name="partner_id" ref="base.partner_root"/>
+            <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
+            <field name="menu_id" ref="action_menu_admin"/>
+            <field name="signature">Administrator</field>
         </record>
 
         <record id="main_partner" model="res.partner">
-            <field name="company_id" ref="main_company"/>
-        </record>
-        <record id="main_address" model="res.partner.address">
-            <field name="company_id" ref="main_company"/>
-        </record>
-        <record id="EUR" model="res.currency">
             <field name="company_id" ref="main_company"/>
         </record>
 
@@ -1329,7 +1376,7 @@
 
         <record id="INR" model="res.currency">
             <field name="name">INR</field>
-            <field name="symbol">Rs</field>
+            <field name="symbol">₹</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
@@ -1588,7 +1635,7 @@
         </record>
 
         <record id="res_bank_1" model="res.bank">
-            <field name="name">Reserve</field>
+            <field name="name">International Bank</field>
         </record>
 
         <record id="CRC" model="res.currency">

@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -23,9 +23,10 @@
 #.apidoc title: Utilities: tools.misc
 
 """
-Miscelleanous tools used by OpenERP.
+Miscellaneous tools used by OpenERP.
 """
 
+from functools import wraps
 import inspect
 import subprocess
 import logging
@@ -36,7 +37,6 @@ import socket
 import sys
 import threading
 import time
-import warnings
 import zipfile
 from collections import defaultdict
 from datetime import datetime
@@ -50,10 +50,7 @@ from email import Encoders
 from itertools import islice, izip
 from lxml import etree
 from which import which
-if sys.version_info[:2] < (2, 4):
-    from threadinglocal import local
-else:
-    from threading import local
+from threading import local
 try:
     from html2text import html2text
 except ImportError:
@@ -68,7 +65,7 @@ from cache import *
 # There are moved to loglevels until we refactor tools.
 from openerp.loglevels import get_encodings, ustr, exception_to_unicode
 
-_logger = logging.getLogger('tools')
+_logger = logging.getLogger(__name__)
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 # We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
@@ -282,7 +279,11 @@ email_re = re.compile(r"""
     """, re.VERBOSE)
 res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-reference_re = re.compile("<.*-open(?:object|erp)-(\\d+).*@(.*)>", re.UNICODE)
+
+# Updated in 7.0 to match the model name as well
+# Typical form of references is <timestamp-openerp-record_id-model_name@domain>
+# group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
+reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?.*@(.*)>", re.UNICODE)
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     """ From an HTML text, convert the HTML to plain text.
@@ -386,9 +387,9 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
         res = mail_server_pool.send_email(cr, uid or 1, email_msg, mail_server_id=None,
                        smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password,
-                       smtp_encryption=('ssl' if ssl else None), debug=debug)
+                       smtp_encryption=('ssl' if ssl else None), smtp_debug=debug)
     except Exception:
-        _log.exception("tools.email_send failed to deliver email")
+        _logger.exception("tools.email_send failed to deliver email")
         return False
     finally:
         cr.close()
@@ -547,28 +548,6 @@ class currency(float):
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
-# to be compatible with python 2.4
-import __builtin__
-if not hasattr(__builtin__, 'all'):
-    def all(iterable):
-        for element in iterable:
-            if not element:
-                return False
-        return True
-
-    __builtin__.all = all
-    del all
-
-if not hasattr(__builtin__, 'any'):
-    def any(iterable):
-        for element in iterable:
-            if element:
-                return True
-        return False
-
-    __builtin__.any = any
-    del any
-
 def get_iso_codes(lang):
     if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():
@@ -715,8 +694,6 @@ def human_size(sz):
     return "%0.2f %s" % (s, units[i])
 
 def logged(f):
-    from func import wraps
-
     @wraps(f)
     def wrapper(*args, **kwargs):
         from pprint import pformat
@@ -732,7 +709,7 @@ def logged(f):
 
         vector.append('  result: %s' % pformat(res))
         vector.append('  time delta: %s' % (time.time() - timeb4))
-        loglevels.Logger().notifyChannel('logged', loglevels.LOG_DEBUG, '\n'.join(vector))
+        _logger.debug('\n'.join(vector))
         return res
 
     return wrapper
@@ -742,8 +719,6 @@ class profile(object):
         self.fname = fname
 
     def __call__(self, f):
-        from func import wraps
-
         @wraps(f)
         def wrapper(*args, **kwargs):
             class profile_wrapper(object):
@@ -758,40 +733,6 @@ class profile(object):
             return pw.result
 
         return wrapper
-
-def debug(what):
-    """
-        This method allow you to debug your code without print
-        Example:
-        >>> def func_foo(bar)
-        ...     baz = bar
-        ...     debug(baz)
-        ...     qnx = (baz, bar)
-        ...     debug(qnx)
-        ...
-        >>> func_foo(42)
-
-        This will output on the logger:
-
-            [Wed Dec 25 00:00:00 2008] DEBUG:func_foo:baz = 42
-            [Wed Dec 25 00:00:00 2008] DEBUG:func_foo:qnx = (42, 42)
-
-        To view the DEBUG lines in the logger you must start the server with the option
-            --log-level=debug
-
-    """
-    warnings.warn("The tools.debug() method is deprecated, please use logging.",
-                      DeprecationWarning, stacklevel=2)
-    from inspect import stack
-    from pprint import pformat
-    st = stack()[1]
-    param = re.split("debug *\((.+)\)", st[4][0].strip())[1].strip()
-    while param.count(')') > param.count('('): param = param[:param.rfind(')')]
-    what = pformat(what)
-    if param != what:
-        what = "%s = %s" % (param, what)
-    logging.getLogger(st[3]).debug(what)
-
 
 __icons_list = ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
 'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
@@ -938,8 +879,8 @@ def detect_server_timezone():
     try:
         import pytz
     except Exception:
-        loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_WARNING,
-            "Python pytz module is not available. Timezone will be set to UTC by default.")
+        _logger.warning("Python pytz module is not available. "
+            "Timezone will be set to UTC by default.")
         return 'UTC'
 
     # Option 1: the configuration option (did not exist before, so no backwards compatibility issue)
@@ -972,15 +913,14 @@ def detect_server_timezone():
         if value:
             try:
                 tz = pytz.timezone(value)
-                loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_INFO,
-                    "Using timezone %s obtained from %s." % (tz.zone,source))
+                _logger.info("Using timezone %s obtained from %s.", tz.zone, source)
                 return value
             except pytz.UnknownTimeZoneError:
-                loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_WARNING,
-                    "The timezone specified in %s (%s) is invalid, ignoring it." % (source,value))
+                _logger.warning("The timezone specified in %s (%s) is invalid, ignoring it.", source, value)
 
-    loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_WARNING,
-        "No valid timezone could be detected, using default UTC timezone. You can specify it explicitly with option 'timezone' in the server configuration.")
+    _logger.warning("No valid timezone could be detected, using default UTC "
+        "timezone. You can specify it explicitly with option 'timezone' in "
+        "the server configuration.")
     return 'UTC'
 
 def get_server_timezone():

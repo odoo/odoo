@@ -122,6 +122,7 @@ start the server specifying the --unaccent flag.
 """
 
 import logging
+import traceback
 
 from openerp.tools import flatten, reverse_enumerate
 import fields
@@ -159,7 +160,7 @@ FALSE_LEAF = (0, '=', 1)
 TRUE_DOMAIN = [TRUE_LEAF]
 FALSE_DOMAIN = [FALSE_LEAF]
 
-_logger = logging.getLogger('expression')
+_logger = logging.getLogger(__name__)
 
 def normalize(domain):
     """Returns a normalized version of ``domain_expr``, where all implicit '&' operators
@@ -426,6 +427,7 @@ class expression(object):
 
             # If the field is _inherits'd, search for the working_table,
             # and extract the field.
+            field = None
             if field_path[0] in table._inherit_fields:
                 while True:
                     field = working_table._columns.get(field_path[0])
@@ -474,6 +476,13 @@ class expression(object):
                     # the function field doesn't provide a search function and doesn't store
                     # values in the database, so we must ignore it : we generate a dummy leaf
                     self.__exp[i] = TRUE_LEAF
+                    _logger.error(
+                        "The field '%s' (%s) can not be searched: non-stored "
+                        "function field without fnct_search",
+                        field.string, left)
+                    # avoid compiling stack trace if not needed
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        _logger.debug(''.join(traceback.format_stack()))
                 else:
                     subexp = field.search(cr, uid, table, left, [self.__exp[i]], context=context)
                     if not subexp:
@@ -526,12 +535,13 @@ class expression(object):
                         self.__exp[i] = ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, field_obj._table))
 
             elif field._type == 'many2many':
+                rel_table, rel_id1, rel_id2 = field._sql_names(working_table)
                 #FIXME
                 if operator == 'child_of':
                     def _rec_convert(ids):
                         if field_obj == table:
                             return ids
-                        return select_from_where(cr, field._id1, field._rel, field._id2, ids, operator)
+                        return select_from_where(cr, rel_id1, rel_table, rel_id2, ids, operator)
 
                     ids2 = to_ids(right, field_obj)
                     dom = child_of_domain('id', ids2, field_obj)
@@ -559,11 +569,11 @@ class expression(object):
                         else:
                             call_null_m2m = False
                             m2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            self.__exp[i] = ('id', m2m_op, select_from_where(cr, field._id1, field._rel, field._id2, res_ids, operator) or [0])
+                            self.__exp[i] = ('id', m2m_op, select_from_where(cr, rel_id1, rel_table, rel_id2, res_ids, operator) or [0])
 
                     if call_null_m2m:
                         m2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                        self.__exp[i] = ('id', m2m_op, select_distinct_from_where_not_null(cr, field._id1, field._rel))
+                        self.__exp[i] = ('id', m2m_op, select_distinct_from_where_not_null(cr, rel_id1, rel_table))
 
             elif field._type == 'many2one':
                 if operator == 'child_of':

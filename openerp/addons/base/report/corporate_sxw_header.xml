@@ -204,8 +204,8 @@
                         </table:table-cell>
                     </table:table-row>
                 </table:table>
-                <text:p text:style-name="P3">[[ company.partner_id.address and company.partner_id.address[0].street ]]</text:p>
-                <text:p text:style-name="P3">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</text:p>
+                <text:p text:style-name="P3">[[ company.partner_id.street ]]</text:p>
+                <text:p text:style-name="P3">[[ company.partner_id.zip ]] [[ company.partner_id.city ]] - [[ company.partner_id.country_id and company.partner_id.country_id.name ]]</text:p>
                 <table:table table:name="Table3" table:style-name="Table3">
                     <table:table-column table:style-name="Table3.A"/>
                     <table:table-column table:style-name="Table3.B"/>
@@ -214,7 +214,7 @@
                             <text:p text:style-name="P4">Phone :</text:p>
                         </table:table-cell>
                         <table:table-cell table:style-name="Table3.A1" table:value-type="string">
-                            <text:p text:style-name="P5">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</text:p>
+                            <text:p text:style-name="P5">[[ company.partner_id.phone ]]</text:p>
                         </table:table-cell>
                     </table:table-row>
                     <table:table-row>
@@ -222,7 +222,7 @@
                             <text:p text:style-name="P4">Mail :</text:p>
                         </table:table-cell>
                         <table:table-cell table:style-name="Table3.A2" table:value-type="string">
-                            <text:p text:style-name="P5">[[ company.partner_id.address and company.partner_id.address[0].email ]]</text:p>
+                            <text:p text:style-name="P5">[[ company.partner_id.email ]]</text:p>
                         </table:table-cell>
                     </table:table-row>
                 </table:table>

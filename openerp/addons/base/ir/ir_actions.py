@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import ast
 import copy
 import logging
@@ -34,6 +35,8 @@ from tools.config import config
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 from socket import gethostname
+
+_logger = logging.getLogger(__name__)
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -114,26 +117,26 @@ class report_xml(osv.osv):
         'usage': fields.char('Action Usage', size=32),
         'report_type': fields.char('Report Type', size=32, required=True, help="Report Type, e.g. pdf, html, raw, sxw, odt, html2html, mako2html, ..."),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
-        'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
-        'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+        'multi': fields.boolean('On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
+        'attachment': fields.char('Save as Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
-        'auto': fields.boolean('Custom python parser'),
+        'auto': fields.boolean('Custom Python Parser'),
 
-        'header': fields.boolean('Add RML header', help="Add or not the coporate RML header"),
+        'header': fields.boolean('Add RML Header', help="Add or not the corporate RML header"),
 
-        'report_xsl': fields.char('XSL path', size=256),
-        'report_xml': fields.char('XML path', size=256, help=''),
+        'report_xsl': fields.char('XSL Path', size=256),
+        'report_xml': fields.char('XML Path', size=256, help=''),
 
         # Pending deprecation... to be replaced by report_file as this object will become the default report object (not so specific to RML anymore)
-        'report_rml': fields.char('Main report file path', size=256, help="The path to the main report file (depending on Report Type) or NULL if the content is in another data field"),
+        'report_rml': fields.char('Main Report File Path', size=256, help="The path to the main report file (depending on Report Type) or NULL if the content is in another data field"),
         # temporary related field as report_rml is pending deprecation - this field will replace report_rml after v6.0
-        'report_file': fields.related('report_rml', type="char", size=256, required=False, readonly=False, string='Report file', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
+        'report_file': fields.related('report_rml', type="char", size=256, required=False, readonly=False, string='Report File', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
 
-        'report_sxw': fields.function(_report_sxw, method=True, type='char', string='SXW path'),
-        'report_sxw_content_data': fields.binary('SXW content'),
-        'report_rml_content_data': fields.binary('RML content'),
-        'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, method=True, type='binary', string='SXW content',),
-        'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, method=True, type='binary', string='RML content'),
+        'report_sxw': fields.function(_report_sxw, type='char', string='SXW Path'),
+        'report_sxw_content_data': fields.binary('SXW Content'),
+        'report_rml_content_data': fields.binary('RML Content'),
+        'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='SXW Content',),
+        'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='RML Content'),
 
     }
     _defaults = {
@@ -200,58 +203,12 @@ class act_window(osv.osv):
 
     def _search_view(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
         for act in self.browse(cr, uid, ids, context=context):
-            fields_from_fields_get = self.pool.get(act.res_model).fields_get(cr, uid, context=context)
-            search_view_id = False
-            if act.search_view_id:
-                search_view_id = act.search_view_id.id
-            else:
-                res_view = self.pool.get('ir.ui.view').search(cr, uid,
-                        [('model','=',act.res_model),('type','=','search'),
-                        ('inherit_id','=',False)], context=context)
-                if res_view:
-                    search_view_id = res_view[0]
-            if search_view_id:
-                field_get = self.pool.get(act.res_model).fields_view_get(cr, uid, search_view_id,
-                            'search', context)
-                fields_from_fields_get.update(field_get['fields'])
-                field_get['fields'] = fields_from_fields_get
-                res[act.id] = str(field_get)
-            else:
-                def process_child(node, new_node, doc):
-                    for child in node.childNodes:
-                        if child.localName=='field' and child.hasAttribute('select') \
-                                and child.getAttribute('select')=='1':
-                            if child.childNodes:
-                                fld = doc.createElement('field')
-                                for attr in child.attributes.keys():
-                                    fld.setAttribute(attr, child.getAttribute(attr))
-                                new_node.appendChild(fld)
-                            else:
-                                new_node.appendChild(child)
-                        elif child.localName in ('page','group','notebook'):
-                            process_child(child, new_node, doc)
-
-                form_arch = self.pool.get(act.res_model).fields_view_get(cr, uid, False, 'form', context)
-                dom_arc = dom.minidom.parseString(encode(form_arch['arch']))
-                new_node = copy.deepcopy(dom_arc)
-                for child_node in new_node.childNodes[0].childNodes:
-                    if child_node.nodeType == child_node.ELEMENT_NODE:
-                        new_node.childNodes[0].removeChild(child_node)
-                process_child(dom_arc.childNodes[0],new_node.childNodes[0],dom_arc)
-
-                form_arch['arch'] = new_node.toxml()
-                form_arch['fields'].update(fields_from_fields_get)
-                res[act.id] = str(form_arch)
+            field_get = self.pool.get(act.res_model).fields_view_get(cr, uid,
+                act.search_view_id and act.search_view_id.id or False,
+                'search', context=context)
+            res[act.id] = str(field_get)
         return res
-
-    def _get_help_status(self, cr, uid, ids, name, arg, context=None):
-        activate_tips = self.pool.get('res.users').browse(cr, uid, uid).menu_tips
-        return dict([(id, activate_tips) for id in ids])
 
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
@@ -261,19 +218,20 @@ class act_window(osv.osv):
             help="Optional domain filtering of the destination data, as a Python expression"),
         'context': fields.char('Context Value', size=250, required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
-        'res_model': fields.char('Object', size=64, required=True,
+        'res_id': fields.integer('Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only"),
+        'res_model': fields.char('Destination Model', size=64, required=True,
             help="Model name of the object to open in the view window"),
-        'src_model': fields.char('Source Object', size=64,
+        'src_model': fields.char('Source Model', size=64,
             help="Optional model name of the objects on which this action should be visible"),
-        'target': fields.selection([('current','Current Window'),('new','New Window'),('inline','Inline')], 'Target Window'),
-        'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
-            help="View type: set to 'tree' for a hierarchical tree view, or 'form' for other views"),
+        'target': fields.selection([('current','Current Window'),('new','New Window'),('inline','Inline Edit'),('inlineview','Inline View')], 'Target Window'),
         'view_mode': fields.char('View Mode', size=250, required=True,
             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)"),
+        'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
+            help="View type: Tree type to use for the tree view, set to 'tree' for a hierarchical tree view, or 'form' for a regular list view"),
         'usage': fields.char('Action Usage', size=32,
             help="Used to filter menu and home actions from the user form."),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
-        'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views',
+        'views': fields.function(_views_get_fnc, type='binary', string='Views',
                help="This function field computes the ordered list of views that should be enabled " \
                     "when displaying the result of an action, federating view mode, views and " \
                     "reference view. The result is returned as an ordered list of pairs (view_id,view_mode)."),
@@ -285,12 +243,10 @@ class act_window(osv.osv):
         'search_view_id': fields.many2one('ir.ui.view', 'Search View Ref.'),
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
-        'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
+        'search_view' : fields.function(_search_view, type='text', string='Search View'),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),
-        'display_menu_tip':fields.function(_get_help_status, type='boolean', method=True, string='Display Menu Tips',
-            help='It gives the status if the tip has to be displayed or not when a user executes an action'),
         'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
 
@@ -507,7 +463,7 @@ class actions_server(osv.osv):
         'code':fields.text('Python Code', help="Python code to be executed if condition is met.\n"
                                                "It is a Python block that can use the same values as for the condition field"),
         'sequence': fields.integer('Sequence', help="Important when you deal with multiple actions, the execution order will be decided based on this, low number is higher priority."),
-        'model_id': fields.many2one('ir.model', 'Object', required=True, help="Select the object on which the action will work (read, write, create)."),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, help="Select the object on which the action will work (read, write, create).", ondelete='cascade'),
         'action_id': fields.many2one('ir.actions.actions', 'Client Action', help="Select the Action Window, Report, Wizard to be executed."),
         'trigger_name': fields.selection(_select_signals, string='Trigger Signal', size=128, help="The workflow signal to trigger"),
         'wkf_model_id': fields.many2one('ir.model', 'Target Object', help="The object that should receive the workflow signal (must have an associated workflow)"),
@@ -549,7 +505,6 @@ class actions_server(osv.osv):
     }
 
     def get_email(self, cr, uid, action, context):
-        logger = logging.getLogger('Workflow')
         obj_pool = self.pool.get(action.model_id.model)
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
@@ -565,12 +520,11 @@ class actions_server(osv.osv):
             try:
                 obj = getattr(obj, field)
             except Exception:
-                logger.exception('Failed to parse: %s', field)
+                _logger.exception('Failed to parse: %s', field)
 
         return obj
 
     def get_mobile(self, cr, uid, action, context):
-        logger = logging.getLogger('Workflow')
         obj_pool = self.pool.get(action.model_id.model)
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
@@ -586,7 +540,7 @@ class actions_server(osv.osv):
             try:
                 obj = getattr(obj, field)
             except Exception:
-                logger.exception('Failed to parse: %s', field)
+                _logger.exception('Failed to parse: %s', field)
 
         return obj
 
@@ -623,7 +577,6 @@ class actions_server(osv.osv):
 
     # FIXME: refactor all the eval() calls in run()!
     def run(self, cr, uid, ids, context=None):
-        logger = logging.getLogger(self._name)
         if context is None:
             context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid)
@@ -667,13 +620,13 @@ class actions_server(osv.osv):
                     pass
 
                 if not address:
-                    logger.info('No partner email address specified, not sending any email.')
+                    _logger.info('No partner email address specified, not sending any email.')
                     continue
 
                 if not email_from:
-                    logger.debug('--email-from command line option is not specified, using a fallback value instead.')
-                    if user.user_email:
-                        email_from = user.user_email
+                    _logger.debug('--email-from command line option is not specified, using a fallback value instead.')
+                    if user.email:
+                        email_from = user.email
                     else:
                         email_from = "%s@%s" % (user.login, gethostname())
 
@@ -684,9 +637,9 @@ class actions_server(osv.osv):
                 msg = ir_mail_server.build_email(email_from, [address], subject, body)
                 res_email = ir_mail_server.send_email(cr, uid, msg)
                 if res_email:
-                    logger.info('Email successfully sent to: %s', address)
+                    _logger.info('Email successfully sent to: %s', address)
                 else:
-                    logger.warning('Failed to send email to: %s', address)
+                    _logger.warning('Failed to send email to: %s', address)
 
             if action.state == 'trigger':
                 wf_service = netsvc.LocalService("workflow")
@@ -700,7 +653,7 @@ class actions_server(osv.osv):
                 #TODO: set the user and password from the system
                 # for the sms gateway user / password
                 # USE smsclient module from extra-addons
-                logger.warning('SMS Facility has not been implemented yet. Use smsclient module!')
+                _logger.warning('SMS Facility has not been implemented yet. Use smsclient module!')
 
             if action.state == 'other':
                 res = []
@@ -796,20 +749,6 @@ class act_window_close(osv.osv):
     }
 act_window_close()
 
-class ir_actions_todo_category(osv.osv):
-    """
-    Category of Configuration Wizards
-    """
-
-    _name = 'ir.actions.todo.category'
-    _description = "Configuration Wizard Category"
-    _columns = {
-         'name':fields.char('Name', size=64, translate=True, required=True),
-         'sequence': fields.integer('Sequence'),
-         'wizards_ids': fields.one2many('ir.actions.todo', 'category_id', 'Configuration Wizards'),
-    }
-ir_actions_todo_category()
-
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done')]
@@ -823,8 +762,7 @@ class ir_actions_todo(osv.osv):
     _description = "Configuration Wizards"
     _columns={
         'action_id': fields.many2one(
-            'ir.actions.act_window', 'Action', select=True, required=True,
-            ondelete='cascade'),
+            'ir.actions.actions', 'Action', select=True, required=True),
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
         'name': fields.char('Name', size=64),
@@ -834,14 +772,13 @@ Automatic: Runs whenever the system is reconfigured.
 Launch Manually Once: after hacing been launched manually, it sets automatically to Done."""),
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
-        'category_id': fields.many2one('ir.actions.todo.category','Category'),
     }
     _defaults={
         'state': 'open',
         'sequence': 10,
         'type': 'manual',
     }
-    _order="sequence,name,id"
+    _order="sequence,id"
 
     def action_launch(self, cr, uid, ids, context=None):
         """ Launch Action of Wizard"""
@@ -851,7 +788,11 @@ Launch Manually Once: after hacing been launched manually, it sets automatically
             wizard.write({'state': 'done'})
 
         # Load action
-        res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
+        act_type = self.pool.get('ir.actions.actions').read(cr, uid, wizard.action_id.id, ['type'], context=context)
+
+        res = self.pool.get(act_type['type']).read(cr, uid, wizard.action_id.id, [], context=context)
+        if act_type<>'ir.actions.act_window':
+            return res
         res.setdefault('context','{}')
         res['nodestroy'] = True
 
@@ -926,8 +867,10 @@ class act_client(osv.osv):
         ])
 
     def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
-        assert isinstance(field_value, dict), "params can only be dictionaries"
-        self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
+        if isinstance(field_value, dict):
+            self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
+        else:
+            self.write(cr, uid, id, {'params_store': field_value}, context=context)
 
     _columns = {
         'tag': fields.char('Client action tag', size=64, required=True,
@@ -935,7 +878,7 @@ class act_client(osv.osv):
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
         'params': fields.function(_get_params, fnct_inv=_set_params,
-                                  type='binary', method=True,
+                                  type='binary', 
                                   string="Supplementary arguments",
                                   help="Arguments sent to the client along with"
                                        "the view tag"),

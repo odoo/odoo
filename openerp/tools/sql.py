@@ -20,9 +20,7 @@
 ##############################################################################
 
 def drop_view_if_exists(cr, viewname):
-    cr.execute("select count(1) from pg_class where relkind=%s and relname=%s", ('v', viewname,))
-    if cr.fetchone()[0]:
-        cr.execute("DROP view %s" % (viewname,))
-        cr.commit()
+    cr.execute("DROP view IF EXISTS %s CASCADE" % (viewname,))
+    cr.commit()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

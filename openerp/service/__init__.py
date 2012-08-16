@@ -46,6 +46,10 @@ import openerp.wsgi
     low-level behavior of the wire.
 """
 
+_logger = logging.getLogger(__name__)
+
+# TODO block until the server is really up, accepting connections
+# TODO be idemptotent (as long as stop_service was not called).
 def start_services():
     """ Start all services.
 
@@ -69,7 +73,7 @@ def start_services():
     openerp.netsvc.Server.startAll()
 
     # Start the WSGI server.
-    openerp.wsgi.start_server()
+    openerp.wsgi.core.start_server()
 
 
 def stop_services():
@@ -78,11 +82,10 @@ def stop_services():
     openerp.cron.cancel_all()
 
     openerp.netsvc.Server.quitAll()
-    openerp.wsgi.stop_server()
+    openerp.wsgi.core.stop_server()
     config = openerp.tools.config
-    logger = logging.getLogger('server')
-    logger.info("Initiating shutdown")
-    logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
+    _logger.info("Initiating shutdown")
+    _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
     logging.shutdown()
 
     # Manually join() all threads before calling sys.exit() to allow a second signal

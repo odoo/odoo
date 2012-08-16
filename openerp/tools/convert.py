@@ -29,10 +29,15 @@ import re
 # for eval context:
 import time
 import openerp.release as release
+
+import assertion_report
+
+_logger = logging.getLogger(__name__)
+
 try:
     import pytz
 except:
-    logging.getLogger("init").warning('could not find pytz library, please install it')
+    _logger.warning('could not find pytz library, please install it')
     class pytzclass(object):
         all_timezones=[]
     pytz=pytzclass()
@@ -135,21 +140,22 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
             try:
                 return unsafe_eval(a_eval, idref2)
             except Exception:
-                logger = logging.getLogger('init')
-                logger.warning('could not eval(%s) for %s in %s' % (a_eval, node.get('name'), context), exc_info=True)
+                _logger.warning('could not eval(%s) for %s in %s' % (a_eval, node.get('name'), context), exc_info=True)
                 return ""
+        def _process(s, idref):
+            m = re.findall('[^%]%\((.*?)\)[ds]', s)
+            for id in m:
+                if not id in idref:
+                    idref[id]=self.id_get(cr, id)
+            return s % idref
         if t == 'xml':
-            def _process(s, idref):
-                m = re.findall('[^%]%\((.*?)\)[ds]', s)
-                for id in m:
-                    if not id in idref:
-                        idref[id]=self.id_get(cr, id)
-                return s % idref
             _fix_multiple_roots(node)
             return '<?xml version="1.0"?>\n'\
                 +_process("".join([etree.tostring(n, encoding='utf-8')
-                                   for n in node]),
-                          idref)
+                                   for n in node]), idref)
+        if t == 'html':
+            return _process("".join([etree.tostring(n, encoding='utf-8')
+                                   for n in node]), idref)
         if t in ('char', 'int', 'float'):
             d = node.text
             if t == 'int':
@@ -198,37 +204,7 @@ escape_re = re.compile(r'(?<!\\)/')
 def escape(x):
     return x.replace('\\/', '/')
 
-class assertion_report(object):
-    def __init__(self):
-        self._report = {}
-
-    def record_assertion(self, success, severity):
-        """
-            Records the result of an assertion for the failed/success count
-            returns success
-        """
-        if severity in self._report:
-            self._report[severity][success] += 1
-        else:
-            self._report[severity] = {success:1, not success: 0}
-        return success
-
-    def get_report(self):
-        return self._report
-
-    def __str__(self):
-        res = '\nAssertions report:\nLevel\tsuccess\tfailed\n'
-        success = failed = 0
-        for sev in self._report:
-            res += sev + '\t' + str(self._report[sev][True]) + '\t' + str(self._report[sev][False]) + '\n'
-            success += self._report[sev][True]
-            failed += self._report[sev][False]
-        res += 'total\t' + str(success) + '\t' + str(failed) + '\n'
-        res += 'end of report (' + str(success + failed) + ' assertion(s) checked)'
-        return res
-
 class xml_import(object):
-    __logger = logging.getLogger('tools.convert.xml_import')
     @staticmethod
     def nodeattr2bool(node, attr, default=False):
         if not node.get(attr):
@@ -258,7 +234,7 @@ class xml_import(object):
                     # client-side, so in that case we keep the original context string
                     # as it is. We also log it, just in case.
                     context = ctx
-                    logging.getLogger("init").debug('Context value (%s) for element with id "%s" or its data node does not parse '\
+                    _logger.debug('Context value (%s) for element with id "%s" or its data node does not parse '\
                                                     'at server-side, keeping original string, in case it\'s meant for client side only',
                                                     ctx, node.get('id','n/a'), exc_info=True)
         return context
@@ -281,7 +257,7 @@ form: module.record_id""" % (xml_id,)
                 assert modcnt == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
 
         if len(id) > 64:
-            self.logger.error('id: %s is to long (max: 64)', id)
+            _logger.error('id: %s is to long (max: 64)', id)
 
     def _tag_delete(self, cr, rec, data_node=None):
         d_model = rec.get("model",'')
@@ -357,7 +333,7 @@ form: module.record_id""" % (xml_id,)
             # Special check for report having attribute menu=False on update
             value = 'ir.actions.report.xml,'+str(id)
             self._remove_ir_values(cr, res['name'], value, res['model'])
-        return False
+        return id
 
     def _tag_function(self, cr, rec, data_node=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
@@ -486,9 +462,9 @@ form: module.record_id""" % (xml_id,)
             # Some domains contain references that are only valid at runtime at
             # client-side, so in that case we keep the original domain string
             # as it is. We also log it, just in case.
-            logging.getLogger("init").debug('Domain value (%s) for element with id "%s" does not parse '\
-                                            'at server-side, keeping original string, in case it\'s meant for client side only',
-                                            domain, xml_id or 'n/a', exc_info=True)
+            _logger.debug('Domain value (%s) for element with id "%s" does not parse '\
+                'at server-side, keeping original string, in case it\'s meant for client side only',
+                domain, xml_id or 'n/a', exc_info=True)
         res = {
             'name': name,
             'type': type,
@@ -593,7 +569,7 @@ form: module.record_id""" % (xml_id,)
                     pid = res[0]
                 else:
                     # the menuitem does't exist but we are in branch (not a leaf)
-                    self.logger.warning('Warning no ID for submenu %s of menu %s !', menu_elem, str(m_l))
+                    _logger.warning('Warning no ID for submenu %s of menu %s !', menu_elem, str(m_l))
                     pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
             values['parent_id'] = pid
         else:
@@ -631,8 +607,9 @@ form: module.record_id""" % (xml_id,)
                     "Verify that this is a window action or add a type argument." % (a_action,)
                 action_type,action_mode,action_name,view_id,target = rrres
                 if view_id:
-                    cr.execute('SELECT type FROM ir_ui_view WHERE id=%s', (int(view_id),))
-                    action_mode, = cr.fetchone()
+                    cr.execute('SELECT arch FROM ir_ui_view WHERE id=%s', (int(view_id),))
+                    arch, = cr.fetchone()
+                    action_mode = etree.fromstring(arch.encode('utf8')).tag
                 cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%s ORDER BY sequence LIMIT 1', (int(a_id),))
                 if cr.rowcount:
                     action_mode, = cr.fetchone()
@@ -711,7 +688,6 @@ form: module.record_id""" % (xml_id,)
         rec_src = rec.get("search",'').encode('utf8')
         rec_src_count = rec.get("count")
 
-        severity = rec.get("severity",'').encode('ascii') or loglevels.LOG_ERROR
         rec_string = rec.get("string",'').encode('utf8') or 'unknown'
 
         ids = None
@@ -726,17 +702,13 @@ form: module.record_id""" % (xml_id,)
             if rec_src_count:
                 count = int(rec_src_count)
                 if len(ids) != count:
-                    self.assert_report.record_assertion(False, severity)
+                    self.assertion_report.record_failure()
                     msg = 'assertion "%s" failed!\n'    \
                           ' Incorrect search count:\n'  \
                           ' expected count: %d\n'       \
                           ' obtained count: %d\n'       \
                           % (rec_string, count, len(ids))
-                    sevval = getattr(logging, severity.upper())
-                    self.logger.log(sevval, msg)
-                    if sevval >= config['assert_exit_level']:
-                        # TODO: define a dedicated exception
-                        raise Exception('Severe assertion failure')
+                    _logger.error(msg)
                     return
 
         assert ids is not None,\
@@ -758,20 +730,16 @@ form: module.record_id""" % (xml_id,)
                 expected_value = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
                 expression_value = unsafe_eval(f_expr, globals_dict)
                 if expression_value != expected_value: # assertion failed
-                    self.assert_report.record_assertion(False, severity)
+                    self.assertion_report.record_failure()
                     msg = 'assertion "%s" failed!\n'    \
                           ' xmltag: %s\n'               \
                           ' expected value: %r\n'       \
                           ' obtained value: %r\n'       \
                           % (rec_string, etree.tostring(test), expected_value, expression_value)
-                    sevval = getattr(logging, severity.upper())
-                    self.logger.log(sevval, msg)
-                    if sevval >= config['assert_exit_level']:
-                        # TODO: define a dedicated exception
-                        raise Exception('Severe assertion failure')
+                    _logger.error(msg)
                     return
         else: # all tests were successful for this assertion tag (no break)
-            self.assert_report.record_assertion(True, severity)
+            self.assertion_report.record_success()
 
     def _tag_record(self, cr, rec, data_node=None):
         rec_model = rec.get("model").encode('ascii')
@@ -876,11 +844,11 @@ form: module.record_id""" % (xml_id,)
 
     def parse(self, de):
         if not de.tag in ['terp', 'openerp']:
-            self.logger.error("Mismatch xml format")
+            _logger.error("Mismatch xml format")
             raise Exception( "Mismatch xml format: only terp or openerp as root tag" )
 
         if de.tag == 'terp':
-            self.logger.warning("The tag <terp/> is deprecated, use <openerp/>")
+            _logger.warning("The tag <terp/> is deprecated, use <openerp/>")
 
         for n in de.findall('./data'):
             for rec in n:
@@ -888,17 +856,16 @@ form: module.record_id""" % (xml_id,)
                     try:
                         self._tags[rec.tag](self.cr, rec, n)
                     except:
-                        self.__logger.error('Parse error in %s:%d: \n%s',
-                                            rec.getroottree().docinfo.URL,
-                                            rec.sourceline,
-                                            etree.tostring(rec).strip(), exc_info=True)
+                        _logger.error('Parse error in %s:%d: \n%s',
+                                      rec.getroottree().docinfo.URL,
+                                      rec.sourceline,
+                                      etree.tostring(rec).strip(), exc_info=True)
                         self.cr.rollback()
                         raise
         return True
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False):
 
-        self.logger = logging.getLogger('init')
         self.mode = mode
         self.module = module
         self.cr = cr
@@ -906,8 +873,8 @@ form: module.record_id""" % (xml_id,)
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         if report is None:
-            report = assertion_report()
-        self.assert_report = report
+            report = assertion_report.assertion_report()
+        self.assertion_report = report
         self.noupdate = noupdate
         self._tags = {
             'menuitem': self._tag_menuitem,
@@ -931,7 +898,6 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         encoding: utf-8'''
     if not idref:
         idref={}
-    logger = logging.getLogger('init')
     model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
     #remove folder path from model
     head, model = os.path.split(model)
@@ -956,7 +922,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
                         reader.next()
 
     if not (mode == 'init' or 'id' in fields):
-        logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
+        _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
         return
 
     uid = 1
@@ -967,7 +933,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         try:
             datas.append(map(lambda x: misc.ustr(x), line))
         except:
-            logger.error("Cannot import the line: %s", line)
+            _logger.error("Cannot import the line: %s", line)
     result, rows, warning_msg, dummy = pool.get(model).import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
     if result < 0:
         # Report failed import and abort module install
@@ -988,9 +954,8 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     try:
         relaxng.assert_(doc)
     except Exception:
-        logger = loglevels.Logger()
-        logger.notifyChannel('init', loglevels.LOG_ERROR, 'The XML file does not fit the required schema !')
-        logger.notifyChannel('init', loglevels.LOG_ERROR, misc.ustr(relaxng.error_log.last_error))
+        _logger.error('The XML file does not fit the required schema !')
+        _logger.error(misc.ustr(relaxng.error_log.last_error))
         raise
 
     if idref is None:

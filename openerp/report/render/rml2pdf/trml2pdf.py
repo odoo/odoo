@@ -39,12 +39,13 @@ from openerp.tools.misc import file_open
 from reportlab.pdfbase import pdfmetrics
 from reportlab.lib.pagesizes import A4, letter
 
-
 try:
     from cStringIO import StringIO
     _hush_pyflakes = [ StringIO ]
 except ImportError:
     from StringIO import StringIO
+
+_logger = logging.getLogger(__name__)
 
 encoding = 'utf-8'
 
@@ -217,7 +218,7 @@ class _rml_styles(object,):
             if sname in self.styles_obj:
                 style = self.styles_obj[sname]
             else:
-                sys.stderr.write('Warning: style not found, %s - setting default!\n' % (node.get('style'),) )
+                _logger.warning('Warning: style not found, %s - setting default!\n' % (node.get('style'),) )
         if not style:
             style = self.default_style['Normal']
         para_update = self._para_style_update(node)
@@ -328,7 +329,6 @@ class _rml_canvas(object):
         self.images = images
         self.path = path
         self.title = title
-        self._logger = logging.getLogger('report.rml.canvas')
         if self.title:
             self.canvas.setTitle(self.title)
 
@@ -452,7 +452,7 @@ class _rml_canvas(object):
         if not nfile:
             if node.get('name'):
                 image_data = self.images[node.get('name')]
-                self._logger.debug("Image %s used", node.get('name'))
+                _logger.debug("Image %s used", node.get('name'))
                 s = StringIO(image_data)
             else:
                 newtext = node.text
@@ -466,7 +466,7 @@ class _rml_canvas(object):
                 if image_data:
                     s = StringIO(image_data)
                 else:
-                    self._logger.debug("No image data!")
+                    _logger.debug("No image data!")
                     return False
         else:
             if nfile in self.images:
@@ -479,16 +479,16 @@ class _rml_canvas(object):
                 if up and up.scheme:
                     # RFC: do we really want to open external URLs?
                     # Are we safe from cross-site scripting or attacks?
-                    self._logger.debug("Retrieve image from %s", nfile)
+                    _logger.debug("Retrieve image from %s", nfile)
                     u = urllib.urlopen(str(nfile))
                     s = StringIO(u.read())
                 else:
-                    self._logger.debug("Open image file %s ", nfile)
+                    _logger.debug("Open image file %s ", nfile)
                     s = _open_image(nfile, path=self.path)
         try:
             img = ImageReader(s)
             (sx,sy) = img.getSize()
-            self._logger.debug("Image is %dx%d", sx, sy)
+            _logger.debug("Image is %dx%d", sx, sy)
             args = { 'x': 0.0, 'y': 0.0 }
             for tag in ('width','height','x','y'):
                 if node.get(tag):
@@ -540,7 +540,7 @@ class _rml_canvas(object):
                 try:
                     pdfmetrics.getFont(fontname)
                 except Exception:
-                    logging.getLogger('report.fonts').debug('Could not locate font %s, substituting default: %s',
+                    _logger.debug('Could not locate font %s, substituting default: %s',
                                  fontname,
                                  self.canvas._fontname)
                     fontname = self.canvas._fontname
@@ -613,7 +613,6 @@ class _rml_flowable(object):
         self.images = images
         self.path = path
         self.title = title
-        self._logger = logging.getLogger('report.rml.flowable')
 
     def _textual(self, node):
         rc1 = utils._process_text(self, node.text or '')
@@ -753,7 +752,7 @@ class _rml_flowable(object):
                 from reportlab.graphics.barcode import createBarcodeDrawing
 
             except ImportError:
-                self._logger.warning("Cannot use barcode renderers:", exc_info=True)
+                _logger.warning("Cannot use barcode renderers:", exc_info=True)
                 return None
             args = utils.attr_get(node, [], {'ratio':'float','xdim':'unit','height':'unit','checksum':'int','quiet':'int','width':'unit','stop':'bool','bearers':'int','barWidth':'float','barHeight':'float'})
             codes = {
@@ -801,10 +800,10 @@ class _rml_flowable(object):
             if not node.get('file'):
                 if node.get('name'):
                     if node.get('name') in self.doc.images:
-                        self._logger.debug("Image %s read ", node.get('name'))
+                        _logger.debug("Image %s read ", node.get('name'))
                         image_data = self.doc.images[node.get('name')].read()
                     else:
-                        self._logger.warning("Image %s not defined", node.get('name'))
+                        _logger.warning("Image %s not defined", node.get('name'))
                         return False
                 else:
                     import base64
@@ -813,11 +812,11 @@ class _rml_flowable(object):
                         newtext = utils._process_text(self, node.text or '')
                     image_data = base64.decodestring(newtext)
                 if not image_data:
-                    self._logger.debug("No inline image data")
+                    _logger.debug("No inline image data")
                     return False
                 image = StringIO(image_data)
             else:
-                self._logger.debug("Image get from file %s", node.get('file'))
+                _logger.debug("Image get from file %s", node.get('file'))
                 image = _open_image(node.get('file'), path=self.doc.path)
             return platypus.Image(image, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
         elif node.tag=='spacer':
@@ -980,7 +979,7 @@ def parseNode(rml, localcontext=None, fout=None, images=None, path='.', title=No
         # means there is no custom fonts mapping in this system.
         pass
     except Exception:
-        logging.getLogger('report').warning('Cannot set font mapping', exc_info=True)
+        _logger.warning('Cannot set font mapping', exc_info=True)
         pass
     fp = StringIO()
     r.render(fp)

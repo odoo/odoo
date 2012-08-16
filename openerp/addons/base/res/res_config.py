@@ -27,6 +27,7 @@ import netsvc
 from tools import ustr
 import pooler
 
+_logger = logging.getLogger(__name__)
 
 class res_config_configurable(osv.osv_memory):
     ''' Base classes for new-style configuration items
@@ -37,11 +38,10 @@ class res_config_configurable(osv.osv_memory):
     '''
     _name = 'res.config'
     _inherit = 'ir.wizard.screen'
-    __logger = logging.getLogger(_name)
 
     def _next_action(self, cr, uid, context=None):
         Todos = self.pool['ir.actions.todo']
-        self.__logger.info('getting next %s', Todos)
+        _logger.info('getting next %s', Todos)
 
         active_todos = Todos.browse(cr, uid,
             Todos.search(cr, uid, ['&', ('type', '=', 'automatic'), ('state','=','open')]),
@@ -63,17 +63,21 @@ class res_config_configurable(osv.osv_memory):
         return None
 
     def _next(self, cr, uid, context=None):
-        self.__logger.info('getting next operation')
+        _logger.info('getting next operation')
         next = self._next_action(cr, uid, context=context)
-        self.__logger.info('next action is %s', next)
+        _logger.info('next action is %s', next)
         if next:
             res = next.action_launch(context=context)
             res['nodestroy'] = False
             return res
-        #if there is no next action and if html is in the context: reload instead of closing
-        if context and 'html' in context:
-            return {'type' : 'ir.actions.reload'}
-        return {'type' : 'ir.actions.act_window_close'}
+        # reload the client; open the first available root menu
+        menu_obj = self.pool.get('ir.ui.menu')
+        menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+            'params': {'menu_id': menu_ids and menu_ids[0] or False},
+        }
 
     def start(self, cr, uid, ids, context=None):
         return self.next(cr, uid, ids, context)
@@ -244,7 +248,6 @@ class res_config_installer(osv.osv_memory):
     """
     _name = 'res.config.installer'
     _inherit = 'res.config'
-    __logger = logging.getLogger(_name)
 
     _install_if = {}
 
@@ -352,7 +355,7 @@ class res_config_installer(osv.osv_memory):
         modules = self.pool.get('ir.module.module')
         to_install = list(self.modules_to_install(
             cr, uid, ids, context=context))
-        self.__logger.info('Selecting addons %s to install', to_install)
+        _logger.info('Selecting addons %s to install', to_install)
         modules.state_update(
             cr, uid,
             modules.search(cr, uid, [('name','in',to_install)]),
@@ -374,7 +377,6 @@ class ir_actions_configuration_wizard(osv.osv_memory):
     '''
     _name='ir.actions.configuration.wizard'
     _inherit = 'res.config'
-    __logger = logging.getLogger(_name)
 
     def _next_action_note(self, cr, uid, ids, context=None):
         next = self._next_action(cr, uid)
@@ -394,8 +396,161 @@ class ir_actions_configuration_wizard(osv.osv_memory):
         }
 
     def execute(self, cr, uid, ids, context=None):
-        self.__logger.warn(DEPRECATION_MESSAGE)
+        _logger.warning(DEPRECATION_MESSAGE)
 
 ir_actions_configuration_wizard()
+
+
+
+class res_config_settings(osv.osv_memory):
+    """ Base configuration wizard for application settings.  It provides support for setting
+        default values, assigning groups to employee users, and installing modules.
+        To make such a 'settings' wizard, define a model like::
+
+            class my_config_wizard(osv.osv_memory):
+                _name = 'my.settings'
+                _inherit = 'res.config.settings'
+                _columns = {
+                    'default_foo': fields.type(..., default_model='my.model'),
+                    'group_bar': fields.boolean(..., group='base.group_user', implied_group='my.group'),
+                    'module_baz': fields.boolean(...),
+                    'other_field': fields.type(...),
+                }
+
+        The method ``execute`` provides some support based on a naming convention:
+
+        *   For a field like 'default_XXX', ``execute`` sets the (global) default value of
+            the field 'XXX' in the model named by ``default_model`` to the field's value.
+
+        *   For a boolean field like 'group_XXX', ``execute`` adds/removes 'implied_group'
+            to/from the implied groups of 'group', depending on the field's value.
+            By default 'group' is the group Employee.  Groups are given by their xml id.
+
+        *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
+            installation of the module named 'XXX' if the field has value ``True``.
+
+        *   For the other fields, the method ``execute`` invokes all methods with a name
+            that starts with 'set_'; such methods can be defined to implement the effect
+            of those fields.
+
+        The method ``default_get`` retrieves values that reflect the current status of the
+        fields like 'default_XXX', 'group_XXX' and 'module_XXX'.  It also invokes all methods
+        with a name that starts with 'get_default_'; such methods can be defined to provide
+        current values for other fields.
+    """
+    _name = 'res.config.settings'
+
+    def copy(self, cr, uid, id, values, context=None):
+        raise osv.except_osv(_("Cannot duplicate configuration!"), "")
+
+    def _get_classified_fields(self, cr, uid, context=None):
+        """ return a dictionary with the fields classified by category::
+
+                {   'default': [('default_foo', 'model', 'foo'), ...],
+                    'group':   [('group_bar', browse_group, browse_implied_group), ...],
+                    'module':  [('module_baz', browse_module), ...],
+                    'other':   ['other_field', ...],
+                }
+        """
+        ir_model_data = self.pool.get('ir.model.data')
+        ir_module = self.pool.get('ir.module.module')
+        def ref(xml_id):
+            mod, xml = xml_id.split('.', 1)
+            return ir_model_data.get_object(cr, uid, mod, xml, context)
+
+        defaults, groups, modules, others = [], [], [], []
+        for name, field in self._columns.items():
+            if name.startswith('default_') and hasattr(field, 'default_model'):
+                defaults.append((name, field.default_model, name[8:]))
+            elif name.startswith('group_') and isinstance(field, fields.boolean) and hasattr(field, 'implied_group'):
+                field_group = getattr(field, 'group', 'base.group_user')
+                groups.append((name, ref(field_group), ref(field.implied_group)))
+            elif name.startswith('module_') and isinstance(field, fields.boolean):
+                mod_ids = ir_module.search(cr, uid, [('name', '=', name[7:])])
+                modules.append((name, ir_module.browse(cr, uid, mod_ids[0], context)))
+            else:
+                others.append(name)
+
+        return {'default': defaults, 'group': groups, 'module': modules, 'other': others}
+
+    def default_get(self, cr, uid, fields, context=None):
+        ir_values = self.pool.get('ir.values')
+        classified = self._get_classified_fields(cr, uid, context)
+
+        res = super(res_config_settings, self).default_get(cr, uid, fields, context)
+
+        # defaults: take the corresponding default value they set
+        for name, model, field in classified['default']:
+            value = ir_values.get_default(cr, uid, model, field)
+            if value is not None:
+                res[name] = value
+
+        # groups: which groups are implied by the group Employee
+        for name, group, implied_group in classified['group']:
+            res[name] = implied_group in group.implied_ids
+
+        # modules: which modules are installed/to install
+        for name, module in classified['module']:
+            res[name] = module.state in ('installed', 'to install', 'to upgrade')
+
+        # other fields: call all methods that start with 'get_default_'
+        for method in dir(self):
+            if method.startswith('get_default_'):
+                res.update(getattr(self, method)(cr, uid, fields, context))
+
+        return res
+
+    def execute(self, cr, uid, ids, context=None):
+        ir_values = self.pool.get('ir.values')
+        ir_model_data = self.pool.get('ir.model.data')
+        ir_module = self.pool.get('ir.module.module')
+        res_groups = self.pool.get('res.groups')
+        classified = self._get_classified_fields(cr, uid, context)
+
+        config = self.browse(cr, uid, ids[0], context)
+
+        # default values fields
+        for name, model, field in classified['default']:
+            ir_values.set_default(cr, uid, model, field, config[name])
+
+        # group fields: modify group / implied groups
+        for name, group, implied_group in classified['group']:
+            if config[name]:
+                group.write({'implied_ids': [(4, implied_group.id)]})
+            else:
+                group.write({'implied_ids': [(3, implied_group.id)]})
+                implied_group.write({'users': [(3, u.id) for u in group.users]})
+
+        # other fields: execute all methods that start with 'set_'
+        for method in dir(self):
+            if method.startswith('set_'):
+                getattr(self, method)(cr, uid, ids, context)
+
+        # module fields: install/uninstall the selected modules
+        to_install_ids = []
+        to_uninstall_ids = []
+        for name, module in classified['module']:
+            if config[name]:
+                if module.state == 'uninstalled': to_install_ids.append(module.id)
+            else:
+                if module.state in ('installed','upgrade'): to_uninstall_ids.append(module.id)
+
+        if to_install_ids or to_uninstall_ids:
+            ir_module.button_uninstall(cr, uid, to_uninstall_ids, context=context)
+            ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
+
+        # force client-side reload (update user menu and current view)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
+    def cancel(self, cr, uid, ids, context=None):
+        # ignore the current record, and send the action to reopen the view
+        act_window = self.pool.get('ir.actions.act_window')
+        action_ids = act_window.search(cr, uid, [('res_model', '=', self._name)])
+        if action_ids:
+            return act_window.read(cr, uid, action_ids[0], [], context=context)
+        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

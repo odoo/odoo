@@ -35,17 +35,17 @@ See also: the `pooler` module
 
 __all__ = ['db_connect', 'close_db']
 
-from threading import currentThread
+from functools import wraps
 import logging
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE,\
-    ISOLATION_LEVEL_REPEATABLE_READ
-from psycopg2.psycopg1 import cursor as psycopg1cursor
-from psycopg2.pool import PoolError
-
 import psycopg2.extensions
-import warnings
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
+from psycopg2.pool import PoolError
+from psycopg2.psycopg1 import cursor as psycopg1cursor
+from threading import currentThread
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
+
+_logger = logging.getLogger(__name__)
 
 types_mapping = {
     'date': (1082,),
@@ -67,7 +67,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 
 import tools
-from tools.func import wraps, frame_codeinfo
+from tools.func import frame_codeinfo
 from datetime import datetime as mdt
 from datetime import timedelta
 import threading
@@ -140,7 +140,6 @@ class Cursor(object):
 
     """
     IN_MAX = 1000 # decent limit on size of IN queries - guideline = Oracle limit
-    __logger = None
 
     def check(f):
         @wraps(f)
@@ -154,14 +153,12 @@ class Cursor(object):
         return wrapper
 
     def __init__(self, pool, dbname, serialized=True):
-        if self.__class__.__logger is None:
-            self.__class__.__logger = logging.getLogger('db.cursor')
         self.sql_from_log = {}
         self.sql_into_log = {}
 
         # default log level determined at cursor creation, could be
         # overridden later for debugging purposes
-        self.sql_log = self.__logger.isEnabledFor(logging.DEBUG_SQL)
+        self.sql_log = _logger.isEnabledFor(logging.DEBUG)
 
         self.sql_log_count = 0
         self.__closed = True    # avoid the call of close() (by __del__) if an exception
@@ -197,15 +194,15 @@ class Cursor(object):
                 msg += "Cursor was created at %s:%s" % self.__caller
             else:
                 msg += "Please enable sql debugging to trace the caller."
-            self.__logger.warn(msg)
+            _logger.warning(msg)
             self._close(True)
 
     @check
     def execute(self, query, params=None, log_exceptions=None):
         if '%d' in query or '%f' in query:
-            self.__logger.warn(query)
-            self.__logger.warn("SQL queries cannot contain %d or %f anymore. "
-                               "Use only %s")
+            _logger.warning(query)
+            _logger.warning("SQL queries cannot contain %d or %f anymore. "
+                         "Use only %s")
 
         if self.sql_log:
             now = mdt.now()
@@ -215,18 +212,18 @@ class Cursor(object):
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
             if (self._default_log_exceptions if log_exceptions is None else log_exceptions):
-                self.__logger.error("Programming error: %s, in query %s", pe, query)
+                _logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
             if (self._default_log_exceptions if log_exceptions is None else log_exceptions):
-                self.__logger.exception("bad query: %s", self._obj.query or query)
+                _logger.exception("bad query: %s", self._obj.query or query)
             raise
 
         if self.sql_log:
             delay = mdt.now() - now
             delay = delay.seconds * 1E6 + delay.microseconds
 
-            self.__logger.log(logging.DEBUG_SQL, "query: %s", self._obj.query)
+            _logger.debug("query: %s", self._obj.query)
             self.sql_log_count+=1
             res_from = re_from.match(query.lower())
             if res_from:
@@ -257,16 +254,16 @@ class Cursor(object):
             if sqllogs[type]:
                 sqllogitems = sqllogs[type].items()
                 sqllogitems.sort(key=lambda k: k[1][1])
-                self.__logger.log(logging.DEBUG_SQL, "SQL LOG %s:", type)
+                _logger.debug("SQL LOG %s:", type)
                 sqllogitems.sort(lambda x,y: cmp(x[1][0], y[1][0]))
                 for r in sqllogitems:
                     delay = timedelta(microseconds=r[1][1])
-                    self.__logger.log(logging.DEBUG_SQL, "table: %s: %s/%s",
+                    _logger.debug("table: %s: %s/%s",
                                         r[0], delay, r[1][0])
                     sum+= r[1][1]
                 sqllogs[type].clear()
             sum = timedelta(microseconds=sum)
-            self.__logger.log(logging.DEBUG_SQL, "SUM %s:%s/%d [%d]",
+            _logger.debug("SUM %s:%s/%d [%d]",
                                 type, sum, self.sql_log_count, sql_counter)
             sqllogs[type].clear()
         process('from')
@@ -302,7 +299,9 @@ class Cursor(object):
         if leak:
             self._cnx.leaked = True
         else:
-            keep_in_pool = self.dbname not in ('template1', 'template0', 'postgres')
+            chosen_template = tools.config['db_template']
+            templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
+            keep_in_pool = self.dbname not in templates_list
             self._pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     @check
@@ -358,7 +357,6 @@ class ConnectionPool(object):
         The connections are *not* automatically closed. Only a close_db()
         can trigger that.
     """
-    __logger = logging.getLogger('db.connection_pool')
 
     def locked(fun):
         @wraps(fun)
@@ -382,7 +380,7 @@ class ConnectionPool(object):
         return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
 
     def _debug(self, msg, *args):
-        self.__logger.log(logging.DEBUG_SQL, ('%r ' + msg), self, *args)
+        _logger.debug(('%r ' + msg), self, *args)
 
     @locked
     def borrow(self, dsn):
@@ -398,7 +396,7 @@ class ConnectionPool(object):
                 delattr(cnx, 'leaked')
                 self._connections.pop(i)
                 self._connections.append((cnx, False))
-                self.__logger.warn('%r: Free leaked connection to %r', self, cnx.dsn)
+                _logger.warning('%r: Free leaked connection to %r', self, cnx.dsn)
 
         for i, (cnx, used) in enumerate(self._connections):
             if not used and dsn_are_equals(cnx.dsn, dsn):
@@ -421,8 +419,8 @@ class ConnectionPool(object):
 
         try:
             result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
-        except psycopg2.Error, e:
-            self.__logger.exception('Connection to the database failed')
+        except psycopg2.Error:
+            _logger.exception('Connection to the database failed')
             raise
         self._connections.append((result, True))
         self._debug('Create new connection')
@@ -446,7 +444,7 @@ class ConnectionPool(object):
 
     @locked
     def close_all(self, dsn):
-        self.__logger.info('%r: Close all connections to %r', self, dsn)
+        _logger.info('%r: Close all connections to %r', self, dsn)
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
             if dsn_are_equals(cnx.dsn, dsn):
                 cnx.close()
@@ -456,7 +454,6 @@ class ConnectionPool(object):
 class Connection(object):
     """ A lightweight instance of a connection to postgres
     """
-    __logger = logging.getLogger('db.connection')
 
     def __init__(self, pool, dbname):
         self.dbname = dbname
@@ -464,7 +461,7 @@ class Connection(object):
 
     def cursor(self, serialized=True):
         cursor_type = serialized and 'serialized ' or ''
-        self.__logger.log(logging.DEBUG_SQL, 'create %scursor to %r', cursor_type, self.dbname)
+        _logger.debug('create %scursor to %r', cursor_type, self.dbname)
         return Cursor(self._pool, self.dbname, serialized=serialized)
 
     # serialized_cursor is deprecated - cursors are serialized by default
@@ -473,8 +470,7 @@ class Connection(object):
     def __nonzero__(self):
         """Check if connection is possible"""
         try:
-            warnings.warn("You use an expensive function to test a connection.",
-                      DeprecationWarning, stacklevel=1)
+            _logger.warning("__nonzero__() is deprecated. (It is too expensive to test a connection.)")
             cr = self.cursor()
             cr.close()
             return True
@@ -508,8 +504,10 @@ def db_connect(db_name):
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
+    global _Pool
     """ You might want to call openerp.modules.registry.RegistryManager.delete(db_name) along this function."""
-    _Pool.close_all(dsn(db_name))
+    if _Pool:
+        _Pool.close_all(dsn(db_name))
     ct = currentThread()
     if hasattr(ct, 'dbname'):
         delattr(ct, 'dbname')

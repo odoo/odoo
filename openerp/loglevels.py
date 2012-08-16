@@ -21,12 +21,8 @@
 
 import sys
 import logging
-import warnings
 
 LOG_NOTSET = 'notset'
-LOG_DEBUG_SQL = 'debug_sql'
-LOG_DEBUG_RPC_ANSWER = 'debug_rpc_answer'
-LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
 LOG_TEST = 'test'
 LOG_INFO = 'info'
@@ -34,32 +30,27 @@ LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
 
-logging.DEBUG_RPC_ANSWER = logging.DEBUG - 4
-logging.addLevelName(logging.DEBUG_RPC_ANSWER, 'DEBUG_RPC_ANSWER')
-logging.DEBUG_RPC = logging.DEBUG - 2
-logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
-logging.DEBUG_SQL = logging.DEBUG_RPC - 3
-logging.addLevelName(logging.DEBUG_SQL, 'DEBUG_SQL')
-
 logging.TEST = logging.INFO - 5
 logging.addLevelName(logging.TEST, 'TEST')
 
+_logger = logging.getLogger(__name__)
+
 class Logger(object):
     def __init__(self):
-        warnings.warn("The netsvc.Logger API shouldn't be used anymore, please "
-                      "use the standard `logging.getLogger` API instead",
-                      PendingDeprecationWarning, stacklevel=2)
+        _logger.warning(
+            "The netsvc.Logger API shouldn't be used anymore, please "
+            "use the standard `logging.getLogger` API instead.")
         super(Logger, self).__init__()
 
     def notifyChannel(self, name, level, msg):
-        warnings.warn("notifyChannel API shouldn't be used anymore, please use "
-                      "the standard `logging` module instead",
-                      PendingDeprecationWarning, stacklevel=2)
+        _logger.warning(
+            "notifyChannel API shouldn't be used anymore, please use "
+            "the standard `logging` module instead.")
         from service.web_services import common
 
-        log = logging.getLogger(ustr(name))
+        log = logging.getLogger(__name__ + '.deprecated.' + ustr(name))
 
-        if level in [LOG_DEBUG_RPC, LOG_TEST] and not hasattr(log, level):
+        if level in [LOG_TEST] and not hasattr(log, level):
             fct = lambda msg, *args, **kwargs: log.log(getattr(logging, level.upper()), msg, *args, **kwargs)
             setattr(log, level, fct)
 
@@ -130,17 +121,22 @@ def get_encodings(hint_encoding='utf-8'):
         if prefenc:
             yield prefenc
 
-def ustr(value, hint_encoding='utf-8'):
-    """This method is similar to the builtin `str` method, except
-       it will return unicode() string.
+def ustr(value, hint_encoding='utf-8', errors='strict'):
+    """This method is similar to the builtin `unicode`, except
+    that it may try multiple encodings to find one that works
+    for decoding `value`, and defaults to 'utf-8' first.
 
-    @param value: the value to convert
-    @param hint_encoding: an optional encoding that was detected
-                          upstream and should be tried first to
-                          decode ``value``.
-
-    @rtype: unicode
-    @return: unicode string
+    :param: value: the value to convert
+    :param: hint_encoding: an optional encoding that was detecte
+        upstream and should be tried first to decode ``value``.
+    :param str error: optional `errors` flag to pass to the unicode
+        built-in to indicate how illegal character values should be
+        treated when converting a string: 'strict', 'ignore' or 'replace'.
+        Passing anything other than 'strict' means that the first
+        encoding tried will be used, even if it's not the correct
+        one to use, so be careful! Ignore if value is not a string/unicode.
+    :rtype: unicode
+    :raise: UnicodeError if value cannot be coerced to unicode
     """
     if isinstance(value, Exception):
         return exception_to_unicode(value)
@@ -156,7 +152,7 @@ def ustr(value, hint_encoding='utf-8'):
 
     for ln in get_encodings(hint_encoding):
         try:
-            return unicode(value, ln)
+            return unicode(value, ln, errors=errors)
         except Exception:
             pass
     raise UnicodeError('unable to convert %r' % (value,))

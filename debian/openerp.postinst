@@ -18,6 +18,8 @@ case "${1}" in
         # Creating local storage directory
         mkdir -p /var/lib/openerp/filestore
         chown openerp:openerp -R /var/lib/openerp
+        # update-python-modules NOW otherwise invoke-rc.d openerp start will fail
+        update-python-modules -p openerp.public
         ;;
     *)
         ;;

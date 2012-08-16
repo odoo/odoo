@@ -20,7 +20,10 @@
 ##############################################################################
 
 import ir_model
+import ir_model_constraint
+import ir_model_relation
 import ir_sequence
+import ir_needaction
 import ir_ui_menu
 import ir_ui_view
 import ir_default

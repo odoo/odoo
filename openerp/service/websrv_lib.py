@@ -32,12 +32,12 @@
     usable in other projects, too.
 """
 
-import socket
-import base64
-import errno
+import logging
 import SocketServer
 from BaseHTTPServer import *
 from SimpleHTTPServer import SimpleHTTPRequestHandler
+
+_logger = logging.getLogger(__name__)
 
 class AuthRequiredExc(Exception):
     def __init__(self,atype,realm):
@@ -179,7 +179,7 @@ class FixSendError:
         if message is None:
             message = short
         explain = long
-        self.log_error("code %d, message %s", code, message)
+        _logger.error("code %d, message %s", code, message)
         # using _quote_html to prevent Cross Site Scripting attacks (see bug #1100201)
         content = (self.error_message_format %
                    {'code': code, 'message': _quote_html(message), 'explain': explain})

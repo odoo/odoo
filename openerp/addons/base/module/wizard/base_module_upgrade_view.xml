@@ -5,24 +5,23 @@
         <record id="view_base_module_upgrade" model="ir.ui.view">
             <field name="name">Module Upgrade</field>
             <field name="model">base.module.upgrade</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="System Update">
-            <group colspan="2" col="4">
-            <label align="0.0" string="Your system will be updated." colspan="4"/>
-            <label align="0.0" string="Note that this operation might take a few minutes." colspan="4"/>
-            <separator string="Modules to update" colspan="4"/>
-            <field name="module_info" nolabel="1" colspan="4"/>
-             <separator string="" colspan="4"/>
-            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-            <button name="upgrade_module" string="Update" type="object" icon="gtk-go-forward"/>
-            </group>
-             </form>
+                <form string="System Update" version="7.0">
+                    <div><label string="Your system will be updated."/></div>
+                    <div><label string="Note that this operation might take a few minutes."/></div>
+                    <separator string="Modules to Update"/>
+                    <field name="module_info"/>
+                    <footer>
+                        <button name="upgrade_module" string="Update" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
             </field>
         </record>
 
         <record id="action_view_base_module_upgrade" model="ir.actions.act_window">
-            <field name="name">Module Upgrade</field>
+            <field name="name">Apply Schedule Upgrade</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.module.upgrade</field>
             <field name="view_type">form</field>
@@ -33,26 +32,25 @@
         <menuitem
            name="Apply Scheduled Upgrades"
            action="action_view_base_module_upgrade"
-           groups="base.group_extended"
+           groups="base.group_no_one"
            id="menu_view_base_module_upgrade"
            parent="menu_management"
            sequence="3"/>
-       
+
        <record id="view_base_module_upgrade_install" model="ir.ui.view">
             <field name="name">Module Upgrade Install</field>
             <field name="model">base.module.upgrade</field>
-            <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-            <form string="Apply Scheduled Upgrades">
-            <separator string="System update completed" colspan="4"/>
-            <label align="0.0" string="The selected modules have been updated / installed !" colspan="4"/>
-            <label align="0.0" string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)." colspan="4"/>
-             <separator string="" colspan="4"/>
-                <newline/>
-                <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
-             </form>
+                <form string="Apply Schedule Upgrade" version="7.0">
+                    <div><label string="The selected modules have been updated / installed !"/></div>
+                    <div><label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/></div>
+                    <footer>
+                        <button name="config" string="Start configuration" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
             </field>
         </record>
 

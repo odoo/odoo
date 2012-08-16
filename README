@@ -1,29 +1,69 @@
-pydot - Python interface to Graphviz's Dot language
-Ero Carrera (c) 2004-2007
-ero@dkbza.org
-
-This code is distributed under the MIT license.
-
-Requirements:
+About OpenERP
 -------------
 
-pyparsing: pydot requires the pyparsing module in order to be
-	able to load DOT files.
+OpenERP is an OpenSource/Free software Enterprise Resource Planning and
+Customer Relationship Management software. More info at:
 
-GraphViz:  is needed in order to render the graphs into any of
-	the plethora of output formats supported.
+    http://www.openerp.com
 
-Installation:
--------------
+Installation on Debian Ubuntu
+-----------------------------
 
-Should suffice with doing:
+Download the deb file and type:
 
- python setup.py install
+    $ sudo dpkg -i <openerp-deb-filename>
+    $ sudo apt-get install install -f
 
-Needless to say, no installation is needed just to use the module. A mere:
+Installation on Debian Ubuntu from nightly build
+------------------------------------------------
 
- import pydot
+Add the the apt repository
 
-should do it, provided that the directory containing the modules is on Python
-module search path.
+    deb http://nightly.openerp.com/6.1/deb/ ./
+
+in your source.list and type:
+
+    $ sudo apt-get update
+    $ sudo apt-get install openerp
+
+Installation on RedHat, Fedora, CentOS
+--------------------------------------
+
+Install the required dependencies:
+
+    $ yum install python
+    $ easy_install pip
+    $ pip install .....
+
+Install the openerp rpm
+
+    $ rpm -i openerp-VERSION.rpm
+
+Installation on Windows
+-----------------------
+
+Installation on MacOSX
+-----------------------
+
+Setuping you first database
+---------------------------
+
+Point your browser to http://localhost:8069/ and click "Manage Databases", the
+default master password is "admin".
+
+Detailed System Requirements
+----------------------------
+
+You need the following software installed:
+
+ postgresql-client, python-dateutil, python-feedparser, python-gdata,
+ python-ldap, python-libxslt1, python-lxml, python-mako, python-openid,
+ python-psycopg2, python-pybabel, python-pychart, python-pydot,
+ python-pyparsing, python-reportlab, python-simplejson, python-tz,
+ python-vatnumber, python-vobject, python-webdav, python-werkzeug, python-xlwt,
+ python-yaml, python-zsi
+
+For Luxembourg localization, you also need:
+
+ pdftk (http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/)
 

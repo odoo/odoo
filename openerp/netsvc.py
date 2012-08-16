@@ -30,7 +30,6 @@ import socket
 import sys
 import threading
 import time
-import traceback
 import types
 from pprint import pformat
 
@@ -38,6 +37,8 @@ from pprint import pformat
 from loglevels import *
 import tools
 import openerp
+
+_logger = logging.getLogger(__name__)
 
 def close_socket(sock):
     """ Closes a socket instance cleanly
@@ -101,12 +102,11 @@ class ExportService(object):
     """
 
     _services = {}
-    _logger = logging.getLogger('web-services')
     
     def __init__(self, name):
         ExportService._services[name] = self
         self.__name = name
-        self._logger.debug("Registered an exported service: %s" % name)
+        _logger.debug("Registered an exported service: %s" % name)
 
     @classmethod
     def getService(cls,name):
@@ -125,9 +125,6 @@ COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
 COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
 LEVEL_COLOR_MAPPING = {
-    logging.DEBUG_SQL: (WHITE, MAGENTA),
-    logging.DEBUG_RPC: (BLUE, WHITE),
-    logging.DEBUG_RPC_ANSWER: (BLUE, WHITE),
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
     logging.TEST: (WHITE, BLUE),
@@ -138,6 +135,7 @@ LEVEL_COLOR_MAPPING = {
 
 class DBFormatter(logging.Formatter):
     def format(self, record):
+        record.pid = os.getpid()
         record.dbname = getattr(threading.currentThread(), 'dbname', '?')
         return logging.Formatter.format(self, record)
 
@@ -147,12 +145,13 @@ class ColoredFormatter(DBFormatter):
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
 
+
 def init_logger():
     from tools.translate import resetlocale
     resetlocale()
 
     # create a format for log messages and dates
-    format = '[%(asctime)s][%(dbname)s] %(levelname)s:%(name)s:%(message)s'
+    format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s'
 
     if tools.config['syslog']:
         # SysLog Handler
@@ -189,11 +188,51 @@ def init_logger():
         formatter = DBFormatter(format)
     handler.setFormatter(formatter)
 
-    # add the handler to the root logger
-    logger = logging.getLogger()
-    logger.handlers = []
-    logger.addHandler(handler)
-    logger.setLevel(int(tools.config['log_level'] or '0'))
+    # Configure handlers
+    default_config = [
+        'openerp.netsvc.rpc.request:INFO',
+        'openerp.netsvc.rpc.response:INFO',
+        'openerp.addons.web.common.http:INFO',
+        'openerp.addons.web.common.openerplib:INFO',
+        'openerp.sql_db:INFO',
+        ':INFO',
+    ]
+
+    if tools.config['log_level'] == 'info':
+        pseudo_config = []
+    elif tools.config['log_level'] == 'debug_rpc':
+        pseudo_config = ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG']
+    elif tools.config['log_level'] == 'debug_rpc_answer':
+        pseudo_config = ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG', 'openerp.netsvc.rpc.response:DEBUG']
+    elif tools.config['log_level'] == 'debug':
+        pseudo_config = ['openerp:DEBUG']
+    elif tools.config['log_level'] == 'test':
+        pseudo_config = ['openerp:TEST']
+    elif tools.config['log_level'] == 'warn':
+        pseudo_config = ['openerp:WARNING']
+    elif tools.config['log_level'] == 'error':
+        pseudo_config = ['openerp:ERROR']
+    elif tools.config['log_level'] == 'critical':
+        pseudo_config = ['openerp:CRITICAL']
+    elif tools.config['log_level'] == 'debug_sql':
+        pseudo_config = ['openerp.sql_db:DEBUG']
+    else:
+        pseudo_config = []
+
+    logconfig = tools.config['log_handler']
+
+    for logconfig_item in default_config + pseudo_config + logconfig:
+        loggername, level = logconfig_item.split(':')
+        level = getattr(logging, level, logging.INFO)
+        logger = logging.getLogger(loggername)
+        logger.handlers = []
+        logger.setLevel(level)
+        logger.addHandler(handler)
+        if loggername != '':
+            logger.propagate = False
+
+    for logconfig_item in default_config + pseudo_config + logconfig:
+        _logger.debug('logger level set: "%s"', logconfig_item)
 
 # A alternative logging scheme for automated runs of the
 # server intended to test it.
@@ -203,8 +242,8 @@ def init_alternative_logger():
         if record.levelno > 20:
           print record.levelno, record.pathname, record.msg
     handler = H()
-    logger = logging.getLogger()
-    logger.handlers = []
+    # Add the handler to the 'openerp' logger.
+    logger = logging.getLogger('openerp')
     logger.addHandler(handler)
     logger.setLevel(logging.ERROR)
 
@@ -226,9 +265,6 @@ class Server:
     # all I/O blocking operations
     _busywait_timeout = 0.5
 
-
-    __logger = logging.getLogger('server')
-
     def __init__(self):
         Server.__servers.append(self)
         if Server.__is_started:
@@ -243,7 +279,7 @@ class Server:
             t.start()
 
     def start(self):
-        self.__logger.debug("called stub Server.start")
+        _logger.debug("called stub Server.start")
 
     def _late_start(self):
         self.start()
@@ -252,7 +288,7 @@ class Server:
                 Server.__starter_threads.remove(thr)
 
     def stop(self):
-        self.__logger.debug("called stub Server.stop")
+        _logger.debug("called stub Server.stop")
 
     def stats(self):
         """ This function should return statistics about the server """
@@ -262,7 +298,7 @@ class Server:
     def startAll(cls):
         if cls.__is_started:
             return
-        cls.__logger.info("Starting %d services" % len(cls.__servers))
+        _logger.info("Starting %d services" % len(cls.__servers))
         for srv in cls.__servers:
             srv.start()
         cls.__is_started = True
@@ -271,7 +307,7 @@ class Server:
     def quitAll(cls):
         if not cls.__is_started:
             return
-        cls.__logger.info("Stopping %d services" % len(cls.__servers))
+        _logger.info("Stopping %d services" % len(cls.__servers))
         for thr in cls.__starter_threads:
             if not thr.finished.is_set():
                 thr.cancel()
@@ -293,19 +329,17 @@ class Server:
 def replace_request_password(args):
     # password is always 3rd argument in a request, we replace it in RPC logs
     # so it's easier to forward logs for diagnostics/debugging purposes...
-    args = list(args)
     if len(args) > 2:
+        args = list(args)
         args[2] = '*'
-    return args
+    return tuple(args)
 
-def log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
-    logger = logging.getLogger(title)
-    if logger.isEnabledFor(channel):
-        indent=''
-        indent_after=' '*len(fn)
-        for line in (fn+pformat(msg, depth=depth)).split('\n'):
-            logger.log(channel, indent+line)
-            indent=indent_after
+def log(logger, level, prefix, msg, depth=None):
+    indent=''
+    indent_after=' '*len(prefix)
+    for line in (prefix+pformat(msg, depth=depth)).split('\n'):
+        logger.log(level, indent+line)
+        indent=indent_after
 
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
@@ -313,22 +347,27 @@ def dispatch_rpc(service_name, method, params):
     This is pure Python code, the actual marshalling (from/to XML-RPC or
     NET-RPC) is done in a upper layer.
     """
-    def _log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
-        log(title, msg, channel=channel, depth=depth, fn=fn)
     try:
-        logger = logging.getLogger('result')
-        start_time = end_time = 0
-        if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
-            _log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
-        if logger.isEnabledFor(logging.DEBUG_RPC):
+        rpc_request = logging.getLogger(__name__ + '.rpc.request')
+        rpc_response = logging.getLogger(__name__ + '.rpc.response')
+        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
+        if rpc_request_flag or rpc_response_flag:
             start_time = time.time()
+            if rpc_request and rpc_response_flag:
+                log(rpc_request,logging.DEBUG,'%s.%s'%(service_name,method), replace_request_password(params))
+
+        threading.current_thread().uid = None
+        threading.current_thread().dbname = None
         result = ExportService.getService(service_name).dispatch(method, params)
-        if logger.isEnabledFor(logging.DEBUG_RPC):
+
+        if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
-        if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
-            _log('service (%.3fs)' % (end_time - start_time), tuple(replace_request_password(params)), depth=1, fn='%s.%s'%(service_name,method))
-        _log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
-        _log('result', result, channel=logging.DEBUG_RPC_ANSWER)
+            if rpc_response_flag:
+                log(rpc_response,logging.DEBUG,'%s.%s time:%.3fs '%(service_name,method,end_time - start_time), result)
+            else:
+                log(rpc_request,logging.DEBUG,'%s.%s time:%.3fs '%(service_name,method,end_time - start_time), replace_request_password(params), depth=1)
+
         return result
     except openerp.exceptions.AccessError:
         raise
@@ -337,11 +376,11 @@ def dispatch_rpc(service_name, method, params):
     except openerp.exceptions.Warning:
         raise
     except openerp.exceptions.DeferredException, e:
-        _log('exception', tools.exception_to_unicode(e))
+        _logger.error(tools.exception_to_unicode(e))
         post_mortem(e.traceback)
         raise
     except Exception, e:
-        _log('exception', tools.exception_to_unicode(e))
+        _logger.error(tools.exception_to_unicode(e))
         post_mortem(sys.exc_info())
         raise
 

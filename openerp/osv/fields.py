@@ -34,22 +34,23 @@
 
 import base64
 import datetime as DT
+import logging
+import pytz
 import re
-import string
-import sys
-import warnings
 import xmlrpclib
 from psycopg2 import Binary
 
 import openerp
-import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_round, float_repr
-import json
+import simplejson
+from openerp.tools.html_sanitize import html_sanitize
+
+_logger = logging.getLogger(__name__)
 
 def _symbol_set(symb):
-    if symb == None or symb == False:
+    if symb is None or symb == False:
         return None
     elif isinstance(symb, unicode):
         return symb.encode('utf-8')
@@ -108,10 +109,12 @@ class _column(object):
         self.manual = manual
         self.selectable = True
         self.group_operator = args.get('group_operator', False)
+        self.groups = False  # CSV list of ext IDs of groups that can access this field
+        self.deprecated = False # Optional deprecation warning
         for a in args:
             if args[a]:
                 setattr(self, a, args[a])
-
+ 
     def restart(self):
         pass
 
@@ -126,6 +129,23 @@ class _column(object):
         res = obj.read(cr, uid, ids, [name], context=context)
         return [x[name] for x in res]
 
+    def as_display_name(self, cr, uid, obj, value, context=None):
+        """Converts a field value to a suitable string representation for a record,
+           e.g. when this field is used as ``rec_name``.
+
+           :param obj: the ``BaseModel`` instance this column belongs to 
+           :param value: a proper value as returned by :py:meth:`~openerp.orm.osv.BaseModel.read`
+                         for this column
+        """
+        # delegated to class method, so a column type A can delegate
+        # to a column type B. 
+        return self._as_display_name(self, cr, uid, obj, value, context=None)
+
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        # This needs to be a class method, in case a column type A as to delegate
+        # to a column type B.
+        return tools.ustr(value)
 
 # ---------------------------------------------------------
 # Simple fields
@@ -139,8 +159,10 @@ class boolean(_column):
     def __init__(self, string='unknown', required=False, **args):
         super(boolean, self).__init__(string=string, required=required, **args)
         if required:
-            warnings.warn("Making a boolean field `required` has no effect, as NULL values are "
-                          "automatically turned into False", PendingDeprecationWarning, stacklevel=2)
+            _logger.debug(
+                "required=True is deprecated: making a boolean field"
+                " `required` has no effect, as NULL values are "
+                "automatically turned into False.")
 
 class integer(_column):
     _type = 'integer'
@@ -151,33 +173,6 @@ class integer(_column):
 
     def __init__(self, string='unknown', required=False, **args):
         super(integer, self).__init__(string=string, required=required, **args)
-        if required:
-            warnings.warn("Making an integer field `required` has no effect, as NULL values are "
-                          "automatically turned into 0", PendingDeprecationWarning, stacklevel=2)
-
-class integer_big(_column):
-    """Experimental 64 bit integer column type, currently unused.
-
-       TODO: this field should work fine for values up
-             to 32 bits, but greater values will not fit
-             in the XML-RPC int type, so a specific
-             get() method is needed to pass them as floats,
-             like what we do for integer functional fields.
-    """
-    _type = 'integer_big'
-    # do not reference the _symbol_* of integer class, as that would possibly
-    # unbind the lambda functions
-    _symbol_c = '%s'
-    _symbol_f = lambda x: int(x or 0)
-    _symbol_set = (_symbol_c, _symbol_f)
-    _symbol_get = lambda self,x: x or 0
-    _deprecated = True
-
-    def __init__(self, string='unknown', required=False, **args):
-        super(integer_big, self).__init__(string=string, required=required, **args)
-        if required:
-            warnings.warn("Making an integer_big field `required` has no effect, as NULL values are "
-                          "automatically turned into 0", PendingDeprecationWarning, stacklevel=2)
 
 class reference(_column):
     _type = 'reference'
@@ -197,11 +192,22 @@ class reference(_column):
                     result[value['id']] = False
         return result
 
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        if value:
+            # reference fields have a 'model,id'-like value, that we need to convert
+            # to a real name
+            model_name, res_id = value.split(',')
+            model = obj.pool.get(model_name)
+            if model and res_id:
+                return model.name_get(cr, uid, [int(res_id)], context=context)[0][1]
+        return tools.ustr(value)
+
 class char(_column):
     _type = 'char'
 
-    def __init__(self, string, size, **args):
-        _column.__init__(self, string=string, size=size, **args)
+    def __init__(self, string="unknown", size=None, **args):
+        _column.__init__(self, string=string, size=size or None, **args)
         self._symbol_set = (self._symbol_c, self._symbol_set_char)
 
     # takes a string (encoded in utf8) and returns a string (encoded in utf8)
@@ -210,7 +216,7 @@ class char(_column):
         # * we need to remove the "symb==False" from the next line BUT
         #   for now too many things rely on this broken behavior
         # * the symb==None test should be common to all data types
-        if symb == None or symb == False:
+        if symb is None or symb == False:
             return None
 
         # we need to convert the string to a unicode object to be able
@@ -222,6 +228,14 @@ class char(_column):
 
 class text(_column):
     _type = 'text'
+
+class html(text):
+    _type = 'html'
+    _symbol_c = '%s'
+    def _symbol_f(x):
+        return html_sanitize(x)
+        
+    _symbol_set = (_symbol_c, _symbol_f)
 
 import __builtin__
 
@@ -237,9 +251,6 @@ class float(_column):
         self.digits = digits
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
-        if required:
-            warnings.warn("Making a float field `required` has no effect, as NULL values are "
-                          "automatically turned into 0.0", PendingDeprecationWarning, stacklevel=2)
 
     def digits_change(self, cr):
         if self.digits_compute:
@@ -252,6 +263,7 @@ class float(_column):
 
 class date(_column):
     _type = 'date'
+
     @staticmethod
     def today(*args):
         """ Returns the current date in a format fit for being a
@@ -262,6 +274,38 @@ class date(_column):
         """
         return DT.date.today().strftime(
             tools.DEFAULT_SERVER_DATE_FORMAT)
+
+    @staticmethod
+    def context_today(model, cr, uid, context=None, timestamp=None):
+        """Returns the current date as seen in the client's timezone
+           in a format fit for date fields.
+           This method may be passed as value to initialize _defaults.
+
+           :param Model model: model (osv) for which the date value is being
+                               computed - technical field, currently ignored,
+                               automatically passed when used in _defaults.
+           :param datetime timestamp: optional datetime value to use instead of
+                                      the current date and time (must be a
+                                      datetime, regular dates can't be converted
+                                      between timezones.)
+           :param dict context: the 'tz' key in the context should give the
+                                name of the User/Client timezone (otherwise
+                                UTC is used)
+           :rtype: str 
+        """
+        today = timestamp or DT.datetime.now()
+        context_today = None
+        if context and context.get('tz'):
+            try:
+                utc = pytz.timezone('UTC')
+                context_tz = pytz.timezone(context['tz'])
+                utc_today = utc.localize(today, is_dst=False) # UTC = no DST
+                context_today = utc_today.astimezone(context_tz)
+            except Exception:
+                _logger.debug("failed to compute context/client-specific today date, "
+                              "using the UTC value for `today`",
+                              exc_info=True)
+        return (context_today or today).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
 
 class datetime(_column):
     _type = 'datetime'
@@ -276,24 +320,48 @@ class datetime(_column):
         return DT.datetime.now().strftime(
             tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
-class time(_column):
-    _type = 'time'
-    _deprecated = True
     @staticmethod
-    def now( *args):
-        """ Returns the current time in a format fit for being a
-        default value to a ``time`` field.
+    def context_timestamp(cr, uid, timestamp, context=None):
+        """Returns the given timestamp converted to the client's timezone.
+           This method is *not* meant for use as a _defaults initializer,
+           because datetime fields are automatically converted upon
+           display on client side. For _defaults you :meth:`fields.datetime.now`
+           should be used instead.
 
-        This method should be proivided as is to the _defaults dict,
-        it should not be called.
+           :param datetime timestamp: naive datetime value (expressed in UTC)
+                                      to be converted to the client timezone
+           :param dict context: the 'tz' key in the context should give the
+                                name of the User/Client timezone (otherwise
+                                UTC is used)
+           :rtype: datetime
+           :return: timestamp converted to timezone-aware datetime in context
+                    timezone
         """
-        return DT.datetime.now().strftime(
-            tools.DEFAULT_SERVER_TIME_FORMAT)
+        assert isinstance(timestamp, DT.datetime), 'Datetime instance expected'
+        if context and context.get('tz'):
+            try:
+                utc = pytz.timezone('UTC')
+                context_tz = pytz.timezone(context['tz'])
+                utc_timestamp = utc.localize(timestamp, is_dst=False) # UTC = no DST
+                return utc_timestamp.astimezone(context_tz)
+            except Exception:
+                _logger.debug("failed to compute context/client-specific timestamp, "
+                              "using the UTC value",
+                              exc_info=True)
+        return timestamp
 
 class binary(_column):
     _type = 'binary'
     _symbol_c = '%s'
-    _symbol_f = lambda symb: symb and Binary(symb) or None
+
+    # Binary values may be byte strings (python 2.6 byte array), but
+    # the legacy OpenERP convention is to transfer and store binaries
+    # as base64-encoded strings. The base64 string may be provided as a
+    # unicode in some circumstances, hence the str() cast in symbol_f.
+    # This str coercion will only work for pure ASCII unicode strings,
+    # on purpose - non base64 data must be passed as a 8bit byte strings.
+    _symbol_f = lambda symb: symb and Binary(str(symb)) or None
+
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self, x: x and str(x)
 
@@ -347,34 +415,6 @@ class selection(_column):
 #         (4, ID)                link
 #         (5)                    unlink all (only valid for one2many)
 #
-#CHECKME: dans la pratique c'est quoi la syntaxe utilisee pour le 5? (5) ou (5, 0)?
-class one2one(_column):
-    _classic_read = False
-    _classic_write = True
-    _type = 'one2one'
-    _deprecated = True
-
-    def __init__(self, obj, string='unknown', **args):
-        warnings.warn("The one2one field doesn't work anymore", DeprecationWarning)
-        _column.__init__(self, string=string, **args)
-        self._obj = obj
-
-    def set(self, cr, obj_src, id, field, act, user=None, context=None):
-        if not context:
-            context = {}
-        obj = obj_src.pool.get(self._obj)
-        self._table = obj_src.pool.get(self._obj)._table
-        if act[0] == 0:
-            id_new = obj.create(cr, user, act[1])
-            cr.execute('update '+obj_src._table+' set '+field+'=%s where id=%s', (id_new, id))
-        else:
-            cr.execute('select '+field+' from '+obj_src._table+' where id=%s', (act[0],))
-            id = cr.fetchone()[0]
-            obj.write(cr, user, [id], act[1], context=context)
-
-    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
-        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
-
 
 class many2one(_column):
     _classic_read = False
@@ -440,6 +480,11 @@ class many2one(_column):
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
         return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
+
+    
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        return value[1] if isinstance(value, tuple) else tools.ustr(value) 
 
 
 class one2many(_column):
@@ -510,11 +555,15 @@ class one2many(_column):
             elif act[0] == 5:
                 reverse_rel = obj._all_columns.get(self._fields_id)
                 assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
-                # if the model has on delete cascade, just delete the rows
+                # if the o2m has a static domain we must respect it when unlinking
+                extra_domain = self._domain if isinstance(getattr(self, '_domain', None), list) else [] 
+                ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
+                # If the model has cascade deletion, we delete the rows because it is the intended behavior,
+                # otherwise we only nullify the reverse foreign key column.
                 if reverse_rel.column.ondelete == "cascade":
-                    obj.unlink(cr, user, obj.search(cr, user, [(self._fields_id,'=',id)], context=context), context=context)
+                    obj.unlink(cr, user, ids_to_unlink, context=context)
                 else:
-                    cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%s', (id,))
+                    obj.write(cr, user, ids_to_unlink, {self._fields_id: False}, context=context)
             elif act[0] == 6:
                 # Must use write() to recompute parent_store structure if needed
                 obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
@@ -527,6 +576,10 @@ class one2many(_column):
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, operator, context=context,limit=limit)
 
+    
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        raise NotImplementedError('One2Many columns should not be used as record name (_rec_name)') 
 
 #
 # Values: (0, 0,  { fields })    create
@@ -605,6 +658,20 @@ class many2many(_column):
                 col2 = '%s_id' % dest_model._table
         return (tbl, col1, col2)
 
+    def _get_query_and_where_params(self, cr, model, ids, values, where_params):
+        """ Extracted from ``get`` to facilitate fine-tuning of the generated
+            query. """
+        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
+                   FROM %(rel)s, %(from_c)s \
+                  WHERE %(rel)s.%(id1)s IN %%s \
+                    AND %(rel)s.%(id2)s = %(tbl)s.id \
+                 %(where_c)s  \
+                 %(order_by)s \
+                 %(limit)s \
+                 OFFSET %(offset)d' \
+                 % values
+        return query, where_params
+
     def get(self, cr, model, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
             context = {}
@@ -616,8 +683,9 @@ class many2many(_column):
         for id in ids:
             res[id] = []
         if offset:
-            warnings.warn("Specifying offset at a many2many.get() may produce unpredictable results.",
-                      DeprecationWarning, stacklevel=2)
+            _logger.warning(
+                "Specifying offset at a many2many.get() is deprecated and may"
+                " produce unpredictable results.")
         obj = model.pool.get(self._obj)
         rel, id1, id2 = self._sql_names(model)
 
@@ -641,15 +709,7 @@ class many2many(_column):
         if self._limit is not None:
             limit_str = ' LIMIT %d' % self._limit
 
-        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
-                   FROM %(rel)s, %(from_c)s \
-                  WHERE %(rel)s.%(id1)s IN %%s \
-                    AND %(rel)s.%(id2)s = %(tbl)s.id \
-                 %(where_c)s  \
-                 %(order_by)s \
-                 %(limit)s \
-                 OFFSET %(offset)d' \
-            % {'rel': rel,
+        query, where_params = self._get_query_and_where_params(cr, model, ids, {'rel': rel,
                'from_c': from_c,
                'tbl': obj._table,
                'id1': id1,
@@ -658,7 +718,8 @@ class many2many(_column):
                'limit': limit_str,
                'order_by': order_by,
                'offset': offset,
-              }
+                }, where_params)
+
         cr.execute(query, [tuple(ids),] + where_params)
         for r in cr.fetchall():
             res[r[1]].append(r[0])
@@ -707,6 +768,10 @@ class many2many(_column):
     #
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit, context=context)
+
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        raise NotImplementedError('Many2Many columns should not be used as record name (_rec_name)') 
 
 
 def get_nice_size(value):
@@ -995,7 +1060,7 @@ class function(_column):
             self._symbol_f = boolean._symbol_f
             self._symbol_set = boolean._symbol_set
 
-        if type in ['integer','integer_big']:
+        if type == 'integer':
             self._symbol_c = integer._symbol_c
             self._symbol_f = integer._symbol_f
             self._symbol_set = integer._symbol_set
@@ -1035,13 +1100,13 @@ class function(_column):
             elif not context.get('bin_raw'):
                 result = sanitize_binary_value(value)
 
-        if field_type in ("integer","integer_big") and value > xmlrpclib.MAXINT:
+        if field_type == "integer" and value > xmlrpclib.MAXINT:
             # integer/long values greater than 2^31-1 are not supported
             # in pure XMLRPC, so we have to pass them as floats :-(
             # This is not needed for stored fields and non-functional integer
             # fields, as their values are constrained by the database backend
             # to the same 32bits signed int limit.
-            result = float(value)
+            result = __builtin__.float(value)
         return result
 
     def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
@@ -1060,6 +1125,12 @@ class function(_column):
             context = {}
         if self._fnct_inv:
             self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
+
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        # Function fields are supposed to emulate a basic field type,
+        # so they can delegate to the basic type for record name rendering
+        return globals()[field._type]._as_display_name(field, cr, uid, obj, value, context=context)
 
 # ---------------------------------------------------------
 # Related fields
@@ -1194,7 +1265,6 @@ class related(function):
                 result[-1]['relation'] = f['relation']
         self._relations = result
 
-
 class sparse(function):   
 
     def convert_value(self, obj, cr, uid, record, value, read_value, context=None):        
@@ -1274,10 +1344,10 @@ class sparse(function):
                     value = value or []
                     if value:
                         # filter out deleted records as superuser
-                        relation_obj = obj.pool.get(self.relation)
+                        relation_obj = obj.pool.get(obj._columns[field_name].relation)
                         value = relation_obj.exists(cr, openerp.SUPERUSER_ID, value)
                 if type(value) in (int,long) and field_type == 'many2one':
-                    relation_obj = obj.pool.get(self.relation)
+                    relation_obj = obj.pool.get(obj._columns[field_name].relation)
                     # check for deleted record as superuser
                     if not relation_obj.exists(cr, openerp.SUPERUSER_ID, [value]):
                         value = False
@@ -1286,7 +1356,7 @@ class sparse(function):
 
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
-        return super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', method=True, **kwargs)
+        return super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
      
 
 
@@ -1320,10 +1390,10 @@ class serialized(_column):
     """
     
     def _symbol_set_struct(val):
-        return json.dumps(val)
+        return simplejson.dumps(val)
 
     def _symbol_get_struct(self, val):
-        return json.loads(val or '{}')
+        return simplejson.loads(val or '{}')
     
     _prefetch = False
     _type = 'serialized'
@@ -1486,7 +1556,7 @@ def field_to_dict(model, cr, user, field, context=None):
         res['related_columns'] = [col1, col2]
         res['third_table'] = table
     for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
-            'change_default', 'translate', 'help', 'select', 'selectable'):
+            'change_default', 'translate', 'help', 'select', 'selectable', 'groups'):
         if getattr(field, arg):
             res[arg] = getattr(field, arg)
     for arg in ('digits', 'invisible', 'filters'):
@@ -1504,7 +1574,7 @@ def field_to_dict(model, cr, user, field, context=None):
         else:
             # call the 'dynamic selection' function
             res['selection'] = field.selection(model, cr, user, context)
-    if res['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+    if res['type'] in ('one2many', 'many2many', 'many2one'):
         res['relation'] = field._obj
         res['domain'] = field._domain
         res['context'] = field._context

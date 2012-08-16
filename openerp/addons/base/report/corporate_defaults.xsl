@@ -22,18 +22,18 @@
 
 		<setFont name="Helvetica" size="10"/>
 		<drawRightString x="20cm" y="28.5cm"><xsl:value-of select="//corporate-header/corporation/rml_header1"/></drawRightString>
-		<drawString x="1cm" y="27cm"><xsl:value-of select="//corporate-header/corporation/address/street"/></drawString>
+		<drawString x="1cm" y="27cm"><xsl:value-of select="//corporate-header/corporation/street"/></drawString>
 		<drawString x="1cm" y="26.5cm">
-			<xsl:value-of select="//corporate-header/corporation/address/zip"/>
+			<xsl:value-of select="//corporate-header/corporation/zip"/>
 			<xsl:text> </xsl:text>
-			<xsl:value-of select="//corporate-header/corporation/address/city"/>
+			<xsl:value-of select="//corporate-header/corporation/city"/>
 			<xsl:text> - </xsl:text>
-			<xsl:value-of select="//corporate-header/corporation/address/country"/>
+			<xsl:value-of select="//corporate-header/corporation/country"/>
 		</drawString>
 		<drawString x="1cm" y="26cm">Phone:</drawString>
-		<drawRightString x="7cm" y="26cm"><xsl:value-of select="//corporate-header/corporation/address/phone"/></drawRightString>
+		<drawRightString x="7cm" y="26cm"><xsl:value-of select="//corporate-header/corporation/phone"/></drawRightString>
 		<drawString x="1cm" y="25.5cm">Mail:</drawString>
-		<drawRightString x="7cm" y="25.5cm"><xsl:value-of select="//corporate-header/corporation/address/email"/></drawRightString>
+		<drawRightString x="7cm" y="25.5cm"><xsl:value-of select="//corporate-header/corporation/email"/></drawRightString>
 
 
 		<!--page bottom-->
@@ -57,18 +57,18 @@
 
 		<setFont name="Helvetica" size="10"/>
 		<drawRightString x="1cm" y="27.5cm"><xsl:value-of select="//corporate-header/corporation/rml_header1"/></drawRightString>
-		<drawString x="1cm" y="27cm"><xsl:value-of select="//corporate-header/corporation/address/street"/></drawString>
+		<drawString x="1cm" y="27cm"><xsl:value-of select="//corporate-header/corporation/street"/></drawString>
 		<drawString x="1cm" y="26.5cm">
-			<xsl:value-of select="//corporate-header/corporation/address/zip"/>
+			<xsl:value-of select="//corporate-header/corporation/zip"/>
 			<xsl:text> </xsl:text>
-			<xsl:value-of select="//corporate-header/corporation/address/city"/>
+			<xsl:value-of select="//corporate-header/corporation/city"/>
 			<xsl:text> - </xsl:text>
-			<xsl:value-of select="//corporate-header/corporation/address/country"/>
+			<xsl:value-of select="//corporate-header/corporation/country"/>
 		</drawString>
 		<drawString x="1cm" y="26cm">Phone:</drawString>
-		<drawRightString x="7cm" y="26cm"><xsl:value-of select="//corporate-header/corporation/address/phone"/></drawRightString>
+		<drawRightString x="7cm" y="26cm"><xsl:value-of select="//corporate-header/corporation/phone"/></drawRightString>
 		<drawString x="1cm" y="25.5cm">Mail:</drawString>
-		<drawRightString x="7cm" y="25.5cm"><xsl:value-of select="//corporate-header/corporation/address/email"/></drawRightString>
+		<drawRightString x="7cm" y="25.5cm"><xsl:value-of select="//corporate-header/corporation/email"/></drawRightString>
 
 		<!--page bottom-->
 

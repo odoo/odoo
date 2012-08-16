@@ -5,16 +5,14 @@
         <record id="ir_property_view_search" model="ir.ui.view">
             <field name="name">ir.property.search</field>
             <field name="model">ir.property</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Parameters">
+                    <field name="name" string="Name"/>
                     <filter icon="terp-project"
                         string="Generic"
                         help="Parameters that are used by all resources."
                         domain="[('res_id','=',False)]"/>
-                    <separator orientation="vertical"/>
-                    <field name="fields_id" />
-                    <field name="name"/>
+                    <field name="fields_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
@@ -22,47 +20,37 @@
         <record id="ir_property_view" model="ir.ui.view">
             <field name="name">ir.property.form</field>
             <field name="model">ir.property</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Parameters">
-                    <separator colspan="4" string="Property"/>
-                    <field name="name" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
-                    <separator colspan="4" string="Field Information"/>
-                    <field colspan="4" name="fields_id" select="1"/>
-                    <field colspan="4" name="type"/>
-                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('integer', 'integer_big', 'boolean'))]}">
-                        <field colspan="4" name="value_integer" widget="integer"/>
+                <form string="Parameters" version="7.0">
+                  <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="fields_id"/>
+                        <field name="type"/>
+                        <field name="res_id"/>
                     </group>
-                    <group colspan="4" attrs="{'invisible' : [('type', '!=', 'float')]}">
-                        <field colspan="4" name="value_float" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('date', 'datetime'))]}">
-                        <field colspan="4" name="value_datetime" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('char', 'text'))]}">
-                        <field colspan="4" name="value_text" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible' : [('type', '!=', 'many2one')]}">
-                        <field colspan="4" name="value_reference" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible' : [('type', '!=', 'binary')]}">
-                        <field colspan="4" name="value_binary" />
-                    </group>
-                    <separator colspan="4" string="Resource"/>
-                    <field colspan="4" name="res_id" groups="base.group_extended"/>
+                    <field name="value_integer" attrs="{'invisible' : [('type', 'not in', ('integer', 'boolean'))]}"/>
+                    <field name="value_float"  attrs="{'invisible' : [('type', '!=', 'float')]}"/>
+                    <field name="value_datetime"  attrs="{'invisible' : [('type', 'not in', ('date', 'datetime'))]}"/>
+                    <field name="value_text"  attrs="{'invisible' : [('type', 'not in', ('char', 'text'))]}"/>
+                    <field name="value_reference"  attrs="{'invisible' : [('type', '!=', 'many2one')]}"/>
+                    <field name="value_binary"  attrs="{'invisible' : [('type', '!=', 'binary')]}"/>
+                  </sheet>
                 </form>
             </field>
         </record>
         <record id="ir_property_view_tree" model="ir.ui.view">
             <field name="name">ir.property.tree</field>
             <field name="model">ir.property</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Parameters">
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="fields_id"/>
+                    <field name="res_id"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
@@ -73,7 +61,6 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_property_view_tree"/>
         </record>
-        <menuitem id="next_id_15" name="Parameters" parent="base.menu_config" groups="base.group_extended" sequence="12"/>
-        <menuitem action="ir_property_form" id="menu_ir_property_form_all" parent="base.next_id_15"/>
+        <menuitem id="menu_ir_property_form_all" parent="menu_ir_property" action="ir_property_form"/>
     </data>
 </openerp>

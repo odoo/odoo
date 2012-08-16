@@ -23,6 +23,8 @@ from osv import fields, osv
 import tools
 import logging
 
+_logger = logging.getLogger(__name__)
+
 TRANSLATION_TYPE = [
     ('field', 'Field'),
     ('model', 'Object'),
@@ -87,13 +89,12 @@ class ir_translation_import_cursor(object):
     def finish(self):
         """ Transfer the data from the temp table to ir.translation
         """
-        logger = logging.getLogger('orm')
 
         cr = self._cr
         if self._debug:
             cr.execute("SELECT count(*) FROM %s" % self._table_name)
             c = cr.fetchone()[0]
-            logger.debug("ir.translation.cursor: We have %d entries to process", c)
+            _logger.debug("ir.translation.cursor: We have %d entries to process", c)
 
         # Step 1: resolve ir.model.data references to res_ids
         cr.execute("""UPDATE %s AS ti
@@ -109,7 +110,7 @@ class ir_translation_import_cursor(object):
             cr.execute("SELECT imd_module, imd_model, imd_name FROM %s " \
                 "WHERE res_id IS NULL AND imd_module IS NOT NULL" % self._table_name)
             for row in cr.fetchall():
-                logger.debug("ir.translation.cursor: missing res_id for %s. %s/%s ", *row)
+                _logger.debug("ir.translation.cursor: missing res_id for %s. %s/%s ", *row)
 
         cr.execute("DELETE FROM %s WHERE res_id IS NULL AND imd_module IS NOT NULL" % \
             self._table_name)
@@ -143,7 +144,7 @@ class ir_translation_import_cursor(object):
             cr.execute('SELECT COUNT(*) FROM ONLY %s AS irt, %s AS ti WHERE %s' % \
                 (self._parent_table, self._table_name, find_expr))
             c = cr.fetchone()[0]
-            logger.debug("ir.translation.cursor:  %d entries now in ir.translation, %d common entries with tmp", c1, c)
+            _logger.debug("ir.translation.cursor:  %d entries now in ir.translation, %d common entries with tmp", c1, c)
 
         # Step 4: cleanup
         cr.execute("DROP TABLE %s" % self._table_name)

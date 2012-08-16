@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-    <menuitem id="menu_workflow_root" name="Workflows" parent="base.menu_custom" groups="base.group_extended"/>
+    <menuitem id="menu_workflow_root" name="Workflows" parent="base.menu_custom" groups="base.group_no_one"/>
 
     <!--
         ================================
@@ -12,36 +12,31 @@
     <record id="view_workflow_form" model="ir.ui.view">
       <field name="name">workflow.form</field>
       <field name="model">workflow</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Workflow">
-            <group col="6" colspan="4" >
+          <form string="Workflow" version="7.0">
+              <group col="4">
                   <field name="name"/>
                   <field name="osv"/>
                   <field name="on_create"/>
               </group>
-          <separator colspan="4" string="Activities"/>
-          <field colspan="4" name="activities" nolabel="1"/>
-        </form>
+              <field name="activities"/>
+          </form>
       </field>
     </record>
 
     <record id="view_workflow_search" model="ir.ui.view">
-      <field name="name">workflow.search</field>
-      <field name="model">workflow</field>
-      <field name="type">search</field>
-      <field name="arch" type="xml">
-        <search string="Workflow">
-          <field name="name"/>
-          <field name="osv"/>
-        </search>
-      </field>
+        <field name="name">workflow.search</field>
+        <field name="model">workflow</field>
+        <field name="arch" type="xml">
+            <search string="Workflow">
+                <field name="name" filter_domain="['|', ('name','ilike',self), ('osv','ilike',self)]" string="Workflow"/>
+            </search>
+        </field>
     </record>
 
     <record id="view_workflow_diagram" model="ir.ui.view">
       <field name="name">workflow.diagram</field>
       <field name="model">workflow</field>
-      <field name="type">diagram</field>
       <field name="arch" type="xml">
         <diagram string="Workflow Editor">
           <node object="workflow.activity" shape="rectangle:subflow_id!=False" bgcolor="gray:flow_start==True;grey:flow_stop==True">
@@ -63,7 +58,6 @@
     <record id="view_workflow_tree" model="ir.ui.view">
       <field name="name">workflow.tree</field>
       <field name="model">workflow</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="Workflow">
           <field name="name"/>
@@ -91,68 +85,61 @@
     <record id="view_workflow_activity_form" model="ir.ui.view">
       <field name="name">workflow.activity.form</field>
       <field name="model">workflow.activity</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Activity">
-            <group col="6" colspan="4">
-                <field name="name"/>
-                <field name="wkf_id"/>
-                <field name="kind"/>
+        <form string="Activity" version="7.0">
+           <sheet>
+            <group>
+                <group>
+                    <field name="name"/>
+                    <field name="wkf_id"/>
+                    <field name="kind"/>
+                </group>
+                <group>
+                    <field name="flow_start"/>
+                    <field name="flow_stop"/>
+                </group>
             </group>
-          <group  colspan="2">
-            <field name="flow_start"/>
-            <field name="flow_stop"/>
-          </group>
-          <notebook colspan="4">
+            <notebook>
             <page string="Properties">
-              <group colspan="4" col="6">
-                <group colspan="1" col="2">
-                  <separator string="Subflow" colspan="2"/>
+              <group>
+                <group string="Subflow">
                   <field name="subflow_id" attrs="{'readonly':[('kind','&lt;&gt;','subflow')]}"/>
                   <field name="signal_send"/>
                 </group>
-                <group colspan="1" col="2">
-                  <separator string="Conditions" colspan="2"/>
+                <group string="Conditions">
                   <field name="split_mode"/>
                   <field name="join_mode"/>
                 </group>
-                <group colspan="1" col="2">
-                  <separator string="Actions" colspan="2"/>
+                <group string="Actions">
                   <field name="action_id"/>
                   <field name="action" attrs="{'readonly':[('kind','=','dummy')]}"/>
                 </group>
               </group>
             </page>
             <page string="Transitions">
-              <group colspan="4" col="4">
-                <group col="2" colspan="2">
-                  <field name="in_transitions" nolabel="1" height="400">
-                    <tree string="Incoming Transitions">
-                      <field name="act_from"/>
-                      <field name="signal"/>
-                      <field name="condition"/>
-                    </tree>
-                  </field>
-                </group>
-                <group col="2" colspan="2">
-                  <field name="out_transitions" nolabel="1" height="400">
-                    <tree string="Outgoing Transitions">
-                      <field name="act_to"/>
-                      <field name="signal"/>
-                      <field name="condition"/>
-                    </tree>
-                  </field>
-                </group>
-              </group>
+                <field name="in_transitions">
+                  <tree string="Incoming Transitions">
+                    <field name="act_from"/>
+                    <field name="signal"/>
+                    <field name="condition"/>
+                  </tree>
+                </field>
+                <field name="out_transitions">
+                  <tree string="Outgoing Transitions">
+                    <field name="act_to"/>
+                    <field name="signal"/>
+                    <field name="condition"/>
+                  </tree>
+                </field>
             </page>
           </notebook>
+         </sheet> 
         </form>
       </field>
     </record>
     <record id="view_workflow_activity_tree" model="ir.ui.view">
       <field name="name">workflow.activity.tree</field>
       <field name="model">workflow.activity</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="Activity">
           <field name="name"/>
@@ -165,27 +152,23 @@
     </record>
 
     <record id="view_workflow_activity_search" model="ir.ui.view">
-      <field name="name">workflow.activity.search</field>
-      <field name="model">workflow.activity</field>
-      <field name="type">search</field>
-      <field name="arch" type="xml">
-        <search string="Workflow Activity">
-          <filter icon="terp-camera_test" string="Flow Start"
-            domain="[('flow_start', '=',True)]" />
-          <filter icon="terp-gtk-stop" string="Flow Stop"
-            domain="[('flow_stop', '=',True)]" />
-          <separator orientation="vertical"/>
-          <field name="name"/>
-          <field name="wkf_id"/>
-          <field name="kind"/>
-          <field name="action_id"/>
-          <field name="action"/>
-          <newline/>
-              <group expand="0" string="Group By...">
-                  <filter string="Workflow" icon="terp-stage" domain="[]" context="{'group_by':'wkf_id'}"/>
-              </group>
-        </search>
-      </field>
+        <field name="name">workflow.activity.search</field>
+        <field name="model">workflow.activity</field>
+        <field name="arch" type="xml">
+            <search string="Workflow Activity">
+                <field name="name" string="Workflow Activity"/>
+                <filter icon="terp-camera_test" string="Flow Start"
+                domain="[('flow_start', '=',True)]" />
+                <filter icon="terp-gtk-stop" string="Flow Stop"
+                domain="[('flow_stop', '=',True)]" />
+                <field name="wkf_id"/>
+                <field name="action_id"/>
+                <field name="kind"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Workflow" icon="terp-stage" domain="[]" context="{'group_by':'wkf_id'}"/>
+                </group>
+            </search>
+        </field>
     </record>
 
     <record id="action_workflow_activity_form" model="ir.actions.act_window">
@@ -207,25 +190,29 @@
     <record id="view_workflow_transition_form" model="ir.ui.view">
       <field name="name">workflow.transition.form</field>
       <field name="model">workflow.transition</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Transition">
-            <group col="6" colspan ="4">
-                <field name="act_from"/>
-                <field name="act_to"/>
-                <field name="signal"/>
-                <field name="condition"/>
-                <field name="trigger_model"/>
-                  <field name="trigger_expr_id"/>
-                <field name="group_id"/>
+        <form string="Transition" version="7.0">
+          <sheet>
+            <group>
+                <group>
+                    <field name="act_from"/>
+                    <field name="act_to"/>
+                    <field name="signal"/>
+                    <field name="condition"/>
+                </group>
+                <group>
+                    <field name="group_id"/>
+                    <field name="trigger_model"/>
+                    <field name="trigger_expr_id"/>
+                </group>
             </group>
+          </sheet>
         </form>
       </field>
     </record>
     <record id="view_workflow_transition_tree" model="ir.ui.view">
       <field name="name">workflow.transition.tree</field>
       <field name="model">workflow.transition</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="Transition">
           <field name="act_from"/>
@@ -237,17 +224,15 @@
     </record>
 
     <record id="view_workflow_transition_search" model="ir.ui.view">
-      <field name="name">workflow.transition.search</field>
-      <field name="model">workflow.transition</field>
-      <field name="type">search</field>
-      <field name="arch" type="xml">
-        <search string="Transition">
-          <field name="act_from"/>
-          <field name="act_to"/>
-          <field name="signal"/>
-          <field name="condition"/>
-        </search>
-      </field>
+        <field name="name">workflow.transition.search</field>
+        <field name="model">workflow.transition</field>
+        <field name="arch" type="xml">
+            <search string="Transition">
+                <field name="signal" filter_domain="['|', ('signal','ilike',self), ('condition','ilike',self)]" string="Workflow Transition"/>
+                <field name="act_from"/>
+                <field name="act_to"/>
+            </search>
+        </field>
     </record>
 
     <record id="action_workflow_transition_form" model="ir.actions.act_window">
@@ -268,20 +253,22 @@
     <record id="view_workflow_instance_form" model="ir.ui.view">
       <field name="name">workflow.instance.form</field>
       <field name="model">workflow.instance</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Workflow Instances">
-          <field name="wkf_id" readonly="1"/>
-          <field name="res_id" readonly="1"/>
-          <field name="res_type" readonly="1"/>
-          <field name="state" readonly="1"/>
+        <form string="Workflow Instances" version="7.0">
+         <sheet>
+          <group col="4">
+              <field name="wkf_id"/>
+              <field name="res_id"/>
+              <field name="res_type"/>
+              <field name="state"/>
+          </group>
+         </sheet> 
         </form>
       </field>
     </record>
     <record id="view_workflow_instance_tree" model="ir.ui.view">
       <field name="name">workflow.instance.tree</field>
       <field name="model">workflow.instance</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="Workflow Instances">
           <field name="wkf_id"/>
@@ -292,17 +279,15 @@
       </field>
     </record>
     <record id="view_workflow_instance_search" model="ir.ui.view">
-      <field name="name">workflow.instance.search</field>
-      <field name="model">workflow.instance</field>
-      <field name="type">search</field>
-      <field name="arch" type="xml">
-        <search string="Workflow Instances">
-          <filter icon="terp-camera_test" string="Active" domain="[('state','=','active')]" name="active"/>
-          <separator orientation="vertical"/>
-          <field name="wkf_id" widget="selection"/>
-          <field name="res_id"/>
-          <field name="res_type"/>
-          <field name="state"/>
+        <field name="name">workflow.instance.search</field>
+        <field name="model">workflow.instance</field>
+        <field name="arch" type="xml">
+            <search string="Workflow Instances">
+                <field name="res_type" string="Resource Object"/>
+                <filter icon="terp-camera_test" string="Active" domain="[('state','=','active')]" name="active"/>
+                <field name="wkf_id"/>
+                <field name="res_id"/>
+                <field name="state"/>
         </search>
       </field>
     </record>
@@ -315,7 +300,7 @@
       <field name="context">{'search_default_active':1}</field>
       <field name="search_view_id" ref="view_workflow_instance_search"/>
     </record>
-    <menuitem action="action_workflow_instance_form" id="menu_workflow_instance" parent="base.menu_low_workflow"/>
+    <menuitem action="action_workflow_instance_form" id="menu_workflow_instance" parent="base.menu_workflow_root"/>
 
     <!--
         ================================
@@ -326,24 +311,26 @@
     <record id="view_workflow_workitem_form" model="ir.ui.view">
       <field name="name">workflow.workitem.form</field>
       <field name="model">workflow.workitem</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Workflow Workitems">
-          <field name="wkf_id" readonly="1"/>  
-          <field name="act_id" readonly="1"/>
-          <field name="subflow_id" readonly="1"/>
-          <field name="inst_id" readonly="1"/>
-          <field name="state" readonly="1"/>
+        <form string="Workflow Workitems" version="7.0">
+         <sheet>
+          <group col="4">
+              <field name="wkf_id"/>
+              <field name="act_id"/>
+              <field name="subflow_id"/>
+              <field name="inst_id"/>
+              <field name="state"/>
+          </group>
+         </sheet> 
         </form>
       </field>
     </record>
     <record id="view_workflow_workitem_tree" model="ir.ui.view">
       <field name="name">workflow.workitem.tree</field>
       <field name="model">workflow.workitem</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="Workflow Workitems">
-          <field name="wkf_id"/>  
+          <field name="wkf_id"/>
           <field name="act_id"/>
           <field name="subflow_id"/>
           <field name="inst_id"/>
@@ -352,20 +339,18 @@
       </field>
     </record>
     <record id="view_workflow_workitem_search" model="ir.ui.view">
-      <field name="name">workflow.workitem.search</field>
-      <field name="model">workflow.workitem</field>
-      <field name="type">search</field>
-      <field name="arch" type="xml">
-        <search string="Workflow Workitems">
-          <filter icon="terp-camera_test" string="Active" name="active" domain="[('state','=','active')]"/>
-          <separator orientation="vertical"/>
-          <field name="wkf_id" widget="selection"/>  
-          <field name="act_id"/>
-          <field name="subflow_id"/>
-          <field name="inst_id"/>
-          <field name="state"/>
-        </search>
-      </field>
+        <field name="name">workflow.workitem.search</field>
+        <field name="model">workflow.workitem</field>
+        <field name="arch" type="xml">
+            <search string="Workflow Workitems">
+                <field name="state" string="State"/>
+                <filter icon="terp-camera_test" string="Active" name="active" domain="[('state','=','active')]"/>
+                <field name="wkf_id"/>
+                <field name="act_id"/>
+                <field name="subflow_id"/>
+                <field name="inst_id"/>
+            </search>
+        </field>
     </record>
 
     <record id="action_workflow_workitem_form" model="ir.actions.act_window">
@@ -376,7 +361,7 @@
       <field name="context">{'search_default_active':1}</field>
       <field name="search_view_id" ref="view_workflow_workitem_search"/>
     </record>
-    <menuitem action="action_workflow_workitem_form" id="menu_workflow_workitem" parent="base.menu_low_workflow"/>
+    <menuitem action="action_workflow_workitem_form" id="menu_workflow_workitem" parent="base.menu_workflow_root"/>
 
   </data>
 </openerp>

@@ -22,6 +22,7 @@
 
 import base64
 import re
+import threading
 
 import tools
 import openerp.modules
@@ -40,65 +41,68 @@ class ir_ui_menu(osv.osv):
     _name = 'ir.ui.menu'
 
     def __init__(self, *args, **kwargs):
-        self._cache = {}
+        self.cache_lock = threading.RLock()
+        self.clear_cache()
         r = super(ir_ui_menu, self).__init__(*args, **kwargs)
         self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
         return r
 
     def clear_cache(self):
-        # radical but this doesn't frequently happen
-        self._cache = {}
+        with self.cache_lock:
+            # radical but this doesn't frequently happen
+            self._cache = {}
 
     def _filter_visible_menus(self, cr, uid, ids, context=None):
         """Filters the give menu ids to only keep the menu items that should be
            visible in the menu hierarchy of the current user.
            Uses a cache for speeding up the computation.
         """
-        modelaccess = self.pool.get('ir.model.access')
-        user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
-        result = []
-        for menu in self.browse(cr, uid, ids, context=context):
-            # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
-            key = (cr.dbname, menu.id, tuple(user_groups))
-            if key in self._cache:
-                if self._cache[key]:
-                    result.append(menu.id)
-                #elif not menu.groups_id and not menu.action:
-                #    result.append(menu.id)
-                continue
-
-            self._cache[key] = False
-            if menu.groups_id:
-                restrict_to_groups = [g.id for g in menu.groups_id]
-                if not user_groups.intersection(restrict_to_groups):
-                    continue
-                #result.append(menu.id)
-                #self._cache[key] = True
-                #continue
-
-            if menu.action:
-                # we check if the user has access to the action of the menu
-                data = menu.action
-                if data:
-                    model_field = { 'ir.actions.act_window':    'res_model',
-                                    'ir.actions.report.xml':    'model',
-                                    'ir.actions.wizard':        'model',
-                                    'ir.actions.server':        'model_id',
-                                  }
-
-                    field = model_field.get(menu.action._name)
-                    if field and data[field]:
-                        if not modelaccess.check(cr, uid, data[field], 'read', False):
-                            continue
-            else:
-                # if there is no action, it's a 'folder' menu
-                if not menu.child_id:
-                    # not displayed if there is no children
+        with self.cache_lock:
+            modelaccess = self.pool.get('ir.model.access')
+            user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
+            result = []
+            for menu in self.browse(cr, uid, ids, context=context):
+                # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
+                key = (cr.dbname, menu.id, tuple(user_groups))
+                if key in self._cache:
+                    if self._cache[key]:
+                        result.append(menu.id)
+                    #elif not menu.groups_id and not menu.action:
+                    #    result.append(menu.id)
                     continue
 
-            result.append(menu.id)
-            self._cache[key] = True
-        return result
+                self._cache[key] = False
+                if menu.groups_id:
+                    restrict_to_groups = [g.id for g in menu.groups_id]
+                    if not user_groups.intersection(restrict_to_groups):
+                        continue
+                    #result.append(menu.id)
+                    #self._cache[key] = True
+                    #continue
+
+                if menu.action:
+                    # we check if the user has access to the action of the menu
+                    data = menu.action
+                    if data:
+                        model_field = { 'ir.actions.act_window':    'res_model',
+                                        'ir.actions.report.xml':    'model',
+                                        'ir.actions.wizard':        'model',
+                                        'ir.actions.server':        'model_id',
+                                      }
+
+                        field = model_field.get(menu.action._name)
+                        if field and data[field]:
+                            if not modelaccess.check(cr, uid, data[field], 'read', False):
+                                continue
+                else:
+                    # if there is no action, it's a 'folder' menu
+                    if not menu.child_id:
+                        # not displayed if there is no children
+                        continue
+
+                result.append(menu.id)
+                self._cache[key] = True
+            return result
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
@@ -200,10 +204,10 @@ class ir_ui_menu(osv.osv):
             ('model', '=', self._name), ('key', '=', 'action'),
             ('key2', '=', 'tree_but_open'), ('res_id', '=', menu_id)],
             context=context)
-        if values_ids:
-            ir_values_obj.write(cursor, user, values_ids, {'value': value},
-                    context=ctx)
-        else:
+        if value and values_ids:
+            ir_values_obj.write(cursor, user, values_ids, {'value': value}, context=ctx)
+        elif value:
+            # no values_ids, create binding
             ir_values_obj.create(cursor, user, {
                 'name': 'Menuitem',
                 'model': self._name,
@@ -212,6 +216,9 @@ class ir_ui_menu(osv.osv):
                 'key2': 'tree_but_open',
                 'res_id': menu_id,
                 }, context=ctx)
+        elif values_ids:
+            # value is False, remove existing binding
+            ir_values_obj.unlink(cursor, user, values_ids, context=ctx)
 
     def _get_icon_pict(self, cr, uid, ids, name, args, context):
         res = {}
@@ -248,6 +255,23 @@ class ir_ui_menu(osv.osv):
 
         return res
 
+    def _get_needaction_info(self, cr, uid, id, domain=[], context={}):
+        return [False, 0]
+
+    def _get_needaction(self, cr, uid, ids, field_names, args, context=None):
+        if context is None:
+            context = {}
+        res = {}
+        for menu in self.browse(cr, uid, ids, context=context):
+            res[menu.id] = {}
+            if menu.action and menu.action.type == 'ir.actions.act_window' and menu.action.res_model:
+                menu_needaction_res = self.pool.get(menu.action.res_model)._get_needaction_info(cr, uid, uid, domain=menu.action.domain, context=context)
+            else:
+                menu_needaction_res = [False, 0]
+            res[menu.id]['needaction_enabled'] = menu_needaction_res[0]
+            res[menu.id]['needaction_counter'] = menu_needaction_res[1]
+        return res
+        
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
@@ -256,16 +280,18 @@ class ir_ui_menu(osv.osv):
         'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
                 "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
-        'complete_name': fields.function(_get_full_name, method=True,
-            string='Complete Name', type='char', size=128),
+        'complete_name': fields.function(_get_full_name, 
+            string='Full Path', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
-        'icon_pict': fields.function(_get_icon_pict, method=True, type='char', size=32),
+        'icon_pict': fields.function(_get_icon_pict, type='char', size=32),
         'web_icon': fields.char('Web Icon File', size=128),
         'web_icon_hover':fields.char('Web Icon File (hover)', size=128),
-        'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', method=True, readonly=True, store=True, multi='icon'),
-        'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', method=True, readonly=True, store=True, multi='icon'),
+        'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', readonly=True, store=True, multi='icon'),
+        'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
+        'needaction_enabled': fields.function(_get_needaction, string='Target model uses the need action mechanism', type='boolean', help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.', multi='_get_needaction'),
+        'needaction_counter': fields.function(_get_needaction, string='Number of actions the user has to perform', type='integer', help='If the target model uses the need action mechanism, this field gives the number of actions the current user has to perform.', multi='_get_needaction'),
         'action': fields.function(_action, fnct_inv=_action_inv,
-            method=True, type='reference', string='Action',
+            type='reference', string='Action',
             selection=[
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),

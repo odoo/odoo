@@ -19,7 +19,9 @@ from lxml import etree
 unsafe_eval = eval
 from safe_eval import safe_eval as eval
 
-logger_channel = 'tests'
+import assertion_report
+
+_logger = logging.getLogger(__name__)
 
 class YamlImportException(Exception):
     pass
@@ -85,33 +87,6 @@ def is_ir_set(node):
 def is_string(node):
     return isinstance(node, basestring)
 
-class TestReport(object):
-    def __init__(self):
-        self._report = {}
-
-    def record(self, success, severity):
-        """
-        Records the result of an assertion for the failed/success count.
-        Returns success.
-        """
-        if severity in self._report:
-            self._report[severity][success] += 1
-        else:
-            self._report[severity] = {success: 1, not success: 0}
-        return success
-
-    def __str__(self):
-        res = []
-        res.append('\nAssertions report:\nLevel\tsuccess\tfailure')
-        success = failure = 0
-        for severity in self._report:
-            res.append("%s\t%s\t%s" % (severity, self._report[severity][True], self._report[severity][False]))
-            success += self._report[severity][True]
-            failure += self._report[severity][False]
-        res.append("total\t%s\t%s" % (success, failure))
-        res.append("end of report (%s assertion(s) checked)" % (success + failure))
-        return "\n".join(res)
-
 class RecordDictWrapper(dict):
     """
     Used to pass a record as locals in eval:
@@ -125,15 +100,16 @@ class RecordDictWrapper(dict):
         return dict.__getitem__(self, key)
 
 class YamlInterpreter(object):
-    def __init__(self, cr, module, id_map, mode, filename, noupdate=False):
+    def __init__(self, cr, module, id_map, mode, filename, report=None, noupdate=False):
         self.cr = cr
         self.module = module
         self.id_map = id_map
         self.mode = mode
         self.filename = filename
-        self.assert_report = TestReport()
+        if report is None:
+            report = assertion_report.assertion_report()
+        self.assertion_report = report
         self.noupdate = noupdate
-        self.logger = logging.getLogger("%s.%s" % (logger_channel, self.module))
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         self.context = {} # opererp context
@@ -163,7 +139,7 @@ class YamlInterpreter(object):
                         ['&', ('name', '=', module), ('state', 'in', ['installed'])])
                 assert module_count == 1, 'The ID "%s" refers to an uninstalled module.' % (xml_id,)
         if len(id) > 64: # TODO where does 64 come from (DB is 128)? should be a constant or loaded form DB
-            self.logger.log(logging.ERROR, 'id: %s is to long (max: 64)', id)
+            _logger.error('id: %s is to long (max: 64)', id)
 
     def get_id(self, xml_id):
         if xml_id is False or xml_id is None:
@@ -211,18 +187,9 @@ class YamlInterpreter(object):
     def process_comment(self, node):
         return node
 
-    def _log_assert_failure(self, severity, msg, *args):
-        if isinstance(severity, types.StringTypes):
-            levelname = severity.strip().upper()
-            level = logging.getLevelName(levelname)
-        else:
-            level = severity
-            levelname = logging.getLevelName(level)
-        self.assert_report.record(False, levelname)
-        self.logger.log(level, msg, *args)
-        if level >= config['assert_exit_level']:
-            raise YamlImportAbortion('Severe assertion failure (%s), aborting.' % levelname)
-        return
+    def _log_assert_failure(self, msg, *args):
+        self.assertion_report.record_failure()
+        _logger.error(msg, *args)
 
     def _get_assertion_id(self, assertion):
         if assertion.id:
@@ -241,7 +208,7 @@ class YamlInterpreter(object):
             assertion, expressions = node, []
 
         if self.isnoupdate(assertion) and self.mode != 'init':
-            self.logger.warn('This assertion was not evaluated ("%s").' % assertion.string)
+            _logger.warning('This assertion was not evaluated ("%s").', assertion.string)
             return
         model = self.get_model(assertion.model)
         ids = self._get_assertion_id(assertion)
@@ -251,7 +218,7 @@ class YamlInterpreter(object):
                   ' expected count: %d\n'      \
                   ' obtained count: %d\n'
             args = (assertion.string, assertion.count, len(ids))
-            self._log_assert_failure(assertion.severity, msg, *args)
+            self._log_assert_failure(msg, *args)
         else:
             context = self.get_context(assertion, self.eval_context)
             for id in ids:
@@ -260,7 +227,7 @@ class YamlInterpreter(object):
                     try:
                         success = unsafe_eval(test, self.eval_context, RecordDictWrapper(record))
                     except Exception, e:
-                        self.logger.debug('Exception during evaluation of !assert block in yaml_file %s.', self.filename, exc_info=True)
+                        _logger.debug('Exception during evaluation of !assert block in yaml_file %s.', self.filename, exc_info=True)
                         raise YamlImportAbortion(e)
                     if not success:
                         msg = 'Assertion "%s" FAILED\ntest: %s\n'
@@ -284,10 +251,10 @@ class YamlInterpreter(object):
                                 args += ( lmsg, aop, rmsg )
                                 break
 
-                        self._log_assert_failure(assertion.severity, msg, *args)
+                        self._log_assert_failure(msg, *args)
                         return
             else: # all tests were successful for this assertion tag (no break)
-                self.assert_report.record(True, assertion.severity)
+                self.assertion_report.record_success()
 
     def _coerce_bool(self, value, default=False):
         if isinstance(value, types.BooleanType):
@@ -348,7 +315,7 @@ class YamlInterpreter(object):
                 view_id = etree.fromstring(view['arch'].encode('utf-8'))
 
             record_dict = self._create_record(model, fields, view_id, default=default)
-            self.logger.debug("RECORD_DICT %s" % record_dict)
+            _logger.debug("RECORD_DICT %s" % record_dict)
             id = self.pool.get('ir.model.data')._update(self.cr, 1, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
@@ -356,12 +323,11 @@ class YamlInterpreter(object):
                 self.cr.commit()
 
     def _create_record(self, model, fields, view=False, parent={}, default=True):
-        allfields = model.fields_get(self.cr, 1, context=self.context)
         if view is not False:
-            defaults = default and model.default_get(self.cr, 1, allfields, context=self.context) or {}
+            defaults = default and model._add_missing_default_values(self.cr, 1, {}, context=self.context) or {}
             fg = model.fields_get(self.cr, 1, context=self.context)
         else:
-            default = {}
+            defaults = {}
             fg = {}
         record_dict = {}
         fields = fields or {}
@@ -519,7 +485,7 @@ class YamlInterpreter(object):
 
     def process_python(self, node):
         def log(msg, *args):
-            self.logger.log(logging.TEST, msg, *args)
+            _logger.log(logging.TEST, msg, *args)
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
@@ -529,13 +495,13 @@ class YamlInterpreter(object):
             code_obj = compile(statements, self.filename, 'exec')
             unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
         except AssertionError, e:
-            self._log_assert_failure(python.severity, 'AssertionError in Python code %s: %s', python.name, e)
+            self._log_assert_failure('AssertionError in Python code %s: %s', python.name, e)
             return
         except Exception, e:
-            self.logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
+            _logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
             raise
         else:
-            self.assert_report.record(True, python.severity)
+            self.assertion_report.record_success()
 
     def process_workflow(self, node):
         workflow, values = node.items()[0]
@@ -754,7 +720,7 @@ class YamlInterpreter(object):
             if len(ids):
                 self.pool.get(node.model).unlink(self.cr, self.uid, ids)
         else:
-            self.logger.log(logging.TEST, "Record not deleted.")
+            _logger.log(logging.TEST, "Record not deleted.")
 
     def process_url(self, node):
         self.validate_xml_id(node.id)
@@ -828,7 +794,7 @@ class YamlInterpreter(object):
         """
         Empty node or commented node should not pass silently.
         """
-        self._log_assert_failure(logging.WARNING, "You have an empty block in your tests.")
+        self._log_assert_failure("You have an empty block in your tests.")
 
 
     def process(self, yaml_string):
@@ -843,9 +809,9 @@ class YamlInterpreter(object):
             try:
                 self._process_node(node)
             except YamlImportException, e:
-                self.logger.exception(e)
+                _logger.exception(e)
             except Exception, e:
-                self.logger.exception(e)
+                _logger.exception(e)
                 raise
 
     def _process_node(self, node):
@@ -889,23 +855,23 @@ class YamlInterpreter(object):
     def _log(self, node, is_preceded_by_comment):
         if is_comment(node):
             is_preceded_by_comment = True
-            self.logger.log(logging.TEST, node)
+            _logger.log(logging.TEST, node)
         elif not is_preceded_by_comment:
             if isinstance(node, types.DictionaryType):
                 msg = "Creating %s\n with %s"
                 args = node.items()[0]
-                self.logger.log(logging.TEST, msg, *args)
+                _logger.log(logging.TEST, msg, *args)
             else:
-                self.logger.log(logging.TEST, node)
+                _logger.log(logging.TEST, node)
         else:
             is_preceded_by_comment = False
         return is_preceded_by_comment
 
-def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False):
+def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False, report=None):
     if idref is None:
         idref = {}
     yaml_string = yamlfile.read()
-    yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, noupdate=noupdate)
+    yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate)
     yaml_interpreter.process(yaml_string)
 
 # keeps convention of convert.py

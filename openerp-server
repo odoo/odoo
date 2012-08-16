@@ -30,6 +30,7 @@ GNU Public Licence.
 (c) 2003-TODAY, Fabien Pinckaers - OpenERP SA
 """
 
+import imp
 import logging
 import os
 import signal
@@ -41,6 +42,9 @@ import time
 import openerp
 __author__ = openerp.release.author
 __version__ = openerp.release.version
+
+# Also use the `openerp` logger for the main script.
+_logger = logging.getLogger('openerp')
 
 def check_root_user():
     """ Exit if the process's user is 'root' (on POSIX system)."""
@@ -66,13 +70,12 @@ def report_configuration():
     This function assumes the configuration has been initialized.
     """
     config = openerp.tools.config
-    logger = logging.getLogger('server')
-    logger.info("OpenERP version %s", __version__)
+    _logger.info("OpenERP version %s", __version__)
     for name, value in [('addons paths', config['addons_path']),
                         ('database hostname', config['db_host'] or 'localhost'),
                         ('database port', config['db_port'] or '5432'),
                         ('database user', config['db_user'])]:
-        logger.info("%s: %s", name, value)
+        _logger.info("%s: %s", name, value)
 
 def setup_pid_file():
     """ Create a file with the process id written in it.
@@ -96,7 +99,7 @@ def preload_registry(dbname):
         # jobs will start to be processed later, when openerp.cron.start_master_thread() is called by openerp.service.start_services()
         registry.schedule_cron_jobs()
     except Exception:
-        logging.exception('Failed to initialize database `%s`.', dbname)
+        _logger.exception('Failed to initialize database `%s`.', dbname)
 
 def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
@@ -105,25 +108,23 @@ def run_test_file(dbname, test_file):
         db, registry = openerp.pooler.get_db_and_pool(
             dbname, update_module=update_module, pooljobs=False, force_demo=not config['without_demo'])
         cr = db.cursor()
-        logger = logging.getLogger('server')
-        logger.info('loading test file %s', test_file)
+        _logger.info('loading test file %s', test_file)
         openerp.tools.convert_yaml_import(cr, 'base', file(test_file), {}, 'test', True)
         cr.rollback()
         cr.close()
     except Exception:
-        logging.exception('Failed to initialize database `%s` and run test file `%s`.', dbname, test_file)
+        _logger.exception('Failed to initialize database `%s` and run test file `%s`.', dbname, test_file)
 
 
 def export_translation():
     config = openerp.tools.config
     dbname = config['db_name']
-    logger = logging.getLogger('server')
 
     if config["language"]:
         msg = "language %s" % (config["language"],)
     else:
         msg = "new language"
-    logger.info('writing translation file for %s to %s', msg,
+    _logger.info('writing translation file for %s to %s', msg,
         config["translate_out"])
 
     fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
@@ -134,7 +135,7 @@ def export_translation():
     cr.close()
     buf.close()
 
-    logger.info('translation file written successfully')
+    _logger.info('translation file written successfully')
 
 def import_translation():
     config = openerp.tools.config
@@ -144,7 +145,6 @@ def import_translation():
     cr = openerp.pooler.get_db(dbname).cursor()
     openerp.tools.trans_load( cr, config["translate_in"], config["language"],
         context=context)
-    openerp.tools.trans_update_res_ids(cr)
     cr.commit()
     cr.close()
 
@@ -169,16 +169,21 @@ def dumpstacks(sig, frame):
     """ Signal handler: dump a stack trace for each existing thread."""
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
     # modified for python 2.5 compatibility
-    thread_map = dict(threading._active, **threading._limbo)
-    id2name = dict([(threadId, thread.getName()) for threadId, thread in thread_map.items()])
+    threads_info = dict([(th.ident, {'name': th.name,
+                                    'uid': getattr(th,'uid','n/a')})
+                                for th in threading.enumerate()])
     code = []
     for threadId, stack in sys._current_frames().items():
-        code.append("\n# Thread: %s(%d)" % (id2name[threadId], threadId))
+        thread_info = threads_info.get(threadId)
+        code.append("\n# Thread: %s (id:%s) (uid:%s)" % \
+                    (thread_info and thread_info['name'] or 'n/a',
+                     threadId,
+                     thread_info and thread_info['uid'] or 'n/a'))
         for filename, lineno, name, line in traceback.extract_stack(stack):
             code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
             if line:
                 code.append("  %s" % (line.strip()))
-    logging.getLogger('dumpstacks').info("\n".join(code))
+    _logger.info("\n".join(code))
 
 def setup_signal_handlers():
     """ Register the signal handler defined above. """
@@ -211,17 +216,26 @@ def quit_on_signals():
     openerp.service.stop_services()
     sys.exit(0)
 
+def configure_babel_localedata_path():
+    # Workaround: py2exe and babel.
+    if hasattr(sys, 'frozen'):
+        import babel
+        babel.localedata._dirname = os.path.join(os.path.dirname(sys.executable), 'localedata')
+
 if __name__ == "__main__":
 
     os.environ["TZ"] = "UTC"
 
     check_root_user()
     openerp.tools.config.parse_config(sys.argv[1:])
+
     check_postgres_user()
     openerp.netsvc.init_logger()
     report_configuration()
 
     config = openerp.tools.config
+
+    configure_babel_localedata_path()
 
     setup_signal_handlers()
 
@@ -244,18 +258,14 @@ if __name__ == "__main__":
 
     for m in openerp.conf.server_wide_modules:
         try:
-            __import__(m)
-            # Call any post_load hook.
-            info = openerp.modules.module.load_information_from_description_file(m)
-            if info['post_load']:
-                getattr(sys.modules[m], info['post_load'])()
+            openerp.modules.module.load_openerp_module(m)
         except Exception:
             msg = ''
             if m == 'web':
                 msg = """
 The `web` module is provided by the addons found in the `openerp-web` project.
 Maybe you forgot to add those addons in your addons_path configuration."""
-            logging.exception('Failed to load server-wide module `%s`.%s', m, msg)
+            _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
     if config['db_name']:
         for dbname in config['db_name'].split(','):
@@ -265,8 +275,7 @@ Maybe you forgot to add those addons in your addons_path configuration."""
         sys.exit(0)
 
     setup_pid_file()
-    logger = logging.getLogger('server')
-    logger.info('OpenERP server is running, waiting for connections...')
+    _logger.info('OpenERP server is running, waiting for connections...')
     quit_on_signals()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

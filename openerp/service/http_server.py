@@ -39,20 +39,16 @@
     static HTTP, DAV or other.
 """
 
-from websrv_lib import *
-import openerp.netsvc as netsvc
-import errno
-import threading
-import openerp.tools as tools
+import base64
 import posixpath
 import urllib
 import os
-import select
-import socket
-import xmlrpclib
 import logging
-
 from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
+
+from websrv_lib import *
+import openerp.netsvc as netsvc
+import openerp.tools as tools
 
 try:
     import fcntl
@@ -64,6 +60,9 @@ try:
 except ImportError:
     class SSLError(Exception): pass
 
+_logger = logging.getLogger(__name__)
+
+# TODO delete this for 6.2, it is still needed for 6.1.
 class HttpLogHandler:
     """ helper class for uniform log handling
     Please define self._logger at each class that is derived from this
@@ -80,11 +79,12 @@ class HttpLogHandler:
         self._logger.exception(format, *args)
 
     def log_request(self, code='-', size='-'):
-        self._logger.log(netsvc.logging.DEBUG_RPC, '"%s" %s %s',
-                        self.requestline, str(code), str(size))
+        self._logger.debug('"%s" %s %s',
+            self.requestline, str(code), str(size))
 
 class StaticHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):
-    _logger = logging.getLogger('httpd')
+    _logger = logging.getLogger(__name__)
+
     _HTTP_OPTIONS = { 'Allow': ['OPTIONS', 'GET', 'HEAD'] }
 
     def __init__(self,request, client_address, server):
@@ -124,8 +124,7 @@ def init_static_http():
     
     reg_http_service(base_path, StaticHTTPHandler)
     
-    logging.getLogger("web-services").info("Registered HTTP dir %s for %s" % \
-                        (document_root, base_path))
+    _logger.info("Registered HTTP dir %s for %s", document_root, base_path)
 
 import security
 
@@ -144,11 +143,8 @@ class OpenERPAuthProvider(AuthProvider):
                 return False
             return (user, passwd, db, uid)
         except Exception,e:
-            logging.getLogger("auth").debug("Fail auth: %s" % e )
+            _logger.debug("Fail auth: %s" % e )
             return False
-
-    def log(self, msg, lvl=logging.INFO):
-        logging.getLogger("auth").log(lvl,msg)
 
     def checkRequest(self,handler,path, db=False):        
         auth_str = handler.headers.get('Authorization',False)
@@ -163,21 +159,21 @@ class OpenERPAuthProvider(AuthProvider):
                 db = psp[0]
             else:
                 #FIXME!
-                self.log("Wrong path: %s, failing auth" %path)
+                _logger.info("Wrong path: %s, failing auth" %path)
                 raise AuthRejectedExc("Authorization failed. Wrong sub-path.") 
         if self.auth_creds.get(db):
             return True 
         if auth_str and auth_str.startswith('Basic '):
             auth_str=auth_str[len('Basic '):]
             (user,passwd) = base64.decodestring(auth_str).split(':')
-            self.log("Found user=\"%s\", passwd=\"***\" for db=\"%s\"" %(user,db))
+            _logger.info("Found user=\"%s\", passwd=\"***\" for db=\"%s\"", user, db)
             acd = self.authenticate(db,user,passwd,handler.client_address)
             if acd != False:
                 self.auth_creds[db] = acd
                 self.last_auth = db
                 return True
         if self.auth_tries > 5:
-            self.log("Failing authorization after 5 requests w/o password")
+            _logger.info("Failing authorization after 5 requests w/o password")
             raise AuthRejectedExc("Authorization failed.")
         self.auth_tries += 1
         raise AuthRequiredExc(atype='Basic', realm=self.realm)

@@ -2,7 +2,7 @@
 <openerp>
 <data noupdate="0">
 
-    <record model="res.groups" id="group_partner_manager" context="{'noadmin':True}">
+    <record model="res.groups" id="group_partner_manager">
         <field name="name">Partner Manager</field>
     </record>
 
@@ -35,8 +35,8 @@
         <field name="name">user rule</field>
         <field model="ir.model" name="model_id" ref="model_res_users"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">[('company_ids','child_of',[user.company_id.id])]</field>
     </record>
     
-</data>
+</data> 
 </openerp>

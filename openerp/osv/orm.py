@@ -52,7 +52,6 @@ import re
 import simplejson
 import time
 import types
-import warnings
 from lxml import etree
 
 import fields
@@ -64,6 +63,9 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from query import Query
+
+_logger = logging.getLogger(__name__)
+_schema = logging.getLogger(__name__ + '.schema')
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
@@ -98,10 +100,10 @@ def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False
 
     if node.get('states'):
         if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
-             # TODO combine with AND or OR, use implicit AND for now.
-             modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
+            # TODO combine with AND or OR, use implicit AND for now.
+            modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
         else:
-             modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
+            modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
 
     for a in ('invisible', 'readonly', 'required'):
         if node.get(a):
@@ -216,8 +218,7 @@ def check_object_name(name):
 def raise_on_invalid_object_name(name):
     if not check_object_name(name):
         msg = "The _name attribute %s is not valid." % name
-        logger = netsvc.Logger()
-        logger.notifyChannel('orm', netsvc.LOG_ERROR, msg)
+        _logger.error(msg)
         raise except_orm('ValueError', msg)
 
 POSTGRES_CONFDELTYPES = {
@@ -306,29 +307,30 @@ class browse_record(object):
             user_rec = uobj.browse(cr, uid, 104)
             name = user_rec.name
     """
-    logger = netsvc.Logger()
 
-    def __init__(self, cr, uid, id, table, cache, context=None, list_class=None, fields_process=None):
+    def __init__(self, cr, uid, id, table, cache, context=None,
+                 list_class=browse_record_list, fields_process=None):
         """
-        @param cache a dictionary of model->field->data to be shared accross browse
-            objects, thus reducing the SQL read()s . It can speed up things a lot,
-            but also be disastrous if not discarded after write()/unlink() operations
-        @param table the object (inherited from orm)
-        @param context dictionary with an optional context
+        :param table: the browsed object (inherited from orm)
+        :param dict cache: a dictionary of model->field->data to be shared
+                           across browse objects, thus reducing the SQL
+                           read()s. It can speed up things a lot, but also be
+                           disastrous if not discarded after write()/unlink()
+                           operations
+        :param dict context: dictionary with an optional context
         """
         if fields_process is None:
             fields_process = {}
         if context is None:
             context = {}
-        self._list_class = list_class or browse_record_list
+        self._list_class = list_class
         self._cr = cr
         self._uid = uid
         self._id = id
         self._table = table # deprecated, use _model!
         self._model = table
         self._table_name = self._table._name
-        self.__logger = logging.getLogger(
-            'osv.browse_record.' + self._table_name)
+        self.__logger = logging.getLogger('openerp.osv.orm.browse_record.' + self._table_name)
         self._context = context
         self._fields_process = fields_process
 
@@ -369,7 +371,7 @@ class browse_record(object):
                     return attr
             else:
                 error_msg = "Field '%s' does not exist in object '%s'" % (name, self) 
-                self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING, error_msg)
+                self.__logger.warning(error_msg)
                 raise KeyError(error_msg)
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
@@ -405,13 +407,13 @@ class browse_record(object):
 
             if not field_values:
                 # Where did those ids come from? Perhaps old entries in ir_model_dat?
-                self.__logger.warn("No field_values found for ids %s in %s", ids, self)
+                _logger.warning("No field_values found for ids %s in %s", ids, self)
                 raise KeyError('Field %s not found in %s'%(name, self))
             # create browse records for 'remote' objects
             for result_line in field_values:
                 new_data = {}
                 for field_name, field_column in fields_to_fetch:
-                    if field_column._type in ('many2one', 'one2one'):
+                    if field_column._type == 'many2one':
                         if result_line[field_name]:
                             obj = self._table.pool.get(field_column._obj)
                             if isinstance(result_line[field_name], (list, tuple)):
@@ -464,10 +466,8 @@ class browse_record(object):
 
         if not name in self._data[self._id]:
             # How did this happen? Could be a missing model due to custom fields used too soon, see above.
-            self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
-                    "Fields to fetch: %s, Field values: %s"%(field_names, field_values))
-            self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
-                    "Cached: %s, Table: %s"%(self._data[self._id], self._table))
+            self.__logger.error("Fields to fetch: %s, Field values: %s", field_names, field_values)
+            self.__logger.error("Cached: %s, Table: %s", self._data[self._id], self._table)
             raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
         return self._data[self._id][name]
 
@@ -544,10 +544,9 @@ def pg_varchar(size=0):
 FIELDS_TO_PGTYPES = {
     fields.boolean: 'bool',
     fields.integer: 'int4',
-    fields.integer_big: 'int8',
     fields.text: 'text',
+    fields.html: 'text',
     fields.date: 'date',
-    fields.time: 'time',
     fields.datetime: 'timestamp',
     fields.binary: 'bytea',
     fields.many2one: 'int4',
@@ -584,7 +583,7 @@ def get_pg_type(f, type_override=None):
         else:
             pg_type = get_pg_type(f, getattr(fields, f._type))
     else:
-        logging.getLogger('orm').warn('%s type not supported!', field_type)
+        _logger.warning('%s type not supported!', field_type)
         pg_type = None
 
     return pg_type
@@ -608,7 +607,16 @@ class MetaModel(type):
             super(MetaModel, self).__init__(name, bases, attrs)
             return
 
-        module_name = self.__module__.split('.')[0]
+        # The (OpenERP) module name can be in the `openerp.addons` namespace
+        # or not. For instance module `sale` can be imported as
+        # `openerp.addons.sale` (the good way) or `sale` (for backward
+        # compatibility).
+        module_parts = self.__module__.split('.')
+        if len(module_parts) > 2 and module_parts[0] == 'openerp' and \
+            module_parts[1] == 'addons':
+            module_name = self.__module__.split('.')[2]
+        else:
+            module_name = self.__module__.split('.')[0]
         if not hasattr(self, '_module'):
             self._module = module_name
 
@@ -650,7 +658,7 @@ class BaseModel(object):
     _columns = {}
     _constraints = []
     _defaults = {}
-    _rec_name = 'name'
+    _rec_name = None
     _parent_name = 'parent_id'
     _parent_store = False
     _parent_order = False
@@ -693,24 +701,12 @@ class BaseModel(object):
     _log_create = False
     _sql_constraints = []
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
-    __logger = logging.getLogger('orm')
-    __schema = logging.getLogger('orm.schema')
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        if context and context.get('disable_log'):
-            return True
-        return self.pool.get('res.log').create(cr, uid,
-                {
-                    'name': message,
-                    'res_model': self._name,
-                    'secondary': secondary,
-                    'res_id': id,
-                },
-                context=context
-        )
-
+        return _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
+    
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
         pass
@@ -743,7 +739,7 @@ class BaseModel(object):
             name_id = 'model_'+self._name.replace('.', '_')
             cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
             if not cr.rowcount:
-                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
+                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
                     (name_id, context['module'], 'ir.model', model_id)
                 )
 
@@ -763,7 +759,7 @@ class BaseModel(object):
                 'model_id': model_id,
                 'model': self._name,
                 'name': k,
-                'field_description': f.string.replace("'", " "),
+                'field_description': f.string,
                 'ttype': f._type,
                 'relation': f._obj or '',
                 'view_load': (f.view_load and 1) or 0,
@@ -772,7 +768,7 @@ class BaseModel(object):
                 'required': (f.required and 1) or 0,
                 'selectable': (f.selectable and 1) or 0,
                 'translate': (f.translate and 1) or 0,
-                'relation_field': (f._type=='one2many' and isinstance(f, fields.one2many)) and f._fields_id or '',
+                'relation_field': f._fields_id if isinstance(f, fields.one2many) else '',
                 'serialization_field_id': None,
             }
             if getattr(f, 'serialization_field', None):
@@ -809,7 +805,7 @@ class BaseModel(object):
                     cr.execute("select name from ir_model_data where name=%s", (name1,))
                     if cr.fetchone():
                         name1 = name1 + "_" + str(id)
-                    cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
+                    cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
                         (name1, context['module'], 'ir.model.fields', id)
                     )
             else:
@@ -859,17 +855,20 @@ class BaseModel(object):
                 parent_names = [parent_names]
             else:
                 name = cls._name
-
+            # for res.parnter.address compatiblity, should be remove in v7
+            if 'res.partner.address' in parent_names:
+                parent_names.pop(parent_names.index('res.partner.address'))
+                parent_names.append('res.partner')
             if not name:
                 raise TypeError('_name is mandatory in case of multiple inheritance')
 
             for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
                 parent_model = pool.get(parent_name)
-                if not getattr(cls, '_original_module', None) and name == parent_model._name:
-                    cls._original_module = parent_model._original_module
                 if not parent_model:
                     raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
                         'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
+                if not getattr(cls, '_original_module', None) and name == parent_model._name:
+                    cls._original_module = parent_model._original_module
                 parent_class = parent_model.__class__
                 nattr = {}
                 for s in attributes:
@@ -879,6 +878,11 @@ class BaseModel(object):
                         for c in new.keys():
                             if new[c].manual:
                                 del new[c]
+                        # Duplicate float fields because they have a .digits
+                        # cache (which must be per-registry, not server-wide).
+                        for c in new.keys():
+                            if new[c]._type == 'float':
+                                new[c] = copy.copy(new[c])
                     if hasattr(new, 'update'):
                         new.update(cls.__dict__.get(s, {}))
                     elif s=='_constraints':
@@ -892,6 +896,7 @@ class BaseModel(object):
                                     # If new class defines a constraint with
                                     # same function name, we let it override
                                     # the old one.
+                                    
                                     new[c2] = c
                                     exist = True
                                     break
@@ -948,8 +953,7 @@ class BaseModel(object):
             name = type(self).__name__.split('.')[0]
             msg = "The class %s has to have a _name attribute" % name
 
-            logger = netsvc.Logger()
-            logger.notifyChannel('orm', netsvc.LOG_ERROR, msg)
+            _logger.error(msg)
             raise except_orm('ValueError', msg)
 
         if not self._description:
@@ -1050,6 +1054,13 @@ class BaseModel(object):
             self._transient_max_hours = config.get('osv_memory_age_limit')
             assert self._log_access, "TransientModels must have log_access turned on, "\
                                      "in order to implement their access rights policy"
+
+        # Validate rec_name
+        if self._rec_name is not None:
+            assert self._rec_name in self._columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
+        else:
+            self._rec_name = 'name'
+
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -1375,7 +1386,7 @@ class BaseModel(object):
                             res = key
                             break
                     if line[i] and not res:
-                        logging.getLogger('orm.import').warn(
+                        _logger.warning(
                             _("key '%s' not found in selection field '%s'"),
                             tools.ustr(line[i]), tools.ustr(field_name))
                         warning.append(_("Key/value '%s' not found in selection field '%s'") % (
@@ -1516,11 +1527,11 @@ class BaseModel(object):
         for id, field, field_value in res:
             if field in fields_list:
                 fld_def = (field in self._columns) and self._columns[field] or self._inherit_fields[field][2]
-                if fld_def._type in ('many2one', 'one2one'):
+                if fld_def._type == 'many2one':
                     obj = self.pool.get(fld_def._obj)
                     if not obj.search(cr, uid, [('id', '=', field_value or False)]):
                         continue
-                if fld_def._type in ('many2many'):
+                if fld_def._type == 'many2many':
                     obj = self.pool.get(fld_def._obj)
                     field_value2 = []
                     for i in range(len(field_value)):
@@ -1529,18 +1540,18 @@ class BaseModel(object):
                             continue
                         field_value2.append(field_value[i])
                     field_value = field_value2
-                if fld_def._type in ('one2many'):
+                if fld_def._type == 'one2many':
                     obj = self.pool.get(fld_def._obj)
                     field_value2 = []
                     for i in range(len(field_value)):
                         field_value2.append({})
                         for field2 in field_value[i]:
-                            if field2 in obj._columns.keys() and obj._columns[field2]._type in ('many2one', 'one2one'):
+                            if field2 in obj._columns.keys() and obj._columns[field2]._type == 'many2one':
                                 obj2 = self.pool.get(obj._columns[field2]._obj)
                                 if not obj2.search(cr, uid,
                                         [('id', '=', field_value[i][field2])]):
                                     continue
-                            elif field2 in obj._inherit_fields.keys() and obj._inherit_fields[field2][2]._type in ('many2one', 'one2one'):
+                            elif field2 in obj._inherit_fields.keys() and obj._inherit_fields[field2][2]._type == 'many2one':
                                 obj2 = self.pool.get(obj._inherit_fields[field2][2]._obj)
                                 if not obj2.search(cr, uid,
                                         [('id', '=', field_value[i][field2])]):
@@ -1564,14 +1575,33 @@ class BaseModel(object):
             res.extend(self.pool.get(parent).fields_get_keys(cr, user, context))
         return res
 
+    def _rec_name_fallback(self, cr, uid, context=None):
+        rec_name = self._rec_name
+        if rec_name not in self._columns:
+            rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
+        return rec_name
+
     #
     # Overload this method if you need a window title which depends on the context
     #
     def view_header_get(self, cr, user, view_id=None, view_type='form', context=None):
         return False
 
+    def user_has_groups(self, cr, uid, groups, context=None):
+        """Return true if the user is at least member of one of the groups
+           in groups_str. Typically used to resolve ``groups`` attribute
+           in view and model definitions. 
+
+           :param str groups: comma-separated list of fully-qualified group
+                              external IDs, e.g.: ``base.group_user,base.group_system``
+           :return: True if the current user is a member of one of the
+                    given groups
+        """
+        return any([self.pool.get('res.users').has_group(cr, uid, group_ext_id)
+                        for group_ext_id in groups.split(',')])
+
     def __view_look_dom(self, cr, user, node, view_id, in_tree_view, model_fields, context=None):
-        """ Return the description of the fields in the node.
+        """Return the description of the fields in the node.
 
         In a normal call to this method, node is a complete view architecture
         but it is actually possible to give some sub-node (this is used so
@@ -1596,17 +1626,35 @@ class BaseModel(object):
             return s
 
         def check_group(node):
-            """ Set invisible to true if the user is not in the specified groups. """
+            """Apply group restrictions,  may be set at view level or model level::
+               * at view level this means the element should be made invisible to
+                 people who are not members
+               * at model level (exclusively for fields, obviously), this means
+                 the field should be completely removed from the view, as it is
+                 completely unavailable for non-members
+
+               :return: True if field should be included in the result of fields_view_get 
+            """
+            if node.tag == 'field' and node.get('name') in self._all_columns:
+                column = self._all_columns[node.get('name')].column
+                if column.groups and not self.user_has_groups(cr, user,
+                                                              groups=column.groups,
+                                                              context=context):
+                    node.getparent().remove(node)
+                    fields.pop(node.get('name'), None)
+                    # no point processing view-level ``groups`` anymore, return
+                    return False
             if node.get('groups'):
-                groups = node.get('groups').split(',')
-                ir_model_access = self.pool.get('ir.model.access')
-                can_see = any(ir_model_access.check_groups(cr, user, group) for group in groups)
+                can_see = self.user_has_groups(cr, user,
+                                               groups=node.get('groups'),
+                                               context=context)
                 if not can_see:
                     node.set('invisible', '1')
                     modifiers['invisible'] = True
                     if 'attrs' in node.attrib:
                         del(node.attrib['attrs']) #avoid making field visible later
                 del(node.attrib['groups'])
+            return True
 
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
@@ -1643,7 +1691,7 @@ class BaseModel(object):
                     children = False
                     views = {}
                     for f in node:
-                        if f.tag in ('form', 'tree', 'graph'):
+                        if f.tag in ('form', 'tree', 'graph', 'kanban'):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
@@ -1691,7 +1739,9 @@ class BaseModel(object):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
-        check_group(node)
+        if not check_group(node):
+            # node must be removed, no need to proceed further with its children
+            return fields
 
         # The view architeture overrides the python model.
         # Get the attrs before they are (possibly) deleted by check_group below
@@ -1701,6 +1751,15 @@ class BaseModel(object):
 
         # translate view
         if 'lang' in context:
+            if node.text and node.text.strip():
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.text.strip())
+                if trans:
+                    node.text = node.text.replace(node.text.strip(), trans)
+            if node.tail and node.tail.strip():
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.tail.strip())
+                if trans:
+                    node.tail =  node.tail.replace(node.tail.strip(), trans)
+
             if node.get('string') and not result:
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
                 if trans == node.get('string') and ('base_model_name' in context):
@@ -1709,18 +1768,13 @@ class BaseModel(object):
                     trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
                 if trans:
                     node.set('string', trans)
-            if node.get('confirm'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('confirm'))
-                if trans:
-                    node.set('confirm', trans)
-            if node.get('sum'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum'))
-                if trans:
-                    node.set('sum', trans)
-            if node.get('help'):
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('help'))
-                if trans:
-                    node.set('help', trans)
+
+            for attr_name in ('confirm', 'sum', 'help', 'placeholder'):
+                attr_value = node.get(attr_name)
+                if attr_value:
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], attr_value)
+                    if trans:
+                        node.set(attr_name, trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
@@ -1794,7 +1848,7 @@ class BaseModel(object):
                 res.insert(0, ("Can't find field '%s' in the following view parts composing the view of object model '%s':" % (field, model), None))
                 msg = "\n * ".join([r[0] for r in res])
                 msg += "\n\nEither you wrongly customized this view, or some modules bringing those views are not compatible with your current data model"
-                netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
+                _logger.error(msg)
                 raise except_orm('View error', msg)
         return arch, fields
 
@@ -1818,9 +1872,8 @@ class BaseModel(object):
                 etree.SubElement(view, 'newline')
         return view
 
-    def _get_default_tree_view(self, cr, user, context=None):
-        """ Generates a single-field tree view, using _rec_name if
-        it's one of the columns or the first column it finds otherwise
+    def _get_default_search_view(self, cr, user, context=None):
+        """ Generates a single-field search view, based on _rec_name.
 
         :param cr: database cursor
         :param int user: user id
@@ -1828,12 +1881,21 @@ class BaseModel(object):
         :returns: a tree view as an lxml document
         :rtype: etree._Element
         """
-        _rec_name = self._rec_name
-        if _rec_name not in self._columns:
-            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
+        view = etree.Element('search', string=self._description)
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
+        return view
 
+    def _get_default_tree_view(self, cr, user, context=None):
+        """ Generates a single-field tree view, based on _rec_name.
+
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a tree view as an lxml document
+        :rtype: etree._Element
+        """
         view = etree.Element('tree', string=self._description)
-        etree.SubElement(view, 'field', name=_rec_name)
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
         return view
 
     def _get_default_calendar_view(self, cr, user, context=None):
@@ -1860,7 +1922,7 @@ class BaseModel(object):
             return False
 
         view = etree.Element('calendar', string=self._description)
-        etree.SubElement(view, 'field', name=self._rec_name)
+        etree.SubElement(view, 'field', self._rec_name_fallback(cr, user, context))
 
         if (self._date_name not in self._columns):
             date_found = False
@@ -1886,38 +1948,6 @@ class BaseModel(object):
                     _("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay" % (self._name)))
 
         return view
-
-    def _get_default_search_view(self, cr, uid, context=None):
-        """
-        :param cr: database cursor
-        :param int user: user id
-        :param dict context: connection context
-        :returns: an lxml document of the view
-        :rtype: etree._Element
-        """
-        form_view = self.fields_view_get(cr, uid, False, 'form', context=context)
-        tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
-
-        # TODO it seems _all_columns could be used instead of fields_get (no need for translated fields info)
-        fields = self.fields_get(cr, uid, context=context)
-        fields_to_search = set(
-            field for field, descriptor in fields.iteritems()
-            if descriptor.get('select'))
-
-        for view in (form_view, tree_view):
-            view_root = etree.fromstring(view['arch'])
-            # Only care about select=1 in xpath below, because select=2 is covered
-            # by the custom advanced search in clients
-            fields_to_search.update(view_root.xpath("//field[@select=1]/@name"))
-
-        tree_view_root = view_root # as provided by loop above
-        search_view = etree.Element("search", string=tree_view_root.get("string", ""))
-
-        field_group = etree.SubElement(search_view, "group")
-        for field_name in fields_to_search:
-            etree.SubElement(field_group, "field", name=field_name)
-
-        return search_view
 
     #
     # if view_id, view_type is not required
@@ -1950,6 +1980,7 @@ class BaseModel(object):
 
         def raise_view_error(error_msg, child_view_id):
             view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
+            error_msg = error_msg % {'parent_xml_id': view.xml_id} 
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
                                  %  (child_view.xml_id, self._name, error_msg))
 
@@ -1978,16 +2009,18 @@ class BaseModel(object):
                     if node.get('name') == spec.get('name'):
                         return node
                 return None
-            else:
-                for node in source.getiterator(spec.tag):
-                    good = True
-                    for attr in spec.attrib:
-                        if attr != 'position' and (not node.get(attr) or node.get(attr) != spec.get(attr)):
-                            good = False
-                            break
-                    if good:
-                        return node
-                return None
+
+            for node in source.getiterator(spec.tag):
+                if isinstance(node, SKIPPED_ELEMENT_TYPES):
+                    continue
+                if all(node.get(attr) == spec.get(attr) \
+                        for attr in spec.attrib
+                            if attr not in ('position','version')):
+                    # Version spec should match parent's root element's version 
+                    if spec.get('version') and spec.get('version') != source.get('version'):
+                        return None
+                    return node
+            return None
 
         def apply_inheritance_specs(source, specs_arch, inherit_id=None):
             """ Apply an inheriting view.
@@ -2053,7 +2086,11 @@ class BaseModel(object):
                         if attr != 'position'
                     ])
                     tag = "<%s%s>" % (spec.tag, attrs)
+                    if spec.get('version') and spec.get('version') != source.get('version'):
+                        raise_view_error("Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
+                                            (tag, spec.get('version'), source.get('version')), inherit_id)
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
+                    
             return source
 
         def apply_view_inheritance(cr, user, source, inherit_id):
@@ -2243,8 +2280,13 @@ class BaseModel(object):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
-            [self._rec_name], context, load='_classic_write')]
+
+        if self._rec_name in self._all_columns:
+            rec_name_column = self._all_columns[self._rec_name].column
+            return [(r['id'], rec_name_column.as_display_name(cr, user, self, r[self._rec_name], context=context))
+                        for r in self.read(cr, user, ids, [self._rec_name],
+                                       load='_classic_write', context=context)]
+        return [(id, "%s,%s" % (self._name, id)) for id in ids]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         """Search for records that have a display name matching the given ``name`` pattern if compared
@@ -2401,9 +2443,9 @@ class BaseModel(object):
                                                   context=context)
 
         result_template = dict.fromkeys(aggregated_fields, False)
-        result_template.update({groupby + '_count':0})
+        result_template[groupby + '_count'] = 0
         if groupby_list and len(groupby_list) > 1:
-            result_template.update(__context={'group_by': groupby_list[1:]})
+            result_template['__context'] = {'group_by': groupby_list[1:]}
 
         # Merge the left_side (current results as dicts) with the right_side (all
         # possible values as m2o pairs). Both lists are supposed to be using the
@@ -2422,10 +2464,8 @@ class BaseModel(object):
             grouped_value = right_side[0]
             if not grouped_value in known_values:
                 line = dict(result_template)
-                line.update({
-                    groupby: right_side,
-                    '__domain': [(groupby,'=',grouped_value)] + domain,
-                })
+                line[groupby] = right_side
+                line['__domain'] = [(groupby,'=',grouped_value)] + domain
                 result.append(line)
                 known_values[grouped_value] = line
         while read_group_result or all_groups:
@@ -2616,8 +2656,7 @@ class BaseModel(object):
     def _parent_store_compute(self, cr):
         if not self._parent_store:
             return
-        logger = netsvc.Logger()
-        logger.notifyChannel('data', netsvc.LOG_INFO, 'Computing parent left and right for table %s...' % (self._table, ))
+        _logger.info('Computing parent left and right for table %s...', self._table)
         def browse_rec(root, pos=0):
 # TODO: set order
             where = self._parent_name+'='+str(root)
@@ -2641,8 +2680,7 @@ class BaseModel(object):
         return True
 
     def _update_store(self, cr, f, k):
-        logger = netsvc.Logger()
-        logger.notifyChannel('data', netsvc.LOG_INFO, "storing computed values of fields.function '%s'" % (k,))
+        _logger.info("storing computed values of fields.function '%s'", k)
         ss = self._columns[k]._symbol_set
         update_query = 'UPDATE "%s" SET "%s"=%s WHERE id=%%s' % (self._table, k, ss[0])
         cr.execute('select id from '+self._table)
@@ -2681,7 +2719,7 @@ class BaseModel(object):
         elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
             return
         raise except_orm(_('ValidateError'),
-			_('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
+            _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints
@@ -2698,12 +2736,52 @@ class BaseModel(object):
 
         for column in cr.dictfetchall():
             if log:
-                self.__logger.debug("column %s is in the table %s but not in the corresponding object %s",
-                                    column['attname'], self._table, self._name)
+                _logger.debug("column %s is in the table %s but not in the corresponding object %s",
+                              column['attname'], self._table, self._name)
             if column['attnotnull']:
                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, column['attname']))
-                self.__schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
-                                    self._table, column['attname'])
+                _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
+                              self._table, column['attname'])
+
+    def _save_constraint(self, cr, constraint_name, type):
+        """
+        Record the creation of a constraint for this model, to make it possible
+        to delete it later when the module is uninstalled. Type can be either
+        'f' or 'u' depending on the constraing being a foreign key or not.
+        """
+        assert type in ('f', 'u')
+        cr.execute("""
+            SELECT 1 FROM ir_model_constraint, ir_module_module
+            WHERE ir_model_constraint.module=ir_module_module.id
+                AND ir_model_constraint.name=%s
+                AND ir_module_module.name=%s
+            """, (constraint_name, self._module))
+        if not cr.rowcount:
+            cr.execute("""
+                INSERT INTO ir_model_constraint
+                    (name, date_init, date_update, module, model, type)
+                VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                    (SELECT id FROM ir_module_module WHERE name=%s),
+                    (SELECT id FROM ir_model WHERE model=%s), %s)""",
+                    (constraint_name, self._module, self._name, type))
+
+    def _save_relation_table(self, cr, relation_table):
+        """
+        Record the creation of a many2many for this model, to make it possible
+        to delete it later when the module is uninstalled.
+        """
+        cr.execute("""
+            SELECT 1 FROM ir_model_relation, ir_module_module
+            WHERE ir_model_relation.module=ir_module_module.id
+                AND ir_model_relation.name=%s
+                AND ir_module_module.name=%s
+            """, (relation_table, self._module))
+        if not cr.rowcount:
+            cr.execute("""INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
+                                 VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                    (SELECT id FROM ir_module_module WHERE name=%s),
+                    (SELECT id FROM ir_model WHERE model=%s))""",
+                       (relation_table, self._module, self._name))
 
     # checked version: for direct m2o starting from `self`
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
@@ -2715,14 +2793,58 @@ class BaseModel(object):
             # So unless stated otherwise we default them to ondelete=cascade.
             ondelete = ondelete or 'cascade'
         self._foreign_keys.append((self._table, source_field, dest_model._table, ondelete or 'set null'))
-        self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-                                        self._table, source_field, dest_model._table, ondelete)
+        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
+            self._table, source_field, dest_model._table, ondelete)
 
     # unchecked version: for custom cases, such as m2m relationships
     def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete):
         self._foreign_keys.append((source_table, source_field, dest_model._table, ondelete or 'set null'))
-        self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-                                        source_table, source_field, dest_model._table, ondelete)
+        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
+            source_table, source_field, dest_model._table, ondelete)
+
+    def _drop_constraint(self, cr, source_table, constraint_name):
+        cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (source_table,constraint_name))
+
+    def _m2o_fix_foreign_key(self, cr, source_table, source_field, dest_model, ondelete):
+        # Find FK constraint(s) currently established for the m2o field,
+        # and see whether they are stale or not 
+        cr.execute("""SELECT confdeltype as ondelete_rule, conname as constraint_name,
+                             cl2.relname as foreign_table
+                      FROM pg_constraint as con, pg_class as cl1, pg_class as cl2,
+                           pg_attribute as att1, pg_attribute as att2
+                      WHERE con.conrelid = cl1.oid 
+                        AND cl1.relname = %s 
+                        AND con.confrelid = cl2.oid 
+                        AND array_lower(con.conkey, 1) = 1 
+                        AND con.conkey[1] = att1.attnum 
+                        AND att1.attrelid = cl1.oid 
+                        AND att1.attname = %s 
+                        AND array_lower(con.confkey, 1) = 1 
+                        AND con.confkey[1] = att2.attnum 
+                        AND att2.attrelid = cl2.oid 
+                        AND att2.attname = %s 
+                        AND con.contype = 'f'""", (source_table, source_field, 'id'))
+        constraints = cr.dictfetchall()
+        if constraints:
+            if len(constraints) == 1:
+                # Is it the right constraint?
+                cons, = constraints 
+                if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
+                    or cons['foreign_table'] != dest_model._table:
+                    _schema.debug("Table '%s': dropping obsolete FK constraint: '%s'",
+                                  source_table, cons['constraint_name'])
+                    self._drop_constraint(cr, source_table, cons['constraint_name'])
+                    self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
+                # else it's all good, nothing to do!
+            else:
+                # Multiple FKs found for the same field, drop them all, and re-create
+                for cons in constraints:
+                    _schema.debug("Table '%s': dropping duplicate FK constraints: '%s'",
+                                  source_table, cons['constraint_name'])
+                    self._drop_constraint(cr, source_table, cons['constraint_name'])
+                self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
+
+
 
     def _auto_init(self, cr, context=None):
         """
@@ -2751,7 +2873,6 @@ class BaseModel(object):
         update_custom_fields = context.get('update_custom_fields', False)
         self._field_create(cr, context=context)
         create = not self._table_exist(cr)
-
         if getattr(self, '_auto', True):
 
             if create:
@@ -2796,8 +2917,8 @@ class BaseModel(object):
                             cr.execute('ALTER TABLE "%s" RENAME "%s" TO "%s"' % (self._table, f.oldname, k))
                             res['attname'] = k
                             column_data[k] = res
-                            self.__schema.debug("Table '%s': renamed column '%s' to '%s'",
-                                                self._table, f.oldname, k)
+                            _schema.debug("Table '%s': renamed column '%s' to '%s'",
+                                self._table, f.oldname, k)
 
                     # The field already exists in database. Possibly
                     # change its type, rename it, drop it or change its
@@ -2808,12 +2929,12 @@ class BaseModel(object):
                         f_pg_notnull = res['attnotnull']
                         if isinstance(f, fields.function) and not f.store and\
                                 not getattr(f, 'nodrop', False):
-                            self.__logger.info('column %s (%s) in table %s removed: converted to a function !\n',
-                                               k, f.string, self._table)
+                            _logger.info('column %s (%s) in table %s removed: converted to a function !\n',
+                                         k, f.string, self._table)
                             cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (self._table, k))
                             cr.commit()
-                            self.__schema.debug("Table '%s': dropped column '%s' with cascade",
-                                                 self._table, k)
+                            _schema.debug("Table '%s': dropped column '%s' with cascade",
+                                self._table, k)
                             f_obj_type = None
                         else:
                             f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
@@ -2835,7 +2956,7 @@ class BaseModel(object):
                                 cr.execute('UPDATE "%s" SET "%s"=temp_change_size::%s' % (self._table, k, pg_varchar(f.size)))
                                 cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
                                 cr.commit()
-                                self.__schema.debug("Table '%s': column '%s' (type varchar) changed size from %s to %s",
+                                _schema.debug("Table '%s': column '%s' (type varchar) changed size from %s to %s",
                                     self._table, k, f_pg_size, f.size)
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
@@ -2846,7 +2967,7 @@ class BaseModel(object):
                                         cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
                                         cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
                                         cr.commit()
-                                        self.__schema.debug("Table '%s': column '%s' changed type from %s to %s",
+                                        _schema.debug("Table '%s': column '%s' changed type from %s to %s",
                                             self._table, k, c[0], c[1])
                                     break
 
@@ -2867,7 +2988,7 @@ class BaseModel(object):
                                     cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (self._table, k, newname))
                                     cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
                                     cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, k), (f.string,))
-                                    self.__schema.debug("Table '%s': column '%s' has changed type (DB=%s, def=%s), data moved to column %s !",
+                                    _schema.debug("Table '%s': column '%s' has changed type (DB=%s, def=%s), data moved to column %s !",
                                         self._table, k, f_pg_type, f._type, newname)
 
                             # if the field is required and hasn't got a NOT NULL constraint
@@ -2888,19 +3009,19 @@ class BaseModel(object):
                                 try:
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
                                     cr.commit()
-                                    self.__schema.debug("Table '%s': column '%s': added NOT NULL constraint",
-                                                        self._table, k)
+                                    _schema.debug("Table '%s': column '%s': added NOT NULL constraint",
+                                        self._table, k)
                                 except Exception:
                                     msg = "Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
                                         "If you want to have it, you should update the records and execute manually:\n"\
                                         "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
-                                    self.__schema.warn(msg, self._table, k, self._table, k)
+                                    _schema.warning(msg, self._table, k, self._table, k)
                                 cr.commit()
                             elif not f.required and f_pg_notnull == 1:
                                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
                                 cr.commit()
-                                self.__schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
-                                                    self._table, k)
+                                _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
+                                    self._table, k)
                             # Verify index
                             indexname = '%s_%s_index' % (self._table, k)
                             cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = %s and tablename = %s", (indexname, self._table))
@@ -2914,40 +3035,17 @@ class BaseModel(object):
                                         "This is probably useless (does not work for fulltext search) and prevents INSERTs of long texts"\
                                         " because there is a length limit for indexable btree values!\n"\
                                         "Use a search view instead if you simply want to make the field searchable."
-                                    self.__schema.warn(msg, self._table, k, f._type)
+                                    _schema.warning(msg, self._table, k, f._type)
                             if res2 and not f.select:
                                 cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
                                 cr.commit()
                                 msg = "Table '%s': dropping index for column '%s' of type '%s' as it is not required anymore"
-                                self.__schema.debug(msg, self._table, k, f._type)
+                                _schema.debug(msg, self._table, k, f._type)
 
                             if isinstance(f, fields.many2one):
                                 dest_model = self.pool.get(f._obj)
-                                ref = dest_model._table
-                                if ref != 'ir_actions':
-                                    cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, '
-                                                'pg_attribute as att1, pg_attribute as att2 '
-                                            'WHERE con.conrelid = cl1.oid '
-                                                'AND cl1.relname = %s '
-                                                'AND con.confrelid = cl2.oid '
-                                                'AND cl2.relname = %s '
-                                                'AND array_lower(con.conkey, 1) = 1 '
-                                                'AND con.conkey[1] = att1.attnum '
-                                                'AND att1.attrelid = cl1.oid '
-                                                'AND att1.attname = %s '
-                                                'AND array_lower(con.confkey, 1) = 1 '
-                                                'AND con.confkey[1] = att2.attnum '
-                                                'AND att2.attrelid = cl2.oid '
-                                                'AND att2.attname = %s '
-                                                "AND con.contype = 'f'", (self._table, ref, k, 'id'))
-                                    res2 = cr.dictfetchall()
-                                    if res2:
-                                        if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get((f.ondelete or 'set null').upper(), 'a'):
-                                            cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res2[0]['conname'] + '"')
-                                            self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
-                                            cr.commit()
-                                            self.__schema.debug("Table '%s': column '%s': XXX",
-                                                self._table, k)
+                                if dest_model._table != 'ir_actions':
+                                    self._m2o_fix_foreign_key(cr, self._table, k, dest_model, f.ondelete)
 
                     # The field doesn't exist in database. Create it if necessary.
                     else:
@@ -2955,7 +3053,7 @@ class BaseModel(object):
                             # add the missing field
                             cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
                             cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, k), (f.string,))
-                            self.__schema.debug("Table '%s': added column '%s' with definition=%s",
+                            _schema.debug("Table '%s': added column '%s' with definition=%s",
                                 self._table, k, get_pg_type(f)[1])
 
                             # initialize it
@@ -2969,7 +3067,7 @@ class BaseModel(object):
                                 query = 'UPDATE "%s" SET "%s"=%s' % (self._table, k, ss[0])
                                 cr.execute(query, (ss[1](default),))
                                 cr.commit()
-                                netsvc.Logger().notifyChannel('data', netsvc.LOG_DEBUG, "Table '%s': setting default value of new column %s" % (self._table, k))
+                                _logger.debug("Table '%s': setting default value of new column %s", self._table, k)
 
                             # remember the functions to call for the stored fields
                             if isinstance(f, fields.function):
@@ -2993,14 +3091,14 @@ class BaseModel(object):
                                 try:
                                     cr.commit()
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
-                                    self.__schema.debug("Table '%s': column '%s': added a NOT NULL constraint",
+                                    _schema.debug("Table '%s': column '%s': added a NOT NULL constraint",
                                         self._table, k)
                                 except Exception:
                                     msg = "WARNING: unable to set column %s of table %s not null !\n"\
                                         "Try to re-run: openerp-server --update=module\n"\
                                         "If it doesn't work, update records and execute manually:\n"\
                                         "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
-                                    self.__logger.warn(msg, k, self._table, self._table, k)
+                                    _logger.warning(msg, k, self._table, self._table, k)
                             cr.commit()
 
         else:
@@ -3020,11 +3118,11 @@ class BaseModel(object):
 
         return todo_end
 
-
     def _auto_end(self, cr, context=None):
         """ Create the foreign keys recorded by _auto_init. """
         for t, k, r, d in self._foreign_keys:
             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
+            self._save_constraint(cr, "%s_%s_fkey" % (t, k), 'f')
         cr.commit()
         del self._foreign_keys
 
@@ -3037,7 +3135,7 @@ class BaseModel(object):
     def _create_table(self, cr):
         cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
         cr.execute(("COMMENT ON TABLE \"%s\" IS %%s" % self._table), (self._description,))
-        self.__schema.debug("Table '%s': created", self._table)
+        _schema.debug("Table '%s': created", self._table)
 
 
     def _parent_columns_exist(self, cr):
@@ -3052,24 +3150,24 @@ class BaseModel(object):
         cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_left" INTEGER' % (self._table,))
         cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_right" INTEGER' % (self._table,))
         if 'parent_left' not in self._columns:
-            self.__logger.error('create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)',
-                                self._table)
-            self.__schema.debug("Table '%s': added column '%s' with definition=%s",
-                                self._table, 'parent_left', 'INTEGER')
+            _logger.error('create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)',
+                          self._table)
+            _schema.debug("Table '%s': added column '%s' with definition=%s",
+                self._table, 'parent_left', 'INTEGER')
         elif not self._columns['parent_left'].select:
-            self.__logger.error('parent_left column on object %s must be indexed! Add select=1 to the field definition)',
-                                self._table)
+            _logger.error('parent_left column on object %s must be indexed! Add select=1 to the field definition)',
+                          self._table)
         if 'parent_right' not in self._columns:
-            self.__logger.error('create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)',
-                                self._table)
-            self.__schema.debug("Table '%s': added column '%s' with definition=%s",
-                                self._table, 'parent_right', 'INTEGER')
+            _logger.error('create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)',
+                          self._table)
+            _schema.debug("Table '%s': added column '%s' with definition=%s",
+                self._table, 'parent_right', 'INTEGER')
         elif not self._columns['parent_right'].select:
-            self.__logger.error('parent_right column on object %s must be indexed! Add select=1 to the field definition)',
-                                self._table)
+            _logger.error('parent_right column on object %s must be indexed! Add select=1 to the field definition)',
+                          self._table)
         if self._columns[self._parent_name].ondelete != 'cascade':
-            self.__logger.error("The column %s on object %s must be set as ondelete='cascade'",
-                                self._parent_name, self._name)
+            _logger.error("The column %s on object %s must be set as ondelete='cascade'",
+                          self._parent_name, self._name)
 
         cr.commit()
 
@@ -3084,8 +3182,8 @@ class BaseModel(object):
             if not cr.rowcount:
                 cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, field, field_def))
                 cr.commit()
-                self.__schema.debug("Table '%s': added column '%s' with definition=%s",
-                                    self._table, field, field_def)
+                _schema.debug("Table '%s': added column '%s' with definition=%s",
+                    self._table, field, field_def)
 
 
     def _select_column_data(self, cr):
@@ -3103,6 +3201,7 @@ class BaseModel(object):
 
     def _o2m_raise_on_missing_reference(self, cr, f):
         # TODO this check should be a method on fields.one2many.
+        
         other = self.pool.get(f._obj)
         if other:
             # TODO the condition could use fields_get_keys().
@@ -3110,9 +3209,9 @@ class BaseModel(object):
                 if f._fields_id not in other._inherit_fields.keys():
                     raise except_orm('Programming Error', ("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj,))
 
-
     def _m2m_raise_or_create_relation(self, cr, f):
         m2m_tbl, col1, col2 = f._sql_names(self)
+        self._save_relation_table(cr, m2m_tbl)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):
@@ -3120,7 +3219,6 @@ class BaseModel(object):
             dest_model = self.pool.get(f._obj)
             ref = dest_model._table
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (m2m_tbl, col1, col2, col1, col2))
-
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
             if not cr.fetchall():
@@ -3133,7 +3231,7 @@ class BaseModel(object):
             cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col2, m2m_tbl, col2))
             cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, ref))
             cr.commit()
-            self.__schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
+            _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
 
 
     def _add_sql_constraints(self, cr):
@@ -3143,12 +3241,15 @@ class BaseModel(object):
         _sql_constraints.
 
         """
+        def unify_cons_text(txt):
+            return txt.lower().replace(', ',',').replace(' (','(')
+
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
+            self._save_constraint(cr, conname, 'u')
             cr.execute("SELECT conname, pg_catalog.pg_get_constraintdef(oid, true) as condef FROM pg_constraint where conname=%s", (conname,))
             existing_constraints = cr.dictfetchall()
-
             sql_actions = {
                 'drop': {
                     'execute': False,
@@ -3172,7 +3273,7 @@ class BaseModel(object):
                 # constraint does not exists:
                 sql_actions['add']['execute'] = True
                 sql_actions['add']['msg_err'] = sql_actions['add']['msg_err'] % (sql_actions['add']['query'], )
-            elif con.lower() not in [item['condef'].lower() for item in existing_constraints]:
+            elif unify_cons_text(con) not in [unify_cons_text(item['condef']) for item in existing_constraints]:
                 # constraint exists but its definition has changed:
                 sql_actions['drop']['execute'] = True
                 sql_actions['drop']['msg_ok'] = sql_actions['drop']['msg_ok'] % (existing_constraints[0]['condef'].lower(), )
@@ -3186,9 +3287,9 @@ class BaseModel(object):
                 try:
                     cr.execute(sql_action['query'])
                     cr.commit()
-                    self.__schema.debug(sql_action['msg_ok'])
+                    _schema.debug(sql_action['msg_ok'])
                 except:
-                    self.__schema.warn(sql_action['msg_err'])
+                    _schema.warning(sql_action['msg_err'])
                     cr.rollback()
 
 
@@ -3245,11 +3346,11 @@ class BaseModel(object):
     def _inherits_check(self):
         for table, field_name in self._inherits.items():
             if field_name not in self._columns:
-                logging.getLogger('init').info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.' % (field_name, self._name))
+                _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, self._name)
                 self._columns[field_name] = fields.many2one(table, string="Automatically created field to link to parent %s" % table,
                                                              required=True, ondelete="cascade")
             elif not self._columns[field_name].required or self._columns[field_name].ondelete.lower() != "cascade":
-                logging.getLogger('init').warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade", forcing it.' % (field_name, self._name))
+                _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade", forcing it.', field_name, self._name)
                 self._columns[field_name].required = True
                 self._columns[field_name].ondelete = "cascade"
 
@@ -3307,7 +3408,8 @@ class BaseModel(object):
             res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
 
         for f, field in self._columns.iteritems():
-            if allfields and f not in allfields:
+            if (allfields and f not in allfields) or \
+                (field.groups and not self.user_has_groups(cr, user, groups=field.groups, context=context)):
                 continue
 
             res[f] = fields.field_to_dict(self, cr, user, field, context=context)
@@ -3407,8 +3509,8 @@ class BaseModel(object):
                     return "date_trunc('second', %s) as %s" % (f_qual, f)
                 if f == self.CONCURRENCY_CHECK_FIELD:
                     if self._log_access:
-                        return "COALESCE(%s.write_date, %s.create_date, now())::timestamp AS %s" % (self._table, self._table, f,)
-                    return "now()::timestamp AS %s" % (f,)
+                        return "COALESCE(%s.write_date, %s.create_date, (now() at time zone 'UTC'))::timestamp AS %s" % (self._table, self._table, f,)
+                    return "(now() at time zone 'UTC')::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                     return 'length(%s) as "%s"' % (f_qual, f)
                 return f_qual
@@ -3423,10 +3525,7 @@ class BaseModel(object):
             for sub_ids in cr.split_for_in_conditions(ids):
                 if rule_clause:
                     cr.execute(query, [tuple(sub_ids)] + rule_params)
-                    if cr.rowcount != len(sub_ids):
-                        raise except_orm(_('AccessError'),
-                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: read, Document type: %s).')
-                                         % (self._description,))
+                    self._check_record_rules_result_count(cr, user, sub_ids, 'read', context=context)
                 else:
                     cr.execute(query, (tuple(sub_ids),))
                 res.extend(cr.dictfetchall())
@@ -3498,6 +3597,14 @@ class BaseModel(object):
                             record[f] = res2[record['id']]
                         else:
                             record[f] = []
+
+        # Warn about deprecated fields now that fields_pre and fields_post are computed
+        # Explicitly use list() because we may receive tuples
+        for f in list(fields_pre) + list(fields_post):
+            field_column = self._all_columns.get(f) and self._all_columns.get(f).column
+            if field_column and field_column.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, f, field_column.deprecated)
+
         readonly = None
         for vals in res:
             for field in vals.copy():
@@ -3589,7 +3696,7 @@ class BaseModel(object):
             return
         if not (context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access):
             return
-        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
+        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp)"
         for sub_ids in cr.split_for_in_conditions(ids):
             ids_to_check = []
             for id in sub_ids:
@@ -3604,6 +3711,26 @@ class BaseModel(object):
             if res:
                 # mention the first one only to keep the error message readable
                 raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
+
+    def _check_record_rules_result_count(self, cr, uid, ids, operation, context=None):
+        """Verify that number of returned rows after applying record rules matches
+           the length of `ids`, and raise an appropriate exception if it does not.
+        """
+        if cr.rowcount != len(ids):
+            # Attempt to distinguish record rule restriction vs deleted records, 
+            # to provide a more specific error message
+            cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(ids),))
+            if cr.rowcount != len(ids):
+                if operation == 'unlink':
+                    # no need to warn about deleting an already deleted record!
+                    return
+                _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
+                raise except_orm(_('Missing document(s)'),
+                                 _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+            _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
+            raise except_orm(_('Access Denied'),
+                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                                (self._description, operation))
 
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
         """Verifies that the operation given by ``operation`` is allowed for the user
@@ -3636,7 +3763,7 @@ class BaseModel(object):
         if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
-            # have log_access enabled and this the create_uid column is always there.
+            # have log_access enabled so that the create_uid column is always there.
             # And even with _inherits, these fields are always present in the local
             # table too, so no need for JOINs.
             cr.execute("""SELECT distinct create_uid
@@ -3644,9 +3771,8 @@ class BaseModel(object):
                           WHERE id IN %%s""" % self._table, (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
-                raise except_orm(_('AccessError'), '%s access is '
-                    'restricted to your own records for transient models '
-                    '(except for the super-user).' % operation.capitalize())
+                raise except_orm(_('Access Denied'),
+                                 _('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
         else:
             where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
             if where_clause:
@@ -3655,10 +3781,13 @@ class BaseModel(object):
                     cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
                                ' WHERE ' + self._table + '.id IN %s' + where_clause,
                                [sub_ids] + where_params)
-                    if cr.rowcount != len(sub_ids):
-                        raise except_orm(_('AccessError'),
-                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
-                                         % (operation, self._description))
+                    self._check_record_rules_result_count(cr, uid, sub_ids, operation, context=context)
+
+    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
+        """Call given workflow trigger as a result of a CRUD operation""" 
+        wf_service = netsvc.LocalService("workflow")
+        for res_id in ids:
+            getattr(wf_service, trigger)(uid, self._name, res_id, cr)
 
     def unlink(self, cr, uid, ids, context=None):
         """
@@ -3685,17 +3814,20 @@ class BaseModel(object):
 
         self.check_unlink(cr, uid)
 
-        properties = self.pool.get('ir.property')
+        ir_property = self.pool.get('ir.property')
+        
+        # Check if the records are used as default properties.
         domain = [('res_id', '=', False),
                   ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
                  ]
-        if properties.search(cr, uid, domain, context=context):
+        if ir_property.search(cr, uid, domain, context=context):
             raise except_orm(_('Error'), _('Unable to delete this document because it is used as a default property'))
 
-        wf_service = netsvc.LocalService("workflow")
-        for oid in ids:
-            wf_service.trg_delete(uid, self._name, oid, cr)
+        # Delete the records' properties.
+        property_ids = ir_property.search(cr, uid, [('res_id', 'in', ['%s,%s' % (self._name, i) for i in ids])], context=context)
+        ir_property.unlink(cr, uid, property_ids, context=context)
 
+        self._workflow_trigger(cr, uid, ids, 'trg_delete', context=context)
 
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         pool_model_data = self.pool.get('ir.model.data')
@@ -3850,6 +3982,9 @@ class BaseModel(object):
         direct = []
         totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
         for field in vals:
+            field_column = self._all_columns.get(field) and self._all_columns.get(field).column
+            if field_column and field_column.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, field, field_column.deprecated)
             if field in self._columns:
                 if self._columns[field]._classic_write and not (hasattr(self._columns[field], '_fnct_inv')):
                     if (not totranslate) or not self._columns[field].translate:
@@ -3867,7 +4002,7 @@ class BaseModel(object):
 
         if self._log_access:
             upd0.append('write_uid=%s')
-            upd0.append('write_date=now()')
+            upd0.append("write_date=(now() at time zone 'UTC')")
             upd1.append(user)
 
         if len(upd0):
@@ -3922,7 +4057,7 @@ class BaseModel(object):
                 self.pool.get(table).write(cr, user, nids, v, context)
 
         if unknown_fields:
-            self.__logger.warn(
+            _logger.warning(
                 'No such field(s) in model %s: %s.',
                 self._name, ', '.join(unknown_fields))
         self._validate(cr, user, ids, context)
@@ -3996,9 +4131,7 @@ class BaseModel(object):
                     todo.append(id)
             self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
 
-        wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_write(user, self._name, id, cr)
+        self._workflow_trigger(cr, user, ids, 'trg_write', context=context)
         return True
 
     #
@@ -4037,6 +4170,12 @@ class BaseModel(object):
 
         self.check_create(cr, user)
 
+        if self._log_access:
+            for f in LOG_ACCESS_COLUMNS:
+                if vals.pop(f, None) is not None:
+                    _logger.warning(
+                        'Field `%s` is not allowed when creating the model `%s`.',
+                        f, self._name)
         vals = self._add_missing_default_values(cr, user, vals, context)
 
         tocreate = {}
@@ -4058,7 +4197,7 @@ class BaseModel(object):
                     del vals[v]
                     unknown_fields.append(v)
         if unknown_fields:
-            self.__logger.warn(
+            _logger.warning(
                 'No such field(s) in model %s: %s.',
                 self._name, ', '.join(unknown_fields))
 
@@ -4068,7 +4207,7 @@ class BaseModel(object):
             cr.execute("SELECT nextval('"+self._sequence+"')")
         except:
             raise except_orm(_('UserError'),
-                        _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
+                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
 
         id_new = cr.fetchone()[0]
         for table in tocreate:
@@ -4134,7 +4273,7 @@ class BaseModel(object):
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
             upd0 += ',create_uid,create_date'
-            upd1 += ',%s,now()'
+            upd1 += ",%s,(now() at time zone 'UTC')"
             upd2.append(user)
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
         self.check_access_rule(cr, user, [id_new], 'create', context=context)
@@ -4190,15 +4329,14 @@ class BaseModel(object):
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
                 "' " + _("created.")
             self.log(cr, user, id_new, message, True, context=context)
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_create(user, self._name, id_new, cr)
+        self._workflow_trigger(cr, user, [id_new], 'trg_create', context=context)
         return id_new
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
         """Fetch records as objects allowing to use dot notation to browse fields and relations
 
         :param cr: database cursor
-        :param user: current user id
+        :param uid: current user id
         :param select: id or list of ids.
         :param context: context arguments, like lang, time zone
         :rtype: object or list of objects requested
@@ -4315,7 +4453,7 @@ class BaseModel(object):
                     for v in value:
                         if v not in val:
                             continue
-                        if self._columns[v]._type in ('many2one', 'one2one'):
+                        if self._columns[v]._type == 'many2one':
                             try:
                                 value[v] = value[v][0]
                             except:
@@ -4337,7 +4475,7 @@ class BaseModel(object):
                                 if f in field_dict[r]:
                                     result.pop(r)
                     for id, value in result.items():
-                        if self._columns[f]._type in ('many2one', 'one2one'):
+                        if self._columns[f]._type == 'many2one':
                             try:
                                 value = value[0]
                             except:
@@ -4367,13 +4505,11 @@ class BaseModel(object):
         domain = domain[:]
         # if the object has a field named 'active', filter out all inactive
         # records unless they were explicitely asked for
-        if 'active' in self._columns and (active_test and context.get('active_test', True)):
+        if 'active' in self._all_columns and (active_test and context.get('active_test', True)):
             if domain:
-                active_in_args = False
-                for a in domain:
-                    if a[0] == 'active':
-                        active_in_args = True
-                if not active_in_args:
+                # the item[0] trick below works for domain items and '&'/'|'/'!'
+                # operators too
+                if not any(item[0] == 'active' for item in domain):
                     domain.insert(0, ('active', '=', 1))
             else:
                 domain = [('active', '=', 1)]
@@ -4440,9 +4576,9 @@ class BaseModel(object):
 
         assert order_field_column._type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
         if not order_field_column._classic_write and not getattr(order_field_column, 'store', False):
-            logging.getLogger('orm.search').debug("Many2one function/related fields must be stored " \
-                                                  "to be used as ordering fields! Ignoring sorting for %s.%s",
-                                                  self._name, order_field)
+            _logger.debug("Many2one function/related fields must be stored " \
+                "to be used as ordering fields! Ignoring sorting for %s.%s",
+                self._name, order_field)
             return
 
         # figure out the applicable order_by for the m2o
@@ -4616,7 +4752,7 @@ class BaseModel(object):
                     data[f] = data[f] and data[f][0]
                 except:
                     pass
-            elif ftype in ('one2many', 'one2one'):
+            elif ftype == 'one2many':
                 res = []
                 rel = self.pool.get(fields[f]['relation'])
                 if data[f]:
@@ -4667,7 +4803,7 @@ class BaseModel(object):
         translation_records = []
         for field_name, field_def in fields.items():
             # we must recursively copy the translations for o2o and o2m
-            if field_def['type'] in ('one2one', 'one2many'):
+            if field_def['type'] == 'one2many':
                 target_obj = self.pool.get(field_def['relation'])
                 old_record, new_record = self.read(cr, uid, [old_id, new_id], [field_name], context=context)
                 # here we rely on the order of the ids to match the translations
@@ -4738,8 +4874,8 @@ class BaseModel(object):
         return [x[0] for x in cr.fetchall()]
 
     def check_recursion(self, cr, uid, ids, context=None, parent=None):
-        warnings.warn("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
-                        self._name, DeprecationWarning, stacklevel=3)
+        _logger.warning("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
+                        self._name)
         assert parent is None or parent in self._columns or parent in self._inherit_fields,\
                     "The 'parent' parameter passed to check_recursion() must be None or a valid field name"
         return self._check_recursion(cr, uid, ids, context, parent)
@@ -4824,7 +4960,37 @@ class BaseModel(object):
     # backwards compatibility
     get_xml_id = get_external_id
     _get_xml_ids = _get_external_ids
-
+    
+    def _get_needaction_info(self, cr, uid, user_id, limit=None, order=None, domain=False, context=None):
+        """Base method for needaction mechanism
+           - see ir.needaction for actual implementation
+           - if the model uses the need action mechanism
+             (hasattr(model_obj, 'needaction_get_record_ids')):
+              - get the record ids on which the user has actions to perform
+              - evaluate the menu domain
+              - compose a new domain: menu domain, limited to ids of
+                records requesting an action
+              - count the number of records maching that domain, that
+                is the number of actions the user has to perform
+           - this method returns default values
+           :param: model_name: the name of the model (ex: hr.holidays)
+           :param: user_id: the id of user
+           :return: [uses_needaction=True/False, needaction_uid_ctr=%d]
+        """
+        if hasattr(self, 'needaction_get_record_ids'):
+            # Arbitrary limit, but still much lower thant infinity, to avoid
+            # getting too much data.
+            ids = self.needaction_get_record_ids(cr, uid, user_id, limit=8192, context=context)
+            if not ids:
+                return [True, 0]
+            if domain:
+                new_domain = eval(domain, locals_dict={'uid': user_id}) + [('id', 'in', ids)]
+            else:
+                new_domain = [('id', 'in', ids)]
+            return [True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context)]
+        else:
+            return [False, 0]
+            
     # Transience
     def is_transient(self):
         """ Return whether the model is transient.
@@ -4837,15 +5003,15 @@ class BaseModel(object):
     def _transient_clean_rows_older_than(self, cr, seconds):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         cr.execute("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, now())::timestamp <"
-            " (now() - interval %s)", ("%s seconds" % seconds,))
+            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp <"
+            " ((now() at time zone 'UTC') - interval %s)", ("%s seconds" % seconds,))
         ids = [x[0] for x in cr.fetchall()]
         self.unlink(cr, SUPERUSER_ID, ids)
 
     def _transient_clean_old_rows(self, cr, count):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         cr.execute(
-            "SELECT id, COALESCE(write_date, create_date, now())::timestamp"
+            "SELECT id, COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
             " AS t FROM " + self._table +
             " ORDER BY t LIMIT %s", (count,))
         ids = [x[0] for x in cr.fetchall()]

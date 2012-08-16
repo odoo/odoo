@@ -7,22 +7,14 @@
 #    > OPENERP_ADDONS_PATH='../../../addons/trunk' OPENERP_PORT=8069 \
 #      OPENERP_DATABASE=yy PYTHONPATH=../:. unit2 test_ir_sequence
 # This assume an existing database.
-import os
 import psycopg2
-import time
 import unittest2
-import xmlrpclib
 
 import openerp
 import common
 
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
-
-def setUpModule():
-    common.create_xmlrpc_proxies()
-
-tearDownModule = common.tearDownModule
 
 def registry(model):
     return openerp.modules.registry.RegistryManager.get(DB)[model]
@@ -104,6 +96,7 @@ class test_ir_sequence_no_gap(unittest2.TestCase):
         """
         cr0 = cursor()
         cr1 = cursor()
+        cr1._default_log_exceptions = False # Prevent logging a traceback
         msg_re = '^could not obtain lock on row in relation "ir_sequence"$'
         with self.assertRaisesRegexp(psycopg2.OperationalError, msg_re):
             n0 = registry('ir.sequence').get(cr0, ADMIN_USER_ID, 'test_sequence_type_2', {})
@@ -177,8 +170,7 @@ class test_ir_sequence_generate(unittest2.TestCase):
     def test_ir_sequence_create_no_gap(self):
         """ Try to create a sequence object. """
         cr = cursor()
-        d = dict(code='test_sequence_type_6', name='Test sequence type',
-            implementation='no_gap')
+        d = dict(code='test_sequence_type_6', name='Test sequence type')
         c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_6', name='Test sequence')

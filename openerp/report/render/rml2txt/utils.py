@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import copy
 import re
 import reportlab
 import reportlab.lib.units

@@ -47,6 +47,8 @@ import time
 import openerp
 import tools
 
+_logger = logging.getLogger(__name__)
+
 # Heapq of database wake-ups. Note that 'database wake-up' meaning is in
 # the context of the cron management. This is not originally about loading
 # a database, although having the database name in the queue will
@@ -83,8 +85,6 @@ _thread_slots = None
 
 # A (non re-entrant) lock to protect the above _thread_slots variable.
 _thread_slots_lock = threading.Lock()
-
-_logger = logging.getLogger('cron')
 
 # Sleep duration limits - must not loop too quickly, but can't sleep too long
 # either, because a new job might be inserted in ir_cron with a much sooner

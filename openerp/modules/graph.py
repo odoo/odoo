@@ -48,8 +48,7 @@ from cStringIO import StringIO
 
 import logging
 
-logger = netsvc.Logger()
-
+_logger = logging.getLogger(__name__)
 
 class Graph(dict):
     """ Modules dependency graph.
@@ -108,7 +107,7 @@ class Graph(dict):
             if info and info['installable']:
                 packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
             else:
-                logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable, skipped' % (module))
+                _logger.warning('module %s: not installable, skipped', module)
 
         dependencies = dict([(p, info['depends']) for p, info in packages])
         current, later = set([p for p, info in packages]), set()
@@ -135,11 +134,11 @@ class Graph(dict):
 
         for package in later:
             unmet_deps = filter(lambda p: p not in self, dependencies[package])
-            logger.notifyChannel('init', netsvc.LOG_ERROR, 'module %s: Unmet dependencies: %s' % (package, ', '.join(unmet_deps)))
+            _logger.error('module %s: Unmet dependencies: %s', package, ', '.join(unmet_deps))
 
         result = len(self) - len_graph
         if result != len(module_list):
-            logger.notifyChannel('init', netsvc.LOG_WARNING, 'Not all modules have loaded.')
+            _logger.warning('Some modules were not loaded.')
         return result
 
 

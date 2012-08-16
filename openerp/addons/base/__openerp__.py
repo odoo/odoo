@@ -34,15 +34,15 @@
         'base_data.xml',
         'security/base_security.xml',
         'base_menu.xml',
-        'base_module_meta.xml',
         'res/res_security.xml',
         'res/res_config.xml',
         'data/res.country.state.csv'
     ],
     'update_xml': [
-        'base_update.xml',
         'ir/wizard/wizard_menu_view.xml',
         'ir/ir.xml',
+        'ir/ir_filters.xml',
+        'ir/ir_config_parameter_view.xml',
         'ir/workflow/workflow_view.xml',
         'ir/report/ir_report.xml',
         'module/module_view.xml',
@@ -56,25 +56,23 @@
         'module/wizard/base_module_configuration_view.xml',
         'module/wizard/base_export_language_view.xml',
         'module/wizard/base_update_translations_view.xml',
+        'module/wizard/base_module_immediate_install.xml',
+        'res/res_company_view.xml',
         'res/res_request_view.xml',
         'res/res_lang_view.xml',
-        'res/res_log_view.xml',
         'res/res_partner_report.xml',
         'res/res_partner_view.xml',
         'res/res_partner_shortcut_data.xml',
         'res/res_bank_view.xml',
         'res/res_country_view.xml',
         'res/res_currency_view.xml',
-        'res/res_partner_event_view.xml',
-        'res/wizard/partner_sms_send_view.xml',
-        'res/wizard/partner_wizard_massmail_view.xml',
-        'res/wizard/partner_clear_ids_view.xml',
-        'res/wizard/partner_wizard_ean_check_view.xml',
+        'res/res_users_view.xml',
         'res/res_partner_data.xml',
         'res/ir_property_view.xml',
         'security/base_security.xml',
         'publisher_warranty/publisher_warranty_view.xml',
         'security/ir.model.access.csv',
+        'security/ir.model.access-1.csv', # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
         'res/res_widget_view.xml',
         'res/res_widget_data.xml',
         'publisher_warranty/publisher_warranty_data.xml',
@@ -82,6 +80,7 @@
     'demo_xml': [
         'base_demo.xml',
         'res/res_partner_demo.xml',
+        'res/res_partner_demo.yml',
         'res/res_widget_demo.xml',
     ],
     'test': [
@@ -91,15 +90,14 @@
         'test/bug_lp541545.xml',
         'test/test_osv_expression.yml',
         'test/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
-        'test/test_ir_values.yml',
         # Commented because this takes some time.
         # This must be (un)commented with the corresponding import statement
         # in test/__init__.py.
         # 'test/test_ir_cron.yml', # <-- These tests perform a roolback.
     ],
     'installable': True,
-    'active': True,
+    'auto_install': True,
     'certificate': '0076807797149',
-    "css": [ 'static/src/css/modules.css' ],
+    'css': ['static/src/css/modules.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

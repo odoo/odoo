@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class Bank(osv.osv):
     _description='Bank'
@@ -31,10 +32,10 @@ class Bank(osv.osv):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state': fields.many2one("res.country.state", 'State',
+        'state': fields.many2one("res.country.state", 'Fed. State',
             domain="[('country_id', '=', country)]"),
         'country': fields.many2one('res.country', 'Country'),
-        'email': fields.char('E-Mail', size=64),
+        'email': fields.char('Email', size=64),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
         'active': fields.boolean('Active'),
@@ -60,7 +61,7 @@ class res_partner_bank_type(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=64, required=True),
-        'field_ids': fields.one2many('res.partner.bank.type.field', 'bank_type_id', 'Type fields'),
+        'field_ids': fields.one2many('res.partner.bank.type.field', 'bank_type_id', 'Type Fields'),
         'format_layout': fields.text('Format Layout', translate=True)
     }
     _defaults = {
@@ -117,20 +118,19 @@ class res_partner_bank(osv.osv):
                 value = address.get(field, value)
         return value
 
-    _rec_name = 'acc_number'
     _columns = {
         'name': fields.char('Bank Account', size=64), # to be removed in v6.2 ?
         'acc_number': fields.char('Account Number', size=64, required=True),
         'bank': fields.many2one('res.bank', 'Bank'),
         'bank_bic': fields.char('Bank Identifier Code', size=16),
         'bank_name': fields.char('Bank Name', size=32),
-        'owner_name': fields.char('Account Owner Name', size=64),
+        'owner_name': fields.char('Account Owner Name', size=128),
         'street': fields.char('Street', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
         'country_id': fields.many2one('res.country', 'Country',
             change_default=True),
-        'state_id': fields.many2one("res.country.state", 'State',
+        'state_id': fields.many2one("res.country.state", 'Fed. State',
             change_default=True, domain="[('country_id','=',country_id)]"),
         'company_id': fields.many2one('res.company', 'Company',
             ondelete='cascade', help="Only if this bank account belong to your company"),
@@ -141,6 +141,7 @@ class res_partner_bank(osv.osv):
         'sequence': fields.integer('Sequence'),
         'footer': fields.boolean("Display on Reports", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
     }
+
     _defaults = {
         'owner_name': lambda obj, cursor, user, context: obj._default_value(
             cursor, user, 'name', context=context),
@@ -171,6 +172,17 @@ class res_partner_bank(osv.osv):
                             ('required', field.required)]
         return res
 
+    def _prepare_name_get(self, cr, uid, bank_type_obj, bank_obj, context=None):
+        """
+        Format the name of a res.partner.bank.
+        This function is designed to be inherited to add replacement fields.
+        :param browse_record bank_type_obj: res.partner.bank.type object
+        :param browse_record bank_obj: res.partner.bank object
+        :rtype: str
+        :return: formatted name of a res.partner.bank record
+        """
+        return bank_type_obj.format_layout % bank_obj._data[bank_obj.id]
+
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
@@ -183,9 +195,12 @@ class res_partner_bank(osv.osv):
                 if type_ids:
                     t = bank_type_obj.browse(cr, uid, type_ids[0], context=context)
                     try:
-                        result = t.format_layout % val._data[val.id]
+                        # avoid the default format_layout to result in "False: ..."
+                        if not val._data[val.id]['bank_name']:
+                            val._data[val.id]['bank_name'] = _('BANK')
+                        result = self._prepare_name_get(cr, uid, t, val, context=context)
                     except:
-                        result += ' [Formating Error]'
+                        result += ' [Formatting Error]'
                         raise
             res.append((val.id, result))
         return res
@@ -215,11 +230,11 @@ class res_partner_bank(osv.osv):
         if partner_id:
             part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             result['owner_name'] = part.name
-            result['street'] = part.address and part.address[0].street or False
-            result['city'] = part.address and part.address[0].city or False
-            result['zip'] =  part.address and part.address[0].zip or False
-            result['country_id'] =  part.address and part.address[0].country_id and part.address[0].country_id.id or False
-            result['state_id'] = part.address and part.address[0].state_id and part.address[0].state_id.id or False
+            result['street'] = part.street or False
+            result['city'] = part.city or False
+            result['zip'] =  part.zip or False
+            result['country_id'] =  part.country_id.id
+            result['state_id'] = part.state_id.id
         return {'value': result}
 
 res_partner_bank()

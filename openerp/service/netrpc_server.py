@@ -36,6 +36,8 @@ import openerp.netsvc as netsvc
 import openerp.tiny_socket as tiny_socket
 import openerp.tools as tools
 
+_logger = logging.getLogger(__name__)
+
 class TinySocketClientThread(threading.Thread):
     def __init__(self, sock, threads):
         spn = sock and sock.getpeername()
@@ -69,12 +71,12 @@ class TinySocketClientThread(threading.Thread):
                     valid_exception = Exception(netrpc_handle_exception_legacy(e)) 
                     valid_traceback = getattr(e, 'traceback', sys.exc_info())
                     formatted_traceback = "".join(traceback.format_exception(*valid_traceback))
-                    logging.getLogger('web-services').debug("netrpc: communication-level exception", exc_info=True)
+                    _logger.debug("netrpc: communication-level exception", exc_info=True)
                     ts.mysend(valid_exception, exception=True, traceback=formatted_traceback)
                     break
                 except Exception, ex:
                     #terminate this channel if we can't properly send back the error
-                    logging.getLogger('web-services').exception("netrpc: cannot deliver exception message to client")
+                    _logger.exception("netrpc: cannot deliver exception message to client")
                     break
 
         netsvc.close_socket(self.sock)
@@ -108,8 +110,7 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
         self.socket.bind((self.__interface, self.__port))
         self.socket.listen(5)
         self.threads = []
-        netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
-                         "starting NET-RPC service on %s:%s" % (interface or '0.0.0.0', port,))
+        _logger.info("starting NET-RPC service on %s:%s", interface or '0.0.0.0', port)
 
     def run(self):
         try:
@@ -127,11 +128,10 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
                 if (lt > 10) and (lt % 10 == 0):
                      # Not many threads should be serving at the same time, so log
                      # their abuse.
-                     netsvc.Logger().notifyChannel("web-services", netsvc.LOG_DEBUG,
-                        "Netrpc: %d threads" % len(self.threads))
+                     _logger.debug("Netrpc: %d threads", len(self.threads))
             self.socket.close()
         except Exception, e:
-            logging.getLogger('web-services').warning("Netrpc: closing because of exception %s" % str(e))
+            _logger.warning("Netrpc: closing because of exception %s" % str(e))
             self.socket.close()
             return False
 

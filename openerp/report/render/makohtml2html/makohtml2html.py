@@ -18,12 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import logging
 import mako
 from lxml import etree
 from mako.template import Template
 from mako.lookup import TemplateLookup
 import openerp.netsvc as netsvc
 import traceback, sys, os
+
+_logger = logging.getLogger(__name__)
 
 class makohtml2html(object):
     def __init__(self, html, localcontext):
@@ -125,8 +128,7 @@ class makohtml2html(object):
             return final_html
         except Exception,e:
             tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-            netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,
-                                'report :\n%s\n%s\n' % (tb_s, str(e)))
+            _logger.error('report :\n%s\n%s\n', tb_s, str(e))
 
 def parseNode(html, localcontext = {}):
     r = makohtml2html(html, localcontext)

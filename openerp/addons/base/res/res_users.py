@@ -20,20 +20,23 @@
 #
 ##############################################################################
 
-import logging
+
 from functools import partial
-
-import pytz
-
+import logging
+from lxml import etree
+from lxml.builder import E
 import netsvc
-import pooler
-import tools
-from osv import fields,osv
-from osv.orm import browse_record
-from service import security
-from tools.translate import _
 import openerp
 import openerp.exceptions
+from osv import fields,osv
+from osv.orm import browse_record
+import pooler
+import random
+from service import security
+import tools
+from tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -89,126 +92,24 @@ class groups(osv.osv):
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
-    def create(self, cr, uid, vals, context=None):
-        if 'name' in vals:
-            if vals['name'].startswith('-'):
-                raise osv.except_osv(_('Error'),
-                        _('The name of the group can not start with "-"'))
-        gid = super(groups, self).create(cr, uid, vals, context=context)
-        if context and context.get('noadmin', False):
-            pass
-        else:
-            # assign this new group to user_root
-            user_obj = self.pool.get('res.users')
-            aid = user_obj.browse(cr, 1, user_obj._get_admin_id(cr))
-            if aid:
-                aid.write({'groups_id': [(4, gid)]})
-        return gid
-
-    def unlink(self, cr, uid, ids, context=None):
-        group_users = []
-        for record in self.read(cr, uid, ids, ['users'], context=context):
-            if record['users']:
-                group_users.extend(record['users'])
-        if group_users:
-            user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
-            user_names = list(set(user_names))
-            if len(user_names) >= 5:
-                user_names = user_names[:5] + ['...']
-            raise osv.except_osv(_('Warning !'),
-                        _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
-                            ', '.join(user_names))
-        return super(groups, self).unlink(cr, uid, ids, context=context)
-
-    def get_extended_interface_group(self, cr, uid, context=None):
-        data_obj = self.pool.get('ir.model.data')
-        extended_group_data_id = data_obj._get_id(cr, uid, 'base', 'group_extended')
-        return data_obj.browse(cr, uid, extended_group_data_id, context=context).res_id
-
 groups()
 
-def _lang_get(self, cr, uid, context=None):
-    obj = self.pool.get('res.lang')
-    ids = obj.search(cr, uid, [('translatable','=',True)])
-    res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
-    res = [(r['code'], r['name']) for r in res]
-    return res
+class res_users(osv.osv):
+    """ User class. A res.users record models an OpenERP user and is different
+        from an employee.
 
-def _tz_get(self,cr,uid, context=None):
-    return [(x, x) for x in pytz.all_timezones]
-
-class users(osv.osv):
+        res.users class now inherits from res.partner. The partner model is
+        used to store the data related to the partner: lang, name, address,
+        avatar, ... The user model is now dedicated to technical data.
+    """
     __admin_ids = {}
     _uid_cache = {}
+    _inherits = {
+        'res.partner': 'partner_id',
+    }
     _name = "res.users"
-    _order = 'name'
-
-    WELCOME_MAIL_SUBJECT = u"Welcome to OpenERP"
-    WELCOME_MAIL_BODY = u"An OpenERP account has been created for you, "\
-        "\"%(name)s\".\n\nYour login is %(login)s, "\
-        "you should ask your supervisor or system administrator if you "\
-        "haven't been given your password yet.\n\n"\
-        "If you aren't %(name)s, this email reached you errorneously, "\
-        "please delete it."
-
-    def get_welcome_mail_subject(self, cr, uid, context=None):
-        """ Returns the subject of the mail new users receive (when
-        created via the res.config.users wizard), default implementation
-        is to return config_users.WELCOME_MAIL_SUBJECT
-        """
-        return self.WELCOME_MAIL_SUBJECT
-    def get_welcome_mail_body(self, cr, uid, context=None):
-        """ Returns the subject of the mail new users receive (when
-        created via the res.config.users wizard), default implementation
-        is to return config_users.WELCOME_MAIL_BODY
-        """
-        return self.WELCOME_MAIL_BODY
-
-    def get_current_company(self, cr, uid):
-        cr.execute('select company_id, res_company.name from res_users left join res_company on res_company.id = company_id where res_users.id=%s' %uid)
-        return cr.fetchall()
-
-    def send_welcome_email(self, cr, uid, id, context=None):
-        if isinstance(id,list): id = id[0]
-        user = self.read(cr, uid, id, ['email','login','name', 'user_email'], context=context)
-        email = user['email'] or user['user_email']
-
-        ir_mail_server = self.pool.get('ir.mail_server')
-        msg = ir_mail_server.build_email(email_from=None, # take config default
-                                         email_to=[email],
-                                         subject=self.get_welcome_mail_subject(cr, uid, context=context),
-                                         body=(self.get_welcome_mail_body(cr, uid, context=context) % user))
-        return ir_mail_server.send_email(cr, uid, msg, context=context)
-
-    def _set_interface_type(self, cr, uid, ids, name, value, arg, context=None):
-        """Implementation of 'view' function field setter, sets the type of interface of the users.
-        @param name: Name of the field
-        @param arg: User defined argument
-        @param value: new value returned
-        @return:  True/False
-        """
-        if not value or value not in ['simple','extended']:
-            return False
-        group_obj = self.pool.get('res.groups')
-        extended_group_id = group_obj.get_extended_interface_group(cr, uid, context=context)
-        # First always remove the users from the group (avoids duplication if called twice)
-        self.write(cr, uid, ids, {'groups_id': [(3, extended_group_id)]}, context=context)
-        # Then add them back if requested
-        if value == 'extended':
-            self.write(cr, uid, ids, {'groups_id': [(4, extended_group_id)]}, context=context)
-        return True
-
-
-    def _get_interface_type(self, cr, uid, ids, name, args, context=None):
-        """Implementation of 'view' function field getter, returns the type of interface of the users.
-        @param field_name: Name of the field
-        @param arg: User defined argument
-        @return:  Dictionary of values
-        """
-        group_obj = self.pool.get('res.groups')
-        extended_group_id = group_obj.get_extended_interface_group(cr, uid, context=context)
-        extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
-        return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
+    _description = 'Users'
+    _order = 'login'
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
@@ -224,59 +125,67 @@ class users(osv.osv):
 
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
         return dict.fromkeys(ids, '')
-
+    
     _columns = {
         'id': fields.integer('ID'),
-        'name': fields.char('User Name', size=64, required=True, select=True,
-                            help="The new user's real name, used for searching"
-                                 " and most listings"),
+        'login_date': fields.date('Latest connection', select=1),
+        'partner_id': fields.many2one('res.partner', required=True,
+            string='Related Partner', ondelete='cascade',
+            help='Partner-related data of the user'),
         'login': fields.char('Login', size=64, required=True,
-                             help="Used to log into the system"),
-        'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
-        'new_password': fields.function(_get_password, method=True, type='char', size=64,
-                                fnct_inv=_set_new_password,
-                                string='Set password', help="Specify a value only when creating a user or if you're changing the user's password, "
-                                                            "otherwise leave empty. After a change of password, the user has to login again."),
-        'user_email': fields.char('Email', size=64),
+            help="Used to log into the system"),
+        'password': fields.char('Password', size=64, invisible=True,
+            help="Keep empty if you don't want the user to be able to connect on the system."),
+        'new_password': fields.function(_get_password, type='char', size=64,
+            fnct_inv=_set_new_password, string='Set Password',
+            help="Specify a value only when creating a user or if you're "\
+                 "changing the user's password, otherwise leave empty. After "\
+                 "a change of password, the user has to login again."),
         'signature': fields.text('Signature', size=64),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
-
         # Special behavior for this field: res.company.search() will only return the companies
         # available to the current user (should be the user's companies?), when the user_preference
         # context is set.
         'company_id': fields.many2one('res.company', 'Company', required=True,
-            help="The company this user is currently working for.", context={'user_preference': True}),
-
+            help='The company this user is currently working for.', context={'user_preference': True}),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
-        'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="The default language used in the graphical user interface, when translations are available. To add a new language, you can use the 'Load an Official Translation' wizard available from the 'Administration' menu."),
-        'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
-            help="The user's timezone, used to perform timezone conversions "
-                 "between the server and the client."),
-        'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
-                                selection=[('simple','Simplified'),('extended','Extended')],
-                                string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
-        'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
-        'date': fields.datetime('Latest Connection', readonly=True),
+        # backward compatibility fields
+        'user_email': fields.related('email', type='char',
+            deprecated='Use the email field instead of user_email. This field will be removed with OpenERP 7.1.'),
     }
 
     def on_change_company_id(self, cr, uid, ids, company_id):
-        return {
-                'warning' : {
+        return {'warning' : {
                     'title': _("Company Switch Warning"),
                     'message': _("Please keep in mind that documents currently displayed may not be relevant after switching to another company. If you have unsaved changes, please make sure to save and close all forms before switching to a different company. (You can click on Cancel in the User Preferences now)"),
                 }
         }
+
+    def onchange_type(self, cr, uid, ids, is_company, context=None):
+        """ Wrapper on the user.partner onchange_type, because some calls to the
+            partner form view applied to the user may trigger the
+            partner.onchange_type method, but applied to the user object.
+        """
+        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
+        return self.pool.get('res.partner').onchange_type(cr, uid, partner_ids, is_company, context=context)
+
+    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+        """ Wrapper on the user.partner onchange_address, because some calls to the
+            partner form view applied to the user may trigger the
+            partner.onchange_type method, but applied to the user object.
+        """
+        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
+        return self.pool.get('res.partner').onchange_address(cr, uid, partner_ids, use_parent_address, parent_id, context=context)
 
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
             if 'password' in o and ( 'id' not in o or o['id'] != uid ):
                 o['password'] = '********'
             return o
-        result = super(users, self).read(cr, uid, ids, fields, context, load)
+        result = super(res_users, self).read(cr, uid, ids, fields, context, load)
         canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
         if not canwrite:
             if isinstance(ids, (int, float)):
@@ -297,21 +206,10 @@ class users(osv.osv):
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
 
-    def _get_email_from(self, cr, uid, ids, context=None):
-        if not isinstance(ids, list):
-            ids = [ids]
-        res = dict.fromkeys(ids, False)
-        for user in self.browse(cr, uid, ids, context=context):
-            if user.user_email:
-                res[user.id] = "%s <%s>" % (user.name, user.user_email)
-        return res
-
-    def _get_admin_id(self, cr):
-        if self.__admin_ids.get(cr.dbname) is None:
-            ir_model_data_obj = self.pool.get('ir.model.data')
-            mdid = ir_model_data_obj._get_id(cr, 1, 'base', 'user_root')
-            self.__admin_ids[cr.dbname] = ir_model_data_obj.read(cr, 1, [mdid], ['res_id'])[0]['res_id']
-        return self.__admin_ids[cr.dbname]
+    def _get_default_image(self, cr, uid, context=None):
+        """ Override of res.partner: multicolor avatars ! """
+        image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
@@ -351,17 +249,27 @@ class users(osv.osv):
 
     _defaults = {
         'password' : '',
-        'context_lang': 'en_US',
         'active' : True,
+        'customer': False,
         'menu_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'menu_tips': False
+        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, context),
     }
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        """ Override of res.users fields_view_get.
+            - if the view is specified: resume with normal behavior
+            - else: the default view is overrided and redirected to the partner
+              view
+        """
+        if not view_id and view_type == 'form':
+            return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        return super(res_users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email', 'name']
+    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
@@ -376,7 +284,7 @@ class users(osv.osv):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
-        res = super(users, self).write(cr, uid, ids, values, context=context)
+        res = super(res_users, self).write(cr, uid, ids, values, context=context)
 
         # clear caches linked to the users
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
@@ -398,7 +306,7 @@ class users(osv.osv):
             for id in ids:
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
-        return super(users, self).unlink(cr, uid, ids, context=context)
+        return super(res_users, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -421,23 +329,80 @@ class users(osv.osv):
                        name=(copy_pattern % user2copy['name']),
                        )
         copydef.update(default)
-        return super(users, self).copy(cr, uid, id, copydef, context)
+        return super(res_users, self).copy(cr, uid, id, copydef, context)
 
     def context_get(self, cr, uid, context=None):
         user = self.browse(cr, uid, uid, context)
         result = {}
-        for k in self._columns.keys():
+        for k in self._all_columns.keys():
             if k.startswith('context_'):
+                context_key = k[8:]
+            elif k in ['lang', 'tz']:
+                context_key = k
+            else:
+                context_key = False
+            if context_key:
                 res = getattr(user,k) or False
                 if isinstance(res, browse_record):
                     res = res.id
-                result[k[8:]] = res or False
+                result[context_key] = res or False
         return result
 
     def action_get(self, cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
         return dataobj.browse(cr, uid, data_id, context=context).res_id
+
+    def check_super(self, passwd):
+        if passwd == tools.config['admin_passwd']:
+            return True
+        else:
+            raise openerp.exceptions.AccessDenied()
+
+    def check_credentials(self, cr, uid, password):
+        """ Override this method to plug additional authentication methods"""
+        res = self.search(cr, 1, [('id','=',uid),('password','=',password)])
+        if not res:
+            raise openerp.exceptions.AccessDenied()
+
+    def login(self, db, login, password):
+        if not password:
+            return False
+        user_id = False
+        cr = pooler.get_db(db).cursor()
+        try:
+            # autocommit: our single update request will be performed atomically.
+            # (In this way, there is no opportunity to have two transactions
+            # interleaving their cr.execute()..cr.commit() calls and have one
+            # of them rolled back due to a concurrent access.)
+            cr.autocommit(True)
+            # check if user exists
+            res = self.search(cr, 1, [('login','=',login)])
+            if res:
+                user_id = res[0]
+                # check credentials
+                self.check_credentials(cr, user_id, password)
+                # We effectively unconditionally write the res_users line.
+                # Even w/ autocommit there's a chance the user row will be locked,
+                # in which case we can't delay the login just for the purpose of
+                # update the last login date - hence we use FOR UPDATE NOWAIT to
+                # try to get the lock - fail-fast
+                # Failing to acquire the lock on the res_users row probably means
+                # another request is holding it. No big deal, we don't want to
+                # prevent/delay login in that case. It will also have been logged
+                # as a SQL error, if anyone cares.
+                try:
+                    cr.execute("SELECT id FROM res_users WHERE id=%s FOR UPDATE NOWAIT", str(user_id))
+                    cr.execute("UPDATE res_users SET login_date = now() AT TIME ZONE 'UTC' WHERE id=%s", str(user_id))
+                except Exception, e:
+                    _logger.exception("Failed to update last_login for db:%s login:%s", db, login)
+        except openerp.exceptions.AccessDenied:
+            _logger.info("Login failed for db:%s login:%s", db, login)
+            user_id = False
+        finally:
+            cr.close()
+
+        return user_id
 
     def authenticate(self, db, login, password, user_agent_env):
         """Verifies and returns the user ID corresponding to the given
@@ -457,41 +422,17 @@ class users(osv.osv):
             if user_agent_env and user_agent_env.get('base_location'):
                 cr = pooler.get_db(db).cursor()
                 try:
-                    self.pool.get('ir.config_parameter').set_param(cr, uid, 'web.base.url',
-                                                                   user_agent_env['base_location'])
+                    base = user_agent_env['base_location']
+                    self.pool.get('ir.config_parameter').set_param(cr, uid, 'web.base.url', base)
                     cr.commit()
                 except Exception:
-                    logging.getLogger('res.users').exception("Failed to update web.base.url configuration parameter")
+                    _logger.exception("Failed to update web.base.url configuration parameter")
                 finally:
                     cr.close()
         return uid
 
-    def login(self, db, login, password):
-        if not password:
-            return False
-        cr = pooler.get_db(db).cursor()
-        try:
-            cr.execute("""UPDATE res_users
-                            SET date = now() AT TIME ZONE 'UTC'
-                            WHERE login=%s AND password=%s AND active RETURNING id""",
-                       (tools.ustr(login), tools.ustr(password)))
-            res = cr.fetchone()
-            cr.commit()
-            if res:
-                return res[0]
-            else:
-                return False
-        finally:
-            cr.close()
-
-    def check_super(self, passwd):
-        if passwd == tools.config['admin_passwd']:
-            return True
-        else:
-            raise openerp.exceptions.AccessDenied()
-
     def check(self, db, uid, passwd):
-        """Verifies that the given (uid, password) pair is authorized for the database ``db`` and
+        """Verifies that the given (uid, password) is authorized for the database ``db`` and
            raise an exception if it is not."""
         if not passwd:
             # empty passwords disallowed for obvious security reasons
@@ -500,29 +441,11 @@ class users(osv.osv):
             return
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s',
-                        (int(uid), passwd, True))
-            res = cr.fetchone()[0]
-            if not res:
-                raise openerp.exceptions.AccessDenied()
+            self.check_credentials(cr, uid, passwd)
             if self._uid_cache.has_key(db):
-                ulist = self._uid_cache[db]
-                ulist[uid] = passwd
+                self._uid_cache[db][uid] = passwd
             else:
                 self._uid_cache[db] = {uid:passwd}
-        finally:
-            cr.close()
-
-    def access(self, db, uid, passwd, sec_level, ids):
-        if not passwd:
-            return False
-        cr = pooler.get_db(db).cursor()
-        try:
-            cr.execute('SELECT id FROM res_users WHERE id=%s AND password=%s', (uid, passwd))
-            res = cr.fetchone()
-            if not res:
-                raise openerp.exceptions.AccessDenied()
-            return res[0]
         finally:
             cr.close()
 
@@ -540,8 +463,34 @@ class users(osv.osv):
             return self.write(cr, uid, uid, {'password': new_passwd})
         raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
 
-users()
+    def preference_save(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
+    def preference_change_password(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'change_password',
+            'target': 'new',
+        }
+
+    def has_group(self, cr, uid, group_ext_id):
+        """Checks whether user belongs to given group.
+
+        :param str group_ext_id: external ID (XML ID) of the group.
+           Must be provided in fully-qualified form (``module.ext_id``), as there
+           is no implicit module to use..
+        :return: True if the current user is a member of the group with the
+           given external ID (XML ID), else False.
+        """
+        assert group_ext_id and '.' in group_ext_id, "External ID must be fully qualified"
+        module, ext_id = group_ext_id.split('.')
+        cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN 
+                        (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
+                   (uid, module, ext_id))
+        return bool(cr.fetchone())
 
 
 #
@@ -622,8 +571,6 @@ class groups_implied(osv.osv):
                 super(groups_implied, self).write(cr, uid, gids, vals, context)
         return res
 
-groups_implied()
-
 class users_implied(osv.osv):
     _inherit = 'res.users'
 
@@ -646,10 +593,6 @@ class users_implied(osv.osv):
                 vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(users_implied, self).write(cr, uid, [user.id], vals, context)
         return res
-
-users_implied()
-
-
 
 #
 # Extension of res.groups and res.users for the special groups view in the users
@@ -718,29 +661,28 @@ class groups_view(osv.osv):
         # and introduces the reified group fields
         view = self.get_user_groups_view(cr, uid, context)
         if view:
-            xml = u"""<?xml version="1.0" encoding="utf-8"?>
-<!-- GENERATED AUTOMATICALLY BY GROUPS -->
-<field name="groups_id" position="replace">
-%s
-%s
-</field>
-"""
             xml1, xml2 = [], []
-            xml1.append('<separator string="%s" colspan="4"/>' % _('Applications'))
+            xml1.append(E.separator(string=_('Application'), colspan="4"))
             for app, kind, gs in self.get_groups_by_application(cr, uid, context):
+                # hide groups in category 'Hidden' (except to group_no_one)
+                attrs = {'groups': 'base.group_no_one'} if app and app.xml_id == 'base.module_category_hidden' else {}
                 if kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(map(int, gs))
-                    xml1.append('<field name="%s"/>' % field_name)
-                    xml1.append('<newline/>')
+                    xml1.append(E.field(name=field_name, **attrs))
+                    xml1.append(E.newline())
                 else:
                     # application separator with boolean fields
                     app_name = app and app.name or _('Other')
-                    xml2.append('<separator string="%s" colspan="4"/>' % app_name)
+                    xml2.append(E.separator(string=app_name, colspan="4", **attrs))
                     for g in gs:
                         field_name = name_boolean_group(g.id)
-                        xml2.append('<field name="%s"/>' % field_name)
-            view.write({'arch': xml % ('\n'.join(xml1), '\n'.join(xml2))})
+                        xml2.append(E.field(name=field_name, **attrs))
+
+            xml = E.field(*(xml1 + xml2), name="groups_id", position="replace")
+            xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
+            xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
+            view.write({'arch': xml_content})
         return True
 
     def get_user_groups_view(self, cr, uid, context=None):
@@ -794,8 +736,6 @@ class groups_view(osv.osv):
             res.append((False, 'boolean', others))
         return res
 
-groups_view()
-
 class users_view(osv.osv):
     _inherit = 'res.users'
 
@@ -845,7 +785,8 @@ class users_view(osv.osv):
         if not fields:
             fields = self.fields_get(cr, uid, context=context).keys()
         group_fields, fields = partition(is_reified_group, fields)
-        fields.append('groups_id')
+        if not 'groups_id' in fields:
+            fields.append('groups_id')
         res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
         for values in (res if isinstance(res, list) else [res]):
             self._get_reified_groups(group_fields, values)
@@ -885,7 +826,5 @@ class users_view(osv.osv):
                         'help': g.comment,
                     }
         return res
-
-users_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

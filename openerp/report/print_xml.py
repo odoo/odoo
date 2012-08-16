@@ -19,13 +19,10 @@
 #
 ##############################################################################
 
-import os,types
 from lxml import etree
-import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.safe_eval import safe_eval
 import print_fnc
-import copy
 from openerp.osv.orm import browse_null, browse_record
 import openerp.pooler as pooler
 

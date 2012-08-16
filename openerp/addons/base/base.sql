@@ -59,7 +59,7 @@ ALTER TABLE ir_model_fields ADD column serialization_field_id int references ir_
 CREATE TABLE ir_actions (
     id serial NOT NULL,
     name varchar(64) DEFAULT ''::varchar NOT NULL,
-    "type" varchar(32) DEFAULT 'window'::varchar NOT NULL,
+    "type" varchar(32) NOT NULL,
     usage varchar(32) DEFAULT null,
     primary key(id)
 );
@@ -146,17 +146,15 @@ select setval('ir_ui_menu_id_seq', 2);
 
 CREATE TABLE res_users (
     id serial NOT NULL,
-    name varchar(64) not null,
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
     password varchar(64) default null,
-    email varchar(64) default null,
-    context_tz varchar(64) default null,
-    signature text,
-    context_lang varchar(64) default '',
+    tz varchar(64) default null,
+    lang varchar(64) default '',
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
     company_id int,
+    partner_id int,
     primary key(id)
 );
 alter table res_users add constraint res_users_login_uniq unique (login);
@@ -286,6 +284,7 @@ CREATE TABLE ir_module_module (
     write_date timestamp without time zone,
     write_uid integer references res_users on delete set null,
     website character varying(256),
+    summary character varying(256),
     name character varying(128) NOT NULL,
     author character varying(128),
     url character varying(128),
@@ -301,6 +300,8 @@ CREATE TABLE ir_module_module (
     demo boolean default False,
     web boolean DEFAULT FALSE,
     license character varying(32),
+    sequence integer DEFAULT 100,
+    auto_install boolean default False,
     primary key(id)
 );
 ALTER TABLE ir_module_module add constraint name_uniq unique (name);
@@ -345,11 +346,44 @@ CREATE TABLE ir_model_data (
     res_id integer, primary key(id)
 );
 
+-- Records foreign keys and constraints installed by a module (so they can be
+-- removed when the module is uninstalled):
+--   - for a foreign key: type is 'f',
+--   - for a constraint: type is 'u' (this is the convention PostgreSQL uses).
+CREATE TABLE ir_model_constraint (
+    id serial NOT NULL,
+    create_uid integer,
+    create_date timestamp without time zone,
+    write_date timestamp without time zone,
+    write_uid integer,
+    date_init timestamp without time zone,
+    date_update timestamp without time zone,
+    module integer NOT NULL references ir_module_module on delete restrict,
+    model integer NOT NULL references ir_model on delete restrict,
+    type character varying(1) NOT NULL,
+    name character varying(128) NOT NULL
+);
+
+-- Records relation tables (i.e. implementing many2many) installed by a module
+-- (so they can be removed when the module is uninstalled).
+CREATE TABLE ir_model_relation (
+    id serial NOT NULL,
+    create_uid integer,
+    create_date timestamp without time zone,
+    write_date timestamp without time zone,
+    write_uid integer,
+    date_init timestamp without time zone,
+    date_update timestamp without time zone,
+    module integer NOT NULL references ir_module_module on delete restrict,
+    model integer NOT NULL references ir_model on delete restrict,
+    name character varying(128) NOT NULL
+);
+
 ---------------------------------
 -- Users
 ---------------------------------
 
-insert into res_users (id,login,password,name,active,company_id,context_lang) values (1,'admin','admin','Administrator',True,1,'en_US');
+insert into res_users (id,login,password,active,company_id,partner_id,lang) values (1,'admin','admin',True,1,1,'en_US');
 insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_root','base','res.users',True,1);
 
 -- Compatibility purpose, to remove V6.0

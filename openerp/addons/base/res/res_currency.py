@@ -57,7 +57,7 @@ class res_currency(osv.osv):
         # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
         'name': fields.char('Currency', size=32, required=True, help="Currency Code (ISO 4217)"),
         'symbol': fields.char('Symbol', size=3, help="Currency sign, to be used when printing amounts."),
-        'rate': fields.function(_current_rate, method=True, string='Current Rate', digits=(12,6),
+        'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1.'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
         'accuracy': fields.integer('Computational Accuracy'),
@@ -66,7 +66,7 @@ class res_currency(osv.osv):
         'company_id':fields.many2one('res.company', 'Company'),
         'date': fields.date('Date'),
         'base': fields.boolean('Base'),
-        'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol position', help="Determines where the currency symbol should be placed after or before the amount.")
+        'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -233,8 +233,7 @@ class res_currency_rate(osv.osv):
 
     _columns = {
         'name': fields.date('Date', required=True, select=True),
-        'rate': fields.float('Rate', digits=(12,6), required=True,
-            help='The rate of the currency to the currency of rate 1'),
+        'rate': fields.float('Rate', digits=(12,6), help='The rate of the currency to the currency of rate 1'),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'currency_rate_type_id': fields.many2one('res.currency.rate.type', 'Currency Rate Type', help="Allow you to define your own currency rate types, like 'Average' or 'Year to Date'. Leave empty if you simply want to use the normal 'spot' rate type"),
     }

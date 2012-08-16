@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    Copyright (C) 2004-2010 OpenERP s.a. (<http://www.openerp.com>).
+#    Copyright (C) 2004-2012 OpenERP s.a. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -30,14 +30,13 @@ condition/math builtins.
 #  - http://code.activestate.com/recipes/286134/
 #  - safe_eval in lp:~xrg/openobject-server/optimize-5.0
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
-#  - python 2.6's ast.literal_eval
 
 from opcode import HAVE_ARGUMENT, opmap, opname
 from types import CodeType
 import logging
 import os
 
-__all__ = ['test_expr', 'literal_eval', 'safe_eval', 'const_eval', 'ext_eval' ]
+__all__ = ['test_expr', 'safe_eval', 'const_eval']
 
 # The time module is usually already provided in the safe_eval environment
 # but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug
@@ -71,7 +70,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY'
     ] if x in opmap))
 
-_logger = logging.getLogger('safe_eval')
+_logger = logging.getLogger(__name__)
 
 def _get_opcodes(codeobj):
     """_get_opcodes(codeobj) -> [opcodes]
@@ -161,61 +160,6 @@ def expr_eval(expr):
     c = test_expr(expr, _EXPR_OPCODES)
     return eval(c)
 
-
-# Port of Python 2.6's ast.literal_eval for use under Python 2.5
-SAFE_CONSTANTS = {'None': None, 'True': True, 'False': False}
-
-try:
-    # first, try importing directly
-    from ast import literal_eval
-except ImportError:
-    import _ast as ast
-
-    def _convert(node):
-        if isinstance(node, ast.Str):
-            return node.s
-        elif isinstance(node, ast.Num):
-            return node.n
-        elif isinstance(node, ast.Tuple):
-            return tuple(map(_convert, node.elts))
-        elif isinstance(node, ast.List):
-            return list(map(_convert, node.elts))
-        elif isinstance(node, ast.Dict):
-            return dict((_convert(k), _convert(v)) for k, v
-                        in zip(node.keys, node.values))
-        elif isinstance(node, ast.Name):
-            if node.id in SAFE_CONSTANTS:
-                return SAFE_CONSTANTS[node.id]
-        raise ValueError('malformed or disallowed expression')
-
-    def parse(expr, filename='<unknown>', mode='eval'):
-        """parse(source[, filename], mode]] -> code object
-        Parse an expression into an AST node.
-        Equivalent to compile(expr, filename, mode, PyCF_ONLY_AST).
-        """
-        return compile(expr, filename, mode, ast.PyCF_ONLY_AST)
-
-    def literal_eval(node_or_string):
-        """literal_eval(expression) -> value
-        Safely evaluate an expression node or a string containing a Python
-        expression.  The string or node provided may only consist of the
-        following Python literal structures: strings, numbers, tuples,
-        lists, dicts, booleans, and None.
-
-        >>> literal_eval('[1,True,"spam"]')
-        [1, True, 'spam']
-
-        >>> literal_eval('1+3')
-        Traceback (most recent call last):
-        ...
-        ValueError: malformed or disallowed expression
-        """
-        if isinstance(node_or_string, basestring):
-            node_or_string = parse(node_or_string)
-        if isinstance(node_or_string, ast.Expression):
-            node_or_string = node_or_string.body
-        return _convert(node_or_string)
-
 def _import(name, globals=None, locals=None, fromlist=None, level=-1):
     if globals is None:
         globals = {}
@@ -262,8 +206,9 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         # isinstance() does not work below, we want *exactly* the dict class
         if (globals_dict is not None and type(globals_dict) is not dict) \
             or (locals_dict is not None and type(locals_dict) is not dict):
-            logging.getLogger('safe_eval').warning('Looks like you are trying to pass a dynamic environment,"\
-                              "you should probably pass nocopy=True to safe_eval()')
+            _logger.warning(
+                "Looks like you are trying to pass a dynamic environment, "
+                "you should probably pass nocopy=True to safe_eval().")
 
         globals_dict = dict(globals_dict)
         if locals_dict is not None:
@@ -293,6 +238,10 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'set' : set
             }
     )
-    return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
+    try:
+        return eval(test_expr(expr, _SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
+    except Exception:
+        _logger.exception('Cannot eval %r', expr)
+        raise
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

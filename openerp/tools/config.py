@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -82,8 +83,7 @@ class configmanager(object):
         self.config_file = fname
         self.has_ssl = check_ssl()
 
-        self._LOGLEVELS = dict([(getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
-                          for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'DEBUG_RPC', 'DEBUG_SQL', 'DEBUG_RPC_ANSWER','NOTSET')])
+        self._LOGLEVELS = dict([(getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'NOTSET')])
 
         version = "%s %s" % (release.description, release.version)
         self.parser = parser = optparse.OptionParser(version=version, option_class=MyOption)
@@ -116,6 +116,8 @@ class configmanager(object):
                          help="specify the TCP port for the XML-RPC protocol", type="int")
         group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", my_default=True,
                          help="disable the XML-RPC protocol")
+        group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
+                         help="Enable correct behavior when behind a reverse proxy")
         parser.add_option_group(group)
 
         # XML-RPC / HTTPS
@@ -166,25 +168,29 @@ class configmanager(object):
                          help="Launch a YML test file.")
         group.add_option("--test-report-directory", dest="test_report_directory", my_default=False,
                          help="If set, will save sample of all reports in this directory.")
-        group.add_option("--test-disable", action="store_true", dest="test_disable",
-                         my_default=False, help="Disable loading test files.")
+        group.add_option("--test-enable", action="store_true", dest="test_enable",
+                         my_default=False, help="Enable YAML and unit tests.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
-                         my_default=False, help="Commit database changes performed by tests.")
-        group.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
-                         my_default='error',
-                         help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
+                         my_default=False, help="Commit database changes performed by YAML or XML tests.")
         parser.add_option_group(group)
 
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
-        group.add_option("--no-logrotate", dest="logrotate", action="store_false", my_default=True,
-                         help="do not rotate the logfile")
-        group.add_option("--syslog", action="store_true", dest="syslog",
-                         my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-level', dest='log_level', type='choice', choices=self._LOGLEVELS.keys(),
-                         my_default='info',
-                         help='specify the level of the logging. Accepted values: ' + str(self._LOGLEVELS.keys()))
+        group.add_option("--no-logrotate", dest="logrotate", action="store_false", my_default=True, help="do not rotate the logfile")
+        group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
+        group.add_option('--log-handler', action="append", default=[':INFO'], my_default=[':INFO'], metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+        group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.request:DEBUG')
+        group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.response:DEBUG')
+        group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.addons.web.common.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.common.http:DEBUG')
+        group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
+        # For backward-compatibility, map the old log levels to something
+        # quite close.
+        levels = ['info', 'debug_rpc', 'warn', 'test', 'critical',
+            'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset']
+        group.add_option('--log-level', dest='log_level', type='choice', choices=levels,
+            my_default='info', help='specify the level of the logging. Accepted values: ' + str(levels) + ' (deprecated option).')
+
         parser.add_option_group(group)
 
         # SMTP Group
@@ -217,6 +223,8 @@ class configmanager(object):
                          help="specify the database port", type="int")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
                          help="specify the the maximum number of physical connections to posgresql")
+        group.add_option("--db-template", dest="db_template", my_default="template0",
+                         help="specify a custom database template to create a new database")
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
@@ -263,6 +271,20 @@ class configmanager(object):
                          type="float")
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=4,
                          help="Maximum number of threads processing concurrently cron jobs.",
+                         type="int")
+        # TODO sensible default for the three following limits.
+        group.add_option("--virtual-memory-limit", dest="virtual_memory_limit", my_default=768 * 1024 * 1024,
+                         help="Maximum allowed virtual memory per Gunicorn process. "
+                         "When the limit is reached, any memory allocation will fail.",
+                         type="int")
+        group.add_option("--virtual-memory-reset", dest="virtual_memory_reset", my_default=640 * 1024 * 1024,
+                         help="Maximum allowed virtual memory per Gunicorn process. "
+                         "When the limit is reached, the worker will be reset after "
+                         "the current request.",
+                         type="int")
+        group.add_option("--cpu-time-limit", dest="cpu_time_limit", my_default=60,
+                         help="Maximum allowed CPU time per Gunicorn process. "
+                         "When the limit is reached, an exception is raised.",
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
@@ -345,14 +367,15 @@ class configmanager(object):
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
 
+        # if defined dont take the configfile value even if the defined value is None
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
+                'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
                 'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter'
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level'
                 ]
 
         for arg in keys:
@@ -363,13 +386,15 @@ class configmanager(object):
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
+        # if defined but None take the configfile value
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'debug_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
-            'list_db', 'xmlrpcs',
-            'test_file', 'test_disable', 'test_commit', 'test_report_directory',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
+            'list_db', 'xmlrpcs', 'proxy_mode',
+            'test_file', 'test_enable', 'test_commit', 'test_report_directory',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads',
+            'virtual_memory_limit', 'virtual_memory_reset', 'cpu_time_limit', 'unaccent',
         ]
 
         for arg in keys:
@@ -379,16 +404,6 @@ class configmanager(object):
             # ... or keep, but cast, the config file value.
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
-
-        if opt.assert_exit_level:
-            self.options['assert_exit_level'] = self._LOGLEVELS[opt.assert_exit_level]
-        else:
-            self.options['assert_exit_level'] = self._LOGLEVELS.get(self.options['assert_exit_level']) or int(self.options['assert_exit_level'])
-
-        if opt.log_level:
-            self.options['log_level'] = self._LOGLEVELS[opt.log_level]
-        else:
-            self.options['log_level'] = self._LOGLEVELS.get(self.options['log_level']) or int(self.options['log_level'])
 
         self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.dirname(openerp.__file__))))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
@@ -461,9 +476,6 @@ class configmanager(object):
         if complete:
             openerp.modules.module.initialize_sys_path()
             openerp.modules.loading.open_openerp_namespace()
-            # openerp.addons.__path__.extend(openerp.conf.addons_paths) # This
-            # is not compatible with initialize_sys_path(): import crm and
-            # import openerp.addons.crm load twice the module.
 
     def _generate_pgpassfile(self):
         """
@@ -562,7 +574,7 @@ class configmanager(object):
                 continue
             if opt in self.blacklist_for_save:
                 continue
-            if opt in ('log_level', 'assert_exit_level'):
+            if opt in ('log_level',):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
             else:
                 p.set('options', opt, self.options[opt])

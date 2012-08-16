@@ -44,6 +44,8 @@ from misc import UpdateableStr
 from misc import SKIPPED_ELEMENT_TYPES
 import osutil
 
+_logger = logging.getLogger(__name__)
+
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
     'sq_AL': 'Albanian_Albania',
@@ -153,8 +155,6 @@ def translate(cr, name, source_type, lang, source=None):
     res = res_trans and res_trans[0] or False
     return res
 
-logger = logging.getLogger('translate')
-
 class GettextAlias(object):
 
     def _get_db(self):
@@ -216,11 +216,11 @@ class GettextAlias(object):
                     pool = pooler.get_pool(cr.dbname)
                     res = pool.get('ir.translation')._get_source(cr, 1, None, ('code','sql_constraint'), lang, source)
                 else:
-                    logger.debug('no context cursor detected, skipping translation for "%r"', source)
+                    _logger.debug('no context cursor detected, skipping translation for "%r"', source)
             else:
-                logger.debug('no translation language detected, skipping translation for "%r" ', source)
+                _logger.debug('no translation language detected, skipping translation for "%r" ', source)
         except Exception:
-            logger.debug('translation went wrong for "%r", skipped', source)
+            _logger.debug('translation went wrong for "%r", skipped', source)
                 # if so, double-check the root/base translations filenames
         finally:
             if cr and is_new_cr:
@@ -250,11 +250,10 @@ def unquote(str):
 # class to handle po files
 class TinyPoFile(object):
     def __init__(self, buffer):
-        self.logger = logging.getLogger('i18n')
         self.buffer = buffer
 
     def warn(self, msg, *args):
-        self.logger.warning(msg, *args)
+        _logger.warning(msg, *args)
 
     def __iter__(self):
         self.buffer.seek(0)
@@ -296,11 +295,14 @@ class TinyPoFile(object):
                 if line.startswith('#~ '):
                     break
                 if line.startswith('#:'):
-                    if ' ' in line[2:].strip():
-                        for lpart in line[2:].strip().split(' '):
-                            tmp_tnrs.append(lpart.strip().split(':',2))
-                    else:
-                        tmp_tnrs.append( line[2:].strip().split(':',2) )
+                    for lpart in line[2:].strip().split(' '):
+                        trans_info = lpart.strip().split(':',2)
+                        if trans_info and len(trans_info) == 2:
+                            # looks like the translation type is missing, which is not
+                            # unexpected because it is not a GetText standard. Default: 'code'
+                            trans_info[:0] = ['code']
+                        if trans_info and len(trans_info) == 3:
+                            tmp_tnrs.append(trans_info)
                 elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
                     fuzzy = True
                 line = self.lines.pop(0).strip()
@@ -499,6 +501,10 @@ def trans_parse_rml(de):
 
 def trans_parse_view(de):
     res = []
+    if de.text and de.text.strip():
+        res.append(de.text.strip().encode("utf8"))
+    if de.tail and de.tail.strip():
+        res.append(de.tail.strip().encode("utf8"))
     if de.tag == 'attribute' and de.get("name") == 'string':
         if de.text:
             res.append(de.text.encode("utf8"))
@@ -529,7 +535,6 @@ def in_modules(object_name, modules):
     return module in modules
 
 def trans_generate(lang, modules, cr):
-    logger = logging.getLogger('i18n')
     dbname = cr.dbname
 
     pool = pooler.get_pool(dbname)
@@ -576,12 +581,12 @@ def trans_generate(lang, modules, cr):
         xml_name = "%s.%s" % (module, encode(xml_name))
 
         if not pool.get(model):
-            logger.error("Unable to find object %r", model)
+            _logger.error("Unable to find object %r", model)
             continue
 
         exists = pool.get(model).exists(cr, uid, res_id)
         if not exists:
-            logger.warning("Unable to find object %r with id %d", model, res_id)
+            _logger.warning("Unable to find object %r with id %d", model, res_id)
             continue
         obj = pool.get(model).browse(cr, uid, res_id)
 
@@ -609,7 +614,7 @@ def trans_generate(lang, modules, cr):
 
                         # export fields
                         if not result.has_key('fields'):
-                            logger.warning("res has no fields: %r", result)
+                            _logger.warning("res has no fields: %r", result)
                             continue
                         for field_name, field_def in result['fields'].iteritems():
                             res_name = name + ',' + field_name
@@ -638,7 +643,7 @@ def trans_generate(lang, modules, cr):
             try:
                 field_name = encode(obj.name)
             except AttributeError, exc:
-                logger.error("name error in %s: %s", xml_name, str(exc))
+                _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             objmodel = pool.get(obj.model)
             if not objmodel or not field_name in objmodel._columns:
@@ -690,7 +695,7 @@ def trans_generate(lang, modules, cr):
                     finally:
                         report_file.close()
                 except (IOError, etree.XMLSyntaxError):
-                    logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
+                    _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
         for field_name,field_def in obj._table._columns.items():
             if field_def.translate:
@@ -718,7 +723,7 @@ def trans_generate(lang, modules, cr):
         model_obj = pool.get(model)
 
         if not model_obj:
-            logging.getLogger("i18n").error("Unable to find object %r", model)
+            _logger.error("Unable to find object %r", model)
             continue
 
         for constraint in getattr(model_obj, '_constraints', []):
@@ -762,7 +767,7 @@ def trans_generate(lang, modules, cr):
     for bin_path in ['osv', 'report' ]:
         path_list.append(os.path.join(config.config['root_path'], bin_path))
 
-    logger.debug("Scanning modules at paths: ", path_list)
+    _logger.debug("Scanning modules at paths: ", path_list)
 
     mod_paths = []
     join_dquotes = re.compile(r'([^\\])"[\s\\]*"', re.DOTALL)
@@ -776,7 +781,7 @@ def trans_generate(lang, modules, cr):
         module = get_module_from_path(fabsolutepath, mod_paths=mod_paths)
         is_mod_installed = module in installed_modules
         if (('all' in modules) or (module in modules)) and is_mod_installed:
-            logger.debug("Scanning code of %s at module: %s", frelativepath, module)
+            _logger.debug("Scanning code of %s at module: %s", frelativepath, module)
             src_file = misc.file_open(fabsolutepath, subdir='')
             try:
                 code_string = src_file.read()
@@ -820,7 +825,7 @@ def trans_generate(lang, modules, cr):
                 code_offset = i.end() # we have counted newlines up to the match end
 
     for path in path_list:
-        logger.debug("Scanning files of modules at %s", path)
+        _logger.debug("Scanning files of modules at %s", path)
         for root, dummy, files in osutil.walksymlinks(path):
             for fname in itertools.chain(fnmatch.filter(files, '*.py')):
                 export_code_terms_from_file(fname, path, root, 'code')
@@ -838,26 +843,22 @@ def trans_generate(lang, modules, cr):
     return out
 
 def trans_load(cr, filename, lang, verbose=True, context=None):
-    logger = logging.getLogger('i18n')
     try:
         fileobj = misc.file_open(filename)
-        logger.info("loading %s", filename)
+        _logger.info("loading %s", filename)
         fileformat = os.path.splitext(filename)[-1][1:].lower()
         r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, context=context)
         fileobj.close()
         return r
     except IOError:
         if verbose:
-            logger.error("couldn't read translation file %s", filename)
+            _logger.error("couldn't read translation file %s", filename)
         return None
 
 def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
-    """Populates the ir_translation table. Fixing the res_ids so that they point
-    correctly to ir_model_data is done in a separate step, using the
-    'trans_update_res_ids' function below."""
-    logger = logging.getLogger('i18n')
+    """Populates the ir_translation table."""
     if verbose:
-        logger.info('loading translation file for language %s', lang)
+        _logger.info('loading translation file for language %s', lang)
     if context is None:
         context = {}
     db_name = cr.dbname
@@ -886,7 +887,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             reader = TinyPoFile(fileobj)
             f = ['type', 'name', 'res_id', 'src', 'value']
         else:
-            logger.error('Bad file format: %s', fileformat)
+            _logger.error('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
 
         # read the rest of the file
@@ -931,7 +932,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
                     dic['res_id'] = None
                 except Exception:
-                    logger.warning("Could not decode resource for %s, please fix the po file.",
+                    _logger.warning("Could not decode resource for %s, please fix the po file.",
                                     dic['res_id'], exc_info=True)
                     dic['res_id'] = None
 
@@ -939,10 +940,10 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
         irt_cursor.finish()
         if verbose:
-            logger.info("translation file loaded succesfully")
+            _logger.info("translation file loaded succesfully")
     except IOError:
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
-        logger.exception("couldn't read translation file %s", filename)
+        _logger.exception("couldn't read translation file %s", filename)
 
 def get_locales(lang=None):
     if lang is None:

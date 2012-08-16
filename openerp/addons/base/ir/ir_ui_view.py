@@ -24,8 +24,11 @@ from lxml import etree
 from tools import graph
 from tools.safe_eval import safe_eval as eval
 import tools
+from tools.view_validation import valid_view
 import os
 import logging
+
+_logger = logging.getLogger(__name__)
 
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
@@ -45,11 +48,22 @@ view_custom()
 
 class view(osv.osv):
     _name = 'ir.ui.view'
+
+    def _type_field(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for record in self.browse(cr, uid, ids, context):
+            # Get the type from the inherited view if any.
+            if record.inherit_id:
+                result[record.id] = record.inherit_id.type
+            else:
+                result[record.id] = etree.fromstring(record.arch.encode('utf8')).tag
+        return result
+
     _columns = {
         'name': fields.char('View Name',size=64,  required=True),
         'model': fields.char('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
-        'type': fields.selection((
+        'type': fields.function(_type_field, type='selection', selection=[
             ('tree','Tree'),
             ('form','Form'),
             ('mdx','mdx'),
@@ -58,12 +72,12 @@ class view(osv.osv):
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
             ('kanban', 'Kanban'),
-            ('search','Search')), 'View Type', required=True, select=True),
+            ('search','Search')], string='View Type', required=True, select=True, store=True),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'field_parent': fields.char('Child Field',size=64),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
-                                  method=True, help="ID of the view defined in xml file"),
+                                  help="ID of the view defined in xml file"),
     }
     _defaults = {
         'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
@@ -71,20 +85,63 @@ class view(osv.osv):
     }
     _order = "priority,name"
 
-    def _check_xml(self, cr, uid, ids, context=None):
-        logger = logging.getLogger('init')
-        for view in self.browse(cr, uid, ids, context):
-            eview = etree.fromstring(view.arch.encode('utf8'))
+    # Holds the RNG schema
+    _relaxng_validator = None  
+
+    def create(self, cr, uid, values, context=None):
+        if 'type' in values:
+            _logger.warning("Setting the `type` field is deprecated in the `ir.ui.view` model.")
+        return super(osv.osv, self).create(cr, uid, values, context)
+
+    def _relaxng(self):
+        if not self._relaxng_validator:
             frng = tools.file_open(os.path.join('base','rng','view.rng'))
             try:
                 relaxng_doc = etree.parse(frng)
-                relaxng = etree.RelaxNG(relaxng_doc)
-                if not relaxng.validate(eview):
-                    for error in relaxng.error_log:
-                        logger.error(tools.ustr(error))
-                    return False
+                self._relaxng_validator = etree.RelaxNG(relaxng_doc)
+            except Exception:
+                _logger.exception('Failed to load RelaxNG XML schema for views validation')
             finally:
                 frng.close()
+        return self._relaxng_validator
+        
+        
+    def _check_render_view(self, cr, uid, view, context=None):
+        """Verify that the given view's hierarchy is valid for rendering, along with all the changes applied by
+           its inherited views, by rendering it using ``fields_view_get()``.
+           
+           @param browse_record view: view to validate
+           @return: the rendered definition (arch) of the view, always utf-8 bytestring (legacy convention)
+               if no error occurred, else False.  
+        """
+        try:
+            fvg = self.pool.get(view.model).fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
+            return fvg['arch']
+        except:
+            _logger.exception("Can't render view %s for model: %s", view.xml_id, view.model)
+            return False
+
+    def _check_xml(self, cr, uid, ids, context=None):
+        for view in self.browse(cr, uid, ids, context):
+            # Sanity check: the view should not break anything upon rendering!
+            view_arch_utf8 = self._check_render_view(cr, uid, view, context=context)
+            # always utf-8 bytestring - legacy convention
+            if not view_arch_utf8: return False
+
+            # RNG-based validation is not possible anymore with 7.0 forms
+            # TODO 7.0: provide alternative assertion-based validation of view_arch_utf8
+            view_docs = [etree.fromstring(view_arch_utf8)]
+            if view_docs[0].tag == 'data':
+                # A <data> element is a wrapper for multiple root nodes
+                view_docs = view_docs[0]
+            validator = self._relaxng()
+            for view_arch in view_docs:
+                if (view_arch.get('version') < '7.0') and validator and not validator.validate(view_arch):
+                    for error in validator.error_log:
+                        _logger.error(tools.ustr(error))
+                    return False
+                if not valid_view(view_arch):
+                    return False
         return True
 
     _constraints = [
@@ -95,19 +152,34 @@ class view(osv.osv):
         super(view, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_model_type_inherit_id\'')
         if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, type, inherit_id)')
+            cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
 
     def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
-        """Retrieves the architecture of views that inherit from the given view.
+        """Retrieves the architecture of views that inherit from the given view, from the sets of
+           views that should currently be used in the system. During the module upgrade phase it
+           may happen that a view is present in the database but the fields it relies on are not
+           fully loaded yet. This method only considers views that belong to modules whose code
+           is already loaded. Custom views defined directly in the database are loaded only
+           after the module initialization phase is completely finished.
 
            :param int view_id: id of the view whose inheriting views should be retrieved
            :param str model: model identifier of the view's related model (for double-checking)
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
-        cr.execute("""SELECT arch, id FROM ir_ui_view WHERE inherit_id=%s AND model=%s
-                      ORDER BY priority""",
-                      (view_id, model))
+        if self.pool._init:
+            # Module init currently in progress, only consider views from modules whose code was already loaded 
+            query = """SELECT v.arch, v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+                       WHERE v.inherit_id=%s AND v.model=%s AND md.module in %s  
+                       ORDER BY priority"""
+            query_params = (view_id, model, tuple(self.pool._init_modules))
+        else:
+            # Modules fully loaded, consider all views
+            query = """SELECT v.arch, v.id FROM ir_ui_view v
+                       WHERE v.inherit_id=%s AND v.model=%s  
+                       ORDER BY priority"""
+            query_params = (view_id, model)
+        cr.execute(query, query_params)
         return cr.fetchall()
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -124,8 +196,6 @@ class view(osv.osv):
         return result
 
     def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, label, scale, context=None):
-        if not label:
-            label = []
         nodes=[]
         nodes_name=[]
         transitions=[]

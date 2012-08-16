@@ -3,13 +3,12 @@
     <data>
 
         <!--
-		Country
-		-->
+        Country
+        -->
 
         <record id="view_country_tree" model="ir.ui.view">
             <field name="name">res.country.tree</field>
             <field name="model">res.country</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Country">
                     <field name="name"/>
@@ -21,12 +20,13 @@
         <record id="view_country_form" model="ir.ui.view">
             <field name="name">res.country.form</field>
             <field name="model">res.country</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Country">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                     <field name="address_format" colspan="4" groups="base.group_extended"/>
+                <form string="Country" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="address_format" colspan="4" groups="base.group_no_one"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -39,9 +39,9 @@
             <field name="help">Display and manage the list of all countries that can be assigned to your partner records. You can create or delete countries to make sure the ones you are working on will be maintained.</field>
         </record>
 
-        <menuitem id="menu_localisation" name="Localisation" parent="menu_config_address_book" sequence="1"/>
+        <menuitem id="menu_localisation" name="Localisation" parent="menu_config_address_book" sequence="1" groups="base.group_no_one"/>
 
-        <menuitem action="action_country" id="menu_country_partner" parent="menu_localisation" sequence="0"/>
+        <menuitem action="action_country" id="menu_country_partner" parent="menu_localisation" sequence="0" groups="base.group_no_one"/>
 
         <!--
           State
@@ -50,7 +50,6 @@
         <record id="view_country_state_tree" model="ir.ui.view">
             <field name="name">res.country.state.tree</field>
             <field name="model">res.country.state</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="State">
                     <field name="name"/>
@@ -63,12 +62,13 @@
         <record id="view_country_state_form" model="ir.ui.view">
             <field name="name">res.country.state.form</field>
             <field name="model">res.country.state</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="State">
-                    <field name="country_id" select="1"/>
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
+                <form string="State" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="country_id" options='{"no_open": true}'/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -82,7 +82,7 @@
             <field name="help">If you are working on the American market, you can manage the different federal states you are working on from here. Each state is attached to one country.</field>
         </record>
 
-          <menuitem action="action_country_state" id="menu_country_state_partner" parent="menu_localisation" sequence="1"/>
+          <menuitem action="action_country_state" id="menu_country_state_partner" parent="menu_localisation" sequence="1" groups="base.group_no_one"/>
 
     </data>
 </openerp>
