@@ -256,7 +256,7 @@ class project_issue(base_stage, osv.osv):
         'inactivity_days': fields.function(_compute_day, string='Days since last action', \
                                 multi='compute_day', type="integer", help="Difference in days between last action and current date"),
         'color': fields.integer('Color Index'),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
@@ -499,13 +499,10 @@ class project_issue(base_stage, osv.osv):
     # OpenChatter methods and notifications
     # -------------------------------------------------------
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        """ Override to add responsible user. """
-        user_ids = super(project_issue, self).message_get_subscribers(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id and not obj.user_id.id in user_ids:
-                user_ids.append(obj.user_id.id)
-        return user_ids
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' to the monitored fields """
+        res = super(project_issue, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['user_id']
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """

@@ -4,7 +4,7 @@
         <record id="confirmation_event" model="email.template">
         <field name="name">Confirmation of the Event</field>
         <field name="model_id" ref="event.model_event_registration"/>
-        <field name="email_from" >${object.user_id.user_email or object.company_id.email or 'noreply@' + object.company_id.name + '.com'}</field>
+        <field name="email_from" >${object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com'}</field>
         <field name="email_to" >${object.email}</field>
         <field name="subject">Your registration at ${object.event_id.name}</field>
         <field name="body_text">
@@ -24,7 +24,7 @@
         <record id="confirmation_registration" model="email.template">
         <field name="name">Confirmation of the Registration</field>
         <field name="model_id" ref="event.model_event_registration"/>
-        <field name="email_from" >${object.user_id.user_email or object.company_id.email or 'noreply@' + object.company_id.name + '.com'}</field>
+        <field name="email_from" >${object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com'}</field>
         <field name="email_to" >${object.email}</field>
         <field name="subject">Your registration at ${object.event_id.name}</field>
         <field name="body_text">
