@@ -28,6 +28,16 @@
                         </div>
                     </group>
                     <group>
+                        <label for="id" string="Email"/>
+                        <div>
+                            <div>
+                                <button type="action"
+                                    name="%(base.action_ir_mail_server_list)d"
+                                    string="Configure outgoing email servers" class="oe_link"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
                         <label for="id" string="Share Data"/>
                         <div>
                             <div>
@@ -38,10 +48,18 @@
                                 <field name="module_portal" class="oe_inline"/>
                                 <label for="module_portal"/>
                             </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Authentification"/>
+                        <div>
                             <div>
-                                <button type="action"
-                                    name="%(base.action_ir_mail_server_list)d"
-                                    string="Configure outgoing email servers" class="oe_link"/>
+                                <field name="module_auth_signup" class="oe_inline"/>
+                                <label for="module_auth_signup"/>
+                            </div>
+                            <div>
+                                <field name="module_auth_oauth" class="oe_inline"/>
+                                <label for="module_auth_oauth"/>
                             </div>
                         </div>
                     </group>
