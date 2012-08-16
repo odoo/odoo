@@ -77,7 +77,7 @@ class hr_expense_expense(osv.osv):
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
         'amount': fields.function(_amount, string='Total Amount', digits_compute= dp.get_precision('Account')),
-        'invoice_id': fields.many2one('account.invoice', "Employee's Invoice"),
+        'voucher_id': fields.many2one('account.voucher', "Employee's Receipt"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'department_id':fields.many2one('hr.department','Department'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
