@@ -57,13 +57,14 @@ system to store and search in your CV base.
         'board_hr_recruitment_statistical_view.xml',
         'hr_recruitment_installer_view.xml',
         'res_config_view.xml',
-     ],
+    ],
     'init_xml': [
         'hr_recruitment_data.xml'
     ],
     'demo_xml': [
         'hr_recruitment_demo.yml',
     ],
+    'js': ['static/src/js/hr_recruitment.js'],
     'test':[
             'test/recruitment_process.yml',
             ],
