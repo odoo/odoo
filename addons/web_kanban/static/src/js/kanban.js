@@ -520,19 +520,19 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         return def;
     },
     compute_cards_auto_height: function() {
-        // oe_kanban_auto_height is an empty class used by the kanban view in order
-        // to normalize height amongst kanban cards. (by group)
-        var self = this;
-        var min_height = 0;
-        var els = [];
-        _.each(this.records, function(r) {
-            var $e = r.$element.find('.oe_kanban_auto_height').first().css('min-height', 0);
-            if ($e.length) {
-                els.push($e[0]);
-                min_height = Math.max(min_height, $e.outerHeight());
-            }
-        });
-        $(els).css('min-height', min_height);
+        // oe_kanban_no_auto_height is an empty class used to disable this feature
+        if (!this.view.group_by) {
+            var min_height = 0;
+            var els = [];
+            _.each(this.records, function(r) {
+                var $e = r.$element.children(':first:not(.oe_kanban_no_auto_height)').css('min-height', 0);
+                if ($e.length) {
+                    els.push($e[0]);
+                    min_height = Math.max(min_height, $e.outerHeight());
+                }
+            });
+            $(els).css('min-height', min_height);
+        }
     },
     destroy: function() {
         this._super();
