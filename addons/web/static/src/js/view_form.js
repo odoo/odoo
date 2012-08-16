@@ -2723,6 +2723,11 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             this.floating = false;
             this.render_value();
         });
+        instance.web.bus.on('click', this, function() {
+            if (!this.get("effective_readonly") && this.$input && this.$input.autocomplete('widget').is(':visible')) {
+                this.$input.autocomplete("close");
+            }
+        });
     },
     initialize_content: function() {
         if (!this.get("effective_readonly"))
