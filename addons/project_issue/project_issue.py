@@ -499,11 +499,6 @@ class project_issue(base_stage, osv.osv):
     # OpenChatter methods and notifications
     # -------------------------------------------------------
 
-    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
-        """ Add 'user_id' to the monitored fields """
-        res = super(project_issue, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        return res + ['user_id']
-
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]

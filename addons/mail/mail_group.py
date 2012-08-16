@@ -67,7 +67,7 @@ class mail_group(osv.Model):
         'image': fields.binary("Photo",
             help="This field holds the image used as photo for the "\
                  "user. The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 12024x1024 px image."),
+                 "It is limited to a 1024x1024 px image."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
@@ -165,17 +165,3 @@ class mail_group(osv.Model):
             self._subscribe_user_with_group_m2m_command(cr, uid, ids, vals.get('group_ids'), context=context)
         return super(mail_group, self).write(cr, uid, ids, vals, context=context)
 
-    def action_group_join(self, cr, uid, ids, context=None):
-        return self.message_subscribe(cr, uid, ids, context=context)
-
-    def action_group_leave(self, cr, uid, ids, context=None):
-        return self.message_unsubscribe(cr, uid, ids, context=context)
-
-    # ----------------------------------------
-    # OpenChatter methods and notifications
-    # ----------------------------------------
-
-    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
-        """ Add 'responsible_id' to the monitored fields """
-        res = super(mail_group, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        return res + ['responsible_id']

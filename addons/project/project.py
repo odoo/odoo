@@ -514,11 +514,6 @@ def Project():
     # OpenChatter methods and notifications
     # ------------------------------------------------
 
-    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
-        """ Add 'user_id' to the monitored fields """
-        res = super(project, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        return res + ['user_id']
-
     def create(self, cr, uid, vals, context=None):
         if context is None: context = {}
         # Prevent double project creation when 'use_tasks' is checked!

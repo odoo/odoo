@@ -24,7 +24,7 @@ from osv import fields
 
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside
-    OpenERP. Users can choose to follow documents (records) of any kind that
+    OpenERP. Partners can choose to follow documents (records) of any kind that
     inherits from mail.thread. Following documents allow to receive
     notifications for new messages.
     A subscription is characterized by:
@@ -32,28 +32,26 @@ class mail_followers(osv.Model):
         :param: res_id: ID of resource (may be 0 for every objects)
     """
     _name = 'mail.followers'
-    _rec_name = 'id'
+    _rec_name = 'partner_id'
     _log_access = False
-    _order = 'res_model asc'
-    _description = 'Mail Document Followers'
+    _description = 'Document Followers'
     _columns = {
         'res_model': fields.char('Related Document Model', size=128,
                         required=True, select=1,
                         help='Model of the followed resource'),
         'res_id': fields.integer('Related Document ID', select=1,
                         help='Id of the followed resource'),
-        'partner_id': fields.many2one('res.partner', string='Related User',
+        'partner_id': fields.many2one('res.partner', string='Related Partner',
                         ondelete='cascade', required=True, select=1),
     }
 
 class mail_notification(osv.Model):
-    """ mail_notification is a relational table modeling messages pushed to users.
+    """ mail_notification is a relational table modeling messages pushed to partners.
     """
     _name = 'mail.notification'
-    _rec_name = 'id'
+    _rec_name = 'partner_id'
     _log_access = False
-    _order = 'message_id desc'
-    _description = 'Mail notification'
+    _description = 'Notifications'
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
@@ -103,9 +101,9 @@ class mail_notification(osv.Model):
                 if email_to not in towrite['email_to']:
                     towrite['email_to'] = towrite['email_to'] + ', ' + email_to
 
+        if towrite.get('state', False):
             if towrite.get('subject', False):
                 towrite['subject'] = msg.name_get(cr, uid, [msg.id], context=context)[0][1]
-        if towrite.get('state', False):
             towrite['message_id'] = msg.id
             self.pool.get('mail.mail').create(cr, uid, towrite, context=context)
         return True

@@ -31,8 +31,8 @@
                                     <h4><a type="edit"><field name="name"/></a></h4>
                                     <ul>
                                         <li><t t-raw="record.message_summary.raw_value"/></li>
-                                        <li t-if="! record.message_is_follower.raw_value"><a name="action_group_join" string="Join" type="object" class="oe_group_join">Not following</a></li>
-                                        <li t-if="record.message_is_follower.raw_value"><a name="action_group_leave" string="Join" type="object" class="oe_group_leave">Following</a></li>
+                                        <li t-if="! record.message_is_follower.raw_value"><a name="message_subscribe" string="Join" type="object" class="oe_group_join">Not following</a></li>
+                                        <li t-if="record.message_is_follower.raw_value"><a name="message_unsubscribe" string="Join" type="object" class="oe_group_leave">Following</a></li>
                                     </ul>
                                 </div>
                             </div>

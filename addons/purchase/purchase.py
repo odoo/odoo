@@ -734,11 +734,6 @@ class purchase_order(osv.osv):
     def needaction_domain_get(self, cr, uid, ids, context=None):
         return [('state','=','draft')]
 
-    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
-        """ Add 'validator' to the monitored fields """
-        res = super(purchase_order, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        return res + ['validator']
-
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Request for quotation <b>created</b>."), context=context)
 
