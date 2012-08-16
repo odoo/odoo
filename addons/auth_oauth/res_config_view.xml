@@ -1,0 +1,17 @@
+<?xml version="1.0"?>        
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_general_configuration_auth_oauth">
+            <field name="name">base.config.auth.oauth</field>
+            <field name="model">model</field>
+            <field name="type">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='module_auth_signup']" position="after">
+                    <label for="explanation" class="oe_inline"/>
+                    <field name="explanation" placeholder="Here goes the explanation" class="oe_inline"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

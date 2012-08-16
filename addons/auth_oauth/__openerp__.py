@@ -28,12 +28,13 @@
     'author': 'Victor Tabuenca',
     'maintainer': 'OpenERP s.a.',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'web'],
+    'depends': ['base', 'web', 'base_setup'],
     'data': [
-        'auth_oauth_data.xml'
+        'auth_oauth_data.xml',
     ],
     'update_xml': [
-        'auth_oauth_view.xml'
+        'auth_oauth_view.xml',
+        'res_config_view.xml',
     ],
     'js': [
         'static/src/js/auth_oauth.js',
