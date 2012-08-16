@@ -121,7 +121,7 @@ class mail_thread(osv.Model):
     _description = 'Email Thread'
     # TODO: may be we should make it _inherit ir.needaction
 
-    def _get_is_subscriber(self, cr, uid, ids, name, args, context=None):
+    def _get_is_follower(self, cr, uid, ids, name, args, context=None):
         subobj = self.pool.get('mail.subscription')
         subids = subobj.search(cr, uid, [
             ('res_model','=',self._name),
@@ -153,8 +153,8 @@ class mail_thread(osv.Model):
 
         for thread in self.browse(cr, uid, ids, context=context):
             message_ids = thread.message_ids
-            subscriber_ids = thread.message_follower_ids
-            res[id]['message_summary'] = "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(message_ids), len(subscriber_ids)),
+            follower_ids = thread.message_follower_ids
+            res[id]['message_summary'] = "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(message_ids), len(follower_ids)),
         return res
 
     # FP Note: todo
@@ -229,7 +229,7 @@ class mail_thread(osv.Model):
 
     def message_get_automatic_followers(self, cr, uid, id, record_vals, add_uid=True, fetch_missing=False, context=None):
         """ Return the command for the many2many follower_ids field to manage
-            subscribers. Behavior :
+            followers. Behavior :
             - get the monitored fields (ex: ['user_id', 'responsible_id']); those
               fields should be relationships to res.users (#TODO: res.partner)
             - if this field is in the record_vals: it means it has been modified
@@ -237,7 +237,7 @@ class mail_thread(osv.Model):
             - if this fields is not in record_vals, but fetch_missing paramter
               is set to True: fetch the value in the record (use: at creation
               for default values, not present in record_vals)
-            - if add_uid: add the current user (for example: writer is subscriber)
+            - if add_uid: add the current user (for example: writer is follower)
             - generate the command and return it
             This method has to be used on 1 id, because otherwise it would imply
             to track which user.id is used for which record.id.
@@ -965,25 +965,25 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
 
     # FP Note: replaced by message_follower_ids
-    # def message_get_subscribers(self, cr, uid, ids, context=None):
+    # def message_get_followers(self, cr, uid, ids, context=None):
 
-    def message_read_subscribers(self, cr, uid, ids, fields=['id', 'name', 'image_small'], context=None):
+    def message_read_followers(self, cr, uid, ids, fields=['id', 'name', 'image_small'], context=None):
         """ Returns the current document followers as a read result. Used
             mainly for Chatter having only one method to call to have
             details about users.
         """
-        user_ids = self.message_get_subscribers(cr, uid, ids, context=context)
+        user_ids = self.message_get_followers(cr, uid, ids, context=context)
         return self.pool.get('res.users').read(cr, uid, user_ids, fields=fields, context=context)
 
-    def message_is_subscriber(self, cr, uid, ids, user_id = None, context=None):
-        """ Check if uid or user_id (if set) is a subscriber to the current
+    def message_is_follower(self, cr, uid, ids, user_id = None, context=None):
+        """ Check if uid or user_id (if set) is a follower to the current
             document.
 
             :param user_id: if set, check is done on user_id; if not set
                             check is done on uid
         """
         sub_user_id = uid if user_id is None else user_id
-        if sub_user_id in self.message_get_subscribers(cr, uid, ids, context=context):
+        if sub_user_id in self.message_get_followers(cr, uid, ids, context=context):
             return True
         return False
 
@@ -1002,7 +1002,7 @@ class mail_thread(osv.Model):
         subscription_obj = self.pool.get('mail.subscription')
         create_ids = []
         for id in ids:
-            already_subscribed_user_ids = self.message_get_subscribers(cr, uid, [id], context=context)
+            already_subscribed_user_ids = self.message_get_followers(cr, uid, [id], context=context)
             for user_id in to_subscribe_uids:
                 if user_id in already_subscribed_user_ids: continue
                 create_ids.append(subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context))

@@ -76,27 +76,27 @@ openerp_mail_followers = function(session, mail) {
                 this.$element.find('div.oe_mail_recthread_aside').hide();
                 return;
             }
-            return this.fetch_subscribers(value_);
+            return this.fetch_followers(value_);
         },
 
-        fetch_subscribers: function (value_) {
-            return this.ds_follow.call('read', [value_ || this.get_value(), ['name', this.params.image]]).then(this.proxy('display_subscribers'));
+        fetch_followers: function (value_) {
+            return this.ds_follow.call('read', [value_ || this.get_value(), ['name', this.params.image]]).then(this.proxy('display_followers'));
         },
 
         /**
          * Display the followers.
-         * TODO: replace the is_subscriber check by fields read */
-        display_subscribers: function (records) {
+         * TODO: replace the is_follower check by fields read */
+        display_followers: function (records) {
             var self = this;
-            this.is_subscriber = false;
+            this.is_follower = false;
             var user_list = this.$element.find('ul.oe_mail_followers_display').empty();
             this.$element.find('div.oe_mail_recthread_followers h4').html(this.params.title + ' (' + records.length + ')');
             _(records).each(function (record) {
-                if (record.id == self.session.uid) { self.is_subscriber = true; }
+                if (record.id == self.session.uid) { self.is_follower = true; }
                 record.avatar_url = mail.ChatterUtils.get_image(self.session.prefix, self.session.session_id, 'res.users', 'image_small', record.id);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(user_list);
             });
-            if (this.is_subscriber) {
+            if (this.is_follower) {
                 this.$element.find('button.oe_mail_button_follow').hide();
                 this.$element.find('button.oe_mail_button_unfollow').show(); }
             else {
@@ -113,8 +113,8 @@ openerp_mail_followers = function(session, mail) {
         },
 
         do_toggle_followers: function () {
-            this.params.see_subscribers = ! this.params.see_subscribers;
-            if (this.params.see_subscribers) { this.$element.find('button.oe_mail_button_followers').html('Hide followers'); }
+            this.params.see_followers = ! this.params.see_followers;
+            if (this.params.see_followers) { this.$element.find('button.oe_mail_button_followers').html('Hide followers'); }
             else { this.$element.find('button.oe_mail_button_followers').html('Show followers'); }
             this.$element.find('div.oe_mail_recthread_followers').toggle();
         },
