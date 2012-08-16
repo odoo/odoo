@@ -60,11 +60,6 @@ class pos_config(osv.osv):
              help="Accounting journal used to post sales entries."),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode',
              help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
-        'iface_websql' : fields.boolean('WebSQL (Faster but Chrome Only)',
-            help="If have more than 200 products, it's highly suggested to use WebSQL "\
-                "to store the data in the browser, instead of localStore mechanism. "\
-                "It's more efficient but works on the Chrome browser only."
-            ),
         'iface_led' : fields.boolean('Help Notification'),
         'iface_cashdrawer' : fields.boolean('Cashdrawer Interface'),
         'iface_payment_terminal' : fields.boolean('Payment Terminal Interface'),
