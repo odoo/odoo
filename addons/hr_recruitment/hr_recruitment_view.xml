@@ -176,6 +176,9 @@
                         </div>
                     </group>
                 </group>
+                <group>
+                    <field name="categ_ids" widget="many2many_tags"/>
+                </group>
                 <separator string="Application Summary"/>
                 <field name="description" placeholder="Feedback of interviews..."/>
             </sheet>
@@ -265,6 +268,7 @@
                 <field name="job_id"/>
                 <field name="title_action"/>
                 <field name="department_id"/>
+                <field name="categ_ids"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -308,6 +312,13 @@
                                     </a>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
 
+                                </div>
+                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <div class="oe_left oe_tags">
+                                        <t t-foreach="record.categ_ids.raw_value" t-as="categ_id">
+                                            <span class="oe_tag" t-att-data-categ_id="categ_id"></span>
+                                        </t>
+                                    </div>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
