@@ -254,12 +254,8 @@ class hr_expense_line(osv.osv):
         return res
 
     def _get_uom_id(self, cr, uid, context=None):
-        try:
-            proxy = self.pool.get('ir.model.data')
-            result = proxy.get_object_reference(cr, uid, 'product', 'product_uom_unit')
-            return result[1]
-        except Exception, ex:
-            return False
+        result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_uom_unit')
+        return result and result[1] or False
 
     _columns = {
         'name': fields.char('Expense Note', size=128, required=True),
@@ -294,14 +290,15 @@ class hr_expense_line(osv.osv):
 
     def onchange_uom(self, cr, uid, ids, product_id, uom_id, context=None):
         res = {'value':{}}
-        if uom_id:
-            if product_id:
-                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                uom = self.pool.get('product.uom').browse(cr, uid, uom_id, context=context)
-                if uom.category_id.id != product.uom_id.category_id.id:
-                    res['warning'] = {'title': _('Warning'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure')}
-                    uom_id = product.uom_id.id
-            res['value'].update({'uom_id': uom_id})
+        if not uom_id:
+            return res
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            uom = self.pool.get('product.uom').browse(cr, uid, uom_id, context=context)
+            if uom.category_id.id != product.uom_id.category_id.id:
+                res['warning'] = {'title': _('Warning'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure')}
+                uom_id = product.uom_id.id
+        res['value'].update({'uom_id': uom_id})
         return res
 
 hr_expense_line()
