@@ -86,6 +86,7 @@ def sass2scss(src):
     return write(sass)
 
 def db_list(req):
+    dbs = []
     proxy = req.session.proxy("db")
     dbs = proxy.list()
     h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
@@ -182,14 +183,19 @@ def module_installed_bypass_session(dbname):
     return sorted_modules
 
 def module_boot(req):
-    dbs = db_list(req)
     serverside = []
     dbside = []
     for i in req.config.server_wide_modules:
         if i in openerpweb.addons_manifest:
             serverside.append(i)
+    # if only one db load every module at boot
+    dbs = []
+    try:
+        dbs = db_list(req)
+    except xmlrpclib.Fault:
+        # ignore access denied
+        pass
     if len(dbs) == 1:
-        # if only one db load every module at boot
         dbside = module_installed_bypass_session(dbs[0])
         dbside = [i for i in dbside if i not in serverside]
     addons = serverside + dbside
