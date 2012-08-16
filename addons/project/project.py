@@ -1122,6 +1122,10 @@ class task(base_stage, osv.osv):
         task_id = super(task, self).create(cr, uid, vals, context=context)
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
+        task_obj = self.browse(cr, uid, task_id, context=context)
+        if task_obj.project_id:
+            project_follower_ids = [follow.id for follow in task_obj.project_id.message_follower_ids]
+            self.message_subscribe(cr, uid, [task_id], project_follower_ids, context=context)
         return task_id
 
     # Overridden to reset the kanban_state to normal whenever
