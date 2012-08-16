@@ -27,9 +27,9 @@
                             </div>
                         </div>
                     </group>
-                    <group>
+                    <group name="email">
                         <label for="id" string="Email"/>
-                        <div>
+                        <div name="email">
                             <div>
                                 <button type="action"
                                     name="%(base.action_ir_mail_server_list)d"
@@ -57,6 +57,7 @@
                                 <field name="module_auth_signup" class="oe_inline"/>
                                 <label for="module_auth_signup"/>
                             </div>
+                            ->
                             <div>
                                 <field name="module_auth_oauth" class="oe_inline"/>
                                 <label for="module_auth_oauth"/>
