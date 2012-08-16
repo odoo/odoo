@@ -596,7 +596,9 @@ form: module.record_id""" % (xml_id,)
                 "act_window": 'STOCK_NEW',
                 "report.xml": 'STOCK_PASTE',
                 "wizard": 'STOCK_EXECUTE',
-                "url": 'STOCK_JUMP_TO'
+                "url": 'STOCK_JUMP_TO',
+                "client": 'STOCK_EXECUTE',
+                "server": 'STOCK_EXECUTE',
             }
             values['icon'] = icons.get(a_type,'STOCK_NEW')
             if a_type=='act_window':
@@ -625,18 +627,19 @@ form: module.record_id""" % (xml_id,)
                     values['icon'] = 'STOCK_EXECUTE'
                 if not values.get('name', False):
                     values['name'] = action_name
-            elif a_type=='wizard':
+            
+            elif a_type in ['wizard', 'url', 'client', 'server'] and not values.get('name'):
                 a_id = self.id_get(cr, a_action)
-                cr.execute('select name from ir_act_wizard where id=%s', (int(a_id),))
+                a_table = 'ir_act_%s' % a_type
+                cr.execute('select name from %s where id=%%s' % a_table, (int(a_id),))
                 resw = cr.fetchone()
-                if (not values.get('name', False)) and resw:
+                if resw:
                     values['name'] = resw[0]
-            elif a_type=='url':
-                a_id = self.id_get(cr, a_action)
-                cr.execute('select name from ir_act_url where id=%s', (int(a_id),))
-                resw = cr.fetchone()
-                if (not values.get('name')) and resw:
-                    values['name'] = resw[0]
+
+        if not values.get('name'):
+            # ensure menu has a name
+            values['name'] = rec_id or '?'
+
         if rec.get('sequence'):
             values['sequence'] = int(rec.get('sequence'))
         if rec.get('icon'):
@@ -658,9 +661,7 @@ form: module.record_id""" % (xml_id,)
                     groups_value.append((4, group_id))
             values['groups_id'] = groups_value
 
-        xml_id = rec.get('id','').encode('utf8')
-        self._test_xml_id(xml_id)
-        pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
+        pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
 
         if rec_id and pid:
             self.idref[rec_id] = int(pid)
