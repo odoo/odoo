@@ -785,6 +785,9 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     },
     kanban_compute_domain: function(domain) {
         return instance.web.form.compute_domain(domain, this.values);
+    },
+    _is_action_enabled: function(action) {
+        return (_.has(this.fields_view.arch.attrs, action))?JSON.parse(this.fields_view.arch.attrs[action]):true;
     }
 });
 

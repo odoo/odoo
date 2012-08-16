@@ -44,7 +44,7 @@ instance.web.DiagramView = instance.web.View.extend({
         this.node = this.nodes.attrs.object,
         this.connector = this.connectors.attrs.object;
 
-        this.$element.html(QWeb.render("DiagramView", this));
+        this.$element.html(QWeb.render("DiagramView",  {'widget':self}));
         this.$element.addClass(this.fields_view.arch.attrs['class']);
 
         this.$element.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
