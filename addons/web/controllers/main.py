@@ -811,9 +811,8 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        loaded = module_boot(req)
-        modules = module_installed(req)
-        return [module for module in modules if module not in loaded]
+        # return all installed modules. Web client is smart enough to not load a module twice
+        return module_installed(req)
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
