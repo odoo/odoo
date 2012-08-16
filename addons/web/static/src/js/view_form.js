@@ -2979,10 +2979,12 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     },
     _quick_create: function() {
         this.no_tipsy = true;
+        this.tip_def.reject();
         return instance.web.form.CompletionFieldMixin._quick_create.apply(this, arguments);
     },
     _search_create_popup: function() {
         this.no_tipsy = true;
+        this.tip_def.reject();
         return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
     },
 });
