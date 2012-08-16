@@ -192,7 +192,6 @@ class hr_expense_expense(osv.osv):
                 'type': 'purchase',
                 'partner_id': exp.employee_id.address_home_id.id,
                 'company_id': company_id,
-                'currency_id': exp.currency_id.id,
                 'line_ids': lines,
                 'amount': total,
                 'journal_id': journal.id,
