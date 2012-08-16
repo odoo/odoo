@@ -34,7 +34,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.use_scale              = false;
             this.use_proxy_printer      = false;
             this.use_virtual_keyboard   = false;
-            this.use_websql             = false;
             this.use_barcode_scanner    = false;
 
             // default attributes values. If null, it will be loaded below.
@@ -146,7 +145,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         var pos_config_def = fetch(
                                 'pos.config',
                                 ['name','journal_ids','shop_id','journal_id',
-                                 'iface_self_checkout', 'iface_websql', 'iface_led', 'iface_cashdrawer',
+                                 'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
                                  'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
                                  'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
                                 [['id','=', pos_session.config_id[0]]]
@@ -157,7 +156,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                 self.use_scale              = pos_config.iface_electronic_scale  || false;
                                 self.use_proxy_printer      = pos_config.iface_print_via_proxy   || false;
                                 self.use_virtual_keyboard   = pos_config.iface_vkeyboard         || false;
-                                self.use_websql             = pos_config.iface_websql            || false;
                                 self.use_barcode_scanner    = pos_config.iface_barscan           || false;
                                 self.use_selfcheckout       = pos_config.iface_self_checkout     || false;
                                 self.use_cashbox            = pos_config.iface_cashdrawer        || false;
