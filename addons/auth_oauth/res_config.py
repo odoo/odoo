@@ -25,8 +25,9 @@ class project_configuration(osv.TransientModel):
     _inherit = 'base.config.settings'
 
     _columns = {
-        'explanation' : fields.text('Deployment Explanation',),
-        'client_id' : fields.char('Client ID'),
+        'auth_oauth_google_active' : fields.boolean('enable sign in with google'),
+        'auth_oauth_google_client_id' : fields.char('Google client_id'),
+        'auth_oauth_facebook_client_id' : fields.char('Facebook client_id'),
     }
 
     # def get_default_alias_domain(self, cr, uid, ids, context=None):

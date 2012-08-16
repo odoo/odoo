@@ -32,8 +32,8 @@ class base_config_settings(osv.osv_memory):
             help="""The portal will give access to a series of documents for your  customers; his quotations, his invoices, his projects, etc."""),
         'module_share': fields.boolean('allow documents sharing',
             help="""As an example, you will be able to share a project or some tasks to  your customers, or quotes/sales to several persons at your customer  company, or your agenda availabilities to your contacts."""),
-        'module_auth_signup': fields.boolean('allow new users to sign up'),
-        'module_auth_oauth': fields.boolean('external oauth authentfication (google, facebook, ...)'),
+        'module_auth_signup': fields.boolean('allow external users to sign up'),
+        'module_auth_oauth': fields.boolean('external authentication, login with google, facebook, ...'),
     }
 
     def open_company(self, cr, uid, ids, context=None):
