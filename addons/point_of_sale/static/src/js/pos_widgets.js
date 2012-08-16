@@ -1,6 +1,51 @@
 function openerp_pos_widgets(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
+    // The ImageCache is used to hide the latency of the application cache on-disk access 
+    // that causes annoying flickering on product pictures. Why the hell a simple access to
+    // the application cache involves such latency is beyond me, hopefully one day this can be
+    // removed.
+    module.ImageCache   = instance.web.Class.extend({
+        init: function(options){
+            options = options || {};
+            this.max_size = options.max_size || 100;
+
+            this.cache = {};
+            this.access_time = {};
+            this.size = 0;
+        },
+        // returns a DOM Image object from an url, and cache the last 100 (by default) results
+        get_image: function(url){
+            var cached = this.cache[url];
+            if(cached){
+                this.access_time[url] = (new Date()).getTime();
+                return cached;
+            }else{
+                var img = new Image();
+                img.src = url;
+                while(this.size >= this.max_size){
+                    var oldestUrl = null;
+                    var oldestTime = (new Date()).getTime();
+                    for(var url in this.cache){
+                        var time = this.access_time[url];
+                        if(time <= oldestTime){
+                            oldestTime = time;
+                            oldestUrl  = url;
+                        }
+                    }
+                    if(oldestUrl){
+                        delete this.cache[oldestUrl];
+                        delete this.access_time[oldestUrl];
+                    }
+                    this.size--;
+                }
+                this.cache[url] = img;
+                this.access_time[url] = (new Date()).getTime();
+                return img;
+            }
+        },
+    });
+
     module.NumpadWidget = module.PosBaseWidget.extend({
         template:'NumpadWidget',
         init: function(parent, options) {
@@ -229,25 +274,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super(parent,options);
             this.model = options.model;
             this.model.attributes.weight = options.weight;
-            this.next_screen = options.next_screen;
-            this.click_product_action = options.click_product_action;
+            this.next_screen = options.next_screen; //when a product is clicked, this screen is set
+            this.click_product_action = options.click_product_action; 
         },
-        add_to_order: function(event) {
-            /* Preserve the category URL */
-            event.preventDefault();
-            return (this.pos.get('selectedOrder')).addProduct(this.model);
-        },
-        set_weight: function(weight){
-            this.model.attributes.weight = weight;
-            this.renderElement();
-        },
+        // returns the url of the product thumbnail
         get_image_url: function() {
-            var url = '/web/binary/image?session_id='+instance.connection.session_id+'&model=product.product&field=image&id='+this.model.get('id');
-            console.log('Requesting url:'+ url);
-            return url;
+            return '/web/binary/image?session_id='+instance.connection.session_id+'&model=product.product&field=image&id='+this.model.get('id');
         },
         renderElement: function() {
             this._super();
+            this.$('img').replaceWith(this.pos_widget.image_cache.get_image(this.get_image_url()));
             var self = this;
             $("a", this.$element).click(function(e){
                 if(self.click_product_action){
@@ -480,7 +516,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.$('.searchbox input').keyup(function(){
                 query = $(this).val().toLowerCase();
                 if(query){
-                    var products = self.pos.db.search_product_in_category(self.category.id, ['name','ean13'], query);
+                    var products = self.pos.db.search_product_in_category(self.category.id, query);
                     self.pos.get('products').reset(products);
                     self.$('.search-clear').fadeIn();
                 }else{
@@ -517,11 +553,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.pos.get('products').bind('reset', function(){
                 self.renderElement();
             });
-        },
-        set_weight: function(weight){
-            for(var i = 0; i < this.product_list.length; i++){
-                this.product_list[i].set_weight(weight);
-            }
         },
         renderElement: function() {
             var self = this;
@@ -656,6 +687,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.leftpane_visible = true;
             this.leftpane_width   = '440px';
             this.cashier_controls_visible = true;
+            this.image_cache = new module.ImageCache(); // for faster products image display
 
             /*
              //Epileptic mode

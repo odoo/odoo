@@ -357,7 +357,7 @@
         <li class='product'>
             <a href="#">
                 <div class="product-img">
-                    <img t-att-src="widget.get_image_url()" />
+                    <img src='' /> <!-- the product thumbnail -->
                     <t t-if="!widget.model.get('to_weight')">
                         <span class="price-tag">
                             <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>

@@ -20,8 +20,11 @@ function openerp_pos_db(instance, module){
             this.category_ancestors = {};
             this.category_childs = {};
             this.category_parent    = {};
+            this.category_search_string = {};
         },
-        /* returns the category object from its id */
+        /* returns the category object from its id. If you pass a list of id as parameters, you get
+         * a list of category objects. 
+         */  
         get_category_by_id: function(categ_id){
             if(categ_id instanceof Array){
                 var list = [];
@@ -108,6 +111,13 @@ function openerp_pos_db(instance, module){
             localStorage[this.name + '_' + store] = JSON.stringify(data);
             this.cache[store] = data;
         },
+        _product_search_string: function(product){
+            var str = '' + product.id + ':' + product.name;
+            if(product.ean13){
+                str += '|' + product.ean13;
+            }
+            return str + '\n';
+        },
         add_products: function(products){
             var stored_products = this.load('products',{}); 
             var stored_categories = this.load('categories',{});
@@ -117,21 +127,35 @@ function openerp_pos_db(instance, module){
             }
             for(var i = 0, len = products.length; i < len; i++){
                 var product = products[i];
+                var search_string = this._product_search_string(product);
                 var categ_id = product.pos_categ_id[0];
                 if(!stored_categories[categ_id]){
                     stored_categories[categ_id] = [];
                 }
                 stored_categories[categ_id].push(product.id);
+
+                if(this.category_search_string[categ_id] === undefined){
+                    this.category_search_string[categ_id] = '';
+                }
+                this.category_search_string[categ_id] += search_string;
+
                 var ancestors = this.get_category_ancestors_ids(categ_id) || [];
 
                 for(var j = 0; j < ancestors.length; j++){
-                    if(! stored_categories[ancestors[j]]){
-                        stored_categories[ancestors[j]] = [];
+                    var ancestor = ancestors[j];
+                    if(! stored_categories[ancestor]){
+                        stored_categories[ancestor] = [];
                     }
-                    stored_categories[ancestors[j]].push(product.id);
+                    stored_categories[ancestor].push(product.id);
+
+                    if( this.category_search_string[ancestor] === undefined){
+                        this.category_search_string[ancestor] = '';
+                    }
+                    this.category_search_string[ancestor] += search_string; 
                 }
                 stored_products[product.id] = product;
             }
+            console.log(this.category_search_string);
             this.save('products',stored_products);
             this.save('categories',stored_categories);
         },
@@ -173,41 +197,23 @@ function openerp_pos_db(instance, module){
             }
             return list;
         },
-        /* returns as a parameter of the result_callback function a list of products with :
+        /* returns a list of products with :
          * - a category that is or is a child of category_id,
-         * - a field in fields that contains a value that contains the query
-         * If a search is started before the previous has returned, the previous search may be cancelled
-         * (and the corresponding result_callback never called) 
+         * - a name, package or ean13 containing the query (case insensitive) 
          */
-        search_product_in_category: function(category_id, fields, query){
-            var self = this;
-            var stored_categories = this.load('categories',{});
-            var stored_products   = this.load('products',{});
-            var product_ids       = stored_categories[category_id];
-            var list = [];
-            var count = 0;
-            
-            query = query.toString().toLowerCase();
-
-            if(!(fields instanceof Array)){
-                fields = [fields];
-            }
-            for(var i = 0, len = product_ids.length; i < len && count < this.limit; i++){
-                var product = stored_products[product_ids[i]];
-                for(var j = 0, jlen = fields.length; j < jlen; j++){
-                    var field = product[fields[j]];
-                    if(field === null || field === undefined){
-                        continue;
-                    }
-                    field = field.toString().toLowerCase();
-                    if(field.indexOf(query) != -1){
-                        list.push(product);
-                        count++;
-                        break;
-                    }
+        search_product_in_category: function(category_id, query){
+            var re = RegExp("([0-9]+):.*?"+query,"gi");
+            var results = [];
+            for(var i = 0; i < this.limit; i++){
+                r = re.exec(this.category_search_string[category_id]);
+                if(r){
+                    var id = Number(r[1]);
+                    results.push(this.get_product_by_id(id));
+                }else{
+                    break;
                 }
             }
-            return list;
+            return results;
         },
         add_order: function(order){
             var last_id = this.load('last_order_id',0);

@@ -298,7 +298,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             //try to push an order to the server
             (new instance.web.Model('pos.order')).get_func('create_from_ui')([order])
                 .fail(function(unused, event){
-                    //don't show error popup if it fails (I guess, copy pasted from niv without understanding it completely)
+                    //don't show error popup if it fails 
                     event.preventDefault();
                     console.error('Failed to send order:',order);
                     self._flush(index+1);
