@@ -33,7 +33,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="//field[@name='job_id']" position="after">
+                 <xpath expr="//field[@name='active']" position="before">
                     <field name="join_date"/>
                     <field name="number_of_year"/>
                  </xpath>
