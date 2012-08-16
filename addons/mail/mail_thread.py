@@ -39,59 +39,6 @@ _logger = logging.getLogger(__name__)
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode,message.get_all(header, [])))
 
-class many2many_reference(fields.many2many):
-    """ many2many_reference is an override of fields.many2many. It manages
-        many2many-like table where one id is given by two fields, res_model
-        and res_id.
-    """
-    
-    def _get_query_and_where_params(self, cr, model, ids, values, where_params):
-        """ Add in where:
-            - mail_followers.res_model = 'crm.lead'
-        """
-        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
-                    FROM %(rel)s, %(from_c)s \
-                    WHERE %(rel)s.%(id1)s IN %%s \
-                    AND %(rel)s.%(id2)s = %(tbl)s.id \
-                    AND %(rel)s.res_model = %%s \
-                    %(where_c)s  \
-                    %(order_by)s \
-                    %(limit)s \
-                    OFFSET %(offset)d' \
-                % values
-        where_params = [model._name] + where_params
-        return query, where_params
-
-    def set(self, cr, model, id, name, values, user=None, context=None):
-        """ Override to add the res_model field in queries. """
-        if not values: return
-        rel, id1, id2 = self._sql_names(model)
-        obj = model.pool.get(self._obj)
-        for act in values:
-            if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
-                continue
-            if act[0] == 0:
-                idnew = obj.create(cr, user, act[2], context=context)
-                cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, idnew, model._name))
-            elif act[0] == 3:
-                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
-            elif act[0] == 4:
-                # following queries are in the same transaction - so should be relatively safe
-                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
-                if not cr.fetchone():
-                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, act[1], model._name))
-            elif act[0] == 6:
-                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
-                if d1:
-                    d1 = ' and ' + ' and '.join(d1)
-                else:
-                    d1 = ''
-                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND res_model=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, model._name, id]+d2)
-                for act_nbr in act[2]:
-                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, act_nbr, model._name))
-            else:
-                return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
-
 class mail_thread(osv.Model):
     '''Mixin model, meant to be inherited by any model that needs to
        act as a discussion topic on which messages can be attached.
@@ -132,13 +79,11 @@ class mail_thread(osv.Model):
             result[res_id] = True
         return result
 
-
-
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         res = {}
         for id in ids:
             res[id] = {
-                'message_state': False,
+                'message_unread': False,
                 'message_Summary': ''
             }
         nobj = self.pool.get('mail.notification')
@@ -149,7 +94,7 @@ class mail_thread(osv.Model):
             ('read','=',False)
         ], context=context)
         for notif in nobj.browse(cr, uid, nids, context=context):
-            res[notif.message_id.id]['message_state'] = True
+            res[notif.message_id.id]['message_unread'] = True
 
         for thread in self.browse(cr, uid, ids, context=context):
             message_ids = thread.message_ids
@@ -171,7 +116,7 @@ class mail_thread(osv.Model):
             domain=lambda self: [('model','=',self._name)],
             string='Related Messages', 
             help="All messages related to the current document."),
-        'message_state': fields.function(_get_message_data, fnct_search=_search_state, 'Message Read',
+        'message_unread': fields.function(_get_message_data, fnct_search=_search_state, 'Message Read',
             help="When checked, new messages require your attention.",
             multi="_get_message_data"),
         'message_summary': fields.function(_get_message_data, method=True,
@@ -225,7 +170,7 @@ class mail_thread(osv.Model):
 
     def _needaction_domain_get(self, cr, uid, context={}):
         if self._needaction:
-            return [('message_state','=',True)]
+            return [('message_unread','=',True)]
         return []
 
     #------------------------------------------------------
@@ -969,7 +914,7 @@ class mail_thread(osv.Model):
     # Thread_state
     #------------------------------------------------------
 
-    # FP Note: this should be a invert function on message_state field
+    # FP Note: this should be a invert function on message_unread field
     def message_mark_as_read(self, cr, uid, ids, context=None):
         """ Set as read. """
         notobj = self.pool.get('mail.notification')

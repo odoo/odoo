@@ -76,8 +76,8 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Applicants" fonts="bold:message_state==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
-                <field name="message_state" invisible="1"/>
+            <tree string="Applicants" fonts="bold:message_unread==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
+                <field name="message_unread" invisible="1"/>
                 <field name="create_date" groups="base.group_no_one"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
@@ -205,7 +205,7 @@
         <field name="arch" type="xml">
             <search string="Search Jobs">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-                <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_state" domain="[('message_state','=',True)]"/>
+                <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
                 <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]" help="All Initial Jobs"/>
                 <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="Open Jobs"/>

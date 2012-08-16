@@ -18,9 +18,9 @@ class mail_mail(osv.Model):
 
     _name = 'mail.mail'
     _description = 'Outgoing Mails'
-    _inherits = {'mail.message': 'message_id'}
+    _inherits = {'mail.message': 'mail_message_id'}
     _columns = {
-        'message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade'),
+        'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
         'subject': fields.char('Subject', size=128),
         'state': fields.selection([
@@ -32,7 +32,7 @@ class mail_mail(osv.Model):
         ], 'Status', readonly=True),
         'auto_delete': fields.boolean('Auto Delete',
             help="Permanently delete this email after sending it, to save space"),
-
+        'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
         'email_to': fields.text('To', help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
@@ -129,7 +129,7 @@ class mail_mail(osv.Model):
                     'datas_fname': fname,
                     'datas': fcontent and fcontent.encode('base64'),
                     'res_model': 'mail.message',
-                    'res_id': msg.message_id.id,
+                    'res_id': msg.mail_message_id.id,
             }
             # FP Note: what's this ???
             # if context.has_key('default_type'):

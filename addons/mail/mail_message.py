@@ -83,7 +83,6 @@ class mail_message(osv.Model):
             res.append((message.id, name))
         return res
 
-
     _columns = {
         # should we keep a distinction between email and comment ?
         'type': fields.selection([
@@ -105,26 +104,20 @@ class mail_message(osv.Model):
         'parent_id': fields.many2one('mail.message', 'Parent Message',
             select=True, ondelete='set null',
             help="Initial thread message."),
-
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
-
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.function(get_record_name, type='string',
             string='Message Record Name',
             help="Name get of the related document."),
-
         'subject': fields.char('Subject', size=128),
         'date': fields.datetime('Date'),
-
-        'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
-
         'body': fields.text('Content', required=True),
     }
     _defaults = {
         'type': 'email',
-        'date': (lambda *a: fields.datetime.now()),
+        'date': lambda *a: fields.datetime.now(),
     }
 
     #------------------------------------------------------
@@ -211,6 +204,7 @@ class mail_message(osv.Model):
         self.check(cr, uid, ids, 'unlink', context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context)
 
+    # FP Note: to review
     def parse_message(self, message, save_original=False, context=None):
         """Parses a string or email.message.Message representing an
            RFC-2822 email, and returns a generic dict holding the

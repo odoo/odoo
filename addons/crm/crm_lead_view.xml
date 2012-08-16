@@ -246,7 +246,7 @@
             <field name="name">Leads</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Leads" fonts="bold:message_state==True" colors="grey:state in ('cancel', 'done')">
+                <tree string="Leads" fonts="bold:message_unread==True" colors="grey:state in ('cancel', 'done')">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
@@ -262,7 +262,7 @@
                     <field name="referred" invisible="1"/>
                     <field name="channel_id" invisible="1"/>
                     <field name="subjects" invisible="1"/>
-                    <field name="message_state" invisible="1"/>
+                    <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -295,7 +295,7 @@
                     <field name="user_id"/>
                     <field name="partner_address_email"/>
                     <field name="message_summary"/>
-                    <field name="message_state"/>
+                    <field name="message_unread"/>
                     <templates>
                         <t t-name="lead_details">
                             <ul class="oe_kanban_tooltip">
@@ -341,7 +341,7 @@
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
-                                        <t t-if="record.message_state.raw_value"><span class="oe_kanban_mail_new">New</span></t>
+                                        <t t-if="record.message_unread.raw_value"><span class="oe_kanban_mail_new">New</span></t>
                                         <t t-raw="record.message_summary.raw_value"/>
                                     </div>
                                 </div>
@@ -364,7 +364,7 @@
                     <!-- subjects is not set as store=True so, it is placed outside filter_domain-->
                     <field name="subjects"/>
                     <field name="create_date"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_state" domain="[('message_state','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="New" name="new" help="New Leads" domain="[('state','=','draft')]"/>
                     <filter icon="terp-camera_test" string="Open" name="open" domain="[('state','=','open')]"/>
@@ -544,7 +544,7 @@
             <field name="name">Opportunities Tree</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" fonts="bold:message_state==True" colors="gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
+                <tree string="Opportunities" fonts="bold:message_unread==True" colors="gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name" string="Opportunity"/>
@@ -562,7 +562,7 @@
                     <field name="user_id"/>
                     <field name="priority" invisible="1"/>
                     <field name="state" groups="base.group_no_one"/>
-                    <field name="message_state" invisible="1"/>
+                    <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -577,7 +577,7 @@
                     <field name="name" string="Opportunity / Customer"
                         filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike', self)]" />
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_state" domain="[('message_state','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="New" help="New Opportunities" name="new" domain="[('state','=','draft')]"/>
                     <filter icon="terp-camera_test" string="Open" help="Open Opportunities" name="open" domain="[('state','=','open')]"/>

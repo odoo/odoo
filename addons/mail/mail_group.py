@@ -105,6 +105,8 @@ class mail_group(osv.Model):
         'alias_domain': False, # always hide alias during creation
     }
 
+    # FP Note: code to be improved. Check we have a code for res.users
+    # when we give them a new group.
     def _subscribe_user_with_group_m2m_command(self, cr, uid, ids, group_ids_command, context=None):
         # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
         user_group_ids = [command[1] for command in group_ids_command if command[0] == 4]
