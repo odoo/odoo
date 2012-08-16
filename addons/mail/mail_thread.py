@@ -273,7 +273,7 @@ class mail_thread(osv.Model):
         followers_obj = self.pool.get('mail.followers')
         subtype_obj = self.pool.get('mail.message.subtype')
         subtype_name = vals.get('subtype')
-        sutype = False
+        subtype = False
         body = vals.get('body_html', '') if vals.get('content_subtype') == 'html' else vals.get('body_text', '')
         if subtype_name:
             subtypes = subtype_obj.name_search(cr, uid, subtype_name)

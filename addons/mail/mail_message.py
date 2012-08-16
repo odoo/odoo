@@ -234,7 +234,7 @@ class mail_message(osv.Model):
             select=True, ondelete='set null',
             help="Parent message, used for displaying as threads with hierarchy"),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
-        'subtype_id': fields.many2one('mail.message.subtype', 'Subtype', select = True),
+        'subtype_id': fields.many2one('mail.message.subtype', 'Subtype'),
     }
         
     _defaults = {
