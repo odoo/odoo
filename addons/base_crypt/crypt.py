@@ -213,7 +213,7 @@ class users(osv.osv):
 
         # Check if the encrypted password matches against the one in the db.
         cr.execute("""UPDATE res_users
-                        SET date=now() AT TIME ZONE 'UTC'
+                        SET login_date=now() AT TIME ZONE 'UTC'
                         WHERE id=%s AND password=%s AND active
                         RETURNING id""",
                    (int(id), encrypted_pw.encode('utf-8')))

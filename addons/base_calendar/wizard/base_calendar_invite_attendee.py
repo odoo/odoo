@@ -99,12 +99,12 @@ send an Email to Invited Person')
                     user = user_obj.browse(cr, uid, user_id)
                     res = {
                            'user_id': user_id,
-                           'email': user.user_email
+                           'email': user.email
                            }
                     res.update(ref)
                     vals.append(res)
-                    if user.user_email:
-                        mail_to.append(user.user_email)
+                    if user.email:
+                        mail_to.append(user.email)
 
             elif  type == 'external' and datas.get('email'):
                 res = {'email': datas['email']}
@@ -143,7 +143,7 @@ send an Email to Invited Person')
                                        self._columns['type'].selection))
                     raise osv.except_osv(_('Error!'), _("%s must have an email address to send mail.") %(name[0]))
                 att_obj._send_mail(cr, uid, attendees, mail_to, \
-                       email_from = current_user.user_email or tools.config.get('email_from', False))
+                       email_from = current_user.email or tools.config.get('email_from', False))
 
         return {'type': 'ir.actions.act_window_close'}
 

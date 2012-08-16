@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,16 +19,31 @@
 #
 ##############################################################################
 
-from osv import osv, fields
 
-
-
-class res_users(osv.osv):
-    _inherit = 'res.users'
-    _columns = {
-        'partner_id': fields.many2one('res.partner',
-            string='Related Partner'),
-    }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+{
+    'name': 'OAuth2 Authentication',
+    'version': '1.0',
+    'category': 'Tools',
+    'description': """Allow users to login through Google OAuth2.""",
+    'author': 'Victor Tabuenca',
+    'maintainer': 'OpenERP s.a.',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'web'],
+    'data': [
+        'auth_oauth_data.xml'
+    ],
+    'update_xml': [
+        'auth_oauth_view.xml'
+    ],
+    'js': [
+        'static/src/js/auth_oauth.js',
+    ],
+    'css': [
+        'static/lib/zocial/css/zocial.css',
+    ],
+    'qweb': [
+        'static/src/xml/auth_oauth.xml',
+    ],
+    'installable': True,
+    'auto_install': False,
+}
