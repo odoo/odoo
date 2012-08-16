@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="auth_oauth.Login.button">
+    <t t-foreach="widget.oauth_providers" t-as="p">
+        <a href="#" t-att-class="p.css_class" t-att-data-index="p_index"><t t-esc="p.body"/></a>
+        <br/>
+    </t>
+</t>
+</templates>

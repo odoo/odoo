@@ -6,7 +6,6 @@
         <record id="view_move_line_form" model="ir.ui.view">
             <field name="name">account.move.line.form.inherit</field>
             <field name="model">account.move.line</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_move_line_form"/>
             <field name="arch" type="xml">
                 <field name="reconcile_partial_id" position="after">
@@ -18,7 +17,6 @@
         <record model="ir.ui.view" id="view_move_line_tree_wiz">
             <field name="name">account.move.line.tree</field>
             <field name="model">account.move.line</field>
-            <field name="type">tree</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <tree string="Account Entry Line">
@@ -44,7 +42,6 @@
         <record id="view_payment_mode_search" model="ir.ui.view">
             <field name="name">payment.mode.search</field>
             <field name="model">payment.mode</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Payment Mode">
                     <field name="name" string="Payment Mode"/>
@@ -60,7 +57,6 @@
         <record id="view_payment_mode_tree" model="ir.ui.view">
             <field name="name">payment.mode.tree</field>
             <field name="model">payment.mode</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Payment Mode">
                     <field name="name"/>
@@ -73,7 +69,6 @@
         <record id="view_payment_mode_form" model="ir.ui.view">
             <field name="name">payment.mode.form</field>
             <field name="model">payment.mode</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Payment Mode" version="7.0">
                     <group col="4">
@@ -99,9 +94,8 @@
         <record id="view_payment_order_form" model="ir.ui.view">
             <field name="name">payment.order.form</field>
             <field name="model">payment.order</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Payment Order" version="7.0">
                 <header>
                     <button name="open" states="draft" string="Confirm Payments" class="oe_highlight"/>
                     <button name="set_done" states="open" string="Make Payments" type="object" class="oe_highlight"/>
@@ -191,7 +185,6 @@
         <record id="view_payment_order_tree" model="ir.ui.view">
             <field name="name">payment.order.tree</field>
             <field name="model">payment.order</field>
-            <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';gray:state in ('cancel','done');black:state == 'open'" string="Payment order">
@@ -210,7 +203,6 @@
         <record id="view_payment_order_search" model="ir.ui.view">
             <field name="name">payment.order.tree.search</field>
             <field name="model">payment.order</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payment Orders">
                     <field name="reference" string="Payment Order"/>
@@ -256,7 +248,6 @@
         <record id="view_payment_line_form" model="ir.ui.view">
             <field name="name">Payment Line</field>
             <field name="model">payment.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Payment Line" version="7.0">
                     <notebook>
@@ -302,7 +293,6 @@
         <record id="view_payment_line_tree" model="ir.ui.view">
             <field name="name">Payment Lines</field>
             <field name="model">payment.line</field>
-            <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Payment Line">
@@ -331,7 +321,6 @@
         <record id="view_bank_statement_form" model="ir.ui.view">
             <field name="name">account.bank.statement.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
 	            <xpath expr="//div[@name='import_buttons']" position="inside">

@@ -53,7 +53,7 @@ class analytic_account(osv.osv):
             ('name', 'not ilike', 'maintenance'),
             ('partner_id', '!=', False),
             ('user_id', '!=', False),
-            ('user_id.user_email', '!=', False),
+            ('user_id.email', '!=', False),
             ('state', 'in', ('draft', 'open')),
             '|', ('date',  '<', time.strftime('%Y-%m-%d')), ('date', '=', False),
         ]
@@ -70,7 +70,7 @@ class analytic_account(osv.osv):
         for user, data in users.iteritems():
             subject = '[OPENERP] Reporting: Analytic Accounts'
             body = Template(MAKO_TEMPLATE).render_unicode(user=user, partners=data)
-            tools.email_send('noreply@openerp.com', [user.user_email, ], subject, body)
+            tools.email_send('noreply@openerp.com', [user.email, ], subject, body)
 
         return True
 
