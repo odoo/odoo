@@ -288,6 +288,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var start_index;
             if (this.grouped_by_m2o) {
                 this.$('.oe_kanban_groups_headers').sortable({
+                    items: '.oe_kanban_group_header',
                     helper: 'clone',
                     axis: 'x',
                     opacity: 0.5,
