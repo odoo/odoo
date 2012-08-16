@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-today OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2012-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,22 +24,30 @@ from osv import fields
 from tools.translate import _
 
 class ir_ui_menu(osv.osv):
+    """ Override of ir.ui.menu class. When adding mail_thread module, each
+        new mail.group will create a menu entry. This overrides checks that
+        the current user is in the mail.group followers. If not, the menu
+        entry is taken off the list of menu ids. This way the user will see
+        menu entries for the mail.group he is following.
+    """
     _inherit = 'ir.ui.menu'
+
     _columns = {
         'mail_group_id': fields.many2one('mail.group', 'Mail Group')
     }
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0, limit=None, order=order, context=context, count=False)
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        """ Override to take off menu entries (mail.group) the user is not
+            following. """
+        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0, limit=None, order=order, context=context, count=False)
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-        subs = self.pool.get('mail.subscription')
+        follower_obj = self.pool.get('mail.followers')
         for menu in self.browse(cr, uid, ids, context=context):
             if menu.mail_group_id:
-                sub_ids = subs.search(cr, uid, [
-                    ('partner_id','=',partner_id),('res_model','=','mail.group'),
-                    ('res_id','=',menu.mail_group_id.id)
+                sub_ids = follower_obj.search(cr, uid, [
+                    ('user_id', '=', uid), ('res_model', '=', 'mail.group'),
+                    ('res_id', '=', menu.mail_group_id.id)
                     ], context=context)
                 if not sub_ids:
                     ids.remove(menu.id)
         return ids
-

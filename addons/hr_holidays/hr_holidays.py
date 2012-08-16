@@ -364,15 +364,11 @@ class hr_holidays(osv.osv):
             dom = ['|'] + dom + [ ('state','=','validate1') ]
         return dom
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        """ Override to add employee and its manager. """
-        user_ids = super(hr_holidays, self).message_get_subscribers(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id and not obj.user_id.id in user_ids:
-                user_ids.append(obj.user_id.id)
-            if obj.employee_id.parent_id and not obj.employee_id.parent_id.user_id.id in user_ids:
-                user_ids.append(obj.employee_id.parent_id.user_id.id)
-        return user_ids
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' and 'manager' to the monitored fields """
+        res = super(hr_holidays, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        # TODO: add manager
+        return res + ['user_id']
         
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):

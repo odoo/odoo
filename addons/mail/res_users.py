@@ -112,7 +112,8 @@ class res_users(osv.Model):
         company_name = user.company_id.name if user.company_id else _('the company')
         subject = '''%s has joined %s.''' % (user.name, company_name)
         body = '''Welcome to OpenERP !''' 
-        return self.pool.get('res.partner').message_append_note(cr, user.id, [user.partner_id.id],
+        # TODO change 1 into user.id but catch errors
+        return self.pool.get('res.partner').message_append_note(cr, 1, [user.partner_id.id],
             subject=subject, body=body, type='comment', content_subtype='html', context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -150,10 +151,6 @@ class res_users(osv.Model):
                         limit=100, offset=0, domain=None, context=None):
         for user in self.browse(cr, uid, ids, context=context):
             return user.partner_id.message_read(fetch_ancestors, ancestor_ids, limit, offset, domain)
-
-    def message_read_subscribers(self, cr, uid, ids, fields=['id', 'name', 'image_small'], context=None):
-        for user in self.browse(cr, uid, ids, context=context):
-            return user.partner_id.message_read_subscribers(fields)
 
     def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
                         limit=100, offset=0, domain=None, count=False, context=None):

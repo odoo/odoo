@@ -36,10 +36,61 @@ from tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
-
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode,message.get_all(header, [])))
 
+class many2many_reference(fields.many2many):
+    """ many2many_reference is an override of fields.many2many. It manages
+        many2many-like table where one id is given by two fields, res_model
+        and res_id.
+    """
+    
+    def _get_query_and_where_params(self, cr, model, ids, values, where_params):
+        """ Add in where:
+            - mail_followers.res_model = 'crm.lead'
+        """
+        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
+                    FROM %(rel)s, %(from_c)s \
+                    WHERE %(rel)s.%(id1)s IN %%s \
+                    AND %(rel)s.%(id2)s = %(tbl)s.id \
+                    AND %(rel)s.res_model = %%s \
+                    %(where_c)s  \
+                    %(order_by)s \
+                    %(limit)s \
+                    OFFSET %(offset)d' \
+                % values
+        where_params = [model._name] + where_params
+        return query, where_params
+
+    def set(self, cr, model, id, name, values, user=None, context=None):
+        """ Override to add the res_model field in queries. """
+        if not values: return
+        rel, id1, id2 = self._sql_names(model)
+        obj = model.pool.get(self._obj)
+        for act in values:
+            if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
+                continue
+            if act[0] == 0:
+                idnew = obj.create(cr, user, act[2], context=context)
+                cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, idnew, model._name))
+            elif act[0] == 3:
+                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
+            elif act[0] == 4:
+                # following queries are in the same transaction - so should be relatively safe
+                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND res_model=%s', (id, act[1], model._name))
+                if not cr.fetchone():
+                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, act[1], model._name))
+            elif act[0] == 6:
+                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
+                if d1:
+                    d1 = ' and ' + ' and '.join(d1)
+                else:
+                    d1 = ''
+                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND res_model=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, model._name, id]+d2)
+                for act_nbr in act[2]:
+                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+',res_model) VALUES (%s,%s,%s)', (id, act_nbr, model._name))
+            else:
+                return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
 
 class mail_thread(osv.Model):
     '''Mixin model, meant to be inherited by any model that needs to
@@ -62,9 +113,9 @@ class mail_thread(osv.Model):
        default implementation will work for any model. However it is common
        to override at least the ``message_new`` and ``message_update``
        methods (calling ``super``) to add model-specific behavior at
-       creation and update of a thread; and ``message_get_subscribers``
-       to manage more precisely the social aspect of the thread through
-       the followers.
+       creation and update of a thread.
+       
+       #TODO: UPDATE WITH SUBTYPE / NEW FOLLOW MECHANISM
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
@@ -111,7 +162,7 @@ class mail_thread(osv.Model):
         return [('id','in',[])]
 
     _columns = {
-        'message_is_subscriber': fields.function(_get_is_subscriber,
+        'message_is_follower': fields.function(_get_is_follower,
             type='boolean', string='Is a Follower'),
         'message_follower_ids': fields.one2many('mail.subscription', 'res_id',
             domain=lambda self: [('res_model','=',self._name)],
@@ -135,28 +186,91 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        """Automatically subscribe the creator """
+        """ Override of create to subscribe :
+            - the writer
+            - followers given by the monitored fields
+        """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
         self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
         return thread_id
 
+    # FP Note: not sure we need this?
+    #def write(self, cr, uid, ids, vals, context=None):
+    #    """ Override of write to subscribe :
+    #        - the writer
+    #        - followers given by the monitored fields
+    #    """
+    #    if isinstance(ids, (int, long)):
+    #        ids = [ids]
+    #    for id in ids:
+    #        # copy original vals because we are going to modify it
+    #        specific_vals = dict(vals)
+    #        # we modify followers: do not subscribe the uid
+    #        if specific_vals.get('message_follower_ids'):
+    #            followers_command = self.message_get_automatic_followers(cr, uid, id, specific_vals, add_uid=False, context=context)
+    #            specific_vals['message_follower_ids'] += followers_command
+    #        else:
+    #            followers_command = self.message_get_automatic_followers(cr, uid, id, specific_vals, context=context)
+    #            specific_vals['message_follower_ids'] = followers_command
+    #        write_res = super(mail_thread, self).write(cr, uid, ids, specific_vals, context=context)
+    #    return True
+
     def unlink(self, cr, uid, ids, context=None):
-        """Override unlink, to automatically delete
-           - subscriptions
-           - messages
+        """Override unlink, to automatically delete messages
            that are linked with res_model and res_id, not through
            a foreign key with a 'cascade' ondelete attribute.
            Notifications will be deleted with messages
         """
-        subscr_obj = self.pool.get('mail.subscription')
         msg_obj = self.pool.get('mail.message')
-        # delete subscriptions
-        subscr_to_del_ids = subscr_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        subscr_obj.unlink(cr, uid, subscr_to_del_ids, context=context)
         # delete messages and notifications
         msg_to_del_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
         msg_obj.unlink(cr, uid, msg_to_del_ids, context=context)
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
+
+    def message_get_automatic_followers(self, cr, uid, id, record_vals, add_uid=True, fetch_missing=False, context=None):
+        """ Return the command for the many2many follower_ids field to manage
+            subscribers. Behavior :
+            - get the monitored fields (ex: ['user_id', 'responsible_id']); those
+              fields should be relationships to res.users (#TODO: res.partner)
+            - if this field is in the record_vals: it means it has been modified
+              thus add its value to the followers
+            - if this fields is not in record_vals, but fetch_missing paramter
+              is set to True: fetch the value in the record (use: at creation
+              for default values, not present in record_vals)
+            - if add_uid: add the current user (for example: writer is subscriber)
+            - generate the command and return it
+            This method has to be used on 1 id, because otherwise it would imply
+            to track which user.id is used for which record.id.
+
+            :param record_vals: values given to the create method of the new
+                record, or values updated in a write.
+            :param monitored_fields: a list of fields that are monitored. Those
+                fields must be many2one fields to the res.users model.
+            :param fetch_missing: is set to True, the method will read the
+                record to find values that are not present in record_vals.
+
+            #TODO : UPDATE WHEN MERGING TO PARTNERS
+        """
+        # get monitored fields
+        monitored_fields = self.message_get_monitored_follower_fields(cr, uid, [id], context=context)
+        modified_fields = [field for field in monitored_fields if field in record_vals.iterkeys()]
+        other_fields = [field for field in monitored_fields if field not in record_vals.iterkeys()] if fetch_missing else []
+        # for each monitored field: if in record_vals, it has been modified/added
+        follower_ids = []
+        for field in modified_fields:
+            # do not add 'False'
+            if record_vals.get(fields):
+                follower_ids.append(record_vals.get(field))
+        # for other fields: read in record if fetch_missing (otherwise list is void)
+        for field in other_fields:
+            record = self.browse(cr, uid, id, context=context)
+            value = getattr(record, field)
+            if value:
+                follower_ids.append(value)
+        # add uid if asked and not already present
+        if add_uid and uid not in follower_ids:
+            follower_ids.append(uid)
+        return self.message_subscribe_get_command(cr, uid, follower_ids, context=context)
 
     #------------------------------------------------------
     # mail.message wrappers and tools
@@ -166,7 +280,7 @@ class mail_thread(osv.Model):
         """ OpenChatter: wrapper of mail.message create method
            - creates the mail.message
            - automatically subscribe the message writer
-           - push the message to subscribed users
+           - push the message to followers
         """
         context = context or {}
         message_obj = self.pool.get('mail.message')
@@ -873,10 +987,17 @@ class mail_thread(osv.Model):
             return True
         return False
 
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Returns a list of fields containing a res.user.id. Those fields
+            will be checked to automatically subscribe those users.
+        """
+        return []
+
     def message_subscribe(self, cr, uid, ids, partner_ids=None, context=None):
         """
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
+            :param return: new value of followers, for Chatter
         """
         subscription_obj = self.pool.get('mail.subscription')
         create_ids = []
@@ -892,17 +1013,15 @@ class mail_thread(osv.Model):
 
             :param user_ids: a list of user_ids; if not set, subscribe
                              uid instead
+            :param return: new value of followers, for Chatter
         """
-        # Trying to unsubscribe somebody not in subscribers: returns False
-        # if special management is needed; allows to know that an automatically
-        # subscribed user tries to unsubscribe and allows to warn him
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
-        subscription_obj = self.pool.get('mail.subscription')
-        to_delete_sub_ids = subscription_obj.search(cr, uid,
-                        ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', 'in', to_unsubscribe_uids)], context=context)
-        if not to_delete_sub_ids:
-            return False
-        return subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
+        write_res = self.write(cr, uid, ids, {'message_follower_ids': self.message_unsubscribe_get_command(cr, uid, to_unsubscribe_uids, context)}, context=context)
+        return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
+
+    def message_unsubscribe_get_command(self, cr, uid, follower_ids, context=None):
+        """ Generate the many2many command to remove followers. """
+        return [(3, id) for id in follower_ids]
 
     #------------------------------------------------------
     # Notification API

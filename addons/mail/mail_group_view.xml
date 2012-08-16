@@ -14,6 +14,8 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
+                    <field name="message_follower_ids"/>
+                    <field name="message_is_follower"/>
                     <templates>
                         <t t-name="kanban-description">
                             <div class="oe_group_description" t-if="record.description.raw_value">
@@ -21,17 +23,16 @@
                             </div>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="{record.message_is_subscriber.raw_value} oe_group_vignette">
+                            <div t-attf-class="{record.message_is_follower.raw_value} oe_group_vignette">
                                 <div class="oe_group_image">
                                     <a type="edit"><img t-att-src="kanban_image('mail.group', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="edit"><field name="name"/></a></h4>
-                                    <span style="display: none;"><field name="message_is_subscriber"/></span>
                                     <ul>
                                         <li><t t-raw="record.message_summary.raw_value"/></li>
-                                        <li t-if="! record.message_is_subscriber.raw_value"><a name="action_group_join" string="Join" type="object" class="oe_group_join">Not following</a></li>
-                                        <li t-if="record.message_is_subscriber.raw_value"><a name="action_group_leave" string="Join" type="object" class="oe_group_leave">Following</a></li>
+                                        <li t-if="! record.message_is_follower.raw_value"><a name="action_group_join" string="Join" type="object" class="oe_group_join">Not following</a></li>
+                                        <li t-if="record.message_is_follower.raw_value"><a name="action_group_leave" string="Join" type="object" class="oe_group_leave">Following</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -80,6 +81,8 @@
                     <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"
                                 options='{"thread_level": 1}'/>
+                        <field name="message_follower_ids" widget="mail_followers"
+                                context="{'lapin': 'nouille'}" image="image_small"/>
                     </div>
                 </form>
             </field>

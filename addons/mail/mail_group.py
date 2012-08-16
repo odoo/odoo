@@ -27,13 +27,12 @@ from osv import osv
 from osv import fields
 from tools.translate import _
 
-class mail_group(osv.osv):
+class mail_group(osv.Model):
     """
     A mail_group is a collection of users sharing messages in a discussion
     group. Group users are users that follow the mail group, using the
     subscription/follow mechanism of OpenSocial. A mail group has nothing
     in common with res.users.group.
-    Additional information on fields:
     """
     _description = 'Discussion group'
     _name = 'mail.group'
@@ -63,8 +62,8 @@ class mail_group(osv.osv):
         'group_ids': fields.many2many('res.groups', rel='mail_group_res_group_rel',
             id1='mail_group_id', id2='groups_id', string='Auto Subscription',
             help="Members of those groups will automatically added as followers. "\
-                    "Note that they will be able to manage their subscription manually "\
-                    "if necessary."),
+                 "Note that they will be able to manage their subscription manually "\
+                 "if necessary."),
         'image': fields.binary("Photo",
             help="This field holds the image used as photo for the "\
                  "user. The image is base64 encoded, and PIL-supported. "\
@@ -86,8 +85,8 @@ class mail_group(osv.osv):
                  "resized as a 50x50px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade",
-                                    help="The email address associated with this group. New emails received will automatically "
-                                         "create new topics."),
+            help="The email address associated with this group. New emails received will automatically "
+                 "create new topics."),
     }
 
     def _get_default_employee_group(self, cr, uid, context=None):
@@ -171,3 +170,12 @@ class mail_group(osv.osv):
 
     def action_group_leave(self, cr, uid, ids, context=None):
         return self.message_unsubscribe(cr, uid, ids, context=context)
+
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'responsible_id' to the monitored fields """
+        res = super(mail_group, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['responsible_id']
