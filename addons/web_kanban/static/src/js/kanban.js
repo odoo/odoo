@@ -175,9 +175,22 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
         form.on_button_cancel.add_last(am.dialog.on_close);
-        form.on_created.add_last(function() {
-            am.dialog.on_close();
-            self.do_reload();
+        form.on_created.add_last(function(r) {
+            (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r.result]).then(function(new_record) {
+                am.dialog.on_close();
+                var domain = self.dataset.domain.slice(0);
+                domain.push([self.group_by, '=', new_record[0][0]]);
+                var dataset = new instance.web.DataSetSearch(self, self.dataset.model, self.dataset.get_context(), domain);
+                var datagroup = {
+                    value: new_record[0],
+                    length: 0,
+                    aggregates: {},
+                };
+                var new_group = new instance.web_kanban.KanbanGroup(self, [], datagroup, dataset);
+                self.do_add_groups([new_group]).then(function() {
+                    $(window).scrollTo(self.groups.slice(-1)[0].$element, { axis: 'x' });
+                });
+            });
         });
     },
     do_search: function(domain, context, group_by) {
@@ -254,7 +267,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.groups[group.undefined_title ? 'unshift' : 'push'](group);
         });
         var groups_started = _.map(this.groups, function(group) {
-            return group.insertBefore(self.$element.find('.oe_kanban_groups_headers td:last'));
+            if (!group.is_started) {
+                return group.insertBefore(self.$element.find('.oe_kanban_groups_headers td:last'));
+            }
         });
         return $.when.apply(null, groups_started).then(function () {
             self.on_groups_started();
@@ -501,6 +516,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                 }
             }
         });
+        this.is_started = true;
         return def;
     },
     compute_cards_auto_height: function() {
@@ -588,7 +604,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var self = this;
         if (confirm(_t("Are you sure to remove this column ?"))) {
             (new instance.web.DataSet(self, self.view.group_by_field.relation)).unlink([self.group.value[0]]).then(function(r) {
-                self.group.destroy();
                 self.view.do_reload();
             });
         }
@@ -813,7 +828,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).then(function(records) {
             if (records.length) {
                 self.set_record(records[0]);
-                self.replaceElement($(self.render()));
+                self.renderElement();
                 self.$element.data('widget', self);
                 self.bind_events();
                 self.group.compute_cards_auto_height();
