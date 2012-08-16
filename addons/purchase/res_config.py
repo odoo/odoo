@@ -59,21 +59,12 @@ class purchase_config_settings(osv.osv_memory):
             help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products.
             You can configure per product if you directly do a Request for Quotation
             to one supplier or if you want a purchase requisition to negotiate with several suppliers."""),
-        'decimal_precision': fields.integer('specify decimal precision on price',help="As an example, a decimal precision of 2 will allow prices   like: 9.99 EUR, whereas a decimal precision of 4 will allow prices  like:  0.0231 EUR per unit."),
     }
 
     _defaults = {
         'default_invoice_method': 'manual',
     }
 
-    def get_default_dp(self, cr, uid, fields, context=None):
-        dp = self.pool.get('ir.model.data').get_object(cr,uid, 'product','decimal_purchase')
-        return {'decimal_precision': dp.digits}
-
-    def set_default_dp(self, cr, uid, ids, context=None):
-        config = self.browse(cr, uid, ids[0], context)
-        dp = self.pool.get('ir.model.data').get_object(cr,uid, 'product','decimal_purchase')
-        dp.write({'digits': config.decimal_precision})
 
 
 

@@ -21,7 +21,7 @@
             <field name="name">Mail.group: access only public and joined groups</field>
             <field name="model_id" ref="model_mail_group"/>
             <!-- This rule has to be improved for employee only groups -->
-            <field name="domain_force">['|', '|', ('public', '=', 'public'), ('member_ids', 'in', [user.id]), '&amp;', ('public','=','groups'), ('group_public_id','in', [x.id for x in user.groups_id])]</field>
+            <field name="domain_force">['|', '|', ('public', '=', 'public'), ('message_follower_ids', 'in', [user.id]), '&amp;', ('public','=','groups'), ('group_public_id','in', [x.id for x in user.groups_id])]</field>
         </record>
 
     </data>
