@@ -193,7 +193,7 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
     on_traceback: function(error) {
         var self = this;
         var buttons = {};
-        if (instance.connection.openerp_entreprise) {
+        if (instance.session.openerp_entreprise) {
             buttons[_t("Send OpenERP Enterprise Report")] = function() {
                 var $this = $(this);
                 var issuename = $('#issuename').val();
@@ -224,7 +224,7 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
             min_height: '600px',
             buttons: buttons
         }).open();
-        dialog.$element.html(QWeb.render('CrashManager.error', {session: instance.connection, error: error}));
+        dialog.$element.html(QWeb.render('CrashManager.error', {session: instance.session, error: error}));
     },
     on_javascript_exception: function(exception) {
         this.on_traceback({
@@ -269,7 +269,7 @@ instance.web.Loading = instance.web.Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
-            if (instance.connection.debug) {
+            if (instance.session.debug) {
                 this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
             } else {
                 this.$element.text(_t("Loading"));
@@ -510,11 +510,11 @@ instance.web.client_actions.add("database_manager", "instance.web.DatabaseManage
 instance.web.Login =  instance.web.Widget.extend({
     template: "Login",
     remember_credentials: true,
-    _db_list: null,
 
     init: function(parent, params) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
+        this.db_list = null;
         this.selected_db = null;
         this.selected_login = null;
         this.params = params || {};
@@ -537,50 +537,41 @@ instance.web.Login =  instance.web.Widget.extend({
         self.$element.find('.oe_login_manage_db').click(function() {
             self.do_action("database_manager");
         });
-        return self.load_db_list().then(self.on_db_list_loaded).then(function() {
-            if (self.params.db) {
-                self.do_login(self.params.db, self.params.login, self.params.password);
-            }
-        });
-    },
-    load_db_list: function (force) {
-        var d = $.when(), self = this;
-        if (_.isNull(this._db_list) || force) {
-            d = self.rpc("/web/database/get_list", {}, function(result) {
-                self._db_list = _.clone(result.db_list);
-            }, function(error, event) {
-                if (error.data.fault_code === 'AccessDenied') {
-                    event.preventDefault();
-                }
-            });
+        var d;
+        if (self.params.db) {
+            d = self.do_login(self.params.db, self.params.login, self.params.password);
+        } else {
+            d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
         }
         return d;
     },
-    on_db_list_loaded: function () {
-        var self = this;
-        var list = this._db_list;
-        var dbdiv = this.$element.find('div.oe_login_dbpane');
-        this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}));
-        if(list.length === 0) {
+    on_db_loaded: function (result) {
+        this.db_list = result.db_list;
+        this.$("[name=db]").replaceWith(QWeb.render('Login.dblist', { db_list: this.db_list, selected_db: this.selected_db}));
+        if(this.db_list.length === 0) {
             this.do_action("database_manager");
-        } else if(list && list.length === 1) {
-            dbdiv.hide();
+        } else if(this.db_list.length === 1) {
+            this.$('div.oe_login_dbpane').hide();
         } else {
-            dbdiv.show();
+            this.$('div.oe_login_dbpane').show();
+        }
+    },
+    on_db_failed: function (error, event) {
+        if (error.data.fault_code === 'AccessDenied') {
+            event.preventDefault();
         }
     },
     on_submit: function(ev) {
         if(ev) {
             ev.preventDefault();
         }
-        var $e = this.$element;
-        var db = $e.find("form [name=db]").val();
+        var db = this.$("form [name=db]").val();
         if (!db) {
             this.do_warn("Login", "No database selected !");
             return false;
         }
-        var login = $e.find("form input[name=login]").val();
-        var password = $e.find("form input[name=password]").val();
+        var login = this.$("form input[name=login]").val();
+        var password = this.$("form input[name=password]").val();
 
         this.do_login(db, login, password);
     },
@@ -616,12 +607,6 @@ instance.web.Login =  instance.web.Widget.extend({
             });
         });
     },
-    show: function () {
-        this.$element.show();
-    },
-    hide: function () {
-        this.$element.hide();
-    }
 });
 instance.web.client_actions.add("login", "instance.web.Login");
 
@@ -882,8 +867,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             var func = new instance.web.Model("res.users").get_func("read");
             return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
                 var topbar_name = res.name;
-                if(instance.connection.debug)
-                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.connection.db);
+                if(instance.session.debug)
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$element.find('.oe_topbar_name').text(topbar_name);
@@ -900,7 +885,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     on_menu_settings: function() {
         var self = this;
         self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
-            result.result.res_id = instance.connection.uid;
+            result.result.res_id = instance.session.uid;
             self.getParent().action_manager.do_action(result.result);
         });
     },
@@ -927,7 +912,7 @@ instance.web.Client = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        return instance.connection.session_bind(this.origin).pipe(function() {
+        return instance.session.session_bind(this.origin).pipe(function() {
             var $e = $(QWeb.render(self._template, {}));
             self.replaceElement($e);
             self.bind_events();
@@ -970,7 +955,7 @@ instance.web.Client = instance.web.Widget.extend({
     show_common: function() {
         var self = this;
         this.crashmanager =  new instance.web.CrashManager();
-        instance.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
+        instance.session.on_rpc_error.add(this.crashmanager.on_rpc_error);
         self.notification = new instance.web.Notification(this);
         self.notification.appendTo(self.$element);
         self.loading = new instance.web.Loading(self);
@@ -1067,7 +1052,7 @@ instance.web.WebClient = instance.web.Client.extend({
     do_reload: function() {
         var self = this;
         return this.session.session_reload().pipe(function () {
-            instance.connection.load_modules(true).pipe(
+            instance.session.load_modules(true).pipe(
                 self.menu.proxy('do_reload')); });
 
     },
@@ -1084,8 +1069,6 @@ instance.web.WebClient = instance.web.Client.extend({
         this.session.session_logout().then(function () {
             $(window).unbind('hashchange', self.on_hashchange);
             self.do_push_state({});
-            //would be cool to be able to do this, but I think it will make addons do strange things
-            //this.show_login();
             window.location.reload();
         });
     },
@@ -1174,7 +1157,7 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).pipe(function() {
-            return instance.connection.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
+            return instance.session.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
                 return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
                     var action = result.result;
                     action.flags = _.extend({

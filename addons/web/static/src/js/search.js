@@ -1613,7 +1613,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             }
             var filter = {
                 name: $name.val(),
-                user_id: private_filter ? instance.connection.uid : false,
+                user_id: private_filter ? instance.session.uid : false,
                 model_id: self.view.model,
                 context: results.context,
                 domain: results.domain
@@ -1737,11 +1737,11 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
     }
 });
 
-instance.web.search.ExtendedSearchProposition = instance.web.OldWidget.extend(/** @lends instance.web.search.ExtendedSearchProposition# */{
+instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @lends instance.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
     /**
      * @constructs instance.web.search.ExtendedSearchProposition
-     * @extends instance.web.OldWidget
+     * @extends instance.web.Widget
      *
      * @param parent
      * @param fields

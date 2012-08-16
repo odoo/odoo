@@ -330,16 +330,32 @@ def httprequest(f):
     return http_handler
 
 #----------------------------------------------------------
-# OpenERP Web werkzeug Session Managment wraped using with
+# OpenERP Web Controller registration with a metaclass
+#----------------------------------------------------------
+addons_module = {}
+addons_manifest = {}
+controllers_class = []
+controllers_object = {}
+controllers_path = {}
+
+class ControllerType(type):
+    def __init__(cls, name, bases, attrs):
+        super(ControllerType, cls).__init__(name, bases, attrs)
+        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
+
+class Controller(object):
+    __metaclass__ = ControllerType
+
+#----------------------------------------------------------
+# OpenERP Web Session context manager
 #----------------------------------------------------------
 STORES = {}
 
 @contextlib.contextmanager
-def session_context(request, storage_path, session_cookie='sessionid'):
+def session_context(request, storage_path, session_cookie='httpsessionid'):
     session_store, session_lock = STORES.get(storage_path, (None, None))
     if not session_store:
-        session_store = werkzeug.contrib.sessions.FilesystemSessionStore(
-            storage_path)
+        session_store = werkzeug.contrib.sessions.FilesystemSessionStore( storage_path)
         session_lock = threading.Lock()
         STORES[storage_path] = session_store, session_lock
 
@@ -402,22 +418,8 @@ def session_context(request, storage_path, session_cookie='sessionid'):
             session_store.save(request.session)
 
 #----------------------------------------------------------
-# OpenERP Web Module/Controller Loading and URL Routing
+# OpenERP Web WSGI Application
 #----------------------------------------------------------
-addons_module = {}
-addons_manifest = {}
-controllers_class = []
-controllers_object = {}
-controllers_path = {}
-
-class ControllerType(type):
-    def __init__(cls, name, bases, attrs):
-        super(ControllerType, cls).__init__(name, bases, attrs)
-        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
-
-class Controller(object):
-    __metaclass__ = ControllerType
-
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
@@ -464,12 +466,12 @@ class Root(object):
 
         if not hasattr(self.config, 'connector'):
             if self.config.backend == 'local':
-                self.config.connector = LocalConnector()
+                self.config.connector = session.LocalConnector()
             else:
                 self.config.connector = openerplib.get_connector(
                     hostname=self.config.server_host, port=self.config.server_port)
 
-        self.session_cookie = 'sessionid'
+        self.httpsession_cookie = 'httpsessionid'
         self.addons = {}
 
         static_dirs = self._load_addons(openerp_addons_namespace)
@@ -504,7 +506,7 @@ class Root(object):
         if not handler:
             response = werkzeug.exceptions.NotFound()
         else:
-            with session_context(request, self.session_storage, self.session_cookie) as session:
+            with session_context(request, self.session_storage, self.httpsession_cookie) as session:
                 result = handler( request, self.config)
 
                 if isinstance(result, basestring):
@@ -514,7 +516,7 @@ class Root(object):
                     response = result
 
                 if hasattr(response, 'set_cookie'):
-                    response.set_cookie(self.session_cookie, session.sid)
+                    response.set_cookie(self.httpsession_cookie, session.sid)
 
         return response(environ, start_response)
 
@@ -563,8 +565,8 @@ class Root(object):
             while ps:
                 c = controllers_path.get(ps)
                 if c:
-                    m = getattr(c, meth)
-                    if getattr(m, 'exposed', False):
+                    m = getattr(c, meth, None)
+                    if m and getattr(m, 'exposed', False):
                         _logger.debug("Dispatching to %s %s %s", ps, c, meth)
                         return m
                 ps, _slash, meth = ps.rpartition('/')
@@ -572,54 +574,4 @@ class Root(object):
                     ps = '/'
         return None
 
-class LibException(Exception):
-    """ Base of all client lib exceptions """
-    def __init__(self,code=None,message=None):
-        self.code = code
-        self.message = message
-
-class ApplicationError(LibException):
-    """ maps to code: 1, server side: Exception or openerp.exceptions.DeferredException"""
-
-class Warning(LibException):
-    """ maps to code: 2, server side: openerp.exceptions.Warning"""
-
-class AccessError(LibException):
-    """ maps to code: 3, server side:  openerp.exceptions.AccessError"""
-
-class AccessDenied(LibException):
-    """ maps to code: 4, server side: openerp.exceptions.AccessDenied"""
-
-
-class LocalConnector(openerplib.Connector):
-    """
-    A type of connector that uses the XMLRPC protocol.
-    """
-    PROTOCOL = 'local'
-
-    def __init__(self):
-        pass
-
-    def send(self, service_name, method, *args):
-        import openerp
-        import traceback
-        import xmlrpclib
-        code_string = "warning -- %s\n\n%s"
-        try:
-            return openerp.netsvc.dispatch_rpc(service_name, method, args)
-        except openerp.osv.osv.except_osv, e:
-        # TODO change the except to raise LibException instead of their emulated xmlrpc fault
-            raise xmlrpclib.Fault(code_string % (e.name, e.value), '')
-        except openerp.exceptions.Warning, e:
-            raise xmlrpclib.Fault(code_string % ("Warning", e), '')
-        except openerp.exceptions.AccessError, e:
-            raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
-        except openerp.exceptions.AccessDenied, e:
-            raise xmlrpclib.Fault('AccessDenied', str(e))
-        except openerp.exceptions.DeferredException, e:
-            formatted_info = "".join(traceback.format_exception(*e.traceback))
-            raise xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
-        except Exception, e:
-            formatted_info = "".join(traceback.format_exception(*(sys.exc_info())))
-            raise xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
-
+# vim:et:ts=4:sw=4:

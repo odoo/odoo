@@ -2063,7 +2063,7 @@ instance.web.list.Button = instance.web.list.Column.extend({
                 title: this.string || '',
                 additional_attributes: isNaN(row_data["id"].value) && instance.web.BufferedDataSet.virtual_id_regex.test(row_data["id"].value) ?
                     'disabled="disabled" class="oe_list_button_disabled"' : '',
-                prefix: instance.connection.prefix,
+                prefix: instance.session.prefix,
                 icon: this.icon,
                 alt: this.string || ''
             });
@@ -2090,7 +2090,7 @@ instance.web.list.Binary = instance.web.list.Column.extend({
         var text = _t("Download");
         var download_url = _.str.sprintf(
                 '/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d',
-                instance.connection.session_id, options.model, this.id, options.id);
+                instance.session.session_id, options.model, this.id, options.id);
         if (this.filename) {
             download_url += '&filename_field=' + this.filename;
             if (row_data[this.filename]) {

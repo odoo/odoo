@@ -32,7 +32,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.aggregates = {};
         this.group_operators = ['avg', 'max', 'min', 'sum', 'count'];
         this.qweb = new QWeb2.Engine();
-        this.qweb.debug = instance.connection.debug;
+        this.qweb.debug = instance.session.debug;
         this.qweb.default_dict = _.clone(QWeb.default_dict);
         this.has_been_loaded = $.Deferred();
         this.search_domain = this.search_context = this.search_group_by = null;
@@ -132,7 +132,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                         node.children = [{
                             tag: 'img',
                             attrs: {
-                                src: instance.connection.prefix + '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
+                                src: instance.session.prefix + '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
                                 width: '16',
                                 height: '16'
                             }
@@ -343,7 +343,7 @@ function get_class(name) {
     return new instance.web.Registry({'tmp' : name}).get_object("tmp");
 }
 
-instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
+instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     template: 'KanbanView.group_header',
     init: function (parent, records, group, dataset) {
         var self = this;
@@ -517,7 +517,7 @@ instance.web_kanban.KanbanGroup = instance.web.OldWidget.extend({
     }
 });
 
-instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
+instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     template: 'KanbanView.record',
     init: function (parent, record) {
         this._super(parent);
@@ -563,7 +563,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
         });
         return new_record;
     },
-    render: function() {
+    renderElement: function() {
         this.qweb_context = {
             record: this.record,
             widget: this,
@@ -574,9 +574,11 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
                 this.qweb_context[p] = _.bind(this[p], this);
             }
         }
-        return this._super({
+        var $el = instance.web.qweb.render(this.template, {
+            'widget': this,
             'content': this.view.qweb.render('kanban-box', this.qweb_context)
         });
+        this.replaceElement($el);
     },
     bind_events: function() {
         var self = this;
@@ -758,7 +760,7 @@ instance.web_kanban.KanbanRecord = instance.web.OldWidget.extend({
             url = "/web/static/src/img/placeholder.png";
         } else {
             id = escape(JSON.stringify(id));
-            url = instance.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+            url = instance.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
             if (cache !== undefined) {
                 // Set the cache duration in seconds.
                 url += '&cache=' + parseInt(cache, 10);
