@@ -253,7 +253,7 @@ class hr_payslip_run(osv.osv):
                 slip_ids.append(slip_id.id)
 
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
-                if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
+                if not slip.employee_id.bank_account_id or not slip.employee_id.bank_account_id.acc_number:
                     raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
                 line_ids = payslip_line_pool.search(cr, uid, [('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
                 if line_ids:
