@@ -3,14 +3,15 @@
         <record id="view_account_configuration_installer" model="ir.ui.view">
             <field name="name">account.installer.form</field>
             <field name="model">account.installer</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
                 <form position="attributes" version="7.0">
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <footer position="replace">
-                    <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
+                    <footer>
+                      <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
+                    </footer>
                 </footer>
                 <separator string="title" position="replace">
                     <group>

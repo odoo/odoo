@@ -35,7 +35,6 @@ class purchase_report(osv.osv):
         'name': fields.char('Year',size=64,required=False, readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'state': fields.selection([('draft', 'Request for Quotation'),
-                                    ('wait', 'Waiting'),
                                      ('confirmed', 'Waiting Supplier Ack'),
                                       ('approved', 'Approved'),
                                       ('except_picking', 'Shipping Exception'),

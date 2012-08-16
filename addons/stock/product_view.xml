@@ -5,7 +5,6 @@
         <record id="product_search_form_view_stock" model="ir.ui.view">
             <field name="name">product.search.stock.form</field>
             <field name="model">product.product</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <field name="pricelist_id" position="before">
@@ -18,7 +17,6 @@
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit</field>
             <field name="model">product.category</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
                 <data>
@@ -35,7 +33,6 @@
         <record id="view_template_property_form" model="ir.ui.view">
             <field name="name">product.template.stock.property.form.inherit</field>
             <field name="model">product.template</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <page position="after" string="Information">
@@ -57,14 +54,13 @@
         <record id="view_product_standard_price_form" model="ir.ui.view">
             <field name="name">product.product.standard.price.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace" version="7.0">
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/> - 
-                        <button name="%(action_view_change_standard_price)d" string="Update"
+                        <button name="%(action_view_change_standard_price)d" string="update"
                             type="action" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"
                             class="oe_link"/>
                     </div>
@@ -75,7 +71,6 @@
         <record id="view_normal_property_acc_form" model="ir.ui.view">
             <field name="name">product.normal.stock.acc.property.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="priority">26</field>
             <field name="arch" type="xml">
@@ -100,21 +95,22 @@
         <record id="view_normal_stock_property_form" model="ir.ui.view">
             <field name="name">product.normal.stock.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="status" position="before" version="7.0">
-                    <group string="Stock and Expected Variations">
-                        <field name="qty_available"/>
-                        <field name="incoming_qty" groups="base.group_user"/>
+                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}">
+                        <label for="qty_available"/>
+                        <div>
+                            <field name="qty_available" class="oe_inline"/>
+                            <button name="%(action_view_change_product_quantity)d" string="update"
+                                type="action" groups="stock.group_stock_manager,stock.group_stock_user"
+                                class="oe_link"/>
+                        </div>
                         <label for="virtual_available" groups="base.group_user"/>
                         <div groups="base.group_user">
                             <field name="virtual_available" class="oe_inline"/>
-
-                            <button name="%(action_view_change_product_quantity)d" string="Update" attrs="{'invisible': [('type', '=', 'service')]}"
-                                type="action" icon="gtk-execute" groups="stock.group_stock_manager,stock.group_stock_user" class="oe_inline"/>
+                            (+<field name="incoming_qty" class="oe_inline"/> -<field name="outgoing_qty" class="oe_inline"/>)
                         </div>
-                        <field name="outgoing_qty" groups="base.group_user"/>
                     </group>
                     <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
                         <field name="track_production" groups="stock.group_production_lot"/>
@@ -131,7 +127,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('product_id','=',active_id),('picking_id.type','=','in')]</field>
+            <field name="domain">[('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
@@ -152,7 +148,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('product_id','=',active_id),('picking_id.type','=','out')]</field>
+            <field name="domain">[('picking_id.type','=','out')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
@@ -170,7 +166,6 @@
         <record model="ir.ui.view" id="product.product_kanban_view">
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="color"/>
@@ -188,7 +183,7 @@
                                 <div class="oe_product_desc">
                                     <h4><a type="edit"><field name="name"></field></a></h4>
                                     <ul>
-                                        <li>Code: <field name="code"/></li>
+                                        <li t-if="record.code.raw_value">Code: <field name="code"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Stock on hand: <field name="qty_available"/> <field name="uom_id"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Stock available: <field name="virtual_available"/> <field name="uom_id"/></li>
                                         <li>Price: <field name="lst_price"></field></li>
@@ -218,7 +213,6 @@
         <record id="view_normal_property_form" model="ir.ui.view">
             <field name="name">product.normal.stock.property.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="store" position="after">

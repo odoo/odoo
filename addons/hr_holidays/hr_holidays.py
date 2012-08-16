@@ -147,7 +147,7 @@ class hr_holidays(osv.osv):
         'holiday_type': 'employee'
     }
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "You have to select an employee or a category"),
+        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "You have to select an employee or a category."),
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be before the end date !"),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
     ]
@@ -202,7 +202,7 @@ class hr_holidays(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state<>'draft':
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft status !'))
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft state !'))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
@@ -366,20 +366,16 @@ class hr_holidays(osv.osv):
                     result[obj.id] = hr_manager_group['users']
         return result
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        """ Override to add employee and its manager. """
-        user_ids = super(hr_holidays, self).message_get_subscribers(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id and not obj.user_id.id in user_ids:
-                user_ids.append(obj.user_id.id)
-            if obj.employee_id.parent_id and not obj.employee_id.parent_id.user_id.id in user_ids:
-                user_ids.append(obj.employee_id.parent_id.user_id.id)
-        return user_ids
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' and 'manager' to the monitored fields """
+        res = super(hr_holidays, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        # TODO: add manager
+        return res + ['user_id']
         
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("The %s request has been <b>created</b> and is waiting confirmation")
+                        _("The %s request has been <b>created</b> and is waiting confirmation.")
                         % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
         return True
     
@@ -443,7 +439,7 @@ class hr_employee(osv.osv):
         # Find for holidays status
         status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
         if len(status_ids) != 1 :
-            raise osv.except_osv(_('Warning !'),_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
+            raise osv.except_osv(_('Warning!'),_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
         status_id = status_ids and status_ids[0] or False
         if not status_id:
             return False

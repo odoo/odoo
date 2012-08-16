@@ -22,6 +22,7 @@
 import time
 from osv import fields,osv
 from tools.translate import _
+import decimal_precision as dp
 
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
@@ -217,7 +218,7 @@ class delivery_grid(osv.osv):
                 ok = True
                 break
         if not ok:
-            raise osv.except_osv(_('No price available!'), _('No line matched this product or order in the choosed delivery grid.'))
+            raise osv.except_osv(_('No price available!'), _('No line matched this product or order in the chosen delivery grid.'))
 
         return price
 
@@ -237,8 +238,8 @@ class delivery_grid_line(osv.osv):
         'max_value': fields.float('Maximum Value', required=True),
         'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
         'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),
-        'list_price': fields.float('Sale Price', required=True),
-        'standard_price': fields.float('Cost Price', required=True),
+        'list_price': fields.float('Sale Price', digits_compute= dp.get_precision('Product Price'), required=True),
+        'standard_price': fields.float('Cost Price', digits_compute= dp.get_precision('Product Price'), required=True),
     }
     _defaults = {
         'type': lambda *args: 'weight',

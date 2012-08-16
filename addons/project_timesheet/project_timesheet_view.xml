@@ -5,7 +5,6 @@
         <record id="view_project_kanban_inherited" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
             <field name="model">project.project</field>
-            <field name="type">kanban</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
                 <field name="use_tasks" position="after">
@@ -32,11 +31,10 @@
         <record id="project_invoice_form_cutomer" model="ir.ui.view">
             <field name="name">Inherit project form : Customer</field>
             <field name="model">project.project</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="analytic_contract_project.project_invoice_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="replace">
-                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Contact"  attrs="{'required':[('to_invoice','!=',False)]}"/>
                 </field>
             </field>
         </record>
@@ -44,7 +42,6 @@
         <record id="project_invoice_search" model="ir.ui.view">
             <field name="name">Inherit project search view : Invoicing Data</field>
             <field name="model">project.project</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
                 <xpath expr='//filter[@string="Project(s) Manager"]' position='after'>
@@ -56,7 +53,6 @@
         <record id="view_account_analytic_line_search_account_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.search.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
                  <field name="account_id" position="replace">
@@ -67,7 +63,6 @@
         <record id="view_account_analytic_line_form_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.form.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
@@ -78,7 +73,6 @@
        <record id="view_account_analytic_line_tree_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">

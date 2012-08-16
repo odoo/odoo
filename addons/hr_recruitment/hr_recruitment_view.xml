@@ -75,7 +75,6 @@
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Applicants" fonts="bold:needaction_pending==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
                 <field name="needaction_pending" invisible="1"/>
@@ -104,25 +103,14 @@
     <record model="ir.ui.view" id="crm_case_form_view_job">
         <field name="name">Jobs - Recruitment Form</field>
         <field name="model">hr.applicant</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" version="7.0">
             <header>
-                <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" type="action"
+                <button name="case_close_with_emp" string="Hire" type="object"
                         states="open,pending" class="oe_highlight"/>
-                <button name="case_open" string="Open" type="object"
-                        states="draft,pending" class="oe_highlight"/>
-                <button name="case_pending" string="Pending" type="object" invisible="1"
-                        states="open"/>
-                <button name="case_reset" string="Reset to New" type="object"
-                        states="done,cancel"/>
                 <button name="case_cancel" string="Refuse" type="object"
                         states="draft,open,pending" class="oe_highlight"/>
-                <button name="stage_previous" string="Previous" type="object"
-                        states="open"/>
-                <button name="stage_next" string="Next" type="object"
-                        states="open"/>
-                <field name="stage_id" widget="statusbar"/>
+                <field name="stage_id" widget="statusbar" clickable="True"/>
             </header>
             <sheet>
                 <div class="oe_right oe_button_box">
@@ -193,6 +181,7 @@
             </sheet>
             <div class="oe_chatter">
                 <field name="message_ids" widget="mail_thread"/>
+                <field name="message_follower_ids" widget="mail_followers"/>
             </div>
           </form>
         </field>
@@ -201,7 +190,6 @@
     <record model="ir.ui.view" id="crm_case_graph_view_job">
         <field name="name">Jobs - Recruitment Graph</field>
         <field name="model">hr.applicant</field>
-        <field name="type">graph</field>
         <field name="arch" type="xml">
               <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
                 <field name="job_id"/>
@@ -214,7 +202,6 @@
     <record id="view_crm_case_jobs_filter" model="ir.ui.view">
         <field name="name">Jobs - Recruitment Search</field>
         <field name="model">hr.applicant</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
@@ -250,7 +237,6 @@
     <record model="ir.ui.view" id="hr_applicant_calendar_view">
         <field name="name">Hr Applicants Calendar</field>
         <field name="model">hr.applicant</field>
-        <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Applicants"
@@ -266,7 +252,6 @@
     <record model="ir.ui.view" id="hr_kanban_view_applicant">
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
-        <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
                 <field name="color"/>
@@ -320,7 +305,7 @@
                                     <a type="object" name="set_priority" args="['1']">
                                         <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16" title="Excellent"/>
                                     </a>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
 
                                 </div>
                             </div>
@@ -336,7 +321,6 @@
     <record id="hr_job_survey" model="ir.ui.view">
         <field name="name">hr.job.form1</field>
         <field name="model">hr.job</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <field name="no_of_recruitment" version="7.0" position="after">
@@ -351,7 +335,7 @@
             </field>
             <xpath expr="/form/sheet/h1" version="7.0" position="after">
                 <div colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                    <field name="alias_id" invisible="1"/>
+                    <field name="alias_id" invisible="1" required="0"/>
                     <label for="alias_name" class="oe_edit_only"/>
                     <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
                 </div>
@@ -363,7 +347,6 @@
     <record model="ir.ui.view" id="hr_recruitment_stage_tree">
         <field name="name">hr.recruitment.stage.tree</field>
         <field name="model">hr.recruitment.stage</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Stages">
                 <field name="sequence" invisible="1"/>
@@ -378,7 +361,6 @@
     <record model="ir.ui.view" id="hr_recruitment_stage_form">
         <field name="name">hr.recruitment.stage.form</field>
         <field name="model">hr.recruitment.stage</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Stage" version="7.0">
                 <group string="Stage Definition">
@@ -420,7 +402,6 @@
     <record model="ir.ui.view" id="hr_recruitment_degree_tree">
         <field name="name">hr.recruitment.degree.tree</field>
         <field name="model">hr.recruitment.degree</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Degree">
                 <field name="sequence" invisible="1"/>
@@ -433,7 +414,6 @@
     <record model="ir.ui.view" id="hr_recruitment_degree_form">
         <field name="name">hr.recruitment.degree.form</field>
         <field name="model">hr.recruitment.degree</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Degree" version="7.0">
                 <group>
@@ -463,7 +443,6 @@
     <record model="ir.ui.view" id="hr_recruitment_source_tree">
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Sources of Applicants">
                 <field name="name"/>
@@ -473,7 +452,6 @@
     <record model="ir.ui.view" id="hr_recruitment_source_form">
         <field name="name">hr.recruitment.source.form</field>
         <field name="model">hr.recruitment.source</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Sources of Applicants">
                 <field name="name"/>
