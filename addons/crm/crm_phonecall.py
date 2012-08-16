@@ -271,7 +271,6 @@ class crm_phonecall(base_state, osv.osv):
     def case_open_send_note(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         for phonecall in self.browse(cr, uid, ids, context=context):
-            phonecall.message_subscribe([phonecall.user_id.id], context=context)
             if phonecall.opportunity_id:
                 lead = phonecall.opportunity_id
                 # convert datetime field to a datetime, using server format, then

@@ -10,7 +10,6 @@
         <record id="product_pricelist_version_form_view" model="ir.ui.view">
             <field name="name">product.pricelist.version.form</field>
             <field name="model">product.pricelist.version</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Pricelist Version" version="7.0">
                     <group col="4">
@@ -28,7 +27,6 @@
         <record id="product_pricelist_version_tree_view" model="ir.ui.view">
             <field name="name">product.pricelist.version.tree</field>
             <field name="model">product.pricelist.version</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Pricelist Version">
                     <field name="name"/>
@@ -63,7 +61,6 @@
         <record id="product_pricelist_item_tree_view" model="ir.ui.view">
             <field name="name">product.pricelist.item.tree</field>
             <field name="model">product.pricelist.item</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Products Listprices Items">
                     <field name="sequence"/>
@@ -80,7 +77,6 @@
         <record id="product_pricelist_item_form_view" model="ir.ui.view">
             <field name="name">product.pricelist.item.form</field>
             <field name="model">product.pricelist.item</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Products Listprices Items" version="7.0">
                     <label for="name" class="oe_edit_only"/>
@@ -118,7 +114,6 @@
         <record model="ir.ui.view" id="product_pricelist_view_search">
             <field name="name">product.pricelist.search</field>
             <field name="model">product.pricelist</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Products Price Search">
                     <field name="name" string="Products Price"/>
@@ -133,7 +128,6 @@
         <record id="product_pricelist_view_tree" model="ir.ui.view">
             <field name="name">product.pricelist.tree</field>
             <field name="model">product.pricelist</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Products Price List">
                     <field name="name"/>
@@ -146,7 +140,6 @@
         <record id="product_pricelist_view" model="ir.ui.view">
             <field name="name">product.pricelist.form</field>
             <field name="model">product.pricelist</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Products Price List" version="7.0">
                     <label for="name" class="oe_edit_only"/>
@@ -231,7 +224,6 @@
         <record id="product_price_type_view" model="ir.ui.view">
             <field name="name">product.price.type.form</field>
             <field name="model">product.price.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Products Price Type" version="7.0">
                     <group col="4">
