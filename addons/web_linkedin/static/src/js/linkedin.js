@@ -78,7 +78,7 @@ openerp.web_linkedin = function(instance) {
             }, _.bind(this.linkedin_disabled, this));
         },
         linkedin_disabled: function() {
-            if (instance.connection.uid !== 1) {
+            if (instance.session.uid !== 1) {
                 instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning")), {
                     title: _t("LinkedIn is not enabled"),
                     buttons: [

@@ -252,7 +252,7 @@ class hr_employee(osv.osv):
     def onchange_user(self, cr, uid, ids, user_id, context=None):
         work_email = False
         if user_id:
-            work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).user_email
+            work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).email
         return {'value': {'work_email' : work_email}}
 
     def _get_default_image(self, cr, uid, context=None):

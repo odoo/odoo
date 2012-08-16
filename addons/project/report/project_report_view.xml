@@ -9,7 +9,6 @@
         <record id="view_task_project_user_tree" model="ir.ui.view">
             <field name="name">report.project.task.user.tree</field>
             <field name="model">report.project.task.user</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Tasks Analysis">
                     <field name="name" invisible="1"/>
@@ -42,7 +41,6 @@
         <record id="view_task_project_user_graph" model="ir.ui.view">
             <field name="name">report.project.task.user.graph</field>
             <field name="model">report.project.task.user</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Tasks Analysis" type="bar">
                      <field name="name"/>
@@ -55,7 +53,6 @@
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
             <field name="model">report.project.task.user</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
                     <field name="date_start"/>

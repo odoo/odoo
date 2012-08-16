@@ -5,7 +5,6 @@
         <record model="ir.ui.view" id="project_issue_board_tree_view">
             <field name="name">Project Issue Board Tree</field>
             <field name="model">project.issue</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Issue Tracker Tree" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="id"/>
@@ -36,7 +35,6 @@
         <record id="board_my_project_issue_form" model="ir.ui.view">
             <field name="name">board.my.project.issue.form.inherit</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="project.board_project_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/board/column/action[@string='My Tasks']" position="after">

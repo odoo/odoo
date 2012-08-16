@@ -4,7 +4,6 @@
         <record model="ir.ui.view" id="view_voucher_tree">
             <field name="name">account.voucher.tree</field>
             <field name="model">account.voucher</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries">
                     <field name="date"/>
@@ -23,7 +22,6 @@
         <record model="ir.ui.view" id="view_voucher_line_form">
             <field name="name">account.voucher.line.form</field>
             <field name="model">account.voucher.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Voucher Lines" version="7.0">
                     <group col="4">
@@ -39,9 +37,8 @@
         <record model="ir.ui.view" id="view_voucher_form">
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Accounting Voucher" version="7.0">
                   <header>
                       <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
                       <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>
@@ -114,6 +111,7 @@
                   </sheet>
                   <div class="oe_chatter">
                       <field name="message_ids" widget="mail_thread"/>
+                      <field name="message_follower_ids" widget="mail_followers"/>
                   </div>
                 </form>
             </field>
@@ -122,7 +120,6 @@
         <record id="view_voucher_filter" model="ir.ui.view">
             <field name="name">account.voucher.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
@@ -148,7 +145,6 @@
         <record id="account_cash_statement_graph" model="ir.ui.view">
             <field name="name">account.voucher.graph</field>
             <field name="model">account.voucher</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Voucher Statistics" type="bar">
                     <field name="date"/>
@@ -201,7 +197,6 @@
         <record id="view_bank_statement_form_invoice" model="ir.ui.view">
             <field name="name">account.bank.statement.invoice.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='import_buttons']" position="inside">
@@ -215,7 +210,6 @@
         <record id="view_bank_statement_tree_voucher" model="ir.ui.view">
             <field name="name">account.bank.statement.voucher.tree.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
@@ -227,7 +221,6 @@
         <record id="view_bank_statement_form_voucher" model="ir.ui.view">
             <field name="name">account.bank.statement.voucher.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='sequence']" position="before">
@@ -238,7 +231,6 @@
         <record id="view_cash_statement_tree_voucher" model="ir.ui.view">
             <field name="name">account.cash.statement.voucher.tree.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
@@ -250,7 +242,6 @@
         <record id="view_cash_statement_form_voucher" model="ir.ui.view">
             <field name="name">account.cash.statement.voucher.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='line_ids']/form/group/field[@name='amount']" position="after">
@@ -264,7 +255,6 @@
             <field name="name">res.company.form.inherit</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="currency_id" position="after">
                       <field name="income_currency_exchange_account_id"/>

@@ -5,9 +5,8 @@
         <record id="view_account_analytic_account_form" model="ir.ui.view">
             <field name="name">analytic.analytic.account.form</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Analytic Account" version="7.0">
                     <sheet string="Analytic Account">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -46,6 +45,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                     </div>
                 </form>
             </field>

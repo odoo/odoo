@@ -4,7 +4,6 @@
     <record model="ir.ui.view" id="view_document_user_form">
             <field name="name">report.document.user.form</field>
             <field name="model">report.document.user</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Files">
                     <field name="name"/>
@@ -21,7 +20,6 @@
         <record model="ir.ui.view" id="view_document_user_tree">
             <field name="name">report.document.user.tree</field>
             <field name="model">report.document.user</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Files">
                     <field name="name"/>
@@ -38,7 +36,6 @@
         <record id="view_report_document_user_search" model="ir.ui.view">
             <field name="name">report.document.user.search</field>
             <field name="model">report.document.user</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="All users files">
                     <field name="name" filter_domain="['|', '|',('name','ilike',self), ('user','ilike',self), ('directory','ilike',self)]" string="Users File"/>
@@ -61,7 +58,6 @@
         <record model="ir.ui.view" id="view_size_month">
             <field name="name">report.document.user.graph</field>
             <field name="model">report.document.file</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="File Size by Month" type="line">
                     <field name="month"/>
@@ -73,7 +69,6 @@
         <record model="ir.ui.view" id="view_size_month_tree">
             <field name="name">report.document.user.tree</field>
             <field name="model">report.document.file</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="File Size by Month">
                     <field name="month" />
@@ -94,7 +89,6 @@
         <record model="ir.ui.view" id="view_files_by_month_graph">
             <field name="name">report.file.month.graph</field>
             <field name="model">report.document.user</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Files by Month" type="pie">
                     <field name="month" />
@@ -106,7 +100,6 @@
         <record model="ir.ui.view" id="view_files_by_month_tree">
             <field name="name">report.file.month.tree</field>
             <field name="model">report.document.user</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Files by Month">
                     <field name="name"/>
@@ -119,7 +112,6 @@
         <record model="ir.ui.view" id="view_files_by_user_graph">
             <field name="name">report.file.user.graph</field>
             <field name="model">report.document.user</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Files by User" type="pie">
                     <field name="user" />

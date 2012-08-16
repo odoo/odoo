@@ -19,7 +19,6 @@
         <record model="ir.ui.view" id="report_stock_lines_date_tree">
             <field name="name">report.stock.lines.date.tree</field>
             <field name="model">report.stock.lines.date</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Dates of Inventories">
                     <field name="product_id"/>
@@ -31,7 +30,6 @@
         <record model="ir.ui.view" id="report_stock_lines_date_search">
             <field name="name">report.stock.lines.date.search</field>
             <field name="model">report.stock.lines.date</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Dates of Inventories">
                     <field name="date"/>
@@ -47,7 +45,6 @@
         <record model="ir.ui.view" id="report_stock_lines_date_form">
             <field name="name">report.stock.lines.date.form</field>
             <field name="model">report.stock.lines.date</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Dates of Inventories" version="7.0">
                     <group>
@@ -72,7 +69,6 @@
         <record id="view_location_graph" model="ir.ui.view">
             <field name="name">stock.location.graph</field>
             <field name="model">stock.location</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Stock Location">
                     <field name="complete_name"/>
