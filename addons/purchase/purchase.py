@@ -143,7 +143,6 @@ class purchase_order(osv.osv):
 
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
-        ('wait', 'Waiting'),
         ('sent', 'RFQ Sent'),
         ('confirmed', 'Waiting Approval'),
         ('approved', 'Purchase Order'),
@@ -190,15 +189,15 @@ class purchase_order(osv.osv):
                 'purchase.order.line': (_get_order, ['date_planned'], 10),
             }
         ),
-        'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Purchase Price'), string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Untaxed Amount',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums", help="The amount without tax"),
-        'amount_tax': fields.function(_amount_all, digits_compute= dp.get_precision('Purchase Price'), string='Taxes',
+        'amount_tax': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Taxes',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums", help="The tax amount"),
-        'amount_total': fields.function(_amount_all, digits_compute= dp.get_precision('Purchase Price'), string='Total',
+        'amount_total': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Total',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums",help="The total amount"),
@@ -739,12 +738,16 @@ class purchase_order(osv.osv):
                 result[obj.id].append(obj.validator.id)
         return result
 
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'validator' to the monitored fields """
+        res = super(purchase_order, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['validator']
+
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Request for quotation <b>created</b>."), context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, [obj.id], [obj.validator.id], context=context)
             self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
 
     def shipment_send_note(self, cr, uid, ids, picking_id, context=None):
@@ -804,8 +807,8 @@ class purchase_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
         'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
         'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Purchase Price')),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Purchase Price')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
         'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
         'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),

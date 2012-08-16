@@ -5,7 +5,6 @@
         <record id="view_hr_timesheet_sheet_graph" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.sheet.graph</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Available Attendance" type="bar">
                     <field name="name"/>
@@ -27,7 +26,6 @@
             <field name="name">board.hr.timesheet.sheet.form</field>
             <field name="model">board.board</field>
             <field name="inherit_id" ref="hr.board_hr_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="/form/board/column[2]" position="inside">
                     <action name="%(action_week_attendance_graph)d" string="My Total Attendance By Week"/>

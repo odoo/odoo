@@ -5,7 +5,6 @@
     <record id="view_evaluation_report_tree" model="ir.ui.view">
         <field name="name">hr.evaluation.report.tree</field>
         <field name="model">hr.evaluation.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')"
              string="Appraisal Analysis">
@@ -29,7 +28,6 @@
     <record id="view_evaluation_report_graph" model="ir.ui.view">
             <field name="name">hr.evaluation.report.graph</field>
             <field name="model">hr.evaluation.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
             <graph string="Appraisal Analysis" type="bar">
                  <field name="employee_id"/>
@@ -42,7 +40,6 @@
     <record id="view_evaluation_report_search" model="ir.ui.view">
         <field name="name">hr.evaluation.report.search</field>
         <field name="model">hr.evaluation.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Appraisal Analysis">
                 <filter string="In Progress" icon="terp-camera_test" domain="[('state', '=' ,'wait')]" help = "In progress Evaluations"/>
