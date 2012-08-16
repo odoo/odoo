@@ -105,15 +105,17 @@ class mail_message(osv.Model):
             select=True, ondelete='set null',
             help="Initial thread message."),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
+
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.function(get_record_name, type='string',
             string='Message Record Name',
             help="Name get of the related document."),
+
         'subject': fields.char('Subject', size=128),
         'date': fields.datetime('Date'),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
-        'body': fields.text('Content', required=True),
+        'body': fields.html('Content', required=True),
     }
     _defaults = {
         'type': 'email',
@@ -204,159 +206,4 @@ class mail_message(osv.Model):
         self.check(cr, uid, ids, 'unlink', context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context)
 
-    # FP Note: to review
-    def parse_message(self, message, save_original=False, context=None):
-        """Parses a string or email.message.Message representing an
-           RFC-2822 email, and returns a generic dict holding the
-           message details.
 
-           :param message: the message to parse
-           :type message: email.message.Message | string | unicode
-           :param bool save_original: whether the returned dict
-               should include an ``original`` entry with the base64
-               encoded source of the message.
-           :rtype: dict
-           :return: A dict with the following structure, where each
-                    field may not be present if missing in original
-                    message::
-
-                    { 'message-id': msg_id,
-                      'subject': subject,
-                      'from': from,
-                      'to': to,
-                      'cc': cc,
-                      'headers' : { 'X-Mailer': mailer,
-                                    #.. all X- headers...
-                                  },
-                      'content_subtype': msg_mime_subtype,
-                      'body_text': plaintext_body
-                      'body_html': html_body,
-                      'attachments': [('file1', 'bytes'),
-                                       ('file2', 'bytes') }
-                       # ...
-                       'original': source_of_email,
-                    }
-        """
-        msg_txt = message
-        if isinstance(message, str):
-            msg_txt = email.message_from_string(message)
-
-        # Warning: message_from_string doesn't always work correctly on unicode,
-        # we must use utf-8 strings here :-(
-        if isinstance(message, unicode):
-            message = message.encode('utf-8')
-            msg_txt = email.message_from_string(message)
-
-        message_id = msg_txt.get('message-id', False)
-        msg = {}
-
-        if save_original:
-            # save original, we need to be able to read the original email sometimes
-            msg['original'] = message.as_string() if isinstance(message, Message) \
-                                                  else message
-            msg['original'] = base64.b64encode(msg['original']) # binary fields are b64
-
-        if not message_id:
-            # Very unusual situation, be we should be fault-tolerant here
-            message_id = time.time()
-            msg_txt['message-id'] = message_id
-            _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
-
-        msg_fields = msg_txt.keys()
-        msg['id'] = message_id
-        msg['message-id'] = message_id
-
-        if 'Subject' in msg_fields:
-            msg['subject'] = decode(msg_txt.get('Subject'))
-
-        if 'Content-Type' in msg_fields:
-            msg['content-type'] = msg_txt.get('Content-Type')
-
-        if 'From' in msg_fields:
-            msg['from'] = decode(msg_txt.get('From') or msg_txt.get_unixfrom())
-
-        if 'To' in msg_fields:
-            msg['to'] = decode(msg_txt.get('To'))
-
-        if 'Delivered-To' in msg_fields:
-            msg['to'] = decode(msg_txt.get('Delivered-To'))
-
-        if 'CC' in msg_fields:
-            msg['cc'] = decode(msg_txt.get('CC'))
-
-        if 'Cc' in msg_fields:
-            msg['cc'] = decode(msg_txt.get('Cc'))
-
-        if 'Reply-To' in msg_fields:
-            msg['reply'] = decode(msg_txt.get('Reply-To'))
-
-        if 'Date' in msg_fields:
-            date_hdr = decode(msg_txt.get('Date'))
-            # convert from email timezone to server timezone
-            date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
-            date_server_datetime_str = date_server_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-            msg['date'] = date_server_datetime_str
-
-        if 'Content-Transfer-Encoding' in msg_fields:
-            msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
-
-        if 'References' in msg_fields:
-            msg['references'] = msg_txt.get('References')
-
-        if 'In-Reply-To' in msg_fields:
-            msg['in-reply-to'] = msg_txt.get('In-Reply-To')
-
-        msg['headers'] = {}
-        msg['content_subtype'] = 'plain'
-        for item in msg_txt.items():
-            if item[0].startswith('X-'):
-                msg['headers'].update({item[0]: item[1]})
-        if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', ''):
-            encoding = msg_txt.get_content_charset()
-            body = msg_txt.get_payload(decode=True)
-            if 'text/html' in msg.get('content-type', ''):
-                msg['body_html'] =  body
-                msg['content_subtype'] = 'html'
-                if body:
-                    body = tools.html2plaintext(body)
-            msg['body_text'] = tools.ustr(body, encoding)
-
-        attachments = []
-        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
-            body = ""
-            if 'multipart/alternative' in msg.get('content-type', ''):
-                msg['content_subtype'] = 'alternative'
-            else:
-                msg['content_subtype'] = 'mixed'
-            for part in msg_txt.walk():
-                if part.get_content_maintype() == 'multipart':
-                    continue
-
-                encoding = part.get_content_charset()
-                filename = part.get_filename()
-                if part.get_content_maintype()=='text':
-                    content = part.get_payload(decode=True)
-                    if filename:
-                        attachments.append((filename, content))
-                    content = tools.ustr(content, encoding)
-                    if part.get_content_subtype() == 'html':
-                        msg['body_html'] = content
-                        msg['content_subtype'] = 'html' # html version prevails
-                        body = tools.ustr(tools.html2plaintext(content))
-                        body = body.replace('&#13;', '')
-                    elif part.get_content_subtype() == 'plain':
-                        body = content
-                elif part.get_content_maintype() in ('application', 'image'):
-                    if filename :
-                        attachments.append((filename,part.get_payload(decode=True)))
-                    else:
-                        res = part.get_payload(decode=True)
-                        body += tools.ustr(res, encoding)
-
-            msg['body_text'] = body
-        msg['attachments'] = attachments
-
-        # for backwards compatibility:
-        msg['body'] = msg['body_text']
-        msg['sub_type'] = msg['content_subtype'] or 'plain'
-        return msg

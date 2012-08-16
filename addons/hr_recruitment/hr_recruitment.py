@@ -339,7 +339,6 @@ class hr_applicant(base_stage, osv.Model):
         })
         if msg.get('priority'):
             custom_values['priority'] = msg.get('priority')
-        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from', False), context=context))
         return super(hr_applicant,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):

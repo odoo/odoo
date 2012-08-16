@@ -37,11 +37,12 @@ class mail_mail(osv.Model):
         'email_to': fields.text('To', help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
+
         'content_subtype': fields.char('Message content subtype', size=32,
             oldname="subtype", readonly=1,
             help="Type of message, usually 'html' or 'plain', used to select "\
                   "plain-text or rich-text contents accordingly"),
-        'body_html': fields.html('Rich-text Contents', help="Rich-text/HTML version of the message"),
+        'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML version of the message"),
     }
 
     _defaults = {

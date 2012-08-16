@@ -38,7 +38,6 @@ class project_tasks(osv.osv):
             'planned_hours': 0.0,
             'subject': msg.get('subject'),
         })
-        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from', False), context=context))
         return super(project_tasks,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):

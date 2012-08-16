@@ -56,10 +56,6 @@ class crm_lead2partner(osv.osv_memory):
         if not len(lead_ids):
             return False
         this = lead.browse(cr, uid, lead_ids[0], context=context)
-        # Find partner address matches the email_from of the lead
-        res = lead.message_partner_by_email(cr, uid, this.email_from, context=context)
-        partner_id = res.get('partner_id', False)      
-        # Find partner name that matches the name of the lead
         if not partner_id and this.partner_name:
             partner_ids = partner.search(cr, uid, [('name', '=', this.partner_name)], context=context)
             if partner_ids and len(partner_ids):

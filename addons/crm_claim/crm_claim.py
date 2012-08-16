@@ -200,7 +200,6 @@ class crm_claim(base_stage, osv.osv):
         })
         if msg.get('priority'):
             custom_values['priority'] = msg.get('priority')
-        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
         return super(crm_claim,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):

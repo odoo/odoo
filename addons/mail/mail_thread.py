@@ -29,7 +29,7 @@ from email.utils import parsedate
 from email.message import Message
 
 from osv import osv, fields
-from mail_message import decode, to_email
+from mail_message import decode, mail_tools_to_email
 import tools
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
@@ -497,8 +497,16 @@ class mail_thread(osv.Model):
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
 
+    def _message_find_partners(self, cr, uid, message, headers=['From'], context=None):
+        s = ', '.join([decode(message.get(h)) for h in headers)
+        mails = mail_tools_to_email(s)
+        result = []
+        for m in mails:
+            result += self.pool.get('res.partner').search(cr, uid, [('email','ilike',m)], context=context)
+        return result
+
     def _message_find_user_id(self, cr, uid, message, context=None):
-        from_local_part = to_email(decode(message.get('From')))[0]
+        from_local_part = mail_tools_to_email(decode(message.get('From')))[0]
         user_ids = self.pool.get('res.users').search(cr, uid, [('login', '=', from_local_part)], context=context)
         return user_ids[0] if user_ids else uid
 
@@ -594,7 +602,6 @@ class mail_thread(osv.Model):
         _logger.debug('Routing mail with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
                       message_id, model, thread_id, custom_values, uid)
         return [(model, thread_id, custom_values, uid)]
-
 
     def message_process(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
@@ -753,8 +760,8 @@ class mail_thread(osv.Model):
                 followers = model_pool.message_thread_followers(cr, uid, [res.id])[res.id]
             else:
                 followers = self.message_thread_followers(cr, uid, [res.id])[res.id]
-            message_followers_emails = to_email(','.join(filter(None, followers)))
-            message_recipients = to_email(','.join(filter(None,
+            message_followers_emails = mail_tools_to_email(','.join(filter(None, followers)))
+            message_recipients = mail_tools_to_email(','.join(filter(None,
                                                                        [decode(msg['from']),
                                                                         decode(msg['to']),
                                                                         decode(msg['cc'])])))
@@ -765,7 +772,7 @@ class mail_thread(osv.Model):
                     del msg['reply-to']
                     msg['reply-to'] = res.section_id.reply_to
 
-                smtp_from, = to_email(msg['from'])
+                smtp_from, = mail_tools_to_email(msg['from'])
                 msg['from'] = smtp_from
                 msg['to'] =  ", ".join(forward_to)
                 msg['message-id'] = tools.generate_tracking_message_id(res.id)
@@ -777,37 +784,187 @@ class mail_thread(osv.Model):
                     smtp_server_obj.send_email(cr, uid, msg)
         return True
 
-    def message_partner_by_email(self, cr, uid, email, context=None):
-        """Attempts to return the id of a partner address matching
-           the given ``email``, and the corresponding partner id.
-           Can be used by classes using the ``mail.thread`` mixin
-           to lookup the partner and use it in their implementation
-           of ``message_new`` to link the new record with a
-           corresponding partner.
-           The keys used in the returned dict are meant to map
-           to usual names for relationships towards a partner
-           and one of its addresses.
+    def parse_message(self, message, save_original=False, context=None):
+        """Parses a string or email.message.Message representing an
+           RFC-2822 email, and returns a generic dict holding the
+           message details.
 
-           :param email: email address for which a partner
-                         should be searched for.
+           :param message: the message to parse
+           :type message: email.message.Message | string | unicode
+           :param bool save_original: whether the returned dict
+               should include an ``original`` entry with the base64
+               encoded source of the message.
            :rtype: dict
-           :return: a map of the following form::
+           :return: A dict with the following structure, where each
+                    field may not be present if missing in original
+                    message::
 
-                      { 'partner_address_id': id or False,
-                        'partner_id': pid or False }
+                    { 'message-id': msg_id,
+                      'subject': subject,
+                      'from': from,          --> author_id
+                      'to': to,              --> partner_ids
+                      'cc': cc,              --> partner_ids
+                      'headers' : { 'X-Mailer': mailer,  --> to remove
+                                    #.. all X- headers...
+                                  },
+                      'content_subtype': msg_mime_subtype,  --> to remove
+                      'body_text': plaintext_body           --> keep body
+                      'body_html': html_body,               --> to remove
+                      'attachments': [('file1', 'bytes'),
+                                       ('file2', 'bytes') }
+                       # ...
+                       'original': source_of_email,         --> attachment document
+                    }
         """
-        partner_pool = self.pool.get('res.partner')
-        res = {'partner_id': False}
-        if email:
-            email = to_email(email)[0]
-            contact_ids = partner_pool.search(cr, uid, [('email', '=', email)])
-            if contact_ids:
-                contact = partner_pool.browse(cr, uid, contact_ids[0])
-                res['partner_id'] = contact.id
-        return res
+        msg_txt = message
+        attachments = []
+        if isinstance(message, str):
+            msg_txt = email.message_from_string(message)
 
-    # for backwards-compatibility with old scripts
-    process_email = message_process
+        # Warning: message_from_string doesn't always work correctly on unicode,
+        # we must use utf-8 strings here :-(
+        if isinstance(message, unicode):
+            message = message.encode('utf-8')
+            msg_txt = email.message_from_string(message)
+
+        message_id = msg_txt.get('message-id', False)
+        msg = {}
+
+        if save_original:
+            msg_original = message.as_string() if isinstance(message, Message) \
+                                                  else message
+            attachments.append((0, 0, {
+                'name':'email.msg',
+                'datas': base64.b64encode(msg_original),
+                'datas_fname': 'email.msg',
+                'res_model': 'mail.message',
+                'description': _('original email'),
+            })
+
+        if not message_id:
+            # Very unusual situation, be we should be fault-tolerant here
+            message_id = time.time()
+            msg_txt['message-id'] = message_id
+            _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
+
+        msg_fields = msg_txt.keys()
+
+        msg['message_id'] = message_id
+
+        if 'Subject' in msg_fields:
+            msg['subject'] = decode(msg_txt.get('Subject'))
+
+        #if 'Content-Type' in msg_fields:
+        #    msg['content-type'] = msg_txt.get('Content-Type')
+
+        # find author_id
+
+        if 'From' in msg_fields:
+            author_ids = self._message_find_partners(cr, uid, msg_text, ['From'], context=context)
+            #decode(msg_txt.get('From') or msg_txt.get_unixfrom()) )
+            if author_ids:
+                msg['author_id'] = author_ids[0]
+
+        partner_ids = self._message_find_partners(cr, uid, msg_text, ['From','To','Delivered-To','CC','Cc'], context=context)
+        msg['partner_ids'] = partner_ids
+
+        #if 'To' in msg_fields:
+        #    msg['to'] = decode(msg_txt.get('To'))
+
+        #if 'Delivered-To' in msg_fields:
+        #    msg['to'] = decode(msg_txt.get('Delivered-To'))
+
+        #if 'CC' in msg_fields:
+        #    msg['cc'] = decode(msg_txt.get('CC'))
+
+        #if 'Cc' in msg_fields:
+        #    msg['cc'] = decode(msg_txt.get('Cc'))
+
+        #if 'Reply-To' in msg_fields:
+        #    msg['reply'] = decode(msg_txt.get('Reply-To'))
+
+        # FP Note: I propose to store the current datetime rather than the email date
+        #if 'Date' in msg_fields:
+        #    date_hdr = decode(msg_txt.get('Date'))
+        #    # convert from email timezone to server timezone
+        #    date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
+        #    date_server_datetime_str = date_server_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        #    msg['date'] = date_server_datetime_str
+
+        #if 'Content-Transfer-Encoding' in msg_fields:
+        #    msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
+
+        #if 'References' in msg_fields:
+        #    msg['references'] = msg_txt.get('References')
+
+        # FP Note: todo - find parent_id
+        if 'In-Reply-To' in msg_fields:
+            pass
+
+        #msg['headers'] = {}
+        #msg['content_subtype'] = 'plain'
+        #for item in msg_txt.items():
+        #    if item[0].startswith('X-'):
+        #        msg['headers'].update({item[0]: item[1]})
+        if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', ''):
+            encoding = msg_txt.get_content_charset()
+            body = msg_txt.get_payload(decode=True)
+            if 'text/html' in msg.get('content-type', ''):
+                msg['body'] =  body
+        #        msg['content_subtype'] = 'html'
+        #        if body:
+        #            body = tools.html2plaintext(body)
+        #    msg['body_text'] = tools.ustr(body, encoding)
+
+        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
+            body = ""
+            if 'multipart/alternative' in msg.get('content-type', ''):
+                msg['content_subtype'] = 'alternative'
+            else:
+                msg['content_subtype'] = 'mixed'
+            for part in msg_txt.walk():
+                if part.get_content_maintype() == 'multipart':
+                    continue
+
+                encoding = part.get_content_charset()
+                filename = part.get_filename()
+                if part.get_content_maintype()=='text':
+                    content = part.get_payload(decode=True)
+                    if filename:
+                        attachments.append((0, 0, {
+                            'name': filename,
+                            'datas': base64.b64encode(msg_original),
+                            'datas_fname': filename,
+                            'res_model': 'mail.message',
+                            'description': _('email attachment'),
+                        }))
+                    content = tools.ustr(content, encoding)
+                    if part.get_content_subtype() == 'html':
+                        msg['body'] = content
+                        # msg['content_subtype'] = 'html' # html version prevails
+                        # body = tools.ustr(tools.html2plaintext(content))
+                        # body = body.replace('&#13;', '')
+                    elif part.get_content_subtype() == 'plain':
+                        msg['body'] = content
+                elif part.get_content_maintype() in ('application', 'image'):
+                    if filename:
+                        attachments.append((0, 0, {
+                            'name': filename,
+                            'datas': part.get_payload(decode=True),
+                            'datas_fname': filename,
+                            'res_model': 'mail.message',
+                            'description': _('email attachment'),
+                        }))
+                    else:
+                        res = part.get_payload(decode=True)
+                        msg['body'] += tools.ustr(res, encoding)
+
+        msg['attachments'] = attachments
+
+        # for backwards compatibility:
+        # msg['body'] = msg['body_text']
+        # msg['sub_type'] = msg['content_subtype'] or 'plain'
+        return msg
 
     #------------------------------------------------------
     # Note specific

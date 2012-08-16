@@ -183,7 +183,7 @@ class res_users_mail_group(osv.Model):
             user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
             mail_group_obj = self.pool.get('mail.group')
             mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', user_group_ids)], context=context)
-            mail_group_obj.message_subscribe(cr, uid, mail_group_ids, ids, context=context)
+            mail_group_obj.message_subscribe_users(cr, uid, mail_group_ids, ids, context=context)
         return write_res
 
 class res_groups_mail_group(osv.Model):
@@ -203,6 +203,6 @@ class res_groups_mail_group(osv.Model):
             user_ids += [id for command in vals['users'] if command[0] == 6 for id in command[2]]
             mail_group_obj = self.pool.get('mail.group')
             mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', ids)], context=context)
-            mail_group_obj.message_subscribe(cr, uid, mail_group_ids, user_ids, context=context)
+            mail_group_obj.message_subscribe_users(cr, uid, mail_group_ids, user_ids, context=context)
         return super(res_groups_mail_group, self).write(cr, uid, ids, vals, context=context)
 

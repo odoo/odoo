@@ -461,7 +461,6 @@ class project_issue(base_stage, osv.osv):
         })
         if  msg.get('priority'):
             custom_values['priority'] =  msg.get('priority')
-        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
 
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         # self.convert_to_bug(cr, uid, [res_id], context=context)

@@ -110,7 +110,6 @@ class crm_helpdesk(base_state, osv.osv):
             'email_cc': msg.get('cc'),
             'user_id': False,
         })
-        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
         return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
