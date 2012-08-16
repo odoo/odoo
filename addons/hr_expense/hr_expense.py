@@ -169,28 +169,12 @@ class hr_expense_expense(osv.osv):
                     acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company_id})
                     if not acc:
                         raise osv.except_osv(_('Error!'), _('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
-                total_amount = 0.0
-                if journal.currency and exp.currency_id.id != journal.currency.id:
-                    total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, journal.currency.id, line.total_amount, context=ctx)
-                else:
-                    total_amount = line.total_amount
-                if exp.journal_id:
-                     journal = exp.journal_id
-                     if journal.currency:
-                         if exp.currency_id != journal.currency:
-                             total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, journal.currency.id, line.total_amount, context=ctx)
-                         else:
-                             total_amount = line.total_amount
-                else:
-                    journal_id = voucher_obj._get_journal(cr, uid, context={'type': 'purchase', 'company_id': company_id})
-                    if journal_id:
-                        journal = account_journal.browse(cr, uid, journal_id, context=context)
-                        if journal.currency:
-                            if exp.currency_id != journal.currency:
-                                total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, journal.currency.id, line.total_amount, context=ctx)
-                            else:
-                                total_amount = line.total_amount
-                            
+                total_amount = line.total_amount
+                if journal.currency:
+                    if exp.currency_id != journal.currency:
+                        total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, journal.currency.id, total_amount, context=ctx)
+                elif exp.company_id.currency_id != exp.currency_id:
+                    total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, exp.company_id.currency_id.id, total_amount, context=ctx)
                 lines.append((0, False, {
                     'name': line.name,
                     'account_id': acc.id,
@@ -210,7 +194,6 @@ class hr_expense_expense(osv.osv):
                 'partner_id': exp.employee_id.address_home_id.id,
                 'company_id': company_id,
                 'currency_id': exp.currency_id.id,
-                'journal_id': journal.id,
                 'line_ids': lines,
                 'amount': total,
                 'journal_id': journal.id,
