@@ -26,17 +26,10 @@
         <record model="crm.case.channel" id="crm_case_channel_email">
             <field name="name">Email</field>
         </record>
-        <record id="mail_alias_sales_department" model="mail.alias">
-            <field name="alias_name">sales</field>
-            <field name="alias_model_id" ref="model_crm_lead"/>
-            <field name="alias_user_id" ref="base.user_root"/>
-            <field name="alias_defaults">{'type':'lead'}</field>
-        </record>
-        
+
         <record model="crm.case.section" id="section_sales_department">
             <field name="name">Sales Department</field>
             <field name="code">Sales</field>
-            <field name="alias_id" ref="mail_alias_sales_department"/>
         </record>
 
         <!-- Payment Mode -->
@@ -70,5 +63,13 @@
 
 To manage quotations and sale orders, install the module "Sales Management".</value>
         </function>
+        
+        <record model="mail.alias" id="default_sales_alias">
+            <field name="alias_name">sales</field>
+            <field name="alias_model_id" ref="model_crm_lead"/>
+            <field name="alias_user_id" ref="base.user_root"/>
+            <field name="alias_defaults">{'type':'lead'}</field>
+        </record>
+
     </data>
 </openerp>

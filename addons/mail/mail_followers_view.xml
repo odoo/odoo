@@ -2,17 +2,14 @@
 <openerp>
     <data>
 
-        <!-- 
-            SUBSCRIPTION
-                !-->
-        
-        <record model="ir.ui.view" id="view_subscription_tree">
-            <field name="name">mail.subscription.tree</field>
-            <field name="model">mail.subscription</field>
+        <!--  FOLLOWERS !-->
+        <record model="ir.ui.view" id="view_followers_tree">
+            <field name="name">mail.followers.tree</field>
+            <field name="model">mail.followers</field>
             <field name="type">tree</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Subscription">
+                <tree string="Followers">
                     <field name="res_model"/>
                     <field name="res_id"/>
                     <field name="user_id"/>
@@ -21,11 +18,11 @@
         </record>
 
         <record model="ir.ui.view" id="view_mail_subscription_form">
-            <field name="name">mail.subscription.form</field>
-            <field name="model">mail.subscription</field>
+            <field name="name">mail.followers.form</field>
+            <field name="model">mail.followers</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Subscription Form" version="7.0">
+                <form string="Followers Form" version="7.0">
                     <sheet>
                         <group>
                             <group>
@@ -41,27 +38,23 @@
                 </form>
             </field>
         </record>
-        <!-- 
-            NOTIFICATION
-                !-->
         
+        <!-- NOTIFICATION !-->
         <record model="ir.ui.view" id="view_notification_tree">
             <field name="name">mail.notification.tree</field>
             <field name="model">mail.notification</field>
-            <field name="type">tree</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Subscription">
+                <tree string="Notifications">
                     <field name="user_id"/>
                     <field name="message_id"/>
-                    <field name="read"/>
                 </tree>
             </field>
         </record>
 
-        <record id="action_view_subscriptions" model="ir.actions.act_window">
-            <field name="name">Subscriptions</field>
-            <field name="res_model">mail.subscription</field>
+        <record id="action_view_followers" model="ir.actions.act_window">
+            <field name="name">Followers</field>
+            <field name="res_model">mail.followers</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
@@ -73,9 +66,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- Add subscriptions related menu entries in Settings/Email -->
-        <menuitem name="Subscriptions" id="menu_email_subscriptions" parent="base.menu_email"
-                    action="action_view_subscriptions" sequence="30" groups="base.group_no_one"/> -->
+        <!-- Add followers related menu entries in Settings/Email -->
+        <menuitem name="Followers" id="menu_email_followers" parent="base.menu_email"
+                    action="action_view_followers" sequence="30" groups="base.group_no_one"/> -->
         
         <!-- Add notifications related menu entry in Settings/Email -->
         <menuitem name="Notifications" id="menu_email_notifications" parent="base.menu_email"

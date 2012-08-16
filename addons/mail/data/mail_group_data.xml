@@ -2,16 +2,14 @@
 <openerp>
     <data noupdate="1">
 
-        <record model="mail.group" id="group_all_company">
-            <field name="name">All Company</field>
-            <field name="description">All company users can come here and discuss.</field>
-        </record>
         <record model="mail.group" id="group_sales">
             <field name="name">Sales</field>
+            <field name="description">Discussion about best sales practices and deals.</field>
         </record>
         <record model="mail.group" id="group_all_employees">
             <field name="name">All Employees</field>
             <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="description">Discussion about best sales practices and deals.</field>
         </record>
 
         <!-- notify all employees of module installation -->
@@ -21,7 +19,7 @@
             <value>Welcome to OpenERP!</value>
             <value>Your homepage is a summary of messages you received and key information about documents you follow.
 
-The top menu bar contains all applications you installed. You can use this &lt;i&gt;Settings&lt;/i&gt; menu to intall more applications, activate others features or give access to new users.
+The top menu bar contains all applications you installed. You can use this &lt;i&gt;Settings&lt;/i&gt; menu to install more applications, activate others features or give access to new users.
 
 To setup your preferences (name, email signature, avatar), click on the top right corner.</value>
         </function>

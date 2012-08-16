@@ -243,7 +243,7 @@ class crm_lead(base_stage, osv.osv):
         'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
         'partner_address_email': fields.related('partner_id', 'email', type='char', string='Partner Contact Email', readonly=True),
         'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
 
         # Fields for address, due to separation from crm and res.partner
@@ -482,7 +482,7 @@ class crm_lead(base_stage, osv.osv):
         details = []
         merge_message = _('Merged opportunities')
         subject = [merge_message]
-        fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id', 'categ_id', 'channel_id', 'company_id', 'contact_name',
+        fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id', 'categ_ids', 'channel_id', 'company_id', 'contact_name',
                   'email_from', 'phone', 'fax', 'mobile', 'state_id', 'description', 'probability', 'planned_revenue',
                   'country_id', 'city', 'street', 'street2', 'zip']
         for opportunity in opportunities:
@@ -553,7 +553,7 @@ class crm_lead(base_stage, osv.osv):
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
 
-        fields = ['partner_id', 'title', 'name', 'categ_id', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
+        fields = ['partner_id', 'title', 'name', 'categ_ids', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
             'partner_name', 'phone', 'probability', 'planned_revenue', 'street', 'street2', 'zip', 'create_date', 'date_action_last',
             'date_action_next', 'email_from', 'email_cc', 'partner_name']
 
@@ -695,11 +695,11 @@ class crm_lead(base_stage, osv.osv):
         """
         #TOFIX: mail template should be used here instead of fix subject, body text.
         message = self.pool.get('mail.message')
-        email_to = lead.user_id and lead.user_id.user_email
+        email_to = lead.user_id and lead.user_id.email
         if not email_to:
             return False
 
-        email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
+        email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.email or email_to
         partner = lead.partner_id and lead.partner_id.name or lead.partner_name
         subject = "lead %s converted into opportunity" % lead.name
         body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)
@@ -861,6 +861,11 @@ class crm_lead(base_stage, osv.osv):
     # ----------------------------------------
     # OpenChatter methods and notifications
     # ----------------------------------------
+
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' to the monitored fields """
+        res = super(crm_lead, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['user_id']
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """

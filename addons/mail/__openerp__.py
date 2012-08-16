@@ -65,7 +65,7 @@ The main features of the module are:
         'mail_message_subtype.xml',
         'res_config_view.xml',
         'mail_message_view.xml',
-        'mail_subscription_view.xml',
+        'mail_followers_view.xml',
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_partner_view.xml',
@@ -103,9 +103,11 @@ The main features of the module are:
     'js': [
         'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
+        'static/src/js/mail_followers.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',
+        'static/src/xml/mail_followers.xml',
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

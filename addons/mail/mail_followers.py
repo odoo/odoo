@@ -22,18 +22,21 @@
 from osv import osv
 from osv import fields
 
-class mail_subscription(osv.osv):
-    """
-    mail_subscription holds the data related to the follow mechanism inside OpenERP.
+class mail_followers(osv.Model):
+    """ mail_followers holds the data related to the follow mechanism inside
+    OpenERP. Users can choose to follow documents (records) of any kind that
+    inherits from mail.thread. Following documents allow to receive
+    notifications for new messages.
     A subscription is characterized by:
         :param: res_model: model of the followed objects
         :param: res_id: ID of resource (may be 0 for every objects)
         :param: user_id: user_id of the follower
     """
-    _name = 'mail.subscription'
+    _name = 'mail.followers'
     _rec_name = 'id'
+    _log_access = False
     _order = 'res_model asc'
-    _description = 'Mail subscription'
+    _description = 'Mail Document Followers'
     _columns = {
         'res_model': fields.char('Related Document Model', size=128,
                         required=True, select=1,
@@ -48,10 +51,8 @@ class mail_subscription(osv.osv):
                                         help = "linking some subscription to several subtype for projet/task"),
     }
 
-class mail_notification(osv.osv):
-    """
-    mail_notification is a relational table modeling messages pushed to users.
-        :param: read: not used currently
+class mail_notification(osv.Model):
+    """ mail_notification is a relational table modeling messages pushed to users.
     """
     _name = 'mail.notification'
     _rec_name = 'id'
@@ -63,9 +64,4 @@ class mail_notification(osv.osv):
                         ondelete='cascade', required=True, select=1),
         'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True, select=1),
-        'read': fields.boolean('Read', help="Not used currently",),
-        # TODO: add a timestamp ? or use message date ?
-    }
-    _defaults = {
-        'read': False,
     }
