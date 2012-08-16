@@ -191,7 +191,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.group_by_field = self.fields_view.fields[self.group_by] || {};
             self.grouped_by_m2o = (self.group_by_field.type === 'many2one');
             self.$buttons.find('.oe_alternative').toggle(self.grouped_by_m2o);
-            self.$element.toggleClass('oe_kanban_sortable_groups', self.grouped_by_m2o);
+            self.$element.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
             self.datagroup = new instance.web.DataGroup(self, self.dataset.model, domain, context, self.group_by ? [self.group_by] : []);
             self.datagroup.list(self.fields_keys, self.do_process_groups, self.do_process_dataset);
         });
@@ -349,7 +349,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         _.each(this.groups, function(group) {
             unfolded += group.state.folded ? 0 : 1;
-            group.$element.css('width', '');
+            group.$element.children(':first').css('width', '');
         });
         _.each(this.groups, function(group) {
             if (!group.state.folded) {
@@ -462,11 +462,14 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         }
         this.$records = $(QWeb.render('KanbanView.group_records_container', { widget : this}));
         this.$records.insertBefore(this.view.$element.find('.oe_kanban_groups_records td:last'));
-        this.$element.find(".oe_kanban_fold_icon").click(function() {
-            self.do_toggle_fold();
-            self.view.compute_groups_width();
-            return false;
+
+        this.$element.on('click', '.oe_kanban_group_dropdown li a', function(ev) {
+            var fn = 'do_action_' + $(ev.target).data().action;
+            if (typeof(self[fn]) === 'function') {
+                self[fn]($(ev.target));
+            }
         });
+
         this.$element.find('.oe_kanban_add').click(function () {
             if (self.quick) { return; }
             var ctx = {};
@@ -493,8 +496,8 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.$records.click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (!self.state.folded) {
-                    add_btn.effect('bounce', {distance: 18, times: 5}, 150)
-                } 
+                    add_btn.effect('bounce', {distance: 18, times: 5}, 150);
+                }
             }
         });
         return def;
@@ -553,6 +556,11 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     do_toggle_fold: function(compute_width) {
         this.$element.add(this.$records).toggleClass('oe_kanban_group_folded');
         this.state.folded = this.$element.is('.oe_kanban_group_folded');
+        this.$("ul.oe_kanban_group_dropdown li a[data-action=toggle_fold]").text((this.state.folded) ? _t("Unfold") : _t("Fold"));
+    },
+    do_action_toggle_fold: function() {
+        this.do_toggle_fold();
+        this.view.compute_groups_width();
     },
     do_save_sequences: function() {
         var self = this;
