@@ -298,7 +298,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // returns true if the ean is a valid EAN codebar number by checking the control digit.
         // ean must be a string
         check_ean: function(ean){
-            return ean_checksum(ean) === Number(ean[ean.length-1]);
+            return this.ean_checksum(ean) === Number(ean[ean.length-1]);
         },
         // returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
         sanitize_ean:function(ean){
