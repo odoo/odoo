@@ -49,6 +49,7 @@ class mail_mail(osv.Model):
         'content_subtype': 'plain',
     }
 
+    # FP Note: should we use a dict instead ?
     def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, type='email',
                              email_cc=None, reply_to=False, partner_ids=None, attachments=None,
                              message_id=False, references=False, res_id=False, content_subtype='plain',

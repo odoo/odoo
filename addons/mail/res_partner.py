@@ -31,18 +31,11 @@ class res_partner_mail(osv.Model):
             The purpose is to add messages directly sent to the partner. It also
             adds messages pushed to the related user, if any, using @login.
         """
-        initial_domain = super(res_partner_mail, self).message_search_get_domain(cr, uid, ids, context=context)
-        # to avoid models inheriting from res.partner
         if self._name != 'res.partner':
-            return initial_domain
+            return super(res_partner_mail, self).message_search_get_domain(cr, uid, ids, context=context)
         # add message linked to the partner
-        search_domain = ['|'] + initial_domain + ['|', ('partner_id', 'in', ids), ('partner_ids', 'in', ids)]
-        # if partner is linked to a user: find @login
-        res_users_obj = self.pool.get('res.users')
-        user_ids = res_users_obj.search(cr, uid, [('partner_id', 'in', ids)], context=context)
-        for user in res_users_obj.browse(cr, uid, user_ids, context=context):
-            search_domain = ['|'] + search_domain + ['|', ('body_text', 'like', '@%s' % (user.login)), ('body_html', 'like', '@%s' % (user.login))]
-        return search_domain
+        return [('partner_ids', 'in', ids)]
+
     _columns = {
         'notification_email_pref': fields.selection([
             ('all', 'All feeds'),

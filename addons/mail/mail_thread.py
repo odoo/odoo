@@ -103,8 +103,8 @@ class mail_thread(osv.Model):
         return res
 
     # FP Note: todo
-    def _search_state(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
-        return [('id','in',[])]
+    def _search_unread(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
+        return []
 
     _columns = {
         'message_is_follower': fields.function(_get_is_follower,
@@ -116,7 +116,7 @@ class mail_thread(osv.Model):
             domain=lambda self: [('model','=',self._name)],
             string='Related Messages', 
             help="All messages related to the current document."),
-        'message_unread': fields.function(_get_message_data, fnct_search=_search_state, 'Message Read',
+        'message_unread': fields.function(_get_message_data, fnct_search=_search_unread, 'Has Unread Messages',
             help="When checked, new messages require your attention.",
             multi="_get_message_data"),
         'message_summary': fields.function(_get_message_data, method=True,
@@ -131,12 +131,10 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        """ Override of create to subscribe :
-            - the writer
-            - followers given by the monitored fields
+        """ Override of create to subscribe the current user
         """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
-        self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
+        self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         return thread_id
 
     def unlink(self, cr, uid, ids, context=None):
@@ -155,6 +153,8 @@ class mail_thread(osv.Model):
     # mail.message wrappers and tools
     #------------------------------------------------------
 
+    # FP Note: should we support attachment ? Also, this method must be on
+    # the mail.message object, not on the thread.
     def message_create(self, cr, uid, thread_id, vals, context=None):
         """ OpenChatter: wrapper of mail.message create method
            - creates the mail.message
@@ -177,14 +177,7 @@ class mail_thread(osv.Model):
     # Generic message api
     #------------------------------------------------------
 
-    def message_capable_models(self, cr, uid, context=None):
-        ret_dict = {}
-        for model_name in self.pool.obj_list():
-            model = self.pool.get(model_name)
-            if 'mail.thread' in getattr(model, '_inherit', []):
-                ret_dict[model_name] = model._description
-        return ret_dict
-
+    # I propose to remove this. Everyone should use message_create instead.
     def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
                         type='email', email_date=None, parent_id=False,
                         content_subtype='plain', state=None,
@@ -313,6 +306,7 @@ class mail_thread(osv.Model):
             new_msg_ids.append(self.message_create(cr, uid, thread.id, data, context=context))
         return new_msg_ids
 
+    # to be removed completly
     def message_append_dict(self, cr, uid, ids, msg_dict, context=None):
         """Creates a new mail.message attached to the given threads (``ids``),
            with the contents of ``msg_dict``, by calling ``message_append``
@@ -866,19 +860,37 @@ class mail_thread(osv.Model):
             return True
         return False
 
-    def message_subscribe(self, cr, uid, ids, partner_ids=None, context=None):
+    def message_subscribe_users(self, cr, uid, ids, user_ids=None, context=None):
+        if not user_ids: user_ids = [uid]
+        partners = {}
+        for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context):
+            partners[user.partner_id.id] = True
+        return self.message_subscribe(cr, uid, ids, partners.keys(), context=context)
+
+    def message_subscribe(self, cr, uid, ids, partner_ids, context=None):
         """
-            :param user_ids: a list of user_ids; if not set, subscribe
+            :param partner_ids: a list of user_ids; if not set, subscribe
                              uid instead
             :param return: new value of followers, for Chatter
         """
-        subscription_obj = self.pool.get('mail.subscription')
+        obj = self.pool.get('mail.followers')
+        objids = obj.search(cr, uid, [
+            ('res_id', 'in', ids),
+            ('res_model', '=', self._name),
+            ('partner_id', 'in', partner_ids),
+            ], context=context)
+        followers = {}
+        for follow in obj.browse(cr, uid, objids, context=context)
+            followers.setdefault(follow.partner_id.id, {})[follow.res_id] = True
         create_ids = []
-        for id in ids:
-            already_subscribed_user_ids = self.message_get_followers(cr, uid, [id], context=context)
-            for user_id in to_subscribe_uids:
-                if user_id in already_subscribed_user_ids: continue
-                create_ids.append(subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context))
+        for res_id in ids:
+            for partner_id in partner_ids:
+                if followers.get(partner_id, {}).get(res_id, False):
+                    continue
+                create_ids.append(obj.create(cr, uid, {
+                    'res_model': self._name,
+                    'res_id': res_id, 'partner_id': partner_id
+                }, context=context))
         return create_ids
 
     def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):

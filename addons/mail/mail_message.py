@@ -360,5 +360,3 @@ class mail_message(osv.Model):
         msg['body'] = msg['body_text']
         msg['sub_type'] = msg['content_subtype'] or 'plain'
         return msg
-
-

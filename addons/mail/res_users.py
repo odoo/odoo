@@ -98,17 +98,16 @@ class res_users(osv.Model):
         alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
         data['alias_id'] = alias_id
         data.pop('alias_name', None) # prevent errors during copy()
+
         # create user that follows its related partner
-        user_id = super(res_users, self).create(cr, uid, data, context=context)
-        user = self.browse(cr, uid, user_id, context=context)
-        self.pool.get('res.partner').message_subscribe(cr, uid, [user.partner_id.id], [user_id], context=context)
+        self.pool.get('res.partner').message_subscribe_users(cr, uid, [user_id], [user_id], context=context)
         # alias
         mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
         # create a welcome message
-        self.create_welcome_message(cr, uid, user, context=context)
+        self._create_welcome_message(cr, uid, user, context=context)
         return user_id
 
-    def create_welcome_message(self, cr, uid, user, context=None):
+    def _create_welcome_message(self, cr, uid, user, context=None):
         company_name = user.company_id.name if user.company_id else _('the company')
         subject = '''%s has joined %s.''' % (user.name, company_name)
         body = '''Welcome to OpenERP !''' 
@@ -135,35 +134,35 @@ class res_users(osv.Model):
     # that should help cleaning those wrappers
     # --------------------------------------------------
 
-    def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
-                        type='email', email_date=None, parent_id=False,
-                        content_subtype='plain', state=None,
-                        partner_ids=None, email_from=False, email_to=False,
-                        email_cc=None, email_bcc=None, reply_to=None,
-                        headers=None, message_id=False, references=None,
-                        attachments=None, original=None, context=None):
-        for user in self.browse(cr, uid, threads, context=context):
-            user.partner_id.message_append(subject, body_text, body_html, type, email_date, parent_id,
-                content_subtype, state, partner_ids, email_from, email_to, email_cc, email_bcc, reply_to,
-                headers, message_id, references, attachments, original)
+    #def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
+    #                    type='email', email_date=None, parent_id=False,
+    #                    content_subtype='plain', state=None,
+    #                    partner_ids=None, email_from=False, email_to=False,
+    #                    email_cc=None, email_bcc=None, reply_to=None,
+    #                    headers=None, message_id=False, references=None,
+    #                    attachments=None, original=None, context=None):
+    #    for user in self.browse(cr, uid, threads, context=context):
+    #        user.partner_id.message_append(subject, body_text, body_html, type, email_date, parent_id,
+    #            content_subtype, state, partner_ids, email_from, email_to, email_cc, email_bcc, reply_to,
+    #            headers, message_id, references, attachments, original)
 
-    def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-                        limit=100, offset=0, domain=None, context=None):
-        for user in self.browse(cr, uid, ids, context=context):
-            return user.partner_id.message_read(fetch_ancestors, ancestor_ids, limit, offset, domain)
+    #def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+    #                    limit=100, offset=0, domain=None, context=None):
+    #    for user in self.browse(cr, uid, ids, context=context):
+    #        return user.partner_id.message_read(fetch_ancestors, ancestor_ids, limit, offset, domain)
 
-    def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-                        limit=100, offset=0, domain=None, count=False, context=None):
-        for user in self.browse(cr, uid, ids, context=context):
-            return user.partner_id.message_search(fetch_ancestors, ancestor_ids, limit, offset, domain, count)
+    #def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+    #                    limit=100, offset=0, domain=None, count=False, context=None):
+    #    for user in self.browse(cr, uid, ids, context=context):
+    #        return user.partner_id.message_search(fetch_ancestors, ancestor_ids, limit, offset, domain, count)
 
-    def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
-        for user in self.browse(cr, uid, ids, context=context):
-            return user.partner_id.message_subscribe(user_ids)
+    #def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
+    #    for user in self.browse(cr, uid, ids, context=context):
+    #        return user.partner_id.message_subscribe(user_ids)
 
-    def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
-        for user in self.browse(cr, uid, ids, context=context):
-            return user.partner_id.message_unsubscribe(user_ids)
+    #def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
+    #    for user in self.browse(cr, uid, ids, context=context):
+    #        return user.partner_id.message_unsubscribe(user_ids)
 
 
 class res_users_mail_group(osv.Model):
@@ -175,6 +174,7 @@ class res_users_mail_group(osv.Model):
     _name = 'res.users'
     _inherit = ['res.users']
 
+    # FP Note: to improve
     def write(self, cr, uid, ids, vals, context=None):
         write_res = super(res_users_mail_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('groups_id'):
@@ -195,6 +195,7 @@ class res_groups_mail_group(osv.Model):
     _name = 'res.groups'
     _inherit = 'res.groups'
 
+    # FP Note: to improve
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('users'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
@@ -205,4 +206,3 @@ class res_groups_mail_group(osv.Model):
             mail_group_obj.message_subscribe(cr, uid, mail_group_ids, user_ids, context=context)
         return super(res_groups_mail_group, self).write(cr, uid, ids, vals, context=context)
 
-# vim:et:
