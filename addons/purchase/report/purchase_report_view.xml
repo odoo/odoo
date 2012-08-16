@@ -4,7 +4,6 @@
         <record model="ir.ui.view" id="view_purchase_order_graph">
             <field name="name">product.month.graph</field>
             <field name="model">purchase.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Purchase Orders Statistics" type="bar">
                     <field name="product_id"/>
@@ -16,7 +15,6 @@
         <record id="view_purchase_order_tree" model="ir.ui.view">
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Purchase Orders Statistics">
                     <field name="date" invisible="1"/>
@@ -50,7 +48,6 @@
         <record id="view_purchase_order_search" model="ir.ui.view">
         <field name="name">report.purchase.order.search</field>
         <field name="model">purchase.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Purchase Orders">
                 <filter icon="terp-document-new" string="Quotations" name="quotes" domain="[('state','=','draft')]"/>
@@ -92,7 +89,6 @@
     <record model="ir.ui.view" id="view_purchase_order_qty_amount_graph">
             <field name="name">purchase.order.qty.amount.graph</field>
             <field name="model">purchase.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Total Qty and Amount by month" type="bar">
                     <field name="month"/>
@@ -105,7 +101,6 @@
     <record model="ir.ui.view" id="view_purchase_order_by_user_graph">
             <field name="name">purchase.order.by.user.graph</field>
             <field name="model">purchase.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Total Orders Lines by User per month" orientation="vertical" type="bar">
                     <field name="month" />

@@ -6,7 +6,6 @@
         <record id="view_partners_form_crm1" model="ir.ui.view">
                 <field name="name">view.res.partner.form.crm.inherited1</field>
                 <field name="model">res.partner</field>
-                <field name="type">form</field>
                 <field name="inherit_id" ref="base.view_partner_form"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
@@ -19,7 +18,6 @@
         <record id="view_partners_tree_crm2" model="ir.ui.view">
                 <field name="name">view.res.partner.tree.crm.inherited2</field>
                 <field name="model">res.partner</field>
-                <field name="type">tree</field>
                 <field name="inherit_id" ref="base.view_partner_tree"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
@@ -32,7 +30,6 @@
         <record id="view_partners_form_crm3" model="ir.ui.view">
                 <field name="name">view.res.partner.search.crm.inherited3</field>
                 <field name="model">res.partner</field>
-                <field name="type">search</field>
                 <field name="inherit_id" ref="base.view_res_partner_filter"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
@@ -106,7 +103,6 @@
         <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
             <field name="name">res.partner.kanban.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">kanban</field>
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
@@ -129,7 +125,6 @@
         <record model="ir.ui.view" id="res_partner_view_buttons">
             <field name="name">res.partner.view.buttons</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">

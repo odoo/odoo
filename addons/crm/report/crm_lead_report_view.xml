@@ -7,7 +7,6 @@
         <record id="view_report_crm_lead_tree" model="ir.ui.view">
             <field name="name">crm.lead.report.tree</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree string="Leads Analysis">
                 <field name="creation_year" invisible="1"/>
@@ -39,7 +38,6 @@
         <record id="view_report_crm_lead_graph" model="ir.ui.view">
             <field name="name">crm.lead.report.graph</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="vertical" string="Leads Analysis" type="bar">
                     <field name="stage_id"/>
@@ -52,7 +50,6 @@
         <record id="view_report_crm_opportunity_graph" model="ir.ui.view">
             <field name="name">crm.opportunity.report.graph</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="vertical" string="Leads Analysis" type="bar">
                     <field name="stage_id"/>
@@ -67,7 +64,6 @@
         <record id="view_report_crm_lead_filter" model="ir.ui.view">
             <field name="name">crm.lead.report.select</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
                     <filter icon="terp-personal" name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
@@ -143,7 +139,6 @@
         <record id="view_report_crm_opportunity_tree" model="ir.ui.view">
             <field name="name">crm.lead.report.tree</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state in ('open','pending','done');gray:state == 'cancel' " string="Opportunities Analysis">
                 <field name="creation_year" invisible="1"/>

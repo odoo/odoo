@@ -44,7 +44,6 @@
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
             <field name="model">project.issue.version</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Version">
                     <field name="name" string="Issue Version"/>
@@ -55,7 +54,6 @@
         <record model="ir.ui.view" id="project_issue_version_form_view">
             <field name="name">Issue Version</field>
             <field name="model">project.issue.version</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Issue Version" version="7.0">
                     <group col="2">
@@ -94,9 +92,8 @@
         <record model="ir.ui.view" id="project_issue_form_view">
             <field name="name">Project Issue Tracker Form</field>
             <field name="model">project.issue</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Issue" version="7.0">
                 <header>
                     <span groups="base.group_user">
                         <button name="case_close" string="Done" type="object"
@@ -163,6 +160,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
             </field>
@@ -171,7 +169,6 @@
         <record model="ir.ui.view" id="project_issue_tree_view">
             <field name="name">Project Issue Tracker Tree</field>
             <field name="model">project.issue</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Issue Tracker Tree" fonts="bold:needaction_pending==True" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="needaction_pending" invisible="1"/>
@@ -195,7 +192,6 @@
         <record id="view_project_issue_filter" model="ir.ui.view">
             <field name="name">Project Issue Tracker Search</field>
             <field name="model">project.issue</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <field name="name" string="Issue" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
@@ -226,7 +222,6 @@
         <record model="ir.ui.view" id="project_issue_calendar_view">
             <field name="name">Project Issue Tracker Calendar</field>
             <field name="model">project.issue</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Issues" date_start="date" color="user_id" date_delay="duration">
@@ -242,7 +237,6 @@
         <record model="ir.ui.view" id="project_issue_kanban_view">
             <field name="name">Project Issue Kanban</field>
             <field name="model">project.issue</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
                     <field name="color"/>
@@ -315,7 +309,6 @@
         <record model="ir.ui.view" id="project_feature_tree_view">
             <field name="name">Project Issue- Feature Tracker Tree</field>
             <field name="model">project.issue</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Feature Tracker Tree" fonts="bold:needaction_pending==True" colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                     <field name="id"/>
@@ -334,7 +327,6 @@
         <record id="view_project_feature_filter" model="ir.ui.view">
             <field name="name">Project Issue - Feature Tracker Search</field>
             <field name="model">project.issue</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
                     <field name="name" string="Feature description"/>
@@ -360,7 +352,6 @@
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>
             <field name="model">project.project</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
@@ -381,7 +372,6 @@
         <record id="view_project_kanban_inherited" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
             <field name="model">project.project</field>
-            <field name="type">kanban</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
                 <field name="use_tasks" position="after">
@@ -399,7 +389,6 @@
         <record id="analytic_account_inherited_issue_form" model="ir.ui.view">
             <field name="name">account.analytic.account.issue.form.inherit</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="project.analytic_account_inherited_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">

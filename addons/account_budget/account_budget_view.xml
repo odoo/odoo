@@ -15,7 +15,6 @@
         <record id="view_budget_post_search" model="ir.ui.view">
             <field name="name">account.budget.post.search</field>
             <field name="model">account.budget.post</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Budgetary Position">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budgetary Position"/>
@@ -27,7 +26,6 @@
         <record id="view_budget_post_tree" model="ir.ui.view">
             <field name="name">account.budget.post.tree</field>
             <field name="model">account.budget.post</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Budgetary Position">
                     <field name="code"/>
@@ -52,7 +50,6 @@
         <record model="ir.ui.view" id="view_budget_post_form">
             <field name="name">account.budget.post.form.inherit</field>
             <field name="model">account.budget.post</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Budgetary Position" version="7.0">
                     <group col="4">
@@ -105,9 +102,8 @@
         <record model="ir.ui.view" id="crossovered_budget_view_form">
             <field name="name">crossovered.budget.view.form</field>
             <field name="model">crossovered.budget</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Budget" version="7.0">
                     <header>
                         <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
                         <button string="Approve" name="validate" states="confirm" type="workflow" class="oe_highlight"/>
@@ -181,7 +177,6 @@
         <record model="ir.ui.view" id="crossovered_budget_view_tree">
             <field name="name">crossovered.budget.view.tree</field>
             <field name="model">crossovered.budget</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree colors="blue:state == 'draft';gray:state in ('done','cancel');black:state in ('confirm','validate')" string="Budget">
                     <field name="name" colspan="1"/>
@@ -198,7 +193,6 @@
         <record id="view_crossovered_budget_search" model="ir.ui.view">
            <field name="name">crossovered.budget.search</field>
            <field name="model">crossovered.budget</field>
-           <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Budget">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budget"/>
@@ -240,7 +234,6 @@
         <record model="ir.ui.view" id="view_crossovered_budget_line_tree">
             <field name="name">crossovered.budget.line.tree</field>
             <field name="model">crossovered.budget.lines</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Budget Lines">
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
@@ -259,7 +252,6 @@
         <record model="ir.ui.view" id="view_crossovered_budget_line_form">
             <field name="name">crossovered.budget.line.form</field>
             <field name="model">crossovered.budget.lines</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Budget Lines" version="7.0">
                     <sheet>
@@ -303,7 +295,6 @@
 
         <record model="ir.ui.view" id="view_account_analytic_account_form_inherit_budget">
             <field name="name">account.analytic.account.form.inherot.budget</field>
-            <field name="type">form</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
