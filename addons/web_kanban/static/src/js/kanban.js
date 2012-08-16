@@ -423,7 +423,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                 this.value = this.value[0];
             }
             var field = this.view.group_by_field;
-            if (field) {
+            if (!_.isEmpty(field)) {
                 try {
                     this.title = instance.web.format_value(group.value, field, false);
                 } catch(e) {}
