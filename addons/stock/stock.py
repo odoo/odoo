@@ -2236,14 +2236,17 @@ class stock_move(osv.osv):
             if move.picking_id:
                 picking_ids.append(move.picking_id.id)
             if move.move_dest_id.id and (move.state != 'done'):
-                self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
-                #cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
-                if move.move_dest_id.state in ('waiting', 'confirmed'):
-                    self.force_assign(cr, uid, [move.move_dest_id.id], context=context)
-                    if move.move_dest_id.picking_id:
-                        wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
-                    if move.move_dest_id.auto_validate:
-                        self.action_done(cr, uid, [move.move_dest_id.id], context=context)
+                # Downstream move should only be triggered if this move is the last pending upstream move
+                other_upstream_move_ids = self.search(cr, uid, [('id','!=',move.id),('state','not in',['done','cancel']),
+                                                                ('move_dest_id','=',move.move_dest_id.id)], context=context)
+                if not other_upstream_move_ids:
+                    self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
+                    if move.move_dest_id.state in ('waiting', 'confirmed'):
+                        self.force_assign(cr, uid, [move.move_dest_id.id], context=context)
+                        if move.move_dest_id.picking_id:
+                            wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
+                        if move.move_dest_id.auto_validate:
+                            self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
             self._create_product_valuation_moves(cr, uid, move, context=context)
             if move.state not in ('confirmed','done','assigned'):
@@ -2469,7 +2472,6 @@ class stock_move(osv.osv):
                     'location_id': location_id or move.location_id.id,
                 }
                 current_move = self.copy(cr, uid, move.id, default_val)
-                self.write(cr, uid, current_move, {'move_dest_id': False})                
                 res += [current_move]
                 update_val = {}
                 update_val['product_qty'] = quantity_rest
