@@ -948,7 +948,7 @@ instance.web.Client = instance.web.Widget.extend({
         instance.web.bus.on('click', this, function(ev) {
             $.fn.tipsy.clear();
             if (!$(ev.target).is('input[type=file]')) {
-                self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
+                self.$element.find('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
             }
         });
     },
