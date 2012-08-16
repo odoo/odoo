@@ -183,12 +183,14 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 self.on_task_display(task_info.internal_task);
             }
         });
-        
-        // insertion of create button
-        var td = $($("table td", self.$element)[0]);
-        var rendered = QWeb.render("GanttView-create-button");
-        $(rendered).prependTo(td);
-        $(".oe_gantt_button_create", this.$element).click(this.on_task_create);
+
+        // insertion of create button if gantt has crate false do not render create button     
+        if (this._is_action_enabled('create')){
+            var td = $($("table td", self.$element)[0]);
+            var rendered = QWeb.render("GanttView-create-button");
+            $(rendered).prependTo(td);
+            $(".oe_gantt_button_create", this.$element).click(this.on_task_create);
+        }
     },
     on_task_changed: function(task_obj) {
         var self = this;
