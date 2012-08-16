@@ -27,18 +27,12 @@ from osv import osv
 from osv import fields
 from tools.translate import _
 
-class mail_group(osv.osv):
+class mail_group(osv.Model):
     """
     A mail_group is a collection of users sharing messages in a discussion
     group. Group users are users that follow the mail group, using the
     subscription/follow mechanism of OpenSocial. A mail group has nothing
     in common with res.users.group.
-    Additional information on fields:
-        - ``member_ids``: user member of the groups are calculated with
-          ``message_get_subscribers`` method from mail.thread
-        - ``member_count``: calculated with member_ids
-        - ``is_subscriber``: calculated with member_ids
-        
     """
     
     _description = 'Discussion group'
@@ -55,26 +49,7 @@ class mail_group(osv.osv):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
     
-    def get_member_ids(self, cr, uid, ids, field_names, args, context=None):
-        if context is None:
-            context = {}
-        result = dict.fromkeys(ids)
-        for id in ids:
-            result[id] = {}
-            result[id]['member_ids'] = self.message_get_subscribers(cr, uid, [id], context=context)
-            result[id]['member_count'] = len(result[id]['member_ids'])
-            result[id]['is_subscriber'] = uid in result[id]['member_ids']
-        return result
-    
-    def search_member_ids(self, cr, uid, obj, name, args, context=None):
-        if context is None:
-            context = {}
-        sub_obj = self.pool.get('mail.subscription')
-        sub_ids = sub_obj.search(cr, uid, ['&', ('res_model', '=', obj._name), ('user_id', '=', args[0][2])], context=context)
-        subs = sub_obj.read(cr, uid, sub_ids, context=context)
-        return [('id', 'in', map(itemgetter('res_id'), subs))]
-    
-    def get_last_month_msg_nbr(self, cr, uid, ids, name, args, context=None):
+    def _get_last_month_msg_nbr(self, cr, uid, ids, name, args, context=None):
         result = {}
         for id in ids:
             lower_date = (DT.datetime.now() - DT.timedelta(days=30)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
@@ -86,21 +61,21 @@ class mail_group(osv.osv):
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
     
     _columns = {
-        #'name': fields.char('Group Name', size=64, required=True),
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
         'responsible_id': fields.many2one('res.users', string='Responsible',
             ondelete='set null', required=True, select=1,
             help="Responsible of the group that has all rights on the record."),
-        'public': fields.selection([('public','Public'),('private','Private'),('groups','Selected Group Only')], 'Privacy', required=True,
-            help='This group is visible by non members. \
-            Invisible groups can add members through the invite button.'),
+        'public': fields.selection([('public', 'Public'), ('private', 'Private'), ('groups', 'Selected Group Only')],
+            string='Privacy', required=True,
+            help='This group is visible by non members. '\
+                 'Invisible groups can add members through the invite button.'),
         'group_public_id': fields.many2one('res.groups', string='Authorized Group'),
         'group_ids': fields.many2many('res.groups', rel='mail_group_res_group_rel',
             id1='mail_group_id', id2='groups_id', string='Auto Subscription',
             help="Members of those groups will automatically added as followers. "\
-                    "Note that they will be able to manage their subscription manually "\
-                    "if necessary."),
+                 "Note that they will be able to manage their subscription manually "\
+                 "if necessary."),
         'image': fields.binary("Photo",
             help="This field holds the image used as photo for the "\
                  "user. The image is base64 encoded, and PIL-supported. "\
@@ -121,15 +96,7 @@ class mail_group(osv.osv):
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 50x50px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'member_ids': fields.function(get_member_ids, fnct_search=search_member_ids,
-            type='many2many', relation='res.users', string='Group members', multi='get_member_ids',
-            deprecated='This field will be deleted in a few hours or days, so please do not use it.'),
-        'member_count': fields.function(get_member_ids, type='integer',
-            string='Member count', multi='get_member_ids',
-            deprecated='This field will be deleted in a few hours or days, so please do not use it.'),
-        'is_subscriber': fields.function(get_member_ids, type='boolean',
-            string='Joined', multi='get_member_ids'),
-        'last_month_msg_nbr': fields.function(get_last_month_msg_nbr, type='integer',
+        'last_month_msg_nbr': fields.function(_get_last_month_msg_nbr, type='integer',
             string='Messages count for last month'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", 
                                     help="The email address associated with this group. New emails received will automatically "
@@ -218,3 +185,12 @@ class mail_group(osv.osv):
 
     def action_group_leave(self, cr, uid, ids, context=None):
         return self.message_unsubscribe(cr, uid, ids, context=context)
+
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'responsible_id' to the monitored fields """
+        res = super(mail_group, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['responsible_id']

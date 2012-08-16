@@ -738,12 +738,16 @@ class purchase_order(osv.osv):
                 result[obj.id].append(obj.validator.id)
         return result
 
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'validator' to the monitored fields """
+        res = super(purchase_order, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['validator']
+
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Request for quotation <b>created</b>."), context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, [obj.id], [obj.validator.id], context=context)
             self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
 
     def shipment_send_note(self, cr, uid, ids, picking_id, context=None):

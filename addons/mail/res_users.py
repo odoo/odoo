@@ -159,10 +159,6 @@ class res_users(osv.Model):
         for user in self.browse(cr, uid, ids, context=context):
             return user.partner_id.message_read(fetch_ancestors, ancestor_ids, limit, offset, domain)
 
-    def message_read_subscribers(self, cr, uid, ids, fields=['id', 'name', 'image_small'], context=None):
-        for user in self.browse(cr, uid, ids, context=context):
-            return user.partner_id.message_read_subscribers(fields)
-
     def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
                         limit=100, offset=0, domain=None, count=False, context=None):
         for user in self.browse(cr, uid, ids, context=context):
