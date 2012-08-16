@@ -36,8 +36,10 @@
                         <span class="oe_e">í</span>
                         <ul class="oe_dropdown_menu oe_kanban_group_dropdown">
                             <li><a data-action="toggle_fold" href="#">Fold</a></li>
-                            <li t-if="widget.view.grouped_by_m2o"><a data-action="edit" href="#">Edit</a></li>
-                            <li t-if="widget.view.grouped_by_m2o"><a data-action="delete" href="#">Delete</a></li>
+                            <t t-if="widget.view.grouped_by_m2o and widget.value">
+                                <li><a data-action="edit" href="#">Edit</a></li>
+                                <li><a data-action="delete" href="#">Delete</a></li>
+                            </t>
                         </ul>
                     </div>
                 <div class="oe_fold_column">
