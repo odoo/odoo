@@ -1,6 +1,30 @@
 -
   In order to test Payment Advice creation from Payslip Bacth I create New Payslip Batch
 -
+  I Create a bank record
+-
+  !record {model: res.partner.bank, id: res_partner_bank_0}:
+    acc_number: '23457685'
+    partner_id: base.res_partner_21
+    sequence: 0.0
+    name: Fortis
+    state: bank
+    bank: base.res_bank_1
+-
+  I create a new employee “Edwin”
+-
+  !record {model: hr.employee, id: hr_employee_edwin0}:
+    address_home_id: base.res_partner_address_2
+    address_id: base.res_partner_address_9
+    birthday: '1984-05-01'
+    children: 0.0
+    country_id: base.in
+    department_id: hr.dep_rd
+    gender: male
+    name: Edwin
+    bank_account_id: res_partner_bank_0
+    vehicle_distance: 0.0
+-
   I want to generate a payslip from Payslip Batch.
 -
   !record {model: hr.payslip.run, id: hr_payslip_run_forAdvice}:
@@ -10,9 +34,9 @@
 -
   !record {model: hr.payslip.employees, id: hr_payslip_employees}:
     employee_ids:
-      - hr.employee_qdp
+      - hr_employee_edwin0
 -
-  I generate the payslip by clicking on Generat button wizard.
+  I generate the payslip by clicking on Generate button wizard.
 -
   !python {model: hr.payslip.employees}: |
      self.compute_sheet(cr, uid, [ref('hr_payslip_employees')], context={'active_id': ref('hr_payslip_run_forAdvice')})
@@ -33,7 +57,7 @@
     batch = self.browse(cr, uid, ref("hr_payslip_run_forAdvice"))
     assert (batch.state == 'close')
 - 
-  I Create Advice from Payslip Batch using Create Advice button
+  I create Advice from Payslip Batch using Create Advice button
 -
     !python {model: hr.payslip.run}: |
      self.create_advice(cr, uid, [ref('hr_payslip_run_forAdvice')])

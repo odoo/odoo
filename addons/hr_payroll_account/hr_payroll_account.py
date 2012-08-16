@@ -218,6 +218,17 @@ class hr_payslip_run(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Expense Journal', states={'draft': [('readonly', False)]}, readonly=True, required=True),
     }
 
+    def _get_default_journal(self, cr, uid, context=None):
+        model_data = self.pool.get('ir.model.data')
+        res = model_data.search(cr, uid, [('name', '=', 'expenses_journal')])
+        if res:
+            return model_data.browse(cr, uid, res[0]).res_id
+        return False
+
+    _defaults = {
+        'journal_id': _get_default_journal,
+    }
+
 hr_payslip_run()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
