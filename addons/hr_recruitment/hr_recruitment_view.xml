@@ -181,6 +181,7 @@
             </sheet>
             <div class="oe_chatter">
                 <field name="message_ids" widget="mail_thread"/>
+                <field name="message_follower_ids" widget="mail_followers"/>
             </div>
           </form>
         </field>
@@ -334,7 +335,7 @@
             </field>
             <xpath expr="/form/sheet/h1" version="7.0" position="after">
                 <div colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                    <field name="alias_id" invisible="1"/>
+                    <field name="alias_id" invisible="1" required="0"/>
                     <label for="alias_name" class="oe_edit_only"/>
                     <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
                 </div>

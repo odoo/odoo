@@ -55,7 +55,7 @@ class base_state(object):
         if not context or not context.get('portal'):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.user_email
+        return user.email
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
