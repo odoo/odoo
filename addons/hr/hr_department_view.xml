@@ -6,7 +6,6 @@
         <record id="view_department_form" model="ir.ui.view">
             <field name="name">hr.department.form</field>
             <field name="model">hr.department</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="department" version="7.0">
                     <sheet>
@@ -23,7 +22,6 @@
         <record id="view_department_tree" model="ir.ui.view">
             <field name="name">hr.department.tree</field>
             <field name="model">hr.department</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Companies">
@@ -36,7 +34,6 @@
         <record id="view_department_filter" model="ir.ui.view">
             <field name="name">Departments</field>
             <field name="model">hr.department</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Departments">
                     <field name="name" string="Department"/>

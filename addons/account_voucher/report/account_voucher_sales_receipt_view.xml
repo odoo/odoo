@@ -5,7 +5,6 @@
    <record id="view_sale_receipt_report_tree" model="ir.ui.view">
         <field name="name">sale.receipt.report.tree</field>
         <field name="model">sale.receipt.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';gray:state in ('cancel','paid');black:state in ('proforma','proforma2')"  string="Sales Receipt Analysis">
                 <field name="date" invisible="1"/>
@@ -33,7 +32,6 @@
     <record id="view_sale_receipt_report_graph" model="ir.ui.view">
          <field name="name">sale.receipt.report.graph</field>
          <field name="model">sale.receipt.report</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Sales Receipt Analysis" type="bar">
                  <field name="account_id"/>
@@ -45,7 +43,6 @@
     <record id="view_sale_receipt_report_search" model="ir.ui.view">
         <field name="name">sale.receipt.report.search</field>
         <field name="model">sale.receipt.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Sales Receipt Analysis">
                 <field name="date"/>
