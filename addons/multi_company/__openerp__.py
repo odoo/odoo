@@ -37,11 +37,11 @@ This module is the base module for other multi-company modules.
         'sale',
         'project',
     ],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'res_company_view.xml'
     ],
-    'demo_xml': [
+    'demo': [
         'multi_company_demo.xml'
     ],
     'installable': True,

@@ -32,7 +32,7 @@ Add a Shortcut icon besides the views title in order to add/remove a shortcut.
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base'],
-    'update_xml': [],
+    'data': [],
     'js' : [
         'static/src/js/web_shortcuts.js',
     ],
@@ -40,7 +40,7 @@ Add a Shortcut icon besides the views title in order to add/remove a shortcut.
         'static/src/css/web_shortcuts.css',
     ],
     'qweb' : [
-        "static/src/xml/*.xml",
+        'static/src/xml/*.xml',
     ],
     'installable': True,
     'auto_install': False,

@@ -63,8 +63,8 @@ of distribution models.
     'website': 'http://www.openerp.com',
     'images': ['images/analytic_plan.jpeg'],
     'depends': ['account', 'account_analytic_default'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'security/account_analytic_plan_security.xml',
         'security/ir.model.access.csv',
         'account_analytic_plans_view.xml',
@@ -72,7 +72,7 @@ of distribution models.
         'wizard/analytic_plan_create_model_view.xml',
         'wizard/account_crossovered_analytic_view.xml',
     ],
-    'demo_xml': [],
+    'demo': [],
     'test': ['test/acount_analytic_plans_report.yml'],
     'installable': True,
     'auto_install': False,

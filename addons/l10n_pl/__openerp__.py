@@ -21,12 +21,12 @@
 #
 ##############################################################################
 {
-    "name" : "Poland - Accounting",
-    "version" : "1.0",
-    "author" : "Grzegorz Grzelak (Cirrus)",
-    "website": "http://www.cirrus.pl",
-    "category" : "Localization/Account Charts",
-    "description": """
+    'name' : 'Poland - Accounting',
+    'version' : '1.0',
+    'author' : 'Grzegorz Grzelak (Cirrus)',
+    'website': 'http://www.cirrus.pl',
+    'category' : 'Localization/Account Charts',
+    'description': """
 This is the module to manage the accounting chart and taxes for Poland in OpenERP.
 ==================================================================================
 
@@ -34,13 +34,13 @@ To jest moduł do tworzenia wzorcowego planu kont i podstawowych ustawień do po
 VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów zakładając,
 że wszystkie towary są w obrocie hurtowym.
     """,
-    "depends" : ["account", "base_iban", "base_vat", "account_chart"],
-    "demo_xml" : [],
-    "update_xml" : ['account_tax_code.xml',"account_chart.xml",
+    'depends' : ['account', 'base_iban', 'base_vat', 'account_chart'],
+    'demo' : [],
+    'data' : ['account_tax_code.xml','account_chart.xml',
                     'account_tax.xml','l10n_chart_pl_wizard.xml'],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "00885794372803776829",
+    'auto_install': False,
+    'installable': True,
+    'certificate' : '00885794372803776829',
     'images': ['images/config_chart_l10n_pl.jpeg','images/l10n_pl_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

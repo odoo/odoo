@@ -21,23 +21,23 @@
 
 
 {
-    "name" : "Marketing Campaign - Demo",
-    "version" : "1.0",
-    "depends" : ["marketing_campaign",
-                 "crm",
+    'name' : 'Marketing Campaign - Demo',
+    'version' : '1.0',
+    'depends' : ['marketing_campaign',
+                 'crm',
                 ],
-    "author" : "OpenERP SA",
-    "category": 'Marketing',
-    "description": """
+    'author' : 'OpenERP SA',
+    'category': 'Marketing',
+    'description': """
 Demo data for the module marketing_campaign.
 ============================================
 
 Creates demo data like leads, campaigns and segments for the module marketing_campaign.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [
+    'data': [],
+    'data': [],
+    'demo': [
         'marketing_campaign_demo.xml',
     ],
     'installable': True,

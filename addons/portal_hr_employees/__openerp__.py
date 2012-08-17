@@ -24,7 +24,7 @@
     'name': 'Portal HR employees',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
 This module adds a list of employees to your portal's contact page if hr and
 portal_crm (which creates the contact page) are installed.

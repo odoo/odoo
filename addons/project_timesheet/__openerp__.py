@@ -35,15 +35,15 @@ with the effect of creating, editing and deleting either ways.
     'website': 'http://www.openerp.com',
     'images': ['images/invoice_task_work.jpeg', 'images/my_timesheet.jpeg', 'images/working_hour.jpeg'],
     'depends': ['project', 'hr_timesheet_sheet', 'hr_timesheet_invoice', 'account_analytic_analysis'],
-    'init_xml': ['project_timesheet_data.xml'],
-    'update_xml': [
-        "security/ir.model.access.csv",
-        "security/project_timesheet_security.xml",
-        "process/project_timesheet_process.xml", 
-        "report/task_report_view.xml", 
-        "project_timesheet_view.xml",
+    'data': ['project_timesheet_data.xml'],
+    'data': [
+        'security/ir.model.access.csv',
+        'security/project_timesheet_security.xml',
+        'process/project_timesheet_process.xml', 
+        'report/task_report_view.xml', 
+        'project_timesheet_view.xml',
         ],
-    'demo_xml': ["project_timesheet_demo.xml"],
+    'demo': ['project_timesheet_demo.xml'],
     'test': [
         'test/worktask_entry_to_timesheetline_entry.yml',
         'test/work_timesheet.yml',

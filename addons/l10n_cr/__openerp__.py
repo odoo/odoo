@@ -54,9 +54,9 @@ Everything is in English with Spanish translation. Further translations are welc
 please go to http://translations.launchpad.net/openerp-costa-rica.
     """,
     'depends': ['account', 'account_chart', 'base'],
-    'init_xml': [],
-    'demo_xml': [],
-    'update_xml': [
+    'data': [],
+    'demo': [],
+    'data': [
         'l10n_cr_base_data.xml',
         'data/account_account_type.xml',
         'data/account_account_template.xml',

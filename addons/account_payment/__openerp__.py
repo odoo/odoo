@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name": "Suppliers Payment Management",
-    "version": "1.1",
-    "author": "OpenERP SA",
-    "category": "Accounting & Finance",
-    "description": """
+    'name': 'Suppliers Payment Management',
+    'version': '1.1',
+    'author': 'OpenERP SA',
+    'category': 'Accounting & Finance',
+    'description': """
 Module to manage the payment of your supplier invoices.
 =======================================================
 
@@ -38,8 +38,8 @@ The confirmation of a payment order does _not_ create accounting entries, it jus
     """,
     'images': ['images/payment_mode.jpeg','images/payment_order.jpeg'],
     'depends': ['account','account_voucher'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'security/account_payment_security.xml',
         'security/ir.model.access.csv',
         'wizard/account_payment_pay_view.xml',
@@ -51,7 +51,7 @@ The confirmation of a payment order does _not_ create accounting entries, it jus
         'account_invoice_view.xml',
         'account_payment_report.xml',
     ],
-    'demo_xml': ['account_payment_demo.xml'],
+    'demo': ['account_payment_demo.xml'],
     'test': [
         'test/account_payment_demo.yml',
         'test/cancel_payment_order.yml',

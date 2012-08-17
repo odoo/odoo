@@ -21,7 +21,7 @@
 
 
 {
-    'name': "Employee Contracts",
+    'name': 'Employee Contracts',
     'version': '1.0',
     'category': 'Human Resources',
     'description': """
@@ -39,12 +39,12 @@ You can assign several contracts per employee.
     'website': 'http://www.openerp.com',
     'images': ['images/hr_contract.jpeg'],
     'depends': ['hr'],
-    'init_xml': ['hr_contract_data.xml'],
-    'update_xml': [
+    'data': ['hr_contract_data.xml'],
+    'data': [
         'security/ir.model.access.csv',
         'hr_contract_view.xml'
         ],
-    'demo_xml': [],
+    'demo': [],
     'test': [
              'test/test_hr_contract.yml'
              ],

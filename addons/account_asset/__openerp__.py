@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Assets Management",
-    "version" : "1.0",
-    "depends" : ["account"],
-    "author" : "OpenERP S.A.",
-    "description": """
+    'name' : 'Assets Management',
+    'version' : '1.0',
+    'depends' : ['account'],
+    'author' : 'OpenERP S.A.',
+    'description': """
 Financial and accounting asset management.
 ==========================================
 
@@ -32,30 +32,30 @@ This Module manages the assets owned by a company or an individual. It will keep
 And it allows to create Move's of the depreciation lines.
 
     """,
-    "website" : "http://www.openerp.com",
-    "category" : "Accounting & Finance",
-    "sequence": 32,
-    "init_xml" : [
+    'website' : 'http://www.openerp.com',
+    'category' : 'Accounting & Finance',
+    'sequence': 32,
+    'data' : [
     ],
-    "demo_xml" : [ 'account_asset_demo.xml'
+    'demo' : [ 'account_asset_demo.xml'
     ],
     'test': [
         'test/account_asset_demo.yml',
         'test/account_asset.yml',
         'test/account_asset_wizard.yml',
     ],
-    "update_xml" : [
-        "security/account_asset_security.xml",
-        "security/ir.model.access.csv",
-        "wizard/account_asset_change_duration_view.xml",
-        "wizard/wizard_asset_compute_view.xml",
-        "account_asset_view.xml",
-        "account_asset_invoice_view.xml",
-        "report/account_asset_report_view.xml",
+    'data' : [
+        'security/account_asset_security.xml',
+        'security/ir.model.access.csv',
+        'wizard/account_asset_change_duration_view.xml',
+        'wizard/wizard_asset_compute_view.xml',
+        'account_asset_view.xml',
+        'account_asset_invoice_view.xml',
+        'report/account_asset_report_view.xml',
     ],
-    "auto_install": False,
-    "installable": True,
-    "application": False,
+    'auto_install': False,
+    'installable': True,
+    'application': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

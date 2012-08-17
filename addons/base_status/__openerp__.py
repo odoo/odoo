@@ -34,9 +34,9 @@ crm_case classes from crm.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [],
+    'data': [],
+    'data': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
 }

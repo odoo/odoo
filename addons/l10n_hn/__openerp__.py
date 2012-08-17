@@ -43,14 +43,14 @@ and the Lempira currency.""",
     'author': 'Salvatore Josue Trimarchi Pinto',
     'website': 'http://trimarchi.co.cc',
     'depends': ['base', 'account', 'account_chart'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'account_types.xml',
         'account_chart.xml',
         'account_tax.xml',
         'l10n_hn_base.xml',
     ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,7 +23,7 @@
 {
     'name': 'Template of Charts of Accounts',
     'version': '1.1',
-    "category": 'Hidden/Dependency',
+    'category': 'Hidden/Dependency',
     'description': """
 Remove minimal account chart.
 =============================
@@ -33,9 +33,9 @@ Deactivates minimal chart of accounts.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['account'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [],
+    'data': [],
+    'data': [],
+    'demo': [],
     'installable': True,
     'certificate': '0073332443901',
 }

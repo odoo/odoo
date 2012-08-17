@@ -18,14 +18,14 @@
 #
 ##############################################################################
 {
-    "name" : "Products Manufacturers",
-    "version" : "1.0",
-    "author" : "OpenERP SA",
+    'name' : 'Products Manufacturers',
+    'version' : '1.0',
+    'author' : 'OpenERP SA',
     'category': 'Purchase Management',
-    "depends" : ["stock"],
-    "init_xml" : [],
-    "demo_xml" : [],
-    "description": """
+    'depends' : ['stock'],
+    'data' : [],
+    'demo' : [],
+    'description': """
 A module that adds manufacturers and attributes on the product form.
 ====================================================================
 
@@ -35,13 +35,13 @@ You can now define the following for a product:
     * Manufacturer Product Code
     * Product Attributes
     """,
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "product_manufacturer_view.xml"
+    'data' : [
+        'security/ir.model.access.csv',
+        'product_manufacturer_view.xml'
     ],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "00720153953662760781",
+    'auto_install': False,
+    'installable': True,
+    'certificate' : '00720153953662760781',
     'images': ['images/products_manufacturer.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

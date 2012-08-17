@@ -39,10 +39,10 @@ This module adds:
     - name_search on res.partner.bank enhanced to allow search on bank and iban account numbers
     ''',
     'depends': ['account'],
-    'demo_xml': [],
-    'init_xml': [
+    'demo': [],
+    'data': [
     ],
-    'update_xml' : [
+    'data' : [
         'security/ir.model.access.csv',
         'account_bank_statement_view.xml',
         'account_bank_statement_report.xml',

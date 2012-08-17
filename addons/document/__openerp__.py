@@ -45,8 +45,8 @@ ATTENTION:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['process','board', 'knowledge'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'security/document_security.xml',
         'document_view.xml',
         'document_data.xml',
@@ -55,7 +55,7 @@ ATTENTION:
         'report/document_report_view.xml',
         'board_document_view.xml',
     ],
-    'demo_xml': [ 'document_demo.xml','board_document_demo.xml'],
+    'demo': [ 'document_demo.xml','board_document_demo.xml'],
     'test': [
         'test/document_test2.yml',
     ],

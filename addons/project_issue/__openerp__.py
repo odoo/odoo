@@ -24,8 +24,8 @@
     'name': 'Issues Tracker',
     'version': '1.0',
     'category': 'Project Management',
-    "sequence": 22,
-    "summary": "Support, Bug Traker, Helpdesk",
+    'sequence': 22,
+    'summary': 'Support, Bug Traker, Helpdesk',
     'description': """
 This module provides Issues/Bugs Management in Project.
 =======================================================
@@ -43,19 +43,19 @@ and decide on their status as they evolve.
         'crm',
         'project',
     ],
-    'init_xml': [
+    'data': [
         'project_issue_data.xml'
     ],
-    'update_xml': [
+    'data': [
         'project_issue_view.xml',
         'project_issue_menu.xml',
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
-        "board_project_issue_view.xml",
-        "res_config_view.xml",
+        'board_project_issue_view.xml',
+        'res_config_view.xml',
      ],
-    'demo_xml': ['project_issue_demo.xml'],
+    'demo': ['project_issue_demo.xml'],
     'test': [
       'test/subscribe_issue.yml',
       'test/issue_process.yml',

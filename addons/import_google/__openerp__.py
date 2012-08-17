@@ -27,14 +27,14 @@
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'import_base', 'google_base_account', 'base_calendar'],
-    'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv',
+    'data': [],
+    'data': ['security/ir.model.access.csv',
                 'sync_google_calendar_view.xml',
                 'wizard/import_google_data_view.xml',
                 'wizard/google_import_message_view.xml'
 
                ],
-    'demo_xml': [],
+    'demo': [],
     'test': [
              #'test/test_sync_google_contact_import_partner.yml',
              #'test/test_sync_google_calendar.yml',

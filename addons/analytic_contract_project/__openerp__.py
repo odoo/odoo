@@ -20,17 +20,17 @@
 ##############################################################################
 
 {
-    "name" : "Contract on Project",
-    "version": "1.1",
-    "author" : "OpenERP SA",
+    'name' : 'Contract on Project',
+    'version': '1.1',
+    'author' : 'OpenERP SA',
     'category': 'Hidden',
-    "website" : "http://www.openerp.com",
-    "depends" : ["project", "account_analytic_analysis"],
-    "description": """
+    'website' : 'http://www.openerp.com',
+    'depends' : ['project', 'account_analytic_analysis'],
+    'description': """
 Add "Contract Data" in project view.
     """,
-    "init_xml" : [],
-    "update_xml": ["analytic_contract_project_view.xml"],
+    'data' : [],
+    'data': ['analytic_contract_project_view.xml'],
     'demo_xml': [],
     'installable': True,
     'auto_install': True,

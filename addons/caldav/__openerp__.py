@@ -21,11 +21,11 @@
 
 
 {
-    "name": "Share Calendar Using CalDAV",
-    "version": "1.1",
-    "depends": [
-                    "base",
-                    "document_webdav",
+    'name': 'Share Calendar Using CalDAV',
+    'version': '1.1',
+    'depends': [
+                    'base',
+                    'document_webdav',
                 ],
      'description': """
 This module contains basic functionality for Caldav system.
@@ -49,11 +49,11 @@ To access OpenERP Calendar using WebCal to remote site use the URL like:
         CALENDAR_NAME: Name of calendar to access
 """, 
     'category': 'Hidden/Dependency', 
-    "author": "OpenERP SA",
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    "init_xml": ["caldav_data.xml"],
-    "demo_xml": [],
-    "update_xml": [
+    'data': ['caldav_data.xml'],
+    'demo': [],
+    'data': [
                     'security/ir.model.access.csv',
                     'wizard/calendar_event_export_view.xml',
                     'wizard/calendar_event_import_view.xml',
@@ -62,9 +62,9 @@ To access OpenERP Calendar using WebCal to remote site use the URL like:
                     'caldav_view.xml',
                     'caldav_setup.xml'
                     ],
-    "installable": True,
-    "auto_install": False,
-    "certificate": "00924841426645403741",
+    'installable': True,
+    'auto_install': False,
+    'certificate': '00924841426645403741',
     'images': ['images/calendar_collections.jpeg','images/calendars.jpeg','images/export_ics_file.jpeg'],
 }
 

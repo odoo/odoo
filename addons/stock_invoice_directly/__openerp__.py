@@ -23,7 +23,7 @@
 {
     'name': 'Invoice Picking Directly',
     'version': '1.0',
-    "category" : "Warehouse Management",
+    'category' : 'Warehouse Management',
     'description': """
 Invoice Wizard for Delivery.
 ============================
@@ -35,9 +35,9 @@ wizard if the delivery is to be invoiced.
     'website': 'http://www.openerp.com',
     'images': ['images/create_invoice.jpeg'],
     'depends': ['delivery', 'stock'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [],
+    'data': [],
+    'data': [],
+    'demo': [],
     'test': ['test/stock_invoice_directly.yml'],
     'installable': True,
     'auto_install': False,

@@ -21,12 +21,12 @@
 ##############################################################################
 
 {
-    "name" : "Email Gateway",
-    "version" : "1.0",
-    "depends" : ["base", 'mail'],
-    "author" : "OpenERP SA",
-    "category": 'Tools',
-    "description": """
+    'name' : 'Email Gateway',
+    'version' : '1.0',
+    'depends' : ['base', 'mail'],
+    'author' : 'OpenERP SA',
+    'category': 'Tools',
+    'description': """
 Retrieve incoming email on POP/IMAP servers.
 ============================================
 
@@ -56,14 +56,14 @@ For more specific needs, you may also assign custom-defined actions
 (technically: Server Actions) to be triggered for each incoming mail.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-        "fetchmail_view.xml",
-        "fetchmail_data.xml",
+    'data': [],
+    'data': [
+        'fetchmail_view.xml',
+        'fetchmail_data.xml',
         'security/ir.model.access.csv',
         'fetchmail_installer_view.xml'
     ],
-    'demo_xml': [
+    'demo': [
 
     ],
     'installable': True,

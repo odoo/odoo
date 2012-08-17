@@ -34,13 +34,13 @@ Caldav features in Meeting.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['caldav', 'crm' ],
-    'init_xml': [
+    'data': [
                 'crm_caldav_data.xml',
                 'crm_caldav_setup.xml',
                 ],
 
-    'update_xml': ['crm_caldav_view.xml'],
-    'demo_xml': [],
+    'data': ['crm_caldav_view.xml'],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate' : '001088048737252670109',

@@ -35,14 +35,14 @@ Accounting chart and localization for Ecuador.
                 'account_chart',
                 'account_coda',
                 ],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
                 'account_tax_code.xml',
                 'account_chart.xml',
                 'account_tax.xml',
                 'l10n_chart_ec_wizard.xml',
                    ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'certificate' : '001226484516187330589',
     'images': ['images/config_chart_l10n_ec.jpeg','images/l10n_ec_chart.jpeg'],

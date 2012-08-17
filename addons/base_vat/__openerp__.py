@@ -22,7 +22,7 @@
 {
     'name': 'VAT Number Validation',
     'version': '1.0',
-    "category": 'Hidden/Dependency',
+    'category': 'Hidden/Dependency',
     'description': """
 VAT validation for Partner's VAT numbers.
 =========================================
@@ -38,7 +38,7 @@ There are two different levels of VAT number validation:
    rules for the country, usually a simple check digit. This is quick and 
    always available, but allows numbers that are perhaps not truly allocated,
    or not valid anymore.
- * When the "VAT VIES Check" option is enabled (in the configuration of the user's
+ * When the 'VAT VIES Check' option is enabled (in the configuration of the user's
    Company), VAT numbers will be instead submitted to the online EU VIES
    database, which will truly verify that the number is valid and currently
    allocated to a EU company. This is a little bit slower than the simple

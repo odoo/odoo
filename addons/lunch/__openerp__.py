@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name": "Lunch Orders",
-    "author": "OpenERP SA",
-    "version": "0.1",
-    "depends": ["base_tools"],
-    "category" : "Tools",
+    'name': 'Lunch Orders',
+    'author': 'OpenERP SA',
+    'version': '0.1',
+    'depends': ['base_tools'],
+    'category' : 'Tools',
     'description': """
 The base module to manage lunch.
 ================================
@@ -32,8 +32,8 @@ The base module to manage lunch.
 keep track for the Lunch Order, Cash Moves, CashBox, Product. Apply Different
 Category for the product.
     """,
-    "init_xml": [],
-    "update_xml": [
+    'data': [],
+    'data': [
         'security/lunch_security.xml',
         'security/ir.model.access.csv',
         'wizard/lunch_order_cancel_view.xml',
@@ -44,10 +44,10 @@ Category for the product.
         'report/report_lunch_order_view.xml',
         'lunch_installer_view.xml'
     ],
-    "demo_xml": ['lunch_demo.xml'],
-    "test": ['test/test_lunch.yml', 'test/lunch_report.yml'],
-    "installable": True,
-    "certificate" : "001292377792581874189",
+    'demo': ['lunch_demo.xml'],
+    'test': ['test/test_lunch.yml', 'test/lunch_report.yml'],
+    'installable': True,
+    'certificate' : '001292377792581874189',
     'images': ['images/cash_moves.jpeg','images/lunch_orders.jpeg','images/products.jpeg'],
 }
 

@@ -20,14 +20,14 @@
 ##############################################################################
 
 {
-    "name": "Employee Directory",
-    "version": "1.1",
-    "author": "OpenERP SA",
-    "category": "Human Resources",
-    "sequence": 12,
-    "website": "http://www.openerp.com",
-    "summary": "All Infos on Employees",
-    "description": """
+    'name': 'Employee Directory',
+    'version': '1.1',
+    'author': 'OpenERP SA',
+    'category': 'Human Resources',
+    'sequence': 12,
+    'website': 'http://www.openerp.com',
+    'summary': 'All Infos on Employees',
+    'description': """
 Module for Human Resource Management.
 =====================================
 
@@ -45,8 +45,8 @@ You can manage:
         'static/src/img/default_image.png',
     ],
     'depends': ['base_setup','mail', 'resource', 'board'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
         'board_hr_view.xml',
@@ -57,7 +57,7 @@ You can manage:
         'hr_data.xml',
         'res_config_view.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'hr_demo.xml',
     ],
     'test': [
@@ -68,6 +68,6 @@ You can manage:
     'application': True,
     'auto_install': False,
     'certificate': '0086710558965',
-    "css": [ 'static/src/css/hr.css' ],
+    'css': [ 'static/src/css/hr.css' ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

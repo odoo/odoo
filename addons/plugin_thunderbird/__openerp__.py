@@ -20,13 +20,13 @@
 #
 ##############################################################################
 {
-    "name" : "Thunderbird Plug-In",
-    "version" : "1.0",
-    "author" : ['OpenERP SA', 'Axelor'],
-    "website" : "http://www.openerp.com/",
-    "depends" : ["base","mail", "plugin"],
-    "category" : "Customer Relationship Management",
-    "description": """
+    'name' : 'Thunderbird Plug-In',
+    'version' : '1.0',
+    'author' : ['OpenERP SA', 'Axelor'],
+    'website' : 'http://www.openerp.com/',
+    'depends' : ['base','mail', 'plugin'],
+    'category' : 'Customer Relationship Management',
+    'description': """
 This module is required for the Thuderbird Plug-in to work properly.
 ====================================================================
 
@@ -36,11 +36,11 @@ account, or any other object and attach the selected mail as a .eml file in
 the attachment of a selected record. You can create documents for CRM Lead,
 HR Applicant and Project Issue from selected mails.
       """,
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : ['plugin_thunderbird.xml'],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "00899858104035139949",
+    'data' : [],
+    'demo' : [],
+    'data' : ['plugin_thunderbird.xml'],
+    'auto_install': False,
+    'installable': True,
+    'certificate' : '00899858104035139949',
     'images': ['images/config_thunderbird.jpeg','images/config_thunderbird_plugin.jpeg','images/thunderbird_document.jpeg'],
 }

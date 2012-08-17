@@ -35,7 +35,7 @@ user name and password for the invitation of the survey.
     """,
     'author': 'OpenERP SA',
     'depends': ['base_tools', 'mail'],
-    'update_xml': ['survey_report.xml',
+    'data': ['survey_report.xml',
                    'survey_data.xml',
                    'wizard/survey_selection.xml',
                    'wizard/survey_answer.xml',
@@ -47,7 +47,7 @@ user name and password for the invitation of the survey.
                    'wizard/survey_browse_answer.xml',
                    'wizard/survey_print.xml',
                    'wizard/survey_send_invitation.xml'],
-    'demo_xml': ['survey_demo.xml'],
+    'demo': ['survey_demo.xml'],
     'test': [
         'test/draft2open2close_survey.yml',
         'test/draft2open2close_request.yml',

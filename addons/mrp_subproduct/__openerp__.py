@@ -40,12 +40,12 @@ With this module:
     'website': 'http://www.openerp.com',
     'images': ['images/bom_subproduct.jpeg'],
     'depends': ['base', 'mrp'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
        'security/ir.model.access.csv',
        'mrp_subproduct_view.xml'
     ],
-    'demo_xml': [],
+    'demo': [],
     'test': [
              'test/mrp_subproduct.yml'
              ],

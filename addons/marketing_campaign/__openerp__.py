@@ -21,16 +21,16 @@
 
 
 {
-    "name" : "Marketing Campaigns",
-    "version" : "1.1",
-    "depends" : ["marketing",
-                 "document",
-                 "email_template",
-                 "decimal_precision"
+    'name' : 'Marketing Campaigns',
+    'version' : '1.1',
+    'depends' : ['marketing',
+                 'document',
+                 'email_template',
+                 'decimal_precision'
                 ],
-    "author" : "OpenERP SA",
-    "category": 'Marketing',
-    "description": """
+    'author' : 'OpenERP SA',
+    'category': 'Marketing',
+    'description': """
 This module provides leads automation through marketing campaigns (campaigns can in fact be defined on any resource, not just CRM Leads).
 =========================================================================================================================================
 
@@ -54,17 +54,17 @@ Note: If you need demo data, you can install the marketing_campaign_crm_demo
       CRM Leads.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'marketing_campaign_view.xml',
         'marketing_campaign_data.xml',
         'marketing_campaign_workflow.xml',
         'res_partner_view.xml',
         'report/campaign_analysis_view.xml',
-        "security/marketing_campaign_security.xml",
-        "security/ir.model.access.csv"
+        'security/marketing_campaign_security.xml',
+        'security/ir.model.access.csv'
     ],
-    'demo_xml': [
+    'demo': [
         'marketing_campaign_demo.xml',
     ],
     'test': [

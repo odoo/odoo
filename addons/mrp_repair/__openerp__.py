@@ -39,7 +39,7 @@ The following topics should be covered by this module:
     'author': 'OpenERP SA',
     'images': ['images/repair_order.jpeg'],
     'depends': ['mrp', 'sale', 'account'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'security/mrp_repair_security.xml',
         'mrp_repair_sequence.xml',
@@ -49,7 +49,7 @@ The following topics should be covered by this module:
         'mrp_repair_workflow.xml',
         'mrp_repair_report.xml',
     ],
-    'demo_xml': ['mrp_repair_demo.yml'],
+    'demo': ['mrp_repair_demo.yml'],
     'test': ['test/test_mrp_repair_noneinv.yml',
              'test/test_mrp_repair_b4inv.yml',
              'test/test_mrp_repair_afterinv.yml',

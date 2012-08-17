@@ -48,9 +48,9 @@ generated if no algorithm is specified on the Partner record.
 
     """,
     'depends': ['account'],
-    'demo_xml': [],
-    'init_xml': [],
-    'update_xml' : [
+    'demo': [],
+    'data': [],
+    'data' : [
         'partner_view.xml',
         'account_invoice_view.xml',        
     ],

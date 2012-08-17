@@ -30,9 +30,9 @@ Meetings, Phonecalls, Emails, Project and Project Tasks Data into OpenERP Module
     'website': 'http://www.openerp.com',
     'depends': ['import_base','crm', 'document'],
     'data': [
-        "wizard/import_message_view.xml",
-        "import_sugarcrm_view.xml",
-        "security/ir.model.access.csv",
+        'wizard/import_message_view.xml',
+        'import_sugarcrm_view.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [],
     'test': [],

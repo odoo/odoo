@@ -61,13 +61,13 @@ PASSWORD: ${object.moodle_user_password}
 """,
     'author': 'OpenERP SA',
     'depends': ['event'],
-    'init_xml': [],
+    'data': [],
     'data': [
             'wizard_moodle.xml',
             'event_view.xml',
             'security/ir.model.access.csv'
             ],
-    'demo_xml': [],
+    'demo': [],
     'test': [],
     'installable': True,
     'auto_install': False,

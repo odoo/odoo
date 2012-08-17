@@ -21,12 +21,12 @@
 
 
 {
-    "name" : "Miscellaneous Tools",
-    "version" : "1.0",
-    "depends" : ["base", "base_setup"],
-    "author" : "OpenERP SA",
-    "category" : "Hidden/Dependency",
-    "description": """
+    'name' : 'Miscellaneous Tools',
+    'version' : '1.0',
+    'depends' : ['base', 'base_setup'],
+    'author' : 'OpenERP SA',
+    'category' : 'Hidden/Dependency',
+    'description': """
 Installer for extra Hidden like lunch, survey, idea, share.
 ===========================================================
 
@@ -34,10 +34,9 @@ Makes the Extra Hidden Configuration available from where you can install
 modules like share, lunch, pad, idea, survey and subscription.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-    ],
-    'demo_xml': [],
+    'data': [],
+    'data': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate' : '00557100228403879621',

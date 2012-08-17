@@ -31,15 +31,15 @@ Web pages
     'author': ['OpenERP SA'],
     'website': 'http://www.openerp.com/',
     'depends': ['knowledge'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'wizard/document_page_create_menu_view.xml',
         'wizard/document_page_show_diff_view.xml',
         'document_page_view.xml',
         'security/document_page_security.xml',
         'security/ir.model.access.csv',
     ],
-    'demo_xml': [
+    'demo': [
         'document_page_demo.xml'
     ],
     'test': [
@@ -54,7 +54,7 @@ Web pages
         'static/src/js/document_page.js'
     ],
     'css' : [
-        "static/src/css/document_page.css"
+        'static/src/css/document_page.css'
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

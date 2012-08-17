@@ -24,7 +24,7 @@
     'name': 'Portal Event',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
 This module adds event menu and features to your portal if event and portal are
 installed.

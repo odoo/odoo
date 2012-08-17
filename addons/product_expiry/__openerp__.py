@@ -18,14 +18,14 @@
 #
 ##############################################################################
 {
-    "name" : "Products Expiry Date",
-    "version" : "1.0",
-    "author" : "OpenERP SA",
-    "category" : "Specific Industry Applications",
-    "depends" : ["stock"],
-    "init_xml" : [],
-    "demo_xml" : ["product_expiry_demo.xml"],
-    "description": '''
+    'name' : 'Products Expiry Date',
+    'version' : '1.0',
+    'author' : 'OpenERP SA',
+    'category' : 'Specific Industry Applications',
+    'depends' : ['stock'],
+    'data' : [],
+    'demo' : ['product_expiry_demo.xml'],
+    'description': """
 Track different dates on products and production lots.
 ======================================================
 
@@ -35,11 +35,11 @@ Following dates can be tracked:
     - removal date
     - alert date
 
-Used, for example, in food industries.''',
-    "update_xml" : ["product_expiry_view.xml"],
-    "auto_install": False,
-    "installable": True,
-    "certificate": "00421222123914960109",
+Used, for example, in food industries.""",
+    'data' : ['product_expiry_view.xml'],
+    'auto_install': False,
+    'installable': True,
+    'certificate': '00421222123914960109',
     'images': ['images/production_lots_dates.jpeg','images/products_dates.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

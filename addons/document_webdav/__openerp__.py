@@ -29,12 +29,12 @@
 ##############################################################################
 
 {
-        "name" : "Shared Repositories (WebDAV)",
-        "version" : "2.3",
-        "author" : "OpenERP SA",
-        "category" : "Knowledge Management",
-        "website": "http://www.openerp.com",
-        "description": """
+        'name' : 'Shared Repositories (WebDAV)',
+        'version' : '2.3',
+        'author' : 'OpenERP SA',
+        'category' : 'Knowledge Management',
+        'website': 'http://www.openerp.com',
+        'description': """
 With this module, the WebDAV server for documents is activated.
 ===============================================================
 
@@ -48,28 +48,28 @@ Server Configuration Parameter:
     ; enable = True ; Serve webdav over the http(s) servers
     ; vdir = webdav ; the directory that webdav will be served at
     ; this default val means that webdav will be
-    ; on "http://localhost:8069/webdav/
+    ; on 'http://localhost:8069/webdav/
     ; verbose = True ; Turn on the verbose messages of webdav
     ; debug = True ; Turn on the debugging messages of webdav
     ; since the messages are routed to the python logging, with
-    ; levels "debug" and "debug_rpc" respectively, you can leave
+    ; levels 'debug' and 'debug_rpc' respectively, you can leave
     ; these options on
 
 Also implements IETF RFC 5785 for services discovery on a http server,
 which needs explicit configuration in openerp-server.conf too.
 """,
-        "depends" : ["base", "document"],
-        "init_xml" : [],
-        "update_xml" : ['security/ir.model.access.csv',
+        'depends' : ['base', 'document'],
+        'data' : [],
+        'data' : ['security/ir.model.access.csv',
                         'webdav_view.xml',
                         'webdav_setup.xml',
                         ],
-        "demo_xml" : [],
-        "test": [ #'test/webdav_test1.yml',
+        'demo' : [],
+        'test': [ #'test/webdav_test1.yml',
                 ],
-        "auto_install": False,
-        "installable": True,
-        "certificate" : "001236490750845657973",
+        'auto_install': False,
+        'installable': True,
+        'certificate' : '001236490750845657973',
         'images': ['images/dav_properties.jpeg','images/directories_structure_principals.jpeg'],
 }
 

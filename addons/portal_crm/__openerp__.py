@@ -24,7 +24,7 @@
     'name': 'Portal CRM',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
 This module adds a contact page (with a contact form creating a lead when
 submitted) to your portal if crm and portal are installed.

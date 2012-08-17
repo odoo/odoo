@@ -36,16 +36,16 @@ and categorize your interventions with a channel and a priority level.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['crm'],
-    'init_xml': [
+    'data': [
          'crm_helpdesk_data.xml',
     ],
-    'update_xml': [
+    'data': [
         'crm_helpdesk_view.xml',
         'crm_helpdesk_menu.xml',
         'security/ir.model.access.csv',
         'report/crm_helpdesk_report_view.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'crm_helpdesk_demo.xml',
     ],
     'test': ['test/process/help-desk.yml'],

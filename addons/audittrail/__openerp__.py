@@ -34,13 +34,13 @@ and can check logs.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'wizard/audittrail_view_log_view.xml',
         'audittrail_view.xml',
         'security/ir.model.access.csv',
     ],
-    'demo_xml': ['audittrail_demo.xml'],
+    'demo': ['audittrail_demo.xml'],
     'installable': True,
     'auto_install': False,
     'certificate': '0062572348749',

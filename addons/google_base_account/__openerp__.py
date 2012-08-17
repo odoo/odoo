@@ -28,12 +28,12 @@
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
                   'google_base_account_view.xml',
                   'wizard/google_login_view.xml',
                    ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
 }

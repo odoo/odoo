@@ -23,8 +23,8 @@
     'name': 'Social Network',
     'version': '1.0',
     'category':'Social Network',
-    "sequence": 2,
-    "summary": "Discussions, Mailing Lists, News",
+    'sequence': 2,
+    'summary': 'Discussions, Mailing Lists, News',
     'description': """
 A business oriented Social Networking with a fully-integrated email 
 and message management.

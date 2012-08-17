@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Cancel Journal Entries",
-    "version" : "1.1",
-    "author" : "OpenERP SA",
-    "category": 'Accounting & Finance',
-    "description": """
+    'name' : 'Cancel Journal Entries',
+    'version' : '1.1',
+    'author' : 'OpenERP SA',
+    'category': 'Accounting & Finance',
+    'description': """
 Allows cancelling accounting entries.
 =====================================
 
@@ -32,14 +32,14 @@ This module adds 'Allow Cancelling Entries' field on form view of account journa
 If set to true it allows user to cancel entries & invoices.
     """,
     'website': 'http://www.openerp.com',
-    "images" : ["images/account_cancel.jpeg"],
-    "depends" : ["account"],
-    'init_xml': [],
-    'update_xml': ['account_cancel_view.xml' ],
-    'demo_xml': [],
+    'images' : ['images/account_cancel.jpeg'],
+    'depends' : ['account'],
+    'data': [],
+    'data': ['account_cancel_view.xml' ],
+    'demo': [],
     'installable': True,
     'auto_install': False,
-    "certificate" : "001101250473177981989",
+    'certificate' : '001101250473177981989',
 
 
 }

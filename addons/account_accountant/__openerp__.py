@@ -19,13 +19,13 @@
 #
 ##############################################################################
 {
-    "name" : "Accounting and Finance",
-    "version" : "1.1",
-    "author" : "OpenERP SA",
-    "category": 'Accounting & Finance',
-    "sequence": 10,
-    "summary": "Financial and Analytic Accounting",
-    "description": """
+    'name' : 'Accounting and Finance',
+    'version' : '1.1',
+    'author' : 'OpenERP SA',
+    'category': 'Accounting & Finance',
+    'sequence': 10,
+    'summary': 'Financial and Analytic Accounting',
+    'description': """
 Accounting Access Rights.
 =========================
 
@@ -36,13 +36,13 @@ It assigns manager and user access rights to the Administrator and only
 user rights to Demo user.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    "depends" : ["account_voucher"],
-    'update_xml': [
+    'data': [],
+    'depends' : ['account_voucher'],
+    'data': [
         'security/account_security.xml',
         'account_accountant_data.xml'
     ],
-    'demo_xml': ['account_accountant_demo.xml'],
+    'demo': ['account_accountant_demo.xml'],
     'test': [],
     'installable': True,
     'auto_install': False,

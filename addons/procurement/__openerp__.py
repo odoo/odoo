@@ -21,13 +21,13 @@
 
 
 {
-    "name" : "Procurements",
-    "version" : "1.0",
-    "author" : "OpenERP SA",
-    "website" : "http://www.openerp.com",
-    "category" : "Hidden/Dependency",
-    "depends" : ["base","process", "product", "stock"],
-    "description": """
+    'name' : 'Procurements',
+    'version' : '1.0',
+    'author' : 'OpenERP SA',
+    'website' : 'http://www.openerp.com',
+    'category' : 'Hidden/Dependency',
+    'depends' : ['base','process', 'product', 'stock'],
+    'description': """
 This is the module for computing Procurements.
 ==============================================
 
@@ -43,8 +43,8 @@ for the product which needs replenishment. This procurement will start a
 task, either a purchase order form for the supplier, or a production order
 depending on the product's configuration.
     """,
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'security/ir.model.access.csv',
         'security/procurement_security.xml',
         'procurement_data.xml',
@@ -55,10 +55,10 @@ depending on the product's configuration.
         'procurement_view.xml',
         'procurement_workflow.xml',
         'process/procurement_process.xml',
-        "company_view.xml",
+        'company_view.xml',
         'board_mrp_procurement_view.xml',
     ],
-    'demo_xml': ['stock_orderpoint.xml'],
+    'demo': ['stock_orderpoint.xml'],
     'test': ['test/procurement.yml'],
     'installable': True,
     'auto_install': False,

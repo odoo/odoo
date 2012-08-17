@@ -22,7 +22,7 @@
 {
     'name': 'Entries Sequence Numbering',
     'version': '1.1',
-    "category": 'Accounting & Finance',
+    'category': 'Accounting & Finance',
     'description': """
 This module maintains internal sequence number for accounting entries.
 ======================================================================
@@ -40,13 +40,13 @@ You can customize the following attributes of the sequence:
     'website': 'http://www.openerp.com',
     'images': ['images/internal_sequence_number.jpeg'],
     'depends': ['account'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [],
+    'data': [
         'account_sequence_data.xml',
         'account_sequence_installer_view.xml',
         'account_sequence.xml'
     ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate': '00475376442024623469',
