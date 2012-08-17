@@ -1742,5 +1742,12 @@
 <div t-name="Many2ManyKanban.quick_create" class="oe_kanban_quick_create">
     <input t-att-placeholder="_t('Type name to search')"/>
 </div>
-
+<t t-name="Throbber">
+    <div>
+        <div class="oe_blockui_spin" style="height: 50px">
+        </div>
+        <br />
+        <div style="color:white">Loading...</div>
+    </div>
+</t>
 </templates>

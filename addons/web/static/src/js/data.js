@@ -706,7 +706,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend( /** @lends openerp.
      * @returns {$.Deferred}
      */
     call_and_eval: function (method, args, domain_index, context_index, callback, error_callback) {
-        return this.rpc('/web/dataset/call', {
+        return instance.session.rpc('/web/dataset/call', {
             model: this.model,
             method: method,
             domain_id: domain_index == undefined ? null : domain_index,
@@ -804,6 +804,22 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend( /** @lends openerp.
     },
     alter_ids: function(n_ids) {
         this.ids = n_ids;
+    },
+    /**
+     * Resequence records.
+     *
+     * @param {Array} ids identifiers of the records to resequence
+     * @returns {$.Deferred}
+     */
+    resequence: function (ids, options) {
+        options = options || {};
+        return instance.session.rpc('/web/dataset/resequence', {
+            model: this.model,
+            ids: ids,
+            context: this._model.context(options.context),
+        }).pipe(function (results) {
+            return results;
+        });
     },
 });
 instance.web.DataSetStatic =  instance.web.DataSet.extend({

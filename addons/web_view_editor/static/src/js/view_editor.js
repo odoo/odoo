@@ -70,11 +70,10 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         this.view_edit_dialog.on_close.add_last(function(){window.location.reload();});
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new instance.web.ActionManager(this);
+        this.action_manager.appendTo(this.view_edit_dialog.$element);
         $.when(this.action_manager.do_action(action)).then(function() {
-            var viewmanager = self.action_manager.inner_widget,
-                controller = viewmanager.views[viewmanager.active_view].controller;
-            self.action_manager.appendTo(self.view_edit_dialog.$element);
-            self.action_manager.renderElement(self.view_edit_dialog);
+            var viewmanager = self.action_manager.inner_widget;
+            var controller = viewmanager.views[viewmanager.active_view].controller;
             controller.on_loaded.add_last(function(){
                 $(controller.groups).bind({
                     'selected': function(e, ids, records) {

@@ -621,11 +621,11 @@ instance.web.Reload = instance.web.Widget.extend({
     },
     start: function() {
         var l = window.location;
-        var timestamp = new Date().getTime();
-        var search = "?ts=" + timestamp;
-        if (l.search) {
-            search = l.search + "&ts=" + timestamp;
-        }
+
+        var sobj = $.deparam(l.search.substr(1));
+        sobj.ts = new Date().getTime();
+        var search = '?' + $.param(sobj);
+
         var hash = l.hash;
         if (this.menu_id) {
             hash = "#menu_id=" + this.menu_id;
@@ -948,7 +948,7 @@ instance.web.Client = instance.web.Widget.extend({
         instance.web.bus.on('click', this, function(ev) {
             $.fn.tipsy.clear();
             if (!$(ev.target).is('input[type=file]')) {
-                self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
+                self.$element.find('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
             }
         });
     },
