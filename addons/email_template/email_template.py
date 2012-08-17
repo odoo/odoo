@@ -38,7 +38,7 @@ except ImportError:
 
 class email_template(osv.osv):
     "Templates for sending email"
-    _inherit = 'mail.message'
+    _inherit = 'mail.mail'
     _name = "email.template"
     _description = 'Email Templates'
     _rec_name = 'name' # override mail.message's behavior
@@ -147,7 +147,6 @@ class email_template(osv.osv):
         'email_from': fields.char('From', size=128, help="Sender address (placeholders may be used here)"),
         'email_to': fields.char('To', size=256, help="Comma-separated recipient addresses (placeholders may be used here)"),
         'email_cc': fields.char('Cc', size=256, help="Carbon copy recipients (placeholders may be used here)"),
-        'email_bcc': fields.char('Bcc', size=256, help="Blind carbon copy recipients (placeholders may be used here)"),
         'reply_to': fields.char('Reply-To', size=250, help="Preferred response address (placeholders may be used here)"),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
@@ -306,7 +305,6 @@ class email_template(osv.osv):
                   'email_from': False,
                   'email_to': False,
                   'email_cc': False,
-                  'email_bcc': False,
                   'reply_to': False,
                   'auto_delete': False,
                   'model': False,
@@ -326,7 +324,7 @@ class email_template(osv.osv):
         template = self.get_email_template(cr, uid, template_id, res_id, context)
 
         for field in ['subject', 'body_text', 'body_html', 'email_from',
-                      'email_to', 'email_cc', 'email_bcc', 'reply_to',
+                      'email_to', 'email_cc', 'reply_to',
                       'message_id']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \

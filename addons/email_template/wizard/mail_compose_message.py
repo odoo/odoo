@@ -138,7 +138,6 @@ class mail_compose_message(osv.osv_memory):
                 'body_text': record.body_text or False,
                 'email_to': record.email_to or False,
                 'email_cc': record.email_cc or False,
-                'email_bcc': record.email_bcc or False,
                 'reply_to': record.reply_to or False,
                 'model_id': model_id or False,
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]

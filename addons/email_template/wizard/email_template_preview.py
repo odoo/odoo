@@ -79,7 +79,6 @@ class email_template_preview(osv.osv_memory):
         model = template.model
         vals['email_to'] = self.render_template(cr, uid, template.email_to, model, res_id, context)
         vals['email_cc'] = self.render_template(cr, uid, template.email_cc, model, res_id, context)
-        vals['email_bcc'] = self.render_template(cr, uid, template.email_bcc, model, res_id, context)
         vals['reply_to'] = self.render_template(cr, uid, template.reply_to, model, res_id, context)
         vals['subject'] = self.render_template(cr, uid, template.subject, model, res_id, context)
         description = self.render_template(cr, uid, template.body_text, model, res_id, context) or ''
