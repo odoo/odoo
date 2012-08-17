@@ -2,13 +2,13 @@
 
 // Variables {{{
 $facets-border: #afafb6
-$section-title-color: #8786b7
+$section-title-color: #7C7BAD
 $tag-bg-light: #f0f0fa
-$tag-bg-dark: #8786b7
+$tag-bg-dark: #7C7BAD
 $tag-border: #afafb6
 $tag-border-selected: #a6a6fe
 $hover-background: #f0f0fa
-$link-color: #8a89ba
+$link-color: #7C7BAD
 $sheet-max-width: 860px
 // }}}
 // Mixins {{{
@@ -1504,6 +1504,7 @@ $sheet-max-width: 860px
         margin: 16px
         > header
             margin: -16px -16px 0 -16px
+            padding: 8px
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form
@@ -1511,8 +1512,6 @@ $sheet-max-width: 860px
             position: relative
             border-bottom: 1px solid #cacaca
             @include vertical-gradient(#fcfcfc, #dedede)
-            padding: 8px
-            //line-height: 30px
             ul
                 display: inline-block
                 float: right
