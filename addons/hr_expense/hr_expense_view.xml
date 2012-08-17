@@ -108,7 +108,7 @@
                                     <field name="sequence" invisible="1"/>
                                     <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
                                     <field name="date_value" string="Expense Date"/>
-                                    <field name="name" invisible="1"/>
+                                    <field name="name"/>
                                     <field name="ref"/>
                                     <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                                     <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)"/>
