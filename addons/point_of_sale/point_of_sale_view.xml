@@ -879,7 +879,7 @@
                             class="oe_highlight"/>
                         <button name="close" type="workflow" string="Validate Closing &amp; Post Entries" states="closing_control"
                             class="oe_highlight"/>
-                        <button name="open_frontend_cb" type="object" string="Start Selling" states="opened"/>
+                        <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"/>
                         <div class="oe_right">
                             <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1"/>
                         </div>
@@ -890,7 +890,7 @@
                             <button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened,closing_control"/>
                         </div>
                         <h1 class="oe_title">
-                            Point of Sale Session:
+                            Session:
                             <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
                         </h1>
                         <field name="has_opening_control" invisible="1" />
