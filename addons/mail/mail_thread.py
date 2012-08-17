@@ -751,7 +751,7 @@ class mail_thread(osv.Model):
                         now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
-    def message_post(self, cr, uid, res_id, body, 
+    def message_post(self, cr, uid, res_id, body, subject=False,
             mtype='notification', attachments=None, context=None, **kwargs):
 
         context = context or {}
@@ -776,6 +776,7 @@ class mail_thread(osv.Model):
             'res_model': self._name,
             'res_id': res_id,
             'body': body,
+            'subject': subject,
             'type': mtype,
             'attachment_ids': data_attach
         })
