@@ -105,6 +105,7 @@ class res_company(osv.osv):
 
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
+        'customize_footer': fields.boolean('Customize Footer', help="Determines if it is true the onchanges on rml_footer text field do not trigger and become editable."),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
@@ -138,6 +139,9 @@ class res_company(osv.osv):
     ]
     def on_change_header(self, cr, uid, ids, phone, email, fax, website, vat, reg=False, context=None):
         val = []
+        res_id=self.browse(cr, uid, ids, context=context)[0]
+        if res_id.customize_footer:
+            return {}
         if phone: val.append(_('Phone: ')+phone)
         if fax: val.append(_('Fax: ')+fax)
         if website: val.append(_('Website: ')+website)
