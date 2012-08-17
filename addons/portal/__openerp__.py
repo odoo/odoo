@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    Copyright (C) 2004-2012 OpenERP S.A (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,10 +20,14 @@
 ##############################################################################
 
 {
-    'name' : "Portal",
-    'version' : "1.0",
-    'depends' : ["base", "share", "anonymous"],
-    'author' : "OpenERP SA",
+    'name' : 'Portal',
+    'version' : '1.0',
+    'depends' : [
+        'base',
+        'share',
+        'auth_anonymous'
+    ],
+    'author' : 'OpenERP SA',
     'category': 'Portal',
     'description': """
 Customize access to your OpenERP database to external users by creating portals.
@@ -43,7 +47,6 @@ very handy when used in combination with the module 'share'.
         'security/ir.model.access.csv',
         'portal_view.xml',
         'portal_data.xml',
-        'res_user_view.xml',
         'wizard/portal_wizard_view.xml',
         'wizard/share_wizard_view.xml',
     ],

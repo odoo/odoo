@@ -5,7 +5,6 @@
         <record id="share_step1_form_portal" model="ir.ui.view">
             <field name="name">share.step1.form.portal</field>
             <field name="model">share.wizard</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="share.share_step1_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_type']" position="attributes">
@@ -34,7 +33,6 @@
         <record id="share_step2_form_portal" model="ir.ui.view">
             <field name="name">share.step2.form.portal</field>
             <field name="model">share.wizard</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="share.share_step2_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='result_line_ids']//field[@name='login']" position="after">

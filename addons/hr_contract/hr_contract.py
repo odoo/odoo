@@ -97,7 +97,7 @@ class hr_contract(osv.osv):
         return True
 
     _constraints = [
-        (_check_dates, 'Error! contract start-date must be lower then contract end-date.', ['date_start', 'date_end'])
+        (_check_dates, 'Error! Contract start-date must be less than contract end-date.', ['date_start', 'date_end'])
     ]
 hr_contract()
 

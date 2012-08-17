@@ -5,7 +5,6 @@
         <record id="view_project_issue_report_tree" model="ir.ui.view">
             <field name="name">project.issue.report.tree</field>
             <field name="model">project.issue.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Issues Analysis">
                     <field name="name" invisible="1"/>
@@ -35,7 +34,6 @@
         <record id="view_project_issue_report_graph" model="ir.ui.view">
             <field name="name">project.issue.report.graph</field>
             <field name="model">project.issue.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Project Issue" type="bar">
                     <field name="state"/>
@@ -48,7 +46,6 @@
         <record id="view_project_issue_report_filter" model="ir.ui.view">
             <field name="name">project.issue.report.select</field>
             <field name="model">project.issue.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="creation_date"/>
@@ -62,7 +59,7 @@
                     <field name="version_id"/>
                     <group  expand="1" string="Group By...">
                         <filter string="Assigned to" name="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Contact" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Sale Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" />
                         <filter string="Project"  name="project" icon="terp-folder-violet" context="{'group_by':'project_id'}" />
                         <filter string="Task"  icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'task_id'}"/>

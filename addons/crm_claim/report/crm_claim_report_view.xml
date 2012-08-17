@@ -7,7 +7,6 @@
         <record id="view_report_crm_claim_tree" model="ir.ui.view">
             <field name="name">crm.claim.report.tree</field>
             <field name="model">crm.claim.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree string="Claims">
                     <field name="name" invisible="1"/>
@@ -35,7 +34,6 @@
         <record id="view_report_crm_claim_graph" model="ir.ui.view">
             <field name="name">crm.claim.report.graph</field>
             <field name="model">crm.claim.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Claims" type="bar">
                     <field name="state"/>
@@ -50,7 +48,6 @@
         <record id="view_report_crm_claim_filter" model="ir.ui.view">
             <field name="name">crm.claim.report.select</field>
             <field name="model">crm.claim.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
                     <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>

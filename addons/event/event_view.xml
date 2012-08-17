@@ -24,7 +24,6 @@
         <record model="ir.ui.view" id="view_event_type_form">
             <field name="name">Event type</field>
             <field name="model">event.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Event Type">
                     <group col="4">
@@ -42,7 +41,6 @@
         <record model="ir.ui.view" id="view_event_type_tree">
             <field name="name">Event type</field>
             <field name="model">event.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Event Type">
                     <field name="name"/>
@@ -100,7 +98,6 @@
         <record model="ir.ui.view" id="view_event_form">
             <field name="name">Events</field>
             <field name="model">event.event</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Events" version="7.0">
                     <header>
@@ -199,6 +196,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                     </div>
                 </form>
             </field>
@@ -209,7 +207,6 @@
         <record model="ir.ui.view" id="view_event_tree">
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Events" fonts="bold:needaction_pending==True" colors="red:(register_min and register_min&gt;register_current) or (register_max and register_max&lt;register_current);grey:state=='cancel'">
                     <field name="name" string="Name"/>
@@ -233,7 +230,6 @@
         <record model="ir.ui.view" id="view_event_kanban">
             <field name="name">event.event.kanban</field>
             <field name="model">event.event</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="register_max"/>
@@ -299,7 +295,6 @@
         <record id="view_event_calendar" model="ir.ui.view">
             <field name="name">event.event.calendar</field>
             <field name="model">event.event</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="type" date_start="date_begin" date_stop="date_end" string="Event Organization">
@@ -314,7 +309,6 @@
         <record model="ir.ui.view" id="view_event_graph">
             <field name="name">Event Graph</field>
             <field name="model">event.event</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Event by Registration" type="bar" orientation="horizontal">
                     <field name="name"/>
@@ -329,7 +323,6 @@
         <record model="ir.ui.view" id="view_event_search">
             <field name="name">Events</field>
             <field name="model">event.event</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Events">
                     <field name="name" string="Events"/>
@@ -427,7 +420,6 @@
         <record model="ir.ui.view" id="view_event_registration_tree">
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Registration" fonts="bold:needaction_pending==True">
                     <field name="create_date"/>
@@ -447,9 +439,8 @@
         <record model="ir.ui.view" id="view_event_registration_form">
             <field name="name">event.registration.form</field>
             <field name="model">event.registration</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Event Registration" version="7.0">
                     <header>
                         <button name="registration_open" string="Confirm" states="draft" type="object" class="oe_highlight"/>
                         <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_highlight"/>
@@ -487,6 +478,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                     </div>
                 </form>
             </field>
@@ -496,7 +488,6 @@
         <record id="view_event_registration_calendar" model="ir.ui.view">
             <field name="name">event.registration.calendar</field>
             <field name="model">event.registration</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="event_id" date_start="event_begin_date" date_stop="event_end_date" string="Event Registration">
@@ -509,7 +500,6 @@
         <record model="ir.ui.view" id="view_event_registration_graph">
             <field name="name">Registration Graph</field>
             <field name="model">event.registration</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Registration" type="bar" orientation="horizontal">
                     <field name="event_id"/>
@@ -523,7 +513,6 @@
         <record model="ir.ui.view" id="view_registration_search">
             <field name="name">Registrations</field>
             <field name="model">event.registration</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <field name="name" string="Participant" filter_domain="['|','|','|',('name','ilike',self),('partner_id','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>

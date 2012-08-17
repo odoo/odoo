@@ -39,7 +39,6 @@
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
             <field name="model">stock.inventory.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Stock Inventory Lines">
                     <field name="product_id"/>
@@ -56,7 +55,6 @@
         <record id="view_inventory_line_form" model="ir.ui.view">
             <field name="name">stock.inventory.line.form</field>
             <field name="model">stock.inventory.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Inventory Lines" version="7.0">
                     <group col="4">
@@ -76,7 +74,6 @@
          <record id="view_inventory_filter" model="ir.ui.view">
             <field name="name">stock.inventory.filter</field>
             <field name="model">stock.inventory</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Inventory">
                     <field name="name" string="Inventory Reference"/>
@@ -94,7 +91,6 @@
         <record id="view_inventory_tree" model="ir.ui.view">
             <field name="name">stock.inventory.tree</field>
             <field name="model">stock.inventory</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Lot Inventory" colors="grey:state == 'cancel'">
                     <field name="name"/>
@@ -107,7 +103,6 @@
         <record id="view_inventory_form" model="ir.ui.view">
             <field name="name">stock.inventory.form</field>
             <field name="model">stock.inventory</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Physical Inventory" version="7.0">
                 <header>
@@ -225,7 +220,6 @@
         <record id="view_tracking_form" model="ir.ui.view">
             <field name="name">stock.tracking.form</field>
             <field name="model">stock.tracking</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Packs" version="7.0">
                     <group>
@@ -249,7 +243,6 @@
         <record id="view_tracking_tree" model="ir.ui.view">
             <field name="name">stock.tracking.tree</field>
             <field name="model">stock.tracking</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Packs">
                     <field name="name"/>
@@ -283,7 +276,6 @@
         <record id="lot_line_tree" model="ir.ui.view">
             <field name="name">stock.tracking.tree</field>
             <field name="model">stock.tracking</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree colors="grey:not active" string="Packs">
@@ -297,7 +289,6 @@
         <record model="ir.ui.view" id="search_stock_packs">
             <field name="name">Pack Search</field>
             <field name="model">stock.tracking</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Pack Search">
                     <field name="name" string="Pack" filter_domain="['|',('name','ilike',self),('serial','ilike',self)]"/>
@@ -310,7 +301,6 @@
         <record id="view_production_lot_revision_form" model="ir.ui.view">
             <field name="name">stock.production.lot.revision.form</field>
             <field name="model">stock.production.lot.revision</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Serial Number Revisions" version="7.0">
                     <group col="4">
@@ -327,7 +317,6 @@
         <record id="view_production_lot_revision_tree" model="ir.ui.view">
             <field name="name">stock.production.lot.revision.tree</field>
             <field name="model">stock.production.lot.revision</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Serial Number Revisions">
                     <field name="indice"/>
@@ -340,7 +329,6 @@
         <record id="view_production_lot_form" model="ir.ui.view">
             <field name="name">stock.production.lot.form</field>
             <field name="model">stock.production.lot</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
                     <div class="oe_button_box oe_right">
@@ -392,7 +380,6 @@
         <record id="view_production_lot_tree" model="ir.ui.view">
             <field name="name">stock.production.lot.tree</field>
             <field name="model">stock.production.lot</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Serial Number">
                     <field name="prefix"/>
@@ -408,7 +395,6 @@
         <record model="ir.ui.view" id="search_product_lot_filter">
             <field name="name">Production Lots Filter</field>
             <field name="model">stock.production.lot</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product Lots Filter">
                     <field name="name" string="Product Lots" filter_domain="['|','|',('name','ilike',self),('prefix','ilike',self),('ref','ilike',self)]"/>
@@ -454,7 +440,6 @@
         <record id="stock_move_tree" model="ir.ui.view">
             <field name="name">Stock Moves</field>
             <field name="model">stock.move</field>
-            <field name="type">tree</field>
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves">
@@ -478,7 +463,6 @@
         <record id="stock_move_tree2" model="ir.ui.view">
             <field name="name">Stock Moves</field>
             <field name="model">stock.move</field>
-            <field name="type">tree</field>
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves">
@@ -534,7 +518,6 @@
         <record id="view_location_form" model="ir.ui.view">
             <field name="name">stock.location.form</field>
             <field name="model">stock.location</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Location" version="7.0">
                     <label for="name" class="oe_edit_only"/>
@@ -577,7 +560,6 @@
         <record id="view_location_search" model="ir.ui.view">
             <field name="name">stock.location.search</field>
             <field name="model">stock.location</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Stock Locations">
                     <field name="name" string="Stock Locations"/>
@@ -593,7 +575,6 @@
         <record id="view_location_tree2" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
             <field name="model">stock.location</field>
-            <field name="type">tree</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal'">
@@ -638,10 +619,9 @@
         <record id="view_location_tree" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
             <field name="model">stock.location</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree toolbar="1">
+                <tree toolbar="1" string="Locations" >
                     <field icon="icon" name="name"/>
                 </tree>
             </field>
@@ -673,7 +653,6 @@
         <record id="view_warehouse" model="ir.ui.view">
             <field name="name">stock.warehouse</field>
             <field name="model">stock.warehouse</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Warehouse" version="7.0">
                     <label for="name" class="oe_edit_only"/>
@@ -695,7 +674,6 @@
         <record id="view_warehouse_tree" model="ir.ui.view">
             <field name="name">stock.warehouse.tree</field>
             <field name="model">stock.warehouse</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Warehouse">
                     <field name="name"/>
@@ -729,7 +707,6 @@
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
             <field name="model">stock.picking</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
@@ -743,7 +720,6 @@
         <record id="vpicktree" model="ir.ui.view">
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
@@ -761,7 +737,6 @@
         <record id="view_picking_form" model="ir.ui.view">
             <field name="name">stock.picking.form</field>
             <field name="model">stock.picking</field>
-            <field name="type">form</field>
             <field eval="12" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Internal Picking List" version="7.0">
@@ -926,7 +901,6 @@
         <record id="view_picking_internal_search" model="ir.ui.view">
             <field name="name">stock.picking.internal.search</field>
             <field name="model">stock.picking</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Internal Picking List">
                     <field name="name" string="Internal Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
@@ -984,7 +958,6 @@
         <record model="ir.ui.view" id="stock_picking_out_calendar">
             <field name="name">stock.picking.out.calendar</field>
             <field name="model">stock.picking.out</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
@@ -998,7 +971,6 @@
         <record id="view_picking_out_tree" model="ir.ui.view">
             <field name="name">stock.picking.out.tree</field>
             <field name="model">stock.picking</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
                     <field name="name"/>
@@ -1017,7 +989,6 @@
             <field name="name">stock.picking.out.form</field>
             <field name="model">stock.picking.out</field>
             <field name="inherit_id" ref="view_picking_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/form/header//button[@name='%(act_stock_return_picking)d']" position="replace">
@@ -1040,6 +1011,7 @@
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
                             <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                            <field name="message_follower_ids" widget="mail_followers"/>
                         </div>
                     </xpath>
                 </data>
@@ -1049,7 +1021,6 @@
         <record id="view_picking_out_search" model="ir.ui.view">
             <field name="name">stock.picking.out.search</field>
             <field name="model">stock.picking</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Picking list">
                     <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
@@ -1115,7 +1086,6 @@
         <record model="ir.ui.view" id="stock_picking_in_calendar">
             <field name="name">stock.picking.in.calendar</field>
             <field name="model">stock.picking.in</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
@@ -1129,7 +1099,6 @@
         <record id="view_picking_in_tree" model="ir.ui.view">
             <field name="name">stock.picking.in.tree</field>
             <field name="model">stock.picking.in</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'done';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
@@ -1148,7 +1117,6 @@
             <field name="name">stock.picking.in.form</field>
             <field name="model">stock.picking.in</field>
             <field name="inherit_id" ref="view_picking_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/form/header//button[@name='%(act_stock_return_picking)d']" position="replace">
@@ -1166,6 +1134,7 @@
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
                             <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                            <field name="message_follower_ids" widget="mail_followers"/>
                         </div>
                     </xpath>
                 </data>
@@ -1174,7 +1143,6 @@
         <record id="view_picking_in_search" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
             <field name="model">stock.picking.in</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Incoming Shipments">
                     <field name="name" string="Incoming Shipments" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
@@ -1242,7 +1210,6 @@
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
             <field name="model">stock.move</field>
-            <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel';red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
@@ -1250,7 +1217,7 @@
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
-                    <field name="product_id"/>
+                    <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_uos" groups="product.group_uos"/>
@@ -1285,7 +1252,6 @@
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">stock.move.form</field>
             <field name="model">stock.move</field>
-            <field name="type">form</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Stock Moves" version="7.0">
@@ -1364,7 +1330,6 @@
         <record id="view_move_search" model="ir.ui.view">
             <field name="name">stock.move.search</field>
             <field name="model">stock.move</field>
-            <field name="type">search</field>
             <field eval="3" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
@@ -1421,7 +1386,6 @@
         <record id="view_move_tree_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.tree2</field>
             <field name="model">stock.move</field>
-            <field name="type">tree</field>
             <field name="priority" eval="6"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves">
@@ -1459,7 +1423,6 @@
         <record id="view_move_tree_reception_picking_board" model="ir.ui.view">
             <field name="name">stock.move.tree3</field>
             <field name="model">stock.move</field>
-            <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Moves">
@@ -1475,7 +1438,6 @@
         <record id="view_move_search_reception_incoming_picking" model="ir.ui.view">
             <field name="name">stock.move.incoming.search2</field>
             <field name="model">stock.move</field>
-            <field name="type">search</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
@@ -1500,7 +1462,6 @@
         <record id="view_move_search_reception_outcoming_picking" model="ir.ui.view">
             <field name="name">stock.move.outgoing.search2</field>
             <field name="model">stock.move</field>
-            <field name="type">search</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
@@ -1563,7 +1524,6 @@
         <record id="view_incoterms_tree" model="ir.ui.view">
             <field name="name">stock.incoterms.tree</field>
             <field name="model">stock.incoterms</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Incoterms">
                     <field name="code"/>
@@ -1574,7 +1534,6 @@
         <record id="stock_incoterms_form" model="ir.ui.view">
             <field name="name">stock.incoterms.form</field>
             <field name="model">stock.incoterms</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Incoterms" version="7.0">
                     <group>
@@ -1701,7 +1660,6 @@
          <record id="view_stock_journal_filter" model="ir.ui.view">
             <field name="name">stock.journal.filter</field>
             <field name="model">stock.journal</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Stock Journal">
                     <field name="name" string="Stock Journal"/>
@@ -1712,7 +1670,6 @@
         <record model="ir.ui.view" id="view_stock_journal_tree">
             <field name="name">Stock Journals</field>
             <field name="model">stock.journal</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Stock Journal">
                     <field name="name"/>
@@ -1723,7 +1680,6 @@
         <record model="ir.ui.view" id="view_stock_journal_form">
             <field name="name">Stock Journals</field>
             <field name="model">stock.journal</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Journal" version="7.0">
                     <group>

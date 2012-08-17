@@ -5,7 +5,6 @@
         <record id="portal_project_issue_kanban_view" model="ir.ui.view">
             <field name="name">Project Issue Kanban</field>
             <field name="model">project.issue</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban version="7.0" class="oe_portal_project_issue">
                     <field name="priority"/>
@@ -49,7 +48,7 @@
                                             <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
                                                 <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
                                             </t>
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
                                 </div>

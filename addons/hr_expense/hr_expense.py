@@ -72,7 +72,7 @@ class hr_expense_expense(osv.osv):
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
-        'amount': fields.function(_amount, string='Total Amount'),
+        'amount': fields.function(_amount, string='Total Amount', digits_compute= dp.get_precision('Account')),
         'invoice_id': fields.many2one('account.invoice', "Employee's Invoice"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'department_id':fields.many2one('hr.department','Department'),
@@ -171,7 +171,7 @@ class hr_expense_expense(osv.osv):
                 else:
                     acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company_id})
                     if not acc:
-                        raise osv.except_osv(_('Error !'), _('Please configure Default Expense account for Product purchase, `property_account_expense_categ`'))
+                        raise osv.except_osv(_('Error!'), _('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
                 lines.append((0, False, {
                     'name': l.name,
                     'account_id': acc.id,
@@ -183,7 +183,7 @@ class hr_expense_expense(osv.osv):
                     'account_analytic_id': l.analytic_account.id,
                 }))
             if not exp.employee_id.address_home_id:
-                raise osv.except_osv(_('Error !'), _('The employee must have a Home address.'))
+                raise osv.except_osv(_('Error!'), _('The employee must have a home address.'))
             acc = exp.employee_id.address_home_id.property_account_payable.id
             payment_term_id = exp.employee_id.address_home_id.property_payment_term.id
             inv = {
@@ -258,8 +258,8 @@ class hr_expense_line(osv.osv):
         'date_value': fields.date('Date', required=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
         'total_amount': fields.function(_amount, string='Total', digits_compute=dp.get_precision('Account')),
-        'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Account')),
-        'unit_quantity': fields.float('Quantities' ),
+        'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Product Price')),
+        'unit_quantity': fields.float('Quantities', digits_compute= dp.get_precision('Product Unit of Measure')),
         'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'description': fields.text('Description'),
