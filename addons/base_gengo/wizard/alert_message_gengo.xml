@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Update Message Form View -->
         <record model="ir.ui.view" id="update_translation_wizard_view_confirm">
-            <field name="name">update.translations.serial.wizard.view</field>
-            <field name="inherit_id" ref="base.wizard_update_translations"/>
-            <field name="model">base.update.translations</field>
+            <field name="name">gengo.update.message.form</field>
+            <field name="model">gengo.update.message</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="//group" position="inside">
-                        <group colspan="4">
-                            <field name="state" invisible="1"/>
-                            <label string="Your Request has been Successfully Send to Gengo" states="done" colspan="4"/>
-                        </group>
-                        <group colspan="4">
-                            <label string="This language is select as Active All Translation Request will be sent by System Automatically" states="inprogress" colspan="4"/>
-                        </group>
-                </xpath>
+                <form string="Update Gengo Data" version="7.0">
+                    <group>
+                        <field name='name'/>
+                    </group>
+                </form>
             </field>
         </record>
     </data>
