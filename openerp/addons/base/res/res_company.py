@@ -109,8 +109,7 @@ class res_company(osv.osv):
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'rml_header1': fields.char('Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents (report header)."),
-        'rml_footer1': fields.char('General Information Footer', size=200),
-        'rml_footer2': fields.char('Bank Accounts Footer', size=250, help="Write here your bank accounts for customer payments."),
+        'rml_footer': fields.text('General Information Footer'),
         'rml_header': fields.text('RML Header', required=True),
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header for Landscape Reports', required=True),
@@ -144,7 +143,7 @@ class res_company(osv.osv):
         if website: val.append(_('Website: ')+website)
         if vat: val.append(_('VAT: ')+vat)
         if reg: val.append(_('Reg: ')+reg)
-        return {'value': {'rml_footer1':' | '.join(val)}}
+        return {'value': {'rml_footer':' | '.join(val)}}
 
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
@@ -294,8 +293,7 @@ class res_company(osv.osv):
 
             <lines>1.2cm 2.15cm 19.9cm 2.15cm</lines>
 
-            <drawCentredString x="10.5cm" y="1.7cm">[[ company.rml_footer1 ]]</drawCentredString>
-            <drawCentredString x="10.5cm" y="1.25cm">[[ company.rml_footer2 ]]</drawCentredString>
+            <drawCentredString x="10.5cm" y="1.7cm">[[ company.rml_footer ]]</drawCentredString>
             <drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
         </pageGraphics>
     </pageTemplate>
