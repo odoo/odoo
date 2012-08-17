@@ -41,7 +41,7 @@ Notes can be found in the 'Home' main menu, under 'Tool' submenu.
         'note_view.xml',
     ],
     'demo': [
-        "note_data.xml"
+        "note_demo.xml",
     ],
     'css': [
         'static/src/css/note.css',
@@ -49,7 +49,6 @@ Notes can be found in the 'Home' main menu, under 'Tool' submenu.
     'installable': True,
     'application': True,
     'category': 'Tools',
-    'images': [],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
