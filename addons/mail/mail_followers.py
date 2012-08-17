@@ -45,9 +45,8 @@ class mail_followers(osv.Model):
                         ondelete='cascade', required=True, select=1),
     }
 
+
 class mail_notification(osv.Model):
-    """ mail_notification is a relational table modeling messages pushed to partners.
-    """
     _name = 'mail.notification'
     _rec_name = 'partner_id'
     _log_access = False
@@ -55,14 +54,14 @@ class mail_notification(osv.Model):
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
-        'message_id': fields.many2one('mail.message', string='Message',
-                        ondelete='cascade', required=True, select=1),
         'read': fields.boolean('Read'),
+        # this will be added in mail_message.py
+        #'message_id': fields.many2one('mail.message', string='Message',
+        #                ondelete='cascade', required=True, select=1),
     }
     _defaults = {
         'read': False,
     }
-
     # FP Note: todo: check that we can not create a notification for
     # a message we can not read.
     # def create(self, ...)

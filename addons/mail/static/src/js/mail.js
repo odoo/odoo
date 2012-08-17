@@ -778,7 +778,7 @@ openerp.mail = function(session) {
             var comment_node = this.$element.find('textarea');
             var body_text = comment_node.val();
             comment_node.val('');
-            return this.ds.call('message_append_note', [[this.params.res_id], '', body_text, this.params.parent_id, 'comment', 'plain']).then(
+            return this.ds.call('message_post', [[this.params.res_id], body_text], {parent_id: this.params.parent_id, mtype: 'comment'}).then(
                 this.proxy('init_comments'));
         },
         

@@ -20,9 +20,9 @@
 ##############################################################################
 
 import mail_alias
+import mail_followers
 import mail_message
 import mail_mail
-import mail_followers
 import mail_thread
 import mail_group
 import res_partner

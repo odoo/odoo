@@ -23,7 +23,7 @@
 
     <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
+        <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
             <value>With OpenERP's accounting, you can get an instant access to all your financial data, setup your analytic accounting, forecast your taxes, control your budgets, easily create and send invoices, record bank statements, etc.

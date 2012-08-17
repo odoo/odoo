@@ -45,7 +45,6 @@ def decode(text):
     if text:
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
-
 class mail_message(osv.Model):
     """Model holding messages: system notification (replacing res.log
     notifications), comments (for OpenChatter feature). This model also
@@ -112,9 +111,13 @@ class mail_message(osv.Model):
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'body': fields.html('Content', required=True),
     }
+    def _get_default_author(self, cr, uid, context={}):
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+
     _defaults = {
         'type': 'email',
         'date': lambda *a: fields.datetime.now(),
+        'author_id': _get_default_author
     }
 
     #------------------------------------------------------
@@ -174,7 +177,9 @@ class mail_message(osv.Model):
             notification_obj = self.pool.get('mail.notification')
             modobj = self.pool.get(values.get('model'))
             follower_notify = []
-            for follower in modobj.message_follower_ids:
+            print values.get('res_id'), '**'
+            print modobj.browse(cr, uid, values.get('res_id'), context=context)
+            for follower in modobj.browse(cr, uid, values.get('res_id'), context=context).message_follower_ids:
                 if follower.id <> uid:
                     follower_notify.append(follower.id)
             self.pool.get('mail.notification').notify(cr, uid, follower_notify, newid, context=context)
@@ -200,5 +205,15 @@ class mail_message(osv.Model):
     def unlink(self, cr, uid, ids, context=None):
         self.check(cr, uid, ids, 'unlink', context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context)
+
+
+class mail_notification(osv.Model):
+    """ mail_notification is a relational table modeling messages pushed to partners.
+    """
+    _inherit = 'mail.notification'
+    _columns = {
+        'message_id': fields.many2one('mail.message', string='Message',
+                        ondelete='cascade', required=True, select=1),
+    }
 
 

@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
+        <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
             <value>OpenERP's electronic invoicing allows to ease and fasten the creation of invoices and collection of customer payments. Invoices are created in a few clicks and your customers receive them by email. They can pay online and/or import them in their own system.

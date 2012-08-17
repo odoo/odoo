@@ -109,7 +109,7 @@ class mail_thread(osv.Model):
     _columns = {
         'message_is_follower': fields.function(_get_is_follower,
             type='boolean', string='Is a Follower'),
-        'message_follower_ids': fields.one2many('mail.subscription', 'res_id',
+        'message_follower_ids': fields.many2many('res.partner', 'mail_subscription', 'res_id', 'partner_id',
             domain=lambda self: [('res_model','=',self._name)],
             string='Followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
@@ -749,7 +749,7 @@ class mail_thread(osv.Model):
                         module instead of by the res.log mechanism. Please \
                         use the mail.thread OpenChatter API instead of the \
                         now deprecated res.log.")
-        self.message_post(cr, uid, [id], message, context=context)
+        self.message_post(cr, uid, id, message, context=context)
 
     def message_post(self, cr, uid, res_id, body, subject=False,
             mtype='notification', attachments=None, context=None, **kwargs):
@@ -757,7 +757,7 @@ class mail_thread(osv.Model):
         context = context or {}
         attachments = attachments or {}
         if type(res_id) in (list, tuple):
-            res_is = res_id[0]
+            res_id = res_id[0]
 
         to_attach = []
         for fname, fcontent in attachments:
@@ -773,12 +773,12 @@ class mail_thread(osv.Model):
 
         value = kwargs
         value.update( {
-            'res_model': self._name,
+            'model': self._name,
             'res_id': res_id,
             'body': body,
             'subject': subject,
             'type': mtype,
-            'attachment_ids': data_attach
+            'attachment_ids': to_attach
         })
         return self.pool.get('mail.message').create(cr, uid, value, context=context)
 

@@ -32,7 +32,7 @@
         </record>
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
+        <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
             <value>Manage the issues you might face in a project, like bugs in a system, client complaints or material breakdowns.  You can record issues, assign them to some responsible person, and keep track of their status as they evolve over time.

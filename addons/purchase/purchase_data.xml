@@ -3,7 +3,7 @@
     <data noupdate="1">
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
+        <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
             <value>From the top menu Purchases, create purchase orders to buy products from your suppliers, encode supplier invoices and manage your payments.
