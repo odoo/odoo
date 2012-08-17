@@ -11,32 +11,6 @@ if (!console.debug) {
 
 openerp.web.coresetup = function(instance) {
 
-/**
- * @deprecated use :class:`instance.web.Widget`
- */
-instance.web.OldWidget = instance.web.Widget.extend({
-    init: function(parent, element_id) {
-        this._super(parent);
-        this.element_id = element_id;
-        this.element_id = this.element_id || _.uniqueId('widget-');
-
-        var tmp = document.getElementById(this.element_id);
-        this.setElement(tmp || this._make_descriptive());
-    },
-    renderElement: function() {
-        var rendered = this.render();
-        if (rendered) {
-            this.replaceElement($(rendered));
-        }
-        return this;
-    },
-    render: function (additional) {
-        if (this.template)
-            return instance.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
-        return null;
-    }
-});
-
 /** Session openerp specific RPC class */
 instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Session# */{
     init: function() {
@@ -540,7 +514,7 @@ $.async_when = function() {
 // special tweak for the web client
 var old_async_when = $.async_when;
 $.async_when = function() {
-    if (instance.connection.synch)
+    if (instance.session.synch)
         return $.when.apply(this, arguments);
     else
         return old_async_when.apply(this, arguments);
@@ -549,43 +523,56 @@ $.async_when = function() {
 /** Setup blockui */
 if ($.blockUI) {
     $.blockUI.defaults.baseZ = 1100;
-    $.blockUI.defaults.message = '<div class="oe_blockui_spin" style="height: 50px">';
+    $.blockUI.defaults.message = '<div class="oe_blockui_spin_container">';
     $.blockUI.defaults.css.border = '0';
     $.blockUI.defaults.css["background-color"] = '';
-    $.blockUI.spinners = [];
 }
+
+instance.web.Throbber = instance.web.Widget.extend({
+    template: "Throbber",
+    start: function() {
+        var opts = {
+          lines: 13, // The number of lines to draw
+          length: 7, // The length of each line
+          width: 4, // The line thickness
+          radius: 10, // The radius of the inner circle
+          rotate: 0, // The rotation offset
+          color: '#FFF', // #rgb or #rrggbb
+          speed: 1, // Rounds per second
+          trail: 60, // Afterglow percentage
+          shadow: false, // Whether to render a shadow
+          hwaccel: false, // Whether to use hardware acceleration
+          className: 'spinner', // The CSS class to assign to the spinner
+          zIndex: 2e9, // The z-index (defaults to 2000000000)
+          top: 'auto', // Top position relative to parent in px
+          left: 'auto' // Left position relative to parent in px
+        };
+        this.spin = new Spinner(opts).spin(this.$element[0]);
+    },
+    destroy: function() {
+        if (this.spin)
+            this.spin.stop();
+        this._super();
+    },
+});
+instance.web.Throbber.throbbers = [];
+
 instance.web.blockUI = function() {
     var tmp = $.blockUI.apply($, arguments);
-    var target = $(".oe_blockui_spin")[0];
-    var opts = {
-      lines: 13, // The number of lines to draw
-      length: 7, // The length of each line
-      width: 4, // The line thickness
-      radius: 10, // The radius of the inner circle
-      rotate: 0, // The rotation offset
-      color: '#FFF', // #rgb or #rrggbb
-      speed: 1, // Rounds per second
-      trail: 60, // Afterglow percentage
-      shadow: false, // Whether to render a shadow
-      hwaccel: false, // Whether to use hardware acceleration
-      className: 'spinner', // The CSS class to assign to the spinner
-      zIndex: 2e9, // The z-index (defaults to 2000000000)
-      top: 'auto', // Top position relative to parent in px
-      left: 'auto' // Left position relative to parent in px
-    };
-    var spinner = new Spinner(opts).spin(target);
-    $.blockUI.spinners.push(spinner);
+    var throbber = new instance.web.Throbber();
+    instance.web.Throbber.throbbers.push(throbber);
+    throbber.appendTo($(".oe_blockui_spin_container"));
     return tmp;
 }
 instance.web.unblockUI = function() {
-    _.each($.blockUI.spinners, function(el) {
-        el.stop();
+    _.each(instance.web.Throbber.throbbers, function(el) {
+        el.destroy();
     });
     return $.unblockUI.apply($, arguments);
 }
 
 /** Setup default session */
-instance.connection = new instance.web.Session();
+instance.session = new instance.web.Session();
 
 /** Configure default qweb */
 instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
@@ -604,8 +591,8 @@ instance.web._lt = function (s) {
     return {toString: function () { return instance.web._t(s); }}
 };
 instance.web.qweb = new QWeb2.Engine();
-instance.web.qweb.default_dict['__debug__'] = instance.connection.debug; // Which one ?
-instance.web.qweb.debug = instance.connection.debug;
+instance.web.qweb.default_dict['__debug__'] = instance.session.debug; // Which one ?
+instance.web.qweb.debug = instance.session.debug;
 instance.web.qweb.default_dict = {
     '_' : _,
     '_t' : instance.web._t
@@ -662,7 +649,7 @@ var _t = instance.web._t;
     _t('%d years ago');
 }
 
-instance.connection.on('module_loaded', this, function () {
+instance.session.on('module_loaded', this, function () {
     // provide timeago.js with our own translator method
     $.timeago.settings.translator = instance.web._t;
 });

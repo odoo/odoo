@@ -58,7 +58,7 @@ instance.web.Query = instance.web.Class.extend({
     },
     _execute: function () {
         var self = this;
-        return instance.connection.rpc('/web/dataset/search_read', {
+        return instance.session.rpc('/web/dataset/search_read', {
             model: this._model.name,
             fields: this._fields || false,
             domain: this._model.domain(this._filter),
@@ -233,7 +233,7 @@ instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
             kwargs = args;
             args = [];
         }
-        return instance.connection.rpc('/web/dataset/call_kw', {
+        return instance.session.rpc('/web/dataset/call_kw', {
             model: this.name,
             method: method,
             args: args,
@@ -256,7 +256,7 @@ instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
      * @param {String} signal signal to trigger on the workflow
      */
     exec_workflow: function (id, signal) {
-        return instance.connection.rpc('/web/dataset/exec_workflow', {
+        return instance.session.rpc('/web/dataset/exec_workflow', {
             model: this.name,
             id: id,
             signal: signal
@@ -282,7 +282,7 @@ instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
      */
     context: function (context) {
         return new instance.web.CompoundContext(
-            instance.connection.user_context, this._context, context || {});
+            instance.session.user_context, this._context, context || {});
     },
     /**
      * Button action caller, needs to perform cleanup if an action is returned
@@ -292,7 +292,7 @@ instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
      * FIXME: remove when evaluator integrated
      */
     call_button: function (method, args) {
-        return instance.connection.rpc('/web/dataset/call_button', {
+        return instance.session.rpc('/web/dataset/call_button', {
             model: this.name,
             method: method,
             domain_id: null,
@@ -439,7 +439,7 @@ instance.web.data = {
     })
 };
 
-instance.web.DataGroup =  instance.web.OldWidget.extend( /** @lends openerp.web.DataGroup# */{
+instance.web.DataGroup =  instance.web.CallbackEnabled.extend( /** @lends openerp.web.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
      * records.
@@ -451,9 +451,9 @@ instance.web.DataGroup =  instance.web.OldWidget.extend( /** @lends openerp.web.
      * content of the current grouping level.
      *
      * @constructs instance.web.DataGroup
-     * @extends instance.web.OldWidget
+     * @extends instance.web.CallbackEnabled
      *
-     * @param {instance.web.OldWidget} parent widget
+     * @param {instance.web.CallbackEnabled} parent widget
      * @param {String} model name of the model managed by this DataGroup
      * @param {Array} domain search domain for this DataGroup
      * @param {Object} context context of the DataGroup's searches
@@ -524,13 +524,13 @@ instance.web.StaticDataGroup = instance.web.GrouplessDataGroup.extend( /** @lend
     }
 });
 
-instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends openerp.web.DataSet# */{
+instance.web.DataSet =  instance.web.CallbackEnabled.extend( /** @lends openerp.web.DataSet# */{
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
      *
      * @constructs instance.web.DataSet
-     * @extends instance.web.OldWidget
+     * @extends instance.web.CallbackEnabled
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
@@ -706,7 +706,7 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends openerp.web.Da
      * @returns {$.Deferred}
      */
     call_and_eval: function (method, args, domain_index, context_index, callback, error_callback) {
-        return this.rpc('/web/dataset/call', {
+        return instance.session.rpc('/web/dataset/call', {
             model: this.model,
             method: method,
             domain_id: domain_index == undefined ? null : domain_index,
@@ -804,6 +804,22 @@ instance.web.DataSet =  instance.web.OldWidget.extend( /** @lends openerp.web.Da
     },
     alter_ids: function(n_ids) {
         this.ids = n_ids;
+    },
+    /**
+     * Resequence records.
+     *
+     * @param {Array} ids identifiers of the records to resequence
+     * @returns {$.Deferred}
+     */
+    resequence: function (ids, options) {
+        options = options || {};
+        return instance.session.rpc('/web/dataset/resequence', {
+            model: this.model,
+            ids: ids,
+            context: this._model.context(options.context),
+        }).pipe(function (results) {
+            return results;
+        });
     },
 });
 instance.web.DataSetStatic =  instance.web.DataSet.extend({

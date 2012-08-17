@@ -4,11 +4,67 @@ import babel
 import dateutil.relativedelta
 import logging
 import time
+import sys
+
 import openerplib
 
 from . import nonliterals
 
 _logger = logging.getLogger(__name__)
+
+#----------------------------------------------------------
+# openerplib local connector
+#----------------------------------------------------------
+class LibException(Exception):
+    """ Base of all client lib exceptions """
+    def __init__(self,code=None,message=None):
+        self.code = code
+        self.message = message
+
+class ApplicationError(LibException):
+    """ maps to code: 1, server side: Exception or openerp.exceptions.DeferredException"""
+
+class Warning(LibException):
+    """ maps to code: 2, server side: openerp.exceptions.Warning"""
+
+class AccessError(LibException):
+    """ maps to code: 3, server side:  openerp.exceptions.AccessError"""
+
+class AccessDenied(LibException):
+    """ maps to code: 4, server side: openerp.exceptions.AccessDenied"""
+
+class LocalConnector(openerplib.Connector):
+    """
+    A type of connector that uses the XMLRPC protocol.
+    """
+    PROTOCOL = 'local'
+
+    def __init__(self):
+        pass
+
+    def send(self, service_name, method, *args):
+        import openerp
+        import traceback
+        import xmlrpclib
+        code_string = "warning -- %s\n\n%s"
+        try:
+            return openerp.netsvc.dispatch_rpc(service_name, method, args)
+        except openerp.osv.osv.except_osv, e:
+        # TODO change the except to raise LibException instead of their emulated xmlrpc fault
+            raise xmlrpclib.Fault(code_string % (e.name, e.value), '')
+        except openerp.exceptions.Warning, e:
+            raise xmlrpclib.Fault(code_string % ("Warning", e), '')
+        except openerp.exceptions.AccessError, e:
+            raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
+        except openerp.exceptions.AccessDenied, e:
+            raise xmlrpclib.Fault('AccessDenied', str(e))
+        except openerp.exceptions.DeferredException, e:
+            formatted_info = "".join(traceback.format_exception(*e.traceback))
+            raise xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
+        except Exception, e:
+            formatted_info = "".join(traceback.format_exception(*(sys.exc_info())))
+            raise xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
+
 #----------------------------------------------------------
 # OpenERPSession RPC openerp backend access
 #----------------------------------------------------------
@@ -68,7 +124,7 @@ class OpenERPSession(object):
         self._login = login
         self._password = password
 
-    def authenticate(self, db, login, password, env):
+    def authenticate(self, db, login, password, env=None):
         # TODO use the openerplib API once it exposes authenticate()
         uid = self.proxy('common').authenticate(db, login, password, env)
         self.bind(db, uid, login, password)
@@ -216,3 +272,5 @@ class OpenERPSession(object):
         cdomain = nonliterals.CompoundDomain(domain)
         cdomain.session = self
         return cdomain.evaluate(context or {})
+
+# vim:et:ts=4:sw=4:

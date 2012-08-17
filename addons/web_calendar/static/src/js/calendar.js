@@ -28,7 +28,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 width: '80%',
                 min_width: 850
             }, this.options.action_views_ids.form, dataset);
-        this.form_dialog.start();
         this.COLOR_PALETTE = ['#f57900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
              '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
              '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
@@ -312,28 +311,30 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         });
     },
     do_create_event_with_formdialog: function(event_id, event_obj) {
-        if (!event_obj) {
-            event_obj = scheduler.getEvent(event_id);
-        }
-        var self = this,
-            data = this.get_event_data(event_obj),
-            form = self.form_dialog.form,
-            fields_to_fetch = _(form.fields_view.fields).keys();
-        this.dataset.index = null;
-        self.creating_event_id = event_id;
-        this.form_dialog.form.do_show().then(function() {
-            _.each(['date_start', 'date_delay', 'date_stop'], function(field) {
-                var field_name = self[field];
-                if (field_name && form.fields[field_name]) {
-                    var ffield = form.fields[field_name];
-                    ffield._dirty_flag = false;
-                    $.when(ffield.set_value(data[field_name])).then(function() {
-                        ffield._dirty_flag = true;
-                        form.do_onchange(ffield);
-                    });
-                }
+        var self = this;
+        $.when(! self.form_dialog.dialog_inited ? self.form_dialog.init_dialog() : true).then(function() {
+            debugger;
+            if (!event_obj) {
+                event_obj = scheduler.getEvent(event_id);
+            }
+            var data = self.get_event_data(event_obj),
+                fields_to_fetch = _(self.form_dialog.form.fields_view.fields).keys();
+            self.dataset.index = null;
+            self.creating_event_id = event_id;
+            self.form_dialog.form.do_show().then(function() {
+                _.each(['date_start', 'date_delay', 'date_stop'], function(field) {
+                    var field_name = self[field];
+                    if (field_name && self.form_dialog.form.fields[field_name]) {
+                        var ffield = self.form_dialog.form.fields[field_name];
+                        ffield._dirty_flag = false;
+                        $.when(ffield.set_value(data[field_name])).then(function() {
+                            ffield._dirty_flag = true;
+                            self.form_dialog.form.do_onchange(ffield);
+                        });
+                    }
+                });
+                self.form_dialog.open();
             });
-            self.form_dialog.open();
         });
     },
     do_save_event: function(event_id, event_obj) {
@@ -451,12 +452,13 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
             pager: false
         });
-        this.form.appendTo(this.$element);
+        var def = this.form.appendTo(this.$element);
         this.form.on_created.add_last(this.on_form_dialog_saved);
         this.form.on_saved.add_last(this.on_form_dialog_saved);
         this.form.on_button_cancel = function() {
             self.close();
         }
+        return def;
     },
     on_form_dialog_saved: function() {
         var id = this.dataset.ids[this.dataset.index];
