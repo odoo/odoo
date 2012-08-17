@@ -19,33 +19,29 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Notes',
     'version': '0.1',
     'category': 'Tools',
     'description': """
 This module allows users to create their own notes inside OpenERP
-==============================================================================
+=================================================================
 
 With this module you can allow users to take notes inside OpenERP.
 These notes can be shared with OpenERP or external users.
-They also can be organized following user dependant categories. 
+They also can be organized following user dependant categories.
 Notes can be found in the 'Home' main menu, under 'Tool' submenu.
 """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base_tools','mail','pad'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/note_security.xml',
         'security/ir.model.access.csv',
         'note_view.xml',
     ],
-    'demo_xml': [
+    'demo': [
         "note_data.xml"
-    ],
-    'test':[
     ],
     'css': [
         'static/src/css/note.css',
@@ -55,4 +51,5 @@ Notes can be found in the 'Home' main menu, under 'Tool' submenu.
     'category': 'Tools',
     'images': [],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
