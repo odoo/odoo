@@ -1,20 +1,25 @@
 function openerp_pos_widgets(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
-    // The ImageCache is used to hide the latency of the application cache on-disk access 
+    // The ImageCache is used to hide the latency of the application cache on-disk access in chrome 
     // that causes annoying flickering on product pictures. Why the hell a simple access to
     // the application cache involves such latency is beyond me, hopefully one day this can be
     // removed.
     module.ImageCache   = instance.web.Class.extend({
         init: function(options){
             options = options || {};
-            this.max_size = options.max_size || 100;
+            this.max_size = options.max_size || 500;
 
             this.cache = {};
             this.access_time = {};
             this.size = 0;
         },
-        // returns a DOM Image object from an url, and cache the last 100 (by default) results
+        get_image_uncached: function(url){
+            var img =  new Image();
+            img.src = url;
+            return img;
+        },
+        // returns a DOM Image object from an url, and cache the last 500 (by default) results
         get_image: function(url){
             var cached = this.cache[url];
             if(cached){
@@ -41,6 +46,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
                 this.cache[url] = img;
                 this.access_time[url] = (new Date()).getTime();
+                this.size++;
                 return img;
             }
         },
@@ -422,6 +428,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
+    module.CategoryButton = module.PosBaseWidget.extend({
+    });
     module.ProductCategoriesWidget = module.PosBaseWidget.extend({
         template: 'ProductCategoriesWidget',
         init: function(parent, options){
@@ -454,6 +462,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.subcategories = db.get_category_by_id(db.get_category_childs_ids(this.category.id));
         },
 
+        get_image_url: function(category){
+            return '/web/binary/image?session_id='+instance.session.session_id+'&model=pos.category&field=image&id='+category.id;
+        },
+
         renderElement: function(){
             var self = this;
             this._super();
@@ -468,12 +480,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             _.each(this.subcategories, function(category){
                 if(hasimages){
                     var button = QWeb.render('CategoryButton',{category:category});
+                    var button = _.str.trim(button);
+                    var button = $(button);
+                    button.find('img').replaceWith(self.pos_widget.image_cache.get_image(self.get_image_url(category)));
                 }else{
                     var button = QWeb.render('CategorySimpleButton',{category:category});
+                    button = _.str.trim(button);    // we remove whitespace between buttons to fix spacing
+                    var button = $(button);
                 }
-                button = _.str.trim(button);    // we remove whitespace between buttons to fix spacing
 
-                $(button).appendTo(this.$('.category-list')).click(function(event){
+                button.appendTo(this.$('.category-list')).click(function(event){
                     var id = category.id;
                     var cat = self.pos.db.get_category_by_id(id);
                     self.set_category(cat);

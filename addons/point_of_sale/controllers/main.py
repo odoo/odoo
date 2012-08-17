@@ -29,15 +29,25 @@ class PointOfSaleController(openerpweb.Controller):
 
     @openerpweb.httprequest
     def manifest(self, req, **kwargs):
+        """ This generates a HTML5 cache manifest files that preloads the categories and products thumbnails """
+
         ml = ["CACHE MANIFEST"]
-        Products = req.session.model('product.product')
-        for p in Products.search_read([('pos_categ_id','!=',False)], ['name', 'dependencies_id']):
-            session_id = req.session_id
+        
+        products = req.session.model('product.product')
+        for p in products.search_read([('pos_categ_id','!=',False)], ['name']):
             product_id = p['id']
-            url = "/web/binary/image?session_id=%s&model=product.product&field=image&id=%s" % (session_id, product_id)
+            url = "/web/binary/image?session_id=%s&model=product.product&field=image&id=%s" % (req.session_id, product_id)
             ml.append(url)
+        
+        categories = req.session.model('pos.category')
+        for c in categories.search_read([],['name']):
+            category_id = c['id']
+            url = "/web/binary/image?session_id=%s&model=pos.category&field=image&id=%s" % (req.session_id, category_id)
+            ml.append(url)
+
         ml += ["NETWORK:","*"]
         m = "\n".join(ml)
+
         return m
 
     @openerpweb.jsonrequest
