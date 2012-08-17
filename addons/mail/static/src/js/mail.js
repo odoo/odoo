@@ -858,7 +858,6 @@ openerp.mail = function(session) {
             this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
                 .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
-            this.reinit();
         },
         
         _check_visibility: function() {
