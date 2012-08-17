@@ -132,7 +132,7 @@ class plugin_handler(osv.osv_memory):
         return ('res.partner', partner_id, url)
 
     # Specific to outlook rfc822 is not available so we split in arguments headerd,body,attachemnts
-    def push_message_outlook(self, cr, uid, model, headers,res_id=0 ,body_text=False, body_html=False, attachments=False):
+    def push_message_outlook(self, cr, uid, model, headers,res_id=0 ,body=False, body_html=False, attachments=False):
         # ----------------------------------------
         # solution 1
         # construct a fake rfc822 from the separated arguement
@@ -160,6 +160,6 @@ class plugin_handler(osv.osv_memory):
                 attach_ids.append(ir_attachment_obj.create(cr, uid, vals))
         mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
         if mail_ids:
-            ids =  mail_message.write(cr, uid,mail_ids[0],{ 'attachment_ids': [(6, 0, attach_ids)],'body_text':body_text,'body_html':body_html})
+            ids =  mail_message.write(cr, uid,mail_ids[0],{ 'attachment_ids': [(6, 0, attach_ids)],'body':body,'body_html':body_html})
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url)

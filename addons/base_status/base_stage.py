@@ -312,8 +312,8 @@ class base_stage(object):
             dest = case.user_id.email or ""
             body = case.description or ""
             for message in case.message_ids:
-                if message.email_from and message.body_text:
-                    body = message.body_text
+                if message.email_from and message.body:
+                    body = message.body
                     break
 
             if not destination:

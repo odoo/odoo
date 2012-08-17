@@ -147,7 +147,7 @@ The best way to direct the messages that will be displayed in the OpenChatter wi
         # add: search in the current task project messages
         '&', '&', ('res_id', '=', my_task.project_id.id), ('model', '=', 'project.project'),
         # ... containing the task name
-        '|', ('body_text', 'like', '%s' % (my_task.name)), ('body_html', 'like', '%s' % (my_task.name))
+        '|', ('body', 'like', '%s' % (my_task.name)), ('body_html', 'like', '%s' % (my_task.name))
         ] + domain, limit=limit, offset=offset, context=context)
     # if asked: add ancestor ids to have complete threads
     if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)

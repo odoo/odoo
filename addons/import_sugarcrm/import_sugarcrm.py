@@ -226,7 +226,7 @@ class sugar_import(import_framework):
                         'model': 'model',
                         'partner_id/.id': 'partner_id/.id',                         
                         'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
-                        'body_text': 'description',
+                        'body': 'description',
                         'body_html' : 'description_html',
                         
                 }

@@ -62,9 +62,9 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         res_id = context.get('active_id')
         model = context.get('active_model')
         lead = self.pool.get(model).browse(cr, uid, res_id, context)
-        body_text = self._get_message_body_text(cr, uid, lead, history_type, context=context)
-        if body_text:
-            res = {'value': {'body_text' : body_text}}
+        body = self._get_message_body(cr, uid, lead, history_type, context=context)
+        if body:
+            res = {'value': {'body' : body}}
         return res
     
     def on_change_partner(self, cr, uid, ids, partner_id):
@@ -99,7 +99,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         mode = context.get('mail.compose.message.mode')
         if mode == 'mass_mail':
             lead_ids = context and context.get('active_ids', []) or []
-            value = self.default_get(cr, uid, ['body_text', 'email_to', 'email_cc', 'subject', 'history'], context=context)
+            value = self.default_get(cr, uid, ['body', 'email_to', 'email_cc', 'subject', 'history'], context=context)
             self.write(cr, uid, ids, value, context=context)
             context['mail.compose.message.mode'] = mode
 
@@ -125,7 +125,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             lead.write(cr, uid, [case.id], update_vals, context=context)
         return res
 
-    def _get_info_body_text(self, cr, uid, lead, context=None):
+    def _get_info_body(self, cr, uid, lead, context=None):
         field_names = []
         proxy = self.pool.get(lead._name)
         if lead.type == 'opportunity':
@@ -135,14 +135,14 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             'zip', 'city', 'country_id', 'state_id', 'email_from',
             'phone', 'fax', 'mobile', 'categ_id', 'description',
         ]
-        return proxy._mail_body_text(cr, uid, lead, field_names, context=context)
+        return proxy._mail_body(cr, uid, lead, field_names, context=context)
 
-    def _get_message_body_text(self, cr, uid, lead, mode='whole', context=None):
+    def _get_message_body(self, cr, uid, lead, mode='whole', context=None):
         """This function gets whole communication history and returns as top posting style
         """
         mail_message = self.pool.get('mail.message')
         message_ids = []
-        body = self._get_info_body_text(cr, uid, lead, context=context)
+        body = self._get_info_body(cr, uid, lead, context=context)
         if mode in ('whole', 'latest'):
             message_ids = lead.message_ids
             message_ids = map(lambda x: x.id, filter(lambda x: x.email_from, message_ids))
@@ -153,7 +153,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                 sender = 'From: %s' %(message.email_from or '')
                 to = 'To: %s' % (message.email_to or '')
                 sentdate = 'Date: %s' % (message.date or '')
-                desc = '\n%s'%(message.body_text)
+                desc = '\n%s'%(message.body)
                 original = [header, sender, to, sentdate, desc, '\n']
                 original = '\n'.join(original)
                 body += original
@@ -174,7 +174,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             email_cc = res.get('email_cc', "")
             email = res.get('email_to', "")
             subject = '%s: %s - %s' % (_('Fwd'), 'Lead forward', lead.name)
-            body = self._get_message_body_text(cr, uid, lead, body_type, context=context)
+            body = self._get_message_body(cr, uid, lead, body_type, context=context)
             partner_assigned_id = lead.partner_assigned_id and lead.partner_assigned_id.id or False
             user_id = False
             if not partner_assigned_id:
@@ -187,7 +187,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             
             res.update({
                 'subject' : subject,
-                'body_text' : body,
+                'body' : body,
                 'email_cc' : email_cc,
                 'email_to' : email,
                 'partner_assigned_id': partner_assigned_id,

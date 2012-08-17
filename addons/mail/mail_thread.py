@@ -622,7 +622,7 @@ class mail_thread(osv.Model):
                                     #.. all X- headers...
                                   },
                       'content_subtype': msg_mime_subtype,  --> to remove
-                      'body_text': plaintext_body           --> keep body
+                      'body': plaintext_body           --> keep body
                       'body_html': html_body,               --> to remove
                       'attachments': [('file1', 'bytes'),
                                        ('file2', 'bytes') }

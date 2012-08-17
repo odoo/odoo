@@ -72,8 +72,8 @@ class mail_message(osv.Model):
             name = ''
             if message.subject:
                 name = '%s: ' % (message.subject)
-            if message.body_text:
-                name = name + message.body_text[0:20]
+            if message.body:
+                name = name + message.body[0:20]
             res.append((message.id, name))
         return res
 

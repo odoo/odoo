@@ -50,7 +50,7 @@ class project_tasks(osv.osv):
         maps = {
             'cost':'planned_hours',
         }
-        for line in msg['body_text'].split('\n'):
+        for line in msg['body'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res:

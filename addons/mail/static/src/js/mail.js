@@ -321,7 +321,7 @@ openerp.mail = function(session) {
         reinit: function() {
             var self = this;
             if (! this.form_view) return;
-            var call_defer = this.ds_compose.call('default_get', [['subject', 'body_text', 'body_html', 'dest_partner_ids'], this.ds_compose.get_context()]).then(
+            var call_defer = this.ds_compose.call('default_get', [['subject', 'body', 'body_html', 'dest_partner_ids'], this.ds_compose.get_context()]).then(
                 function (result) {
                     self.form_view.on_processed_onchange({'value': result}, []);
                 });
@@ -441,7 +441,7 @@ openerp.mail = function(session) {
             this.ds_compose.context.formatting = this.formatting;
             // toggle display
             this.$element.find('span.oe_mail_compose_message_subject').toggleClass('oe_mail_compose_message_invisible');
-            this.$element.find('div.oe_mail_compose_message_body_text').toggleClass('oe_mail_compose_message_invisible');
+            this.$element.find('div.oe_mail_compose_message_body').toggleClass('oe_mail_compose_message_invisible');
             this.$element.find('div.oe_mail_compose_message_body_html').toggleClass('oe_mail_compose_message_invisible');
         },
 
@@ -472,9 +472,9 @@ openerp.mail = function(session) {
 
         /**
          * Update the values of the composition form; with possible different
-         * values for body_text and body_html. */
-        set_body_value: function(body_text, body_html) {
-            this.form_view.fields.body_text.set_value(body_text);
+         * values for body and body_html. */
+        set_body_value: function(body, body_html) {
+            this.form_view.fields.body.set_value(body);
             this.form_view.fields.body_html.set_value(body_html);
         },
     }),
@@ -776,9 +776,9 @@ openerp.mail = function(session) {
         
         do_comment: function () {
             var comment_node = this.$element.find('textarea');
-            var body_text = comment_node.val();
+            var body = comment_node.val();
             comment_node.val('');
-            return this.ds.call('message_post', [[this.params.res_id], body_text], {parent_id: this.params.parent_id, mtype: 'comment'}).then(
+            return this.ds.call('message_post', [[this.params.res_id], body], {parent_id: this.params.parent_id, mtype: 'comment'}).then(
                 this.proxy('init_comments'));
         },
         

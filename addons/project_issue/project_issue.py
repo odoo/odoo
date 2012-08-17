@@ -454,7 +454,7 @@ class project_issue(base_stage, osv.osv):
 
         custom_values.update({
             'name':  msg.get('subject') or _("No Subject"),
-            'description': msg.get('body_text'),
+            'description': msg.get('body'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
@@ -476,16 +476,16 @@ class project_issue(base_stage, osv.osv):
         if update_vals is None: update_vals = {}
 
         # Update doc values according to the message
-        update_vals['description'] = msg.get('body_text', '')
+        update_vals['description'] = msg.get('body', '')
         if msg.get('priority'):
             update_vals['priority'] = msg.get('priority')
-        # Parse 'body_text' to find values to update
+        # Parse 'body' to find values to update
         maps = {
             'cost': 'planned_cost',
             'revenue': 'planned_revenue',
             'probability': 'probability',
         }
-        for line in msg.get('body_text', '').split('\n'):
+        for line in msg.get('body', '').split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):

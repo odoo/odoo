@@ -194,7 +194,7 @@ class crm_claim(base_stage, osv.osv):
         if custom_values is None: custom_values = {}
         custom_values.update({
             'name': msg.get('subject') or _("No Subject"),
-            'description': msg.get('body_text'),
+            'description': msg.get('body'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
         })
@@ -219,7 +219,7 @@ class crm_claim(base_stage, osv.osv):
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
-        for line in msg['body_text'].split('\n'):
+        for line in msg['body'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):

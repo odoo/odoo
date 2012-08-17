@@ -447,7 +447,7 @@ class crm_lead(base_stage, osv.osv):
         oldest_id = opportunity_ids[0]
         return self.browse(cr, uid, oldest_id, context=context)
 
-    def _mail_body_text(self, cr, uid, lead, fields, title=False, context=None):
+    def _mail_body(self, cr, uid, lead, fields, title=False, context=None):
         body = []
         if title:
             body.append("%s\n" % (title))
@@ -484,7 +484,7 @@ class crm_lead(base_stage, osv.osv):
         for opportunity in opportunities:
             subject.append(opportunity.name)
             title = "%s : %s" % (merge_message, opportunity.name)
-            details.append(self._mail_body_text(cr, uid, opportunity, fields, title=title, context=context))
+            details.append(self._mail_body(cr, uid, opportunity, fields, title=title, context=context))
 
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
@@ -819,7 +819,7 @@ class crm_lead(base_stage, osv.osv):
         if custom_values is None: custom_values = {}
         custom_values.update({
             'name':  msg.get('subject') or _("No Subject"),
-            'description': msg.get('body_text'),
+            'description': msg.get('body'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
@@ -844,7 +844,7 @@ class crm_lead(base_stage, osv.osv):
             'revenue': 'planned_revenue',
             'probability':'probability',
         }
-        for line in msg.get('body_text', '').split('\n'):
+        for line in msg.get('body', '').split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):

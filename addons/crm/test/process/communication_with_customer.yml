@@ -23,7 +23,7 @@
   !python {model: mail.compose.message}: |
     lead_ids = self.pool.get('crm.lead').search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
     context.update({'active_model': 'crm.lead','active_id': lead_ids[0]})
-    id = self.create(cr, uid, {'body_text': "Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci", 'email_from': 'sales@mycompany.com'}, context=context)
+    id = self.create(cr, uid, {'body': "Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci", 'email_from': 'sales@mycompany.com'}, context=context)
     try:
         self.send_mail(cr, uid, [id], context=context)
     except:

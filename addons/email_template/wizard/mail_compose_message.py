@@ -135,7 +135,7 @@ class mail_compose_message(osv.osv_memory):
                 'name': template_name,
                 'email_from': record.email_from or False,
                 'subject': record.subject or False,
-                'body_text': record.body_text or False,
+                'body': record.body or False,
                 'email_to': record.email_to or False,
                 'email_cc': record.email_cc or False,
                 'reply_to': record.reply_to or False,

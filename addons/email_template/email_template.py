@@ -151,7 +151,7 @@ class email_template(osv.osv):
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
-        'body_text': fields.text('Text Contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
+        'body': fields.text('Text Contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
         'body_html': fields.text('Rich-text Contents', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
         'message_id': fields.char('Message-Id', size=256, help="Message-ID SMTP header to use in outgoing messages based on this template. "
                                                                "Please note that this overrides the 'Resource Tracking' option, "
@@ -300,7 +300,7 @@ class email_template(osv.osv):
             context = {}
         values = {
                   'subject': False,
-                  'body_text': False,
+                  'body': False,
                   'body_html': False,
                   'email_from': False,
                   'email_to': False,
@@ -323,7 +323,7 @@ class email_template(osv.osv):
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, res_id, context)
 
-        for field in ['subject', 'body_text', 'body_html', 'email_from',
+        for field in ['subject', 'body', 'body_html', 'email_from',
                       'email_to', 'email_cc', 'reply_to',
                       'message_id']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
@@ -342,7 +342,7 @@ class email_template(osv.osv):
 
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-            values['body_text'] += '\n\n' + signature
+            values['body'] += '\n\n' + signature
 
         values.update(mail_server_id = template.mail_server_id.id or False,
                       auto_delete = template.auto_delete,

@@ -46,7 +46,7 @@ class mail_compose_message(osv.osv_memory):
                 result.update({
                         'email_to': record_data.user_to_review_id.work_email or False,
                         'subject': _("Reminder to fill up Survey"),
-                        'body_text': msg,
+                        'body': msg,
                     })
         return result
 
