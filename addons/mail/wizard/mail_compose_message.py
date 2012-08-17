@@ -116,6 +116,7 @@ class mail_compose_message(osv.TransientModel):
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
+        'body_html': fields.html('HTML Editor Body'),
     }
 
     def get_value(self, cr, uid, model, res_id, context=None):

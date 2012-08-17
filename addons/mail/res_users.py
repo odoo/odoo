@@ -45,7 +45,6 @@ class res_users(osv.Model):
     }
     
     _defaults = {
-        'notification_email_pref': 'to_me',
         'alias_domain': False, # always hide alias during creation
     }
 
@@ -127,43 +126,6 @@ class res_users(osv.Model):
         res = super(res_users, self).unlink(cr, uid, ids, context=context)
         alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
-
-    # --------------------------------------------------
-    # Wrappers on partner methods for Chatter
-    # #FIXME: another branch holds a refactoring of mail.thread
-    # that should help cleaning those wrappers
-    # --------------------------------------------------
-
-    #def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
-    #                    type='email', email_date=None, parent_id=False,
-    #                    content_subtype='plain', state=None,
-    #                    partner_ids=None, email_from=False, email_to=False,
-    #                    email_cc=None, email_bcc=None, reply_to=None,
-    #                    headers=None, message_id=False, references=None,
-    #                    attachments=None, original=None, context=None):
-    #    for user in self.browse(cr, uid, threads, context=context):
-    #        user.partner_id.message_append(subject, body_text, body_html, type, email_date, parent_id,
-    #            content_subtype, state, partner_ids, email_from, email_to, email_cc, email_bcc, reply_to,
-    #            headers, message_id, references, attachments, original)
-
-    #def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-    #                    limit=100, offset=0, domain=None, context=None):
-    #    for user in self.browse(cr, uid, ids, context=context):
-    #        return user.partner_id.message_read(fetch_ancestors, ancestor_ids, limit, offset, domain)
-
-    #def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
-    #                    limit=100, offset=0, domain=None, count=False, context=None):
-    #    for user in self.browse(cr, uid, ids, context=context):
-    #        return user.partner_id.message_search(fetch_ancestors, ancestor_ids, limit, offset, domain, count)
-
-    #def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
-    #    for user in self.browse(cr, uid, ids, context=context):
-    #        return user.partner_id.message_subscribe(user_ids)
-
-    #def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
-    #    for user in self.browse(cr, uid, ids, context=context):
-    #        return user.partner_id.message_unsubscribe(user_ids)
-
 
 class res_users_mail_group(osv.Model):
     """ Update of res.groups class

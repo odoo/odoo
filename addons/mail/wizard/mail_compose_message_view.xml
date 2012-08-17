@@ -9,18 +9,14 @@
                     <group>
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
-                        <field name='filter_id' invisible="context.get('active_model',False)"/>
-                        <field name="email_from" required="1"/>
-                        <field name="email_to" required="1"/>
-                        <field name="email_cc"/>
-                        <field name="reply_to"/>
+                        <field name="author_id"/>
+                        <field name="partner_ids"/>
                         <field name="subject" widget="char" size="512"/>
-                        <field name="references"/>
                         <field name="message_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Body">
-                            <field name="body_text" colspan="4" nolabel="1" height="300" width="300"/>
+                            <field name="body" colspan="4" nolabel="1" height="300" width="300"/>
                         </page>
                         <page string="Attachments">
                             <field name="attachment_ids" colspan="4" nolabel="1"/>
@@ -44,7 +40,7 @@
                     <group>
                         <field name="subject" colspan="2" nolabel="1" placeholder="Subject..."
                                 class="oe_mail_compose_message_subject oe_mail_compose_message_invisible"/>
-                        <field name="body_text" colspan="2" nolabel="1" placeholder="What are you working on ?"
+                        <field name="body" colspan="2" nolabel="1" placeholder="What are you working on ?"
                                 class="oe_mail_compose_message_body_text"/>
                         <field name="body_html" colspan="2" nolabel="1" placeholder="What are you working on HTML ?"
                                 class="oe_mail_compose_message_body_html oe_mail_compose_message_invisible"/>

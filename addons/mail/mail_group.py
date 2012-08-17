@@ -36,7 +36,7 @@ class mail_group(osv.Model):
     """
     _description = 'Discussion group'
     _name = 'mail.group'
-    _inherit = ['mail.thread','ir.needaction']
+    _inherit = ['mail.thread','ir.needaction_mixin']
     _inherits = {'mail.alias': 'alias_id', 'ir.ui.menu': 'menu_id'}
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
@@ -84,7 +84,7 @@ class mail_group(osv.Model):
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 50x50px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade",
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
             help="The email address associated with this group. New emails received will automatically "
                  "create new topics."),
     }

@@ -334,7 +334,7 @@ class event_registration(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
-        self.message_append(cr, uid, ids,_('State set to open'),body_text= _('Open'))
+        self.message_append_note(cr, uid, ids, body=_('State set to open'))
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -364,13 +364,13 @@ class event_registration(osv.osv):
             if today >= registration.event_id.date_begin:
                 values = {'state': 'done', 'date_closed': today}
                 self.write(cr, uid, ids, values)
-                self.message_append(cr, uid, ids, _('State set to Done'), body_text=_('Done'))
+                self.message_append_note(cr, uid, ids, body=_('State set to Done'))
             else:
                 raise osv.except_osv(_('Error!'),_("You must wait for the starting day of the event to do this action.") )
         return True
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
-        self.message_append(cr, uid, ids,_('State set to Cancel'),body_text= _('Cancel'))
+        self.message_append_note(cr, uid, ids,body = _('State set to Cancel'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, context=None):

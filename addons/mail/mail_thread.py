@@ -835,9 +835,9 @@ class mail_thread(osv.Model):
             msg_original = message.as_string() if isinstance(message, Message) \
                                                   else message
             attachments.append((0, 0, {
-                'name':'email.msg',
+                'name':'email.eml',
                 'datas': base64.b64encode(msg_original),
-                'datas_fname': 'email.msg',
+                'datas_fname': 'email.eml',
                 'res_model': 'mail.message',
                 'description': _('original email'),
             }))

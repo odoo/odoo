@@ -45,5 +45,8 @@ class res_partner_mail(osv.Model):
             help="Choose in which case you want to receive an email when you "\
                   "receive new feeds."),
     }
+    _defaults = {
+        'notification_email_pref': lambda *args: 'comment'
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

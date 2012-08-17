@@ -10,7 +10,7 @@
                 <tree string="Messages">
                     <field name="date"/>
                     <field name="subject"/>
-                    <field name="user_id"/>
+                    <field name="author_id"/>
                     <field name="model"/>
                     <field name="res_id"/>
                 </tree>
@@ -28,10 +28,9 @@
                         <group>
                             <group>
                                 <field name="subject"/>
-                                <field name="user_id"/>
+                                <field name="author_id"/>
                                 <field name="date"/>
                                 <field name="type"/>
-                                <field name="content_subtype"/>
                             </group>
                             <group>
                                 <field name="model"/>
@@ -40,14 +39,7 @@
                                 <field name="partner_ids" widget="many2many_tags"/>
                             </group>
                         </group>
-                        <notebook>
-                            <page string="Body (Rich)">
-                                <field name="body_html"/>
-                            </page>
-                            <page string="Body (Plain)">
-                                <field name="body_text" widget="text"/>
-                            </page>
-                        </notebook>
+                        <field name="body"/>
                     </sheet>
                 </form>
             </field>
@@ -60,9 +52,8 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <search string="Messages Search">
-                    <field name="model" string="Message"/>
-                    <field name="date"/>
-                    <field name="user_id"/>
+                    <field name="body" string="Message"/>
+                    <field name="author_id"/>
                 </search>
             </field>
         </record>
@@ -76,9 +67,6 @@
                 <search string="Messages Search">
                     <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
                     <field name="type"/>
-                    <filter icon="terp-personal+" string="My Feeds"
-                            name="my_feeds" help="My Feeds"
-                            domain="[('user_id','=',uid)]"/>
                     <filter icon="terp-personal+" string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
@@ -88,31 +76,21 @@
                     <filter icon="terp-personal+" string="Emails"
                             name="emails" help="Emails"
                             domain="[('type', '=', 'email')]"/>
-                    <filter icon="terp-go-today" string="Today"
-                            name="today" help="Today"
-                            domain="[   ('date', '&lt;=', datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59')),
-                                        ('date', '&gt;=', datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00'))
-                                    ]"/>
-                    <filter icon="terp-go-week" string="This week"
-                            name="7_days" help="This week"
-                            domain="[   ('date', '&lt;=', datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59')),
-                                        ('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))
-                                    ]"/>
-                    <field name="user_id"/>
+                    <field name="author_id"/>
                 </search>
             </field>
         </record>
 
         <record model="ir.ui.view" id="view_email_message_form">
-            <field name="name">mail.message.form</field>
-            <field name="model">mail.message</field>
+            <field name="name">mail.mail.form</field>
+            <field name="model">mail.mail</field>
             <field name="arch" type="xml">
                 <form string="Email message" version="7.0">
                     <sheet>
                         <label for="subject" class="oe_edit_only"/>
                         <h2><field name="subject"/></h2>
 						<div>
-                            by <field name="user_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/>
+                            by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/>
                             <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
                                 context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
                         </div>
@@ -126,16 +104,15 @@
                                         <field name="reply_to"/>
                                     </group>
                                     <group>
-                                        <field name="partner_id" readonly="1"/>
                                         <field name="partner_ids" widget="many2many_tags"/>
                                     </group>
                                 </group>
                                 <notebook>
+                                    <page string="Body">
+                                        <field name="body" widget="text"/>
+                                    </page>
                                     <page string="Body (Rich)">
                                         <field name="body_html"/>
-                                    </page>
-                                    <page string="Body (Plain)">
-                                        <field name="body_text" widget="text"/>
                                     </page>
                                 </notebook>
                             </page>
@@ -153,7 +130,6 @@
                                     <group>
                                         <field name="message_id"/>
                                         <field name="references"/>
-                                        <field name="headers"/>
                                     </group>
                                 </group>
                             </page>
@@ -173,13 +149,11 @@
                 <tree string="Emails" colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
                     <field name="date"/>
                     <field name="subject"/>
-                    <field name="email_from"/>
-                    <field name="user_id" string="User"/>
+                    <field name="author_id" string="User"/>
                     <field name="message_id" invisible="1"/>
-                    <field name="partner_id" invisible="1"/>
+                    <field name="partner_ids" invisible="1"/>
                     <field name="model" invisible="1"/>
                     <field name="res_id" invisible="1"/>
-                    <field name="state"/>
                     <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
                     <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
                     <button name="cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
@@ -188,8 +162,8 @@
         </record>
 
         <record model="ir.ui.view" id="view_email_message_search">
-            <field name="name">mail.message.search</field>
-            <field name="model">mail.message</field>
+            <field name="name">mail.mail.search</field>
+            <field name="model">mail.mail</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
                     <field name="email_from" filter_domain="['|' '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
@@ -203,8 +177,8 @@
                     <filter icon="terp-camera_test" name="type_comment" string="Comment" domain="[('type','=','comment')]"/>
                     <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('type','=','notification')]"/>
                     <group expand="0" string="Extended Filters...">
-                        <field name="user_id" string="User"/>
-                        <field name="partner_id" string="Partner Name"/>
+                        <field name="author_id"/>
+                        <field name="partner_ids"/>
                         <field name="model"/>
                         <field name="res_id"/>
                     </group>
