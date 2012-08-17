@@ -169,6 +169,7 @@ class mail_message(osv.Model):
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
 
     def create(self, cr, uid, values, context=None):
+        print values
         newid = super(mail_message, self).create(cr, uid, values, context)
         self.check(cr, uid, [newid], mode='create', context=context)
 

@@ -757,7 +757,7 @@ class mail_thread(osv.Model):
         context = context or {}
         attachments = attachments or {}
         if type(res_id) in (list, tuple):
-            res_id = res_id[0]
+            res_id = res_id and res_id[0] or False
 
         to_attach = []
         for fname, fcontent in attachments:
