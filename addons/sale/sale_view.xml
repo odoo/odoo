@@ -508,8 +508,7 @@
                     <header>
                         <span groups="base.group_user">
                             <button name="button_cancel" string="Cancel" type="object" icon="gtk-cancel" states="confirmed,exception"/>
-                            <button name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" states="done" icon="gtk-go-forward" attrs="{'invisible': [('invoiced', '=', 1)]}" class="oe_highlight"/>
-                            <button name="button_done" string="Done" type="object" states="confirmed,exception" icon="gtk-go-forward" class="oe_highlight"/>
+                            <button name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" icon="gtk-go-forward" states="confirmed" attrs="{'invisible': [('invoiced', '=', True)]}" class="oe_highlight"/>
                         </span>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     </header>

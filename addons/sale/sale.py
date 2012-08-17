@@ -1260,13 +1260,6 @@ class sale_order_line(osv.osv):
     def button_confirm(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
-    def button_done(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        res = self.write(cr, uid, ids, {'state': 'done'})
-        for line in self.browse(cr, uid, ids, context=context):
-            wf_service.trg_write(uid, 'sale.order', line.order_id.id, cr)
-        return res
-
     def uos_change(self, cr, uid, ids, product_uos, product_uos_qty=0, product_id=None):
         product_obj = self.pool.get('product.product')
         if not product_id:
