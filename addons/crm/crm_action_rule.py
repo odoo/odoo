@@ -49,8 +49,8 @@ class base_action_rule(osv.osv):
         mail_message = self.pool.get('mail.message')
         body = self.format_mail(obj, body)
         if not emailfrom:
-            if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.user_email:
-                emailfrom = obj.user_id.user_email
+            if hasattr(obj, 'user_id') and obj.user_id and obj.user_id.email:
+                emailfrom = obj.user_id.email
 
         name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
         emailfrom = tools.ustr(emailfrom)

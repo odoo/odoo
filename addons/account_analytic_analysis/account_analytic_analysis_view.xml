@@ -16,7 +16,6 @@
         <record id="account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="40" name="priority"/>
             <field name="arch" type="xml">
@@ -101,7 +100,6 @@
             <field name="name">account.analytic.account.tree</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <field name="date" position="before">
                     <field name="last_invoice_date"/>
