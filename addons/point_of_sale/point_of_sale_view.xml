@@ -776,10 +776,10 @@
                     <sheet>
                         <group>
                         <field name="name"/>
-                        <field name="shop_id" widget="selection" />
+                        <field name="shop_id" widget="selection" groups="stock.group_locations" />
                         <field name="journal_id" widget="selection" />
-                        <field name="sequence_id" readonly="1"/>
-                        <field name="group_by" />
+                        <field name="sequence_id" readonly="1" groups="base.group_no_one" />
+                        <field name="group_by" groups="account.group_account_user"  />
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
                         <field name="journal_ids" colspan="4" nolabel="1">

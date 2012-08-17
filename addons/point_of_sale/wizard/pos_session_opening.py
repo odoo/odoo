@@ -10,7 +10,7 @@ class pos_session_opening(osv.osv_memory):
     _columns = {
         'pos_config_id' : fields.many2one('pos.config', 'Point of Sale', required=True),
         'pos_session_id' : fields.many2one('pos.session', 'PoS Session'),
-        'pos_state' : fields.char('Session State'),
+        'pos_state' : fields.char('Session State', readonly=True),
     }
 
     def open_ui(self, cr, uid, ids, context=None):
@@ -60,6 +60,12 @@ class pos_session_opening(osv.osv_memory):
         }
 
     def on_change_config(self, cr, uid, ids, config_id, context=None):
+        states = {
+            'opening_control': _('Opening Control'),
+            'opened': _('In Progress'),
+            'closing_control': _('Closing Control'),
+            'closed': _('Closed & Posted'),
+        }
         result = {
             'pos_session_id': False,
             'pos_state': False
@@ -72,7 +78,7 @@ class pos_session_opening(osv.osv_memory):
             ('config_id', '=', config_id),
         ], context=context)
         if session_ids:
-            result['pos_state'] = proxy.browse(cr, uid, session_ids[0], context=context).state
+            result['pos_state'] = states.get(proxy.browse(cr, uid, session_ids[0], context=context).state, False)
             result['pos_session_id'] = session_ids[0]
         return {'value' : result}
 
