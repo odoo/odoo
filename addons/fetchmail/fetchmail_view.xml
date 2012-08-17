@@ -114,17 +114,6 @@
           </field>
       </record>
 
-      <record model="ir.ui.view" id="email_message_search_view">
-          <field name="name">mail.message.inherit.search</field>
-          <field name="model">mail.message</field>
-          <field name="inherit_id" ref="mail.view_email_message_search"/>
-          <field name="arch" type="xml">
-            <xpath expr="/search/group/filter[@string='Thread']" position="before">
-                <filter string="Mail Server" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'fetchmail_server_id'}"/>
-            </xpath>
-          </field>
-      </record>
-
       <act_window
             context="{'search_default_server_id': active_id, 'default_fetchmail_server_id': active_id}"
             id="act_server_history" name="Messages" domain="[('email_from', '!=', False), ('fetchmail_server_id', '=', active_id)]"
