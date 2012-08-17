@@ -73,7 +73,7 @@ class pos_config(osv.osv):
             help="This sequence is automatically created by OpenERP but you can change it "\
                 "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
-        'group_by' : fields.boolean('Group By', help="Check this if you want to group the Journal Items by Product while closing a Session"),
+        'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -89,7 +89,7 @@ class pos_config(osv.osv):
                 result.append((record.id, record.name+' ('+_('not used')+')'))
                 continue
             session = record.session_ids[0]
-            result.append((record.id, record.name + ' ('+session.user_id.name+', '+states[session.state]+')'))
+            result.append((record.id, record.name + ' ('+session.user_id.name+')')) #, '+states[session.state]+')'))
         return result
 
 
