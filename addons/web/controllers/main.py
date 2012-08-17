@@ -86,6 +86,7 @@ def sass2scss(src):
     return write(sass)
 
 def db_list(req):
+    dbs = []
     proxy = req.session.proxy("db")
     dbs = proxy.list()
     h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
@@ -182,14 +183,19 @@ def module_installed_bypass_session(dbname):
     return sorted_modules
 
 def module_boot(req):
-    dbs = db_list(req)
     serverside = []
     dbside = []
     for i in req.config.server_wide_modules:
         if i in openerpweb.addons_manifest:
             serverside.append(i)
+    # if only one db load every module at boot
+    dbs = []
+    try:
+        dbs = db_list(req)
+    except xmlrpclib.Fault:
+        # ignore access denied
+        pass
     if len(dbs) == 1:
-        # if only one db load every module at boot
         dbside = module_installed_bypass_session(dbs[0])
         dbside = [i for i in dbside if i not in serverside]
     addons = serverside + dbside
@@ -805,9 +811,8 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        loaded = module_boot(req)
-        modules = module_installed(req)
-        return [module for module in modules if module not in loaded]
+        # return all installed modules. Web client is smart enough to not load a module twice
+        return module_installed(req)
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
@@ -1135,6 +1140,15 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
         return req.session.exec_workflow(model, id, signal)
+
+    @openerpweb.jsonrequest
+    def resequence(self, req, model, ids):
+        m = req.session.model(model)
+        if not len(m.fields_get(['sequence'])):
+            return False
+        for i in range(len(ids)):
+            m.write([ids[i]], { 'sequence': i })
+        return True
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/web/group"

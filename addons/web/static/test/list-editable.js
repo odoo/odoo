@@ -87,10 +87,10 @@ $(document).ready(function () {
             });
     });
     asyncTest('toggle-edition-save', 4, function () {
-        instance.connection.responses['/web/dataset/call_kw:create'] = function () {
+        instance.session.responses['/web/dataset/call_kw:create'] = function () {
             return { result: 42 };
         };
-        instance.connection.responses['/web/dataset/call_kw:read'] = function () {
+        instance.session.responses['/web/dataset/call_kw:read'] = function () {
             return { result: [{
                 id: 42,
                 a: false,
@@ -125,7 +125,7 @@ $(document).ready(function () {
             })
     });
     asyncTest('toggle-edition-cancel', 2, function () {
-        instance.connection.responses['/web/dataset/call_kw:create'] = function () {
+        instance.session.responses['/web/dataset/call_kw:create'] = function () {
             return { result: 42 };
         };
         var e = new instance.web.list.Editor({
@@ -153,7 +153,7 @@ $(document).ready(function () {
             })
     });
     asyncTest('toggle-save-required', 2, function () {
-        instance.connection.responses['/web/dataset/call_kw:create'] = function () {
+        instance.session.responses['/web/dataset/call_kw:create'] = function () {
             return { result: 42 };
         };
         var e = new instance.web.list.Editor({
@@ -191,7 +191,7 @@ $(document).ready(function () {
             baseSetup();
 
             var records = {};
-            _.extend(instance.connection.responses, {
+            _.extend(instance.session.responses, {
                 '/web/listview/load': function () {
                     return {result: {
                         type: 'tree',
@@ -227,7 +227,7 @@ $(document).ready(function () {
     });
     asyncTest('newrecord', 6, function () {
         var got_defaults = false;
-        instance.connection.responses['/web/dataset/call_kw:default_get'] = function (params) {
+        instance.session.responses['/web/dataset/call_kw:default_get'] = function (params) {
             var fields = params.params.args[0];
             deepEqual(
                 fields, ['a', 'b', 'c'],
@@ -267,7 +267,7 @@ $(document).ready(function () {
     module('list-edition-events', {
         setup: function () {
             baseSetup();
-            _.extend(instance.connection.responses, {
+            _.extend(instance.session.responses, {
                 '/web/listview/load': function () {
                     return {result: {
                         type: 'tree',

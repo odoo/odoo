@@ -66,10 +66,16 @@
         height: inherit
     &.oe_kanban_ungrouped .oe_kanban_groups
         width: 100%
+    &.oe_kanban_grouped_by_m2o .oe_kanban_group_title
+        cursor: move
     .oe_kanban_header
+        .oe_dropdown_kanban
+            float: right
+        .oe_dropdown_kanban > span
+            visibility: hidden
         &:hover
-            .oe_dropdown_kanban
-                display: inline-block
+            .oe_dropdown_kanban > span
+                visibility: visible
         .oe_dropdown_menu
             font-weight: normal
             font-size: 13px
@@ -80,7 +86,6 @@
         color: #333333
         text-shadow: 0 1px 0 white
         > span
-            float: left
             margin-right: 4px
 
     .oe_kanban_column, .oe_kanban_group_header
@@ -111,6 +116,8 @@
             display: none
         .oe_kanban_group_title_vertical
             display: block
+        .oe_dropdown_kanban
+            left: -5px
     .oe_kanban_group_title_undefined
         color: #666666
     .oe_kanban_group_title_vertical
@@ -121,19 +128,11 @@
         -ms-transform: rotate(90deg)
         transform: rotate(90deg)
         width: 30px
-        height: 20px
         font-size: 24px
         white-space: nowrap
         display: none
-        position: absolute
-        top: 10px
-    .oe_kanban_fold_icon
-        cursor: pointer
-        float: left
-        padding: 2px
-        width: 16px
-        height: 16px
-        background: url(/web_kanban/static/src/img/minus-icon.png) no-repeat
+        position: relative
+        top: 5px
     // }}}
     // KanbanQuickCreate {{{
     .oe_kanban_add, .oe_kanban_header .oe_dropdown_toggle
@@ -388,15 +387,11 @@
             left: 0
             top: 28px
             min-width: 160px
-    .oe_kanban_header
-        .oe_dropdown_kanban
-            display: none
-    .oe_kanban_column
-        .oe_dropdown_kanban
-            &.oe_opened > span
-                visibility: visible
-            > span
-                visibility: hidden
+    .oe_dropdown_kanban
+        &.oe_opened > span
+            visibility: visible
+        > span
+            visibility: hidden
     // }}}
     // KanbanColorPicker {{{
     .oe_kanban_colorpicker

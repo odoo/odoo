@@ -159,7 +159,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     //state = _.extend(this.inner_action.params || {}, state);
                 }
             }
-            this.getParent().do_push_state(state);
+            if(!this.dialog) {
+                this.getParent().do_push_state(state);
+            }
         }
     },
     do_load_state: function(state, warm) {
@@ -1331,12 +1333,10 @@ instance.web.View = instance.web.Widget.extend({
     do_search: function(view) {
     },
     on_sidebar_import: function() {
-        var import_view = new instance.web.DataImport(this, this.dataset);
-        import_view.start();
+        new instance.web.DataImport(this, this.dataset).open();
     },
     on_sidebar_export: function() {
-        var export_view = new instance.web.DataExport(this, this.dataset);
-        export_view.start();
+        new instance.web.DataExport(this, this.dataset).open();
     },
     on_sidebar_translate: function() {
         return this.do_action({

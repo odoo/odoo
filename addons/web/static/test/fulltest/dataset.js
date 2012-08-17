@@ -7,7 +7,7 @@ $(document).ready(function () {
     t.module('Dataset shortcuts', 'data');
     t.test('read_index', function (openerp) {
         var ds = new openerp.web.DataSet(
-            {session: openerp.connection}, 'some.model');
+            {session: openerp.session}, 'some.model');
         ds.ids = [10, 20, 30, 40, 50];
         ds.index = 2;
         t.expect(ds.read_index(['a', 'b', 'c']), function (result) {
@@ -24,7 +24,7 @@ $(document).ready(function () {
     });
     t.test('default_get', function (openerp) {
         var ds = new openerp.web.DataSet(
-            {session: openerp.connection}, 'some.model', {foo: 'bar'});
+            {session: openerp.session}, 'some.model', {foo: 'bar'});
         t.expect(ds.default_get(['a', 'b', 'c']), function (result) {
             strictEqual(result.method, 'default_get');
             strictEqual(result.model, 'some.model');
@@ -38,7 +38,7 @@ $(document).ready(function () {
         });
     });
     t.test('create', function (openerp) {
-        var ds = new openerp.web.DataSet({session: openerp.connection}, 'some.model');
+        var ds = new openerp.web.DataSet({session: openerp.session}, 'some.model');
         t.expect(ds.create({foo: 1, bar: 2}), function (r) {
             strictEqual(r.method, 'create');
 
@@ -51,7 +51,7 @@ $(document).ready(function () {
         });
     });
     t.test('write', function (openerp) {
-        var ds = new openerp.web.DataSet({session: openerp.connection}, 'mod');
+        var ds = new openerp.web.DataSet({session: openerp.session}, 'mod');
         t.expect(ds.write(42, {foo: 1}), function (r) {
             strictEqual(r.method, 'write');
 
@@ -69,7 +69,7 @@ $(document).ready(function () {
 //        });
     });
     t.test('unlink', function (openerp) {
-        var ds = new openerp.web.DataSet({session: openerp.connection}, 'mod');
+        var ds = new openerp.web.DataSet({session: openerp.session}, 'mod');
         t.expect(ds.unlink([42]), function (r) {
             strictEqual(r.method, 'unlink');
 
@@ -81,7 +81,7 @@ $(document).ready(function () {
         });
     });
     t.test('call', function (openerp) {
-        var ds = new openerp.web.DataSet({session: openerp.connection}, 'mod');
+        var ds = new openerp.web.DataSet({session: openerp.session}, 'mod');
         t.expect(ds.call('frob', ['a', 'b', 42]), function (r) {
             strictEqual(r.method, 'frob');
 
@@ -92,7 +92,7 @@ $(document).ready(function () {
         });
     });
     t.test('name_get', function (openerp) {
-        var ds = new openerp.web.DataSet({session: openerp.connection}, 'mod');
+        var ds = new openerp.web.DataSet({session: openerp.session}, 'mod');
         t.expect(ds.name_get([1, 2], null), function (r) {
             strictEqual(r.method, 'name_get');
 
@@ -104,7 +104,7 @@ $(document).ready(function () {
         });
     });
     t.test('name_search, name', function (openerp) {
-        var ds = new openerp.web.DataSet({session: openerp.connection}, 'mod');
+        var ds = new openerp.web.DataSet({session: openerp.session}, 'mod');
         t.expect(ds.name_search('bob'), function (r) {
             strictEqual(r.method, 'name_search');
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
         });
     });
     t.test('name_search, domain & operator', function (openerp) {
-        var ds = new openerp.web.DataSet({session: openerp.connection}, 'mod');
+        var ds = new openerp.web.DataSet({session: openerp.session}, 'mod');
         t.expect(ds.name_search(0, [['foo', '=', 3]], 'someop'), function (r) {
             strictEqual(r.method, 'name_search');
 
@@ -134,7 +134,7 @@ $(document).ready(function () {
         });
     });
     t.test('exec_workflow', function (openerp) {
-        var ds = new openerp.web.DataSet({session: openerp.connection}, 'mod');
+        var ds = new openerp.web.DataSet({session: openerp.session}, 'mod');
         t.expect(ds.exec_workflow(42, 'foo'), function (r) {
             strictEqual(r['service'], 'object');
             strictEqual(r.method, 'exec_workflow');
@@ -147,7 +147,7 @@ $(document).ready(function () {
     });
 
     t.test('DataSetSearch#read_slice', function (openerp) {
-        var ds = new openerp.web.DataSetSearch({session: openerp.connection}, 'mod');
+        var ds = new openerp.web.DataSetSearch({session: openerp.session}, 'mod');
         t.expect(ds.read_slice(['foo', 'bar'], {
             domain: [['foo', '>', 42], ['qux', '=', 'grault']],
             context: {peewee: 'herman'},
@@ -167,7 +167,7 @@ $(document).ready(function () {
         });
     });
     t.test('DataSetSearch#read_slice sorted', function (openerp) {
-        var ds = new openerp.web.DataSetSearch({session: openerp.connection}, 'mod');
+        var ds = new openerp.web.DataSetSearch({session: openerp.session}, 'mod');
         ds.sort('foo');
         ds.sort('foo');
         ds.sort('bar');
@@ -194,7 +194,7 @@ $(document).ready(function () {
     });
     t.test('Dataset', function (openerp) {
         var ds = new openerp.web.DataSetSearch(
-            {session: openerp.connection}, 'mod');
+            {session: openerp.session}, 'mod');
         var c = new openerp.web.CompoundContext(
             {a: 'foo', b: 3, c: 5}, openerp.contexts[0]);
         t.expect(ds.read_slice(['foo', 'bar'], {
@@ -220,7 +220,7 @@ $(document).ready(function () {
             parent: {model: 'qux'}
         };
         var ds = new openerp.web.DataSet(
-            {session: openerp.connection}, 'mod',
+            {session: openerp.session}, 'mod',
              new openerp.web.CompoundContext({})
                  .set_eval_context(eval_context));
         var domain = new openerp.web.CompoundDomain(openerp.domains[0])
