@@ -21,19 +21,58 @@
 
 from openerp.osv import osv, fields
 
-class project_configuration(osv.TransientModel):
+import logging
+_logger = logging.getLogger(__name__)
+
+class base_config_settings(osv.TransientModel):
     _inherit = 'base.config.settings'
 
     _columns = {
-        'auth_oauth_google_active' : fields.boolean('enable sign in with google'),
-        'auth_oauth_google_client_id' : fields.char('Google client_id'),
-        'auth_oauth_facebook_client_id' : fields.char('Facebook client_id'),
+        'auth_oauth_google_enabled' : fields.boolean('Allow users to login with Google'),
+        'auth_oauth_google_client_id' : fields.char('Client ID'),
+        'auth_oauth_facebook_enabled' : fields.boolean('Allow users to login with Facebook'),
+        'auth_oauth_facebook_client_id' : fields.char('Client ID'),
     }
 
-    # def get_default_alias_domain(self, cr, uid, ids, context=None):
-    #     return {'alias_domain': self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)}
+    def get_default_allow(self, cr, uid, fields, context=None):
+        google_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_google')[1]
+        rg = self.pool.get('auth.oauth.provider').read(cr, uid, [google_id], ['enabled'], context=context)
+        facebook_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_facebook')[1]
+        rf = self.pool.get('auth.oauth.provider').read(cr, uid, [facebook_id], ['enabled'], context=context)
+        return {
+            'auth_oauth_google_enabled': rg[0]['enabled'],
+            'auth_oauth_facebook_enabled': rf[0]['enabled']
+        }
 
-    # def set_alias_domain(self, cr, uid, ids, context=None):
-    #     config_parameters = self.pool.get("ir.config_parameter")
-    #     for record in self.browse(cr, uid, ids, context=context):
-    #         config_parameters.set_param(cr, uid, "mail.catchall.domain", record.alias_domain or '', context=context)
+    def set_allow(self, cr, uid, ids, context=None):
+        google_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_google')[1]
+        facebook_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_facebook')[1]
+        config = self.browse(cr, uid, ids[0], context=context)
+        self.pool.get('auth.oauth.provider').write(cr, uid, [google_id], {'enabled':config.auth_oauth_google_enabled})
+        self.pool.get('auth.oauth.provider').write(cr, uid, [facebook_id], {'enabled':config.auth_oauth_facebook_enabled})
+
+    # def get_default_client_ids(self, cr, uid, fields, context=None):
+    #     google_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_google')[1]
+    #     facebook_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_facebook')[1]
+    #     return {
+    #         'auth_oauth_google_client_id': icp.get_param(cr, uid, 'auth.auth_oauth_google_client_id', "Set by the user") or False
+    #     }
+
+    # def set_client_ids(self, cr, uid, ids, context=None):
+    #     provider_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_goole')
+
+
+    #     config = self.browse(cr, uid, ids[0], context=context)
+    #     icp = self.pool.get('ir.config_parameter')
+    #     icp.set_param(cr, uid, 'auth.google_client_id', config.google_client_id)
+
+    # def get_default_facebook_client_id(self, cr, uid, fields, context=None):
+    #     icp = self.pool.get('ir.config_parameter')
+    #     return {
+    #         'facebook_client_id': icp.get_param(cr, uid, 'auth.facebook_client_id', "Set by the user") or False
+    #     }
+
+    # def set_facebook_client_id(self, cr, uid, ids, context=None):
+    #     config = self.browse(cr, uid, ids[0], context=context)
+    #     icp = self.pool.get('ir.config_parameter')
+    #     icp.set_param(cr, uid, 'auth.facebook_client_id', config.facebook_client_id)

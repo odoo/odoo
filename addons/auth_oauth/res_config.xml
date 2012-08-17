@@ -1,0 +1,52 @@
+<?xml version="1.0"?>        
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_general_configuration">
+            <field name="name">base.config.settings.oauth</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='module_auth_oauth']/.." position="after">
+                    <div attrs="{'invisible':[('module_auth_oauth','=',False)]}">
+                        <div name="google">
+                            <div>
+                                <field name="auth_oauth_google_enabled" class="oe_inline"/>
+                                <label for="auth_oauth_google_enabled"/>                                
+                            </div>
+                            <div attrs="{'invisible':[('auth_oauth_google_enabled','=',False)]}">
+                                <div>
+                                    <p>To setup the signin process with Google, first you have to perform the following steps:</p>
+                                    <br/>
+                                    1. Register your application through the Google's APIs console. The result of this registration is a set of values that are known to both Google and you application: 'client_id' and 'redirect_uri'.
+                                    <br/>
+                                    2. Fill the following field with the values assigned by Google.
+                                </div>
+                                <div>
+                                    <label for="auth_oauth_google_client_id" placeholder="Your CLIENT_ID"/>                                            
+                                    <field name="auth_oauth_google_client_id" class="oe_inline"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div name="facebook">
+                            <div>
+                                <field name="auth_oauth_facebook_enabled" class="oe_inline"/>
+                                <label for="auth_oauth_facebook_enabled"/>                                
+                            </div>
+                            <div attrs="{'invisible':[('auth_oauth_facebook_enabled','=',False)]}">                            
+                                <div>
+                                    <label string="Here goes the explanation"/>
+                                </div>
+                                <div>
+                                    <label for="auth_oauth_facebook_client_id" placeholder="Your CLIENT_ID"/>                                            
+                                    <field name="auth_oauth_facebook_client_id" class="oe_inline"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

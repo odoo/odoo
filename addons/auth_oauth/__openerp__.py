@@ -34,7 +34,7 @@
     ],
     'update_xml': [
         'auth_oauth_view.xml',
-        'res_config_view.xml',
+        'res_config.xml',
     ],
     'js': [
         'static/src/js/auth_oauth.js',
