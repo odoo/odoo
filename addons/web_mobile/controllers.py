@@ -1,11 +1,21 @@
 #!/usr/bin/env python
 
-from openerp.addons.web.common import http as oeweb
 import werkzeug
 
-class Mobile(oeweb.Controller):
+try:
+    # embedded
+    import openerp.addons.web.common.http as openerpweb
+    from openerp.addons.web.controllers.main import View
+except ImportError:
+    # standalone
+    import web.common.http as openerpweb
+    from web.controllers.main import View
+
+class Mobile(openerpweb.Controller):
     _cp_path = '/mobile'
 
-    @oeweb.httprequest
+    @openerpweb.httprequest
     def index(self, req):
-        return werkzeug.utils.redirect('/web_mobile/static/src/web_mobile.html', 301)
+        r = werkzeug.utils.redirect('/web_mobile/static/src/web_mobile.html', 301)
+        r.autocorrect_location_header = False
+        return r

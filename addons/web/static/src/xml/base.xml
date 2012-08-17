@@ -121,25 +121,25 @@
     </select>
 </t>
 
+
 <t t-name="DatabaseManager">
-    <div class="oe_database_manager">
-        <div class="oe_database_manager_menu">
-            <ul class="oe_notebook">
-                <li><a href="#db_create">Create</a></li>
-                <li><a href="#db_drop">Drop</a></li>
-                <li><a href="#db_backup">Backup</a></li>
-                <li><a href="#db_restore">Restore</a></li>
-                <li><a href="#db_change_password">Password</a></li>
-                <li><a id="back_to_login" href="#">Back to Login</a></li>
-            </ul>
-            <form id="db_create" name="create_db_form" method="POST">
+    <div class="oe_view_manager_view_form">
+        <div class="oe_form">
+            <form id="db_create" name="create_db_form" style="display: block;">
+                <div class="oe_view_manager oe_view_manager_current">
+                    <div class="oe_view_manager_header" style="padding: 8px;">
+                        <div class="oe_header_row">
+                            <h2 class="oe_view_title">
+                                <span class="oe_view_title_text oe_breadcrumb_title">Create Database</span>
+                            </h2>
+                            <button type="submit" class="oe_button oe_highlight db_create">Create</button>
+                        </div>
+                    </div>
+                </div>
                 <table align="center" class="db_option_table">
                     <tr>
-                        <th colspan="2" class="option_string"> CREATE DATABASE </th>
-                    </tr>
-                    <tr>
                         <td><label for="super_admin_pwd">Master password:</label></td>
-                        <td><input type="password" name="super_admin_pwd" class="required" value="admin"/></td>
+                        <td><input type="password" name="super_admin_pwd" class="required" value="admin" /></td>
                     </tr>
                     <tr>
                         <td><label for="db_name">New database name:</label></td>
@@ -147,42 +147,54 @@
                     </tr>
                     <tr>
                         <td><label for="demo_data">Load Demonstration data:</label></td>
-                        <td><input type="checkbox" name="demo_data"/></td>
+                        <td class="oe_form_group_cell">
+                            <span class="oe_form_field oe_form_field_boolean">
+                                <input type="checkbox" name="demo_data" />
+                            </span>
+                        </td>
                     </tr>
                     <tr>
                         <td><label for="db_lang">Default language:</label></td>
-                        <td>
+                        <td class="oe_form_field oe_form_field_selection ">
                             <select name="db_lang" t-if="widget.lang_list">
                                 <t t-foreach="widget.lang_list" t-as="lang">
-                                    <option t-att-value="lang[0]" t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined"><t t-esc="lang[1]"/></option>
+                                    <option t-att-value="lang[0]" t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined">
+                                        <t t-esc="lang[1]" />
+                                    </option>
                                 </t>
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <td><label for="create_admin_pwd">Admin password:</label></td>
-                        <td><input type="password" name="create_admin_pwd" class="required"/></td>
+                        <td><input type="password" name="create_admin_pwd" class="required" /></td>
                     </tr>
                     <tr>
                         <td><label for="create_confirm_pwd">Confirm password:</label></td>
                         <td><input type="password" name="create_confirm_pwd" class="required" equalTo="input[name=create_admin_pwd]"/></td>
                     </tr>
-                    <tr>
-                        <td colspan="2" align="right"><button class="oe_button">Create</button></td>
-                    </tr>
                 </table>
             </form>
-            <form id="db_drop" name="drop_db_form" method="POST">
+            <form id="db_drop" name="drop_db_form" style="display: none; ">
+                <div class="oe_view_manager oe_view_manager_current">
+                    <div class="oe_view_manager_header" style="padding: 8px;">
+                        <div class="oe_header_row">
+                            <h2 class="oe_view_title">
+                                <span class="oe_view_title_text oe_breadcrumb_title">Drop Database</span>
+                            </h2>
+                            <button type="submit" class="oe_button oe_highlight db_drop">Drop</button>
+                        </div>
+                    </div>
+                </div>
                 <table align="center" class="db_option_table">
                     <tr>
-                        <th colspan="2" class="option_string"> DROP DATABASE </th>
-                    </tr>
-                    <tr>
                         <td><label for="drop_db">Database:</label></td>
-                        <td>
+                        <td class="oe_form_field oe_form_field_selection">
                             <select t-if="widget.db_list" name="drop_db" autofocus="autofocus">
                                 <t t-foreach="widget.db_list" t-as="db">
-                                    <option t-att-value="db"><t t-esc="db"/></option>
+                                    <option t-att-value="db">
+                                        <t t-esc="db" />
+                                    </option>
                                 </t>
                             </select>
                             <input t-if="!widget.db_list" name="drop_db" class="required" type="text" autofocus="autofocus"/>
@@ -190,25 +202,31 @@
                     </tr>
                     <tr>
                         <td><label for="drop_password">Master Password:</label></td>
-                        <td><input type="password" name="drop_pwd" class="required"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="right"><button class="oe_button">Drop</button></td>
+                        <td><input type="password" name="drop_pwd" class="required" /></td>
                     </tr>
                 </table>
             </form>
-            <form id="db_backup" name="backup_db_form" method="POST" target="backup-target" action="/web/database/backup">
-                <input type="hidden" name="token"/>
+            <form id="db_backup" name="backup_db_form" target="backup-target" action="/web/database/backup" style="display: none;">
+                <div class="oe_view_manager oe_view_manager_current">
+                    <div class="oe_view_manager_header" style="padding: 8px;">
+                        <div class="oe_header_row">
+                            <h2 class="oe_view_title">
+                                <span class="oe_view_title_text oe_breadcrumb_title">Backup Database</span>
+                            </h2>
+                            <button type="submit" class="oe_button oe_highlight db_backup">Backup</button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="token" />
                 <table align="center" class="db_option_table">
                     <tr>
-                        <th colspan="2" class="option_string"> BACKUP DATABASE </th>
-                    </tr>
-                    <tr>
                         <td><label for="backup_db">Database:</label></td>
-                        <td>
+                        <td class="oe_form_field oe_form_field_selection ">
                             <select t-if="widget.db_list" name="backup_db" autofocus="autofocus">
                                 <t t-foreach="widget.db_list" t-as="db">
-                                    <option t-att-value="db"><t t-esc="db"/></option>
+                                    <option t-att-value="db">
+                                        <t t-esc="db" />
+                                    </option>
                                 </t>
                             </select>
                             <input t-if="!widget.db_list" name="backup_db" class="required" type="text" autofocus="autofocus"/>
@@ -216,18 +234,22 @@
                     </tr>
                     <tr>
                         <td><label for="backup_pwd">Master Password:</label></td>
-                        <td><input type="password" name="backup_pwd" class="required"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="right"><button class="oe_button">Backup</button></td>
+                        <td><input type="password" name="backup_pwd" class="required" /></td>
                     </tr>
                 </table>
             </form>
-            <form id="db_restore" name="restore_db_form" method="POST">
+            <form id="db_restore" name="restore_db_form" style="display: none; ">
+                <div class="oe_view_manager oe_view_manager_current">
+                    <div class="oe_view_manager_header" style="padding: 8px;">
+                        <div class="oe_header_row">
+                            <h2 class="oe_view_title">
+                                <span class="oe_view_title_text oe_breadcrumb_title">Restore Database</span>
+                            </h2>
+                            <button type="submit" class="oe_button oe_highlight db_restore">Restore</button>
+                        </div>
+                    </div>
+                </div>
                 <table align="center" class="db_option_table">
-                    <tr>
-                        <th colspan="2" class="option_string"> RESTORE DATABASE </th>
-                    </tr>
                     <tr>
                         <td><label for="restore_db">File:</label></td>
                         <td><input type="file" name="db_file" class="required" autofocus="autofocus"/></td>
@@ -240,16 +262,20 @@
                         <td><label for="new_db">New database name:</label></td>
                         <td><input type="text" name="new_db" class="required"/></td>
                     </tr>
-                    <tr>
-                        <td colspan="2" align="right"><button class="oe_button">Restore</button></td>
-                    </tr>
                 </table>
             </form>
-            <form id="db_change_password" name="change_pwd_form" method="POST">
+            <form id="db_change_password" name="change_pwd_form" style="display: none;">
+                <div class="oe_view_manager oe_view_manager_current">
+                    <div class="oe_view_manager_header" style="padding: 8px;">
+                        <div class="oe_header_row">
+                            <h2 class="oe_view_title">
+                                <span class="oe_view_title_text oe_breadcrumb_title">Change Master Password</span>
+                            </h2>
+                            <button type="submit" class="oe_button oe_highlight db-change-password">Change Password</button>
+                        </div>
+                    </div>
+                </div>
                 <table align="center" class="db_option_table">
-                    <tr>
-                        <th colspan="2" class="option_string"> CHANGE MASTER PASSWORD </th>
-                    </tr>
                     <tr>
                         <td><label for="old_pwd">Master password:</label></td>
                         <td><input type="password" name="old_pwd" class="required" minlength="1" autofocus="autofocus"/></td>
@@ -260,15 +286,27 @@
                     </tr>
                     <tr>
                         <td><label for="confirm_pwd">Confirm new master password:</label></td>
-                        <td><input type="password" name="confirm_pwd" class="required" equalTo="input[name=new_pwd]" minlength="1"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
+                        <td><input type="password" name="confirm_pwd" class="required" equalTo="input[name=new_pwd]" minlength="1"/> </td>
                     </tr>
                 </table>
             </form>
         </div>
     </div>
+</t>
+<t t-name="DatabaseManager.user_menu">
+    <span class="oe_right">
+         <a id="back-to-login" href="#"><span class="oe_topbar_item oe_topbar_name">Back to Login</span></a>
+    </span>
+</t>
+<t t-name="DatabaseManager.menu">
+    <div class="oe_secondary_menu_section">Database Management</div>
+    <ul class="oe_secondary_submenu">
+        <li><a href="#db_create">Create</a></li>
+        <li><a href="#db_drop">Drop</a></li>
+        <li><a href="#db_backup">Backup</a></li>
+        <li><a href="#db_restore">Restore</a></li>
+        <li><a href="#db_change_password">Password</a></li>
+    </ul>
 </t>
 
 <t t-name="ChangePassword">
@@ -282,7 +320,7 @@
             <tr>
             <td><label for="new_password">New Password:</label></td>
             <td><input type="password" name="new_password"
-                       minlength="1" autofocus="autofocus"/></td>
+                       minlength="1"/></td>
             </tr>
             <tr>
                 <td><label for="confirm_pwd">Confirm Password:</label></td>
@@ -342,7 +380,7 @@
         t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
         <t t-esc="menu.name"/>
         <t t-if="menu.needaction_enabled and menu.needaction_counter">
-            <div class="oe_menu_counter">
+            <div class="oe_tag oe_tag_dark oe_menu_counter">
                 <t t-esc="menu.needaction_counter"/>
             </div>
         </t>
@@ -937,6 +975,14 @@
         />
     </div>
 </t>
+<t t-name="FieldTextHtml">
+    <div t-att-class="'oe_form_field oe_form_field_html' + (widget.get('effective_readonly') ? ' oe_form_embedded_html' : '')"
+            t-att-style="widget.node.attrs.style">
+        <t t-if="! widget.get('effective_readonly')">
+            <textarea/>
+        </t>
+    </div>
+</t>
 <t t-name="web.datepicker">
     <span>
         <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
@@ -1049,7 +1095,7 @@
                     <span></span>
                 </span>
                 <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
-            </div>            
+            </div>
         </li>
     </t>
 </t>
@@ -1058,13 +1104,8 @@
         <div class="oe_form_field_image_controls oe_edit_only">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                <button class="oe_button" type="button" title="Set Image">
-                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                </button>
+                Edit 
             </t>
-            <button class="oe_button oe_form_binary_file_clear" type="button" title="Clear">
-                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
-            </button>
             <div class="oe_form_binary_progress" style="display: none">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
@@ -1235,14 +1276,24 @@
     <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-name="AbstractFormPopup.buttons">
-    <t t-if="! multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save</button>
+    <t t-if="! readonly">
+        <t t-if="! multi_select">
+            <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save</button>
+        </t>
+        <t t-if="multi_select">
+            <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
+            <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
+        </t>
+        or
     </t>
-    <t t-if="multi_select">
-        <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
-        <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
-    </t>
-    or <a class="oe_button oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Discard</a>
+    <a class="oe_button oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">
+        <t t-if="! readonly">
+            Discard
+        </t>
+        <t t-if="readonly">
+            Close
+        </t>
+    </a>
 </t>
 
 <t t-name="One2Many.viewmanager" t-extend="ViewManager">
@@ -1284,7 +1335,7 @@
      contenteditable="true"/>
 <!-- tabindex: makes div focusable -->
 <div t-name="SearchView.FacetView"
-     class="oe_searchview_facet"
+     class="oe_tag oe_tag_dark oe_searchview_facet"
      tabindex="0"
     ><span class="oe_facet_remove">x</span
     ><span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">
@@ -1459,20 +1510,7 @@
     <div>
     </div>
 </div>
-<div t-name="SearchView.addtoreporting" class="oe_searchview_dashboard">
-    <h4>Add to Dashboard</h4>
-    <form>
-        <p><input placeholder="Title of new dashboard item"/></p>
-        <button class="oe_apply" type="submit">Add</button>
-    </form>
-</div>
-<t t-name="SearchView.addtoreporting.selection">
-    <select>
-        <option t-foreach="selections" t-as="element"
-                t-att-value="element.id || element.res_id ">
-            <t t-esc="element.name"/></option>
-    </select>
-</t>
+
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
     <h4>Advanced Search</h4>
     <form>
@@ -1698,5 +1736,12 @@
 <div t-name="Many2ManyKanban.quick_create" class="oe_kanban_quick_create">
     <input t-att-placeholder="_t('Type name to search')"/>
 </div>
-
+<t t-name="Throbber">
+    <div>
+        <div class="oe_blockui_spin" style="height: 50px">
+        </div>
+        <br />
+        <div style="color:white">Loading...</div>
+    </div>
+</t>
 </templates>

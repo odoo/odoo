@@ -2,7 +2,7 @@ openerp.web_tests = function (instance) {
     instance.web.client_actions.add(
         'buncha-forms', 'instance.web_tests.BunchaForms');
     instance.web_tests = {};
-    instance.web_tests.BunchaForms = instance.web.OldWidget.extend({
+    instance.web_tests.BunchaForms = instance.web.Widget.extend({
         init: function (parent) {
             this._super(parent);
             this.dataset = new instance.web.DataSetSearch(this, 'test.listview.relations');

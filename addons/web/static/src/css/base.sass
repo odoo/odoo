@@ -1,11 +1,14 @@
 @charset "utf-8"
 
 // Variables {{{
-$section-title-color: #8786b7
 $facets-border: #afafb6
-$facets-border-selected: #a6a6fe
+$section-title-color: #8786b7
+$tag-bg-light: #f0f0fa
+$tag-bg-dark: #8786b7
+$tag-border: #afafb6
+$tag-border-selected: #a6a6fe
 $hover-background: #f0f0fa
-$colour4: #8a89ba
+$link-color: #8a89ba
 $sheet-max-width: 860px
 // }}}
 // Mixins {{{
@@ -190,7 +193,7 @@ $sheet-max-width: 860px
         margin: 4px 0
     // }}}
     // Button style {{{
-    a.button:link, a.button:visited, button, input[type='submit']
+    a.button:link, a.button:visited, button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
         display: inline-block
         border: 1px solid #ababab
         color: #404040
@@ -205,16 +208,18 @@ $sheet-max-width: 860px
         -webkit-font-smoothing: antialiased
         outline: none
 
-    a.button:hover, button:hover, input[type='submit']:hover
+    a.button:hover, button:hover, input[type='submit']:hover, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         cursor: pointer
+        background-position: 0
 
-    a.button:focus, button:focus, input[type='submit']:focus
+    a.button:focus, button:focus, input[type='submit']:focus, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus
         border: 1px solid #80bfff
+        background-position: 0
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
-    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active
+    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active
         @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
@@ -230,6 +235,8 @@ $sheet-max-width: 860px
     .ui-widget
         font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
         font-size: 13px
+    .ui-widget-content a
+        color: $link-color
     .ui-menu
         .ui-menu-item
             margin: 0 8px 0 0
@@ -237,9 +244,7 @@ $sheet-max-width: 860px
             width: auto
             a.ui-state-active
                 background: #f0f0fa
-    div.ui-widget-overlay
-        background: black
-        @include opacity(0.3)
+
     // Modal box
     &.ui-dialog
         display: none
@@ -276,6 +281,8 @@ $sheet-max-width: 860px
                 margin: 0
             .ui-dialog-buttonset
                 float: left
+                .ui-button
+                    margin-right: 4px
         .ui-dialog-titlebar-close
             padding: 0
             .ui-icon-closethick
@@ -299,9 +306,11 @@ $sheet-max-width: 860px
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
             @include radius(0 0 2px 2px)
             a
-                color: #8A89BA
+                color: $link-color
                 &:hover
                     text-decoration: underline
+                &:focus
+                    outline: none
             .oe_logo
                 margin-left: -6px
             .oe_bottom
@@ -399,7 +408,6 @@ $sheet-max-width: 860px
         button
             margin: 4px
     .oe_avatar
-        margin: 0 6px 15px 0
         > img
             height: 90px
             max-width: 100px
@@ -420,7 +428,7 @@ $sheet-max-width: 860px
             display: none
         span
             @include reset()
-            color: #8A89BA
+            color: $link-color
             font-weight: bold
             &:hover
                 text-decoration: underline
@@ -438,16 +446,20 @@ $sheet-max-width: 860px
     // }}}
     // Tags (for many2many tags, among others) {{{
     .oe_tag
-        border-radius: 2px
-        @include box-sizing(border)
-        border: 1px solid #9DACCC
-        background: #E2E6F0
-        color: black !important
-        padding: 0px 3px 0px 3px
+        border: 1px solid $tag-border
+        font-size: 11px
+        padding: 2px 4px
         margin: 0 2px 2px 0
-        height: 16px
-        // font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
+        @include radius(3px)
+        background: $tag-bg-light
+        color: #4C4C4C
+    .oe_tag_dark
+        background: $tag-bg-dark
+        color: #eee
+
     .oe_tags
+        &.oe_inline
+            min-width: 250px
         .text-wrap
             width: 100% !important
             textarea
@@ -899,7 +911,7 @@ $sheet-max-width: 860px
     .oe_secondary_menu_section
         font-weight: bold
         margin-left: 8px
-        color: $colour4
+        color: $link-color
     .oe_secondary_submenu
         padding: 2px 0 8px 0
         margin: 0
@@ -917,7 +929,7 @@ $sheet-max-width: 860px
                 top: 1px
                 right: 1px
                 font-size: 10px
-                background: $colour4
+                background: $link-color
                 color: white
                 padding: 2px 4px
                 margin: 1px 6px 0 0
@@ -927,16 +939,11 @@ $sheet-max-width: 860px
                 @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
         .oe_menu_counter
             float: right
-            background: #8a89ba
-            color: #eee
-            font-size: 10px
-            border: 1px solid lightgray
-            padding: 2px 4px
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
             margin: 0px
-            @include radius(4px)
+            padding: 1px 4px
         .oe_active
-            background: $colour4
+            background: $link-color
             border-top: 1px solid lightGray
             border-bottom: 1px solid lightGray
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
@@ -945,12 +952,12 @@ $sheet-max-width: 860px
                 color: white
             .oe_menu_label
                 background: #eee
-                color: $colour4
+                color: $link-color
                 text-shadow: 0 1px 1px white
                 @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2))
             .oe_menu_counter
                 background: #eee
-                color: #8a89ba
+                color: $link-color
         .oe_menu_toggler:before
             width: 0
             height: 0
@@ -977,7 +984,7 @@ $sheet-max-width: 860px
     .oe_application
         width: 100%
         a
-            color: $colour4
+            color: $link-color
             &:hover
                 text-decoration: underline
         > div
@@ -1011,7 +1018,7 @@ $sheet-max-width: 860px
                 margin: 0
                 float: left
                 a
-                    color: $colour4
+                    color: $link-color
             .oe_button_group
                 display: inline-block
                 border: 1px solid #ababab
@@ -1148,8 +1155,8 @@ $sheet-max-width: 860px
             font-size: 12px
             line-height: 18px
         &.oe_focused
-            border-color: $facets-border-selected
-            @include box-shadow(0 1px 2px $facets-border-selected inset)
+            border-color: $tag-border-selected
+            @include box-shadow(0 1px 2px $tag-border-selected inset)
         .oe_searchview_clear
             cursor: pointer
             position: absolute
@@ -1200,7 +1207,7 @@ $sheet-max-width: 860px
                 vertical-align: top
                 display: inline-block
                 line-height: 17px
-            .oe_searchview_input, .oe_searchview_facet
+            .oe_searchview_facet
                 height: 18px
                 margin: 1px 0
                 font-size: 11px
@@ -1208,17 +1215,20 @@ $sheet-max-width: 860px
                     outline: none
             .oe_searchview_input
                 padding: 0 0 0 6px
+                font-size: 12px
+                height: 16px
+                margin-top: 3px
+                &:focus
+                    outline: none
             .oe_searchview_facet
                 position: relative
                 cursor: pointer
-                border: 1px solid $facets-border
-                @include radius(3px)
-                background: #8786b7
+                padding: 0
                 -webkit-font-smoothing: auto
                 // spacing for opera, FF
                 &:focus
-                    border-color: $facets-border-selected
-                    @include box-shadow(0 0 3px 1px $facets-border-selected)
+                    border-color: $tag-border-selected
+                    @include box-shadow(0 0 3px 1px $tag-border-selected)
                 .oe_facet_values
                     background: #f0f0fa
                     @include radius(0 3px 3px 0)
@@ -1231,8 +1241,9 @@ $sheet-max-width: 860px
                 .oe_facet_category.oe_i
                     font-size: 16px
                 .oe_facet_value
-                    border-left: 1px solid $facets-border
+                    border-left: 1px solid $tag-border
                     text-shadow: 0 1px 1px white
+                    color: #4C4C4C
                     &:last-child
                         padding-right: 16px
                 .oe_facet_remove
@@ -1243,6 +1254,7 @@ $sheet-max-width: 860px
                     line-height: 8px
                     width: 12px
                     height: 12px
+                    padding-top: 1px
                     text-align: center
                     font-weight: bold
                     cursor: pointer
@@ -1473,11 +1485,11 @@ $sheet-max-width: 860px
         .oe_form .oe_form_field_date
             width: auto
     .oe_form_nosheet
-        margin: 20px
+        margin: 8px
     .oe_form_nosheet > header
-        margin-top: -20px
-        margin-left: -20px
-        margin-right: -20px
+        margin-top: -8px
+        margin-left: -8px
+        margin-right: -8px
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form
@@ -1825,19 +1837,14 @@ $sheet-max-width: 860px
      * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
      */
     .oe_hidden_input_file
-        overflow: hidden
-        position: relative
-        display: inline-block
-        width: 45px
-        height: 30px
         input.oe_form_binary_file
             z-index: 0
             line-height: 0
             font-size: 12px
             position: absolute
-            // Should be adjusted for all browsers
             top: 1px
-            right: 10px
+            left: 0
+            right: 0
             opacity: 0
             filter: alpha(opacity = 0)
             -ms-filter: "alpha(opacity=0)"
@@ -1852,15 +1859,14 @@ $sheet-max-width: 860px
             vertical-align: top
             .oe_form_field_image_controls
                 position: absolute
-                white-space: nowrap
                 top: 1px
-                padding: 3px 0 0 0
-                margin: 0 1px
+                padding: 4px
+                width: 100%
                 display: none
-                width: 99%
                 text-align: center
-                background: url(/web/static/src/img/form_sheetbg.png)
-                border-bottom: 1px dotted black
+                color: #eee
+                background: rgba(37,37,37,0.9)
+                @include radius(3px 3px 0 0)
                 @include box-sizing(border)
             &:hover .oe_form_field_image_controls
                 display: block
@@ -2160,6 +2166,10 @@ $sheet-max-width: 860px
 
 // }}}
 
+// The jQuery-ui overlay is outside the .openerp div, please don't add indentation !!!
+div.ui-widget-overlay
+    background: black
+    @include opacity(0.3)
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

@@ -12,7 +12,7 @@ $(document).ready(function () {
         // Context n should have base evaluation context + all of contexts
         // 0..n-1 in its own evaluation context
         var active_id = 4;
-        var result = openerp.connection.test_eval_contexts([
+        var result = openerp.session.test_eval_contexts([
             {
                 "__contexts": [
                     {
@@ -56,7 +56,7 @@ $(document).ready(function () {
         });
     });
     test('non-literal_eval_contexts', function () {
-        var result = openerp.connection.test_eval_contexts([{
+        var result = openerp.session.test_eval_contexts([{
             "__ref": "compound_context",
             "__contexts": [
                 {"__ref": "context", "__debug": "{'type':parent.type}",
@@ -141,9 +141,9 @@ $(document).ready(function () {
     });
     test('current_date', function () {
         var current_date = openerp.web.date_to_str(new Date());
-        var result = openerp.connection.test_eval_domains(
+        var result = openerp.session.test_eval_domains(
             [[],{"__ref":"domain","__debug":"[('name','>=',current_date),('name','<=',current_date)]","__id":"5dedcfc96648"}],
-            openerp.connection.test_eval_get_context());
+            openerp.session.test_eval_get_context());
         deepEqual(result, [
             ['name', '>=', current_date],
             ['name', '<=', current_date]

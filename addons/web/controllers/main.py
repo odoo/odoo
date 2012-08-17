@@ -31,86 +31,8 @@ from .. import common
 openerpweb = common.http
 
 #----------------------------------------------------------
-# OpenERP Web web Controllers
+# OpenERP Web helpers
 #----------------------------------------------------------
-
-
-def concat_xml(file_list):
-    """Concatenate xml files
-
-    :param list(str) file_list: list of files to check
-    :returns: (concatenation_result, checksum)
-    :rtype: (str, str)
-    """
-    checksum = hashlib.new('sha1')
-    if not file_list:
-        return '', checksum.hexdigest()
-
-    root = None
-    for fname in file_list:
-        with open(fname, 'rb') as fp:
-            contents = fp.read()
-            checksum.update(contents)
-            fp.seek(0)
-            xml = ElementTree.parse(fp).getroot()
-
-        if root is None:
-            root = ElementTree.Element(xml.tag)
-        #elif root.tag != xml.tag:
-        #    raise ValueError("Root tags missmatch: %r != %r" % (root.tag, xml.tag))
-
-        for child in xml.getchildren():
-            root.append(child)
-    return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
-
-
-def concat_files(file_list, reader=None, intersperse=""):
-    """ Concatenates contents of all provided files
-
-    :param list(str) file_list: list of files to check
-    :param function reader: reading procedure for each file
-    :param str intersperse: string to intersperse between file contents
-    :returns: (concatenation_result, checksum)
-    :rtype: (str, str)
-    """
-    checksum = hashlib.new('sha1')
-    if not file_list:
-        return '', checksum.hexdigest()
-
-    if reader is None:
-        def reader(f):
-            with open(f, 'rb') as fp:
-                return fp.read()
-
-    files_content = []
-    for fname in file_list:
-        contents = reader(fname)
-        checksum.update(contents)
-        files_content.append(contents)
-
-    files_concat = intersperse.join(files_content)
-    return files_concat, checksum.hexdigest()
-
-html_template = """<!DOCTYPE html>
-<html style="height: 100%%">
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>OpenERP</title>
-        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/web/static/src/css/full.css" />
-        %(css)s
-        %(js)s
-        <script type="text/javascript">
-            $(function() {
-                var s = new openerp.init(%(modules)s);
-                %(init)s
-            });
-        </script>
-    </head>
-    <body></body>
-</html>
-"""
 
 def sass2scss(src):
     # Validated by diff -u of sass2scss against:
@@ -163,13 +85,180 @@ def sass2scss(src):
         return out
     return write(sass)
 
-def server_wide_modules(req):
-    addons = [i for i in req.config.server_wide_modules if i in openerpweb.addons_manifest]
+def db_list(req):
+    dbs = []
+    proxy = req.session.proxy("db")
+    dbs = proxy.list()
+    h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
+    d = h.split('.')[0]
+    r = req.config.dbfilter.replace('%h', h).replace('%d', d)
+    dbs = [i for i in dbs if re.match(r, i)]
+    return dbs
+
+def module_topological_sort(modules):
+    """ Return a list of module names sorted so that their dependencies of the
+    modules are listed before the module itself
+
+    modules is a dict of {module_name: dependencies}
+
+    :param modules: modules to sort
+    :type modules: dict
+    :returns: list(str)
+    """
+
+    dependencies = set(itertools.chain.from_iterable(modules.itervalues()))
+    # incoming edge: dependency on other module (if a depends on b, a has an
+    # incoming edge from b, aka there's an edge from b to a)
+    # outgoing edge: other module depending on this one
+
+    # [Tarjan 1976], http://en.wikipedia.org/wiki/Topological_sorting#Algorithms
+    #L ← Empty list that will contain the sorted nodes
+    L = []
+    #S ← Set of all nodes with no outgoing edges (modules on which no other
+    #    module depends)
+    S = set(module for module in modules if module not in dependencies)
+
+    visited = set()
+    #function visit(node n)
+    def visit(n):
+        #if n has not been visited yet then
+        if n not in visited:
+            #mark n as visited
+            visited.add(n)
+            #change: n not web module, can not be resolved, ignore
+            if n not in modules: return
+            #for each node m with an edge from m to n do (dependencies of n)
+            for m in modules[n]:
+                #visit(m)
+                visit(m)
+            #add n to L
+            L.append(n)
+    #for each node n in S do
+    for n in S:
+        #visit(n)
+        visit(n)
+    return L
+
+def module_installed(req):
+    # Candidates module the current heuristic is the /static dir
+    loadable = openerpweb.addons_manifest.keys()
+    modules = {}
+
+    # Retrieve database installed modules
+    # TODO The following code should move to ir.module.module.list_installed_modules()
+    Modules = req.session.model('ir.module.module')
+    domain = [('state','=','installed'), ('name','in', loadable)]
+    for module in Modules.search_read(domain, ['name', 'dependencies_id']):
+        modules[module['name']] = []
+        deps = module.get('dependencies_id')
+        if deps:
+            deps_read = req.session.model('ir.module.module.dependency').read(deps, ['name'])
+            dependencies = [i['name'] for i in deps_read]
+            modules[module['name']] = dependencies
+
+    sorted_modules = module_topological_sort(modules)
+    return sorted_modules
+
+def module_installed_bypass_session(dbname):
+    loadable = openerpweb.addons_manifest.keys()
+    modules = {}
+    try:
+        import openerp.modules.registry
+        registry = openerp.modules.registry.RegistryManager.get(dbname)
+        with registry.cursor() as cr:
+            m = registry.get('ir.module.module')
+            # TODO The following code should move to ir.module.module.list_installed_modules()
+            domain = [('state','=','installed'), ('name','in', loadable)]
+            ids = m.search(cr, 1, [('state','=','installed'), ('name','in', loadable)])
+            for module in m.read(cr, 1, ids, ['name', 'dependencies_id']):
+                modules[module['name']] = []
+                deps = module.get('dependencies_id')
+                if deps:
+                    deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
+                    dependencies = [i['name'] for i in deps_read]
+                    modules[module['name']] = dependencies
+    except Exception,e:
+        pass
+    sorted_modules = module_topological_sort(modules)
+    return sorted_modules
+
+def module_boot(req):
+    serverside = []
+    dbside = []
+    for i in req.config.server_wide_modules:
+        if i in openerpweb.addons_manifest:
+            serverside.append(i)
+    # if only one db load every module at boot
+    dbs = []
+    try:
+        dbs = db_list(req)
+    except xmlrpclib.Fault:
+        # ignore access denied
+        pass
+    if len(dbs) == 1:
+        dbside = module_installed_bypass_session(dbs[0])
+        dbside = [i for i in dbside if i not in serverside]
+    addons = serverside + dbside
     return addons
+
+def concat_xml(file_list):
+    """Concatenate xml files
+
+    :param list(str) file_list: list of files to check
+    :returns: (concatenation_result, checksum)
+    :rtype: (str, str)
+    """
+    checksum = hashlib.new('sha1')
+    if not file_list:
+        return '', checksum.hexdigest()
+
+    root = None
+    for fname in file_list:
+        with open(fname, 'rb') as fp:
+            contents = fp.read()
+            checksum.update(contents)
+            fp.seek(0)
+            xml = ElementTree.parse(fp).getroot()
+
+        if root is None:
+            root = ElementTree.Element(xml.tag)
+        #elif root.tag != xml.tag:
+        #    raise ValueError("Root tags missmatch: %r != %r" % (root.tag, xml.tag))
+
+        for child in xml.getchildren():
+            root.append(child)
+    return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
+
+def concat_files(file_list, reader=None, intersperse=""):
+    """ Concatenates contents of all provided files
+
+    :param list(str) file_list: list of files to check
+    :param function reader: reading procedure for each file
+    :param str intersperse: string to intersperse between file contents
+    :returns: (concatenation_result, checksum)
+    :rtype: (str, str)
+    """
+    checksum = hashlib.new('sha1')
+    if not file_list:
+        return '', checksum.hexdigest()
+
+    if reader is None:
+        def reader(f):
+            with open(f, 'rb') as fp:
+                return fp.read()
+
+    files_content = []
+    for fname in file_list:
+        contents = reader(fname)
+        checksum.update(contents)
+        files_content.append(contents)
+
+    files_concat = intersperse.join(files_content)
+    return files_concat, checksum.hexdigest()
 
 def manifest_glob(req, addons, key):
     if addons is None:
-        addons = server_wide_modules(req)
+        addons = module_boot(req)
     else:
         addons = addons.split(',')
     r = []
@@ -237,6 +326,189 @@ def make_conditional(req, response, last_modified=None, etag=None):
         response.set_etag(etag)
     return response.make_conditional(req.httprequest)
 
+def login_and_redirect(req, db, login, key, redirect_url='/'):
+    req.session.authenticate(db, login, key, {})
+    return set_cookie_and_redirect(req, redirect_url)
+
+def set_cookie_and_redirect(req, redirect_url):
+    redirect = werkzeug.utils.redirect(redirect_url, 303)
+    redirect.autocorrect_location_header = False
+    cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
+    redirect.set_cookie('instance0|session_id', cookie_val)
+    return redirect
+
+def eval_context_and_domain(session, context, domain=None):
+    e_context = session.eval_context(context)
+    # should we give the evaluated context as an evaluation context to the domain?
+    e_domain = session.eval_domain(domain or [])
+
+    return e_context, e_domain
+
+def load_actions_from_ir_values(req, key, key2, models, meta):
+    context = req.session.eval_context(req.context)
+    Values = req.session.model('ir.values')
+    actions = Values.get(key, key2, models, meta, context)
+
+    return [(id, name, clean_action(req, action))
+            for id, name, action in actions]
+
+def clean_action(req, action, do_not_eval=False):
+    action.setdefault('flags', {})
+
+    context = req.session.eval_context(req.context)
+    eval_ctx = req.session.evaluation_context(context)
+
+    if not do_not_eval:
+        # values come from the server, we can just eval them
+        if action.get('context') and isinstance(action.get('context'), basestring):
+            action['context'] = eval( action['context'], eval_ctx ) or {}
+
+        if action.get('domain') and isinstance(action.get('domain'), basestring):
+            action['domain'] = eval( action['domain'], eval_ctx ) or []
+    else:
+        if 'context' in action:
+            action['context'] = parse_context(action['context'], req.session)
+        if 'domain' in action:
+            action['domain'] = parse_domain(action['domain'], req.session)
+
+    action_type = action.setdefault('type', 'ir.actions.act_window_close')
+    if action_type == 'ir.actions.act_window':
+        return fix_view_modes(action)
+    return action
+
+# I think generate_views,fix_view_modes should go into js ActionManager
+def generate_views(action):
+    """
+    While the server generates a sequence called "views" computing dependencies
+    between a bunch of stuff for views coming directly from the database
+    (the ``ir.actions.act_window model``), it's also possible for e.g. buttons
+    to return custom view dictionaries generated on the fly.
+
+    In that case, there is no ``views`` key available on the action.
+
+    Since the web client relies on ``action['views']``, generate it here from
+    ``view_mode`` and ``view_id``.
+
+    Currently handles two different cases:
+
+    * no view_id, multiple view_mode
+    * single view_id, single view_mode
+
+    :param dict action: action descriptor dictionary to generate a views key for
+    """
+    view_id = action.get('view_id') or False
+    if isinstance(view_id, (list, tuple)):
+        view_id = view_id[0]
+
+    # providing at least one view mode is a requirement, not an option
+    view_modes = action['view_mode'].split(',')
+
+    if len(view_modes) > 1:
+        if view_id:
+            raise ValueError('Non-db action dictionaries should provide '
+                             'either multiple view modes or a single view '
+                             'mode and an optional view id.\n\n Got view '
+                             'modes %r and view id %r for action %r' % (
+                view_modes, view_id, action))
+        action['views'] = [(False, mode) for mode in view_modes]
+        return
+    action['views'] = [(view_id, view_modes[0])]
+
+def fix_view_modes(action):
+    """ For historical reasons, OpenERP has weird dealings in relation to
+    view_mode and the view_type attribute (on window actions):
+
+    * one of the view modes is ``tree``, which stands for both list views
+      and tree views
+    * the choice is made by checking ``view_type``, which is either
+      ``form`` for a list view or ``tree`` for an actual tree view
+
+    This methods simply folds the view_type into view_mode by adding a
+    new view mode ``list`` which is the result of the ``tree`` view_mode
+    in conjunction with the ``form`` view_type.
+
+    TODO: this should go into the doc, some kind of "peculiarities" section
+
+    :param dict action: an action descriptor
+    :returns: nothing, the action is modified in place
+    """
+    if not action.get('views'):
+        generate_views(action)
+
+    id_form = None
+    for index, (id, mode) in enumerate(action['views']):
+        if mode == 'form':
+            id_form = id
+            break
+
+    if action.pop('view_type', 'form') != 'form':
+        return action
+
+    action['views'] = [
+        [id, mode if mode != 'tree' else 'list']
+        for id, mode in action['views']
+    ]
+
+    return action
+
+def parse_domain(domain, session):
+    """ Parses an arbitrary string containing a domain, transforms it
+    to either a literal domain or a :class:`common.nonliterals.Domain`
+
+    :param domain: the domain to parse, if the domain is not a string it
+                   is assumed to be a literal domain and is returned as-is
+    :param session: Current OpenERP session
+    :type session: openerpweb.openerpweb.OpenERPSession
+    """
+    if not isinstance(domain, basestring):
+        return domain
+    try:
+        return ast.literal_eval(domain)
+    except ValueError:
+        # not a literal
+        return common.nonliterals.Domain(session, domain)
+
+def parse_context(context, session):
+    """ Parses an arbitrary string containing a context, transforms it
+    to either a literal context or a :class:`common.nonliterals.Context`
+
+    :param context: the context to parse, if the context is not a string it
+           is assumed to be a literal domain and is returned as-is
+    :param session: Current OpenERP session
+    :type session: openerpweb.openerpweb.OpenERPSession
+    """
+    if not isinstance(context, basestring):
+        return context
+    try:
+        return ast.literal_eval(context)
+    except ValueError:
+        return common.nonliterals.Context(session, context)
+
+#----------------------------------------------------------
+# OpenERP Web web Controllers
+#----------------------------------------------------------
+
+html_template = """<!DOCTYPE html>
+<html style="height: 100%%">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>OpenERP</title>
+        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+        <link rel="stylesheet" href="/web/static/src/css/full.css" />
+        %(css)s
+        %(js)s
+        <script type="text/javascript">
+            $(function() {
+                var s = new openerp.init(%(modules)s);
+                %(init)s
+            });
+        </script>
+    </head>
+    <body></body>
+</html>
+"""
+
 class Home(openerpweb.Controller):
     _cp_path = '/'
 
@@ -248,21 +520,14 @@ class Home(openerpweb.Controller):
         r = html_template % {
             'js': js,
             'css': css,
-            'modules': simplejson.dumps(server_wide_modules(req)),
+            'modules': simplejson.dumps(module_boot(req)),
             'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
         }
         return r
 
     @openerpweb.httprequest
     def login(self, req, db, login, key):
-        return self._login(req, db, login, key)
-
-    def _login(self, req, db, login, key, redirect_url='/'):
-        req.session.authenticate(db, login, key, {})
-        redirect = werkzeug.utils.redirect(redirect_url, 303)
-        cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
-        redirect.set_cookie('instance0|session_id', cookie_val)
-        return redirect
+        return login_and_redirect(req, db, login, key)
 
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
@@ -412,12 +677,7 @@ class Database(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def get_list(self, req):
-        proxy = req.session.proxy("db")
-        dbs = proxy.list()
-        h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
-        d = h.split('.')[0]
-        r = req.config.dbfilter.replace('%h', h).replace('%d', d)
-        dbs = [i for i in dbs if re.match(r, i)]
+        dbs = db_list(req)
         return {"db_list": dbs}
 
     @openerpweb.jsonrequest
@@ -486,50 +746,6 @@ class Database(openerpweb.Controller):
                 return {'error': e.faultCode, 'title': 'Change Password'}
         return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
-def topological_sort(modules):
-    """ Return a list of module names sorted so that their dependencies of the
-    modules are listed before the module itself
-
-    modules is a dict of {module_name: dependencies}
-
-    :param modules: modules to sort
-    :type modules: dict
-    :returns: list(str)
-    """
-
-    dependencies = set(itertools.chain.from_iterable(modules.itervalues()))
-    # incoming edge: dependency on other module (if a depends on b, a has an
-    # incoming edge from b, aka there's an edge from b to a)
-    # outgoing edge: other module depending on this one
-
-    # [Tarjan 1976], http://en.wikipedia.org/wiki/Topological_sorting#Algorithms
-    #L ← Empty list that will contain the sorted nodes
-    L = []
-    #S ← Set of all nodes with no outgoing edges (modules on which no other
-    #    module depends)
-    S = set(module for module in modules if module not in dependencies)
-
-    visited = set()
-    #function visit(node n)
-    def visit(n):
-        #if n has not been visited yet then
-        if n not in visited:
-            #mark n as visited
-            visited.add(n)
-            #change: n not web module, can not be resolved, ignore
-            if n not in modules: return
-            #for each node m with an edge from m to n do (dependencies of n)
-            for m in modules[n]:
-                #visit(m)
-                visit(m)
-            #add n to L
-            L.append(n)
-    #for each node n in S do
-    for n in S:
-        #visit(n)
-        visit(n)
-    return L
-
 class Session(openerpweb.Controller):
     _cp_path = "/web/session"
 
@@ -595,34 +811,8 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        # Compute available candidates module
-        loadable = openerpweb.addons_manifest
-        loaded = set(req.config.server_wide_modules)
-        candidates = [mod for mod in loadable if mod not in loaded]
-
-        # already installed modules have no dependencies
-        modules = dict.fromkeys(loaded, [])
-
-        # Compute auto_install modules that might be on the web side only
-        modules.update((name, openerpweb.addons_manifest[name].get('depends', []))
-                      for name in candidates
-                      if openerpweb.addons_manifest[name].get('auto_install'))
-
-        # Retrieve database installed modules
-        Modules = req.session.model('ir.module.module')
-        for module in Modules.search_read(
-                        [('state','=','installed'), ('name','in', candidates)],
-                        ['name', 'dependencies_id']):
-            deps = module.get('dependencies_id')
-            if deps:
-                dependencies = map(
-                    operator.itemgetter('name'),
-                    req.session.model('ir.module.module.dependency').read(deps, ['name']))
-                modules[module['name']] = list(
-                    set(modules.get(module['name'], []) + dependencies))
-
-        sorted_modules = topological_sort(modules)
-        return [module for module in sorted_modules if module not in loaded]
+        # return all installed modules. Web client is smart enough to not load a module twice
+        return module_installed(req)
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
@@ -725,120 +915,6 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def destroy(self, req):
         req.session._suicide = True
-
-def eval_context_and_domain(session, context, domain=None):
-    e_context = session.eval_context(context)
-    # should we give the evaluated context as an evaluation context to the domain?
-    e_domain = session.eval_domain(domain or [])
-
-    return e_context, e_domain
-
-def load_actions_from_ir_values(req, key, key2, models, meta):
-    context = req.session.eval_context(req.context)
-    Values = req.session.model('ir.values')
-    actions = Values.get(key, key2, models, meta, context)
-
-    return [(id, name, clean_action(req, action))
-            for id, name, action in actions]
-
-def clean_action(req, action, do_not_eval=False):
-    action.setdefault('flags', {})
-
-    context = req.session.eval_context(req.context)
-    eval_ctx = req.session.evaluation_context(context)
-
-    if not do_not_eval:
-        # values come from the server, we can just eval them
-        if action.get('context') and isinstance(action.get('context'), basestring):
-            action['context'] = eval( action['context'], eval_ctx ) or {}
-
-        if action.get('domain') and isinstance(action.get('domain'), basestring):
-            action['domain'] = eval( action['domain'], eval_ctx ) or []
-    else:
-        if 'context' in action:
-            action['context'] = parse_context(action['context'], req.session)
-        if 'domain' in action:
-            action['domain'] = parse_domain(action['domain'], req.session)
-
-    action_type = action.setdefault('type', 'ir.actions.act_window_close')
-    if action_type == 'ir.actions.act_window':
-        return fix_view_modes(action)
-    return action
-
-# I think generate_views,fix_view_modes should go into js ActionManager
-def generate_views(action):
-    """
-    While the server generates a sequence called "views" computing dependencies
-    between a bunch of stuff for views coming directly from the database
-    (the ``ir.actions.act_window model``), it's also possible for e.g. buttons
-    to return custom view dictionaries generated on the fly.
-
-    In that case, there is no ``views`` key available on the action.
-
-    Since the web client relies on ``action['views']``, generate it here from
-    ``view_mode`` and ``view_id``.
-
-    Currently handles two different cases:
-
-    * no view_id, multiple view_mode
-    * single view_id, single view_mode
-
-    :param dict action: action descriptor dictionary to generate a views key for
-    """
-    view_id = action.get('view_id') or False
-    if isinstance(view_id, (list, tuple)):
-        view_id = view_id[0]
-
-    # providing at least one view mode is a requirement, not an option
-    view_modes = action['view_mode'].split(',')
-
-    if len(view_modes) > 1:
-        if view_id:
-            raise ValueError('Non-db action dictionaries should provide '
-                             'either multiple view modes or a single view '
-                             'mode and an optional view id.\n\n Got view '
-                             'modes %r and view id %r for action %r' % (
-                view_modes, view_id, action))
-        action['views'] = [(False, mode) for mode in view_modes]
-        return
-    action['views'] = [(view_id, view_modes[0])]
-
-def fix_view_modes(action):
-    """ For historical reasons, OpenERP has weird dealings in relation to
-    view_mode and the view_type attribute (on window actions):
-
-    * one of the view modes is ``tree``, which stands for both list views
-      and tree views
-    * the choice is made by checking ``view_type``, which is either
-      ``form`` for a list view or ``tree`` for an actual tree view
-
-    This methods simply folds the view_type into view_mode by adding a
-    new view mode ``list`` which is the result of the ``tree`` view_mode
-    in conjunction with the ``form`` view_type.
-
-    TODO: this should go into the doc, some kind of "peculiarities" section
-
-    :param dict action: an action descriptor
-    :returns: nothing, the action is modified in place
-    """
-    if not action.get('views'):
-        generate_views(action)
-
-    id_form = None
-    for index, (id, mode) in enumerate(action['views']):
-        if mode == 'form':
-            id_form = id
-            break
-
-    if action.pop('view_type', 'form') != 'form':
-        return action
-
-    action['views'] = [
-        [id, mode if mode != 'tree' else 'list']
-        for id, mode in action['views']
-    ]
-
-    return action
 
 class Menu(openerpweb.Controller):
     _cp_path = "/web/menu"
@@ -1065,6 +1141,15 @@ class DataSet(openerpweb.Controller):
     def exec_workflow(self, req, model, id, signal):
         return req.session.exec_workflow(model, id, signal)
 
+    @openerpweb.jsonrequest
+    def resequence(self, req, model, ids):
+        m = req.session.model(model)
+        if not len(m.fields_get(['sequence'])):
+            return False
+        for i in range(len(ids)):
+            m.write([ids[i]], { 'sequence': i })
+        return True
+
 class DataGroup(openerpweb.Controller):
     _cp_path = "/web/group"
     @openerpweb.jsonrequest
@@ -1204,39 +1289,6 @@ class View(openerpweb.Controller):
     def load(self, req, model, view_id, view_type, toolbar=False):
         return self.fields_view_get(req, model, view_id, view_type, toolbar=toolbar)
 
-def parse_domain(domain, session):
-    """ Parses an arbitrary string containing a domain, transforms it
-    to either a literal domain or a :class:`common.nonliterals.Domain`
-
-    :param domain: the domain to parse, if the domain is not a string it
-                   is assumed to be a literal domain and is returned as-is
-    :param session: Current OpenERP session
-    :type session: openerpweb.openerpweb.OpenERPSession
-    """
-    if not isinstance(domain, basestring):
-        return domain
-    try:
-        return ast.literal_eval(domain)
-    except ValueError:
-        # not a literal
-        return common.nonliterals.Domain(session, domain)
-
-def parse_context(context, session):
-    """ Parses an arbitrary string containing a context, transforms it
-    to either a literal context or a :class:`common.nonliterals.Context`
-
-    :param context: the context to parse, if the context is not a string it
-           is assumed to be a literal domain and is returned as-is
-    :param session: Current OpenERP session
-    :type session: openerpweb.openerpweb.OpenERPSession
-    """
-    if not isinstance(context, basestring):
-        return context
-    try:
-        return ast.literal_eval(context)
-    except ValueError:
-        return common.nonliterals.Context(session, context)
-
 class ListView(View):
     _cp_path = "/web/listview"
 
@@ -1310,47 +1362,6 @@ class SearchView(View):
                 del filter['context']
                 del filter['domain']
         return filters
-    
-     
-    @openerpweb.jsonrequest
-    def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
-        to_eval = common.nonliterals.CompoundContext(context_to_save)
-        to_eval.session = req.session
-        ctx = dict((k, v) for k, v in to_eval.evaluate().iteritems()
-                   if not k.startswith('search_default_'))
-        ctx['dashboard_merge_domains_contexts'] = False # TODO: replace this 6.1 workaround by attribute on <action/>
-        domain = common.nonliterals.CompoundDomain(domain)
-        domain.session = req.session
-        domain = domain.evaluate()
-
-        dashboard_action = load_actions_from_ir_values(req, 'action', 'tree_but_open',
-                                             [('ir.ui.menu', menu_id)], False)
-        if dashboard_action:
-            action = dashboard_action[0][2]
-            if action['res_model'] == 'board.board' and action['views'][0][1] == 'form':
-                # Maybe should check the content instead of model board.board ?
-                view_id = action['views'][0][0]
-                board = req.session.model(action['res_model']).fields_view_get(view_id, 'form')
-                if board and 'arch' in board:
-                    xml = ElementTree.fromstring(board['arch'])
-                    column = xml.find('./board/column')
-                    if column is not None:
-                        new_action = ElementTree.Element('action', {
-                                'name' : str(action_id),
-                                'string' : name,
-                                'view_mode' : view_mode,
-                                'context' : str(ctx),
-                                'domain' : str(domain)
-                            })
-                        column.insert(0, new_action)
-                        arch = ElementTree.tostring(xml, 'utf-8')
-                        return req.session.model('ir.ui.view.custom').create({
-                                'user_id': req.session._uid,
-                                'ref_id': view_id,
-                                'arch': arch
-                            }, req.session.eval_context(req.context))
-
-        return False
 
 class Binary(openerpweb.Controller):
     _cp_path = "/web/binary"
@@ -1363,11 +1374,14 @@ class Binary(openerpweb.Controller):
         headers = [('Content-Type', 'image/png')]
         etag = req.httprequest.headers.get('If-None-Match')
         hashed_session = hashlib.md5(req.session_id).hexdigest()
+        id = None if not id else simplejson.loads(id)
+        if type(id) is list:
+            id = id[0] # m2o
         if etag:
             if not id and hashed_session == etag:
                 return werkzeug.wrappers.Response(status=304)
             else:
-                date = Model.read([int(id)], [last_update], context)[0].get(last_update)
+                date = Model.read([id], [last_update], context)[0].get(last_update)
                 if hashlib.md5(date).hexdigest() == etag:
                     return werkzeug.wrappers.Response(status=304)
 
@@ -1377,11 +1391,6 @@ class Binary(openerpweb.Controller):
                 res = Model.default_get([field], context).get(field)
                 image_data = base64.b64decode(res)
             else:
-                try:
-                    id = int(id)
-                except (ValueError):
-                    # objects might use virtual ids as string
-                    pass
                 res = Model.read([id], [last_update, field], context)[0]
                 retag = hashlib.md5(res.get(last_update)).hexdigest()
                 image_data = base64.b64decode(res.get(field))
@@ -1999,3 +2008,5 @@ class Import(View):
             message, record)
         return '<script>window.top.%s(%s);</script>' % (
             jsonp, simplejson.dumps({'error': {'message':msg}}))
+
+# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
