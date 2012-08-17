@@ -5,7 +5,6 @@
         <record model="ir.ui.view" id="email_template_form">
             <field name="name">email.template.form</field>
             <field name="model">email.template</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Templates" version="7.0">
                   <sheet>
@@ -102,7 +101,6 @@
         <record model="ir.ui.view" id="email_template_tree">
             <field name="name">email.template.tree</field>
             <field name="model">email.template</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Templates">
                     <field name="model_id"/>
@@ -119,19 +117,13 @@
         <record id="view_email_template_search" model="ir.ui.view">
            <field name="name">email.template.search</field>
            <field name="model">email.template</field>
-           <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Templates">
-                    <group>
-                        <field name="name" filter_domain="['|', '|', '|',('name','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
-                        <separator orientation="vertical"/>
-                        <field name="model_id"/>
-                        <field name="lang"/>
-                    </group>
-                    <newline/>
+                    <field name="name" filter_domain="['|', '|', '|',('name','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
+                    <field name="lang"/>
+                    <field name="model_id"/>
                     <group expand="0" string="Group by...">
                         <filter string="SMTP Server" domain="[]" context="{'group_by':'mail_server_id'}" icon="terp-folder-orange"/>
-                        <separator orientation="vertical"/>
                         <filter string="Model" domain="[]" context="{'group_by':'model_id'}" icon="terp-accessories-archiver"/>
                     </group>
                </search>

@@ -4,7 +4,6 @@
         <record id="view_thunderbird_installer" model="ir.ui.view">
             <field name="name">plugin_thunderbird.installer.view</field>
             <field name="model">plugin_thunderbird.installer</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
                 <data>
@@ -52,17 +51,16 @@
         <record id="view_config_thunderbird_installer" model="ir.ui.view">
             <field name="name">Sales Application</field>
             <field name="model">sale.config.settings</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <field name="module_plugin_thunderbird" version="7.0" position="replace">
-                    <label for="module_plugin_thunderbird"/>
+                <div name="module_plugin_thunderbird" version="7.0" position="replace">
                     <div>
-                        <field name="module_plugin_thunderbird"/>
-                        <button name="%(action_thunderbird_installer)d" type="action" string="Configure" icon="gtk-execute"
-                            attrs="{'invisible': [('module_plugin_thunderbird','=',False)]}"/>
+                        <field name="module_plugin_thunderbird" class="oe_inline"/>
+                        <label for="module_plugin_thunderbird"/>
+                        <button name="%(action_thunderbird_installer)d" type="action" string="Download and install the plugin" icon="gtk-execute"
+                            attrs="{'invisible': [('module_plugin_thunderbird','=',False)]}" class="oe_link"/>
                     </div>
-                </field>
+                </div>
             </field>
         </record>
 

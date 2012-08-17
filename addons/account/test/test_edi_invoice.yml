@@ -5,7 +5,7 @@
 -
   !record {model: account.invoice, id: invoice_edi_1}:
     journal_id: 1
-    partner_id: base.res_partner_agrolait
+    partner_id: base.res_partner_2
     currency_id: base.EUR
     company_id: 1
     account_id: account.a_pay
@@ -13,14 +13,14 @@
     name: selling product
     type: 'out_invoice'
     invoice_line:
-      - product_id: product.product_product_pc1
+      - product_id: product.product_product_3
         uos_id: 1
         quantity: 1.0
         price_unit: 10.0
         name: 'basic pc'
         account_id: account.a_pay
     invoice_line:
-      - product_id: product.product_product_pc3
+      - product_id: product.product_product_5
         uos_id: 1
         quantity: 5.0
         price_unit: 100.0
@@ -106,7 +106,7 @@
                 "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "Unit"],
                 "name": "Basic PC",
                 "price_unit": 10.0,
-                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc1", "[PC1] Basic PC"],
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_3", "[PC1] Basic PC"],
                 "quantity": 1.0
         },
         {
@@ -116,7 +116,7 @@
                 "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "Unit"],
                 "name": "Medium PC",
                 "price_unit": 100.0,
-                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc3", "[PC3] Medium PC"],
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_5", "[PC3] Medium PC"],
                 "quantity": 5.0
         }]
     }

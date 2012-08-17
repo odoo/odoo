@@ -2,8 +2,6 @@
 <openerp>
     <data>
 
-
-
         <!-- MEMBERSHIP -->
 
         <!-- MEMBERSHIP/MEMBERSHIP PRODUCTS -->
@@ -11,19 +9,14 @@
         <record model="ir.ui.view" id="membership_product_search_form_view">
             <field name="name">membership.product.search.form</field>
             <field name="model">product.product</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Membership Products">
                     <field name="name" filter_domain="['|',('name','ilike',self),('code','ilike',self)]" string="Membership Product"/>
-                    <separator orientation="vertical"/>
                     <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',0)]"/>
-                    <separator orientation="vertical"/>
-                    <field name="categ_id" widget="selection" operator="child_of"/>
-                    <newline/>
+                    <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>
-                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
-                        <separator orientation="vertical"/>
-                        <filter string='Date From' icon="terp-go-month" domain="[]" context="{'group_by' : 'membership_date_from'}" />
+                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
+                        <filter string='Date From' icon="terp-go-month" domain="[]" context="{'group_by' : 'membership_date_from'}"/>
                     </group>
                 </search>
             </field>
@@ -32,7 +25,6 @@
         <record model="ir.ui.view" id="membership_products_tree">
             <field name="name">Membership products</field>
             <field name="model">product.product</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Membership products">
                     <field name="code"/>
@@ -50,7 +42,6 @@
         <record model="ir.ui.view" id="membership_products_form">
             <field name="name">Membership Products</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Membership products" version="7.0">
                     <sheet>
@@ -71,7 +62,7 @@
                             <group>
                                 <label for="membership_date_from" string="Membership Duration"/>
                                 <div>
-                                    <field name="membership_date_from" required="1" class="oe_inline"/> - 
+                                    <field name="membership_date_from" required="1" class="oe_inline"/> -
                                     <field name="membership_date_to" required="1" class="oe_inline"/>
                                 </div>
                                 <field name="list_price" string="Membership Fee"/>
@@ -152,7 +143,6 @@
         <record model="ir.ui.view" id="membership_members_tree">
             <field name="name">Members</field>
             <field name="model">res.partner</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Members">
                     <field name="name"/>
@@ -168,22 +158,20 @@
         <record id="view_res_partner_member_filter" model="ir.ui.view">
             <field name="name">res.partner.select</field>
             <field name="model">res.partner</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Membership Partners">
                     <field name="membership_start" invisible="1"/>
                     <field name="membership_stop" string="End Membership Date"/>
-                    <separator orientation="vertical"/>
                     <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+                    <separator/>
                     <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                    <separator/>
                     <filter icon="terp-personal" name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
                     <filter icon="terp-personal" name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
                     <group expand="0" string="Group By..." colspan="10" col="8">
-                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}"/>
                         <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
-                        <separator orientation="vertical"/>
                         <filter string=" Membership State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Start Date" help="Starting Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
                         <filter string="End Date" help="Ending Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
                     </group>
@@ -282,15 +270,14 @@
         <!-- MEMBERSHIP/REPORTING -->
         <menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
 
-<!-- View for product.product object inherited from product module................ -->
+        <!-- View for product.product object inherited from product module -->
         <record model="ir.ui.view" id="view_product_form_inherit1">
             <field name="name">product.normal.form</field>
-            <field name="type">form</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="list_price" position="after">
-                    <field name="member_price"/>
+                    <field name="member_price" groups="base.group_user"/>
                 </field>
             </field>
         </record>

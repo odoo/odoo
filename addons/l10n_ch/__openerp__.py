@@ -23,8 +23,8 @@
  "description" :  """
 Swiss localisation :
  - DTA generation for a lot of payment types
- - BVR management (number generation, report, etc..)
- - Import account move from the bank file (like v11 etc..)
+ - BVR management (number generation, report.)
+ - Import account move from the bank file (like v11)
  - Simplify the way you handle the bank statement for reconciliation
 
 You can also add ZIP and bank completion with:
@@ -36,10 +36,11 @@ You can also add ZIP and bank completion with:
 
 ------------------------------------------------------------------------
 
-Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp. Cette nouvelle version
-comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement)
-et l'import du relevé de compte depuis la banque de manière automatisée.
-De plus, nous avons intégré la définition de toutes les banques Suisses(adresse, swift et clearing).
+Module incluant la localisation Suisse de OpenERP revu et corrigé par Camptocamp.
+Cette nouvelle version comprend la gestion et l'émissionde BVR, le paiement
+électronique via DTA (pour les banques, le système postal est en développement)
+et l'import du relevé de compte depuis la banque de manière automatisée. De plus,
+nous avons intégré la définition de toutes les banques Suisses(adresse, swift et clearing).
 
 Par ailleurs, conjointement à ce module, nous proposons la complétion NPA:
 
@@ -52,12 +53,11 @@ Vous pouvez ajouter la completion des banques et des NPA avec with:
 
 --------------------------------------------------------------------------
 TODO :
-- Implement bvr import partial reconciliation
-- Replace wizard by osv_memory when possible
-- Add mising HELP
-- Finish code comment
-- Improve demo data
-
+    - Implement bvr import partial reconciliation
+    - Replace wizard by osv_memory when possible
+    - Add mising HELP
+    - Finish code comment
+    - Improve demo data
 
 """,
  "version": "6.1",

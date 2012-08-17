@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_general_configuration_mail_alias_domain" model="ir.ui.view">
+            <field name="name">base.config.settings.mail.alias</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/group[last()]/div[last()]/div[last()]" position='after' version="7.0">
+                    <div>
+                        <label for="alias_domain" class="oe_inline"/><field name="alias_domain" placeholder="mycompany.my.openerp.com" class="oe_inline"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
