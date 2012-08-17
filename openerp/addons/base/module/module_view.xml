@@ -65,7 +65,7 @@
                   <field name="summary"/>
                   <templates>
                     <t t-name="kanban-box">
-                      <div class="oe_module_vignette oe_kanban_auto_height">
+                      <div class="oe_module_vignette">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
                         <div class="oe_module_desc">
