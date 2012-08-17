@@ -1085,6 +1085,8 @@
 <t t-name="FieldStatus">
     <ul class="" t-att-style="widget.node.attrs.style"/>
 </t>
+
+
 <t t-name="FieldStatus.content">
     <t t-set="size" t-value="widget.to_show.length"/>
     <t t-foreach="_.range(size)" t-as="i">
@@ -1096,6 +1098,19 @@
                 </span>
                 <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
             </div>
+        </li>
+    </t>
+</t>
+
+
+<t t-name="FieldStatus.content">
+    <t t-set="size" t-value="widget.to_show.length"/>
+    <t t-foreach="_.range(size)" t-as="i">
+        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_active' : ''" t-att-data-id="widget.to_show[i][0]">
+            <span class="label">
+                <t t-esc="widget.to_show[i][1]"/>
+            </span>
+            <span class="arrow"><span></span></span>
         </li>
     </t>
 </t>

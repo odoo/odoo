@@ -4790,7 +4790,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         if (this.clickable) {
             this.$element.addClass("oe_form_steps_clickable");
             $('.oe_form_steps_arrow').remove();
-            var elemts = this.$element.find('.oe_form_steps_button');
+            var elemts = this.$element.find('li');
             _.each(elemts, function(element){
                 $item = $(element);
                 if ($item.attr("data-id") != self.selected_value) {
