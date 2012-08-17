@@ -34,20 +34,24 @@ Notes can be found in the 'Home' main menu, under 'Tool' submenu.
 """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'depends': ['base_tools','mail','pad'],
+    'depends': [
+        'base_tools',
+        'mail',
+        'pad',
+    ],
     'data': [
         'security/note_security.xml',
         'security/ir.model.access.csv',
+        'note_data.xml',
         'note_view.xml',
     ],
     'demo': [
-        "note_demo.xml",
+        'note_demo.xml',
     ],
     'css': [
         'static/src/css/note.css',
     ],
     'installable': True,
-    'application': True,
     'category': 'Tools',
 }
 
