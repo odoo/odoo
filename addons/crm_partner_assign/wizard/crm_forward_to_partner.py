@@ -43,16 +43,13 @@ class crm_lead_forward_to_partner(osv.osv_memory):
     _defaults = {
         'send_to' : 'email',
         'history': 'latest',
-        'email_from': lambda self, cr, uid, *a: self.pool.get('res.users')._get_email_from(cr, uid, uid)[uid],
+        'email_from': lambda s, cr, uid, c: s.pool.get('res.users').browse(cr, uid, uid, c).email,
     }
 
-
-    
-    def on_change_email(self, cr, uid, ids, user):
+    def on_change_email(self, cr, uid, ids, user, context=None):
         if not user:
             return {'value': {'email_to': False}}
-        email = self.pool.get('res.users')._get_email_from(cr, uid, [user])[user]
-        return {'value': {'email_to': email}}
+        return {'value': {'email_to': self.pool.get('res.users').browse(cr, uid, uid, context=context).email}}
 
     def on_change_history(self, cr, uid, ids, history_type, context=None):
         """Gives message body according to type of history selected
@@ -80,7 +77,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         partner = partner_obj.browse(cr, uid, [partner_id])
         user_id = partner and partner[0].user_id or False
         data.update({'email_from': partner and partner[0].email or "", 
-                     'email_cc' : user_id and user_id.user_email or '', 
+                     'email_cc' : user_id and user_id.user or '', 
                      'user_id': user_id and user_id.id or False})
         return {'value' : data}
 
@@ -185,7 +182,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             if partner_assigned_id:
                 assigned_partner = partner.browse(cr, uid, partner_assigned_id, context=context)
                 user_id = assigned_partner.user_id and assigned_partner.user_id.id or False
-                email_cc = assigned_partner.user_id and assigned_partner.user_id.user_email or ''
+                email_cc = assigned_partner.user_id and assigned_partner.user_id.email or ''
                 email = assigned_partner.email
             
             res.update({

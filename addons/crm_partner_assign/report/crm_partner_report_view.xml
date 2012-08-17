@@ -6,7 +6,6 @@
         <record id="view_report_crm_partner_assign_filter" model="ir.ui.view">
             <field name="name">crm.partner.report.assign.select</field>
             <field name="model">crm.partner.report.assign</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Partner assigned Analysis">
                     <field name="section_id"/>
@@ -41,7 +40,6 @@
        <record id="view_report_crm_partner_assign_tree" model="ir.ui.view">
             <field name="name">crm.partner.assign.report.tree</field>
             <field name="model">crm.partner.report.assign</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree string="Opportunities Assignment Analysis">
                 <field name="partner_id" invisible="1"/>

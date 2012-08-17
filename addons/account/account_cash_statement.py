@@ -169,7 +169,7 @@ class account_cash_statement(osv.osv):
         return result
 
     _columns = {
-        'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Total Cash Transactions",
+        'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Total Transactions",
             store = {
                 'account.bank.statement': (lambda self, cr, uid, ids, context=None: ids, ['line_ids','move_line_ids'], 10),
                 'account.bank.statement.line': (_get_statement_from_line, ['amount'], 10),

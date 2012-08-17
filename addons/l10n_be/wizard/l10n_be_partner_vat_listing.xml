@@ -4,7 +4,6 @@
     <record id="l10n_be.view_partner_vat_listing" model="ir.ui.view">
       <field name="name">Partner VAT Listing</field>
       <field name="model">partner.vat</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Partner VAT Listing" version="7.0">
           <header>
@@ -38,7 +37,6 @@
     <record id="l10n_be.view_vat_listing" model="ir.ui.view">
       <field name="name">Vat Listing</field>
       <field name="model">partner.vat.list</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Annual Listing of VAT-Subjected Customers">
           <notebook colspan="4">
@@ -63,7 +61,6 @@
     <record id="l10n_be.view_vat_listing_result" model="ir.ui.view">
       <field name="name">VAT List - XML File Created</field>
       <field name="model">partner.vat.list</field>
-      <field name="type">form</field>
       <field name="priority" eval="1"/>
       <field name="arch" type="xml">
         <form string="XML File has been Created." version="7.0">
@@ -84,7 +81,6 @@
     <record id="l10n_be.view_vat_listing_form" model="ir.ui.view">
       <field name="name">step.vat.listing</field>
       <field name="model">vat.listing.clients</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="VAT listing">
           <field name="name"/>
@@ -98,7 +94,6 @@
     <record id="l10n_be.view_vat_listing_tree" model="ir.ui.view">
       <field name="name">step.vat.listing</field>
       <field name="model">vat.listing.clients</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="VAT listing">
           <field name="name"/>

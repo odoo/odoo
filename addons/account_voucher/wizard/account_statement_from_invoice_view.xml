@@ -1,38 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="view_account_statement_from_invoice" model="ir.ui.view">
-            <field name="name">account.statement.from.invoice.form</field>
-            <field name="model">account.statement.from.invoice</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Import Invoices in Statement" version="7.0">
-                    <group>
-                        <field name="date"/>
-                        <field name="journal_ids"  domain="[('type','in',['sale','purchase','cash'])]"/>
-                    </group>
-                    <footer>
-                        <button string="Go" name="search_invoices" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </footer>
-               </form>
-            </field>
-        </record>
-
-        <record id="action_view_account_statement_from_invoice" model="ir.actions.act_window">
-            <field name="name">Import Invoices in Statement</field>
-            <field name="res_model">account.statement.from.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_account_statement_from_invoice"/>
-            <field name="target">new</field>
-        </record>
-
         <record id="view_account_statement_from_invoice_lines" model="ir.ui.view">
             <field name="name">account.statement.from.invoice.lines.form</field>
             <field name="model">account.statement.from.invoice.lines</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Entries" version="7.0">
                     <separator string="Payable and Receivables"/>

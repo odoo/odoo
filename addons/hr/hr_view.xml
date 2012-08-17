@@ -17,7 +17,6 @@
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee" version="7.0">
                     <sheet>
@@ -65,7 +64,7 @@
                             <page string="Personal Information" groups="base.group_hr_user">
                                 <group col="4">
                                     <group>
-                                        <field name="country_id"/>
+                                        <field name="country_id" options='{"no_open": true}'/>
                                         <field name="bank_account_id"/>
                                         <field name="address_home_id"/>
                                     </group>
@@ -85,7 +84,6 @@
         <record id="view_employee_tree" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
@@ -103,7 +101,6 @@
         <record id="view_employee_filter" model="ir.ui.view">
             <field name="name">Employees</field>
             <field name="model">hr.employee</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees"/>
@@ -126,7 +123,6 @@
     <record model="ir.ui.view" id="hr_kanban_view_employees">
         <field name="name">HR - Employess Kanban</field>
         <field name="model">hr.employee</field>
-        <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban>
                 <field name="last_login"/>
@@ -234,7 +230,6 @@
         <record id="view_partner_tree2" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
@@ -273,7 +268,6 @@
        <record id="view_employee_category_form" model="ir.ui.view">
             <field name="name">hr.employee.category.form</field>
             <field name="model">hr.employee.category</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee Category" version="7.0">
                     <group>
@@ -287,7 +281,6 @@
         <record id="view_employee_category_list" model="ir.ui.view">
             <field name="name">hr.employee.category.list</field>
             <field name="model">hr.employee.category</field>
-            <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Employees Categories">
@@ -299,7 +292,6 @@
         <record id="view_employee_category_tree" model="ir.ui.view">
             <field name="name">hr.employee.category.tree</field>
             <field name="model">hr.employee.category</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Employees Categories">
@@ -348,7 +340,6 @@
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
             <field name="model">hr.job</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <header>
@@ -392,7 +383,6 @@
         <record id="view_hr_job_tree" model="ir.ui.view">
             <field name="name">hr.job.tree</field>
             <field name="model">hr.job</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Job">
                     <field name="name"/>
@@ -409,7 +399,6 @@
         <record id="view_job_filter" model="ir.ui.view">
             <field name="name">Job</field>
             <field name="model">hr.job</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
@@ -428,7 +417,6 @@
         <record id="view_hr_job_employee_form" model="ir.ui.view">
             <field name="name">hr.job.employee.form</field>
             <field name="model">hr.job</field>
-            <field name="type">form</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
