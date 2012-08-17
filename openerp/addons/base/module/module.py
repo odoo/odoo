@@ -139,14 +139,17 @@ class module(osv.osv):
             # We use try except, because views or menus may not exist.
             try:
                 res_mod_dic = res[module_rec.id]
-                for v in view_obj.browse(cr, uid, imd_models.get('ir.ui.view', []), context=context):
+                view_ids = imd_models.get('ir.ui.view', [])
+                for v in view_obj.browse(cr, uid, view_ids, context=context):
                     aa = v.inherit_id and '* INHERIT ' or ''
                     res_mod_dic['views_by_module'].append(aa + v.name + '('+v.type+')')
 
-                for rx in report_obj.browse(cr, uid, imd_models.get('ir.actions.report.xml', []), context=context):
+                report_ids = imd_models.get('ir.actions.report.xml', [])
+                for rx in report_obj.browse(cr, uid, report_ids, context=context):
                     res_mod_dic['reports_by_module'].append(rx.name)
 
-                for um in menu_obj.browse(cr, uid, imd_models.get('ir.ui.menu', []), context=context):
+                menu_ids = imd_models.get('ir.ui.menu', [])
+                for um in menu_obj.browse(cr, uid, menu_ids, context=context):
                     res_mod_dic['menus_by_module'].append(um.complete_name)
             except KeyError, e:
                 _logger.warning(

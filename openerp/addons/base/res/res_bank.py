@@ -139,6 +139,7 @@ class res_partner_bank(osv.osv):
         'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),
+        'footer': fields.boolean("Display on Reports", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
     }
 
     _defaults = {
@@ -211,6 +212,7 @@ class res_partner_bank(osv.osv):
             if c.partner_id:
                 r = self.onchange_partner_id(cr, uid, ids, c.partner_id.id, context=context)
                 r['value']['partner_id'] = c.partner_id.id
+                r['value']['footer'] = 1
                 result = r
         return result
 

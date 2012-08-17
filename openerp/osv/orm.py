@@ -545,6 +545,7 @@ FIELDS_TO_PGTYPES = {
     fields.boolean: 'bool',
     fields.integer: 'int4',
     fields.text: 'text',
+    fields.html: 'text',
     fields.date: 'date',
     fields.datetime: 'timestamp',
     fields.binary: 'bytea',
@@ -2442,9 +2443,9 @@ class BaseModel(object):
                                                   context=context)
 
         result_template = dict.fromkeys(aggregated_fields, False)
-        result_template.update({groupby + '_count':0})
+        result_template[groupby + '_count'] = 0
         if groupby_list and len(groupby_list) > 1:
-            result_template.update(__context={'group_by': groupby_list[1:]})
+            result_template['__context'] = {'group_by': groupby_list[1:]}
 
         # Merge the left_side (current results as dicts) with the right_side (all
         # possible values as m2o pairs). Both lists are supposed to be using the
@@ -2463,10 +2464,8 @@ class BaseModel(object):
             grouped_value = right_side[0]
             if not grouped_value in known_values:
                 line = dict(result_template)
-                line.update({
-                    groupby: right_side,
-                    '__domain': [(groupby,'=',grouped_value)] + domain,
-                })
+                line[groupby] = right_side
+                line['__domain'] = [(groupby,'=',grouped_value)] + domain
                 result.append(line)
                 known_values[grouped_value] = line
         while read_group_result or all_groups:
@@ -3598,6 +3597,14 @@ class BaseModel(object):
                             record[f] = res2[record['id']]
                         else:
                             record[f] = []
+
+        # Warn about deprecated fields now that fields_pre and fields_post are computed
+        # Explicitly use list() because we may receive tuples
+        for f in list(fields_pre) + list(fields_post):
+            field_column = self._all_columns.get(f) and self._all_columns.get(f).column
+            if field_column and field_column.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, f, field_column.deprecated)
+
         readonly = None
         for vals in res:
             for field in vals.copy():
@@ -3975,6 +3982,9 @@ class BaseModel(object):
         direct = []
         totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
         for field in vals:
+            field_column = self._all_columns.get(field) and self._all_columns.get(field).column
+            if field_column and field_column.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, field, field_column.deprecated)
             if field in self._columns:
                 if self._columns[field]._classic_write and not (hasattr(self._columns[field], '_fnct_inv')):
                     if (not totranslate) or not self._columns[field].translate:
@@ -4197,7 +4207,7 @@ class BaseModel(object):
             cr.execute("SELECT nextval('"+self._sequence+"')")
         except:
             raise except_orm(_('UserError'),
-                        _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
+                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
 
         id_new = cr.fetchone()[0]
         for table in tocreate:
