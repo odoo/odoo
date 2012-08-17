@@ -108,7 +108,7 @@ class plugin_handler(osv.osv_memory):
         else:
             if model == 'res.partner':
                 model_obj = self.pool.get('mail.thread')
-            model_obj.message_append_note(cr, uid, [res_id], body=msg)
+            model_obj.message_post(cr, uid, [res_id], body=msg)
             notify = "Mail succefully pushed"
             
         url = self._make_url(cr, uid, res_id, model)

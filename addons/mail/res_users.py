@@ -108,11 +108,10 @@ class res_users(osv.Model):
 
     def _create_welcome_message(self, cr, uid, user, context=None):
         company_name = user.company_id.name if user.company_id else _('the company')
-        subject = '''%s has joined %s.''' % (user.name, company_name)
-        body = '''Welcome to OpenERP !''' 
+        body = '''%s has joined %s.''' % (user.name, company_name)
         # TODO change 1 into user.id but catch errors
-        return self.pool.get('res.partner').message_append_note(cr, 1, [user.partner_id.id],
-            subject=subject, body=body, type='comment', content_subtype='html', context=context)
+        return self.pool.get('res.partner').message_post(cr, 1, [user.partner_id.id],
+            body=body, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         # User alias is sync'ed with login

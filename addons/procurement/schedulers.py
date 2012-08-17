@@ -131,7 +131,7 @@ class procurement_order(osv.osv):
 
         Exceptions:\n""") % (start_date, end_date, report_total, report_except, report_later)
                 summary += '\n'.join(report)
-                procurement_obj.message_append_note(cr, uid, ids, body=summary, context=context)
+                procurement_obj.message_post(cr, uid, ids, body=summary, context=context)
 
             if use_new_cursor:
                 cr.commit()

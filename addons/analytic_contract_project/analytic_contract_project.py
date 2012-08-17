@@ -79,6 +79,6 @@ class task(osv.osv):
         task_id = super(task, self).create(cr, uid, vals, context=context)
         task_browse = self.browse(cr, uid, task_id, context=context)
         if task_browse.project_id.analytic_account_id:
-            self.pool.get('account.analytic.account').message_append_note(cr, uid, [task_browse.project_id.analytic_account_id.id], body=_("Task <em>%s</em> has been <b>created</b>.") % (task_browse.name), context=context)
+            self.pool.get('account.analytic.account').message_post(cr, uid, [task_browse.project_id.analytic_account_id.id], body=_("Task <em>%s</em> has been <b>created</b>.") % (task_browse.name), context=context)
         return task_id
 task()

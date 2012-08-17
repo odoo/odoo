@@ -1045,7 +1045,7 @@ class account_invoice(osv.osv):
                 if obj_inv.type in ('out_invoice', 'out_refund'):
                     ctx = self.get_log_context(cr, uid, context=ctx)
                 message = _("Invoice  '%s' is validated.") % name
-                self.message_append_note(cr, uid, [inv_id], body=message, context=context)
+                self.message_post(cr, uid, [inv_id], body=message, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
@@ -1275,7 +1275,7 @@ class account_invoice(osv.osv):
             # TODO: use currency's formatting function
             msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining).") % \
                     (name, pay_amount, code, invoice.amount_total, code, total, code)
-            self.message_append_note(cr, uid, [inv_id], body=msg, context=context)
+            self.message_post(cr, uid, [inv_id], body=msg, context=context)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
         # Update the stored value (fields.function), so we write to trigger recompute
@@ -1297,15 +1297,15 @@ class account_invoice(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
 
     def confirm_paid_send_note(self, cr, uid, ids, context=None):
          for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (self._get_document_type(obj.type)), context=context)
 
     def invoice_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
 
 account_invoice()
 

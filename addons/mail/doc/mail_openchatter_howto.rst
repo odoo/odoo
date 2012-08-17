@@ -57,7 +57,7 @@ Use the thread viewer widget inside your form view by using the mail_thread widg
 Send notifications
 +++++++++++++++++++
 
-When sending a notification is required in your workflow or business logic, use the ``message_append_note`` method. This method is a shortcut to the ``message_append`` method that takes all ``mail.message`` fields as arguments. This latter method calls ``message_create`` that
+When sending a notification is required in your workflow or business logic, use the ``message_post`` method. This method is a shortcut to the ``message_append`` method that takes all ``mail.message`` fields as arguments. This latter method calls ``message_create`` that
 
  - creates the message
  - parses the body to find users you want to push the message to (finding and parsing ``@login`` in the message body)
@@ -74,7 +74,7 @@ You should therefore not worry about subscriptions or anything else than sending
     return res
 
   def do_something_send_note(self, cr, uid, ids, context=None):
-    self.message_append_note(cr, uid, ids, _('My subject'),
+    self.message_post(cr, uid, ids, _('My subject'),
     _("has received a <b>notification</b> and is happy for it."), context=context)
 
 Notifications guidelines

@@ -488,7 +488,7 @@ class crm_lead(base_stage, osv.osv):
 
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
-        return self.message_append_note(cr, uid, [opportunity_id], subject=subject, body=details)
+        return self.message_post(cr, uid, [opportunity_id], subject=subject, body=details)
 
     def _merge_opportunity_history(self, cr, uid, opportunity_id, opportunities, context=None):
         message = self.pool.get('mail.message')
@@ -860,7 +860,7 @@ class crm_lead(base_stage, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
@@ -870,33 +870,33 @@ class crm_lead(base_stage, osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=message, context=context)
+            self.message_post(cr, uid, [id], body=message, context=context)
         return True
 
     def case_mark_lost_send_note(self, cr, uid, ids, context=None):
         message = _("Opportunity has been <b>lost</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def case_mark_won_send_note(self, cr, uid, ids, context=None):
         message = _("Opportunity has been <b>won</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
         if action == 'log': prefix = 'Logged'
         else: prefix = 'Scheduled'
         message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def _lead_set_partner_send_note(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context=context):
             message = _("%s <b>partner</b> is now set to <em>%s</em>." % (self.case_get_note_msg_prefix(cr, uid, lead, context=context), lead.partner_id.name))
-            lead.message_append_note(body=message)
+            lead.message_post(body=message)
         return True
 
     def convert_opportunity_send_note(self, cr, uid, lead, context=None):
         message = _("Lead has been <b>converted to an opportunity</b>.")
-        lead.message_append_note(body=message)
+        lead.message_post(body=message)
         return True
 
 crm_lead()

@@ -289,14 +289,14 @@ class procurement_order(osv.osv):
                 return False
             if not procurement.product_id.seller_ids:
                 message = _('No supplier defined for this product !')
-                self.message_append_note(cr, uid, [procurement.id], body=message)
+                self.message_post(cr, uid, [procurement.id], body=message)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
             if not partner:
                 message = _('No default supplier defined for this product')
-                self.message_append_note(cr, uid, [procurement.id], body=message)
+                self.message_post(cr, uid, [procurement.id], body=message)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
             if user.company_id and user.company_id.partner_id:
@@ -306,7 +306,7 @@ class procurement_order(osv.osv):
             address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
                 message = _('No address defined for the supplier')
-                self.message_append_note(cr, uid, [procurement.id], body=message)
+                self.message_post(cr, uid, [procurement.id], body=message)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
         return True

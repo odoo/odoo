@@ -266,7 +266,7 @@ class crm_phonecall(base_state, osv.osv):
     
     def case_reset_send_note(self, cr, uid, ids, context=None):
         message = _('Phonecall has been <b>reset and set as open</b>.')
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def case_open_send_note(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
@@ -280,11 +280,11 @@ class crm_phonecall(base_state, osv.osv):
                 message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, phonecall_date_str)
             else:
                 message = _("Phonecall has been <b>created and opened</b>.")
-            phonecall.message_append_note(body=message)
+            phonecall.message_post(body=message)
         return True
 
     def _call_set_partner_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Partner has been <b>created</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Partner has been <b>created</b>."), context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

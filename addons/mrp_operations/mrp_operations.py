@@ -224,7 +224,7 @@ class mrp_production_workcenter_line(osv.osv):
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
                 message = _("Work order has been <b>created</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_append_note(cr, uid, [workorder.id], body=message, context=context)
+                self.message_post(cr, uid, [workorder.id], body=message, context=context)
         return True
 
     def action_start_send_note(self, cr, uid, ids, context=None):
@@ -232,7 +232,7 @@ class mrp_production_workcenter_line(osv.osv):
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
                 message = _("Work order has been <b>started</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_append_note(cr, uid, [workorder.id], body=message, context=context)
+                self.message_post(cr, uid, [workorder.id], body=message, context=context)
         return True
 
     def action_done_send_note(self, cr, uid, ids, context=None):
@@ -240,7 +240,7 @@ class mrp_production_workcenter_line(osv.osv):
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
                 message = _("Work order has been <b>done</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_append_note(cr, uid, [workorder.id], body=message, context=context)
+                self.message_post(cr, uid, [workorder.id], body=message, context=context)
         return True
 
     def action_pending_send_note(self, cr, uid, ids, context=None):
@@ -248,7 +248,7 @@ class mrp_production_workcenter_line(osv.osv):
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
                 message = _("Work order is <b>pending</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_append_note(cr, uid, [workorder.id], body=message, context=context)
+                self.message_post(cr, uid, [workorder.id], body=message, context=context)
         return True
 
     def action_cancel_send_note(self, cr, uid, ids, context=None):
@@ -256,7 +256,7 @@ class mrp_production_workcenter_line(osv.osv):
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
                 message = _("Work order has been <b>cancelled</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_append_note(cr, uid, [workorder.id], body=message, context=context)
+                self.message_post(cr, uid, [workorder.id], body=message, context=context)
         return True
 
 mrp_production_workcenter_line()

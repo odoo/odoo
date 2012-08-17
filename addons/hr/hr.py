@@ -212,7 +212,7 @@ class hr_employee(osv.osv):
         try:
             (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
             employee = self.browse(cr, uid, employee_id, context=context)
-            self.pool.get('mail.group').message_append_note(cr, uid, [mail_group_id], body='Welcome to %s! Please help him make its first steps in OpenERP!' % (employee.name), context=context)
+            self.pool.get('mail.group').message_post(cr, uid, [mail_group_id], body='Welcome to %s! Please help him make its first steps in OpenERP!' % (employee.name), context=context)
         except:
             pass # group deleted: do not push a message
         return employee_id

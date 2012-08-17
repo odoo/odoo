@@ -238,16 +238,16 @@ class crm_claim(base_stage, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         msg = _('Claim has been <b>created</b>.')
-        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return self.message_post(cr, uid, ids, body=msg, context=context)
 
     def case_refuse_send_note(self, cr, uid, ids, context=None):
         msg = _('Claim has been <b>refused</b>.')
-        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return self.message_post(cr, uid, ids, body=msg, context=context)
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.claim.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
 
 class res_partner(osv.osv):

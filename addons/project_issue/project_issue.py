@@ -501,7 +501,7 @@ class project_issue(base_stage, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ Override of default prefix for notifications. """
@@ -509,20 +509,20 @@ class project_issue(base_stage, osv.osv):
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue has been <b>converted</b> into task.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue has been <b>created</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.project_id:
                 message = _("has been <b>escalated</b> to <em>'%s'</em>.") % (obj.project_id.name)
-                obj.message_append_note(body=message, context=context)
+                obj.message_post(body=message, context=context)
             else:
                 message = _("has been <b>escalated</b>.")
-                obj.message_append_note(body=message, context=context)
+                obj.message_post(body=message, context=context)
         return True
 
 project_issue()

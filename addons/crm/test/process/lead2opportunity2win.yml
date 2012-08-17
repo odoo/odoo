@@ -55,7 +55,7 @@
   After communicated  with customer, I put some notes with contract details.
 -
   !python {model: crm.lead}: |
-    self.message_append_note(cr, uid, [ref('crm_case_4')], subject='Test note', body='ces détails envoyés par le client sur ​​le FAX pour la qualité')
+    self.message_post(cr, uid, [ref('crm_case_4')], subject='Test note', body='ces détails envoyés par le client sur ​​le FAX pour la qualité')
 -
   I win this opportunity
 -
