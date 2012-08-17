@@ -16,7 +16,10 @@
             <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                     <h2 class="oe_view_title">
-                        <span class="oe_view_title_text">All Feeds</span>
+                        <span class="oe_view_title_text">
+                            <t t-if="! widget.params.res_model">News Feeds</t>
+                            <t t-if="widget.params.res_model" t-esc="widget.params.res_model"/>
+                        </span>
                     </h2>
                 </td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
@@ -70,15 +73,6 @@
             </div>
         </div>
     </div>
-
-    <!--
-        record_thread.subscriber template
-        Template used to display a subscriber.
-        -->
-    <li t-name="mail.record_thread.subscriber">
-        <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
-        <a t-attf-href="#model=res.users&amp;id=#{record.id}"><t t-raw="record.name"/></a>
-    </li>
 
     <!--
         mail.compose_message template
