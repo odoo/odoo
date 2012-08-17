@@ -5,7 +5,6 @@
         <record id="product_search_form_view_stock" model="ir.ui.view">
             <field name="name">product.search.stock.form</field>
             <field name="model">product.product</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <field name="pricelist_id" position="before">
@@ -18,7 +17,6 @@
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit</field>
             <field name="model">product.category</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
                 <data>
@@ -35,7 +33,6 @@
         <record id="view_template_property_form" model="ir.ui.view">
             <field name="name">product.template.stock.property.form.inherit</field>
             <field name="model">product.template</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <page position="after" string="Information">
@@ -57,7 +54,6 @@
         <record id="view_product_standard_price_form" model="ir.ui.view">
             <field name="name">product.product.standard.price.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace" version="7.0">
@@ -75,7 +71,6 @@
         <record id="view_normal_property_acc_form" model="ir.ui.view">
             <field name="name">product.normal.stock.acc.property.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="priority">26</field>
             <field name="arch" type="xml">
@@ -100,7 +95,6 @@
         <record id="view_normal_stock_property_form" model="ir.ui.view">
             <field name="name">product.normal.stock.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="status" position="before" version="7.0">
@@ -172,7 +166,6 @@
         <record model="ir.ui.view" id="product.product_kanban_view">
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="color"/>
@@ -220,7 +213,6 @@
         <record id="view_normal_property_form" model="ir.ui.view">
             <field name="name">product.normal.stock.property.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="store" position="after">

@@ -26,16 +26,8 @@ from osv import osv, fields
 from tools.translate import _
 from tools.misc import email_re
 
-from base.res.res_users import _lang_get
+from base.res.res_partner import _lang_get
 _logger = logging.getLogger(__name__)
-
-
-
-def extract_email(user_email):
-    """ extract the email address from a user-friendly email address """
-    m = email_re.search(user_email or "")
-    return m and m.group(0) or ""
-
 
 # welcome email sent to new portal users (note that calling tools.translate._
 # has no effect except exporting those strings for translation)
@@ -69,6 +61,10 @@ def random_password():
     random.shuffle(chars)
     return ''.join(chars)
 
+def extract_email(email):
+    """ extract the email address from a user-friendly email address """
+    m = email_re.search(email or "")
+    return m and m.group(0) or ""
 
 
 
@@ -150,7 +146,7 @@ class wizard(osv.osv_memory):
                 if address.email:
                     users.append({
                     'name': address.name,
-                    'user_email': extract_email(address.email),
+                    'email': extract_email(address.email),
                     'lang': lang or 'en_US',
                     'partner_id': company_id,
                     'has_portal_user': False,
@@ -163,7 +159,7 @@ class wizard(osv.osv_memory):
         partner_user_ids = self._search_partner_user(cr, uid, partner.id, context=context)
         portal_users = [u.id for u in self.pool.get('res.portal').browse(cr, uid, portal_id, context=context).group_id.users]
         for user in res_user.browse(cr, uid, partner_user_ids, context=context):
-            email = user and user.user_email or False
+            email = user and user.email or False
             has_portal_user = False
             if user.id in portal_users:
                 has_portal_user = True
@@ -171,7 +167,7 @@ class wizard(osv.osv_memory):
             if email:
                 users.append({
                    'name': user and user.name,
-                   'user_email': email and extract_email(email) or False,
+                   'email': email and extract_email(email) or False,
                    'lang': lang or 'en_US',
                    'partner_id': company_id,
                    'has_portal_user': has_portal_user,
@@ -202,7 +198,6 @@ class wizard(osv.osv_memory):
             portal_user_ids = [user.id for user in data.user_ids]
             res_portal_user.manage_portal_access(cr, uid, portal_user_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
 wizard()
 
 class wizard_user(osv.osv_memory):
@@ -218,7 +213,7 @@ class wizard_user(osv.osv_memory):
         'name': fields.char(size=64, required=True,
             string='User Name',
             help="The user's real name"),
-        'user_email': fields.char(size=64, required=True,
+        'email': fields.char(size=64, required=True,
             string='Email',
             help="Will be used as user login.  "
                  "Also necessary to send the account information to new users"),
@@ -233,7 +228,7 @@ class wizard_user(osv.osv_memory):
     def _check_email(self, cr, uid, ids):
         """ check syntax of email address """
         for wuser in self.browse(cr, uid, ids):
-            if not email_re.match(wuser.user_email): return False
+            if not email_re.match(wuser.email): return False
         return True
 
     _constraints = [
@@ -250,7 +245,7 @@ class wizard_user(osv.osv_memory):
         res_users = self.pool.get('res.users')
         mail_message = self.pool.get('mail.message')
         user = res_users.browse(cr, ROOT_UID, uid, context)
-        if not user.user_email:
+        if not user.email:
             raise osv.except_osv(_('Email required'),
                 _('You must have an email address in your User Preferences'
                   ' to send emails.'))
@@ -270,8 +265,8 @@ class wizard_user(osv.osv_memory):
                 'name': new_user.name
         }
         body_data.update(subject_data)
-        email_from = user.user_email
-        email_to = portal_user.user_email
+        email_from = user.email
+        email_to = portal_user.email
         subject = _(WELCOME_EMAIL_SUBJECT) % subject_data
         body = _(WELCOME_EMAIL_BODY) % body_data
         res = mail_message.schedule_with_attach(cr, uid, email_from , [email_to], subject, body, context=context)
@@ -287,10 +282,10 @@ class wizard_user(osv.osv_memory):
         action_id = portal.home_action_id and portal.home_action_id.id or False
         value = {
                 'name': portal_user.name,
-                'login': portal_user.user_email,
+                'login': portal_user.email,
                 'password': random_password(),
-                'user_email': portal_user.user_email,
-                'context_lang': portal_user.lang,
+                'email': portal_user.email,
+                'lang': portal_user.lang,
                 'share': True,
                 'action_id': action_id,
                 'partner_id': partner.id,
@@ -329,7 +324,7 @@ class wizard_user(osv.osv_memory):
             portal = portal_user.wizard_id.portal_id
             user_id = portal_user.user_id and portal_user.user_id.id
             if not user_id:
-                user_ids = res_user.search(cr, uid, [('login','=',portal_user.user_email)])
+                user_ids = res_user.search(cr, uid, [('login','=',portal_user.email)])
                 user_id = user_ids and user_ids[0] or False
 
             if not user_id:
