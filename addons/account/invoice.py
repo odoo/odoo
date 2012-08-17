@@ -780,6 +780,8 @@ class account_invoice(osv.osv):
                     line2[tmp]['credit'] = (am < 0) and -am or 0.0
                     line2[tmp]['tax_amount'] += l['tax_amount']
                     line2[tmp]['analytic_lines'] += l['analytic_lines']
+                    line2[tmp]['amount_currency'] += l['amount_currency']
+                    line2[tmp]['quantity'] += l['quantity']
                 else:
                     line2[tmp] = l
             line = []
