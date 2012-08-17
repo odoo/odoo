@@ -1,18 +1,34 @@
 -
-  In order to test Payment Advice creation from Payslip Bacth I create New Payslip Batch
+  In order to test Payment Advice Creation from Payslip Bacth I create New Payslip Batch
+-
+  I Create a bank record
+-
+  !record {model: res.partner.bank, id: res_partner_bank_0}:
+    acc_number: '3025632343043'
+    partner_id: base.res_partner_21
+    state: bank
+    bank: base.res_bank_1
+-
+  I create a new employee “Rahul”
+-
+  !record {model: hr.employee, id: hr_employee_rahul0}:
+    country_id: base.in
+    department_id: hr.dep_rd
+    name: Rahul
+    bank_account_id: res_partner_bank_0
 -
   I want to generate a payslip from Payslip Batch.
 -
   !record {model: hr.payslip.run, id: hr_payslip_run_forAdvice}:
-    name: Payslip Batch for August
+    name: Payslip Batch
 -
-  I create record for generating the payslip for this Payslip Batch.
+  I create record for generating the Payslip for Payslip Batch.
 -
   !record {model: hr.payslip.employees, id: hr_payslip_employees}:
     employee_ids:
-      - hr.employee_qdp
+      - hr_employee_rahul0
 -
-  I generate the payslip by clicking on Generat button wizard.
+  I generate the payslip by clicking on Generate button wizard.
 -
   !python {model: hr.payslip.employees}: |
      self.compute_sheet(cr, uid, [ref('hr_payslip_employees')], context={'active_id': ref('hr_payslip_run_forAdvice')})
@@ -33,7 +49,7 @@
     batch = self.browse(cr, uid, ref("hr_payslip_run_forAdvice"))
     assert (batch.state == 'close')
 - 
-  I Create Advice from Payslip Batch using Create Advice button
+  I create Advice from Payslip Batch using Create Advice button
 -
     !python {model: hr.payslip.run}: |
      self.create_advice(cr, uid, [ref('hr_payslip_run_forAdvice')])
