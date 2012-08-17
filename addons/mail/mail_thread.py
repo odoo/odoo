@@ -877,15 +877,30 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
 
     # FP Note: this should be a invert function on message_unread field
+    # not sure because if not readonly, it may often write to this field?
+    def message_mark_as_unread(self, cr, uid, ids, context=None):
+        """ Set as read. """
+        notobj = self.pool.get('mail.notification')
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        cr.execute('''
+            UPDATE mail_notification SET 
+                read=false
+            WHERE
+                message_id IN (SELECT id from mail_message where res_id=any(%s) and model=%s limit 1) and
+                partner_id = %s
+        ''', (ids, self._name, partner_id))
+        return True
+
     def message_mark_as_read(self, cr, uid, ids, context=None):
         """ Set as read. """
         notobj = self.pool.get('mail.notification')
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         cr.execute('''
-            update mail_notification set 
+            UPDATE mail_notification SET 
                 read=true
-            where
-                message_id in (select id from mail_message where res_id in %s and model=%s)
-                user_id = %s
-        ''', (ids, self._name, uid))
+            WHERE
+                message_id IN (SELECT id FROM mail_message WHERE res_id=ANY(%s) AND model=%s) AND
+                partner_id = %s
+        ''', (ids, self._name, partner_id))
         return True
 
