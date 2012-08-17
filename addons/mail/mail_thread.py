@@ -110,7 +110,7 @@ class mail_thread(osv.Model):
         'message_is_follower': fields.function(_get_is_follower,
             type='boolean', string='Is a Follower'),
         'message_follower_ids': fields.many2many('res.partner', 'mail_subscription', 'res_id', 'partner_id',
-            domain=lambda self: [('res_model','=',self._name)],
+            # FP Note: implement this domain=lambda self: [('res_model','=',self._name)],
             string='Followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model','=',self._name)],
