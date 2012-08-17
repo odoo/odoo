@@ -66,9 +66,11 @@ class change_production_qty(osv.osv_memory):
             prod = prod_obj.browse(cr, uid, record_id, context=context)
             prod_obj.write(cr, uid,prod.id, {'product_qty': wiz_qty.product_qty})
             prod_obj.action_compute(cr, uid, [prod.id])
-        
+            move_lines = prod.move_lines
+            move_lines.extend(prod.picking_id.move_lines)
+
             move_lines_obj = self.pool.get('stock.move')
-            for move in prod.move_lines:
+            for move in move_lines:
                 bom_point = prod.bom_id
                 bom_id = prod.bom_id.id
                 if not bom_point:
