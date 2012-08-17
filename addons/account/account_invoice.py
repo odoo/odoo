@@ -1479,10 +1479,11 @@ class account_invoice_line(osv.osv):
             prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
             prod_uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
             if prod.uom_id.category_id.id != prod_uom.category_id.id:
-                 warning = {
+                warning = {
                     'title': _('Warning!'),
                     'message': _('The selected unit of measure is not compatible with the unit of measure of the product.')
-            }
+                }
+                res['value'].update({'uos_id': prod.uom_id.id})
             return {'value': res['value'], 'warning': warning}
         return res
 
