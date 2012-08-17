@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import simplejson
+import os
+import openerp
 
 try:
     import openerp.addons.web.common.http as openerpweb
@@ -29,9 +31,23 @@ class PointOfSaleController(openerpweb.Controller):
 
     @openerpweb.httprequest
     def manifest(self, req, **kwargs):
-        """ This generates a HTML5 cache manifest files that preloads the categories and products thumbnails """
+        """ This generates a HTML5 cache manifest files that preloads the categories and products thumbnails 
+            and other ressources necessary for the point of sale to work offline """
 
         ml = ["CACHE MANIFEST"]
+
+        # loading all the images in the static/src/img/* directories
+        def load_css_img(srcdir,dstdir):
+            for f in os.listdir(srcdir):
+                path = os.path.join(srcdir,f)
+                dstpath = os.path.join(dstdir,f)
+                if os.path.isdir(path) :
+                    load_css_img(path,dstpath)
+                elif f.endswith(('.png','.PNG','.jpg','.JPG','.jpeg','.JPEG','.gif','.GIF')):
+                    ml.append(dstpath)
+
+        imgdir = openerp.modules.get_module_resource('point_of_sale','static/src/img');
+        load_css_img(imgdir,'/point_of_sale/static/src/img')
         
         products = req.session.model('product.product')
         for p in products.search_read([('pos_categ_id','!=',False)], ['name']):
