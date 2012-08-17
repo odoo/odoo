@@ -5,7 +5,6 @@
         <record id="view_base_module_upgrade" model="ir.ui.view">
             <field name="name">Module Upgrade</field>
             <field name="model">base.module.upgrade</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="System Update" version="7.0">
                     <div><label string="Your system will be updated."/></div>
@@ -41,7 +40,6 @@
        <record id="view_base_module_upgrade_install" model="ir.ui.view">
             <field name="name">Module Upgrade Install</field>
             <field name="model">base.module.upgrade</field>
-            <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Apply Schedule Upgrade" version="7.0">
