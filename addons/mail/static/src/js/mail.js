@@ -851,6 +851,13 @@ openerp.mail = function(session) {
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
             mail.ChatterUtils.bind_events(this);
+            this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
+            if (! this.params.see_subscribers_options) {
+                this.$element.find('button.oe_mail_button_followers').hide(); }
+            this.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); });
+            this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
+                .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
+                .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
         },
         
         _check_visibility: function() {

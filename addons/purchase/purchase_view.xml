@@ -323,7 +323,7 @@
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="grey:state=='cancel';blue:state in (confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
+                <tree fonts="bold:needaction_pending==True" colors="grey:state=='cancel';blue:state in ('confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
                     <field name="needaction_pending" invisible="1"/>
                     <field name="name" string="Reference"/>
                     <field name="date_order" />
