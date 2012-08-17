@@ -1522,12 +1522,16 @@ $sheet-max-width: 860px
             padding: 16px 0 48px
         div.oe_form_configuration
             div.oe_horizontal_separator 
-                margin: 25px 0 10px 0
+                margin: 12px 0 8px 0
             p
                 color: #aaa
                 max-width: 650px
             label
                 min-width: 150px
+            .oe_form_group_cell_label
+                padding: 2px 0
+            .oe_form_group_cell div div
+                padding: 1px 0
                 
 
     ul.oe_form_steps, ul.oe_form_steps_clickable
@@ -1650,7 +1654,7 @@ $sheet-max-width: 860px
             label
                 line-height: 18px
                 display: block
-                min-width: 120px
+                min-width: 160px
         td.oe_form_group_cell + .oe_form_group_cell
             padding-left: 6px
         .oe_form_group
@@ -1680,7 +1684,7 @@ $sheet-max-width: 860px
         font-weight: bold
         font-size: 20px
         margin: 8px 0px 8px 0px
-        color: #53637e
+        color: $section-title-color
     .oe_horizontal_separator:empty
         height: 5px
     .oe_vertical_separator
