@@ -45,7 +45,7 @@ class ir_ui_menu(osv.osv):
         for menu in self.browse(cr, uid, ids, context=context):
             if menu.mail_group_id:
                 sub_ids = follower_obj.search(cr, uid, [
-                    ('user_id', '=', uid), ('res_model', '=', 'mail.group'),
+                    ('partner_id', '=', partner_id), ('res_model', '=', 'mail.group'),
                     ('res_id', '=', menu.mail_group_id.id)
                     ], context=context)
                 if not sub_ids:
