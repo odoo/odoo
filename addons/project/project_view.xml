@@ -233,8 +233,8 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
-                                        <li><a type="edit">Edit...</a></li>
-                                        <li><a type="delete">Delete</a></li>
+                                        <t t-if="widget.view._is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view._is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
@@ -514,8 +514,8 @@
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                 <span class="oe_e">í</span>
                                 <ul class="oe_dropdown_menu">
-                                    <li><a type="edit" >Edit...</a></li>
-                                    <li><a type="delete">Delete</a></li>
+                                    <t t-if="widget.view._is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                    <t t-if="widget.view._is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                     <li>
                                       <ul class="oe_kanban_project_times">
                                         <li><a name="set_remaining_time_1" type="object" class="oe_kanban_button">1</a></li>
