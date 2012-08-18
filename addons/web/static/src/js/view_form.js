@@ -4666,12 +4666,15 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
 
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     template: "FieldStatus",
-    start: function() {
-        this._super();
-        this.selected_value = null;
-        // backward compatibility
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
         this.options.clickable = this.options.clickable || (this.node.attrs || {}).clickable || false;
         this.options.visible = this.options.visible || (this.node.attrs || {}).statusbar_visible || false;
+        this.selected_value = null;
+    },
+    start: function() {
+        this._super();
+        // backward compatibility
         this.loaded = new $.Deferred();
         if (this.options.clickable) {
             this.$element.on('click','li',this.on_click_stage);
