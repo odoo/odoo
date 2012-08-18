@@ -838,13 +838,13 @@ openerp.mail = function(session) {
 
        init: function() {
             this._super.apply(this, arguments);
-            this.params = this.get_definition_options();
+            this.params = this.options;
             this.params.thread_level = this.params.thread_level || 0;
             this.thread = null;
             this.ds = new session.web.DataSet(this, this.view.model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
-        
+
         start: function() {
             // NB: all the widget should be modified to check the actual_mode property on view, not use
             // any other method to know if the view is in create mode anymore
