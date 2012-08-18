@@ -1908,6 +1908,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this.field = this.field_manager.get_field(this.name);
         this.widget = this.node.attrs.widget;
         this.string = this.node.attrs.string || this.field.string || this.name;
+        this.options = JSON.parse(this.node.attrs.options || '{}');
         this.set({'value': false});
         this.set({required: this.modifiers['required'] === true});
 
@@ -1992,16 +1993,6 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     },
     focus: function() {
         return false;
-    },
-    /**
-     * Utility method to get the widget options defined in the field xml description.
-     */
-    get_definition_options: function() {
-        if (!this.definition_options) {
-            var str = this.node.attrs.options || '{}';
-            this.definition_options = JSON.parse(str);
-        }
-        return this.definition_options;
     },
     set_input_id: function(id) {
         this.id_for_label = id;
@@ -2667,7 +2658,7 @@ instance.web.form.CompletionFieldMixin = {
         var slow_create = function () {
             self._search_create_popup("form", undefined, {"default_name": name});
         };
-        if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
+        if (self.options.quick_create === undefined || self.options.quick_create) {
             new instance.web.DataSet(this, this.field.relation, self.build_context())
                 .name_create(name, function(data) {
                     self.add_id(data[0]);
@@ -2924,7 +2915,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             var lines = _.escape(str).split("\n");
             var link = "";
             var follow = "";
-            if (! this.get_definition_options().highlight_first_line) {
+            if (! this.options.highlight_first_line) {
                 link = lines.join("<br />");
             } else {
                 link = lines[0];
@@ -2935,7 +2926,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             var $link = this.$element.find('.oe_form_uri')
                  .unbind('click')
                  .html(link);
-            if (! this.get_definition_options().no_open)
+            if (! this.options.no_open)
                 $link.click(function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
@@ -2954,7 +2945,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var self = this;
         if (value_ instanceof Array) {
             this.display_value = {};
-            if (! this.get_definition_options().always_reload) {
+            if (! this.options.always_reload) {
                 this.display_value["" + value_[0]] = value_[1];
             }
             value_ = value_[0];
@@ -4683,10 +4674,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         if (this.$element.parent().is('header')) {
             this.$element.after('<div class="oe_clear"/>');
         }
-        // preview in start only for selection fields, because of the dynamic behavior of many2one fields.
-        if (this.field.type in ['selection']) {
-            this.render_list();
-        }
     },
     set_value: function(value_) {
         var self = this;
@@ -4705,7 +4692,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             return self.render_list();
         });
     },
-
     /** Get the status list and render them
      *  to_show: [[identifier, value_to_display]] where
      *   - identifier = key for a selection, id for a many2one
@@ -4715,7 +4701,8 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     render_list: function() {
         var self = this;
         // get selection values, filter them and render them
-        var selection_done = this.get_selection().pipe(self.proxy('filter_selection')).pipe(self.proxy('render_elements'));
+        var selection_done = 
+        this.get_selection().pipe(self.proxy('filter_selection')).pipe(self.proxy('render_elements'));
     },
 
     /** Get the selection list to be displayed in the statusbar widget.
@@ -4790,12 +4777,15 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         if (this.clickable) {
             this.$element.addClass("oe_form_steps_clickable");
             $('.oe_form_steps_arrow').remove();
+
             var elemts = this.$element.find('li');
             _.each(elemts, function(element){
                 $item = $(element);
                 if ($item.attr("data-id") != self.selected_value) {
                     $item.click(function(event){
                         var data_id = parseInt($(this).attr("data-id"))
+
+                        return this.view.recursive_save().pipe(exec_action);
                         self.view.dataset.call('stage_set', [[self.view.datarecord.id],data_id]).then(function() {
                             return self.view.reload();
                         });
@@ -4807,10 +4797,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         }
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
-        if (color) {            
+        if (color) {
             var elem = this.$element.find("li.oe_form_steps_active span");
-            elem.css("color", color);            
+            elem.css("color", color);
         }
+    },
+    on_click_stage: function () {
     },
 });
 

@@ -1017,12 +1017,12 @@
 <t t-name="FieldMany2One">
     <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button" t-att-style="widget.node.attrs.style">
         <t t-if="widget.get('effective_readonly')">
-            <a t-if="! widget.get_definition_options().no_open" href="#" class="oe_form_uri"/>
-            <span t-if="widget.get_definition_options().no_open" href="#" class="oe_form_uri"/>
+            <a t-if="! widget.options.no_open" href="#" class="oe_form_uri"/>
+            <span t-if="widget.options.no_open" href="#" class="oe_form_uri"/>
             <span class="oe_form_m2o_follow"/>
         </t>
         <t t-if="!widget.get('effective_readonly')">
-            <a t-if="! widget.get_definition_options().no_open" href="#" tabindex="-1"
+            <a t-if="! widget.options.no_open" href="#" tabindex="-1"
                 class="oe_m2o_cm_button oe_e">/</a>
             <div>
                 <input type="text"
