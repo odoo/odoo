@@ -32,8 +32,8 @@ class base_config_settings(osv.osv_memory):
             help="""Share or embbed any screen of openerp."""),
         'module_portal': fields.boolean('activate the customer/supplier portal',
             help="""Give access your customers and suppliers to their documents."""),
-        'module_auth_anonymous': fields.boolean('activete the public portal',
-            help="""Enable the public part of openerp, the public part of openerp are browsable like a website."""),
+        'module_auth_anonymous': fields.boolean('activate the public portal',
+            help="""Enable the public part of openerp, openerp becomes a public website."""),
         'module_auth_oauth': fields.boolean('use external authentication providers, sign in with google, facebook, ...'),
     }
 
