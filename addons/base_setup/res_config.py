@@ -30,9 +30,9 @@ class base_config_settings(osv.osv_memory):
                 This installs the module multi_company."""),
         'module_share': fields.boolean('allow documents sharing',
             help="""Share or embbed any screen of openerp."""),
-        'module_portal': fields.boolean('activate customer portal',
+        'module_portal': fields.boolean('activate the customer/supplier portal',
             help="""Give access your customers and suppliers to their documents."""),
-        'module_auth_anonymous': fields.boolean('public website',
+        'module_auth_anonymous': fields.boolean('activete the public portal',
             help="""Enable the public part of openerp, the public part of openerp are browsable like a website."""),
         'module_auth_oauth': fields.boolean('use external authentication providers, sign in with google, facebook, ...'),
     }

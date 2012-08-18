@@ -17,7 +17,6 @@ class auth_oauth_provider(osv.osv):
         'enabled' : fields.boolean('Allowed'),
         'css_class' : fields.char('CSS class'),
         'body' : fields.char('Body'),
-        'active' : fields.boolean('Active'),
         'sequence' : fields.integer(),
     }
     _defaults = {
