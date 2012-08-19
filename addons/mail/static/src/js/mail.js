@@ -164,18 +164,6 @@ openerp.mail = function(session) {
          *      5. 'My Label'
          */
 
-        /** Removes html tags, except b, em, br, ul, li */
-        do_text_remove_html_tags: function (string) {
-            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /|ul|li|div)\\s*&gt;', 'gi'), '<$1$2>');
-            return html;
-        },
-        
-        /** Replaces line breaks by html line breaks (br) */
-        do_text_nl2br: function (str, is_xhtml) {   
-            var break_tag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
-            return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2');
-        },
-
         /* Add a prefix before each new line of the original string */
         do_text_quote: function (str, prefix) {
             return str.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2' + prefix || '> ');
@@ -191,28 +179,6 @@ openerp.mail = function(session) {
         do_replace_expressions: function (string) {
             var self = this;
             var icon_list = ['al', 'pinky']
-            /* shortcut to user: @login */
-            var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
-            var regex_res = regex_login.exec(string);
-            while (regex_res != null) {
-                var login = regex_res[2];
-                string = string.replace(regex_res[0], regex_res[1] + '<a href="#" class="oe_mail_internal_link" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
-                regex_res = regex_login.exec(string);
-            }
-            /* shortcut for internal document */
-            var regex_login = new RegExp(/(^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]/g);
-            var regex_res = regex_login.exec(string);
-            while (regex_res != null) {
-                var res_model = regex_res[2] + '.' + regex_res[3];
-                var res_id = regex_res[4];
-                if (! regex_res[5]) {
-                    var label = res_model + ':' + res_id }
-                else {
-                    var label = regex_res[5];
-                }
-                string = string.replace(regex_res[0], regex_res[1] + '<a href="#model=' + res_model + '&id=' + res_id + '>' + label + '</a>');
-                regex_res = regex_login.exec(string);
-            }
             /* special shortcut: :name, try to find an icon if in list */
             var regex_login = new RegExp(/(^|\s):((\w)*)/g);
             var regex_res = regex_login.exec(string);
@@ -741,17 +707,12 @@ openerp.mail = function(session) {
 
         /** Displays a record, performs text/link formatting */
         display_comment: function (record) {
-            record.body = mail.ChatterUtils.do_text_nl2br($.trim(record.body), true);
             // if (record.type == 'email' && record.state == 'received') {
             if (record.type == 'email') {
                 record.mini_url = ('/mail/static/src/img/email_icon.png');
             } else {
                 record.mini_url = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', record.user_id[0]);
             }
-            // body text manipulation
-	    // if (record.subtype == 'plain') {
-            //     record.body = mail.ChatterUtils.do_text_remove_html_tags(record.body);
-            // }
             // record.body = mail.ChatterUtils.do_replace_expressions(record.body);
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});

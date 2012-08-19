@@ -251,6 +251,7 @@ class mail_thread(osv.Model):
 
             Please see message_search for more information about the parameters.
         """
+        print 'MSG READ', uid, ids, fetch_ancestors, ancestor_ids, limit, offset, domain, context
         message_ids = self.message_search(cr, uid, ids, fetch_ancestors, ancestor_ids,
             limit, offset, domain, context=context)
         messages = self.pool.get('mail.message').read(cr, uid, message_ids, context=context)
@@ -752,17 +753,6 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
     # Subscription mechanism
     #------------------------------------------------------
-
-    # FP Note: replaced by message_follower_ids
-    # def message_get_followers(self, cr, uid, ids, context=None):
-
-    def message_read_followers(self, cr, uid, ids, fields=['id', 'name', 'image_small'], context=None):
-        """ Returns the current document followers as a read result. Used
-            mainly for Chatter having only one method to call to have
-            details about users.
-        """
-        user_ids = self.message_get_followers(cr, uid, ids, context=context)
-        return self.pool.get('res.users').read(cr, uid, user_ids, fields=fields, context=context)
 
     def message_is_follower(self, cr, uid, ids, user_id = None, context=None):
         """ Check if uid or user_id (if set) is a follower to the current
