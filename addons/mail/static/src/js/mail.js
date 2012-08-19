@@ -164,11 +164,6 @@ openerp.mail = function(session) {
          *      5. 'My Label'
          */
 
-        /* Add a prefix before each new line of the original string */
-        do_text_quote: function (str, prefix) {
-            return str.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2' + prefix || '> ');
-        },
-
         /**
          * Replaces some expressions
          * - @login - shorcut to link to a res.user, given its login
@@ -191,45 +186,6 @@ openerp.mail = function(session) {
             return string;
         },
 
-        /**
-         * Checks a string to find an expression that will be replaced
-         * by an internal link and requiring a name_get to replace
-         * the expression.
-         * :param mapping: structure to keep a trace of internal links mapping
-         *                  mapping['model'] = {
-         *                      name_get': [[id,label], [id,label], ...]
-         *                      'to_fetch_ids': [id, id, ...]
-         *                  }
-         * CURRENTLY NOT IMPLEMENTED */
-        do_check_for_name_get_mapping: function(string, mapping) {
-            /* shortcut to user: @login */
-            //var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
-            //var regex_res = regex_login.exec(string);
-            //while (regex_res != null) {
-                //var login = regex_res[2];
-                //if (! ('res.users' in this.map_hash)) { this.map_hash['res.users']['name'] = []; }
-                //this.map_hash['res.users']['login'].push(login);
-                //regex_res = regex_login.exec(string);
-            //}
-            /* document link with name_get: [res.model,name] */
-            /* internal link with id: [res.model,id], or [res.model,id|display_name] */
-            //var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
-            //regex_res = regex_intlink.exec(string);
-            //while (regex_res != null) {
-                //var res_model = regex_res[2] + '.' + regex_res[3];
-                //var res_name = regex_res[4];
-                //if (! (res_model in this.map_hash)) { this.map_hash[res_model]['name'] = []; }
-                //this.map_hash[res_model]['name'].push(res_name);
-                //regex_res = regex_intlink.exec(string);
-            //}
-        },
-        
-        /**
-         * Updates the mapping; check for to_fetch_ids for each recorded
-         * model, and perform a name_get to update the mapping.
-         * CURRENTLY NOT IMPLEMENTED */
-        do_update_name_get_mapping: function(mapping) {
-        },
     };
 
 
