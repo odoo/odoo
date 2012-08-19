@@ -1,12 +1,3 @@
-Web Stuff to Do:
-* replace comments_structure by a real tree structure
-* rewrite completly records_struct_add_records
-* remove records_struct_update_after_display:
-* remove all is_wall stuff and pass real arguments
-* remove init_and_fetch_comments
-* rename fetch_comments into message_read
-* implement display_current_user --> check why it's present two times
-
 Backend:
 * remove _message_search_ancestor_ids and implement in message_read (must use browse records instead of IDS)
 * remove message_search_get_domain
@@ -18,6 +9,15 @@ Backend:
 * remove message_subscribe_users and use message_subscribe instead
 * remove message_unsubscribe_get_command
 
+Web Stuff to Do:
+* replace comments_structure by a real tree structure, provided by message_read directly
+* rewrite completly records_struct_add_records, merge existing messages with those coming from another message_read
+* remove records_struct_update_after_display:
+* remove all is_wall stuff and pass real arguments
+* remove init_and_fetch_comments
+* rename fetch_comments into message_read
+* implement display_current_user --> check why it's present two times
+
 To Check:
 * message_forward for mail gateway (redundant with notifications by emails ?)
-
+* check if addons modules rely on some stuff changed in the aboce backend section
