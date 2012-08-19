@@ -498,7 +498,6 @@ openerp.mail = function(session) {
 
             // datasets and internal vars
             this.ds = new session.web.DataSetSearch(this, this.params.res_model);
-            this.ds_users = new session.web.DataSetSearch(this, 'res.users');
             this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
             this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             // display customization vars
@@ -805,7 +804,6 @@ openerp.mail = function(session) {
             this.params.thread_level = this.params.thread_level || 0;
             this.thread = null;
             this.ds = new session.web.DataSet(this, this.view.model);
-            this.ds_users = new session.web.DataSet(this, 'res.users');
         },
         
         start: function() {
@@ -866,23 +864,38 @@ openerp.mail = function(session) {
          */
         init: function (parent, params) {
             this._super(parent);
+
             this.params = {};
-            this.params.limit = params.limit || 25;
+            // this.params.limit = params.limit || 25;
+
             this.params.domain = params.domain || [];
             this.params.context = params.context || {};
+
+            // FP Note: do we need this ?
+            // Should be in domain/context instead ?
             this.params.res_model = params.res_model || false;
             this.params.res_id = params.res_id || false;
-            this.params.search_view_id = params.search_view_id || false;
+
+            // Do we need this ?
+            // this.params.search_view_id = params.search_view_id || false;
+
             this.params.thread_level = params.thread_level || 1;
+
+	    // FP Note: looks strange, this is not the way to build a tree structure
             this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
-            this.display_show_more = true;
+
+            // FP Note: I changed: always true
+            // this.display_show_more = true;
+
             this.thread_list = [];
             this.search = {'domain': [], 'context': {}, 'groupby': {}}
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
             // datasets
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
-            this.ds_thread = new session.web.DataSet(this, 'mail.thread');
-            this.ds_users = new session.web.DataSet(this, 'res.users');
+
+	    // I don't think we need this ?
+	    // message_read and others methods must be on mail.message
+            // this.ds_thread = new session.web.DataSet(this, 'mail.thread');
         },
 
         start: function () {
@@ -891,7 +904,7 @@ openerp.mail = function(session) {
             // add events
             this.add_event_handlers();
             // load mail.message search view
-            var search_view_ready = this.load_search_view(this.params.search_view_id, {}, false);
+            var search_view_ready = this.load_search_view({}, false);
             // load composition form
             var compose_done = this.instantiate_composition_form();
             // fetch first threads
@@ -940,9 +953,9 @@ openerp.mail = function(session) {
          * @param {Object} defaults ??
          * @param {Boolean} hidden some kind of trick we do not care here
          */
-        load_search_view: function (view_id, defaults, hidden) {
+        load_search_view: function (defaults, hidden) {
             var self = this;
-            this.searchview = new session.web.SearchView(this, this.ds_msg, view_id || false, defaults || {}, hidden || false);
+            this.searchview = new session.web.SearchView(this, this.ds_msg, false, defaults || {}, hidden || false);
             var search_view_loaded = this.searchview.appendTo(this.$element.find('.oe_view_manager_view_search'));
             return $.when(search_view_loaded).then(function () {
                 self.searchview.on_search.add(self.do_searchview_search);
@@ -985,7 +998,6 @@ openerp.mail = function(session) {
         init_and_fetch_comments: function() {
             this.search['domain'] = _.union(this.params.domain, this.search_results.domain);
             this.search['context'] = _.extend(this.params.context, this.search_results.context);
-            this.display_show_more = true;
             this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             this.$element.find('ul.oe_mail_wall_threads').empty();
             return this.fetch_comments(this.params.limit, 0);
@@ -1004,7 +1016,8 @@ openerp.mail = function(session) {
             else var fetch_domain = this.search['domain'];
             if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
             else var fetch_context = this.search['context'];
-            return this.ds_thread.call('message_read', 
+	    // FP Note: call to review
+            return this.ds_msg.call('message_read', 
                 [[this.session.uid], true, [], (limit || 0), (offset || 0), fetch_domain, fetch_context]).then(this.proxy('display_comments'));
         },
 
@@ -1052,9 +1065,11 @@ openerp.mail = function(session) {
         
         /** Display update: show more button */
         do_update_show_more: function (new_value) {
-            if (new_value != undefined) this.display_show_more = new_value;
-            if (this.display_show_more) this.$element.find('div.oe_mail_wall_more:last').show();
-            else this.$element.find('div.oe_mail_wall_more:last').hide();
+            if (new_value) {
+                    this.$element.find('div.oe_mail_wall_more:last').show();
+            } else {
+                    this.$element.find('div.oe_mail_wall_more:last').hide();
+            }
         },
         
         /** Action: Shows more discussions */
