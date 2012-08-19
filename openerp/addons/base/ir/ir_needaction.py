@@ -63,5 +63,5 @@ class ir_needaction_mixin(osv.Model):
         dom = self._needaction_domain_get(cr, uid, context=context)
         if dom is False:
             return 0
-        return self.search(cr, uid, domain+dom, context=context, count=True)
+        return self.search(cr, uid, (domain or []) +dom, context=context, count=True)
 
