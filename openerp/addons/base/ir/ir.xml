@@ -556,30 +556,6 @@
 
         <menuitem action="ir_action_wizard" id="menu_ir_action_wizard" parent="base.next_id_6"/>
 
-        <!-- Needaction mechanism -->
-        <record model="ir.ui.view" id="view_ir_needaction_users_rel_tree">
-            <field name="name">ir.needaction_users_rel.tree</field>
-            <field name="model">ir.needaction_users_rel</field>
-            <field name="sequence">10</field>
-            <field name="arch" type="xml">
-                <tree string="Subscription">
-                    <field name="user_id"/>
-                    <field name="res_model"/>
-                    <field name="res_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="action_view_needaction_users_rel" model="ir.actions.act_window">
-            <field name="name">Need action relationships</field>
-            <field name="res_model">ir.needaction_users_rel</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem id="menu_needaction_users_rel" name="Need actions" parent="base.menu_users" sequence="20" action="action_view_needaction_users_rel" groups="base.group_no_one"/>
-
-
         <!-- View -->
         <record id="view_view_form" model="ir.ui.view">
             <field name="name">ir.ui.view</field>

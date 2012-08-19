@@ -514,7 +514,10 @@ class one2many(_column):
         for id in ids:
             res[id] = []
 
-        ids2 = obj.pool.get(self._obj).search(cr, user, self._domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
+        dom = self._domain
+        if isinstance(self._domain, type(lambda: None)):
+            dom = self._domain(obj)
+        ids2 = obj.pool.get(self._obj).search(cr, user, dom + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id] in res:
                 res[r[self._fields_id]].append(r['id'])
@@ -556,7 +559,10 @@ class one2many(_column):
                 reverse_rel = obj._all_columns.get(self._fields_id)
                 assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                 # if the o2m has a static domain we must respect it when unlinking
-                extra_domain = self._domain if isinstance(getattr(self, '_domain', None), list) else [] 
+                dom = self._domain
+                if isinstance(self._domain, type(lambda: None)):
+                    dom = self._domain(obj)
+                extra_domain = dom or []
                 ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
                 # If the model has cascade deletion, we delete the rows because it is the intended behavior,
                 # otherwise we only nullify the reverse foreign key column.
@@ -574,7 +580,10 @@ class one2many(_column):
         return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
-        return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, operator, context=context,limit=limit)
+        dom = self._domain
+        if isinstance(self._domain, type(lambda: None)):
+            dom = self._domain(obj)
+        return obj.pool.get(self._obj).name_search(cr, uid, value, dom, operator, context=context,limit=limit)
 
     
     @classmethod
