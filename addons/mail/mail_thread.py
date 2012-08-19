@@ -278,40 +278,6 @@ class mail_thread(osv.Model):
         messages = sorted(messages, key=lambda d: (-d['id']))
         return messages
 
-    def message_get_pushed_messages(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None,
-                            limit=100, offset=0, msg_search_domain=[], context=None):
-        """ OpenChatter: wall: get the pushed notifications and used them
-            to fetch messages to display on the wall.
-
-            :param fetch_ancestors: performs an ascended search; will add
-                                    to fetched msgs all their parents until
-                                    ancestor_ids
-            :param ancestor_ids: used when fetching ancestors
-            :param domain: domain to add to the search; especially child_of
-                           is interesting when dealing with threaded display
-            :param ascent: performs an ascended search; will add to fetched msgs
-                           all their parents until root_ids
-            :param root_ids: for ascent search
-            :return: list of mail.messages sorted by date
-        """
-        notification_obj = self.pool.get('mail.notification')
-        msg_obj = self.pool.get('mail.message')
-        # update message search
-        for arg in msg_search_domain:
-            if isinstance(arg, (tuple, list)):
-                arg[0] = 'message_id.' + arg[0]
-        # compose final domain
-        domain = [('user_id', '=', uid)] + msg_search_domain
-        # get notifications
-        notification_ids = notification_obj.search(cr, uid, domain, limit=limit, offset=offset, context=context)
-        notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
-        msg_ids = [notification.message_id.id for notification in notifications]
-        # get messages
-        msg_ids = msg_obj.search(cr, uid, [('id', 'in', msg_ids)], context=context)
-        if (fetch_ancestors): msg_ids = self._message_search_ancestor_ids(cr, uid, ids, msg_ids, ancestor_ids, context=context)
-        msgs = msg_obj.read(cr, uid, msg_ids, context=context)
-        return msgs
-
     def _message_find_partners(self, cr, uid, message, headers=['From'], context=None):
         s = ', '.join([decode(message.get(h)) for h in headers])
         mails = tools.email_split(s)

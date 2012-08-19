@@ -529,6 +529,7 @@ openerp.mail = function(session) {
             // this.params.limit = 3; // tmp for testing
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
+
             // datasets and internal vars
             this.ds = new session.web.DataSetSearch(this, this.params.res_model);
             this.ds_users = new session.web.DataSetSearch(this, 'res.users');
@@ -550,6 +551,7 @@ openerp.mail = function(session) {
             this.bind_events();
             // display user, fetch comments
             this.display_current_user();
+
             if (this.params.records) var display_done = this.display_comments_from_parameters(this.params.records);
             else var display_done = this.init_comments();
             // customize display
@@ -747,10 +749,10 @@ openerp.mail = function(session) {
                 record.mini_url = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', record.user_id[0]);
             }
             // body text manipulation
-            if (record.subtype == 'plain') {
-                record.body = mail.ChatterUtils.do_text_remove_html_tags(record.body);
-            }
-            record.body = mail.ChatterUtils.do_replace_expressions(record.body);
+	    // if (record.subtype == 'plain') {
+            //     record.body = mail.ChatterUtils.do_text_remove_html_tags(record.body);
+            // }
+            // record.body = mail.ChatterUtils.do_replace_expressions(record.body);
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
             // is the user the author ?
@@ -1041,7 +1043,7 @@ openerp.mail = function(session) {
             else var fetch_domain = this.search['domain'];
             if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
             else var fetch_context = this.search['context'];
-            return this.ds_thread.call('message_get_pushed_messages', 
+            return this.ds_thread.call('message_read', 
                 [[this.session.uid], true, [], (limit || 0), (offset || 0), fetch_domain, fetch_context]).then(this.proxy('display_comments'));
         },
 
