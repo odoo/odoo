@@ -28,8 +28,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.db = new module.PosLS();                       // a database used to store the products and categories
             this.db.clear('products','categories');
 
-            window.db = this.db;
-
             // pos settings
             this.use_scale              = false;
             this.use_proxy_printer      = false;
@@ -76,16 +74,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'email',
                         'website',
                         'company_registry',
-                        //TODO contact_address
                         'vat',
                         'name',
-                        'phone'
+                        'phone',
+                        'partner_id',
                     ],
                     [['id','=',user.company_id[0]]])
                 }).pipe(function(companies){
                     var company = companies[0];
                     self.set('company',company);
-
+                    fetch('res.partner',['contact_address'],[['id','=',company.partner_id[0]]])
+                        .then(function(partner){
+                            company.contact_address = partner[0].contact_address;
+                        });
                     return fetch('res.currency',['symbol','position'],[['id','=',company.currency_id[0]]]);
                 }).pipe(function (currencies){
                     self.set('currency',currencies[0]);
@@ -700,6 +701,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 change: this.getChange(),
                 name : this.getName(),
                 client: client ? client.name : null ,
+                invoice_id: null,   //TODO
                 cashier: cashier ? cashier.name : null,
                 date: { 
                     year: date.getFullYear(), 
@@ -713,7 +715,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     email: company.email,
                     website: company.website,
                     company_registry: company.company_registry,
-                    contact_address: null,  //TODO
+                    contact_address: company.contact_address, 
                     vat: company.vat,
                     name: company.name,
                     phone: company.phone,
