@@ -1585,6 +1585,9 @@ def field_to_dict(model, cr, user, field, context=None):
             res['selection'] = field.selection(model, cr, user, context)
     if res['type'] in ('one2many', 'many2many', 'many2one'):
         res['relation'] = field._obj
+        dom = field._domain
+        if isinstance(field._domain, type(lambda: None)):
+            dom = field._domain(model)
         res['domain'] = field._domain
         res['context'] = field._context
 
