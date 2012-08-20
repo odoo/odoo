@@ -234,6 +234,7 @@ class mail_message(osv.Model):
             select=True, ondelete='set null',
             help="Parent message, used for displaying as threads with hierarchy"),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
+        'subtype_id': fields.many2one('mail.message.subtype', 'Subtype'),
     }
         
     _defaults = {
@@ -278,7 +279,7 @@ class mail_message(osv.Model):
     def create(self, cr, uid, values, context=None):
         self.check(cr, uid, [], mode='create', context=context, values=values)
         return super(mail_message, self).create(cr, uid, values, context)
-
+       
     def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
         self.check(cr, uid, ids, 'read', context=context)
         return super(mail_message, self).read(cr, uid, ids, fields_to_read, context, load)

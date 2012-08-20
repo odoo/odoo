@@ -14,7 +14,7 @@
 
         <!-- notify all employees of module installation -->
         <function model="mail.group" name="message_append_note">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <!-- ids, subject,subtype_id="other", body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
             <value>Welcome to OpenERP!</value>
             <value>Your homepage is a summary of messages you received and key information about documents you follow.

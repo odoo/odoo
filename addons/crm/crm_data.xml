@@ -56,7 +56,7 @@
 
         <!-- notify all employees of module installation -->
         <function model="mail.group" name="message_append_note">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <!-- ids, subject,subtype_id="other", body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
             <value>Module CRM has been installed</value>
             <value>From the top menu Sales, you can: trace leads and opportunities, get accurate forecast on your sales pipeline, plan meetings and phonecalls, get realtime statistics and efficiently organize the communication with your prospects.

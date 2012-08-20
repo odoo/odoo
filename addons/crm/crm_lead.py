@@ -278,6 +278,9 @@ class crm_lead(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
+        record = self.browse(cr, uid, obj_id, context)
+        if record.user_id:
+            self.message_subscribe(cr, uid, [obj_id], [record.user_id.id], context = context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
@@ -867,7 +870,7 @@ class crm_lead(base_stage, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="stage change",context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
@@ -877,16 +880,16 @@ class crm_lead(base_stage, osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=message, context=context)
+            self.message_append_note(cr, uid, [id], body=message, subtype="new", context=context)
         return True
 
     def case_mark_lost_send_note(self, cr, uid, ids, context=None):
         message = _("Opportunity has been <b>lost</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_append_note(cr, uid, ids, body=message,subtype="lost", context=context)
 
     def case_mark_won_send_note(self, cr, uid, ids, context=None):
         message = _("Opportunity has been <b>won</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_append_note(cr, uid, ids, body=message, subtype="won", context=context)
 
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
