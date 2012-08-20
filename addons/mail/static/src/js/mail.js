@@ -42,18 +42,6 @@ openerp.mail = function(session) {
 
     mail.ChatterUtils = {
 
-        /**
-        * mail_int_mapping: structure to keep a trace of internal links mapping
-        *      mail_int_mapping['model'] = {
-        *          'name_get': [[id,label], [id,label], ...]
-        *          'fetch_ids': [id, id, ...] } */
-        //var mail_int_mapping = {};
-        
-        /**
-        * mail_msg_struct: structure to orrganize chatter messages
-        */
-        //var mail_msg_struct = {}; // TODO: USE IT OR NOT :)
-
         /* generic chatter events binding */
         bind_events: function(widget) {
             // event: click on an internal link to a document: model, login
@@ -100,50 +88,50 @@ openerp.mail = function(session) {
         *           'for_thread_msgs': [records],
         *           'ancestors': [msg_ids], } }
         */
-        records_struct_add_records: function(cs, records, parent_id) {
-            var cur_iter = 0; var max_iter = 10; var modif = true;
-            while ( modif && (cur_iter++) < max_iter) {
-                modif = false;
-                _(records).each(function (record) {
-                    // root and not yet recorded
-                    if ( (record.parent_id == false || record.parent_id[0] == parent_id) && ! cs['msgs'][record.id]) {
-                        // add to model -> root_list ids
-                        if (! cs['model_to_root_ids'][record.model]) cs['model_to_root_ids'][record.model] = [record.id];
-                        else cs['model_to_root_ids'][record.model].push(record.id);
-                        // add root data
-                        cs['new_root_ids'].push(record.id);
-                        // add record
-                        cs['tree_struct'][record.id] = {'level': 0, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [record], 'msg_nbr': -1, 'ancestors': []};
-                        cs['msgs'][record.id] = record;
-                        modif = true;
-                    }
-                    // not yet recorded, but parent is recorded
-                    else if (! cs['msgs'][record.id] && cs['msgs'][record.parent_id[0]]) {
-                        var parent_level = cs['tree_struct'][record.parent_id[0]]['level'];
-                        // update parent structure
-                        cs['tree_struct'][record.parent_id[0]]['direct_childs'].push(record.id);
-                        cs['tree_struct'][record.parent_id[0]]['for_thread_msgs'].push(record);
-                        // update ancestors structure
-                        for (ancestor_id in cs['tree_struct'][record.parent_id[0]]['ancestors']) {
-                            cs['tree_struct'][ancestor_id]['all_childs'].push(record.id);
-                        }
-                        // add record
-                        cs['tree_struct'][record.id] = {'level': parent_level+1, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [], 'msg_nbr': -1, 'ancestors': []};
-                        cs['msgs'][record.id] = record;
-                        modif = true;
-                    }
-                });
-            }
-            return cs;
-        },
+        // records_struct_add_records: function(cs, records, parent_id) {
+        //     var cur_iter = 0; var max_iter = 10; var modif = true;
+        //     while ( modif && (cur_iter++) < max_iter) {
+        //         modif = false;
+        //         _(records).each(function (record) {
+        //             // root and not yet recorded
+        //             if ( (record.parent_id == false || record.parent_id[0] == parent_id) && ! cs['msgs'][record.id]) {
+        //                 // add to model -> root_list ids
+        //                 if (! cs['model_to_root_ids'][record.model]) cs['model_to_root_ids'][record.model] = [record.id];
+        //                 else cs['model_to_root_ids'][record.model].push(record.id);
+        //                 // add root data
+        //                 cs['new_root_ids'].push(record.id);
+        //                 // add record
+        //                 cs['tree_struct'][record.id] = {'level': 0, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [record], 'msg_nbr': -1, 'ancestors': []};
+        //                 cs['msgs'][record.id] = record;
+        //                 modif = true;
+        //             }
+        //             // not yet recorded, but parent is recorded
+        //             else if (! cs['msgs'][record.id] && cs['msgs'][record.parent_id[0]]) {
+        //                 var parent_level = cs['tree_struct'][record.parent_id[0]]['level'];
+        //                 // update parent structure
+        //                 cs['tree_struct'][record.parent_id[0]]['direct_childs'].push(record.id);
+        //                 cs['tree_struct'][record.parent_id[0]]['for_thread_msgs'].push(record);
+        //                 // update ancestors structure
+        //                 for (ancestor_id in cs['tree_struct'][record.parent_id[0]]['ancestors']) {
+        //                     cs['tree_struct'][ancestor_id]['all_childs'].push(record.id);
+        //                 }
+        //                 // add record
+        //                 cs['tree_struct'][record.id] = {'level': parent_level+1, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [], 'msg_nbr': -1, 'ancestors': []};
+        //                 cs['msgs'][record.id] = record;
+        //                 modif = true;
+        //             }
+        //         });
+        //     }
+        //     return cs;
+        // },
 
         /* copy cs.new_root_ids into cs.root_ids */
-        records_struct_update_after_display: function(cs) {
-            // update TODO
-            cs['root_ids'] = _.union(cs['root_ids'], cs['new_root_ids']);
-            cs['new_root_ids'] = [];
-            return cs;
-        },
+        // records_struct_update_after_display: function(cs) {
+        //     // update TODO
+        //     cs['root_ids'] = _.union(cs['root_ids'], cs['new_root_ids']);
+        //     cs['new_root_ids'] = [];
+        //     return cs;
+        // },
 
         /**
          *    CONTENT MANIPULATION
@@ -623,7 +611,7 @@ openerp.mail = function(session) {
         display_comments: function (records) {
             var self = this;
             // sort the records
-            mail.ChatterUtils.records_struct_add_records(this.comments_structure, records, this.params.parent_id);
+            // mail.ChatterUtils.records_struct_add_records(this.comments_structure, records, this.params.parent_id);
             //build attachments download urls and compute time-relative from dates
             for (var k in records) {
                 records[k].timerelative = $.timeago(records[k].date);
@@ -636,14 +624,14 @@ openerp.mail = function(session) {
             }
             _(records).each(function (record) {
                 var sub_msgs = [];
-                if ((record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
-                    var sub_list = self.comments_structure['tree_struct'][record.id]['direct_childs'];
-                    _(records).each(function (record) {
-                        //if (record.parent_id == false || record.parent_id[0] == self.params.parent_id) return;
-                        if (_.indexOf(sub_list, record.id) != -1) {
-                            sub_msgs.push(record);
-                        }
-                    });
+                if ((record.parent_id == undefined || record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
+                    // var sub_list = self.comments_structure['tree_struct'][record.id]['direct_childs'];
+                    // _(records).each(function (record) {
+                    //     //if (record.parent_id == false || record.parent_id[0] == self.params.parent_id) return;
+                    //     if (_.indexOf(sub_list, record.id) != -1) {
+                    //         sub_msgs.push(record);
+                    //     }
+                    // });
                     self.display_comment(record);
                     self.thread = new mail.Thread(self, {'res_model': self.params.res_model, 'res_id': self.params.res_id, 'uid': self.params.uid,
                                                             'records': sub_msgs, 'thread_level': (self.params.thread_level-1), 'parent_id': record.id,
@@ -655,7 +643,7 @@ openerp.mail = function(session) {
                     self.display_comment(record);
                 }
             });
-            mail.ChatterUtils.records_struct_update_after_display(this.comments_structure);
+            // mail.ChatterUtils.records_struct_update_after_display(this.comments_structure);
             // update offset for "More" buttons
             if (this.params.thread_level == 0) this.params.offset += records.length;
         },
@@ -666,13 +654,13 @@ openerp.mail = function(session) {
             if (record.type == 'email') {
                 record.mini_url = ('/mail/static/src/img/email_icon.png');
             } else {
-                record.mini_url = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', record.user_id[0]);
+                record.mini_url = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.partner', 'image_small', record.author_id[0]);
             }
             // record.body = mail.ChatterUtils.do_replace_expressions(record.body);
             // format date according to the user timezone
             record.date = session.web.format_value(record.date, {type:"datetime"});
             // is the user the author ?
-            record.is_author = mail.ChatterUtils.is_author(this, record.user_id[0]);
+            record.is_author = mail.ChatterUtils.is_author(this, record.author_id[0]);
             // render
             var rendered = session.web.qweb.render('mail.thread.message', {'record': record, 'thread': this, 'params': this.params, 'display': this.display});
             // expand feature
@@ -756,10 +744,9 @@ openerp.mail = function(session) {
 
        init: function() {
             this._super.apply(this, arguments);
-            this.params = this.get_definition_options();
+            this.params = this.options;
             this.params.thread_level = this.params.thread_level || 0;
             this.thread = null;
-            this.ds = new session.web.DataSet(this, this.view.model);
         },
         
         start: function() {
@@ -785,6 +772,7 @@ openerp.mail = function(session) {
                 this.$element.find('.oe_mail_thread').hide();
                 return;
             }
+            // debugger
             // create and render Thread widget
             this.$element.find('div.oe_mail_recthread_main').empty();
             if (this.thread) this.thread.destroy();
@@ -815,48 +803,29 @@ openerp.mail = function(session) {
          * @param {Object} parent parent
          * @param {Object} [params]
          * @param {Number} [params.limit=20] number of messages to show and fetch
-         * @param {Number} [params.search_view_id=false] search view id for messages
          * @var {Array} comments_structure (see chatter utils)
          */
-        init: function (parent, params) {
+        init: function (parent, options) {
             this._super(parent);
-
-            this.params = {};
-            // this.params.limit = params.limit || 25;
-
-            this.params.domain = params.domain || [];
-            this.params.context = params.context || {};
-
-            // FP Note: do we need this ?
+            // console.log(options);
+            this.options = options || {};
+            this.options.domain = options.domain || [];
+            this.options.context = options.context || {};
+            // FP Note: do we need this ? --> not sure, use mail.message create instead ?
             // Should be in domain/context instead ?
-            this.params.res_model = params.res_model || false;
-            this.params.res_id = params.res_id || false;
-
-            // Do we need this ?
-            // this.params.search_view_id = params.search_view_id || false;
-
-            this.params.thread_level = params.thread_level || 1;
-
-	    // FP Note: looks strange, this is not the way to build a tree structure
-            this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
-
-            // FP Note: I changed: always true
-            // this.display_show_more = true;
-
+            this.options.context.res_model = options.res_model || 'mail.thread';
+            this.options.context.res_id = options.res_id || false;
+            this.options.thread_level = options.thread_level || 1;
             this.thread_list = [];
             this.search = {'domain': [], 'context': {}, 'groupby': {}}
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
             // datasets
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
-
-	    // I don't think we need this ?
-	    // message_read and others methods must be on mail.message
-            // this.ds_thread = new session.web.DataSet(this, 'mail.thread');
+            // this.ds_post = new session.web.DataSet(this, this.options.context.res_model);
         },
 
         start: function () {
             this._super.apply(this, arguments);
-            this.display_current_user();
             // add events
             this.add_event_handlers();
             // load mail.message search view
@@ -864,7 +833,7 @@ openerp.mail = function(session) {
             // load composition form
             var compose_done = this.instantiate_composition_form();
             // fetch first threads
-            var comments_ready = this.init_and_fetch_comments(this.params.limit, 0);
+            var comments_ready = this.init_and_fetch_comments(this.options.limit, 0);
             return (search_view_ready && comments_ready && compose_done);
         },
 
@@ -888,8 +857,8 @@ openerp.mail = function(session) {
                 this.compose_message_widget.destroy();
             }
             this.compose_message_widget = new mail.ComposeMessage(this, {
-                'extended_mode': false, 'uid': this.session.uid, 'res_model': this.params.res_model,
-                'res_id': this.params.res_id, 'mode': mode || 'comment', 'msg_id': msg_id });
+                'extended_mode': false, 'uid': this.session.uid, 'res_model': this.options.res_model,
+                'res_id': this.options.res_id, 'mode': mode || 'comment', 'msg_id': msg_id });
             var composition_node = this.$element.find('div.oe_mail_wall_action');
             composition_node.empty();
             var compose_done = this.compose_message_widget.appendTo(composition_node);
@@ -940,10 +909,6 @@ openerp.mail = function(session) {
             });
         },
 
-        display_current_user: function () {
-            //return this.$element.find('img.oe_mail_msg_image').attr('src', this.thread_get_avatar('res.users', 'avatar', this.session.uid));
-        }, 
-
         /**
          * Initializes the wall and calls fetch_comments
          * @param {Number} limit: number of notifications to fetch
@@ -952,11 +917,11 @@ openerp.mail = function(session) {
          * @param {Array} context
          */
         init_and_fetch_comments: function() {
-            this.search['domain'] = _.union(this.params.domain, this.search_results.domain);
-            this.search['context'] = _.extend(this.params.context, this.search_results.context);
-            this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
+            this.search['domain'] = _.union(this.options.domain, this.search_results.domain);
+            this.search['context'] = _.extend(this.options.context, this.search_results.context);
+            // this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             this.$element.find('ul.oe_mail_wall_threads').empty();
-            return this.fetch_comments(this.params.limit, 0);
+            return this.fetch_comments(this.options.limit);
         },
 
         /**
@@ -966,40 +931,39 @@ openerp.mail = function(session) {
          * @param {Array} domain
          * @param {Array} context
          */
-        fetch_comments: function (limit, offset, additional_domain, additional_context) {
+        fetch_comments: function (limit, additional_domain, additional_context) {
             var self = this;
             if (additional_domain) var fetch_domain = this.search['domain'].concat(additional_domain);
             else var fetch_domain = this.search['domain'];
             if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
             else var fetch_context = this.search['context'];
-	    // FP Note: call to review
+            // FP Note: call to review
             return this.ds_msg.call('message_read', 
-                [[this.session.uid], true, [], (limit || 0), (offset || 0), fetch_domain, fetch_context]).then(this.proxy('display_comments'));
+                [[this.session.uid], false, [] ]).then(this.proxy('display_comments'));
         },
 
         /**
          * @param {Array} records records to show in threads
          */
         display_comments: function (records) {
+            console.log(records);
+            // debugger
             var self = this;
-            this.do_update_show_more(records.length >= self.params.limit);
-            mail.ChatterUtils.records_struct_add_records(this.comments_structure, records, false);
-            _(this.comments_structure['new_root_ids']).each(function (root_id) {
-                var records = self.comments_structure.tree_struct[root_id]['for_thread_msgs'];
-                var model_name = self.comments_structure.msgs[root_id]['model'];
-                var res_id = self.comments_structure.msgs[root_id]['res_id'];
+            this.do_update_show_more(records.length >= self.options.limit);
+
+            _(records).each(function (root_record) {
+                console.log(root_record);
+
                 var render_res = session.web.qweb.render('mail.wall_thread_container', {});
                 $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('ul.oe_mail_wall_threads'));
                 var thread = new mail.Thread(self, {
-                    'res_model': model_name, 'res_id': res_id, 'uid': self.session.uid, 'records': records,
-                    'parent_id': false, 'thread_level': self.params.thread_level, 'show_hide': true, 'is_wall': true}
+                    'res_model': root_record.model, 'res_id': root_record.res_id, 'uid': self.session.uid, 'records': [root_record],
+                    'parent_id': false, 'thread_level': self.options.thread_level, 'show_hide': true, 'is_wall': true}
                     );
                 self.thread_list.push(thread);
                 return thread.appendTo(self.$element.find('li.oe_mail_wall_thread:last'));
             });
-            // update TODO
-            this.comments_structure['root_ids'] = _.union(this.comments_structure['root_ids'], this.comments_structure['new_root_ids']);
-            this.comments_structure['new_root_ids'] = [];
+
         },
 
         /**
@@ -1013,9 +977,9 @@ openerp.mail = function(session) {
             var self = this;
             var model_to_root = {};
             var fetch_domain = [];
-            _(this.comments_structure['model_to_root_ids']).each(function (sc_model, model_name) {
-                fetch_domain.push('|', ['model', '!=', model_name], '!', ['id', 'child_of', sc_model]);
-            });
+            // _(this.comments_structure['model_to_root_ids']).each(function (sc_model, model_name) {
+            //     fetch_domain.push('|', ['model', '!=', model_name], '!', ['id', 'child_of', sc_model]);
+            // });
             return fetch_domain;
         },
         

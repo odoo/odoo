@@ -17,8 +17,8 @@
                 <td colspan="2">
                     <h2 class="oe_view_title">
                         <span class="oe_view_title_text">
-                            <t t-if="! widget.params.res_model">News Feeds</t>
-                            <t t-if="widget.params.res_model" t-esc="widget.params.res_model"/>
+                            <t t-if="! widget.options.res_model">News Feeds</t>
+                            <t t-if="widget.options.res_model" t-esc="widget.options.res_model"/>
                         </span>
                     </h2>
                 </td>
@@ -136,7 +136,7 @@
                     <div class="oe_clear"/>
                     <ul class="oe_mail_msg_footer">
                       <li t-if="record.subject &amp; params.thread_level > 0"><a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}"><t t-raw="record.record_name"/></a></li>
-                      <li><a t-attf-href="#model=res.users&amp;id=#{record.user_id[0]}"><t t-raw="record.user_id[1]"/></a></li>
+                      <li><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>
                       <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
                       <li t-if="display['show_reply']"><a href="#" class="oe_mail_msg_reply">Reply</a></li>
                       <!-- uncomment when merging vote
