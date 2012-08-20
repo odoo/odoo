@@ -749,18 +749,18 @@
 }
 
 @media print {
-    #oe_header, #oe_menu, .point-of-sale #topheader, .point-of-sale #leftpane {
-        display: none;
+    .point-of-sale #topheader, .point-of-sale #leftpane {
+        display: none !important;
     }
     .point-of-sale #content {
-        top: 0px;
+        top: 0px !important;
     }
     .point-of-sale #rightpane {
-        left: 0px;
+        left: 0px !important;
         background-color: white;
     }
     #receipt-screen header {
-        display: none;
+        display: none !important;
     }
     #receipt-screen {
         text-align: left;
