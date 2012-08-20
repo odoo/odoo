@@ -1554,8 +1554,8 @@ def field_to_dict(model, cr, user, field, context=None):
     if isinstance(field, function):
         res['function'] = field._fnct and field._fnct.func_name or False
     #    res['store'] = field.store
-        if isinstance(field.store, dict):
-            res['store'] = str(field.store)
+    #    if isinstance(field.store, dict):
+    #        res['store'] = str(field.store)
         res['fnct_search'] = field._fnct_search and field._fnct_search.func_name or False
         res['fnct_inv'] = field._fnct_inv and field._fnct_inv.func_name or False
         res['fnct_inv_arg'] = field._fnct_inv_arg or False
