@@ -38,7 +38,6 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
         'base_vat',
         'account_chart',
     ],
-    'data': [],
     'data': [
         'account_code_template.xml',
         'account_tdhp_turkey.xml',

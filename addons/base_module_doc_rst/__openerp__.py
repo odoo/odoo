@@ -34,7 +34,6 @@ This module generates the Technical Guides of selected modules in Restructured T
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'data': [],
     'data': [
         'base_module_doc_rst_view.xml',
         'wizard/generate_relation_graph_view.xml',

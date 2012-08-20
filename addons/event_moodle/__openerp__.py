@@ -61,7 +61,6 @@ PASSWORD: ${object.moodle_user_password}
 """,
     'author': 'OpenERP SA',
     'depends': ['event'],
-    'data': [],
     'data': [
             'wizard_moodle.xml',
             'event_view.xml',

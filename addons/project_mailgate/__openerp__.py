@@ -42,7 +42,6 @@ There are two common alternatives to configure the mailbox integration:
       provided in the ``mail`` module - and connect it to the `project.task` model.
     """,
     'data': [],
-    'data': [],
     'demo': [],
     'installable': True,
     'auto_install': False,

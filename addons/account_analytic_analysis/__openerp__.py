@@ -36,7 +36,6 @@ user-wise as well as month-wise.
     'website': 'http://www.camptocamp.com/',
     'images': ['images/bill_tasks_works.jpeg','images/overpassed_accounts.jpeg'],
     'depends': ['hr_timesheet_invoice', 'sale'], #although sale is technically not required to install this module, all menuitems are located under 'Sales' application
-    'data': [],
     'data': [
                     'security/ir.model.access.csv',
                     'account_analytic_analysis_view.xml',

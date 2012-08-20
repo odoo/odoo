@@ -41,7 +41,6 @@ were overlapping.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'crm'],
-    'data': [],
     'data': ['security/ir.model.access.csv', 'wizard/open_questionnaire_view.xml', 'crm_profiling_view.xml'],
     'demo': ['crm_profiling_demo.xml'],
     'test': [

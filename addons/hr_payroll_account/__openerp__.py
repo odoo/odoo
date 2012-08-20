@@ -40,8 +40,6 @@ Generic Payroll system Integrated with Accounting.
         'hr_expense'
     ],
     'data': [
-    ],
-    'data': [
         'hr_payroll_account_view.xml',
     ],
     'demo': [

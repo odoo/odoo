@@ -33,7 +33,6 @@ the tasks will change accordingly.
     'author': 'OpenERP SA',
     'depends': ['base', 'project'],
     'data': [],
-    'data': [],
     'demo': [],
     'test' : [
               'test/deadline_change.yml'

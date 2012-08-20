@@ -122,7 +122,6 @@ De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
                  'base_iban',
                  'account_chart'
                  ],
-    'data' : [],
     'data' : ['account_chart_netherlands.xml',
                     'l10n_nl_wizard.xml'
             ],

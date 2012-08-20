@@ -36,7 +36,6 @@ Creates demo data like leads, campaigns and segments for the module marketing_ca
     """,
     'website': 'http://www.openerp.com',
     'data': [],
-    'data': [],
     'demo': [
         'marketing_campaign_demo.xml',
     ],

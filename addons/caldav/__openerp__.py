@@ -51,7 +51,6 @@ To access OpenERP Calendar using WebCal to remote site use the URL like:
     'category': 'Hidden/Dependency', 
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'data': ['caldav_data.xml'],
     'demo': [],
     'data': [
                     'security/ir.model.access.csv',
@@ -60,7 +59,8 @@ To access OpenERP Calendar using WebCal to remote site use the URL like:
                     'wizard/calendar_event_subscribe_view.xml',
                     'wizard/caldav_browse_view.xml',
                     'caldav_view.xml',
-                    'caldav_setup.xml'
+                    'caldav_setup.xml',
+                    'caldav_data.xml'
                     ],
     'installable': True,
     'auto_install': False,

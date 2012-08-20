@@ -36,7 +36,6 @@ account, or any other object and attach the selected mail as a .eml file in
 the attachment of a selected record. You can create documents for CRM Lead,
 HR Applicant and Project Issue from selected mails.
       """,
-    'data' : [],
     'demo' : [],
     'data' : ['plugin_thunderbird.xml'],
     'auto_install': False,

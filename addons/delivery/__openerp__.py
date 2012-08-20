@@ -33,12 +33,12 @@ invoices from picking, OpenERP is able to add and compute the shipping line.
 """,
     'author': 'OpenERP SA',
     'depends': ['sale', 'purchase', 'stock'],
-    'data': ['delivery_data.xml'],
     'data': [
         'security/ir.model.access.csv',
         'delivery_report.xml',
         'delivery_view.xml',
-        'partner_view.xml'
+        'partner_view.xml',
+        'delivery_data.xml'
     ],
     'demo': ['delivery_demo.xml'],
     'test': [

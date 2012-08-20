@@ -37,13 +37,11 @@ and categorize your interventions with a channel and a priority level.
     'website': 'http://www.openerp.com',
     'depends': ['crm'],
     'data': [
-         'crm_helpdesk_data.xml',
-    ],
-    'data': [
         'crm_helpdesk_view.xml',
         'crm_helpdesk_menu.xml',
         'security/ir.model.access.csv',
         'report/crm_helpdesk_report_view.xml',
+        'crm_helpdesk_data.xml',
     ],
     'demo': [
         'crm_helpdesk_demo.xml',

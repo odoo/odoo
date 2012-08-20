@@ -54,7 +54,6 @@ So, that we can compare the theoretic delay and real delay.
     'website': 'http://www.openerp.com',
     'images': ['images/work_order_analysis.jpeg','images/work_order_planning.jpeg','images/work_order.jpeg'],
     'depends': ['mrp'],
-    'data': [],
     'data': [
         'security/ir.model.access.csv',
         'mrp_operations_workflow.xml',

@@ -40,8 +40,6 @@ This module adds:
     ''',
     'depends': ['account'],
     'demo': [],
-    'data': [
-    ],
     'data' : [
         'security/ir.model.access.csv',
         'account_bank_statement_view.xml',

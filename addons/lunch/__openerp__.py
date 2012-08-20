@@ -32,7 +32,6 @@ The base module to manage lunch.
 keep track for the Lunch Order, Cash Moves, CashBox, Product. Apply Different
 Category for the product.
     """,
-    'data': [],
     'data': [
         'security/lunch_security.xml',
         'security/ir.model.access.csv',

@@ -45,7 +45,6 @@ You can manage:
         'static/src/img/default_image.png',
     ],
     'depends': ['base_setup','mail', 'resource', 'board'],
-    'data': [],
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',

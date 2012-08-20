@@ -33,7 +33,6 @@ related requisition. This new object will regroup and will allow you to easily
 keep track and order all your purchase orders.
 """,
     'depends' : ['purchase','mrp'],
-    'data' : [],
     'demo' : ['purchase_requisition_demo.xml'],
     'data' : ['security/purchase_tender.xml',
                     'wizard/purchase_requisition_partner_view.xml',

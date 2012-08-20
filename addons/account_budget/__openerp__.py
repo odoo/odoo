@@ -47,7 +47,6 @@ Three reports are available:
     'website': 'http://www.openerp.com',
     'images': ['images/budget.jpeg','images/budgetary_position.jpeg'],
     'depends': ['account'],
-    'data': [],
     'data': [
         'security/ir.model.access.csv',
         'security/account_budget_security.xml',

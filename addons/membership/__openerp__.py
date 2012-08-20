@@ -39,13 +39,13 @@ invoice and send propositions for membership renewal.
     """,
     'author': 'OpenERP SA',
     'depends': ['base', 'product', 'account', 'process'],
-    'data': ['membership_data.xml'],
     'data': [
         'security/ir.model.access.csv',
         'wizard/membership_invoice_view.xml',
         'membership_view.xml',
         'report/report_membership_view.xml',
-        'process/membership_process.xml'
+        'process/membership_process.xml',
+        'membership_data.xml'
     ],
     'demo': ['membership_demo.xml'],
     'test': ['test/test_membership.yml'],

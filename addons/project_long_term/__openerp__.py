@@ -44,7 +44,6 @@ Features:
     * Schedule Tasks: All the tasks which are in draft, pending and open state
       are scheduled with taking the phase's start date.
     """,
-    'data': [],
     'demo': ['project_long_term_demo.xml'],
     'test': [
           'test/phase_process.yml',

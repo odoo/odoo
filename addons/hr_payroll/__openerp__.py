@@ -47,8 +47,6 @@ Generic Payroll system.
         'decimal_precision',
     ],
     'data': [
-    ],
-    'data': [
         'security/hr_security.xml',
         'wizard/hr_payroll_payslips_by_employees.xml',
         'hr_payroll_view.xml',

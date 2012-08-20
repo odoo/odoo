@@ -40,7 +40,6 @@ With this module:
     'website': 'http://www.openerp.com',
     'images': ['images/bom_subproduct.jpeg'],
     'depends': ['base', 'mrp'],
-    'data': [],
     'data': [
        'security/ir.model.access.csv',
        'mrp_subproduct_view.xml'

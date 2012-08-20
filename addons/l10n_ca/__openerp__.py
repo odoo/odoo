@@ -31,7 +31,6 @@ This is the module to manage the English and French - Canadian accounting chart 
 Canadian accounting charts and localizations.
     """,
     'depends' : ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
-    'data' : [],
     'data' : [
         'account_chart_en.xml',
         'account_tax_code_en.xml',

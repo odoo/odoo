@@ -33,7 +33,6 @@ Using this module you will be able to link analytic accounts to sales orders.
     'website': 'http://www.openerp.com',
     'images': ['images/sale_order_analytic_account.jpeg', 'images/sales_order_line.jpeg'],
     'depends': ['sale', 'account_analytic_plans'],
-    'data': [],
     'data': ['sale_analytic_plans_view.xml'],
     'demo': [],
     'installable': True,

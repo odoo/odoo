@@ -42,8 +42,6 @@ Main features:
     'author': 'OpenERP SA',
     'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
     'depends': ['sale'],
-    'data': [],
-
     'data': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',

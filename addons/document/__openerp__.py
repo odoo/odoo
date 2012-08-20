@@ -45,7 +45,6 @@ ATTENTION:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['process','board', 'knowledge'],
-    'data': [],
     'data': [
         'security/document_security.xml',
         'document_view.xml',

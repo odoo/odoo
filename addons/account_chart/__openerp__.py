@@ -34,7 +34,6 @@ Deactivates minimal chart of accounts.
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'data': [],
-    'data': [],
     'demo': [],
     'installable': True,
     'certificate': '0073332443901',

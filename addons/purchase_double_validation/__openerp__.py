@@ -34,7 +34,6 @@ This module modifies the purchase workflow in order to validate purchases that
 exceeds minimum amount set by configuration wizard.
     """,
     'website': 'http://www.openerp.com',
-    'data': [],
     'data': [
         'purchase_double_validation_workflow.xml',
         'purchase_double_validation_installer.xml',

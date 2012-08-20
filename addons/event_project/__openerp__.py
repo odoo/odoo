@@ -32,7 +32,6 @@ This module allows you to create retro planning for managing your events.
     'author': 'OpenERP SA',
     'images': ['images/event.jpeg'],
     'depends': ['project_retro_planning', 'event'],
-    'data': [],
     'data': ['wizard/event_project_retro_view.xml', 'event_project_view.xml'],
     'demo': [],
     'installable': True,

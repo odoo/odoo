@@ -41,7 +41,6 @@ Note that:
 """,
     'author': 'OpenERP SA',
     'depends': ['base_setup', 'board', 'email_template', 'google_map'],
-    'data': [],
     'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',

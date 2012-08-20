@@ -44,9 +44,6 @@ and decide on their status as they evolve.
         'project',
     ],
     'data': [
-        'project_issue_data.xml'
-    ],
-    'data': [
         'project_issue_view.xml',
         'project_issue_menu.xml',
         'report/project_issue_report_view.xml',
@@ -54,6 +51,7 @@ and decide on their status as they evolve.
         'security/ir.model.access.csv',
         'board_project_issue_view.xml',
         'res_config_view.xml',
+        'project_issue_data.xml'
      ],
     'demo': ['project_issue_demo.xml'],
     'test': [

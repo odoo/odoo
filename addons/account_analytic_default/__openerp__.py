@@ -39,7 +39,6 @@ Allows to automatically select analytic accounts based on criterions:
     'website'   : 'http://www.openerp.com',
     'images'   : ['images/analytic_defaults.jpeg'],
     'depends'   : ['sale'],
-    'data'  : [],
     'data': [
         'security/ir.model.access.csv', 
         'security/account_analytic_default_security.xml', 

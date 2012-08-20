@@ -35,7 +35,6 @@ Accounting chart and localization for Ecuador.
                 'account_chart',
                 'account_coda',
                 ],
-    'data': [],
     'data': [
                 'account_tax_code.xml',
                 'account_chart.xml',

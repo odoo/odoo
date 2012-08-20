@@ -36,7 +36,6 @@ your email and its attachments from MS Outlook. You can select a partner, a task
 a project, an analytical account, or any other object and archive selected mail
 into mail.message with attachments.
       """,
-    'data' : [],
     'demo' : [],
     'data' : ['plugin_outlook.xml'],
     'auto_install': False,

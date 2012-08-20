@@ -43,7 +43,6 @@ and the Lempira currency.""",
     'author': 'Salvatore Josue Trimarchi Pinto',
     'website': 'http://trimarchi.co.cc',
     'depends': ['base', 'account', 'account_chart'],
-    'data': [],
     'data': [
         'account_types.xml',
         'account_chart.xml',

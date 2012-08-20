@@ -77,8 +77,6 @@ If required, you can manually adjust the descriptions via the CODA configuration
         'account_coda_trans_code.xml',
         'account_coda_trans_category.xml',
         'account_coda_comm_type.xml',
-    ],
-    'data' : [
         'security/ir.model.access.csv',
         'security/account_security.xml',
         'account_coda_wizard.xml',

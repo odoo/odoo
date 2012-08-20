@@ -29,7 +29,6 @@
     'description': """
 Add "Contract Data" in project view.
     """,
-    'data' : [],
     'data': ['analytic_contract_project_view.xml'],
     'demo_xml': [],
     'installable': True,

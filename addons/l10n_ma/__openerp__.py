@@ -35,7 +35,6 @@ L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comp
 Seddik au cours du troisième trimestre 2010.""",
     'website': 'http://www.kazacube.com',
     'depends' : ['base', 'account'],
-    'data' : [],
     'data' : [
                     'security/compta_security.xml',
                     'security/ir.model.access.csv',

@@ -30,7 +30,6 @@ other software.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base','mail'],
-    'data': [],
     'data': ['import_base_view.xml'],
     'demo': [],
     'test': [], #TODO provide test

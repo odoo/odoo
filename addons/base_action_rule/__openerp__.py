@@ -37,11 +37,9 @@ trigger an automatic reminder email.
     'website': 'http://www.openerp.com',
     'depends': ['base', 'mail'],
     'data': [
-        'base_action_rule_data.xml'
-    ],
-    'data': [
         'base_action_rule_view.xml',
         'security/ir.model.access.csv',
+        'base_action_rule_data.xml'
     ],
     'demo': [],
     'installable': True,

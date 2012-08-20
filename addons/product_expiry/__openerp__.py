@@ -23,7 +23,6 @@
     'author' : 'OpenERP SA',
     'category' : 'Specific Industry Applications',
     'depends' : ['stock'],
-    'data' : [],
     'demo' : ['product_expiry_demo.xml'],
     'description': """
 Track different dates on products and production lots.

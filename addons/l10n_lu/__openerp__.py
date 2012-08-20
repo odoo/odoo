@@ -34,7 +34,6 @@ This is the base module to manage the accounting chart for Luxembourg.
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['account', 'base_vat', 'base_iban'],
-    'data': [],
     'data': [
         'account.tax.code.template.csv',
         'l10n_lu_data.xml',

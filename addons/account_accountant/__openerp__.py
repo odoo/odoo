@@ -36,7 +36,6 @@ It assigns manager and user access rights to the Administrator and only
 user rights to Demo user.
     """,
     'website': 'http://www.openerp.com',
-    'data': [],
     'depends' : ['account_voucher'],
     'data': [
         'security/account_security.xml',

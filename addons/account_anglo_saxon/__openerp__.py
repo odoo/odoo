@@ -39,7 +39,6 @@ actual purchase price and fixed product standard price are booked on a separate 
     'images': ['images/account_anglo_saxon.jpeg'],
     'depends': ['product', 'purchase'],
     'category': 'Accounting & Finance',
-    'data': [],
     'demo': [],
     'data': ['product_view.xml',],
     'auto_install': False,

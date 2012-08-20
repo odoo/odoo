@@ -41,7 +41,6 @@ up a management by affair.
     'website': 'http://www.openerp.com',
     'images': ['images/hr_timesheet_lines.jpeg'],
     'depends': ['account', 'hr', 'base', 'hr_attendance', 'process'],
-    'data': ['hr_timesheet_data.xml'],
     'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_security.xml',
@@ -53,6 +52,7 @@ up a management by affair.
         'wizard/hr_timesheet_print_users_view.xml',
         'wizard/hr_timesheet_sign_in_out_view.xml',
         'hr_timesheet_installer.xml',
+        'hr_timesheet_data.xml'
     ],
     'demo': ['hr_timesheet_demo.xml'],
     'test': [

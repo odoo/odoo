@@ -27,7 +27,6 @@
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'import_base', 'google_base_account', 'base_calendar'],
-    'data': [],
     'data': ['security/ir.model.access.csv',
                 'sync_google_calendar_view.xml',
                 'wizard/import_google_data_view.xml',

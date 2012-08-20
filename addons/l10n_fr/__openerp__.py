@@ -54,7 +54,6 @@ configuration of their taxes and fiscal positions manually.
 Credits: Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.
 """,
     'depends' : ['base_iban', 'account', 'account_chart', 'base_vat', 'l10n_fr_rib'],
-    'data' : [],
     'data' : [
         'fr_report.xml',
         'plan_comptable_general.xml',

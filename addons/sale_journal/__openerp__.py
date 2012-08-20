@@ -50,10 +50,10 @@ Some statistics by journals are provided.
     'website': 'http://www.openerp.com',
     'images': ['images/invoice_type.jpeg'],
     'depends': ['sale'],
-    'data': ['sale_journal_data.xml'],
     'data': [
         'security/ir.model.access.csv',
         'sale_journal_view.xml',
+        'sale_journal_data.xml'
     ],
     'demo': ['sale_journal_demo.xml'],
     'test': [ ],

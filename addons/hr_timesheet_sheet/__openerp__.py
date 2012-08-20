@@ -51,7 +51,6 @@ The validation can be configured in the company:
     'website': 'http://www.openerp.com',
     'images': ['images/hr_my_timesheet.jpeg','images/hr_timesheet_analysis.jpeg','images/hr_timesheet_sheet_analysis.jpeg','images/hr_timesheets.jpeg'],
     'depends': ['hr_timesheet', 'hr_timesheet_invoice', 'process'],
-    'data': [],
     'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_sheet_security.xml',

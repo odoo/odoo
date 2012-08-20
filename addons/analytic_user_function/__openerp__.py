@@ -41,7 +41,6 @@ compatible with older configurations.
     'website': 'http://www.openerp.com',
     'images': ['images/analytic_user_function.jpeg'],
     'depends': ['hr_timesheet_sheet'],
-    'data': [],
     'data': ['analytic_user_function_view.xml', 'security/ir.model.access.csv'],
     'demo': [],
     'installable': True,

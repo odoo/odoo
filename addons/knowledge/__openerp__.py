@@ -34,7 +34,6 @@ Makes the Knowledge Application Configuration available from where you can insta
 document and Wiki based Hidden.
     """,
     'website': 'http://www.openerp.com',
-    'data': [],
     'data': [
         'security/knowledge_security.xml',
         'security/ir.model.access.csv',

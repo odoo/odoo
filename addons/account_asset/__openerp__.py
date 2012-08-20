@@ -35,8 +35,6 @@ And it allows to create Move's of the depreciation lines.
     'website' : 'http://www.openerp.com',
     'category' : 'Accounting & Finance',
     'sequence': 32,
-    'data' : [
-    ],
     'demo' : [ 'account_asset_demo.xml'
     ],
     'test': [

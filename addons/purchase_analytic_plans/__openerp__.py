@@ -35,7 +35,6 @@ on a supplier purchase order into several accounts and analytic plans.
     'website': 'http://www.openerp.com',
     'images' : ['images/purchase_analytic_distribution.jpeg'],
     'depends': ['purchase', 'account_analytic_plans'],
-    'data': [],
     'data': ['purchase_analytic_plans_view.xml'],
     'demo': [],
     'installable': True,

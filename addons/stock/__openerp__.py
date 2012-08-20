@@ -50,7 +50,6 @@ Dashboard for warehouse that includes:
     'depends' : ['product', 'account'],
     'category' : 'Warehouse Management',
     'sequence': 16,
-    'data' : [],
     'demo' : [
         'stock_demo.xml',
 #        'stock_demo.yml',

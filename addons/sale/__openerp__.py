@@ -64,7 +64,6 @@ Dashboard for Sales Manager that includes:
     'website': 'http://www.openerp.com',
     'images': ['images/deliveries_to_invoice.jpeg','images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
     'depends': ['stock', 'procurement', 'board', 'account_voucher'],
-    'data': [],
     'data': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',

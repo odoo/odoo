@@ -27,7 +27,6 @@
 United States - Chart of accounts.
     """,
     'website': 'http://www.openerp.com',
-    'data': [],
     'depends': [
         'account_chart',
         ],

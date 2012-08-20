@@ -34,7 +34,6 @@ If set to true it allows user to cancel entries & invoices.
     'website': 'http://www.openerp.com',
     'images' : ['images/account_cancel.jpeg'],
     'depends' : ['account'],
-    'data': [],
     'data': ['account_cancel_view.xml' ],
     'demo': [],
     'installable': True,

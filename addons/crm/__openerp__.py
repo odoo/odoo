@@ -74,8 +74,7 @@ Creates a dashboard for CRM that includes:
         'crm_data.xml',
         'crm_lead_data.xml',
         'crm_phonecall_data.xml',
-    ],
-    'data': [
+
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 

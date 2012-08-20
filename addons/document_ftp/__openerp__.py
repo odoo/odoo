@@ -35,7 +35,6 @@ FTP client.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'document'],
-    'data': [],
     'data': [
         'wizard/ftp_configuration_view.xml',
         'wizard/ftp_browse_view.xml',

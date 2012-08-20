@@ -35,7 +35,6 @@ crm_case classes from crm.
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'data': [],
-    'data': [],
     'demo': [],
     'installable': True,
     'auto_install': False,

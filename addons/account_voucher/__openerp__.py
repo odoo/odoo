@@ -38,12 +38,7 @@ eInvoicing & Payments module manage all Voucher Entries such as 'Reconciliation 
     'website' : 'http://openerp.com',
     'images' : ['images/customer_payment.jpeg','images/journal_voucher.jpeg','images/sales_receipt.jpeg','images/supplier_voucher.jpeg'],
     'depends' : ['account'],
-    'data' : [
-        'account_voucher_data.xml',
-    ],
-
     'demo' : [],
-
     'data' : [
         'security/ir.model.access.csv',
         'account_voucher_sequence.xml',
@@ -56,7 +51,8 @@ eInvoicing & Payments module manage all Voucher Entries such as 'Reconciliation 
         'account_voucher_wizard.xml',
         'account_voucher_pay_invoice.xml',
         'report/account_voucher_sales_receipt_view.xml',
-        'security/account_voucher_security.xml'
+        'security/account_voucher_security.xml',
+        'account_voucher_data.xml',
     ],
     'test' : [
         'test/account_voucher.yml',

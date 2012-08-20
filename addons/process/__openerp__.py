@@ -35,7 +35,6 @@ e.g product/process/product_process.xml.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'data': [],
     'data': [
        'security/ir.model.access.csv',
        'process_view.xml'

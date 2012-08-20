@@ -23,7 +23,6 @@
     'author' : 'OpenERP SA',
     'category': 'Purchase Management',
     'depends' : ['stock'],
-    'data' : [],
     'demo' : [],
     'description': """
 A module that adds manufacturers and attributes on the product form.

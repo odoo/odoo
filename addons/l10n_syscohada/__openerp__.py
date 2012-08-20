@@ -37,7 +37,6 @@ Countries that use OHADA are the following:
     'website': 'http://www.baamtu.com',
     'depends' : ['account', 'base_vat'],
     'demo' : [],
-    'data':[],
     'data' : ['l10n_syscohada_data.xml','l10n_syscohada_wizard.xml'],
     'auto_install': False,
     'installable': True

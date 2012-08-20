@@ -38,10 +38,6 @@ If you need to manage your meetings, you should install the CRM module.
     'author': 'OpenERP SA',
     'category': 'Hidden/Dependency',
     'website': 'http://www.openerp.com',
-    'data': [
-        'base_calendar_data.xml',
-        'crm_meeting_data.xml',
-    ],
     'demo': ['crm_meeting_demo.xml'],
     'data': [
         'security/calendar_security.xml',
@@ -49,6 +45,8 @@ If you need to manage your meetings, you should install the CRM module.
         'wizard/base_calendar_invite_attendee_view.xml',
         'base_calendar_view.xml',
         'crm_meeting_view.xml',
+        'base_calendar_data.xml',
+        'crm_meeting_data.xml',
     ],
     'test' : ['test/base_calendar_test.yml'],
     'installable': True,

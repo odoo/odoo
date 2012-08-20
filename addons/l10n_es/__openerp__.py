@@ -52,8 +52,6 @@ Note: You should install the l10n_ES_account_balance_report module for yearly
         'l10n_es_wizard.xml'
     ],
     'demo' : [],
-    'data' : [
-    ],
     'auto_install': False,
     'installable': True,
     'certificate' : '00408828172062583229',

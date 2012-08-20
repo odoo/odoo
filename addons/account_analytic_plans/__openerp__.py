@@ -63,7 +63,6 @@ of distribution models.
     'website': 'http://www.openerp.com',
     'images': ['images/analytic_plan.jpeg'],
     'depends': ['account', 'account_analytic_default'],
-    'data': [],
     'data': [
         'security/account_analytic_plan_security.xml',
         'security/ir.model.access.csv',

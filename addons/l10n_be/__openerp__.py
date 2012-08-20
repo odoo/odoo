@@ -54,7 +54,6 @@ Wizards provided by this module:
         'account_chart',
         'account_coda',
     ],
-    'data': [],
     'data': [
         'account_financial_report.xml',
         'account_pcmn_belgium.xml',

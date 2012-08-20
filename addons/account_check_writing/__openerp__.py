@@ -27,7 +27,6 @@
 Module for the Check Writing and Check Printing.
     """,
     'website': 'http://www.openerp.com',
-    'data': [],
     'depends' : [
         'account_voucher',
         ],

@@ -38,7 +38,6 @@ The confirmation of a payment order does _not_ create accounting entries, it jus
     """,
     'images': ['images/payment_mode.jpeg','images/payment_order.jpeg'],
     'depends': ['account','account_voucher'],
-    'data': [],
     'data': [
         'security/account_payment_security.xml',
         'security/ir.model.access.csv',

@@ -71,11 +71,9 @@ for online use of 'private modules'.""",
         'data/account_tax_template.xml',
         'data/l10n_br_data.xml',
         'security/ir.model.access.csv',
-                ],
-    'data': [
         'account_view.xml',
         'l10n_br_view.xml',
-    ],
+                ],
     'installable': True,
     'certificate' : '001280994939126801405',
 }

@@ -67,7 +67,6 @@ Dashboard provided by this module:
     * List of next production orders
     * Graph of stock value variation
     """,
-    'data': [],
     'data': [
         'security/mrp_security.xml',
         'security/ir.model.access.csv',

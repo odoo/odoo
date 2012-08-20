@@ -48,7 +48,6 @@ performing those tasks.
     'author': 'OpenERP SA',
     'images': ['images/project_gtd.jpeg'],
     'depends': ['project'],
-    'data': [],
     'data': [
         'project_gtd_data.xml',
         'project_gtd_view.xml',

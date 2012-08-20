@@ -50,7 +50,6 @@ entry, you can do from in the menu:
     'website': 'http://www.openerp.com',
     'images': ['images/follow_ups.jpeg','images/send_followups.jpeg'],
     'depends': ['account_accountant', 'mail'],
-    'data': [],
     'data': [
         'security/account_followup_security.xml',
         'security/ir.model.access.csv',

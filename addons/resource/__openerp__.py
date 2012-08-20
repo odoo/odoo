@@ -36,7 +36,6 @@ associated to every resource. It also manages the leaves of every resource.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['process'],
-    'data': [],
     'data': [
         'security/ir.model.access.csv',
         'resource_view.xml',

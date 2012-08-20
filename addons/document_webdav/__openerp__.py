@@ -59,7 +59,6 @@ Also implements IETF RFC 5785 for services discovery on a http server,
 which needs explicit configuration in openerp-server.conf too.
 """,
         'depends' : ['base', 'document'],
-        'data' : [],
         'data' : ['security/ir.model.access.csv',
                         'webdav_view.xml',
                         'webdav_setup.xml',

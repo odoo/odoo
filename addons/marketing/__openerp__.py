@@ -33,7 +33,6 @@ Menu for Marketing.
 Contains the installer for marketing-related modules.
     """,
     'website': 'http://www.openerp.com',
-    'data': [],
     'data': [
         'security/marketing_security.xml',
         'security/ir.model.access.csv',

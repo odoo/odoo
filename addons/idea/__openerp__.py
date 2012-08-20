@@ -36,7 +36,6 @@ Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base_tools','mail'],
-    'data': [],
     'data': [
         'security/idea_security.xml',
         'security/ir.model.access.csv',

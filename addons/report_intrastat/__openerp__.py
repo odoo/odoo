@@ -33,11 +33,11 @@ European Union.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'product', 'stock', 'sale', 'purchase'],
-    'data': ['report_intrastat_data.xml'],
     'data': [
         'security/ir.model.access.csv',
         'report_intrastat_view.xml',
-        'intrastat_report.xml'
+        'intrastat_report.xml',
+        'report_intrastat_data.xml'
     ],
     'demo': [],
     'test': ['test/report_intrastat_report.yml'],

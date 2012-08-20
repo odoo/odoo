@@ -34,7 +34,6 @@ and can check logs.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'data': [],
     'data': [
         'wizard/audittrail_view_log_view.xml',
         'audittrail_view.xml',

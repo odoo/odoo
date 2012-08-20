@@ -46,7 +46,6 @@ taxes and the Quetzal currency.""",
     'author': 'José Rodrigo Fernández Menegazzo',
     'website': 'http://solucionesprisma.com/',
     'depends': ['base', 'account', 'account_chart'],
-    'data': [],
     'data': [
         'account_types.xml',
         'account_chart.xml',

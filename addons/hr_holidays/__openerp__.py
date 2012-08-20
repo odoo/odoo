@@ -56,7 +56,6 @@ Note that:
 """,
     'images': ['images/hr_allocation_requests.jpeg', 'images/hr_leave_requests.jpeg', 'images/leaves_analysis.jpeg'],
     'depends': ['hr', 'base_calendar', 'process', 'resource'],
-    'data': [],
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',

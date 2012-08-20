@@ -40,7 +40,6 @@ Plan contable argentino e impuestos de acuerdo a disposiciones vigentes
         'l10n_ar_wizard.xml',
     ],
     'demo': [],
-    'data': [],
     'active': False,
     'installable': True,
     'images': ['images/config_chart_l10n_ar.jpeg','images/l10n_ar_chart.jpeg'],

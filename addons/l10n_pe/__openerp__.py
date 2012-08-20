@@ -42,8 +42,6 @@ SUNAT 2011 (PCGE 2010).
             ],
     'demo': [
             ],
-    'data': [
-            ],
     'active': False,
     'installable': True,
     'certificate' : '0045046493412',

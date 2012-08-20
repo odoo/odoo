@@ -37,7 +37,6 @@ This module is the base module for other multi-company modules.
         'sale',
         'project',
     ],
-    'data': [],
     'data': [
         'res_company_view.xml'
     ],

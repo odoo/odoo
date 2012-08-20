@@ -36,7 +36,6 @@ wizard if the delivery is to be invoiced.
     'images': ['images/create_invoice.jpeg'],
     'depends': ['delivery', 'stock'],
     'data': [],
-    'data': [],
     'demo': [],
     'test': ['test/stock_invoice_directly.yml'],
     'installable': True,

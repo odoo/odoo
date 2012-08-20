@@ -40,7 +40,6 @@ You can customize the following attributes of the sequence:
     'website': 'http://www.openerp.com',
     'images': ['images/internal_sequence_number.jpeg'],
     'depends': ['account'],
-    'data': [],
     'data': [
         'account_sequence_data.xml',
         'account_sequence_installer_view.xml',

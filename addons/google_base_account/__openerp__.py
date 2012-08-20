@@ -28,7 +28,6 @@
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'data': [],
     'data': [
                   'google_base_account_view.xml',
                   'wizard/google_login_view.xml',

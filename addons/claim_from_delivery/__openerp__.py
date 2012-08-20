@@ -23,7 +23,6 @@
     'author' : 'OpenERP SA',
     'category' : 'Warehouse Management',
     'depends' : ['base', 'crm_claim', 'stock'],
-    'data' : [],
     'demo' : [],
     'description': """
 Create a claim from a delivery order.

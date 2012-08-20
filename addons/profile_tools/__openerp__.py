@@ -35,7 +35,6 @@ modules like share, lunch, pad, idea, survey and subscription.
     """,
     'website': 'http://www.openerp.com',
     'data': [],
-    'data': [],
     'demo': [],
     'installable': True,
     'auto_install': False,

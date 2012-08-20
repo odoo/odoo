@@ -54,7 +54,6 @@ Note: If you need demo data, you can install the marketing_campaign_crm_demo
       CRM Leads.
     """,
     'website': 'http://www.openerp.com',
-    'data': [],
     'data': [
         'marketing_campaign_view.xml',
         'marketing_campaign_data.xml',
