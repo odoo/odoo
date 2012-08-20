@@ -1553,7 +1553,7 @@ def field_to_dict(model, cr, user, field, context=None):
     # when client is started in debug mode.
     if isinstance(field, function):
         res['function'] = field._fnct and field._fnct.func_name or False
-        res['store'] = field.store
+    #    res['store'] = field.store
         if isinstance(field.store, dict):
             res['store'] = str(field.store)
         res['fnct_search'] = field._fnct_search and field._fnct_search.func_name or False
