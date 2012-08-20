@@ -2371,6 +2371,7 @@
                     <div groups="base.group_multi_company">
                         <label for="company_id"/>
                         <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
+                        <label for="currency_id"/>
                         <field name="currency_id" />
                     </div>
                     <group>

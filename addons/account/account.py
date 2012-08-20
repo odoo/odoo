@@ -3039,12 +3039,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             company_id = res.get('company_id') or False
             if company_id:
                 company_obj = self.pool.get('res.company')
-                company = company_obj.browse(cr, uid, company_id, context=context)
-                if company.country_id and company.country_id.currency_id:
-                    res.update({'currency_id': company.country_id.currency_id.id})
-                else:
-                    currency_id = company_obj._get_euro(cr, uid, context=context)
-                    res.update({'currency_id': currency_id})
+                country_id = company_obj.browse(cr, uid, company_id, context=context).country_id.id
+                currency_id = company_obj.on_change_country(cr, uid, company_id, country_id, context=context)['value']['currency_id']
+                res.update({'currency_id': currency_id})
 
         ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
         if ids:
