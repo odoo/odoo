@@ -196,7 +196,7 @@ class share_wizard(osv.TransientModel):
     }
 
     def has_email(self, cr, uid, context=None):
-        return bool(self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email)
+        return bool(self.pool.get('res.users').browse(cr, uid, uid, context=context).email)
 
     def go_step_1(self, cr, uid, ids, context=None):
         wizard_data = self.browse(cr,uid,ids,context)[0]
@@ -241,7 +241,7 @@ class share_wizard(osv.TransientModel):
                 if not wizard_data.invite:
                     existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
                 else:
-                    existing = user_obj.search(cr, UID_ROOT, [('user_email', '=', new_user)])
+                    existing = user_obj.search(cr, UID_ROOT, [('email', '=', new_user)])
                 existing_ids.extend(existing)
                 if existing:
                     new_line = { 'user_id': existing[0],
@@ -253,7 +253,7 @@ class share_wizard(osv.TransientModel):
                         'login': new_user,
                         'password': new_pass,
                         'name': new_user,
-                        'user_email': new_user,
+                        'email': new_user,
                         'groups_id': [(6,0,[group_id])],
                         'share': True,
                         'message_email_pref': 'all',
@@ -825,12 +825,12 @@ class share_wizard(osv.TransientModel):
         message_obj = self.pool.get('mail.message')
         notification_obj = self.pool.get('mail.notification')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
-        if not user.user_email:
+        if not user.email:
             raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         for result_line in wizard_data.result_line_ids:
-            email_to = result_line.user_id.user_email
+            email_to = result_line.user_id.email
             if not email_to:
                 continue
             subject = _('Invitation to collaborate about %s') % (wizard_data.record_name)
@@ -849,20 +849,20 @@ class share_wizard(osv.TransientModel):
             body += "--\n"
             body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
-            msg_id = message_obj.schedule_with_attach(cr, uid, user.user_email, [email_to], subject, body, model='', context=context)
+            msg_id = message_obj.schedule_with_attach(cr, uid, user.email, [email_to], subject, body, model='', context=context)
             notification_obj.create(cr, uid, {'user_id': result_line.user_id.id, 'message_id': msg_id}, context=context)
     
     def send_emails(self, cr, uid, wizard_data, context=None):
         _logger.info('Sending share notifications by email...')
         mail_message = self.pool.get('mail.message')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
-        if not user.user_email:
+        if not user.email:
             raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         msg_ids = []
         for result_line in wizard_data.result_line_ids:
-            email_to = result_line.user_id.user_email
+            email_to = result_line.user_id.email
             if not email_to:
                 continue
             subject = wizard_data.name
@@ -883,7 +883,7 @@ class share_wizard(osv.TransientModel):
             body += "--\n"
             body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
-            msg_ids.append(mail_message.schedule_with_attach(cr, uid, user.user_email, [email_to], subject, body, model='share.wizard', context=context))
+            msg_ids.append(mail_message.schedule_with_attach(cr, uid, user.email, [email_to], subject, body, model='share.wizard', context=context))
         # force direct delivery, as users expect instant notification
         mail_message.send(cr, uid, msg_ids, context=context)
         _logger.info('%d share notification(s) sent.', len(msg_ids))

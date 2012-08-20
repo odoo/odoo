@@ -2,27 +2,25 @@
 <openerp>
     <data>
 
-
         <record model="ir.ui.view" id="crm_lead_forward_to_partner_form">
             <field name="name">crm_lead_forward_to_partner</field>
             <field name="model">crm.lead.forward.to.partner</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Send Mail" version="7.0">
-                    <separator string="Forward to Partner" colspan="4" />
+                    <separator string="Forward to Partner" colspan="4"/>
                     <group col="4" colspan="6">
                         <field name="history" colspan="2" on_change="on_change_history(history, context)"/>
-                        <field name="send_to" colspan="2" />
+                        <field name="send_to" colspan="2"/>
                         <group col="2" colspan="2" attrs="{ 'invisible' : [('send_to','!=','user')]}">
                             <field name="user_id"
                                 attrs="{ 'required' : [('send_to','=','user')]}"
-                                on_change="on_change_email(user_id)" />
+                                on_change="on_change_email(user_id)"/>
                         </group>
                         <group col="4" colspan="4" attrs="{'invisible' : [('send_to','!=','partner')]}">
-                            <field name="partner_id" attrs="{'required' : [('send_to','=','partner')]}" on_change="on_change_partner(partner_id)" colspan="2" />
+                            <field name="partner_id" attrs="{'required' : [('send_to','=','partner')]}" on_change="on_change_partner(partner_id)" colspan="2"/>
                         </group>
                     </group>
-                    <separator string="" colspan="4" />
+                    <separator string="" colspan="4"/>
                     <group col="6" colspan="4">
                         <field name="email_from" colspan="4" required="1"/>
                         <field name="email_to" colspan="4" required="1"/>
@@ -44,7 +42,7 @@
                     <footer>
                         <button name="action_forward" string="Send" type="object" class="oe_highlight"/>
                         or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -60,7 +58,7 @@
         </record>
 
 
-        
+
         <act_window id="action_crm_send_mass_forward"
             multi="True"
             key2="client_action_multi" name="Mass forward to partner"
@@ -68,7 +66,7 @@
             view_mode="form" target="new" view_type="form"
             context="{'mail.compose.message.mode' : 'mass_mail'}"
             view_id="crm_lead_forward_to_partner_form"
-        />
+       />
 
 
 

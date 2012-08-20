@@ -61,7 +61,6 @@
         <record id="edit_project" model="ir.ui.view">
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                 <header>
@@ -82,14 +81,14 @@
                         <field name="name" string="Project Name"/>
                     </h1>
                     <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <field name="alias_id" invisible="1"/>
+                        <field name="alias_id" invisible="1" required="0"/>
                         <label for="alias_name" class="oe_edit_only "/>
                         <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
                     </div>
                     <group>
                         <group>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                            <field name="partner_id" string = "Contact" on_change="onchange_partner_id(partner_id)"/>
+                            <field name="partner_id" string="Contact" on_change="onchange_partner_id(partner_id)"/>
                             <field name="privacy_visibility"/>
                             <field name="analytic_account_id" invisible="1" required="0"/>
                         </group>
@@ -149,6 +148,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
             </field>
@@ -157,7 +157,6 @@
        <record id="view_project_project_filter" model="ir.ui.view">
             <field name="name">project.project.select</field>
             <field name="model">project.project</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Project">
                     <field name="complete_name" string="Project Name"/>
@@ -171,10 +170,10 @@
                     <separator/>
                     <filter string="Project(s) Manager" domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
                     <field name="user_id" string="Project Manager"/>
-                    <field name="partner_id" string="Partner"/>
+                    <field name="partner_id" string="Contact"/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" name="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Partner" name="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Contact" name="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Parent" name="Parent" help="Parent" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
                     </group>
                 </search>
@@ -184,7 +183,6 @@
         <record id="view_project" model="ir.ui.view">
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree fonts="bold:needaction_pending==True" colors="red:date and (date&lt;current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
@@ -216,7 +214,6 @@
         <record model="ir.ui.view" id="view_project_kanban">
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="effective_hours"/>
@@ -232,7 +229,7 @@
                     <field name="alias_domain"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
@@ -277,7 +274,6 @@
        <record id="view_project_project_gantt" model="ir.ui.view">
             <field name="name">project.project.gantt</field>
             <field name="model">project.project</field>
-            <field name="type">gantt</field>
             <field name="arch" type="xml">
                 <gantt date_delay="planned_hours" date_start="date_start" string="Projects">
                 </gantt>
@@ -321,14 +317,13 @@
         <record id="view_task_work_form" model="ir.ui.view">
             <field name="name">project.task.work.form</field>
             <field name="model">project.task.work</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Task Work" version="7.0">
                     <group col="4">
                         <field colspan="4" name="name"/>
                         <field name="hours" widget="float_time"/>
                         <field name="date"/>
-                        <field name="user_id"/>
+                        <field name="user_id" options='{"no_open": true}'/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </form>
@@ -338,7 +333,6 @@
         <record id="view_task_work_tree" model="ir.ui.view">
             <field name="name">project.task.work.tree</field>
             <field name="model">project.task.work</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="top" string="Task Work">
                     <field name="date"/>
@@ -391,7 +385,6 @@
         <record id="view_task_form2" model="ir.ui.view">
             <field name="name">project.task.form</field>
             <field name="model">project.task</field>
-            <field name="type">form</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
@@ -422,7 +415,7 @@
                     <group>
                         <group>
                             <field name="project_id"  on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
-                            <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
+                            <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}" options='{"no_open": true}'/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
@@ -489,6 +482,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                     </div>
                 </form>
             </field>
@@ -498,7 +492,6 @@
         <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" >
                     <field name="color"/>
@@ -549,7 +542,7 @@
                                     <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
                                     <a t-if="record.priority.raw_value == 1" type="object" string="Priority" name="set_normal_priority" class="oe_e oe_star_on">7</a>
                                     <a t-if="record.priority.raw_value != 1" type="object" string="Priority" name="set_high_priority" class="oe_e oe_star_off">7</a>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left">
                                     <span groups="project.group_time_work_estimation_tasks" title="Remaining hours">
@@ -576,7 +569,6 @@
         <record id="view_task_tree2" model="ir.ui.view">
             <field name="name">project.task.tree</field>
             <field name="model">project.task</field>
-            <field name="type">tree</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <tree fonts="bold:needaction_pending==True" colors="grey:state in ('cancelled','done');blue:state == 'pending';red:date_deadline and (date_deadline&lt;current_date) and (state in ('draft','pending','open'))" string="Tasks">
@@ -603,7 +595,6 @@
         <record id="view_task_calendar" model="ir.ui.view">
             <field name="name">project.task.calendar</field>
             <field name="model">project.task</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_deadline" string="Tasks">
@@ -616,7 +607,6 @@
         <record id="view_task_gantt" model="ir.ui.view">
             <field name="name">project.task.gantt</field>
             <field name="model">project.task</field>
-            <field name="type">gantt</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <gantt date_start="date_start" date_stop="date_end" string="Tasks" default_group_by="project_id">
@@ -627,7 +617,6 @@
         <record id="view_project_task_graph" model="ir.ui.view">
             <field name="name">project.task.graph</field>
             <field name="model">project.task</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Project Tasks" type="bar">
                     <field name="project_id"/>
@@ -640,7 +629,6 @@
         <record id="view_task_search_form" model="ir.ui.view">
             <field name="name">project.task.search.form</field>
             <field name="model">project.task</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                <search string="Tasks">
                     <field name="name" string="Tasks"/>
@@ -675,7 +663,6 @@
         <record id="analytic_account_inherited_form" model="ir.ui.view">
             <field name="name">account.analytic.account.form.inherit</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
@@ -751,7 +738,6 @@
         <record id="task_type_search" model="ir.ui.view">
             <field name="name">project.task.type.search</field>
             <field name="model">project.task.type</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Tasks Stages">
                    <field name="name" string="Tasks Stages"/>
@@ -763,7 +749,6 @@
         <record id="task_type_edit" model="ir.ui.view">
             <field name="name">project.task.type.form</field>
             <field name="model">project.task.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Task Stage" version="7.0">
                     <group>
@@ -785,7 +770,6 @@
         <record id="task_type_tree" model="ir.ui.view">
             <field name="name">project.task.type.tree</field>
             <field name="model">project.task.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Task Stage">
                     <field name="sequence"/>
@@ -824,7 +808,6 @@
          <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='account_grp']" position="after">

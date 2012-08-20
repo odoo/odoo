@@ -31,7 +31,7 @@ openerp.auth_reset_password = function(instance) {
         },
         do_reset_password: function(db, email) {
             var self = this;
-            instance.connection.session_authenticate(db, 'anonymous', 'anonymous', true).pipe(function () {
+            instance.session.session_authenticate(db, 'anonymous', 'anonymous', true).pipe(function () {
                 var func = new instance.web.Model("res.users").get_func("send_reset_password_request");
                 return func(email).then(function(res) {
                     // show message

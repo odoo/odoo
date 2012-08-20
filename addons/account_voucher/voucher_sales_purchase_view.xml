@@ -4,7 +4,6 @@
         <record id="view_voucher_filter_vendor" model="ir.ui.view">
             <field name="name">account.voucher.purchase.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
@@ -27,7 +26,6 @@
         <record id="view_voucher_filter_sale" model="ir.ui.view">
             <field name="name">account.voucher.sale.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
@@ -60,9 +58,8 @@
         <record model="ir.ui.view" id="view_sale_receipt_form">
             <field name="name">account.voucher.sale.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Sale voucher" version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
                     <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
@@ -150,6 +147,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                     </div>
                 </form>
             </field>
@@ -204,9 +202,8 @@
         <record model="ir.ui.view" id="view_purchase_receipt_form">
             <field name="name">account.voucher.purchase.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Purchase Voucher" version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
                     <button name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
@@ -305,6 +302,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                     </div>
                 </form>
             </field>

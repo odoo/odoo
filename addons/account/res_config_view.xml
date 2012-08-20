@@ -13,7 +13,6 @@
         <record id="view_account_config_settings" model="ir.ui.view">
             <field name="name">account settings</field>
             <field name="model">account.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Accounting" version="7.0" class="oe_form_configuration">
                     <header>
@@ -225,6 +224,8 @@
                                     icon="gtk-go-forward"
                                     type="action"
                                     class="oe_inline oe_link"/>
+                                <label for="company_footer"/>
+                                <field name="company_footer"/>
                             </div>
                             <div>
                                 <label for="paypal_account"/>

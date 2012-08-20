@@ -39,7 +39,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         'product_id': fields.many2one('product.product', 'Advance Product',
             help="""Select a product of type service which is called 'Advance Product'.
                 You may have to create it and set it as a default value on this field."""),
-        'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Sale Price'),
+        'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Account'),
             help="The amount to be invoiced in advance."),
     }
 
