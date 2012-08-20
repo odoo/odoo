@@ -6,9 +6,10 @@
             <field name="model">base.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_general_configuration"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/group[last()]/div[last()]/div[last()]" position='after' version="7.0">
+                <xpath expr="//div[@name='email']" position='inside'>
                     <div>
-                        <label for="alias_domain" class="oe_inline"/><field name="alias_domain" placeholder="mycompany.my.openerp.com" class="oe_inline"/>
+                        <label for="alias_domain" class="oe_inline"/>
+                        <field name="alias_domain" placeholder="mycompany.my.openerp.com" class="oe_inline"/>
                     </div>
                 </xpath>
             </field>
