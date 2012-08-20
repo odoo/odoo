@@ -671,14 +671,12 @@
     </tfoot>
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable">
-        <t t-if="widget._is_action_enabled('create')">
-            <button type="button" class="oe_button oe_list_add oe_highlight">
-                <t t-esc="widget.options.addable"/>
-            </button>
-        </t>
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget._is_action_enabled('create')">
+        <button type="button" class="oe_button oe_list_add oe_highlight">
+            <t t-esc="widget.options.addable"/>
+        </button>
         <span class="oe_alternative" t-if="widget.options.import_enabled">
-            <span class="oe_fade" t-if="widget._is_action_enabled('create')">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
+            <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
         </span>
     </t>
 </div>
