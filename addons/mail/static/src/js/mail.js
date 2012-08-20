@@ -73,67 +73,6 @@ openerp.mail = function(session) {
         },
 
         /**
-        * Add records to comments_structure array
-        * @param {Array} records records from mail.message sorted by date desc
-        * @returns {Object} cs comments_structure: dict
-        *       cs.model_to_root_ids = {model: [root_ids], }
-        *       cs.new_root_ids = [new_root_ids]
-        *       cs.root_ids = [root_ids]
-        *       cs.msgs = {record.id: record,}
-        *       cs.tree_struct = {record.id: {
-        *           'level': record_level in hierarchy, 0 is root,
-        *           'msg_nbr': number of childs,
-        *           'direct_childs': [msg_ids],
-        *           'all_childs': [msg_ids],
-        *           'for_thread_msgs': [records],
-        *           'ancestors': [msg_ids], } }
-        */
-        // records_struct_add_records: function(cs, records, parent_id) {
-        //     var cur_iter = 0; var max_iter = 10; var modif = true;
-        //     while ( modif && (cur_iter++) < max_iter) {
-        //         modif = false;
-        //         _(records).each(function (record) {
-        //             // root and not yet recorded
-        //             if ( (record.parent_id == false || record.parent_id[0] == parent_id) && ! cs['msgs'][record.id]) {
-        //                 // add to model -> root_list ids
-        //                 if (! cs['model_to_root_ids'][record.model]) cs['model_to_root_ids'][record.model] = [record.id];
-        //                 else cs['model_to_root_ids'][record.model].push(record.id);
-        //                 // add root data
-        //                 cs['new_root_ids'].push(record.id);
-        //                 // add record
-        //                 cs['tree_struct'][record.id] = {'level': 0, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [record], 'msg_nbr': -1, 'ancestors': []};
-        //                 cs['msgs'][record.id] = record;
-        //                 modif = true;
-        //             }
-        //             // not yet recorded, but parent is recorded
-        //             else if (! cs['msgs'][record.id] && cs['msgs'][record.parent_id[0]]) {
-        //                 var parent_level = cs['tree_struct'][record.parent_id[0]]['level'];
-        //                 // update parent structure
-        //                 cs['tree_struct'][record.parent_id[0]]['direct_childs'].push(record.id);
-        //                 cs['tree_struct'][record.parent_id[0]]['for_thread_msgs'].push(record);
-        //                 // update ancestors structure
-        //                 for (ancestor_id in cs['tree_struct'][record.parent_id[0]]['ancestors']) {
-        //                     cs['tree_struct'][ancestor_id]['all_childs'].push(record.id);
-        //                 }
-        //                 // add record
-        //                 cs['tree_struct'][record.id] = {'level': parent_level+1, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [], 'msg_nbr': -1, 'ancestors': []};
-        //                 cs['msgs'][record.id] = record;
-        //                 modif = true;
-        //             }
-        //         });
-        //     }
-        //     return cs;
-        // },
-
-        /* copy cs.new_root_ids into cs.root_ids */
-        // records_struct_update_after_display: function(cs) {
-        //     // update TODO
-        //     cs['root_ids'] = _.union(cs['root_ids'], cs['new_root_ids']);
-        //     cs['new_root_ids'] = [];
-        //     return cs;
-        // },
-
-        /**
          *    CONTENT MANIPULATION
          * 
          * Regular expressions
@@ -192,33 +131,33 @@ openerp.mail = function(session) {
         
         /**
          * @param {Object} parent parent
-         * @param {Object} [params]
-         * @param {String} [params.res_model] res_model of document [REQUIRED]
-         * @param {Number} [params.res_id] res_id of record [REQUIRED]
-         * @param {Number} [params.email_mode] true/false, tells whether
+         * @param {Object} [options]
+         * @param {String} [options.res_model] res_model of document [REQUIRED]
+         * @param {Number} [options.res_id] res_id of record [REQUIRED]
+         * @param {Number} [options.email_mode] true/false, tells whether
          *      we are in email sending mode
-         * @param {Number} [params.formatting] true/false, tells whether
+         * @param {Number} [options.formatting] true/false, tells whether
          *      we are in advance formatting mode
-         * @param {String} [params.model] mail.compose.message.mode (see
+         * @param {String} [options.model] mail.compose.message.mode (see
          *      composition wizard)
-         * @param {Number} [params.msg_id] id of a message in case we are in
+         * @param {Number} [options.msg_id] id of a message in case we are in
          *      reply mode
          */
-        init: function(parent, params) {
+        init: function(parent, options) {
             var self = this;
             this._super(parent);
             // options
-            this.params = params || {};
-            this.params.context = params.context || {};
-            this.params.email_mode = params.email_mode || false;
-            this.params.formatting = params.formatting || false;
-            this.params.mode = params.mode || 'comment';
-            this.params.form_xml_id = params.form_xml_id || 'email_compose_message_wizard_form_chatter';
-            this.params.form_view_id = false;
-            if (this.params.mode == 'reply') {
-                this.params.active_id = this.params.msg_id;
+            this.options = options || {};
+            this.options.context = options.context || {};
+            this.options.email_mode = options.email_mode || false;
+            this.options.formatting = options.formatting || false;
+            this.options.mode = options.mode || 'comment';
+            this.options.form_xml_id = options.form_xml_id || 'email_compose_message_wizard_form_chatter';
+            this.options.form_view_id = false;
+            if (this.options.mode == 'reply') {
+                this.options.active_id = this.options.msg_id;
             } else {
-                this.params.active_id = this.params.res_id;
+                this.options.active_id = this.options.res_id;
             }
             this.email_mode = false;
             this.formatting = false;
@@ -258,17 +197,17 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_msg_content').empty();
             // create a context for the default_get of the compose form
             var widget_context = {
-                'active_model': this.params.res_model,
-                'active_id': this.params.active_id,
-                'mail.compose.message.mode': this.params.mode,
+                'active_model': this.options.res_model,
+                'active_id': this.options.active_id,
+                'mail.compose.message.mode': this.options.mode,
             };
-            var context = _.extend({}, this.params.context, widget_context);
+            var context = _.extend({}, this.options.context, widget_context);
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             // find the id of the view to display in the chatter form
             var data_ds = new session.web.DataSetSearch(this, 'ir.model.data');
-            var deferred_form_id =data_ds.call('get_object_reference', ['mail', this.params.form_xml_id]).then( function (result) {
+            var deferred_form_id =data_ds.call('get_object_reference', ['mail', this.options.form_xml_id]).then( function (result) {
                 if (result) {
-                    self.params.form_view_id = result[1];
+                    self.options.form_view_id = result[1];
                 }
             }).pipe(this.proxy('create_form_view'));
             return deferred_form_id;
@@ -281,7 +220,7 @@ openerp.mail = function(session) {
             // destroy previous form_view if any
             if (this.form_view) { this.form_view.destroy(); }
             // create the FormView
-            this.form_view = new session.web.FormView(this, this.ds_compose, this.params.form_view_id, {
+            this.form_view = new session.web.FormView(this, this.ds_compose, this.options.form_view_id, {
                 action_buttons: false,
                 pager: false,
                 initial_mode: 'edit',
@@ -292,8 +231,8 @@ openerp.mail = function(session) {
             return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
                 self.bind_events();
                 self.form_view.do_show();
-                if (self.params.email_mode) { self.toggle_email_mode(); }
-                if (self.params.formatting) { self.toggle_formatting_mode(); }
+                if (self.options.email_mode) { self.toggle_email_mode(); }
+                if (self.options.formatting) { self.toggle_formatting_mode(); }
             });
         },
 
@@ -343,7 +282,7 @@ openerp.mail = function(session) {
             var self = this;
             this.formatting = ! this.formatting;
             // calls onchange
-            var call_defer = this.ds_compose.call('onchange_formatting', [[], this.formatting, this.params.res_model, this.params.res_id]).then(
+            var call_defer = this.ds_compose.call('onchange_formatting', [[], this.formatting, this.options.res_model, this.options.res_id]).then(
                 function (result) {
                     self.form_view.on_processed_onchange(result, []);
                 });
@@ -361,7 +300,7 @@ openerp.mail = function(session) {
             var self = this;
             this.email_mode = ! this.email_mode;
             // calls onchange
-            var call_defer = this.ds_compose.call('onchange_email_mode', [[], this.email_mode, this.params.res_model, this.params.res_id]).then(
+            var call_defer = this.ds_compose.call('onchange_email_mode', [[], this.email_mode, this.options.res_model, this.options.res_id]).then(
                 function (result) {
                     self.form_view.on_processed_onchange(result, []);
                 });
@@ -410,22 +349,22 @@ openerp.mail = function(session) {
 
         /**
          * @param {Object} parent parent
-         * @param {Object} [params]
-         * @param {String} [params.res_model] res_model of document [REQUIRED]
-         * @param {Number} [params.res_id] res_id of record [REQUIRED]
-         * @param {Number} [params.uid] user id [REQUIRED]
-         * @param {Bool}   [params.parent_id=false] parent_id of message
-         * @param {Number} [params.thread_level=0] number of levels in the thread
+         * @param {Object} [options]
+         * @param {String} [options.res_model] res_model of document [REQUIRED]
+         * @param {Number} [options.res_id] res_id of record [REQUIRED]
+         * @param {Number} [options.uid] user id [REQUIRED]
+         * @param {Bool}   [options.parent_id=false] parent_id of message
+         * @param {Number} [options.thread_level=0] number of levels in the thread
          *      (only 0 or 1 currently)
-         * @param {Bool}   [params.is_wall=false] thread is displayed in the wall
-         * @param {Number} [params.msg_more_limit=150] number of character to
+         * @param {Bool}   [options.is_wall=false] thread is displayed in the wall
+         * @param {Number} [options.msg_more_limit=150] number of character to
          *      display before having a "show more" link; note that the text
          *      will not be truncated if it does not have 110% of the parameter
          *      (ex: 110 characters needed to be truncated and be displayed as
          *      a 100-characters message)
-         * @param {Number} [params.limit=100] maximum number of messages to fetch
-         * @param {Number} [params.offset=0] offset for fetching messages
-         * @param {Number} [params.records=null] records to show instead of fetching messages
+         * @param {Number} [options.limit=100] maximum number of messages to fetch
+         * @param {Number} [options.offset=0] offset for fetching messages
+         * @param {Number} [options.records=null] records to show instead of fetching messages
          */
         init: function(parent, params) {
             this._super(parent);
