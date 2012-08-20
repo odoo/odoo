@@ -1,7 +1,8 @@
 Backend:
 * remove _message_search_ancestor_ids and implement in message_read (must use browse records instead of IDS)
+* I propose to move message_read in mail.message and rename to message_fetch
 * remove message_search_get_domain
-* remove message_search (object can overwrite message_ids if they want a custom list of messages)
+* remove message_search (objects can overwrite message_ids if they want a custom list of messages)
 * remove _message_find_partners
 * remove _message_find_user_id
 * remove message_thread_followers
