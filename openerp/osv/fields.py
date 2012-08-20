@@ -517,6 +517,7 @@ class one2many(_column):
         dom = self._domain
         if isinstance(self._domain, type(lambda: None)):
             dom = self._domain(obj)
+        print self._obj, user, dom + [(self._fields_id, 'in', ids)]
         ids2 = obj.pool.get(self._obj).search(cr, user, dom + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id] in res:
