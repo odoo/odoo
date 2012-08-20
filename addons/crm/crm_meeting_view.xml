@@ -3,16 +3,15 @@
     <data>
 
     <!-- Calendar Attendee Form View -->
-
     <record id="attendee_form_view_inherit" model="ir.ui.view">
-            <field name="name">calendar.attendee.form.inherit</field>
-            <field name="model">calendar.attendee</field>
-            <field name="inherit_id" ref="base_calendar.base_calendar_attendee_form_view"/>
-            <field name="arch" type="xml">
-                <field name="ref" position="after">
-                    <field name="categ_id" string="Event Type"/>
-                </field>
+        <field name="name">calendar.attendee.form.inherit</field>
+        <field name="model">calendar.attendee</field>
+        <field name="inherit_id" ref="base_calendar.base_calendar_attendee_form_view"/>
+        <field name="arch" type="xml">
+            <field name="ref" position="after">
+                <field name="categ_id" string="Event Type"/>
             </field>
+        </field>
     </record>
 
     </data>
