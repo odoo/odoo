@@ -1588,7 +1588,7 @@ def field_to_dict(model, cr, user, field, context=None):
         dom = field._domain
         if isinstance(field._domain, type(lambda: None)):
             dom = field._domain(model)
-        res['domain'] = field._domain
+        res['domain'] = dom
         res['context'] = field._context
 
     if isinstance(field, one2many):
