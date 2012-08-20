@@ -87,7 +87,7 @@ class note_note(osv.osv):
     _columns = {
         'name': fields.function(_get_note_first_line,_fnct_inv=_set_note_first_line, string='Note Summary', type="text", store=True),
         'note': fields.text('Pad Content'),
-        'note_pad': fields.char('Pad Url', size=250),
+        'note_pad_url': fields.char('Pad Url', size=250),
         'sequence': fields.integer('Sequence'),
         'stage_id': fields.many2one('note.stage', 'Stage'),
         'active': fields.boolean('Active'),
@@ -101,7 +101,7 @@ class note_note(osv.osv):
     _defaults = {
         'active' : 1,
         'stage_id' : _get_default_stage_id,
-        'note_pad': lambda self, cr, uid, context: self.pad_generate_url(cr, uid, context),
+        'note_pad_url': lambda self, cr, uid, context: self.pad_generate_url(cr, uid, context),
     }
 
     _order = 'sequence asc'

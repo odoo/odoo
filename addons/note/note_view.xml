@@ -104,7 +104,8 @@
             <!-- todo: remove domain -->
             <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
-          <field name="note_pad" widget="pad"/>
+          <field name="note"/>
+          <field name="note_pad_url"/>
           <div class="oe_chatter">
             <field name="message_ids" widget="mail_thread"/>
           </div>
