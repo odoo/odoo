@@ -112,7 +112,17 @@ class mail_compose_message(osv.TransientModel):
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
         'body_html': fields.html('HTML Editor Body'),
+        'content_subtype': fields.char('Message content subtype', size=32,
+            oldname="subtype", readonly=1,
+            help="Type of message, usually 'html' or 'plain', used to select "\
+                  "plain-text or rich-text contents accordingly"),
     }
+    _defaults = {
+        'content_subtype': lambda self,cr, uid, context={}: 'plain',
+        'body_html': lambda self,cr, uid, context={}: '',
+        'body': lambda self,cr, uid, context={}: ''
+    }
+
 
     def get_value(self, cr, uid, model, res_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
@@ -233,14 +243,12 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
 
-        # composition wizard options
         email_mode = context.get('email_mode')
         formatting = context.get('formatting')
         mass_mail_mode = context.get('mail.compose.message.mode') == 'mass_mail'
 
         mail_message_obj = self.pool.get('mail.message')
         for mail_wiz in self.browse(cr, uid, ids, context=context):
-            # attachments
             attachment = {}
             for attach in mail_wiz.attachment_ids:
                 attachment[attach.datas_fname] = attach.datas and attach.datas or False
@@ -248,27 +256,17 @@ class mail_compose_message(osv.TransientModel):
             # default values, according to the wizard options
             subject = mail_wiz.subject if formatting else False
             partner_ids = [partner.id for partner in mail_wiz.dest_partner_ids]
-            body = mail_wiz.body_html if content_subtype == 'html' else mail_wiz.body
+            body = mail_wiz.body_html if mail_wiz.content_subtype == 'html' else mail_wiz.body
 
-            active_model_pool = self.pool.get(active_model)
-
-            # get model, active_ids, and check if model is openchatter-enabled
-            if mass_mail_mode and context.get('active_ids') and context.get('active_model'):
-                active_ids = context['active_ids']
-                active_model = context['active_model']
-            elif mass_mail_mode:
-                active_model = mail_wiz.model
-                active_ids = active_model_pool.search(cr, uid, ast.literal_eval(mail_wiz.filter_id.domain), context=ast.literal_eval(mail_wiz.filter_id.context))
-            else:
-                active_model = mail_wiz.model
-                active_ids = [mail_wiz.res_id]
-
-            for active_id in active_ids:
-                if context.get('mail.compose.message.mode') == 'mass_mail':
-                    subject = self.render_template(cr, uid, subject, active_model, active_id)
-                    body = self.render_template(cr, uid, mail_wiz.body_html, active_model, active_id)
-                active_model_pool.message_post(cr, uid, active_id, body, subject, 'comment', 
-                    attachments=attachments, context=context)
+            active_model_pool = self.pool.get('mail.thread')
+            active_id = context.get('default_res_id', False)
+            if context.get('mail.compose.message.mode') == 'mass_mail' and context.get('default_model', False) and context.get('default_res_id', False):
+                active_model = context.get('default_model', False)
+                active_model_pool = self.pool.get(active_model)
+                subject = self.render_template(cr, uid, subject, active_model, active_id)
+                body = self.render_template(cr, uid, mail_wiz.body_html, active_model, active_id)
+            active_model_pool.message_post(cr, uid, active_id, body, subject, 'comment', 
+                attachments=attachment, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 
