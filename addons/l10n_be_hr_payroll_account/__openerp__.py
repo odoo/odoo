@@ -26,6 +26,7 @@
     'version': '1.0',
     'description': """
 Accounting Data for Belgian Payroll Rules.
+==========================================
     """,
 
     'auto_install': True,

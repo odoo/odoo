@@ -29,6 +29,7 @@ Add additional date information to the sales order.
 ===================================================
 
 You can add the following additional dates to a sale order:
+-----------------------------------------------------------
     * Requested Date
     * Commitment Date
     * Effective Date

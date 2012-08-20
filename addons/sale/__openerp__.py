@@ -31,7 +31,7 @@ The base module to manage quotations and sales orders.
 
 Workflow with validation steps:
 -------------------------------
-    * Quotation -> Sales order -> Invoice
+    * **Quotation** -> **Sales order** -> **Invoice**
 
 Create Invoice:
 ---------------
@@ -46,10 +46,10 @@ Partners preferences:
     * Invoicing
 
 Products stocks and prices:
---------------------------
+---------------------------
 
 Delivery method:
------------------
+----------------
     * The Poste
     * Free Delivery Charges
     * Normal Delivery Charges

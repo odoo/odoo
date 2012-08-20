@@ -30,7 +30,7 @@ Replaces cleartext passwords in the database with a secure hash.
 ================================================================
 
 For your existing user base, the removal of the cleartext passwords occurs 
-immediately when you instal base_crypt.
+immediately when you install base_crypt.
 
 All passwords will be replaced by a secure, salted, cryptographic hash, 
 preventing anyone from reading the original password in the database.
@@ -49,8 +49,8 @@ contain critical data. Appropriate security measures need to be implemented
 by the system administrator in all areas, such as: protection of database
 backups, system files, remote shell access, physical server access.
 
-Interation with LDAP authentication:
-------------------------------------
+Interaction with LDAP authentication:
+-------------------------------------
 This module is currently not compatible with the ``user_ldap`` module and
 will disable LDAP authentication completely if installed at the same time.
 """,

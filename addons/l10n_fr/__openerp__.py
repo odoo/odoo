@@ -51,7 +51,7 @@ and "service" VAT taxes. We consider that it is too "heavy" to have this by defa
 in l10n_fr; companies that sell services to DOM-based companies should update the
 configuration of their taxes and fiscal positions manually.
 
-Credits: Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.
+**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.
 """,
     "depends" : ['base_iban', 'account', 'account_chart', 'base_vat', 'l10n_fr_rib'],
     "init_xml" : [],

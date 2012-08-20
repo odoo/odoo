@@ -33,17 +33,19 @@ This module helps you to easily encode and validate timesheet and attendances wi
     * It will maintain attendances and track (sign in/sign out) events.
     * Track the timesheet lines.
 
-Other tabs contains statistics views to help you analyse your
-time or the time of your team:
+Other tabs contains statistics views to help you analyse your time or the time of your team:
+--------------------------------------------------------------------------------------------
     * Time spent by day (with attendances)
     * Time spent by project
 
 This module also implements a complete timesheet validation process:
+--------------------------------------------------------------------
     * Draft sheet
     * Confirmation at the end of the period by the employee
     * Validation by the project manager
 
 The validation can be configured in the company:
+------------------------------------------------
     * Period size (day, week, month, year)
     * Maximal difference between timesheet and attendances
     """,

@@ -38,6 +38,7 @@ This module adds a new Report Engine based on WebKit library (wkhtmltopdf) to su
 The module structure and some code is inspired by the report_openoffice module.
 
 The module allows:
+------------------
     - HTML report definition
     - Multi header support
     - Multi logo
@@ -56,7 +57,7 @@ For a sample report see also the webkit_report_sample module, and this video:
     http://files.me.com/nbessi/06n92k.mov
 
 Requirements and Installation:
------------------------------
+------------------------------
 This module requires the ``wkthtmltopdf`` library to render HTML documents as
 PDF. Version 0.9.9 or later is necessary, and can be found at
 http://code.google.com/p/wkhtmltopdf/ for Linux, Mac OS X (i386) and Windows (32bits).

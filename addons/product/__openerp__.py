@@ -36,6 +36,7 @@ Products support variants, different pricing methods, suppliers information,
 make to stock/order, different unit of measures, packaging and properties.
 
 Pricelists support:
+-------------------
     * Multiple-level of discount (by product, category, quantities)
     * Compute price based on different criteria:
         * Other pricelist

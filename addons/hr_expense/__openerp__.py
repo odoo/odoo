@@ -31,6 +31,7 @@ This module aims to manage employee's expenses.
 ===============================================
 
 The whole workflow is implemented:
+----------------------------------
     * Draft expense
     * Confirmation of the sheet by the employee
     * Validation by his manager

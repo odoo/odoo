@@ -28,13 +28,19 @@
 Module to manage the payment of your supplier invoices.
 =======================================================
 
-This module allows you to create and manage your payment orders, with purposes to 
+This module allows you to create and manage your payment orders, with purposes to
+--------------------------------------------------------------------------------- 
     * serve as base for an easy plug-in of various automated payment mechanisms.
     * provide a more efficient way to manage invoice payment.
 
 Warning:
---------
-The confirmation of a payment order does _not_ create accounting entries, it just records the fact that you gave your payment order to your bank. The booking of your order must be encoded as usual through a bank statement. Indeed, it's only when you get the confirmation from your bank that your order has been accepted that you can book it in your accounting. To help you with that operation, you have a new option to import payment orders as bank statement lines.
+~~~~~~~~
+The confirmation of a payment order does _not_ create accounting entries, it just 
+records the fact that you gave your payment order to your bank. The booking of 
+your order must be encoded as usual through a bank statement. Indeed, it's only 
+when you get the confirmation from your bank that your order has been accepted 
+that you can book it in your accounting. To help you with that operation, you 
+have a new option to import payment orders as bank statement lines.
     """,
     'images': ['images/payment_mode.jpeg','images/payment_order.jpeg'],
     'depends': ['account','account_voucher'],

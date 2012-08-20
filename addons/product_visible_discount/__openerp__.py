@@ -28,7 +28,7 @@ This module lets you calculate discounts on Sale Order lines and Invoice lines b
 
 To this end, a new check box named "Visible Discount" is added to the pricelist form.
 
-Example:
+**Example:**
     For the product PC1 and the partner "Asustek": if listprice=450, and the price
     calculated using Asustek's pricelist is 225. If the check box is checked, we
     will have on the sale order line: Unit price=450, Discount=50,00, Net price=225.

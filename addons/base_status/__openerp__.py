@@ -24,12 +24,11 @@
     'version': '1.0',
     'category': 'Hidden',
     'description': """
-This module handles state and stage. It is derived from the crm_base and
-crm_case classes from crm.
-========================================================================
+This module handles state and stage. It is derived from the crm_base and crm_case classes from crm.
+===================================================================================================
 
- * ``base_state``: state management
- * ``base_stage``: stage management
+    * ``base_state``: state management
+    * ``base_stage``: stage management
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

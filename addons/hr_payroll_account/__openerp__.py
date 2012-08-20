@@ -25,7 +25,7 @@
     'category': 'Human Resources',
     'description': """
 Generic Payroll system Integrated with Accounting.
-===================================================
+==================================================
 
     * Expense Encoding
     * Payment Encoding

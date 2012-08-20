@@ -25,10 +25,10 @@
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
     "description": """
-Allows cancelling accounting entries.
+Allows canceling accounting entries.
 =====================================
 
-This module adds 'Allow Cancelling Entries' field on form view of account journal.
+This module adds 'Allow Canceling Entries' field on form view of account journal.
 If set to true it allows user to cancel entries & invoices.
     """,
     'website': 'http://www.openerp.com',

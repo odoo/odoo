@@ -21,7 +21,10 @@
 
 {
     'name': 'Signup',
-    'description': 'Allow users to sign up',
+    'description': """
+Allow users to sign up.
+=======================
+    """,
     'author': 'OpenERP SA',
     'version': '1.0',
     'category': 'Authentication',

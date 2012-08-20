@@ -39,6 +39,7 @@ This should help you to easily create reusable and publishable modules for custo
 configurations and demo/testing data.
 
 How to use it?:
+---------------
 Run Settings/Technical/Module Creation/Export Customizations As a Module wizard. 
 Select datetime criteria of recording and objects to be recorded and Record module.
     """,

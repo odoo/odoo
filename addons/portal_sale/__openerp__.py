@@ -26,8 +26,8 @@
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-This module adds sale menu and features to your portal if sale and portal are 
-installed.
+This module adds sale menu and features to your portal if sale and portal are installed.
+========================================================================================
     """,
     'author': 'OpenERP SA',
     'depends': ['sale','portal'],

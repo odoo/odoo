@@ -44,6 +44,7 @@ Chart of accounts for Costa Rica.
 =================================
 
 Includes:
+---------
     * account.type
     * account.account.template
     * account.tax.template

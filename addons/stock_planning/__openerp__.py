@@ -46,17 +46,20 @@ Forecast" and "Stock Planning" to emphasize that we use quantity values.
 Where to begin:
 ---------------
 Using this module is done in three steps:
-    * Create Stock Periods via the Warehouse>Configuration>Stock Periods menu
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    * Create Stock Periods via the **Warehouse** > **Configuration** > **Stock Periods** menu
       (Mandatory step)
     * Create Sale Forecasts fill them with forecast quantities, via the
-      Sales > Sales Forecast menu. (Optional step but useful for further planning)
+      **Sales** > **Sales Forecast** menu. (Optional step but useful for further planning)
     * Create the actual MPS plan, check the balance and trigger the procurements
       as required. The actual procurement is the final step for the Stock Period.
 
 Stock Period configuration:
 ---------------------------
-You have two menu items for Periods in "Warehouse > Configuration > Stock Periods".
+You have two menu items for Periods in "**Warehouse** > **Configuration** > **Stock Periods**".
+
 There are:
+~~~~~~~~~~
     * "Create Stock Periods" - can automatically creating daily, weekly or
       monthly periods.
     * "Stock Periods" - allows to create any type of periods, change the dates
@@ -67,6 +70,7 @@ button in "Stock Periods", but it is recommended to use the automatic assistant
 "Create Stock Periods".
 
 Remarks:
+++++++++
     - These periods (Stock Periods) are completely distinct from Financial or
       other periods in the system.
     - Periods are not assigned to companies (when you use multicompany). Module
@@ -86,7 +90,8 @@ Remarks:
 
 Sales Forecasts configuration:
 ------------------------------
-You have few menus for Sales forecast in "Sales > Sales Forecasts":
+You have few menus for Sales forecast in "**Sales** > **Sales Forecasts**":
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     - "Create Sales Forecasts" - can automatically create forecast lines
       according to your needs
     - "Sales Forecasts" - for managing the Sales forecasts
@@ -96,6 +101,7 @@ Category, for selected Period and for selected Warehouse.
 It is also possible to copy the previous forecast.
 
 Remarks:
+++++++++
     - This tool doesn't duplicate lines if you already have an entry for the same
       Product, Period, Warehouse, created or validated by the same user. If you
       wish to create another forecast, if relevant lines exists you have to do it
@@ -130,8 +136,9 @@ MPS or Procurement Planning:
 ----------------------------
 An MPS planning consists in Stock Planning lines, used to analyze and possibly
 drive the procurement of products for each relevant Stock Period and Warehouse.
-The menu is located in "Warehouse > Schedulers > Master Procurement Schedule":
 
+The menu is located in "**Warehouse** > **Schedulers** > **Master Procurement Schedule**":
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     - "Create Stock Planning Lines" - a wizard to help automatically create many
       planning lines
     - "Master Procurement Schedule" - management of your planning lines
@@ -186,14 +193,14 @@ Computation of Stock Simulation quantities:
 The Stock Simulation value is the estimated stock quantity at the end of the
 period. The calculation always starts with the real stock on hand at the beginning
 of the current period, then adds or subtracts the computed quantities.
-When you are in the same period (current period is the same as calculated) Stock
-Simulation is calculated as follows:
 
-Stock Simulation = Stock of beginning of current Period - Planned Out + Planned In
+When you are in the same period (current period is the same as calculated) Stock Simulation is calculated as follows:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Stock Simulation =** Stock of beginning of current Period - Planned Out + Planned In
 
 When you calculate period next to current:
-
-Stock Simulation = Stock of beginning of current Period - Planned Out of current Period
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Stock Simulation =** Stock of beginning of current Period - Planned Out of current Period
     + Confirmed In of current Period  (incl. Already In) - Planned Out of calculated Period
     + Planned In of calculated Period .
 
@@ -204,8 +211,8 @@ that you should complete the planning and procurement of the current Period befo
 going to the next one.
 
 When you plan for future Periods:
-
-Stock Simulation = Stock of beginning of current Period
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Stock Simulation =** Stock of beginning of current Period
     - Sum of Planned Out of Periods before calculated
     + Sum of Confirmed In of Periods before calculated (incl. Already In) 
     - Planned Out of calculated Period
@@ -215,7 +222,7 @@ Here "Periods before calculated" designates all periods starting with the curren
 until the period before the one being calculated.
 
 Remarks:
-
+++++++++
     - Remember to make the proceed with the planning of each period in chronological
       order, otherwise the numbers will not reflect the reality
     - If you planned for future periods and find that real Confirmed Out is larger

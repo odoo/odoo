@@ -34,5 +34,8 @@
         'res_config_user_view.xml'
     ],
     'depends': ['google_base_account'],
-    'description': 'Module to attach a google document to any model.'
+    'description': """
+Module to attach a google document to any model.
+================================================
+"""
 }

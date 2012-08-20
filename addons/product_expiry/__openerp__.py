@@ -30,6 +30,7 @@ Track different dates on products and production lots.
 ======================================================
 
 Following dates can be tracked:
+-------------------------------
     - end of life
     - best before date
     - removal date

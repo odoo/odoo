@@ -23,7 +23,7 @@
     "version": "1.0",
     "description": """
 Chilean accounting chart and tax localization.
-
+==============================================
 Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
 
     """,

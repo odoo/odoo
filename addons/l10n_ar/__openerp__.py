@@ -23,6 +23,7 @@
     "version": "1.0",
     "description": """
 Argentinian accounting chart and tax localization.
+==================================================
 
 Plan contable argentino e impuestos de acuerdo a disposiciones vigentes
 

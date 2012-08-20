@@ -32,6 +32,7 @@ Module for Human Resource Management.
 =====================================
 
 You can manage:
+---------------
     * Employees and hierarchies : You can define your employee with User and display hierarchies
     * HR Departments
     * HR Jobs

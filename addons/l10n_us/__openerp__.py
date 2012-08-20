@@ -25,6 +25,7 @@
     "category": 'Localization/Account Charts',
     "description": """
 United States - Chart of accounts.
+==================================
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

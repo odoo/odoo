@@ -44,8 +44,8 @@ Creates a dashboard for accountants that includes:
     * Company Analysis
     * Graph of Treasury
 
-The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) for a particular
-financial year and for preparation of vouchers there is a module named account_voucher.
+The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) 
+for a particular financial year and for preparation of vouchers there is a module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],

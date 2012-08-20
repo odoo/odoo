@@ -24,7 +24,10 @@
     'name': 'OAuth2 Authentication',
     'version': '1.0',
     'category': 'Tools',
-    'description': """Allow users to login through Google OAuth2.""",
+    'description': """
+Allow users to login through Google OAuth2.
+===========================================
+""",
     'author': 'Victor Tabuenca',
     'maintainer': 'OpenERP s.a.',
     'website': 'http://www.openerp.com',
