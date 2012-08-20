@@ -36,7 +36,7 @@ class mail_group(osv.Model):
     """
     _description = 'Discussion group'
     _name = 'mail.group'
-    _inherit = ['mail.thread','ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _inherits = {'mail.alias': 'alias_id', 'ir.ui.menu': 'menu_id'}
 
     def _get_image(self, cr, uid, ids, name, args, context=None):

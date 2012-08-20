@@ -17,7 +17,8 @@
                 <td colspan="2">
                     <h2 class="oe_view_title">
                         <span class="oe_view_title_text">
-                            <t t-if="! widget.options.res_model">News Feeds</t>
+                            News Feed
+                            <t t-if="widget.options.res_model"> / </t>
                             <t t-if="widget.options.res_model" t-esc="widget.options.res_model"/>
                         </span>
                     </h2>

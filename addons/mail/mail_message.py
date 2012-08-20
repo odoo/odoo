@@ -54,6 +54,7 @@ class mail_message(osv.Model):
 
     _name = 'mail.message'
     _description = 'Message'
+    _inherit = ['ir.needaction_mixin']
     _order = 'id desc'
 
     def get_record_name(self, cr, uid, ids, name, arg, context=None):
