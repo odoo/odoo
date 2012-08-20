@@ -160,46 +160,6 @@ class mail_thread(osv.Model):
         return []
 
     #------------------------------------------------------
-    # Message loading
-    #------------------------------------------------------
-
-    def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None,
-                        limit=100, offset=0, domain=None, context=None):
-        """ OpenChatter feature: read the messages related to some threads.
-            This method is used mainly the Chatter widget, to directly have
-            read result instead of searching then reading.
-
-            Please see message_search for more information about the parameters.
-        """
-        print 'MSG READ', uid, ids, fetch_ancestors, ancestor_ids, limit, offset, domain, context
-        message_ids = self.message_search(cr, uid, ids, fetch_ancestors, ancestor_ids,
-            limit, offset, domain, context=context)
-        messages = self.pool.get('mail.message').read(cr, uid, message_ids, context=context)
-
-        """ Retrieve all attachments names """
-        map_id_to_name = dict((attachment_id, '') for message in messages for attachment_id in message['attachment_ids'])
-
-        ids = map_id_to_name.keys()
-        names = self.pool.get('ir.attachment').name_get(cr, uid, ids, context=context)
-
-        # convert the list of tuples into a dictionnary
-        for name in names:
-            map_id_to_name[name[0]] = name[1]
-
-        # give corresponding ids and names to each message
-        for msg in messages:
-            msg["attachments"] = []
-
-            for attach_id in msg["attachment_ids"]:
-                msg["attachments"].append({'id': attach_id, 'name': map_id_to_name[attach_id]})
-
-        # Set the threads as read
-        self.message_mark_as_read(cr, uid, ids, context=context)
-        # Sort and return the messages
-        messages = sorted(messages, key=lambda d: (-d['id']))
-        return messages
-
-    #------------------------------------------------------
     # Mail gateway
     #------------------------------------------------------
 

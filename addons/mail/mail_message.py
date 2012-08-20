@@ -120,6 +120,65 @@ class mail_message(osv.Model):
         'author_id': _get_default_author
     }
 
+
+    #------------------------------------------------------
+    # Message loading for web interface
+    #------------------------------------------------------
+
+    _limit = 10
+    def _message_read(self, cr, uid, messages, domain=[], thread_level=0, fetch_ancestors=False, context=None):
+        result = []
+        for msg in messages[:-1]:
+            if len(result)<(self._limit-1):
+                record = {
+                    'id': msg.id,
+                    'type': msg.type,
+                    'attachment_ids': msg.attachment_ids.name_get(context=context),
+                    'body': msg.body,
+                    'model': msg.model,
+                    'res_id': msg.res_id,
+                    'record_name': msg.record_name,
+                    'subject': msg.subject,
+                    'date': msg.date,
+                    'author_id': msg.author_id.id
+                }
+                if thread_level>0:
+                    dom = [('parent_id','=', msg.id)]
+                    if thread_level==1:
+                        dom = [('parent_id','child_of', [msg.id])]
+                    newids = self.search(cr, uid, domain+dom, context=context, limit=self._limit)
+                    objs = self.browse(cr, uid, newids, context=context)
+                    record['child_ids'] = self._message_read(cr, uid, objs, domain+dom, thread_level-1, context=context)
+                result.append(record)
+            else:
+                result.append({
+                    'type': 'expandable',
+                    'domain': [('id','<=', msg.id)]+domain,
+                    'context': context
+                })
+                break
+
+    def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, fetch_ancestors=False, context=None):
+        """ 
+            If IDS are provided, fetch these records, otherwise use the domain to
+            fetch the matching records. After having fetched the records provided
+            by IDS, it will fetch children (according to thread_level) and/or the
+            parents if fetch_ancestrors is True.
+            
+            Return [
+            
+            ]
+        """
+        if ids is False:
+            dom = []
+            if thread_level>0:
+                dom = [('parent_id', '=', False)]
+            ids = self.search(cr, uid, domain+dom, context=context, limit=10)
+
+        messages = self.browse(cr, uid, ids, context=context)
+        return self._message_read(cr, uid, messages, thread_level, domain=domain, context=context)
+
+
     #------------------------------------------------------
     # Email api
     #------------------------------------------------------

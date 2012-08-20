@@ -1,9 +1,5 @@
 Backend:
-* remove _message_search_ancestor_ids and implement in message_read (must use browse records instead of IDS)
 * I propose to move message_read in mail.message and rename to message_fetch
-
-* remove message_search (objects can overwrite message_ids if they want a custom list of messages)
-    - requires to reimplement message_read
 
 * remove _message_find_user_id and use _message_find_partners
     - it requires to change the route code
@@ -11,15 +7,15 @@ Backend:
 Web Stuff to Do:
 * replace comments_structure by a real tree structure, provided by message_read directly
 * rewrite completly records_struct_add_records, merge existing messages with those coming from another message_read
-* remove records_struct_update_after_display:
+     -> false records with domain message_read
+* remove records_struct_update_after_display
 * remove all is_wall stuff and pass real arguments
 * remove init_and_fetch_comments
 * rename fetch_comments into message_read
-* implement display_current_user --> check why it's present two times
+Not Sure:
+    * implement display_current_user --> check why it's present two times
 
 To Check:
 * check if addons modules rely on some stuff changed in the aboce backend section
 
-To ask ODO:
-* message_forward for mail gateway (redundant with notifications by emails ?)
-    -> I removed it to rely on notifications
+
