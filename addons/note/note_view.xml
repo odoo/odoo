@@ -34,6 +34,7 @@
         </tree>
       </field>
     </record>
+
     <!-- Note Stage Action -->
     <record model="ir.actions.act_window" id="action_note_stage">
       <field name="name">Stages</field>
@@ -63,28 +64,27 @@
           <templates>
             <t t-name="kanban-box">
               <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-              <!-- dropdown menu -->
-              <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                <span class="oe_e">í</span>
-                <ul class="oe_dropdown_menu">
-                  <li><a type="edit" >Edit...</a></li>
-                  <li><a type="delete">Delete</a></li>
-                  <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                </ul>
-              </div>
+                <!-- dropdown menu -->
+                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                  <span class="oe_e">í</span>
+                  <ul class="oe_dropdown_menu">
+                    <li><a type="edit">Edit...</a></li>
+                    <li><a type="delete">Delete</a></li>
+                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                  </ul>
+                </div>
 
-              <!-- kanban note -->
-              <div class="oe_kanban_content">
-                <!-- title -->
-                <field name="name"/>
-              </div>
+                <!-- kanban note -->
+                <div class="oe_kanban_content">
+                  <!-- title -->
+                  <field name="name"/>
+                </div>
 
-              <div class="oe_kanban_project_avatars">
-                <t t-foreach="record.follower_ids.raw_value" t-as="follower">
-                  <img t-att-src="kanban_image('res.users', 'image_small', follower)" t-att-data-member_id="follower"/>
-                </t>
-              </div>
-
+                <div class="oe_kanban_project_avatars">
+                  <t t-foreach="record.follower_ids.raw_value" t-as="follower">
+                    <img t-att-src="kanban_image('res.users', 'image_small', follower)" t-att-data-member_id="follower"/>
+                  </t>
+                </div>
               </div>
               <div class="oe_clear"></div>
             </t>
@@ -136,6 +136,7 @@
       <field name="type">tree</field>
     </record>
 
+    <!-- Note Action -->
     <record model="ir.actions.act_window" id="action_note_note">
       <field name="name">Notes</field>
       <field name="res_model">note.note</field>

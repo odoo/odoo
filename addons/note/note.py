@@ -22,7 +22,7 @@
 from openerp.osv import osv, fields
 from tools.translate import _
 
-class note_stage(osv.Model):
+class note_stage(osv.osv):
     """ Category of Note """
 
     _name = "note.stage"
@@ -46,13 +46,7 @@ class note_stage(osv.Model):
     }
 
 
-# class many2many_filter(fields.many2many)
-
-# grep many2many_mod dans le code
-
-
-
-class note_note(osv.Model):
+class note_note(osv.osv):
     """ Note """
     _name = 'note.note'
     _inherit = ['mail.thread','pad.common']
@@ -71,6 +65,25 @@ class note_note(osv.Model):
         #
         return self.write(cr, uid, [id], {'name': value}, context=context)
 
+
+    def _get_default_stage_id(self,cr,uid,context=None):
+        id = self.pool.get('note.stage').search(cr,uid,[('sequence','=','1')])
+        return id[0]
+
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        access_rights_uid = access_rights_uid or uid
+        stage_obj = self.pool.get('note.stage')
+
+        # only show stage groups not folded and owned by user
+        search_domain = [('fold', '=', False),('user_id', '=', uid)]
+
+        stage_ids = stage_obj._search(cr, uid, search_domain, order=self._order, access_rights_uid=access_rights_uid, context=context)
+        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+        return result
+
+    def stage_set(self,cr,uid,ids,stage_id,context=None):
+        self.write(cr,uid,ids,{'stage_id': stage_id})
+
     _columns = {
         'name': fields.function(_get_note_first_line,_fnct_inv=_set_note_first_line, string='Note Summary', type="text", store=True),
         'note': fields.text('Pad Content'),
@@ -85,11 +98,6 @@ class note_note(osv.Model):
     _sql_constraints = [
     ]
 
-
-    def _get_default_stage_id(self,cr,uid,context=None):
-        id = self.pool.get('note.stage').search(cr,uid,[('sequence','=','1')])
-        return id[0]
-
     _defaults = {
         'active' : 1,
         'stage_id' : _get_default_stage_id,
@@ -98,20 +106,6 @@ class note_note(osv.Model):
 
     _order = 'sequence asc'
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        access_rights_uid = access_rights_uid or uid
-        stage_obj = self.pool.get('note.stage')
-
-        # only show stage groups not folded and owned by user
-        search_domain = [('fold', '=', False),('user_id', '=', uid)]
-
-        stage_ids = stage_obj._search(cr, uid, search_domain, order=self._order, access_rights_uid=access_rights_uid, context=context)
-        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
-        return result
-
     _group_by_full = {
         'stage_id' : _read_group_stage_ids,
     }
-
-    def stage_set(self,cr,uid,ids,stage_id,context=None):
-        self.write(cr,uid,ids,{'stage_id': stage_id})
