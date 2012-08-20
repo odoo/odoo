@@ -2,27 +2,21 @@
 <openerp>
   <data noupdate="1">
 
-    <record model="note.stage" id="note_stage_today">
-      <field name="name">Today</field>
+    <record model="note.stage" id="note_stage_01">
+      <field name="name">Todo today</field>
       <field name="sequence">1</field>
       <field name="user_id" eval="ref('base.user_root')"/>
     </record>
 
-    <record model="note.stage" id="note_stage_tomorrow">
-      <field name="name">Tomorrow</field>
+    <record model="note.stage" id="note_stage_02">
+      <field name="name">Todo later</field>
       <field name="sequence">2</field>
       <field name="user_id" eval="ref('base.user_root')"/>
     </record>
 
-    <record model="note.stage" id="note_stage_week">
-      <field name="name">This week</field>
+    <record model="note.stage" id="note_stage_03">
+      <field name="name">For information</field>
       <field name="sequence">3</field>
-      <field name="user_id" eval="ref('base.user_root')"/>
-    </record>
-
-    <record model="note.stage" id="note_stage_month">
-      <field name="name">This month</field>
-      <field name="sequence">4</field>
       <field name="user_id" eval="ref('base.user_root')"/>
     </record>
 
