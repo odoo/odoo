@@ -30,11 +30,11 @@ class account_common_report(osv.osv_memory):
     _description = "Account Common Report"
 
     def onchange_chart_id(self, cr, uid, ids, chart_account_id=False, context=None):
+        res = {}
         if chart_account_id:
             company_id = self.pool.get('account.account').browse(cr, uid, chart_account_id, context=context).company_id.id
-        else:
-            return {'value': {'company_id': False}}
-        return {'value': {'company_id': company_id}}
+            res['value'] = {'company_id': company_id}
+        return res
 
     _columns = {
         'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
