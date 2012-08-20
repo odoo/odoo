@@ -127,7 +127,7 @@ class mail_message(osv.Model):
     # Message loading for web interface
     #------------------------------------------------------
 
-    _limit = 10
+    _limit = 3
     def _message_dict_get(self, cr, uid, msg, context={}):
         attachs = self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)
         author = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id,], context=context)[0]

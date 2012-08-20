@@ -38,29 +38,24 @@ openerp.mail = function(session) {
      * 
      * This class holds a few tools method that will be used by
      * the various Chatter widgets.
+     *
+     * Some regular expressions not used anymore, kept because I want to
+     * - (^|\s)@((\w|@|\.)*): @login@log.log, supports inner '@' for
+     *   logins that are emails
+     *      1. '(void)'
+     *      2. login@log.log
+     * - (^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]: [ir.attachment,3|My Label],
+     *   for internal links to model ir.attachment, id=3, and with
+     *   optional label 'My Label'. Note that having a '|Label' is not
+     *   mandatory, because the regex should still be correct.
+     *      1. '(void)'
+     *      2. 'ir'
+     *      3. 'attachment'
+     *      4. '3'
+     *      5. 'My Label'
      */
 
     mail.ChatterUtils = {
-
-        /* generic chatter events binding */
-        bind_events: function(widget) {
-            // event: click on an internal link to a document: model, login
-            widget.$element.delegate('a.oe_mail_internal_link', 'click', function (event) {
-                event.preventDefault();
-                // lazy implementation: fetch data and try to redirect
-                if (! event.srcElement.dataset.resModel) return false;
-                else var res_model = event.srcElement.dataset.resModel;
-                var res_login = event.srcElement.dataset.resLogin;
-                if (! res_login) return false;
-                var ds = new session.web.DataSet(widget, res_model);
-                var defer = ds.call('search', [[['login', '=', res_login]]]).pipe(function (records) {
-                    if (records[0]) {
-                        widget.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(records[0]), views: [[false, 'form']]});
-                    }
-                    else return false;
-                });
-            });
-        },
 
         /** get an image in /web/binary/image?... */
         get_image: function(session_prefix, session_id, model, field, id) {
@@ -72,30 +67,7 @@ openerp.mail = function(session) {
             return (widget.session && widget.session.uid != 0 && widget.session.uid == message_user_id);
         },
 
-        /**
-         *    CONTENT MANIPULATION
-         * 
-         * Regular expressions
-         * - (^|\s)@((\w|@|\.)*): @login@log.log, supports inner '@' for
-         *   logins that are emails
-         *      1. '(void)'
-         *      2. login@log.log
-         * - (^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]: [ir.attachment,3|My Label],
-         *   for internal links to model ir.attachment, id=3, and with
-         *   optional label 'My Label'. Note that having a '|Label' is not
-         *   mandatory, because the regex should still be correct.
-         *      1. '(void)'
-         *      2. 'ir'
-         *      3. 'attachment'
-         *      4. '3'
-         *      5. 'My Label'
-         */
-
-        /**
-         * Replaces some expressions
-         * - @login - shorcut to link to a res.user, given its login
-         * - [ir.attachment,3|My Label] - shortcut to an internal
-         *   document
+        /** Replaces some expressions
          * - :name - shortcut to an image
          */
         do_replace_expressions: function (string) {
@@ -112,7 +84,6 @@ openerp.mail = function(session) {
             }
             return string;
         },
-
     };
 
 
@@ -446,8 +417,6 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            // generic events from Chatter Mixin
-            mail.ChatterUtils.bind_events(this);
             // event: click on 'more' at bottom of thread
             this.$element.find('button.oe_mail_button_more').click(function () {
                 self.do_more();
@@ -693,7 +662,6 @@ openerp.mail = function(session) {
             // any other method to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
-            mail.ChatterUtils.bind_events(this);
         },
         
         _check_visibility: function() {
@@ -746,7 +714,6 @@ openerp.mail = function(session) {
          */
         init: function (parent, options) {
             this._super(parent);
-            // console.log(options);
             this.options = options || {};
             this.options.domain = options.domain || [];
             this.options.context = options.context || {};
@@ -798,9 +765,10 @@ openerp.mail = function(session) {
          * Normally it should be called only when clicking on 'Post/Send'
          * in the composition form. */
         do_action: function(action, on_close) {
-            this.init_and_fetch_comments();
             if (this.compose_message_widget) {
                 this.compose_message_widget.reinit(); }
+            this.message_clean();
+            this.message_fetch();
             return this._super(action, on_close);
         },
 
