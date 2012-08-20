@@ -317,7 +317,7 @@ class mail_compose_message_extended(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
     def get_value(self, cr, uid, model, res_id, context=None):
-        return result
+        return {}
 
     def onchange_email_mode(self, cr, uid, ids, value, model, res_id, context=None):
         """ Overrides the default implementation to provide default values for
