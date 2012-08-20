@@ -19,18 +19,33 @@
 #
 ##############################################################################
 
-
 {
-    "name": "Project Management",
-    "version": "1.1",
-    "author": "OpenERP SA",
-    "website": "http://www.openerp.com",
-    "category": "Project Management",
-    "sequence": 8,
-    "summary": "Projects, Tasks",
-    "images": ["images/gantt.png", "images/project_dashboard.jpeg","images/project_task_tree.jpeg","images/project_task.jpeg","images/project.jpeg","images/task_analysis.jpeg"],
-    "depends": ["base_setup", "base_status", "product", "analytic", "board",  "mail", "resource","web_kanban"],
-    "description": """
+    'name': 'Project Management',
+    'version': '1.1',
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'category': 'Project Management',
+    'sequence': 8,
+    'summary': 'Projects, Tasks',
+    'images': [
+        'images/gantt.png',
+        'images/project_dashboard.jpeg',
+        'images/project_task_tree.jpeg',
+        'images/project_task.jpeg',
+        'images/project.jpeg',
+        'images/task_analysis.jpeg'
+    ],
+    'depends': [
+        'base_setup',
+        'base_status',
+        'product',
+        'analytic',
+        'board',
+        'mail',
+        'resource',
+        'web_kanban'
+    ],
+    'description': """
 Project Management module tracks multi-level projects, tasks, work done on tasks.
 =================================================================================
 
@@ -41,22 +56,21 @@ Dashboard for project management that includes:
     * List of My Open Tasks
     * Graph of My Remaining Hours by Project
     """,
-    "init_xml": [],
-    "update_xml": [
-        "security/project_security.xml",
-        "wizard/project_task_delegate_view.xml",
-        "wizard/project_task_reevaluate_view.xml",
-        "security/ir.model.access.csv",
-        "project_data.xml",
-        "project_view.xml",
-        "process/task_process.xml",
-        "res_partner_view.xml",
-        "report/project_report_view.xml",
+    'data': [
+        'security/project_security.xml',
+        'wizard/project_task_delegate_view.xml',
+        'wizard/project_task_reevaluate_view.xml',
+        'security/ir.model.access.csv',
+        'project_data.xml',
+        'project_view.xml',
+        'process/task_process.xml',
+        'res_partner_view.xml',
+        'report/project_report_view.xml',
         'report/project_cumulative.xml',
-        "board_project_view.xml",
+        'board_project_view.xml',
         'res_config_view.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'project_demo.xml',
     ],
     'test':[
