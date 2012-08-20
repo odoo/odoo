@@ -142,21 +142,13 @@ class mail_message(osv.Model):
             'child_ids': [] # will be filled after by _message_read
         }
 
-    def _message_read(self, cr, uid, messages, domain=[], thread_level=0, fetch_ancestors=False, context=None):
+    def _message_read(self, cr, uid, messages, domain=[], thread_level=0, context=None):
         result = []
         tree = {} # key: ID, value: record
         for msg in messages:
             if len(result)<(self._limit-1):
                 record = self._message_dict_get(cr, uid, msg, context=context)
-                if thread_level>0:
-                    dom = [('parent_id','=', msg.id)]
-                    if thread_level==1:
-                        dom = [('parent_id','child_of', [x.id for x in msg.child_ids])]
-                    newids = self.search(cr, uid, domain+dom, context=context, limit=self._limit)
-                    objs = self.browse(cr, uid, newids, context=context)
-                    record['child_ids'] = self._message_read(cr, uid, objs, domain+dom, thread_level-1, context=context)
-
-                if fetch_ancestors and msg.parent_id:
+                if thread_level and msg.parent_id:
                     while msg.parent_id:
                         if msg.parent_id.id in tree:
                             record_parent = tree[msg.parent_id.id]
@@ -179,25 +171,24 @@ class mail_message(osv.Model):
                 break
         return result
 
-    def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, fetch_ancestors=False, context=None):
+    def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, context=None):
         """ 
             If IDS are provided, fetch these records, otherwise use the domain to
             fetch the matching records. After having fetched the records provided
-            by IDS, it will fetch children (according to thread_level) and/or the
-            parents if fetch_ancestors is True.
+            by IDS, it will fetch children (according to thread_level).
             
             Return [
             
             ]
         """
         if ids is False:
-            dom = []
-            if thread_level>0:
-                dom = [('parent_id', '=', False)]
-            ids = self.search(cr, uid, domain+dom, context=context, limit=10)
+            ids = self.search(cr, uid, domain, context=context, limit=10)
+
+
+        # FP Todo: flatten to max X level of mail_thread
 
         messages = self.browse(cr, uid, ids, context=context)
-        result = self._message_read(cr, uid, messages, thread_level=thread_level, domain=domain, fetch_ancestors=fetch_ancestors, context=context)
+        result = self._message_read(cr, uid, messages, thread_level=thread_level, domain=domain, context=context)
         return result
 
 
