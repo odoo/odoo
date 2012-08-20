@@ -18,7 +18,7 @@ class OAuthController(openerpweb.Controller):
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
             providers = registry.get('auth.oauth.provider')
-            l = providers.read(cr, 1, providers.search(cr, 1, []))
+            l = providers.read(cr, 1, providers.search(cr, 1, [('enabled','=',True)]))
         return l
 
     @openerpweb.httprequest
