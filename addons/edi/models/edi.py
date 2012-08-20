@@ -472,8 +472,7 @@ class EDIMixin(object):
                     _logger.warning('Ignoring EDI mail notification, template %s cannot be located', template_ext_id)
                     return
                 for edi_record in self.browse(local_cr, uid, ids, context=context):
-                    edi_token = self.pool.get('edi.document').export_edi(local_cr, uid, [edi_record], context = context)[0]
-                    edi_context = dict(context, edi_web_url_view=EDI_VIEW_WEB_URL % (web_root_url, local_cr.dbname, edi_token))
+                    edi_context = dict(context, edi_web_url_view=self._edi_get_object_web_url_view(cr, uid, edi_record, context=context))
                     self.pool.get('email.template').send_mail(local_cr, uid, mail_tmpl.id, edi_record.id,
                                                               force_send=False, context=edi_context)
                     _logger.info('EDI export successful for %s #%s, email notification sent.', self._name, edi_record.id)
@@ -486,6 +485,14 @@ class EDIMixin(object):
 
         threading.Thread(target=email_task, name='EDI ExportAndEmail for %s %r' % (self._name, ids)).start()
         return True
+
+    def _edi_get_object_web_url_view(self, cr, uid, record, context=None):
+        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        if not web_root_url:
+            _logger.warning('Ignoring EDI mail notification, web.base.url not defined in parameters')
+            return ''
+        edi_token = self.pool.get('edi.document').export_edi(cr, uid, [record], context=context)[0]
+        return EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token)
 
     def _edi_get_object_by_name(self, cr, uid, name, model_name, context=None):
         model = self.pool.get(model_name)
