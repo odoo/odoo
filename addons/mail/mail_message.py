@@ -128,6 +128,8 @@ class mail_message(osv.Model):
     _limit = 10
     def _message_dict_get(self, cr, uid, msg, context={}):
         attachs = self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)
+        author = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id,], context=context)[0]
+        partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
         return {
             'id': msg.id,
             'type': msg.type,
@@ -138,11 +140,13 @@ class mail_message(osv.Model):
             'record_name': msg.record_name,
             'subject': msg.subject,
             'date': msg.date,
-            'author_id': msg.author_id.id,
+            'author_id': author,
+            'partner_ids': partner_ids,
             'child_ids': [] # will be filled after by _message_read
         }
 
     def _message_read(self, cr, uid, messages, domain=[], thread_level=0, context=None):
+        context = context or {}
         result = []
         tree = {} # key: ID, value: record
         for msg in messages:
@@ -169,6 +173,8 @@ class mail_message(osv.Model):
                     'context': context
                 })
                 break
+        for r in result:
+            print r
         return result
 
     def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, context=None):
