@@ -1,0 +1,54 @@
+-
+  I have add the sub_type name other with default false
+-  
+  !record {model: mail.message.subtype, id: mail_subtype_lead_won }:
+    name: won
+    model_ids:
+      - crm.model_crm_lead
+    default: False
+-
+  I have add the sub_type name email with default true
+-  
+  !record {model: mail.message.subtype, id: mail_subtype_lead_email }:
+    name: email
+    model_ids:
+      - crm.model_crm_lead
+    default: True   
+-  
+  I have add the sub_type name comment with default true
+-  
+  !record {model: mail.message.subtype, id: mail_subtype_lead_comment }:
+    name: comment
+    model_ids:
+      - crm.model_crm_lead
+    default: True
+    
+-  
+  I have search and write its subtype in followers
+-  
+  !python {model: mail.followers}: |    
+    ids = self.search(cr, uid, [('res_model', '=', 'crm.lead'),('res_id', '=', ref('crm_case_1'))])
+    self.write(cr, uid, ids, {'subtype_ids': [(6,0,[ref('mail_subtype_lead_won')])]})
+-
+  I have change the lead into mark won
+-
+  !python {model: crm.lead}: |
+     self.convert_opportunity(cr, uid ,[ref("crm_case_1")], ref("base.res_partner_4"))
+     self.case_mark_won(cr, uid,[ref("crm_case_1")] )
+-
+  I have check the lead into mark won 
+-
+  !assert {model: crm.lead, id: crm_case_1 ,string: 'The record is not in won state'}:
+    - state == 'done' 
+-        
+  I have check to if subtype is won then display notification.
+-
+  !python {model: mail.message}: |
+    ids = self.search(cr, uid, [('model', '=','crm.lead'),('res_id', '=', ref('crm_case_1'))])
+    browse = self.browse(cr,uid,ids)
+   
+    assert ids, 'lead is in won'
+
+
+
+  
