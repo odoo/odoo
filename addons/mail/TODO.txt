@@ -1,13 +1,12 @@
 Backend:
 * remove _message_search_ancestor_ids and implement in message_read (must use browse records instead of IDS)
 * I propose to move message_read in mail.message and rename to message_fetch
-* remove message_search_get_domain
-* remove message_search (objects can overwrite message_ids if they want a custom list of messages)
-* remove _message_find_partners
-* remove _message_find_user_id
 
-I was wrong:
-    * remove message_subscribe_users and use message_subscribe instead
+* remove message_search (objects can overwrite message_ids if they want a custom list of messages)
+    - requires to reimplement message_read
+
+* remove _message_find_user_id and use _message_find_partners
+    - it requires to change the route code
 
 Web Stuff to Do:
 * replace comments_structure by a real tree structure, provided by message_read directly

@@ -163,86 +163,6 @@ class mail_thread(osv.Model):
     # Message loading
     #------------------------------------------------------
 
-    def _message_search_ancestor_ids(self, cr, uid, ids, child_ids, ancestor_ids, context=None):
-        """ Given message child_ids ids, find their ancestors until ancestor_ids
-            using their parent_id relationship.
-
-            :param child_ids: the first nodes of the search
-            :param ancestor_ids: list of ancestors. When the search reach an
-                                 ancestor, it stops.
-        """
-        def _get_parent_ids(message_list, ancestor_ids, child_ids):
-            """ Tool function: return the list of parent_ids of messages
-                contained in message_list. Parents that are in ancestor_ids
-                or in child_ids are not returned. """
-            return [message['parent_id'][0] for message in message_list
-                        if message['parent_id']
-                        and message['parent_id'][0] not in ancestor_ids
-                        and message['parent_id'][0] not in child_ids
-                    ]
-
-        message_obj = self.pool.get('mail.message')
-        messages_temp = message_obj.read(cr, uid, child_ids, ['id', 'parent_id'], context=context)
-        parent_ids = _get_parent_ids(messages_temp, ancestor_ids, child_ids)
-        child_ids += parent_ids
-        cur_iter = 0; max_iter = 100; # avoid infinite loop
-        while (parent_ids and (cur_iter < max_iter)):
-            cur_iter += 1
-            messages_temp = message_obj.read(cr, uid, parent_ids, ['id', 'parent_id'], context=context)
-            parent_ids = _get_parent_ids(messages_temp, ancestor_ids, child_ids)
-            child_ids += parent_ids
-        if (cur_iter > max_iter):
-            _logger.warning("Possible infinite loop in _message_search_ancestor_ids. "\
-                "Note that this algorithm is intended to check for cycle in "\
-                "message graph, leading to a curious error. Have fun.")
-        return child_ids
-
-    def message_search_get_domain(self, cr, uid, ids, context=None):
-        """ OpenChatter feature: get the domain to search the messages related
-            to a document. mail.thread defines the default behavior as
-            being messages with model = self._name, id in ids.
-            This method should be overridden if a model has to implement a
-            particular behavior.
-        """
-        return ['&', ('res_id', 'in', ids), ('model', '=', self._name)]
-
-    def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None,
-                        limit=100, offset=0, domain=None, count=False, context=None):
-        """ OpenChatter feature: return thread messages ids according to the
-            search domain given by ``message_search_get_domain``.
-
-            It is possible to add in the search the parent of messages by
-            setting the fetch_ancestors flag to True. In that case, using
-            the parent_id relationship, the method returns the id list according
-            to the search domain, but then calls ``_message_search_ancestor_ids``
-            that will add to the list the ancestors ids. The search is limited
-            to parent messages having an id in ancestor_ids or having
-            parent_id set to False.
-
-            If ``count==True``, the number of ids is returned instead of the
-            id list. The count is done by hand instead of passing it as an
-            argument to the search call because we might want to perform
-            a research including parent messages until some ancestor_ids.
-
-            :param fetch_ancestors: performs an ascended search; will add
-                                    to fetched msgs all their parents until
-                                    ancestor_ids
-            :param ancestor_ids: used when fetching ancestors
-            :param domain: domain to add to the search; especially child_of
-                           is interesting when dealing with threaded display.
-                           Note that the added domain is anded with the
-                           default domain.
-            :param limit, offset, count, context: as usual
-        """
-        search_domain = self.message_search_get_domain(cr, uid, ids, context=context)
-        if domain:
-            search_domain += domain
-        message_obj = self.pool.get('mail.message')
-        message_res = message_obj.search(cr, uid, search_domain, limit=limit, offset=offset, count=count, context=context)
-        if not count and fetch_ancestors:
-            message_res += self._message_search_ancestor_ids(cr, uid, ids, message_res, ancestor_ids, context=context)
-        return message_res
-
     def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None,
                         limit=100, offset=0, domain=None, context=None):
         """ OpenChatter feature: read the messages related to some threads.
@@ -279,6 +199,10 @@ class mail_thread(osv.Model):
         messages = sorted(messages, key=lambda d: (-d['id']))
         return messages
 
+    #------------------------------------------------------
+    # Mail gateway
+    #------------------------------------------------------
+
     def _message_find_partners(self, cr, uid, message, headers=['From'], context=None):
         s = ', '.join([decode(message.get(h)) for h in headers])
         mails = tools.email_split(s)
@@ -289,13 +213,11 @@ class mail_thread(osv.Model):
 
     def _message_find_user_id(self, cr, uid, message, context=None):
         from_local_part = tools.email_split(decode(message.get('From')))[0]
-        user_ids = self.pool.get('res.users').search(cr, uid, [('login', '=', from_local_part)], context=context)
+        # FP Note: canonification required, the minimu: .lower()
+        user_ids = self.pool.get('res.users').search(cr, uid, ['|', 
+            ('login', '=', from_local_part),
+            ('email', '=', from_local_part)], context=context)
         return user_ids[0] if user_ids else uid
-
-    #------------------------------------------------------
-    # Mail gateway
-    #------------------------------------------------------
-    # message_process will call either message_new or message_update.
 
     def message_route(self, cr, uid, message, model=None, thread_id=None,
                       custom_values=None, context=None):
