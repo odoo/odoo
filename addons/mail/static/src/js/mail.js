@@ -479,10 +479,10 @@ openerp.mail = function(session) {
 
             this.$element.find('div.oe_mail_thread_display').empty();
             // var domain = this.get_fetch_domain(this.comments_structure);
-            return this.fetch_comments(this.options.limit, this.options.offset, domain).then();
+            return this.fetch_comments(this.options.domain || []).then();
         },
         
-        fetch_comments: function (limit, offset, domain) {
+        fetch_comments: function (domain) {
             var self = this;
             var defer = this.ds.call('message_read', [[this.options.res_id], (this.options.thread_level > 0), (this.comments_structure['root_ids']),
                                     (limit+1) || (this.options.limit+1), offset||this.options.offset, domain||undefined ]).then(function (records) {
@@ -622,7 +622,7 @@ openerp.mail = function(session) {
         
         do_more: function () {
             domain = this.get_fetch_domain(this.comments_structure);
-            return this.fetch_comments(this.options.limit, this.options.offset, domain);
+            return this.fetch_comments(domain);
         },
     });
 
@@ -645,7 +645,7 @@ openerp.mail = function(session) {
 
        init: function() {
             this._super.apply(this, arguments);
-            this.params = this.options;
+            this.params = this.options || {};
             this.params.thread_level = this.params.thread_level || 0;
             this.thread = null;
         },
