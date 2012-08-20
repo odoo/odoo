@@ -78,6 +78,11 @@ class email_template(osv.osv):
             logging.exception("failed to render mako template value %r", template)
             return u""
 
+    def _prepare_render_template_context(self, cr, uid, model, res_id, context=None):
+        if context is None:
+            return {}
+        return context.copy()
+
     def get_email_template(self, cr, uid, template_id=False, record_id=None, context=None):
         if context is None:
             context = {}
@@ -317,12 +322,13 @@ class email_template(osv.osv):
 
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, res_id, context)
+        template_context = self._prepare_render_template_context(cr, uid, template.model, res_id, context)
 
         for field in ['subject', 'body_text', 'body_html', 'email_from',
                       'email_to', 'email_cc', 'email_bcc', 'reply_to',
                       'message_id']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
-                                                 template.model, res_id, context=context) \
+                                                 template.model, res_id, context=template_context) \
                                                  or False
 
         if values['body_html']:
