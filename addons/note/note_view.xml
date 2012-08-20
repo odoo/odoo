@@ -2,6 +2,22 @@
 <openerp>
   <data>
 
+    <record id="action_dummy" model="ir.actions.client">
+        <field name="name">News Feed</field>
+        <field name="tag">mail.wall</field>
+        <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
+    </record>
+
+    <!-- Rename the 'Feeds' main menu into 'Home' -->
+    <!-- Top menu item -->
+    <menuitem name="Home"
+      id="mail.mail_feeds_main"/>
+
+      <menuitem name="My Stuff" id="note_my_stuff" parent="mail.mail_feeds_main"/>
+        <menuitem name="Agenda" id="note_agenda" parent="note_my_stuff" sequence="10" action="action_dummy" type="client"/>
+        <menuitem name="Notes" id="note_notes" parent="note_my_stuff" sequence="20"/>
+        <menuitem name="Contacts" id="note_contacts" parent="note_my_stuff" sequence="30"/>
+
     <!-- Note Stage Form View -->
     <record model="ir.ui.view" id="view_note_stage_form">
       <field name="name">note.stage.form</field>
@@ -25,9 +41,9 @@
 
       <field name="arch" type="xml">
         <tree string="Stages of notes" editable="top">
-	  <field name="sequence" invisible="1" />
-          <field name="name" />
-	  <field name="fold" />
+          <field name="sequence" invisible="1"/>
+                <field name="name"/>
+          <field name="fold"/>
         </tree>
       </field>
     </record>
@@ -44,7 +60,7 @@
     <menuitem name="Notes" parent="base.menu_tools" id="menu_notes" sequence="20"/>
 
     <menuitem name="Categories" parent="menu_notes"
-    	      id="menu_notes_stage" action="action_note_stage" sequence="2" />
+            id="menu_notes_stage" action="action_note_stage" sequence="2"/>
 
     <!-- New Note Kanban View -->
     <record model="ir.ui.view" id="view_note_note_kanban">
@@ -52,44 +68,44 @@
       <field name="model">note.note</field>
       <field name="type">kanban</field>
       <field name="arch" type="xml">
-        <kanban default_group_by="stage_id" >
-	  <field name="color" />
-	  <field name="sequence" />
-	  <field name="name" />
-	  <field name="stage_id" />
-	  <field name="active" />
-	  <field name="note" />
-	  <field name="follower_ids" />
-	  <templates>
-	    <t t-name="kanban-box">
-	      <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-		<!-- dropdown menu -->
-		<div class="oe_dropdown_toggle oe_dropdown_kanban">
-		  <span class="oe_e">í</span>
-		  <ul class="oe_dropdown_menu">
-		    <li><a type="edit" >Edit...</a></li>
-                    <li><a type="delete">Delete</a></li>
-                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-		  </ul>
-		</div>
+        <kanban default_group_by="stage_id">
+          <field name="color"/>
+          <field name="sequence"/>
+          <field name="name"/>
+          <field name="stage_id"/>
+          <field name="active"/>
+          <field name="note"/>
+          <field name="follower_ids"/>
+          <templates>
+            <t t-name="kanban-box">
+              <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+              <!-- dropdown menu -->
+              <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                <span class="oe_e">í</span>
+                <ul class="oe_dropdown_menu">
+                  <li><a type="edit" >Edit...</a></li>
+                  <li><a type="delete">Delete</a></li>
+                  <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                </ul>
+              </div>
 
-		<!-- kanban note -->
-		<div class="oe_kanban_content">
-		  <!-- title -->
-		  <field name="name" />
-		</div>
-		
-		<div class="oe_kanban_project_avatars">
-		  <t t-foreach="record.follower_ids.raw_value" t-as="follower">
-                    <img t-att-src="kanban_image('res.users', 'image_small', follower)" t-att-data-member_id="follower"/>
-		  </t>
-		</div>
-		
-	      </div>
-	      <div class="oe_clear"></div>
-	    </t>
-	  </templates>
-	</kanban>
+              <!-- kanban note -->
+              <div class="oe_kanban_content">
+                <!-- title -->
+                <field name="name"/>
+              </div>
+
+              <div class="oe_kanban_project_avatars">
+                <t t-foreach="record.follower_ids.raw_value" t-as="follower">
+                  <img t-att-src="kanban_image('res.users', 'image_small', follower)" t-att-data-member_id="follower"/>
+                </t>
+              </div>
+
+              </div>
+              <div class="oe_clear"></div>
+            </t>
+          </templates>
+        </kanban>
       </field>
     </record>
 
@@ -100,11 +116,11 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Note" version="7.0">
-	  <header>
-	    <!-- todo: remove domain -->
-	    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1" />
-	  </header>
-          <field name="note_pad" widget="pad" />
+          <header>
+            <!-- todo: remove domain -->
+            <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
+          </header>
+          <field name="note_pad" widget="pad"/>
           <div class="oe_chatter">
             <field name="message_ids" widget="mail_thread"/>
           </div>
@@ -129,7 +145,7 @@
       </field>
     </record>
 
-    <!-- New Note Tree View -->    
+    <!-- New Note Tree View -->
     <record model="ir.ui.view" id="view_note_note_tree">
       <field name="name">note.note.tree</field>
       <field name="model">note.note</field>
@@ -143,7 +159,7 @@
       <field name="view_mode">kanban,tree,form</field>
       <field name="search_view_id" ref="view_note_note_filter"/>
     </record>
-    
+
     <menuitem name="My notes" parent="menu_notes" id="menu_notes_note" action="action_note_note" sequence="1"/>
 
   </data>
