@@ -93,11 +93,17 @@ class account_invoice(osv.osv):
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         result = {}
         for invoice in self.browse(cr, uid, ids, context=context):
+            checked_partial_rec_ids = []
             result[invoice.id] = 0.0
             if invoice.move_id:
-                for m in invoice.move_id.line_id:
-                    if m.account_id.type in ('receivable','payable'):
-                        result[invoice.id] += m.amount_residual_currency
+                for move_line in invoice.move_id.line_id:
+                    if move_line.account_id.type in ('receivable','payable'):
+                        if move_line.reconcile_partial_id:
+                            partial_reconcile_id = move_line.reconcile_partial_id.id
+                            if partial_reconcile_id in checked_partial_rec_ids:
+                                continue
+                            checked_partial_rec_ids.append(partial_reconcile_id)
+                        result[invoice.id] += move_line.amount_residual_currency
         return result
 
     # Give Journal Items related to the payment reconciled to this invoice
