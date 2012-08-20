@@ -488,7 +488,7 @@ class EDIMixin(object):
 
     def _edi_get_object_web_url_view(self, cr, uid, record, context=None):
         web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        if web_root_url:
+        if not web_root_url:
             _logger.warning('Ignoring EDI mail notification, web.base.url not defined in parameters')
             return ''
         edi_token = self.pool.get('edi.document').export_edi(cr, uid, [record], context=context)[0]
