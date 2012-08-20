@@ -100,11 +100,6 @@ class mail_compose_message(osv.TransientModel):
             result['model'] = active_model
         if not result.get('res_id') and active_id:
             result['res_id'] = active_id
-
-        # Try to provide default email_from if not specified yet
-        if not result.get('email_from'):
-            current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            result['email_from'] = current_user.email or False
         return result
 
     _columns = {
@@ -139,7 +134,6 @@ class mail_compose_message(osv.TransientModel):
             'model': model,
             'res_id': res_id,
             'email_from': user.email or tools.config.get('email_from', False),
-            'body_html': False,
             'body': False,
             'subject': False,
             'dest_partner_ids': [],
@@ -199,44 +193,28 @@ class mail_compose_message(osv.TransientModel):
         reply_subject = tools.ustr(message_data.subject or '')
         if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)):
             reply_subject = "%s %s" % (re_prefix, reply_subject)
+
         # Form the bodies (text and html). We use the plain text version of the
         # original mail, by default, as it is easier to quote than the HTML
         # version. TODO: make it possible to switch to HTML on the fly
+
         sent_date = _('On %(date)s, ') % {'date': message_data.date} if message_data.date else ''
         sender = _('%(sender_name)s wrote:') % {'sender_name': tools.ustr(message_data.email_from or _('You'))}
+
         body = message_data.body or ''
-        body_html = message_data.body_html or ''
-        quoted_body = '> %s' % tools.ustr(body.replace('\n', "\n> ") or '')
-        quoted_body_html = '<blockquote>%s</blockquote>' % (tools.ustr(body_html)),
-        reply_body = '\n%s%s\n%s\n%s' % (sent_date, sender, quoted_body, current_user.signature)
-        reply_body_html = '<br /><br />%s%s<br />%s<br />%s' % (sent_date, sender, quoted_body_html, current_user.signature)
+        quoted_body = '<blockquote>%s</blockquote>' % (tools.ustr(body)),
+        reply_body = '<br /><br />%s%s<br />%s<br />%s' % (sent_date, sender, quoted_body, current_user.signature)
+
         # form dest_partner_ids
         dest_partner_ids = [partner.id for partner in message_data.partner_ids]
-        # Update header and references
-        reply_headers = {}
-        reply_references = message_data.references and tools.ustr(message_data.references) or False
-        reply_message_id = message_data.message_id or False
-        if reply_message_id:
-            reply_references = (reply_references or '') + " " + message_data.message_id
-            reply_headers['In-Reply-To'] = message_data.message_id
+
         # update the result
         result.update({
             'body': reply_body,
-            'body_html': reply_body_html,
             'subject': reply_subject,
-            'attachment_ids': [],
             'dest_partner_ids': dest_partner_ids,
             'model': message_data.model or False,
             'res_id': message_data.res_id or False,
-            'email_from': current_user.email or message_data.email_to or False,
-            'email_to': message_data.reply_to or message_data.email_from or False,
-            'email_cc': message_data.email_cc or False,
-            'user_id': uid,
-            # pass msg-id and references of mail we're replying to, to construct the
-            # new ones later when sending
-            'message_id': reply_message_id,
-            'references': reply_references,
-            'headers': reply_headers,
         })
         return result
 
@@ -289,7 +267,7 @@ class mail_compose_message(osv.TransientModel):
                 if context.get('mail.compose.message.mode') == 'mass_mail':
                     subject = self.render_template(cr, uid, subject, active_model, active_id)
                     body = self.render_template(cr, uid, mail_wiz.body_html, active_model, active_id)
-                active_model_pool.message_append(cr, uid, active_id, body, subject, 'comment', 
+                active_model_pool.message_post(cr, uid, active_id, body, subject, 'comment', 
                     attachments=attachments, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
@@ -339,20 +317,6 @@ class mail_compose_message_extended(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
     def get_value(self, cr, uid, model, res_id, context=None):
-        """ Overrides the default implementation to provide more default field values
-            related to the corresponding CRM case.
-        """
-        result = super(mail_compose_message_extended, self).get_value(cr, uid, model, res_id, context=context)
-        model_obj = self.pool.get(model)
-        if getattr(model_obj, '_mail_compose_message', False) and res_id:
-            data = model_obj.browse(cr, uid , res_id, context)
-            result.update({
-                'email_to': data.email_from or False,
-                'email_cc': tools.ustr(data.email_cc or ''),
-                'subject': data.name or False,
-            })
-            if hasattr(data, 'section_id'):
-                result['reply_to'] = data.section_id and data.section_id.reply_to or False
         return result
 
     def onchange_email_mode(self, cr, uid, ids, value, model, res_id, context=None):

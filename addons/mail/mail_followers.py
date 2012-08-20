@@ -90,10 +90,6 @@ class mail_notification(osv.Model):
             if partner.notification_email_pref=='comment' and msg.type in ('email','comment'):
                 continue
 
-            if not msg.email_from:
-                current_user = res_users_obj.browse(cr, uid, uid, context=context)
-                towrite['email_from'] = current_user.email
-
             towrite['state'] = 'outgoing'
             if not towrite.get('email_to', False):
                 towrite['email_to'] = email_to
@@ -109,5 +105,3 @@ class mail_notification(osv.Model):
             newid = mail_message_obj.create(cr, uid, towrite, context=context)
             mail_message_obj.send(cr, uid, [newid], context=context)
         return True
-
-

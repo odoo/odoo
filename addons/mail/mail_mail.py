@@ -1,4 +1,3 @@
-
 import ast
 import base64
 import email
@@ -45,9 +44,16 @@ class mail_mail(osv.Model):
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML version of the message"),
     }
 
+    def _get_default_from(self, cr, uid, context={}):
+        cur = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if not cur.alias_domain:
+            raise osv.except_osv(_('Invalid Action!'), _('Unable to send email, set an alias domain in your server settings.'))
+        return cur.alias_name + '@' + cur.alias_domain
+
     _defaults = {
         'state': 'outgoing',
         'content_subtype': 'plain',
+        'email_from': _get_default_from
     }
 
     def mark_outgoing(self, cr, uid, ids, context=None):
