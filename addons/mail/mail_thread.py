@@ -73,10 +73,10 @@ class mail_thread(osv.Model):
         subids = subobj.search(cr, uid, [
             ('res_model','=',self._name),
             ('res_id', 'in', ids),
-            ('user_id','=',uid)], context=context)
+            ('partner_id.user_ids','in',[uid])], context=context)
         result = dict.fromkeys(ids, False)
         for sub in subobj.browse(cr, uid, subids, context=context):
-            result[res_id] = True
+            result[sub.res_id] = True
         return result
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
@@ -84,17 +84,17 @@ class mail_thread(osv.Model):
         for id in ids:
             res[id] = {
                 'message_unread': False,
-                'message_Summary': ''
+                'message_summary': ''
             }
         nobj = self.pool.get('mail.notification')
-        notifs = nobj.search(cr, uid, [
-            ('user_id','=',uid),
+        nids = nobj.search(cr, uid, [
+            ('partner_id.user_ids','in',[uid]),
             ('message_id.res_id','in', ids),
             ('message_id.model','=', self._name),
             ('read','=',False)
         ], context=context)
         for notif in nobj.browse(cr, uid, nids, context=context):
-            res[notif.message_id.id]['message_unread'] = True
+            res[notif.message_id.res_id]['message_unread'] = True
 
         for thread in self.browse(cr, uid, ids, context=context):
             message_ids = thread.message_ids
