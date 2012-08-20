@@ -28,20 +28,34 @@
                         </div>
                     </group>
                     <group>
-                        <label for="id" string="Share Data"/>
-                        <div>
+                        <label for="id" string="Email"/>
+                        <div name="email">
                             <div>
-                                <field name="module_share" class="oe_inline"/>
-                                <label for="module_share"/>
+                                <button type="action"
+                                    name="%(base.action_ir_mail_server_list)d"
+                                    string="Configure outgoing email servers" class="oe_link"/>
                             </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Portal access"/>
+                        <div>
                             <div>
                                 <field name="module_portal" class="oe_inline"/>
                                 <label for="module_portal"/>
                             </div>
                             <div>
-                                <button type="action"
-                                    name="%(base.action_ir_mail_server_list)d"
-                                    string="Configure outgoing email servers" class="oe_link"/>
+                                <field name="module_auth_anonymous" class="oe_inline"/>
+                                <label for="module_auth_anonymous"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Authentication"/>
+                        <div>
+                            <div>
+                                <field name="module_auth_oauth" class="oe_inline"/>
+                                <label for="module_auth_oauth"/>
                             </div>
                         </div>
                     </group>

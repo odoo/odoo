@@ -20,10 +20,14 @@
 ##############################################################################
 
 {
-    'name' : "Portal",
-    'version' : "1.0",
-    'depends' : ["base", "share", "auth_anonymous"],
-    'author' : "OpenERP SA",
+    'name' : 'Portal',
+    'version' : '1.0',
+    'depends' : [
+        'base',
+        'share',
+        'auth_signup',
+    ],
+    'author' : 'OpenERP SA',
     'category': 'Portal',
     'description': """
 Customize access to your OpenERP database to external users by creating portals.
