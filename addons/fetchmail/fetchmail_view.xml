@@ -104,11 +104,11 @@
         />
 
       <record model="ir.ui.view" id="email_message_tree_view">
-          <field name="name">mail.message.list.fetchmail</field>
-          <field name="model">mail.message</field>
-          <field name="inherit_id" ref="mail.view_email_message_tree"/>
+          <field name="name">mail.mail.list.fetchmail</field>
+          <field name="model">mail.mail</field>
+          <field name="inherit_id" ref="mail.view_email_message_form"/>
           <field name="arch" type="xml">
-              <field name="user_id" position="after">
+              <field name="references" position="after">
                   <field name="fetchmail_server_id"/>
               </field>
           </field>
