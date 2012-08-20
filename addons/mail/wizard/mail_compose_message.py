@@ -216,14 +216,14 @@ class mail_compose_message(osv.osv_memory):
                     active_ids = active_model_pool.search(cr, uid, ast.literal_eval(mail.filter_id.domain), context=ast.literal_eval(mail.filter_id.context))
 
                 for active_id in active_ids:
-                    self._pre_render_template(cr, uid, active_model, active_id, context)
-                    subject = self.render_template(cr, uid, mail.subject, active_model, active_id, context)
-                    rendered_body = self.render_template(cr, uid, body, active_model, active_id, context)
-                    email_from = self.render_template(cr, uid, mail.email_from, active_model, active_id, context)
-                    email_to = self.render_template(cr, uid, mail.email_to, active_model, active_id, context)
-                    email_cc = self.render_template(cr, uid, mail.email_cc, active_model, active_id, context)
-                    email_bcc = self.render_template(cr, uid, mail.email_bcc, active_model, active_id, context)
-                    reply_to = self.render_template(cr, uid, mail.reply_to, active_model, active_id, context)
+                    render_context = self._prepare_render_template_context(cr, uid, active_model, active_id, context)
+                    subject = self.render_template(cr, uid, mail.subject, active_model, active_id, render_context)
+                    rendered_body = self.render_template(cr, uid, body, active_model, active_id, render_context)
+                    email_from = self.render_template(cr, uid, mail.email_from, active_model, active_id, render_context)
+                    email_to = self.render_template(cr, uid, mail.email_to, active_model, active_id, render_context)
+                    email_cc = self.render_template(cr, uid, mail.email_cc, active_model, active_id, render_context)
+                    email_bcc = self.render_template(cr, uid, mail.email_bcc, active_model, active_id, render_context)
+                    reply_to = self.render_template(cr, uid, mail.reply_to, active_model, active_id, render_context)
 
                     # in mass-mailing mode we only schedule the mail for sending, it will be 
                     # processed as soon as the mail scheduler runs.
@@ -242,8 +242,8 @@ class mail_compose_message(osv.osv_memory):
 
         return {'type': 'ir.actions.act_window_close'}
 
-    def _pre_render_template(self, cr, uid, active_model, active_id, context):
-        return True
+    def _prepare_render_template_context(self, cr, uid, active_model, active_id, context):
+        return {}
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
         """Render the given template text, replace mako-like expressions ``${expr}``
