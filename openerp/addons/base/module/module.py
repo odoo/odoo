@@ -99,7 +99,7 @@ class module(osv.osv):
         res = {}
         for module in self.browse(cr, uid, ids, context=context):
             desc = self.get_module_info(module.name).get('description', '')
-            overrides = dict(embed_stylesheet= False, doctitle_xform= False)
+            overrides = dict(embed_stylesheet= False, doctitle_xform= False, output_encoding = 'unicode')
             output = publish_string(source= desc, writer_name= 'html', settings_overrides= overrides)
             res[module.id] = output
         return res
