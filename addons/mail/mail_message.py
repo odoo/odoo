@@ -129,8 +129,6 @@ class mail_message(osv.Model):
 
     _limit = 10
     def _message_dict_get(self, cr, uid, msg, context={}):
-        print msg
-        print msg.attachment_ids
         attachs = self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)
         author = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id,], context=context)[0]
         partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
