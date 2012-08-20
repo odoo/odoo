@@ -2,21 +2,9 @@
 <openerp>
   <data>
 
-    <record id="action_dummy" model="ir.actions.client">
-        <field name="name">News Feed</field>
-        <field name="tag">mail.wall</field>
-        <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
-    </record>
-
-    <!-- Rename the 'Feeds' main menu into 'Home' -->
-    <!-- Top menu item -->
-    <menuitem name="Home"
-      id="mail.mail_feeds_main"/>
-
-      <menuitem name="My Stuff" id="note_my_stuff" parent="mail.mail_feeds_main"/>
-        <menuitem name="Agenda" id="note_agenda" parent="note_my_stuff" sequence="10" action="action_dummy" type="client"/>
-        <menuitem name="Notes" id="note_notes" parent="note_my_stuff" sequence="20"/>
-        <menuitem name="Contacts" id="note_contacts" parent="note_my_stuff" sequence="30"/>
+    <menuitem name="My Stuff" id="note_my_stuff" parent="mail.mail_feeds_main"/>
+      <menuitem name="Calendar" id="note_agenda" parent="note_my_stuff" action="base_calendar.action_crm_meeting" sequence="10"/>
+      <menuitem name="Contacts" id="note_contacts" parent="note_my_stuff" action="base.action_partner_form" sequence="30"/>
 
     <!-- Note Stage Form View -->
     <record model="ir.ui.view" id="view_note_stage_form">
@@ -38,7 +26,6 @@
       <field name="model">note.stage</field>
       <field name="type">tree</field>
       <field name="field_parent"></field>
-
       <field name="arch" type="xml">
         <tree string="Stages of notes" editable="top">
           <field name="sequence" invisible="1"/>
@@ -47,7 +34,6 @@
         </tree>
       </field>
     </record>
-
     <!-- Note Stage Action -->
     <record model="ir.actions.act_window" id="action_note_stage">
       <field name="name">Stages</field>
@@ -57,10 +43,8 @@
       <field name="domain">[('user_id','=',uid)]</field>
     </record>
 
-    <menuitem name="Notes" parent="base.menu_tools" id="menu_notes" sequence="20"/>
-
-    <menuitem name="Categories" parent="menu_notes"
-            id="menu_notes_stage" action="action_note_stage" sequence="2"/>
+    <menuitem name="Categories"
+      id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
 
     <!-- New Note Kanban View -->
     <record model="ir.ui.view" id="view_note_note_kanban">
@@ -160,7 +144,7 @@
       <field name="search_view_id" ref="view_note_note_filter"/>
     </record>
 
-    <menuitem name="My notes" parent="menu_notes" id="menu_notes_note" action="action_note_note" sequence="1"/>
+    <menuitem name="Notes" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
 
   </data>
 </openerp>
