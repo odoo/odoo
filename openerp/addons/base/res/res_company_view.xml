@@ -17,7 +17,6 @@
         <record id="view_company_form" model="ir.ui.view">
             <field name="name">res.company.form</field>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Company" version="7.0">
                   <sheet>
@@ -51,10 +50,10 @@
                                         <field name="street2"/>
                                         <div>
                                             <field name="city" placeholder="City" style="width: 40%%"/>
-                                            <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%"/>
+                                            <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%" options='{"no_open": true}'/>
                                             <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                         </div>
-                                        <field name="country_id" placeholder="Country" class="oe_no_button" on_change="on_change_country(country_id)"/>
+                                        <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": true}' on_change="on_change_country(country_id)"/>
                                     </div>
                                     <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
                                 </group>
@@ -102,7 +101,6 @@
         <record id="view_company_tree" model="ir.ui.view">
             <field name="name">res.company.tree</field>
             <field name="model">res.company</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Companies">
@@ -131,7 +129,6 @@
         <record id="view_inventory_tree" model="ir.ui.view">
             <field name="name">multi_company.default.tree</field>
             <field name="model">multi_company.default</field>
-            <field name="type">tree</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Multi Company">
@@ -148,7 +145,6 @@
         <record id="view_inventory_form" model="ir.ui.view">
             <field name="name">multi_company.default.form</field>
             <field name="model">multi_company.default</field>
-            <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Multi Company" version="7.0">
@@ -173,7 +169,6 @@
         <record id="view_inventory_search" model="ir.ui.view">
             <field name="name">multi_company.default.search</field>
             <field name="model">multi_company.default</field>
-            <field name="type">search</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Multi Company">

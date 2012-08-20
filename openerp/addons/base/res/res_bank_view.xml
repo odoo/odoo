@@ -5,7 +5,6 @@
         <record id="view_res_bank_form" model="ir.ui.view">
             <field name="name">res.bank.form</field>
             <field name="model">res.bank</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank" version="7.0">
                   <sheet>
@@ -41,7 +40,6 @@
         <record id="view_res_bank_tree" model="ir.ui.view">
             <field name="name">res.bank.tree</field>
             <field name="model">res.bank</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Banks">
                     <field name="name"/>
@@ -63,7 +61,6 @@
         <record id="view_partner_bank_type_form" model="ir.ui.view">
             <field name="name">res.partner.bank.type.form</field>
             <field name="model">res.partner.bank.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank Account Type" version="7.0">
                     <group col="4">
@@ -78,7 +75,6 @@
         <record id="view_partner_bank_type_tree" model="ir.ui.view">
             <field name="name">res.partner.bank.type.tree</field>
             <field name="model">res.partner.bank.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Bank Account Type">
                     <field name="name"/>
@@ -90,13 +86,13 @@
         <record id="view_partner_bank_form" model="ir.ui.view">
             <field name="name">res.partner.bank.form</field>
             <field name="model">res.partner.bank</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank account" version="7.0">
                     <group col="4">
                         <field name="state"/>
                         <field name="acc_number"/>
                         <field name="company_id" on_change="onchange_company_id(company_id)" invisible="context.get('company_hide', True)" widget="selection"/>
+                        <field name="footer" attrs="{'invisible': [('company_id','=',False)]}"/>
                     </group>
                     <group>
                         <group name="owner" string="Bank Account Owner">
@@ -109,8 +105,8 @@
                                     <field name="zip" class="oe_inline" placeholder="ZIP"/>
                                     <field name="city" class="oe_inline" placeholder="City"/>
                                 </div>
-                                <field name="state_id" placeholder="State"/>
-                                <field name="country_id" placeholder="Country"/>
+                                <field name="state_id" placeholder="State" options='{"no_open": true}'/>
+                                <field name="country_id" placeholder="Country" options='{"no_open": true}'/>
                             </div>
                         </group>
                         <group name="bank" string="Information About the Bank">
@@ -126,13 +122,13 @@
         <record id="view_partner_bank_tree" model="ir.ui.view">
             <field name="name">res.partner.bank.tree</field>
             <field name="model">res.partner.bank</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Bank Accounts">
                     <field name="sequence" invisible="1"/>
                     <field name="acc_number"/>
                     <field name="bank_name"/>
                     <field name="company_id" invisible="context.get('company_hide', True)"/>
+                    <field name="footer" invisible="context.get('company_hide', True)"/>
                     <field name="partner_id"/>
                 </tree>
             </field>
@@ -140,7 +136,6 @@
         <record id="view_partner_bank_search" model="ir.ui.view">
             <field name="name">res.partner.bank.search</field>
             <field name="model">res.partner.bank</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Bank Accounts">
                     <field name="bank_name" filter_domain="['|', ('bank_name','ilike',self), ('acc_number','ilike',self)]" string="Bank Name"/>
@@ -155,7 +150,7 @@
             <field name="res_model">res.partner.bank</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Configure your company's bank accounts. You can reorder bank accounts from the list view. If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.</field>
+            <field name="help">Configure your company's bank accounts and select those that must appear on the report footer. You can reorder bank accounts from the list view. If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.</field>
         </record>
         <menuitem action="action_res_partner_bank_account_form"
             id="menu_action_res_partner_bank_form"

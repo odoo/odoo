@@ -20,6 +20,7 @@
 ##############################################################################
 
 import math
+import openerp
 import os
 from osv import osv, fields
 import re
@@ -27,6 +28,10 @@ import tools
 from tools.translate import _
 import logging
 import pooler
+import pytz
+
+def _tz_get(self,cr,uid, context=None):
+    return [(x, x) for x in pytz.all_timezones]
 
 class res_payterm(osv.osv):
     _description = 'Payment term'
@@ -150,9 +155,14 @@ class res_partner(osv.osv):
         'parent_id': fields.many2one('res.partner', 'Owned by'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
-        'lang': fields.selection(_lang_get, 'Language', help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
+        'lang': fields.selection(_lang_get, 'Language',
+            help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
+        'tz': fields.selection(_tz_get,  'Timezone', size=64,
+            help="The partner's timezone, used to output proper date and time values inside printed reports. "
+                 "It is important to set a value for this field. You should use the same timezone "
+                 "that is otherwise used to pick and render date and time values: your computer's timezone."),
         'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this partner if any.'),
-        'vat': fields.char('VAT',size=32 ,help="Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."),
+        'vat': fields.char('TIN',size=32 ,help="Tax Identification Number. Check the box if the partner is subjected to taxes. Used by the some of the legal statements."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website',size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
@@ -165,10 +175,10 @@ class res_partner(osv.osv):
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
         'function': fields.char('Job Position', size=128),
-        'type': fields.selection( [('default','Default'),('invoice','Invoice'),
+        'type': fields.selection( [('default','Default'), ('invoice','Invoice'),
                                    ('delivery','Delivery'), ('contact','Contact'),
-                                   ('other','Other')],
-                   'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
+                                   ('other', 'Other')], 'Address Type',
+            help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
@@ -217,13 +227,15 @@ class res_partner(osv.osv):
 
     def _get_default_image(self, cr, uid, is_company, context=None):
         if is_company:
-            image_path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'company_icon.png')
+            image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')
         else:
-            image_path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png')
+            image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'partner_image.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'active': True,
+        'lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
+        'tz': lambda self, cr, uid, context: context.get('tz', False),
         'customer': True,
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
@@ -232,6 +244,8 @@ class res_partner(osv.osv):
         'type': 'default',
         'use_parent_address': True,
         'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
+        'image_small': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
+        'image_medium': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -316,7 +330,8 @@ class res_partner(osv.osv):
 
     def update_address(self, cr, uid, ids, vals, context=None):
         addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if vals.get(key))
-        return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
+        if addr_vals:
+            return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
 
     def name_get(self, cr, uid, ids, context=None):
         if context is None:

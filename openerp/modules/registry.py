@@ -22,6 +22,7 @@
 """ Models registries.
 
 """
+from contextlib import contextmanager
 import logging
 import threading
 
@@ -43,12 +44,12 @@ class Registry(object):
     """
 
     def __init__(self, db_name):
-        self.models = {} # model name/model instance mapping
+        self.models = {}    # model name/model instance mapping
         self._sql_error = {}
         self._store_function = {}
         self._init = True
         self._init_parent = {}
-        
+
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
 
@@ -118,6 +119,17 @@ class Registry(object):
         """
         for model in self.models.itervalues():
             model.clear_caches()
+
+    @contextmanager
+    def cursor(self, auto_commit=True):
+        cr = self.db.cursor()
+        try:
+            yield cr
+            if auto_commit:
+                cr.commit()
+        finally:
+            cr.close()
+
 
 class RegistryManager(object):
     """ Model registries manager.
@@ -195,7 +207,6 @@ class RegistryManager(object):
                 cls.registries[db_name].clear_caches()
                 del cls.registries[db_name]
                 openerp.cron.cancel(db_name)
-
 
     @classmethod
     def delete_all(cls):
