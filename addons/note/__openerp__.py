@@ -35,6 +35,7 @@ Notes can be found in the 'Home' main menu, under 'Tool' submenu.
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': [
+        'base_calendar',
         'base_tools',
         'mail',
         'pad',
@@ -52,7 +53,8 @@ Notes can be found in the 'Home' main menu, under 'Tool' submenu.
         'static/src/css/note.css',
     ],
     'installable': True,
-    'category': 'Tools',
+    'application': True,
+    'auto_install': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
