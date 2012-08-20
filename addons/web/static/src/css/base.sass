@@ -142,6 +142,10 @@ $sheet-max-width: 860px
         opacity: 1
 // }}}
 
+@media print
+    .oe_topbar, .oe_leftbar, .oe_loading
+        display: none !important
+
 .openerp.openerp_webclient_container
     height: 100%
     position: relative
