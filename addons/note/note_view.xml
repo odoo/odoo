@@ -3,8 +3,46 @@
   <data>
 
     <menuitem name="Organizer" id="note_my_stuff" parent="mail.mail_feeds_main"/>
-      <menuitem name="Calendar" id="note_agenda" parent="note_my_stuff" action="base_calendar.action_crm_meeting" sequence="10"/>
-      <menuitem name="Contacts" id="note_contacts" parent="note_my_stuff" action="base.action_partner_form" sequence="30"/>
+
+    <!-- Override original action to modify its name -->
+    <record id="action_crm_meeting" model="ir.actions.act_window">
+        <field name="name">Calendar</field>
+        <field name="res_model">crm.meeting</field>
+        <field name="view_mode">calendar,tree,form,gantt</field>
+        <field name="view_id" ref="base_calendar.view_crm_meeting_calendar"/>
+        <field name="search_view_id" ref="base_calendar.view_crm_meeting_search"/>
+        <field name="context">{"calendar_default_user_id": uid}</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to schedule a new meeting.
+          </p><p>
+            The agenda is shared between employees and fully integrated with
+            other applications such as the employee holidays or the business
+            opportunities.
+          </p>
+        </field>
+    </record>
+    <menuitem name="Calendar" id="note_agenda" parent="note_my_stuff" action="action_crm_meeting" sequence="10"/>
+
+    <!-- Override original action to modify its name and context -->
+    <record id="action_partner_form" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a contact in your address book.
+          </p><p>
+            OpenERP helps you easily track all activities related to
+            a customer; discussions, history of business opportunities,
+            documents, etc.
+          </p>
+        </field>
+    </record>
+    <menuitem name="Contacts" id="note_contacts" parent="note_my_stuff" action="action_partner_form" sequence="30"/>
 
     <!-- Note Stage Form View -->
     <record model="ir.ui.view" id="view_note_stage_form">
