@@ -676,6 +676,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     icon: '/point_of_sale/static/src/img/icons/png48/go-next.png',
                     click: function() { self.finishOrder(); },
                 });
+
+            window.print();
         },
         print: function() {
             window.print();

@@ -508,7 +508,7 @@
                 <tr><td>Tax:</td><td class="pos-right-align">
                     <t t-esc="widget.format_currency(widget.currentOrder.getTax().toFixed(2))"/>
                     </td></tr>
-                <tr><td>Total:</td><td class="pos-right-align">
+                <tr class="emph"><td>Total:</td><td class="pos-right-align">
                     <t t-esc="widget.format_currency(widget.currentOrder.getTotal().toFixed(2))"/>
                     </td></tr>
             </table>
