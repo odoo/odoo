@@ -394,9 +394,7 @@ class mail_thread(osv.Model):
 
            Once the target model is known, its ``message_new`` method
            is called with the new message (if the thread record did not exist)
-            or its ``message_update`` method (if it did). Finally,
-           ``message_forward`` is called to automatically notify other
-           people that should receive this message.
+            or its ``message_update`` method (if it did).
 
            :param string model: the fallback model to use if the message
                does not match any of the currently configured mail aliases
@@ -503,66 +501,6 @@ class mail_thread(osv.Model):
         """
         if update_vals:
             self.write(cr, uid, ids, update_vals, context=context)
-        return True
-
-    def message_thread_followers(self, cr, uid, ids, context=None):
-        """ Returns a list of email addresses of the people following
-            this thread, including the sender of each mail, and the
-            people who were in CC of the messages, if any.
-        """
-        res = {}
-        if isinstance(ids, (str, int, long)):
-            ids = [long(ids)]
-        for thread in self.browse(cr, uid, ids, context=context):
-            l = set()
-            for message in thread.message_ids:
-                l.add((message.user_id and message.user_id.email) or '')
-                l.add(message.email_from or '')
-                l.add(message.email_cc or '')
-            res[thread.id] = filter(None, l)
-        return res
-
-    def message_forward(self, cr, uid, model, thread_ids, msg, email_error=False, context=None):
-        """Sends an email to all people following the given threads.
-           The emails are forwarded immediately, not queued for sending,
-           and not archived.
-
-        :param str model: thread model
-        :param list thread_ids: ids of the thread records
-        :param msg: email.message.Message object to forward
-        :param email_error: optional email address to notify in case
-                            of any delivery error during the forward.
-        :return: True
-        """
-        model_pool = self.pool.get(model)
-        smtp_server_obj = self.pool.get('ir.mail_server')
-        for res in model_pool.browse(cr, uid, thread_ids, context=context):
-            if hasattr(model_pool, 'message_thread_followers'):
-                followers = model_pool.message_thread_followers(cr, uid, [res.id])[res.id]
-            else:
-                followers = self.message_thread_followers(cr, uid, [res.id])[res.id]
-            message_followers_emails = tools.email_split(','.join(filter(None, followers)))
-            message_recipients = tools.email_split(','.join(filter(None,
-                                                                       [decode(msg['from']),
-                                                                        decode(msg['to']),
-                                                                        decode(msg['cc'])])))
-            forward_to = [i for i in message_followers_emails if (i and (i not in message_recipients))]
-            if forward_to:
-                # TODO: we need an interface for this for all types of objects, not just leads
-                if model_pool._columns.get('section_id'):
-                    del msg['reply-to']
-                    msg['reply-to'] = res.section_id.reply_to
-
-                smtp_from, = tools.email_split(msg['from'])
-                msg['from'] = smtp_from
-                msg['to'] =  ", ".join(forward_to)
-                msg['message-id'] = tools.generate_tracking_message_id(res.id)
-                if not smtp_server_obj.send_email(cr, uid, msg) and email_error:
-                    subj = msg['subject']
-                    del msg['subject'], msg['to'], msg['cc'], msg['bcc']
-                    msg['subject'] = _('[OpenERP-Forward-Failed] %s') % subj
-                    msg['to'] = email_error
-                    smtp_server_obj.send_email(cr, uid, msg)
         return True
 
     def parse_message(self, message, save_original=False, context=None):
@@ -754,18 +692,6 @@ class mail_thread(osv.Model):
     # Subscription mechanism
     #------------------------------------------------------
 
-    def message_is_follower(self, cr, uid, ids, user_id = None, context=None):
-        """ Check if uid or user_id (if set) is a follower to the current
-            document.
-
-            :param user_id: if set, check is done on user_id; if not set
-                            check is done on uid
-        """
-        sub_user_id = uid if user_id is None else user_id
-        if sub_user_id in self.message_get_followers(cr, uid, ids, context=context):
-            return True
-        return False
-
     def message_subscribe_users(self, cr, uid, ids, user_ids=None, context=None):
         if not user_ids: user_ids = [uid]
         partners = {}
@@ -806,13 +732,11 @@ class mail_thread(osv.Model):
                              uid instead
             :param return: new value of followers, for Chatter
         """
-        to_unsubscribe_uids = [uid] if user_ids is None else user_ids
-        write_res = self.write(cr, uid, ids, {'message_follower_ids': self.message_unsubscribe_get_command(cr, uid, to_unsubscribe_uids, context)}, context=context)
-        return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        self.write(cr, uid, ids, [(3, partner_id)], context=context)
 
-    def message_unsubscribe_get_command(self, cr, uid, follower_ids, context=None):
-        """ Generate the many2many command to remove followers. """
-        return [(3, id) for id in follower_ids]
+        # FP Note: do we need this ?
+        return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
     #------------------------------------------------------
     # Notification API

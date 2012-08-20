@@ -5,10 +5,9 @@ Backend:
 * remove message_search (objects can overwrite message_ids if they want a custom list of messages)
 * remove _message_find_partners
 * remove _message_find_user_id
-* remove message_thread_followers
-* remove method message_is_follower (conflict with column of same name)
-* remove message_subscribe_users and use message_subscribe instead
-* remove message_unsubscribe_get_command
+
+I was wrong:
+    * remove message_subscribe_users and use message_subscribe instead
 
 Web Stuff to Do:
 * replace comments_structure by a real tree structure, provided by message_read directly
