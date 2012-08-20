@@ -22,9 +22,8 @@
     model_ids:
       - crm.model_crm_lead
     default: True
-    
 -  
-  I have search and write its subtype in followers
+  I have add the subtypes as won in feeds  
 -  
   !python {model: mail.followers}: |    
     ids = self.search(cr, uid, [('res_model', '=', 'crm.lead'),('res_id', '=', ref('crm_case_1'))])
@@ -41,14 +40,9 @@
   !assert {model: crm.lead, id: crm_case_1 ,string: 'The record is not in won state'}:
     - state == 'done' 
 -        
-  I have check to if subtype is won then display notification.
+  I have check the subtype as won in feeds
 -
-  !python {model: mail.message}: |
-    ids = self.search(cr, uid, [('model', '=','crm.lead'),('res_id', '=', ref('crm_case_1'))])
-    browse = self.browse(cr,uid,ids)
-   
-    assert ids, 'lead is in won'
-
-
-
-  
+  !python {model: mail.followers}: |
+    followers_ids =self.search(cr, uid, [('res_model', '=','crm.lead'),('res_id', '=', ref('crm_case_1')),('subtype_ids', 'in',[ref('mail_subtype_lead_won')])])
+    if len(followers_ids):
+      assert followers_ids, 'lead is in won'
