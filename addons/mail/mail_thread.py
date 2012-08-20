@@ -560,7 +560,7 @@ class mail_thread(osv.Model):
 
         value = kwargs
         value.update( {
-            'model': self._name,
+            'model': res_id and self._name or False,
             'res_id': res_id,
             'body': body,
             'subject': subject,
