@@ -45,6 +45,7 @@ def decode(text):
     if text:
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
+
 class mail_message(osv.Model):
     """Model holding messages: system notification (replacing res.log
     notifications), comments (for OpenChatter feature). This model also
@@ -106,6 +107,7 @@ class mail_message(osv.Model):
             string='Message Record Name',
             help="Name get of the related document."),
 
+        'notification_ids': fields.one2many('mail.notification', 'message_id', 'Notifications'),
         'subject': fields.char('Subject', size=128),
         'date': fields.datetime('Date'),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
@@ -127,6 +129,8 @@ class mail_message(osv.Model):
 
     _limit = 10
     def _message_dict_get(self, cr, uid, msg, context={}):
+        print msg
+        print msg.attachment_ids
         attachs = self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)
         author = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id,], context=context)[0]
         partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
@@ -142,11 +146,26 @@ class mail_message(osv.Model):
             'date': msg.date,
             'author_id': author,
             'partner_ids': partner_ids,
-            'child_ids': [] # will be filled after by _message_read
+            'child_ids': []
         }
 
-    def _message_read(self, cr, uid, messages, domain=[], thread_level=0, context=None):
+    def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, context=None):
+        """ 
+            If IDS are provided, fetch these records, otherwise use the domain to
+            fetch the matching records. After having fetched the records provided
+            by IDS, it will fetch children (according to thread_level).
+            
+            Return [
+            
+            ]
+        """
         context = context or {}
+        if ids is False:
+            ids = self.search(cr, uid, domain, context=context, limit=10)
+
+        # FP Todo: flatten to max X level of mail_thread
+        messages = self.browse(cr, uid, ids, context=context)
+
         result = []
         tree = {} # key: ID, value: record
         for msg in messages:
@@ -170,31 +189,10 @@ class mail_message(osv.Model):
                 result.append({
                     'type': 'expandable',
                     'domain': [('id','<=', msg.id)]+domain,
-                    'context': context
+                    'context': context,
+                    'thread_level': thread_level  # should be improve accodting to level of records
                 })
                 break
-        for r in result:
-            print r
-        return result
-
-    def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, context=None):
-        """ 
-            If IDS are provided, fetch these records, otherwise use the domain to
-            fetch the matching records. After having fetched the records provided
-            by IDS, it will fetch children (according to thread_level).
-            
-            Return [
-            
-            ]
-        """
-        if ids is False:
-            ids = self.search(cr, uid, domain, context=context, limit=10)
-
-
-        # FP Todo: flatten to max X level of mail_thread
-
-        messages = self.browse(cr, uid, ids, context=context)
-        result = self._message_read(cr, uid, messages, thread_level=thread_level, domain=domain, context=context)
         return result
 
 
@@ -230,7 +228,10 @@ class mail_message(osv.Model):
         ], context=context)
         notifications = {}
         for notification in not_obj.browse(cr, uid, not_ids, context=context):
-            ids.remove(notification.message_id.id)
+            if notification.message_id.id in ids:
+                pass
+                # FO Note: we should put this again !!!
+                #ids.remove(notification.message_id.id)
 
         # check messages according to related documents
         res_ids = {}
