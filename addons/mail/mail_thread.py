@@ -552,7 +552,7 @@ class mail_thread(osv.Model):
                 fcontent = fcontent.encode('utf-8')
             data_attach = {
                 'name': fname,
-                'datas': base64.b64encode(str(fcontent)),
+                'datas': fcontent,
                 'datas_fname': fname,
                 'description': _('email attachment'),
             }

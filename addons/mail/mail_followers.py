@@ -105,7 +105,9 @@ class mail_notification(osv.Model):
             if towrite.get('subject', False):
                 towrite['subject'] = msg.name_get(cr, uid, [msg.id], context=context)[0][1]
             towrite['message_id'] = msg.id
-            self.pool.get('mail.mail').create(cr, uid, towrite, context=context)
+            mail_message_obj = self.pool.get('mail.mail')
+            newid = mail_message_obj.create(cr, uid, towrite, context=context)
+            mail_message_obj.send(cr, uid, [newid], context=context)
         return True
 
 
