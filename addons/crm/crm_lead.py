@@ -174,16 +174,6 @@ class crm_lead(base_stage, osv.osv):
         else:
             return [('id', '=', '0')]
 
-    def _get_email_subject(self, cr, uid, ids, fields, args, context=None):
-        res = {}
-        for obj in self.browse(cr, uid, ids, context=context):
-            res[obj.id] = ''
-            for msg in obj.message_ids:
-                if msg.email_from:
-                    res[obj.id] = msg.subject
-                    break
-        return res
-
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
             select=True, help="Optional linked partner, usually after conversion of the lead"),
@@ -227,7 +217,6 @@ class crm_lead(base_stage, osv.osv):
                       When the case is over, the state is set to \'Done\'.\
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
-        'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', type='char', size=64),
 
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)',group_operator="avg"),

@@ -261,7 +261,6 @@
                     <field name="type_id" invisible="1"/>
                     <field name="referred" invisible="1"/>
                     <field name="channel_id" invisible="1"/>
-                    <field name="subjects" invisible="1"/>
                     <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
@@ -361,8 +360,6 @@
                 <search string="Search Leads">
                     <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]" />
-                    <!-- subjects is not set as store=True so, it is placed outside filter_domain-->
-                    <field name="subjects"/>
                     <field name="create_date"/>
                     <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
@@ -554,7 +551,6 @@
                     <field name="title_action" />
                     <field name="channel_id" invisible="1"/>
                     <field name="type_id" invisible="1"/>
-                    <field name="subjects" invisible="1"/>
                     <field name="stage_id"/>
                     <field name="planned_revenue" sum="Expected Revenues"/>
                     <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
