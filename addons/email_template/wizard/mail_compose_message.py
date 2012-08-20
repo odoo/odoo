@@ -82,7 +82,10 @@ class mail_compose_message(osv.osv_memory):
         values = {}
         if template_id:
             res_id = context.get('mail.compose.target.id') or context.get('active_id') or False
-            if context.get('mail.compose.message.mode') == 'mass_mail':
+            # when composing message interactivly, do not use mass_mail mode if user are working
+            # on a unique resource (ex: when composing message from a form view)
+            working_on_multi_resources = len(context.get('active_ids') or []) > 1 and True or False
+            if context.get('mail.compose.message.mode') == 'mass_mail' and working_on_multi_resources:
                 # use the original template values - to be rendered when actually sent
                 # by super.send_mail()
                 values = self.pool.get('email.template').read(cr, uid, template_id, self.fields_get_keys(cr, uid), context)
