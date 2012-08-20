@@ -130,7 +130,7 @@ class mail_group(osv.Model):
         # Create client action for this group and link the menu to it
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'action_mail_group_feeds')
         if ref:
-            search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search_wall')
+            search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search')
             params = {
                 'search_view_id': search_ref and search_ref[1] or False,
                 'domain': [('model','=','mail.group'),('res_id','=',mail_group_id)],
