@@ -215,6 +215,7 @@ class res_partner(osv.osv):
                  "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
+        'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
     }
 
