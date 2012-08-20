@@ -18,6 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import time
+from datetime import datetime
+
 
 import tools
 from osv import fields,osv
@@ -58,7 +61,26 @@ class account_move_reconciliation(osv.osv):
             res_all[id] = res
         return res_all
     
-        
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        obj_move_line = self.pool.get('account.move.line')
+        ids = super(account_move_reconciliation, self).search(cr, uid, args, offset, limit, order, context, count)
+        res_ids = []
+        for id in ids:
+            last_reconciliation_date = self.browse(cr, uid, id, context=context).last_reconciliation_date
+            if not last_reconciliation_date:
+                res_ids.append(id)
+            else:
+                move_ids = obj_move_line.search(cr, uid, [('partner_id','=', id),('create_date','>', last_reconciliation_date)])
+                if move_ids:
+                    res_ids.append(id)
+        return res_ids
+    
+    def skip_partner(self, cr, uid, ids, context):
+        res_partner = self.pool.get('res.partner')
+        for partner in self.browse(cr, uid, ids, context=context):
+            res_partner.write(cr, uid, [partner.id] ,{'last_reconciliation_date':time.strftime("%Y-%m-%d %H:%M:%S")})
+            
+            
     _columns = {
         'partner_id':fields.many2one('res.partner', 'Partner'),
         'last_reconciliation_date':fields.related('partner_id', 'last_reconciliation_date' ,type='datetime', relation='res.partner', string='Last Reconciliation'),
