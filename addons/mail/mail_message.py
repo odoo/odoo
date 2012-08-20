@@ -127,10 +127,11 @@ class mail_message(osv.Model):
 
     _limit = 10
     def _message_dict_get(self, cr, uid, msg, context={}):
+        attachs = self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)
         return {
             'id': msg.id,
             'type': msg.type,
-            'attachment_ids': msg.attachment_ids.name_get(context=context),
+            'attachment_ids': attachs,
             'body': msg.body,
             'model': msg.model,
             'res_id': msg.res_id,
@@ -146,28 +147,29 @@ class mail_message(osv.Model):
         tree = {} # key: ID, value: record
         for msg in messages:
             if len(result)<(self._limit-1):
-                record = self._message_dict_get(msg)
+                record = self._message_dict_get(cr, uid, msg, context=context)
                 if thread_level>0:
                     dom = [('parent_id','=', msg.id)]
                     if thread_level==1:
-                        dom = [('parent_id','child_of', [msg.id])]
+                        dom = [('parent_id','child_of', [x.id for x in msg.child_ids])]
                     newids = self.search(cr, uid, domain+dom, context=context, limit=self._limit)
                     objs = self.browse(cr, uid, newids, context=context)
                     record['child_ids'] = self._message_read(cr, uid, objs, domain+dom, thread_level-1, context=context)
 
-                if fetch_ancestrors and record.parent_id:
-                    while record.parent_id:
-                        if record.parent_id.id in tree:
-                            record_parent = tree[record.parent_id.id]
+                if fetch_ancestors and msg.parent_id:
+                    while msg.parent_id:
+                        if msg.parent_id.id in tree:
+                            record_parent = tree[msg.parent_id.id]
                         else:
-                            record_parent = self._message_dict(record.parent_id)
-                            if record.parent_id.parent_id:
-                                tree[record.parent_id.id] = record.parent_id
+                            record_parent = self._message_dict_get(cr, uid, msg.parent_id, context=context)
+                            if msg.parent_id.parent_id:
+                                tree[msg.parent_id.id] = record_parent
                         record_parent['child_ids'].append(record)
-                        record = record.parent_id
-                if record.id not in tree:
+                        record = record_parent
+                        msg = msg.parent_id
+                if msg.id not in tree:
                     result.append(record)
-                    tree[record.id] = record
+                    tree[msg.id] = record
             else:
                 result.append({
                     'type': 'expandable',
@@ -175,13 +177,14 @@ class mail_message(osv.Model):
                     'context': context
                 })
                 break
+        return result
 
     def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, fetch_ancestors=False, context=None):
         """ 
             If IDS are provided, fetch these records, otherwise use the domain to
             fetch the matching records. After having fetched the records provided
             by IDS, it will fetch children (according to thread_level) and/or the
-            parents if fetch_ancestrors is True.
+            parents if fetch_ancestors is True.
             
             Return [
             
@@ -194,7 +197,8 @@ class mail_message(osv.Model):
             ids = self.search(cr, uid, domain+dom, context=context, limit=10)
 
         messages = self.browse(cr, uid, ids, context=context)
-        return self._message_read(cr, uid, messages, thread_level, domain=domain, context=context)
+        result = self._message_read(cr, uid, messages, thread_level=thread_level, domain=domain, fetch_ancestors=fetch_ancestors, context=context)
+        return result
 
 
     #------------------------------------------------------
