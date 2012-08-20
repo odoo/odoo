@@ -51,7 +51,7 @@
                                         </div>
                                         <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": true}'/>
                                     </div>
-                                   <label for="rml_header1" class="oe_edit_only"/>
+                                   <label for="rml_header1"/>
                                    <div>
                                             <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
                                    </div>
@@ -72,7 +72,7 @@
                                 <field name="paper_format" on_change="onchange_paper_format(paper_format)"/>
                                 <label for="rml_footer"/>
                                 <div name="bank_acc">
-                                    <field name="rml_footer"/>
+                                    <field name="rml_footer" attrs="{'readonly':[('customize_footer','=',False)]}"/>
                                     <!--<button name="%(bank_account_update)d" string="Set Bank Accounts" type="action" icon="gtk-go-forward" class="oe_inline"/>-->
                                 </div>
                             </group>
