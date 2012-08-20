@@ -126,22 +126,27 @@ class mail_message(osv.Model):
     #------------------------------------------------------
 
     _limit = 10
+    def _message_dict_get(self, cr, uid, msg, context={}):
+        return {
+            'id': msg.id,
+            'type': msg.type,
+            'attachment_ids': msg.attachment_ids.name_get(context=context),
+            'body': msg.body,
+            'model': msg.model,
+            'res_id': msg.res_id,
+            'record_name': msg.record_name,
+            'subject': msg.subject,
+            'date': msg.date,
+            'author_id': msg.author_id.id,
+            'child_ids': [] # will be filled after by _message_read
+        }
+
     def _message_read(self, cr, uid, messages, domain=[], thread_level=0, fetch_ancestors=False, context=None):
         result = []
-        for msg in messages[:-1]:
+        tree = {} # key: ID, value: record
+        for msg in messages:
             if len(result)<(self._limit-1):
-                record = {
-                    'id': msg.id,
-                    'type': msg.type,
-                    'attachment_ids': msg.attachment_ids.name_get(context=context),
-                    'body': msg.body,
-                    'model': msg.model,
-                    'res_id': msg.res_id,
-                    'record_name': msg.record_name,
-                    'subject': msg.subject,
-                    'date': msg.date,
-                    'author_id': msg.author_id.id
-                }
+                record = self._message_dict_get(msg)
                 if thread_level>0:
                     dom = [('parent_id','=', msg.id)]
                     if thread_level==1:
@@ -149,7 +154,20 @@ class mail_message(osv.Model):
                     newids = self.search(cr, uid, domain+dom, context=context, limit=self._limit)
                     objs = self.browse(cr, uid, newids, context=context)
                     record['child_ids'] = self._message_read(cr, uid, objs, domain+dom, thread_level-1, context=context)
-                result.append(record)
+
+                if fetch_ancestrors and record.parent_id:
+                    while record.parent_id:
+                        if record.parent_id.id in tree:
+                            record_parent = tree[record.parent_id.id]
+                        else:
+                            record_parent = self._message_dict(record.parent_id)
+                            if record.parent_id.parent_id:
+                                tree[record.parent_id.id] = record.parent_id
+                        record_parent['child_ids'].append(record)
+                        record = record.parent_id
+                if record.id not in tree:
+                    result.append(record)
+                    tree[record.id] = record
             else:
                 result.append({
                     'type': 'expandable',
