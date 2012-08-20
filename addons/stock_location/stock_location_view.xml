@@ -5,7 +5,6 @@
        <record id="stock_location_path_tree" model="ir.ui.view">
             <field name="name">stock.location.path.tree</field>
             <field name="model">stock.location.path</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Location Paths">
                     <field name="location_from_id"/>
@@ -18,7 +17,6 @@
        <record id="stock_location_path_form" model="ir.ui.view">
             <field name="name">stock.location.path.form</field>
             <field name="model">stock.location.path</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Location Paths" version="7.0">
                     <group col="4">
@@ -38,7 +36,6 @@
        <record id="product_normal_form_inherit_location" model="ir.ui.view">
             <field name="name">product.product.form</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <notebook position="inside">

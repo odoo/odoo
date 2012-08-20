@@ -21,9 +21,8 @@
         <record model="ir.ui.view" id="view_crm_opportunity_stage_graph">
             <field name="name">Opportunities By Stage - Graph</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Opportunities By Stage" type="pie">
+                <graph string="Opportunities By Stage" type="area">
                     <field name="stage_id"/>
                     <field name="nbr" operator="+"/>
                 </graph>
@@ -44,7 +43,6 @@
         <record model="ir.ui.view" id="view_crm_opportunity_user_stage_graph">
             <field name="name">Opportunities By Stage Per User - Graph</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Opportunities By Stage" type="line">
                     <field name="stage_id"/>
@@ -65,27 +63,15 @@
             <field name="context">{'search_default_Stage':1}</field>
         </record>
 
-        <record model="ir.actions.act_window" id="crm_case_confirmed_meet">
-            <field name="name">Meetings</field>
-            <field name="res_model">crm.meeting</field>
-            <field name="view_mode">calendar,tree,form,gantt</field>
-            <field name="view_id" ref="base_calendar.view_crm_meeting_tree"/>
-            <field name="context">{"calendar_default_user_id":uid}</field>
-            <field name="domain">[('state','=','open'),('date','&gt;',datetime.date.today().strftime("%Y-%m-%d %H:%M:%S"))]</field>
-            <field name="search_view_id" ref="base_calendar.view_crm_meeting_search"/>
-        </record>
-
         <record model="ir.ui.view" id="board_crm_statistical_form">
             <field name="name">CRM - Statistical Dashboard Form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Statistics Dashboard" version="7.0">
                     <board style="1-1">
                         <column>
                             <action string="New Leads" name="%(act_crm_tag_tree_view_leads_all)d"/>
                             <action string="My Opportunities" name="%(act_my_oppor)d"/>
-                            <action string="My Next Meetings" name="%(crm_case_confirmed_meet)d"/>
                         </column>
                         <column>
                             <action string="Planned Revenue by Stage and User" name="%(act_oppor_stage_user)d"/>

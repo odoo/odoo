@@ -2,41 +2,11 @@
 <openerp>
     <data>
 
-    <!-- CRM Meetings Form View -->
-
-    <record model="ir.ui.view" id="view_crm_meeting_form">
-        <field name="name">CRM - Meetings Form</field>
-        <field name="model">crm.meeting</field>
-        <field name="type">form</field>
-        <field name="inherit_id" ref="base_calendar.view_crm_meeting_form"/>
-        <field name="arch" type="xml">
-            <field name="organizer" position="after">
-                <field name="section_id" widget="selection"/>
-            </field>
-        </field>
-    </record>
-
-    <!-- CRM Meeting Calendar -->
-
-    <record model="ir.ui.view" id="view_crm_meeting_calendar">
-        <field name="name">CRM - Meetings Calendar</field>
-        <field name="model">crm.meeting</field>
-        <field name="type">calendar</field>
-        <field name="inherit_id" ref="base_calendar.view_crm_meeting_calendar"/>
-        <field name="priority" eval="2"/>
-        <field name="arch" type="xml">
-            <field name="partner_id" position="after">
-                <field name="section_id" widget="selection"/>
-            </field>
-        </field>
-    </record>
-
     <!-- Calendar Attendee Form View -->
 
     <record id="attendee_form_view_inherit" model="ir.ui.view">
             <field name="name">calendar.attendee.form.inherit</field>
             <field name="model">calendar.attendee</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base_calendar.base_calendar_attendee_form_view"/>
             <field name="arch" type="xml">
                 <field name="ref" position="after">

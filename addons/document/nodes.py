@@ -45,7 +45,7 @@ _logger = logging.getLogger(__name__)
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)
-    
+
         Note: a place to fix if datetime is used in db.
     """
     if not cre:
@@ -62,7 +62,7 @@ def get_node_context(cr, uid, context):
 
 class node_context(object):
     """ This is the root node, representing access to some particular context
-    
+
     A context is a set of persistent data, which may influence the structure
     of the nodes. All other transient information during a data query should
     be passed down with function arguments.
@@ -99,7 +99,7 @@ class node_context(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
-    
+
     def get(self, name, default=None):
         return self.context.get(name, default)
 
@@ -119,7 +119,7 @@ class node_context(object):
         """Create (or locate) a node for a directory
             @param dbro a browse object of document.directory
         """
-        
+
         fullpath = dbro.get_full_path(context=self.context)
         klass = dbro.get_node_class(dbro, context=self.context)
         return klass(fullpath, None ,self, dbro)
@@ -183,7 +183,7 @@ class node_descriptor(object):
 
     def __nonzero__(self):
         """ Ensure that a node_descriptor will never equal False
-        
+
             Since we do define __len__ and __iter__ for us, we must avoid
             being regarded as non-true objects.
         """
@@ -244,7 +244,7 @@ class node_class(object):
         else:
             s.append(self.path)
         return s #map(lambda x: '/' +x, s)
-        
+
     def __repr__(self):
         return "%s@/%s" % (self.our_type, '/'.join(self.full_path()))
 
@@ -271,7 +271,7 @@ class node_class(object):
         return False
 
     def get_data(self,cr):
-        raise TypeError('no data for %s'% self.type)
+        raise TypeError('No data for %s.'% self.type)
 
     def open_data(self, cr, mode):
         """ Open a node_descriptor object for this node.
@@ -285,10 +285,10 @@ class node_class(object):
         For this class, there is no data, so no implementation. Each
         child class that has data should override this.
         """
-        raise TypeError('no data for %s' % self.type)
+        raise TypeError('No data for %s.' % self.type)
 
     def _get_storage(self,cr):
-        raise RuntimeError("no storage for base class")
+        raise RuntimeError("No storage for base class.")
 
     def get_etag(self,cr):
         """ Get a tag, unique per object + modification.
@@ -323,11 +323,11 @@ class node_class(object):
     def get_dav_eprop(self, cr, ns, prop):
         if not self.DAV_M_NS:
             return None
-        
+
         if self.DAV_M_NS.has_key(ns):
             prefix = self.DAV_M_NS[ns]
         else:
-            _logger.debug('No namespace: %s ("%s")',ns, prop)
+            _logger.debug('No namespace: %s ("%s").',ns, prop)
             return None
 
         mname = prefix + "_" + prop.replace('-','_')
@@ -340,12 +340,12 @@ class node_class(object):
             r = m(cr)
             return r
         except AttributeError:
-            _logger.debug('Property %s not supported' % prop, exc_info=True)
+            _logger.debug('The property %s is not supported.' % prop, exc_info=True)
         return None
 
     def get_dav_resourcetype(self, cr):
         """ Get the DAV resource type.
-        
+
             Is here because some nodes may exhibit special behaviour, like
             CalDAV/GroupDAV collections
         """
@@ -375,7 +375,7 @@ class node_class(object):
         could do various things.
         Should also consider node<->content, dir<->dir moves etc.
 
-        Move operations, as instructed from APIs (eg. request from DAV) could
+        Move operations, as instructed from APIs (e.g. request from DAV) could
         use this function.
         """
         raise NotImplementedError(repr(self))
@@ -384,13 +384,13 @@ class node_class(object):
         """ Create a regular file under this node
         """
         _logger.warning("Attempted to create a file under %r, not possible.", self)
-        raise IOError(errno.EPERM, "Not allowed to create files here")
-    
+        raise IOError(errno.EPERM, "Not allowed to create file(s) here.")
+
     def create_child_collection(self, cr, objname):
         """ Create a child collection (directory) under self
         """
         _logger.warning("Attempted to create a collection under %r, not possible.", self)
-        raise IOError(errno.EPERM, "Not allowed to create folders here")
+        raise IOError(errno.EPERM, "Not allowed to create folder(s) here.")
 
     def rm(self, cr):
         raise NotImplementedError(repr(self))
@@ -404,7 +404,7 @@ class node_class(object):
 
     def check_perms(self, perms):
         """ Check the permissions of the current node.
-        
+
         @param perms either an integers of the bits to check, or
                 a string with the permission letters
 
@@ -414,7 +414,7 @@ class node_class(object):
         4, r : allow read of file, or listing of dir contents
         8, u : allow remove (unlink)
         """
-        
+
         if isinstance(perms, str):
             pe2 = 0
             chars = { 'x': 1, 'w': 2, 'r': 4, 'u': 8 }
@@ -423,10 +423,10 @@ class node_class(object):
             perms = pe2
         elif isinstance(perms, int):
             if perms < 0 or perms > 15:
-                raise ValueError("Invalid permission bits")
+                raise ValueError("Invalid permission bits.")
         else:
-            raise ValueError("Invalid permission attribute")
-        
+            raise ValueError("Invalid permission attribute.")
+
         return ((self.uidperms & perms) == perms)
 
 class node_database(node_class):
@@ -463,9 +463,9 @@ class node_database(node_class):
             is_allowed = self.check_perms(1)
         else:
             is_allowed = self.check_perms(5)
-        
+
         if not is_allowed:
-            raise IOError(errno.EPERM, "Permission into directory denied")
+            raise IOError(errno.EPERM, "Permission into directory denied.")
 
         if domain:
             where = where + domain
@@ -493,7 +493,7 @@ def mkdosname(company_name, default='noname'):
     for c in company_name[:8]:
         n += (c in badchars and '_') or c
     return n
-    
+
 
 def _uid2unixperms(perms, has_owner):
     """ Convert the uidperms and the owner flag to full unix bits
@@ -543,7 +543,7 @@ class node_dir(node_database):
                 try:
                     self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
                 except Exception,e:
-                    print "Cannot eval %s" % dfld.expr
+                    print "Cannot eval %s." % dfld.expr
                     print e
                     pass
 
@@ -566,10 +566,10 @@ class node_dir(node_database):
 
     def _file_get(self, cr, nodename=False):
         res = super(node_dir,self)._file_get(cr, nodename)
-        
+
         is_allowed = self.check_perms(nodename and 1 or 5)
         if not is_allowed:
-            raise IOError(errno.EPERM, "Permission into directory denied")
+            raise IOError(errno.EPERM, "Permission into directory denied.")
 
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
@@ -583,7 +583,7 @@ class node_dir(node_database):
                 res.extend(res3)
 
         return res
-    
+
     def _child_get(self, cr, name=None, domain=None):
         dirobj = self.context._dirobj
         uid = self.context.uid
@@ -595,9 +595,9 @@ class node_dir(node_database):
             is_allowed = self.check_perms(1)
         else:
             is_allowed = self.check_perms(5)
-        
+
         if not is_allowed:
-            raise IOError(errno.EPERM, "Permission into directory denied")
+            raise IOError(errno.EPERM, "Permission into directory denied.")
 
         if not domain:
             domain = []
@@ -633,20 +633,20 @@ class node_dir(node_database):
         if not directory:
             raise OSError(2, 'Not such file or directory.')
         if not self.check_perms('u'):
-            raise IOError(errno.EPERM,"Permission denied")
+            raise IOError(errno.EPERM,"Permission denied.")
 
         if directory._table_name=='document.directory':
             if self.children(cr):
                 raise OSError(39, 'Directory not empty.')
             res = self.context._dirobj.unlink(cr, uid, [directory.id])
         else:
-            raise OSError(1, 'Operation not permited.')
+            raise OSError(1, 'Operation is not permitted.')
         return res
 
     def create_child_collection(self, cr, objname):
         object2 = False
         if not self.check_perms(2):
-            raise IOError(errno.EPERM,"Permission denied")
+            raise IOError(errno.EPERM,"Permission denied.")
 
         dirobj = self.context._dirobj
         uid = self.context.uid
@@ -654,7 +654,7 @@ class node_dir(node_database):
         ctx.update(self.dctx)
         obj = dirobj.browse(cr, uid, self.dir_id)
         if obj and (obj.type == 'ressource') and not object2:
-            raise OSError(1, 'Operation not permited.')
+            raise OSError(1, 'Operation is not permitted.')
 
         #objname = uri2[-1]
         val = {
@@ -672,7 +672,7 @@ class node_dir(node_database):
             Return the node_* created
         """
         if not self.check_perms(2):
-            raise IOError(errno.EPERM,"Permission denied")
+            raise IOError(errno.EPERM,"Permission denied.")
 
         dirobj = self.context._dirobj
         uid = self.context.uid
@@ -702,10 +702,10 @@ class node_dir(node_database):
             Note /may/ be called with ndir_node = None, to rename the document root.
         """
         if ndir_node and (ndir_node.context != self.context):
-            raise NotImplementedError("Cannot move directories between contexts")
+            raise NotImplementedError("Cannot move directories between contexts.")
 
         if (not self.check_perms('u')) or (not ndir_node.check_perms('w')):
-            raise IOError(errno.EPERM,"Permission denied")
+            raise IOError(errno.EPERM,"Permission denied.")
 
         dir_obj = self.context._dirobj
         if not fil_obj:
@@ -724,13 +724,13 @@ class node_dir(node_database):
             assert self.parent
 
         if self.parent != ndir_node:
-            _logger.debug('Cannot move dir %r from %r to %r', self, self.parent, ndir_node)
-            raise NotImplementedError('Cannot move dir to another dir')
+            _logger.debug('Cannot move dir %r from %r to %r.', self, self.parent, ndir_node)
+            raise NotImplementedError('Cannot move dir to another dir.')
 
         ret = {}
         if new_name and (new_name != dbro.name):
             if ndir_node.child(cr, new_name):
-                raise IOError(errno.EEXIST, "Destination path already exists")
+                raise IOError(errno.EEXIST, "Destination path already exists.")
             ret['name'] = new_name
 
         del dbro
@@ -832,7 +832,7 @@ class node_res_dir(node_class):
             elif isinstance(app, tuple):
                 where.append(app)
             else:
-                raise RuntimeError("incorrect domain expr: %s" % self.domain)
+                raise RuntimeError("Incorrect domain expr: %s." % self.domain)
         if self.resm_id:
             where.append(('id','=',self.resm_id))
 
@@ -845,7 +845,7 @@ class node_res_dir(node_class):
             is_allowed = self.check_perms(5)
 
         if not is_allowed:
-            raise IOError(errno.EPERM,"Permission denied")
+            raise IOError(errno.EPERM,"Permission denied.")
 
         # print "Where clause for %s" % self.res_model, where
         if self.ressource_tree:
@@ -864,10 +864,10 @@ class node_res_dir(node_class):
             if not res_name:
                 continue
                 # Yes! we can't do better but skip nameless records.
-            
+
             # Escape the name for characters not supported in filenames
             res_name = res_name.replace('/','_') # any other weird char?
-            
+
             if name and (res_name != ustr(name)):
                 # we have matched _ to any character, but we only meant to match
                 # the special ones.
@@ -923,7 +923,7 @@ class node_res_obj(node_class):
                 try:
                     self.dctx[fld] = safe_eval(expr, dc2)
                 except Exception,e:
-                    print "Cannot eval %s for %s" % (expr, fld)
+                    print "Cannot eval %s for %s." % (expr, fld)
                     print e
                     pass
         else:
@@ -962,7 +962,7 @@ class node_res_obj(node_class):
         res = []
         is_allowed = self.check_perms((nodename and 1) or 5)
         if not is_allowed:
-            raise IOError(errno.EPERM,"Permission denied")
+            raise IOError(errno.EPERM,"Permission denied.")
 
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
@@ -997,7 +997,7 @@ class node_res_obj(node_class):
     def get_dav_eprop_DEPR(self, cr, ns, prop):
         # Deprecated!
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-            _logger.warning("Who asked for %s:%s?" % (ns, prop))
+            _logger.warning("Who asks for %s:%s?" % (ns, prop))
             return None
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
@@ -1016,7 +1016,7 @@ class node_res_obj(node_class):
 
         is_allowed = self.check_perms((name and 1) or 5)
         if not is_allowed:
-            raise IOError(errno.EPERM,"Permission denied")
+            raise IOError(errno.EPERM,"Permission denied.")
 
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -1057,7 +1057,7 @@ class node_res_obj(node_class):
         where2 = where + [('parent_id','=',self.dir_id) ]
         ids = dirobj.search(cr, uid, where2, context=ctx)
         bo = obj.browse(cr, uid, self.res_id, context=ctx)
-        
+
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             if name and (name != dirr.name):
                 continue
@@ -1103,7 +1103,7 @@ class node_res_obj(node_class):
         dirobj = self.context._dirobj
         is_allowed = self.check_perms(2)
         if not is_allowed:
-            raise IOError(errno.EPERM,"Permission denied")
+            raise IOError(errno.EPERM,"Permission denied.")
 
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -1114,7 +1114,7 @@ class node_res_obj(node_class):
 
         obj = dirobj.browse(cr, uid, self.dir_id)
         if obj and (obj.type == 'ressource') and not object2:
-            raise OSError(1, 'Operation not permited.')
+            raise OSError(1, 'Operation is not permitted.')
 
 
         val = {
@@ -1135,7 +1135,7 @@ class node_res_obj(node_class):
         """
         is_allowed = self.check_perms(2)
         if not is_allowed:
-            raise IOError(errno.EPERM,"Permission denied")
+            raise IOError(errno.EPERM,"Permission denied.")
 
         dirobj = self.context._dirobj
         uid = self.context.uid
@@ -1177,14 +1177,14 @@ class node_file(node_class):
         self.write_date = fil.write_date or fil.create_date
         self.content_length = fil.file_size
         self.displayname = fil.name
-        
+
         self.uidperms = 14
         if parent:
             if not parent.check_perms('x'):
                 self.uidperms = 0
             elif not parent.check_perms('w'):
                 self.uidperms = 4
-    
+
         try:
             self.uuser = (fil.user_id and fil.user_id.login) or 'nobody'
         except Exception:
@@ -1213,9 +1213,9 @@ class node_file(node_class):
 
     def open_data(self, cr, mode):
         stor = self.storage_id
-        assert stor, "No storage for file #%s" % self.file_id
+        assert stor, "No storage for file #%s." % self.file_id
         if not self.check_perms(4):
-            raise IOError(errno.EPERM, "Permission denied")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         # If storage is not set properly, we are just screwed here, don't
         # try to get it from default.
@@ -1225,7 +1225,7 @@ class node_file(node_class):
     def rm(self, cr):
         uid = self.context.uid
         if not self.check_perms(8):
-            raise IOError(errno.EPERM, "Permission denied")
+            raise IOError(errno.EPERM, "Permission denied.")
         document_obj = self.context._dirobj.pool.get('ir.attachment')
         if self.type in ('collection','database'):
             return False
@@ -1271,7 +1271,7 @@ class node_file(node_class):
         stor = self.storage_id
         assert stor, "No storage for file #%s" % self.file_id
         if not self.check_perms(4):
-            raise IOError(errno.EPERM, "Permission denied")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         # If storage is not set properly, we are just screwed here, don't
         # try to get it from default.
@@ -1294,7 +1294,7 @@ class node_file(node_class):
         stor = self.storage_id
         assert stor, "No storage for file #%s" % self.file_id
         if not self.check_perms(2):
-            raise IOError(errno.EPERM, "Permission denied")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         stobj = self.context._dirobj.pool.get('document.storage')
         return stobj.set_data(cr, self.context.uid,stor, self, data, self.context.context, fil_obj)
@@ -1304,31 +1304,31 @@ class node_file(node_class):
 
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
         if ndir_node and ndir_node.context != self.context:
-            raise NotImplementedError("Cannot move files between contexts")
+            raise NotImplementedError("Cannot move files between contexts.")
 
         if (not self.check_perms(8)) and ndir_node.check_perms(2):
-            raise IOError(errno.EPERM, "Permission denied")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         doc_obj = self.context._dirobj.pool.get('ir.attachment')
         if not fil_obj:
             dbro = doc_obj.browse(cr, self.context.uid, self.file_id, context=self.context.context)
         else:
             dbro = fil_obj
-            assert dbro.id == self.file_id, "%s != %s for %r" % (dbro.id, self.file_id, self)
+            assert dbro.id == self.file_id, "%s != %s for %r." % (dbro.id, self.file_id, self)
 
         if not dbro:
-            raise IndexError("Cannot locate doc %d", self.file_id)
+            raise IndexError("Cannot locate doc %d.", self.file_id)
 
         if (not self.parent):
             # there *must* be a parent node for this one
             self.parent = self.context.get_dir_node(cr, dbro.parent_id)
             assert self.parent
-        
+
         ret = {}
         if ndir_node and self.parent != ndir_node:
             if not (isinstance(self.parent, node_dir) and isinstance(ndir_node, node_dir)):
-                _logger.debug('Cannot move file %r from %r to %r', self, self.parent, ndir_node)
-                raise NotImplementedError('Cannot move files between dynamic folders')
+                _logger.debug('Cannot move file %r from %r to %r.', self, self.parent, ndir_node)
+                raise NotImplementedError('Cannot move files between dynamic folders.')
 
             if not ndir_obj:
                 ndir_obj = self.context._dirobj.browse(cr, self.context.uid, \
@@ -1343,7 +1343,7 @@ class node_file(node_class):
 
         if new_name and (new_name != dbro.name):
             if len(ret):
-                raise NotImplementedError("Cannot rename and move") # TODO
+                raise NotImplementedError("Cannot rename and move.") # TODO
             stobj = self.context._dirobj.pool.get('document.storage')
             r2 = stobj.simple_rename(cr, self.context.uid, self, new_name, self.context.context)
             ret.update(r2)
@@ -1373,7 +1373,7 @@ class node_content(node_class):
             self.uidperms = parent.uidperms & 14
             self.uuser = parent.uuser
             self.ugroup = parent.ugroup
-        
+
         self.extension = cnt.extension
         self.report_id = cnt.report_id and cnt.report_id.id
         #self.mimetype = cnt.extension.
@@ -1399,7 +1399,7 @@ class node_content(node_class):
     def get_data(self, cr, fil_obj = None):
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         if not self.check_perms(4):
-            raise IOError(errno.EPERM, "Permission denied")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
@@ -1416,14 +1416,14 @@ class node_content(node_class):
         elif mode in ('r+', 'w+'):
             cperms = 'rw'
         else:
-            raise IOError(errno.EINVAL, "Cannot open at mode %s" % mode)
-        
+            raise IOError(errno.EINVAL, "Cannot open at mode %s." % mode)
+
         if not self.check_perms(cperms):
-            raise IOError(errno.EPERM, "Permission denied")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        
+
         return nodefd_content(self, cr, mode, ctx)
 
     def get_data_len(self, cr, fil_obj = None):
@@ -1438,7 +1438,7 @@ class node_content(node_class):
     def set_data(self, cr, data, fil_obj = None):
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         if not self.check_perms(2):
-            raise IOError(errno.EPERM, "Permission denied")
+            raise IOError(errno.EPERM, "Permission denied.")
 
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
@@ -1451,7 +1451,7 @@ class node_content(node_class):
         return ''
 
 class nodefd_content(StringIO, node_descriptor):
-    
+
     """ A descriptor to content nodes
     """
     def __init__(self, parent, cr, mode, ctx):
@@ -1473,8 +1473,8 @@ class nodefd_content(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s specified", mode)
-            raise IOError(errno.EINVAL, "Invalid file mode")
+            _logger.error("Incorrect mode %s is specified.", mode)
+            raise IOError(errno.EINVAL, "Invalid file mode.")
         self.mode = mode
 
     def size(self):
@@ -1499,14 +1499,14 @@ class nodefd_content(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db content #%d for close:', par.cnt_id)
+            _logger.exception('Cannot update db content #%d for close.', par.cnt_id)
             raise
         finally:
             cr.close()
         StringIO.close(self)
 
 class nodefd_static(StringIO, node_descriptor):
-    
+
     """ A descriptor to nodes with static data.
     """
     def __init__(self, parent, cr, mode, ctx=None):
@@ -1527,8 +1527,8 @@ class nodefd_static(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s specified", mode)
-            raise IOError(errno.EINVAL, "Invalid file mode")
+            _logger.error("Incorrect mode %s is specified.", mode)
+            raise IOError(errno.EINVAL, "Invalid file mode.")
         self.mode = mode
 
     def size(self):
@@ -1552,7 +1552,7 @@ class nodefd_static(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db content #%d for close:', par.cnt_id)
+            _logger.exception('Cannot update db content #%d for close.', par.cnt_id)
             raise
         finally:
             cr.close()

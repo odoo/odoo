@@ -60,7 +60,7 @@ class account_move_journal(osv.osv_memory):
         if context.get('journal_type', False):
             jids = journal_pool.search(cr, uid, [('type','=', context.get('journal_type'))])
             if not jids:
-                raise osv.except_osv(_('Configuration Error !'), _('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration/Financial Accounting/Accounts/Journals.') % context.get('journal_type'))
+                raise osv.except_osv(_('Configuration Error!'), _('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration/Journals/Journals.') % context.get('journal_type'))
             journal_id = jids[0]
 
         return journal_id
@@ -83,42 +83,40 @@ class account_move_journal(osv.osv_memory):
         if context:
             if not view_id:
                 return res
-    
+
             period_pool = self.pool.get('account.period')
             journal_pool = self.pool.get('account.journal')
-    
+
             journal_id = self._get_journal(cr, uid, context)
             period_id = self._get_period(cr, uid, context)
-    
+
             journal = False
             if journal_id:
                 journal = journal_pool.read(cr, uid, [journal_id], ['name'])[0]['name']
                 journal_string = _("Journal: %s") % tools.ustr(journal)
             else:
                 journal_string = _("Journal: All")
-    
+
             period = False
             if period_id:
                 period = period_pool.browse(cr, uid, [period_id], ['name'])[0]['name']
                 period_string = _("Period: %s") % tools.ustr(period)
-    
-            separator_string = _("Open Journal Items !")
+
             open_string = _("Open")
             view = """<?xml version="1.0" encoding="utf-8"?>
             <form string="Standard entries" version="7.0">
-                <header>
+                <group>
+                    <field name="target_move"/>
+                </group>
+                %s: <label string="%s"/>
+                %s: <label string="%s"/>
+                <footer>
                     <button string="%s" name="action_open_window" default_focus="1" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
-                </header>
-                <group string="%s">
-                    <field name="target_move" />
-                </group>
-                <label width="300" string="%s"/>
-                <newline/>
-                <label width="300" string="%s"/>
-            </form>""" % (open_string, separator_string, journal_string, period_string)
-    
+                </footer>
+            </form>""" % (_('Journal'), journal_string, _('Period'), period_string, open_string)
+
             view = etree.fromstring(view.encode('utf8'))
             xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)
             view = xarch
@@ -160,7 +158,7 @@ class account_move_journal(osv.osv_memory):
                 state = period.state
 
                 if state == 'done':
-                    raise osv.except_osv(_('UserError'), _('This period is already closed !'))
+                    raise osv.except_osv(_('User Error!'), _('This period is already closed.'))
 
                 company = period.company_id.id
                 res = {

@@ -4,18 +4,17 @@
         <record id="view_hr_timesheet_sign_in_message" model="ir.ui.view">
             <field name="name">hr.sign.in.project.message.form</field>
             <field name="model">hr.sign.in.project</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sign In/Out by Project" version="7.0">
-                    <header>
-                        <button string="Sign in / Sign out" name="check_state" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <separator colspan="4" string="Sign In/Out by Project"/>
                         <label colspan="4" nolabel="1" string="Employees can encode their time spent on the different projects they are assigned on. A  project is an analytic account and the time spent on a project generates costs on the analytic account. This feature allows to record at the same time the attendance and the timesheet."/>
                     </group>
+                    <footer>
+                        <button string="Sign in / Sign out" name="check_state" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                </form>
             </field>
         </record>
@@ -23,14 +22,8 @@
         <record id="view_hr_timesheet_sign_in" model="ir.ui.view">
             <field name="name">hr.sign.in.project.form</field>
             <field name="model">hr.sign.in.project</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sign In/Out by Project" version="7.0">
-                    <header>
-                        <button string="Start Working" name="sign_in_result" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group colspan="4" >
                         <separator string="Sign in" colspan="4"/>
                         <field name="name" readonly="True" />
@@ -40,6 +33,11 @@
                         <field name="date"/>
                         <label string="(Keep empty for current time)" colspan="2"/>
                     </group>
+                    <footer>
+                        <button string="Start Working" name="sign_in_result" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                </form>
             </field>
         </record>
@@ -57,15 +55,8 @@
         <record id="view_hr_timesheet_sign_out" model="ir.ui.view">
             <field name="name">hr.sign.out.project.form</field>
             <field name="model">hr.sign.out.project</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sign In/Out by Project" version="7.0">
-                    <header>
-                        <button string="Change Work" name="sign_out_result" type="object" class="oe_highlight"/>
-                        <button string="Stop Working" name="sign_out_result_end" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group colspan="4" >
                         <separator string="General Information" colspan="4" />
                         <field name="name" readonly="True" />
@@ -80,6 +71,12 @@
                         <field name="analytic_amount"/>
                     </group>
 
+                    <footer>
+                        <button string="Change Work" name="sign_out_result" type="object" class="oe_highlight"/>
+                        <button string="Stop Working" name="sign_out_result_end" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                </form>
             </field>
         </record>

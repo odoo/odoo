@@ -1,6 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_hr_menu" model="ir.actions.client">
+            <field name="name">Open HR Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_hr_root')}"/>
+        </record>
+        <record id="todo_open_hr_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_hr_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
     <data>
-
         <record id="open_payroll_modules" model="ir.actions.act_window">
             <field name="name">Payroll</field>
             <field name="res_model">ir.module.module</field>
@@ -12,39 +25,67 @@
         <record id="view_human_resources_configuration" model="ir.ui.view">
             <field name="name">hr settings</field>
             <field name="model">hr.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Human Resources" version="7.0">
+                <form string="Configure Human Resources" version="7.0" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <group string="Additional Features">
-                        <group>
-                            <field name="module_hr_expense"/>
-                            <field name="module_hr_evaluation"/>
-                            <field name="module_hr_holidays"/>
-                        </group>
-                        <group>
-                            <field name="module_hr_recruitment"/>
-                            <field name="module_hr_contract"/>
-                            <label for="module_hr_payroll"/>
-                            <div>
-                                <field name="module_hr_payroll"/>
-                                <button name="%(open_payroll_modules)d" type="action"
-                                    string="Install Country-Specific Payroll" icon="gtk-go-forward"
-                                    attrs="{'invisible': [('module_hr_payroll','=',False)]}"/>
-                            </div>
-                        </group>
-                    </group>
+                    <separator string="Human Resources Management"/>
                     <group>
-                        <group string="Timesheets">
-                            <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)"/>
-                            <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)"/>
-                            <field name="module_hr_timesheet_sheet"/>
-                        </group>
-                        <group name="config_recruitment"/>
+                        <label for="id" string="Additional Features"/>
+                        <div>
+                            <div>
+                                <field name="module_hr_holidays" class="oe_inline"/>
+                                <label for="module_hr_holidays"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_expense" class="oe_inline"/>
+                                <label for="module_hr_expense"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_evaluation" class="oe_inline"/>
+                                <label for="module_hr_evaluation"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_contract" class="oe_inline"/>
+                                <label for="module_hr_contract"/>
+                            </div>
+                            <div name="hr_payroll">
+                                <field name="module_hr_payroll" class="oe_inline"/>
+                                <label for="module_hr_payroll"/>
+                                <button name="%(open_payroll_modules)d" type="action"
+                                    string="Install your country's payroll" icon="gtk-go-forward"
+                                    attrs="{'invisible': [('module_hr_payroll','=',False)]}" class="oe_link"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group name="timesheet_grp">
+                        <label for="id" string="Time Tracking"/>
+                        <div>
+                            <div>
+                                <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)" class="oe_inline"/>
+                                <label for="module_hr_timesheet"/>
+                            </div>
+                            <div name="hr_timesheet">
+                                <field name="module_hr_timesheet_sheet" class="oe_inline"/>
+                                <label for="module_hr_timesheet_sheet"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)" class="oe_inline"/>
+                                <label for="module_hr_attendance"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group name="recruitment_grp">
+                        <label for="id" string="Recruitment"/>
+                        <div name="recruitment">
+                            <div>
+                                <field name="module_hr_recruitment" class="oe_inline"/>
+                                <label for="module_hr_recruitment"/>
+                            </div>
+                        </div>
                     </group>
                 </form>
             </field>

@@ -4,18 +4,17 @@
         <record id="view_calendar_event_import" model="ir.ui.view">
             <field name="name">calendar.event.import.form</field>
             <field name="model">calendar.event.import</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import ICS" version="7.0">
-                    <header>
-                        <button name="process_imp_ics"  string="_Import" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group colspan="4" >
                          <separator string="Select ICS File"/>
                          <field name="file_path" colspan="4" width="500" nolabel="1"/>
                     </group>
+                    <footer>
+                        <button name="process_imp_ics"  string="_Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>
@@ -23,7 +22,6 @@
         <record id="view_calendar_event_import_display" model="ir.ui.view">
             <field name="name">calendar.event.import.form.display</field>
             <field name="model">calendar.event.import</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Message">
                     <group colspan="4" >

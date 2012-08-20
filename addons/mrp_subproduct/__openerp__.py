@@ -46,7 +46,9 @@ With this module:
        'mrp_subproduct_view.xml'
     ],
     'demo_xml': [],
-    'test': ['test/mrp_subproduct.yml'],
+    'test': [
+             'test/mrp_subproduct.yml'
+             ],
     'installable': True,
     'auto_install': False,
     'certificate': '0050060616733',

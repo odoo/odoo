@@ -2,26 +2,10 @@
 <openerp>
     <data>
 
-        <!-- menu Administration/Portals/Portals -->
-        <record id="portal_list_action" model="ir.actions.act_window">
-            <field name="name">Portals</field>
-            <field name="res_model">res.portal</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <!-- a context is necessary to get the right portal form view -->
-            <field name="context">{'form_view_ref': 'portal.portal_form_view'}</field>
-            <field name="help">
-A portal helps defining specific views and rules for a group of users (the
-portal group).  A portal menu, widgets and specific groups may be assigned to
-the portal's users.
-            </field>
-        </record>
-
         <!-- portal tree view -->
         <record id="portal_list_view" model="ir.ui.view">
             <field name="name">Portal List</field>
             <field name="model">res.portal</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Portals">
                     <field name="name" string="Portal Name"/>
@@ -33,16 +17,23 @@ the portal's users.
         <record id="portal_form_view" model="ir.ui.view">
             <field name="name">Portal Form</field>
             <field name="model">res.portal</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_groups_form"/>
             <field name="arch" type="xml">
                 <page string="Users" position="before">
                     <page string="Portal">
-                        <group colspan="4" col="2">
-                            <separator string="Website" colspan="2"/>
-                            <field name="url" widget="url"/>
-                        </group>
-                        <group colspan="2" col="2">
+                        <group>
+                            <group>
+                                <field name="url" widget="url" string="Portal URL"/>
+                                <field name="home_action_id"/>
+                            </group>
+                            <group>
+                                <field name="override_menu"/>
+                                <field name="parent_menu_id"
+                                    context="{'ir.ui.menu.full_list': True}"/>
+                                <label for="partent_menu_id" colspan="1"/>
+                                <button name="do_create_menu" type="object"
+                                    string="Create Parent Menu"/>
+                            </group>
                             <separator string="Widgets Assigned to Users" colspan="2"/>
                             <field name="widget_ids" nolabel="1" colspan="2">
                                 <tree string="Widgets" editable="bottom">
@@ -51,56 +42,33 @@ the portal's users.
                                 </tree>
                             </field>
                         </group>
-                        <group colspan="2" col="2">
-                            <separator string="Portal Menu" colspan="2"/>
-                            <field name="override_menu"/>
-                            <field name="parent_menu_id"
-                                context="{'ir.ui.menu.full_list': True}"/>
-                            <label colspan="1"/>
-                            <button name="do_create_menu" type="object"
-                                string="Create Parent Menu"/>
-                            <field name="home_action_id"/>
-                        </group>
                     </page>
                 </page>
             </field>
         </record>
 
-        <record id="company_news_feed" model="mail.group">
-            <field name="name">Company's news feed</field>
+        <!-- action Administration/Portals/Portals -->
+        <record id="portal_list_action" model="ir.actions.act_window">
+            <field name="name">Portals</field>
+            <field name="res_model">res.portal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- a context is necessary to get the right portal form view -->
+            <field name="context">{'form_view_ref': 'portal.portal_form_view'}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new portal.
+              </p><p>
+                A portal helps defining specific views and rules for a group of
+                users (the portal group).  A portal menu, widgets and specific
+                groups may be assigned to the portal's users.
+              </p>
+            </field>
         </record>
 
-        <record id="action_news" model="ir.actions.act_window">
-            <field name="name">News</field>
-            <field name="res_model">mail.group</field>
-            <field name="res_id" ref="company_news_feed"/>
-            <field name="view_mode">form</field>
-        </record>
-
-
-        <!-- module's menu -->
-        <!-- menu Administration/Portals -->
-        <menuitem name="Portals Settings" id="portal_menu_settings" parent="base.menu_administration"
-            groups="group_portal_manager"/>
-
+        <!-- menu Administration/Portals/Portals -->
+        <menuitem name="Portals Settings" id="portal_menu_settings" parent="base.menu_administration" groups="group_portal_manager"/>
             <menuitem name="Portals" id="portal_list_menu" parent="portal_menu_settings" action="portal_list_action"/>
-
-            <!-- root menu for portal members (chrooted in this menu) -->
-            <menuitem name="Portal Members Root Menu" id="portal_members_root_menu" parent="portal_menu_settings"/>
-                <menuitem name="Portal Member's Menu" id="menu_portal" parent="portal_members_root_menu"/>
-                <menuitem name="Our company" id="portal_company" 
-                    parent="menu_portal" sequence="10"/>
-                    <menuitem name="News" id="portal_company_news" 
-                        parent="portal_company" sequence="10" action="action_news"/>
-                
-                <menuitem name="Orders" id="portal_orders" 
-                    parent="menu_portal" sequence="20"/>
-                <menuitem name="Invoices and Payments" id="portal_invoices_payements" 
-                    parent="menu_portal" sequence="30"/>
-                <menuitem name="Projects" id="portal_projects"
-                    parent="menu_portal" sequence="40"/>
-                <menuitem name="After Sale Services" id="portal_after_sales" 
-                    parent="menu_portal" sequence="50"/>
 
     </data>
 </openerp>
