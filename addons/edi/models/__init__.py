@@ -23,5 +23,6 @@ import edi
 import res_partner
 import res_company
 import res_currency
+import email_template
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
