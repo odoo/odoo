@@ -2,8 +2,8 @@
 <openerp>
     <data>
         <!-- mail.message tree: short view !-->
-        <record model="ir.ui.view" id="view_message_tree_short">
-            <field name="name">mail.message.tree.short</field>
+        <record model="ir.ui.view" id="view_message_tree">
+            <field name="name">mail.message.tree</field>
             <field name="model">mail.message</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
@@ -18,8 +18,8 @@
         </record>
 
         <!-- mail.message form: short view !-->
-        <record model="ir.ui.view" id="view_message_form_short">
-            <field name="name">mail.message.form.short</field>
+        <record model="ir.ui.view" id="view_message_form">
+            <field name="name">mail.message.form</field>
             <field name="model">mail.message</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
@@ -45,28 +45,16 @@
             </field>
         </record>
 
-        <!-- mail.message search: short view !-->
-        <record model="ir.ui.view" id="view_message_search_short">
-            <field name="name">mail.message.search.short</field>
-            <field name="model">mail.message</field>
-            <field name="priority">20</field>
-            <field name="arch" type="xml">
-                <search string="Messages Search">
-                    <field name="body" string="Message"/>
-                    <field name="author_id"/>
-                </search>
-            </field>
-        </record>
-
         <!-- mail.message search: wall view !-->
-        <record model="ir.ui.view" id="view_message_search_wall">
-            <field name="name">mail.message.search.wall</field>
+        <record model="ir.ui.view" id="view_message_search">
+            <field name="name">mail.message.search</field>
             <field name="model">mail.message</field>
             <field name="priority">25</field>
             <field name="arch" type="xml">
                 <search string="Messages Search">
                     <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
                     <field name="type"/>
+                    <field name="author_id"/>
                     <filter icon="terp-personal+" string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
@@ -81,7 +69,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_email_message_form">
+        <record model="ir.ui.view" id="view_mail_form">
             <field name="name">mail.mail.form</field>
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
@@ -142,9 +130,9 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_email_message_tree">
+        <record model="ir.ui.view" id="view_mail_tree">
             <field name="name">mail.message.tree</field>
-            <field name="model">mail.message</field>
+            <field name="model">mail.mail</field>
             <field name="arch" type="xml">
                 <tree string="Emails" colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
                     <field name="date"/>
@@ -154,6 +142,9 @@
                     <field name="partner_ids" invisible="1"/>
                     <field name="model" invisible="1"/>
                     <field name="res_id" invisible="1"/>
+                    <field name="email_from" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
                     <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
                     <button name="cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
@@ -161,7 +152,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_email_message_search">
+        <record model="ir.ui.view" id="view_mail_search">
             <field name="name">mail.mail.search</field>
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
@@ -193,22 +184,21 @@
             </field>
         </record>
 
-        <record id="action_view_all_messages_short" model="ir.actions.act_window">
-            <field name="name">Messages</field>
-            <field name="res_model">mail.message</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'tree_view_ref': 'mail.view_message_tree_short', 'form_view_ref': 'mail.view_message_form_short'}</field>
-            <field name="search_view_id" ref="view_message_search_short"/>
-        </record>
-
         <record id="action_view_mail_message" model="ir.actions.act_window">
             <field name="name">Messages</field>
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_message_search"/>
+        </record>
+
+        <record id="action_view_mail_mail" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">mail.mail</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_received': 1, 'search_default_type_email': 1}</field>
-            <field name="search_view_id" ref="view_email_message_search"/>
+            <field name="search_view_id" ref="view_mail_search"/>
         </record>
 
         <act_window domain="[('partner_id', '=', active_id), ('email_from', '!=', False)]"
@@ -216,18 +206,19 @@
             id="act_res_partner_emails" name="Emails"
             res_model="mail.message"
             src_model="res.partner"
-            view_id="view_email_message_tree"/>
+            view_id="view_message_tree"/>
 
         <!-- Add menu entry in Settings/Email -->
-        <menuitem name="Messages" id="menu_email_message" parent="base.menu_email" action="action_view_mail_message" />
+        <menuitem name="Mails" id="menu_mail_mail" parent="base.menu_email" action="action_view_mail_mail" />
         
         <!-- Add menu entry in Settings/Email -->
-        <menuitem name="Feeds" id="menu_email_message_all" parent="base.menu_email" action="action_view_all_messages_short" groups="base.group_no_one"/>
+        <menuitem name="Messages" id="menu_mail_message" parent="base.menu_email" action="action_view_mail_message"/>
 
         <record id="action_mail_all_feeds" model="ir.actions.client">
             <field name="name">News Feed</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="{'domain': [('notification_ids.partner_id.user_ids', 'in', '[uid]')] }"/>
+            <field name="params" eval=""/>
+            <!-- <field name="params" eval="{'domain': [('notification_ids.partner_id.user_ids', 'in', '[uid]')] }"/> -->
         </record>
 
         <record id="action_mail_my_feeds" model="ir.actions.client">

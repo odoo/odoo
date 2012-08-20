@@ -73,6 +73,7 @@ class mail_notification(osv.Model):
         context = context or {}
         partner_obj = self.pool.get('res.partner')
         msg_obj = self.pool.get('mail.message')
+        notification_obj = self.pool.get('mail.notification')
         msg = msg_obj.browse(cr, uid, msg_id, context=context)
 
         towrite = {
