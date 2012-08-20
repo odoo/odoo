@@ -233,7 +233,7 @@
         <record id="action_mail_my_feeds" model="ir.actions.client">
             <field name="name">My Feeds</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="{'search_view_id': ref('view_message_search_wall'), 'domain':[('partner_id.user_ids','=',uid)]}"/>
+            <field name="params" eval="{'search_view_id': ref('view_message_search_wall'), 'domain':[('partner_id.user_ids','in',[uid])]}"/>
         </record>
     </data>
 </openerp>
