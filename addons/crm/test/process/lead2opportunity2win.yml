@@ -4,39 +4,39 @@
   I open customer lead.
 -
    !python {model: crm.lead}: |
-     self.case_open(cr, uid, [ref("crm_case_qrecorp0")])
+     self.case_open(cr, uid, [ref("crm_case_4")])
 - 
   I check lead state is "Open". 
 -
-  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in open state}:
+  !assert {model: crm.lead, id: crm.crm_case_4, string: Lead in open state}:
      - state == "open"
 -
   I create partner from lead. 
 -
-  !record {model: crm.lead2partner, id: crm_lead2partner_id1, context: '{"active_model": "crm.lead", "active_ids": [ref("crm_case_qrecorp0")]}'}:
+  !record {model: crm.lead2partner, id: crm_lead2partner_id1, context: '{"active_model": "crm.lead", "active_ids": [ref("crm_case_4")]}'}:
 -
    !python {model: crm.lead2partner}: |
-     context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_qrecorp0')], 'active_id': ref('crm_case_qrecorp0')})
+     context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_4')], 'active_id': ref('crm_case_4')})
      self.make_partner(cr, uid ,[ref("crm_lead2partner_id1")], context=context)
 -
   I convert lead into opportunity for exiting customer.
 -
   !python {model: crm.lead}: |
-    self.convert_opportunity(cr, uid ,[ref("crm_case_qrecorp0")], ref("base.res_partner_agrolait"))
+    self.convert_opportunity(cr, uid ,[ref("crm_case_4")], ref("base.res_partner_2"))
 -
   I check details of converted opportunity. 
 -
   !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
+    lead = self.browse(cr, uid, ref('crm_case_4'))
     assert lead.type == 'opportunity', 'Lead is not converted to opportunity!'
-    assert lead.partner_id.id == ref("base.res_partner_agrolait"), 'Partner missmatch!'
+    assert lead.partner_id.id == ref("base.res_partner_2"), 'Partner mismatch!'
     assert lead.stage_id.id == ref("stage_lead1"), 'Stage of opportunity is incorrect!'
 -
   Now I begin communication and schedule a phone call with the customer.
 -
   !python {model: crm.opportunity2phonecall}: |
     import time
-    context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_qrecorp0')]})
+    context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_4')]})
     call_id = self.create(cr, uid, {'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                 'name': "Bonjour M. Jean, Comment êtes-vous? J'ai obtenu votre demande. peut-on parler au sujet de ce pour quelques minutes?"}, context=context)
     self.action_schedule(cr, uid, [call_id], context=context)
@@ -44,30 +44,28 @@
   I check that phonecall is scheduled for that opportunity.
 -
   !python {model: crm.phonecall}: |
-    ids = self.search(cr, uid, [('opportunity_id', '=', ref('crm_case_qrecorp0'))])
+    ids = self.search(cr, uid, [('opportunity_id', '=', ref('crm_case_4'))])
     assert len(ids), 'phonecall is not scheduled'
 -
   Now I schedule meeting with customer.
 -
   !python {model: crm.lead}: |
-    self.action_makeMeeting(cr, uid, [ref('crm_case_qrecorp0')])
+    self.action_makeMeeting(cr, uid, [ref('crm_case_4')])
 -
   After communicated  with customer, I put some notes with contract details.
 -
-  !python {model: crm.add.note}: |
-    context.update({'active_model': 'crm.lead', 'active_id': ref('crm_case_qrecorp0')})
-    note_id = self.create(cr, uid, {'body': "ces détails envoyés par le client sur ​​le FAX pour la qualité"})
-    self.action_add(cr, uid, [note_id], context=context)
+  !python {model: crm.lead}: |
+    self.message_append_note(cr, uid, [ref('crm_case_4')], subject='Test note', body='ces détails envoyés par le client sur ​​le FAX pour la qualité')
 -
   I win this opportunity
 -
   !python {model: crm.lead}: |
-    self.case_mark_won(cr, uid, [ref("crm_case_qrecorp0")])
+    self.case_mark_won(cr, uid, [ref("crm_case_4")])
 -
   I check details of the opportunity after having won the opportunity.
 -
   !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
+    lead = self.browse(cr, uid, ref('crm_case_4'))
     assert lead.stage_id.id == ref('crm.stage_lead6'), "Opportunity stage should be 'Won'."
     assert lead.state == 'done', "Opportunity is not in 'done' state!"
     assert lead.probability == 100.0, "Revenue probability should be 100.0!"
@@ -75,36 +73,36 @@
   I convert mass lead into opportunity customer.
 -
   !python {model: crm.lead2opportunity.partner.mass}: |
-    context.update({'active_model': 'crm.lead', 'active_ids': [ref("crm_case_employee0"), ref("crm_case_electonicgoodsdealer0")], 'active_id': ref("crm_case_qrecorp0")}) 
+    context.update({'active_model': 'crm.lead', 'active_ids': [ref("crm_case_11"), ref("crm_case_2")], 'active_id': ref("crm_case_4")}) 
     id = self.create(cr, uid, {'user_ids': [ref('base.user_root')], 'section_id': ref('crm.section_sales_department')}, context=context)
     self.mass_convert(cr, uid, [id], context=context)
 -
   Now I check first lead converted on opportunity.
 -
   !python {model: crm.lead}: |
-    opp = self.browse(cr, uid, ref('crm_case_employee0'))
-    assert opp.name == "Need Info about Onsite Intervention", "Opportunity name not correct"
+    opp = self.browse(cr, uid, ref('crm_case_11'))
+    assert opp.name == "Need estimated cost for new project", "Opportunity name not correct"
     assert opp.type == 'opportunity', 'Lead is not converted to opportunity!'
-    assert opp.partner_id.name == "Agrolait", 'Partner missmatch!'
+    assert opp.partner_id.name == "Thomas Passot", 'Partner mismatch!'
     assert opp.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
 -
   Then check for second lead converted on opportunity.
 -
   !python {model: crm.lead}: |
-    opp = self.browse(cr, uid, ref('crm_case_electonicgoodsdealer0'))
-    assert opp.name == "Interest in Your New Product", "Opportunity name not correct"
+    opp = self.browse(cr, uid, ref('crm_case_2'))
+    assert opp.name == "Interest in Your New Software", "Opportunity name not correct"
     assert opp.type == 'opportunity', 'Lead is not converted to opportunity!'
     assert opp.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
 -
   I loose the second opportunity
 -
   !python {model: crm.lead}: |
-    self.case_mark_lost(cr, uid, [ref("crm_case_electonicgoodsdealer0")])
+    self.case_mark_lost(cr, uid, [ref("crm_case_2")])
 -
   I check details of the opportunity after the loose
 -
   !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_electonicgoodsdealer0'))
+    lead = self.browse(cr, uid, ref('crm_case_2'))
     assert lead.stage_id.id == ref('crm.stage_lead8'), "Opportunity stage should be 'Lost'."
     assert lead.state == 'cancel', "Lost opportunity is not in 'cancel' state!"
     assert lead.probability == 0.0, "Revenue probability should be 0.0!"
@@ -113,7 +111,7 @@
 -
   !python {model: crm.meeting}: |
     context.update({'active_model': 'crm.meeting'}) 
-    self.case_open(cr, uid, [ref('crm.crm_case_reviewneeds0')])
+    self.case_open(cr, uid, [ref('base_calendar.crm_meeting_4')])
 -
   I invite a user for meeting.
 -

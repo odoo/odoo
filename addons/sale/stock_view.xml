@@ -4,23 +4,24 @@
         <record id="stock_picking_inherit_sale" model="ir.ui.view">
             <field name="name">stock.picking.form</field>
             <field name="model">stock.picking</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <field name="auto_picking" position="after">
+                <field name="move_type" position="before">
                     <field name="sale_id"/>
                 </field>
+                <label for="partner_id" position="replace">
+                    <label for="partner_id" class="oe_edit_only" string="Contact"/>
+                </label>
             </field>
         </record>
 
         <record id="stock_move_sale" model="ir.ui.view">
             <field name="name">stock.move.form</field>
             <field name="model">stock.move</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="//field[@name='tracking_id']"  position="before">
-                    <field name="sale_line_id" colspan="2"/>
+                 <xpath expr="//group[@name='origin_grp']"  position="inside">
+                    <field name="sale_line_id"/>
                 </xpath>
             </field>
         </record>
@@ -54,7 +55,6 @@
         <record id="stock_picking_out_inherit_sale" model="ir.ui.view">
             <field name="name">Outgoing picking Inherited</field>
             <field name="model">stock.picking</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
                 <field name="move_type" position="after">
@@ -71,7 +71,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_to_invoice': 1, 'search_default_done': 1}</field>
+            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_to_invoice': 1, 'search_default_done': 1, 'default_invoice_state': '2binvoiced'}</field>
             <field name="search_view_id" ref="stock.view_picking_out_search"/>
         </record>
         <menuitem action="outgoing_picking_list_to_invoice" id="menu_action_picking_list_to_invoice" parent="base.menu_invoiced" groups="sale.group_invoice_deli_orders" sequence="20"/>

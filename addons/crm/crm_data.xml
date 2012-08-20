@@ -1,21 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <record model="crm.case.channel">
-            <field name="name">website</field>
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_crm_menu" model="ir.actions.client">
+            <field name="name">Open Sale Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.menu_base_partner')}"/>
         </record>
-        <record model="crm.case.channel">
-            <field name="name">phone</field>
+        <record id="todo_open_crm_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_crm_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
         </record>
-        <record model="crm.case.channel">
-            <field name="name">direct</field>
+
+        <record model="crm.case.channel" id="crm_case_channel_website">
+            <field name="name">Website</field>
         </record>
-        <record model="crm.case.channel">
-            <field name="name">email</field>
+        <record model="crm.case.channel" id="crm_case_channel_phone">
+            <field name="name">Phone</field>
         </record>
+        <record model="crm.case.channel" id="crm_case_channel_direct">
+            <field name="name">Direct</field>
+        </record>
+        <record model="crm.case.channel" id="crm_case_channel_email">
+            <field name="name">Email</field>
+        </record>
+
         <record model="crm.case.section" id="section_sales_department">
             <field name="name">Sales Department</field>
             <field name="code">Sales</field>
         </record>
+
+        <!-- Payment Mode -->
+
+        <record model="crm.payment.mode" id="payment_mode_1">
+            <field name="name">Cash</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_2">
+            <field name="name">Cheque</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_3">
+            <field name="name">Credit Card</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_4">
+            <field name="name">Demand Draft</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module CRM has been installed</value>
+            <value>From the top menu Sales, you can: trace leads and opportunities, get accurate forecast on your sales pipeline, plan meetings and phonecalls, get realtime statistics and efficiently organize the communication with your prospects.
+
+To manage quotations and sale orders, install the module "Sales Management".</value>
+        </function>
+        
+        <record model="mail.alias" id="default_sales_alias">
+            <field name="alias_name">sales</field>
+            <field name="alias_model_id" ref="model_crm_lead"/>
+            <field name="alias_user_id" ref="base.user_root"/>
+            <field name="alias_defaults">{'type':'lead'}</field>
+        </record>
+
     </data>
 </openerp>

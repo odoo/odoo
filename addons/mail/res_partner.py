@@ -20,36 +20,28 @@
 ##############################################################################
 
 from osv import osv
-from osv import fields
 
-class res_partner(osv.osv):
+class res_partner_mail(osv.Model):
     """ Inherits partner and adds CRM information in the partner form """
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread']
-    _columns = {
-        'emails': fields.one2many('mail.message', 'partner_id', 'Emails', readonly=True, domain=[('email_from','!=',False)]),
-    }
 
-    def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
-        """ Override of message_load_ids
-            partner discussion page :
-            - messages posted on res.partner, partner_id = partner.id
-            - messages directly sent to partner
+    def message_search_get_domain(self, cr, uid, ids, context=None):
+        """ Override of message_search_get_domain for partner discussion page.
+            The purpose is to add messages directly sent to the partner. It also
+            adds messages pushed to the related user, if any, using @login.
         """
-        msg_obj = self.pool.get('mail.message')
-        msg_ids = []
-        partner_ids=[]
-        for partner in self.browse(cr, uid, ids, context=context):
-            msg_ids += msg_obj.search(cr, uid, [ ('res_id', '=', partner.id), ('model', '=' ,self._name)] + domain,
-            limit=limit, offset=offset, context=context)
-        if self._name=='res.partner':
-            partner_ids=msg_obj.search(cr, uid, [ ('partner_id', 'in', ids)] + domain,
-                            limit=limit, offset=offset, context=context)
-        if partner_ids  :
-           msg_ids+= partner_ids            
-        if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
-        return msg_ids
-
-res_partner()
+        initial_domain = super(res_partner_mail, self).message_search_get_domain(cr, uid, ids, context=context)
+        # to avoid models inheriting from res.partner
+        if self._name != 'res.partner':
+            return initial_domain
+        # add message linked to the partner
+        search_domain = ['|'] + initial_domain + ['|', ('partner_id', 'in', ids), ('partner_ids', 'in', ids)]
+        # if partner is linked to a user: find @login
+        res_users_obj = self.pool.get('res.users')
+        user_ids = res_users_obj.search(cr, uid, [('partner_id', 'in', ids)], context=context)
+        for user in res_users_obj.browse(cr, uid, user_ids, context=context):
+            search_domain = ['|'] + search_domain + ['|', ('body_text', 'like', '@%s' % (user.login)), ('body_html', 'like', '@%s' % (user.login))]
+        return search_domain
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

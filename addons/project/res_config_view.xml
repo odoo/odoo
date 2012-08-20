@@ -1,39 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_project_menu" model="ir.actions.client">
+            <field name="name">Open Project Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.menu_main_pm')}"/>
+        </record>
+        <record id="todo_open_project_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_project_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
     <data>
         <record id="view_config_settings" model="ir.ui.view">
             <field name="name">project settings</field>
             <field name="model">project.config.settings</field>
-            <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Configure Project" version="7.0">
+                <form string="Configure Project" version="7.0" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                        <group string="Project">
-                            <group>
-                                <field name="module_project_mrp"/>
-                                <field name="module_project_timesheet"/>
-                                <field name="module_pad"/>
-                            </group>
-                            <group>
-                                <field name="group_tasks_work_on_tasks"/>
-                                <field name="group_time_work_estimation_tasks"/>
-                                <field name="group_manage_delegation_task"/>
-                                <field name="time_unit" domain="[('category_id.name','=','Working Time')]"/>
-                            </group>
-                        </group>
-                        <group string="Planning">
-                            <field name="module_project_long_term"/>
-                        </group>
-                        <group string="Helpdesk and Support" name="support">
-                            <field name="module_project_issue"/>
-                            <field name="module_project_issue_sheet"/>
-                        </group>
-                    </sheet>
+                    <separator string="Project Management"/>
+                    <group>
+                        <label for="id" string="Task"/>
+                        <div>
+                            <div>
+                                <field name="module_project_timesheet" class="oe_inline"/>
+                                <label for="module_project_timesheet"/>
+                            </div>
+                            <div>
+                                <field name="module_project_mrp" class="oe_inline"/>
+                                <label for="module_project_mrp"/>
+                            </div>
+                            <div>
+                                <field name="module_pad" class="oe_inline"/>
+                                <label for="module_pad"/>
+                            </div>
+                            <div>
+                                <field name="group_manage_delegation_task" class="oe_inline"/>
+                                <label for="group_manage_delegation_task"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Planning"/>
+                        <div>
+                             <div>
+                                <field name="group_time_work_estimation_tasks" class="oe_inline"/>
+                                <label for="group_time_work_estimation_tasks"/>
+                            </div>
+                            <div>
+                                <label for="time_unit"/>
+                                <field name="time_unit" class="oe_inline" domain="[('category_id.name','=','Working Time')]"/>
+                            </div>
+                            <div>
+                                <field name="group_tasks_work_on_tasks" class="oe_inline"/>
+                                <label for="group_tasks_work_on_tasks" />
+                            </div>
+                            <div>
+                                <field name="module_project_long_term" class="oe_inline"/>
+                                <label for="module_project_long_term"/>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="Helpdesk &amp; Support"/>
+                    <group>
+                        <label for="id" string="Support"/>
+                        <div>
+                            <div>
+                                <field name="module_project_issue" class="oe_inline"/>
+                                <label for="module_project_issue"/>
+                            </div>
+                            <div name="module_project_issue_sheet">
+                                <field name="module_project_issue_sheet" class="oe_inline"/>
+                                <label for="module_project_issue_sheet"/>
+                            </div>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>

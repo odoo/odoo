@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+       <menuitem name="Knowledge" id="knowledge.menu_document"/>
+       <menuitem name="Pages" id="menu_wiki" parent="knowledge.menu_document" sequence="20" />
+
+        <!-- wiki tree view -->
+        <record id="view_wiki_tree_children" model="ir.ui.view">
+            <field name="name">document.page.tree</field>
+            <field name="model">document.page</field>
+            <field name="field_parent">child_ids</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <tree string="Document Page">
+                    <field name="name"/>
+                    <field name="write_uid"/>
+                    <field name="write_date"/>
+                </tree>
+            </field>
+        </record>
+        <!-- wiki list view  -->
+        <record id="view_wiki_tree" model="ir.ui.view">
+            <field name="name">document.page.list</field>
+            <field name="model">document.page</field>
+            <field name="arch" type="xml">
+                <tree string="Document Page">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="write_uid"/>
+                    <field name="write_date"/>
+                </tree>
+            </field>
+        </record>
+        <!-- wiki Form view  -->
+        <record id="view_wiki_form" model="ir.ui.view">
+            <field name="name">document.page.form</field>
+            <field name="model">document.page</field>
+            <field name="arch" type="xml">
+                <form string="Document Page" version="7.0">
+                    <field name="type" invisible="1"/>
+                    <h1><field name="name" placeholder="Name"/></h1>
+                    <group class="oe_edit_only">
+                        <group>
+                            <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Category"/>
+                        </group>
+                        <group>
+                            <field name="write_uid" groups="base.group_no_one"/>
+                            <field name="write_date" groups="base.group_no_one"/>
+                            <field name="menu_id" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <div class="oe_edit_only" attrs="{'invisible':[('type','=','content')]}">
+                        <label for="content" string="Template"/>
+                        that will be used as a content template for all new page of this category.
+                    </div>
+                    <field name="content" placeholder="e.g. Once upon a time..." class="oe_edit_only"/>
+                    <div class="oe_document_page">
+                        <field name="display_content" widget="text_wiki" class="oe_view_only"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <!-- page Search view  -->
+        <record id="view_wiki_filter" model="ir.ui.view">
+            <field name="name">document.page.search</field>
+            <field name="model">document.page</field>
+            <field name="arch" type="xml">
+                <search string="Document Page">
+                    <field name="name" string="Content" filter_domain="['|', ('name','ilike',self), ('content','ilike',self)]"/>
+                    <field name="write_uid"/>
+                    <field name="parent_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Document Type" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Author" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Last Contributor" domain="[]" context="{'group_by':'write_uid'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- page action -->
+        <record id="action_category" model="ir.actions.act_window">
+            <field name="name">Category</field>
+            <field name="res_model">document.page</field>
+            <field name="domain">[('type','=','category')]</field>
+            <field name="context">{'default_type': 'category'}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wiki_tree"/>
+            <field name="search_view_id" ref="view_wiki_filter"/>
+        </record>
+        <menuitem id="menu_category" parent="menu_wiki" name="Categories" action="action_category" sequence="10"/>
+        <record id="action_page" model="ir.actions.act_window">
+            <field name="name">Pages</field>
+            <field name="res_model">document.page</field>
+            <field name="domain">[('type','=','content')]</field>
+            <field name="context">{'default_type': 'content'}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wiki_tree"/>
+            <field name="search_view_id" ref="view_wiki_filter"/>
+            <field name="help">Create web pages</field>
+        </record>
+        <menuitem id="menu_page" parent="menu_wiki" name="Pages" action="action_page" sequence="20"/>
+
+        <!-- History Tree view -->
+        <record model="ir.ui.view" id="view_wiki_history_tree">
+            <field name="name">document.page.history.tree</field>
+            <field name="model">document.page.history</field>
+            <field name="arch" type="xml">
+                <tree string="Document History">
+                    <field name="create_date"/>
+                    <field name="create_uid"/>
+                    <field name="page_id"/>
+                </tree>
+            </field>
+        </record>
+        <!-- History Form view  -->
+        <record model="ir.ui.view" id="wiki_history_form">
+            <field name="name">document.page.history.form</field>
+            <field name="model">document.page.history</field>
+            <field name="arch" type="xml">
+                <form string="Document Page History" version="7.0">
+                    <label for="page_id" class="oe_edit_only"/>
+                    <h1><field name="page_id" select="1" /></h1>
+                    <label for="create_date" class="oe_edit_only"/>
+                    <field name="create_date" readonly="1"/>
+                    <label for="content" class="oe_edit_only"/>
+                    <field name="content" colspan="4"/>
+                </form>
+            </field>
+        </record>
+        <!-- History Action  -->
+        <record model="ir.actions.act_window" id="action_history">
+            <field name="name">Page history</field>
+            <field name="res_model">document.page.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_page_history" parent="menu_wiki" name="Pages history" action="action_history" sequence="30" groups="base.group_no_one"/>
+        <act_window
+            id="action_related_page_history"
+            context="{'search_default_page_id': [active_id], 'default_page_id': active_id}"
+            domain="[('page_id','=',active_id)]"
+            name="Page History"
+            res_model="document.page.history"
+            src_model="document.page"/>
+        <act_window 
+            id="action_related_page_create_menu"
+            name="Create Menu"
+            res_model="document.page.create.menu"
+            target="new"
+            view_type="form"
+            view_mode="form"
+            src_model="document.page"/>
+
+    </data>
+</openerp>

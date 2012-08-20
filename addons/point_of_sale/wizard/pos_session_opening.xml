@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="pos_session_opening_form_view">
+            <field name="name">pos.session.opening.form.view</field>
+            <field name="model">pos.session.opening</field>
+            <field name="arch" type="xml">
+                <form string="PoS Session Opening" version="7.0">
+                    <separator string="Select your Point of Sale" colspan="4" />
+                    <group>
+                        <field name="pos_config_id" on_change="on_change_config(pos_config_id)"
+                            widget="selection" domain="[('state','=','active')]"
+                            class="oe_inline"/>
+                    </group>
+                    <field name="pos_session_id" invisible="1"/>
+                    <field name="pos_state" invisible="1"/>
+                    <button name="open_ui" type="object" string="Start Selling" 
+                        attrs="{'invisible' : [('pos_state', 'not in', ('opened',))]}" 
+                        class="oe_highlight"
+                    />
+                    <button name="open_existing_session_cb" type="object" string="Open Session" 
+                        attrs="{'invisible' : [('pos_state', 'not in', ('opening_control',))]}" 
+                        class="oe_highlight"
+                    />
+                    <button name="open_existing_session_cb_close" type="object" string="Close Session" 
+                        attrs="{'invisible' : [('pos_state', 'not in', ('opened',))]}" 
+                    />
+                    <button name="open_existing_session_cb" type="object" string="Close Session" 
+                        attrs="{'invisible' : [('pos_state', 'not in', ('closing_control',))]}" 
+                        class="oe_highlight"
+                    />
+                    <button name="open_session_cb" type="object" string="New Session" 
+                        attrs="{'invisible' : ['|', ('pos_state', '!=', False),('pos_config_id','=',False)]}"
+                        class="oe_highlight"
+                    />
+
+                    <div attrs="{'invisible' : ['|', ('pos_state', '!=', False),('pos_config_id','=',False)]}" class="oe_view_nocontent">
+                        <p class="oe_view_nocontent_create">
+                          Click to start a session.
+                        </p><p>
+                          You will first have to control your cash amount in your cash register.
+                          Then you will be able to open the session and start selling with the touchscreen
+                          interface.
+                        </p>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="action_pos_session_opening" model="ir.actions.act_window">
+            <field name="name">Your Session</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.session.opening</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+    </data>
+</openerp>

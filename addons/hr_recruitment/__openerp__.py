@@ -19,11 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 {
     'name': 'Recruitment Process',
     'version': '1.0',
     'category': 'Human Resources',
-    "sequence": 24,
+    'sequence': 24,
+    'summary': 'Recruitment Process, Job Descriptions',
     'description': """
 Manages job positions and the recruitment process.
 ==================================================
@@ -42,11 +44,10 @@ system to store and search in your CV base.
         'decimal_precision',
         'hr',
         'survey',
-        'crm',
+        'base_calendar',
         'fetchmail',
     ],
-    'update_xml': [
-        'wizard/hr_recruitment_phonecall_view.xml',
+    'data': [
         'wizard/hr_recruitment_employee_hired.xml',
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
@@ -57,19 +58,18 @@ system to store and search in your CV base.
         'board_hr_recruitment_statistical_view.xml',
         'hr_recruitment_installer_view.xml',
         'res_config_view.xml',
-     ],
-    'init_xml': [
         'hr_recruitment_data.xml'
     ],
-    'demo_xml': [
+    'demo': [
         'hr_recruitment_demo.yml',
     ],
-    'test':[
-            'test/recruitment_process.yml',
-            ],
+    'js': ['static/src/js/hr_recruitment.js'],
+    'test': [
+        'test/recruitment_process.yml',
+    ],
     'installable': True,
     'auto_install': False,
-    'certificate' : '001073437025460275621',
+    'certificate': '001073437025460275621',
     'application': True,
 }
 

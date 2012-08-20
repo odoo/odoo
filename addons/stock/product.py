@@ -93,7 +93,7 @@ class product_product(osv.osv):
         product_obj=self.browse(cr, uid, ids, context=context)[0]
         account_valuation = product_obj.categ_id.property_stock_valuation_account_id
         account_valuation_id = account_valuation and account_valuation.id or False
-        if not account_valuation_id: raise osv.except_osv(_('Error!'), _('Valuation Account is not specified for Product Category: %s') % (product_obj.categ_id.name))
+        if not account_valuation_id: raise osv.except_osv(_('Error!'), _('Specify valuation Account for Product Category: %s.') % (product_obj.categ_id.name))
         move_ids = []
         loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
@@ -107,10 +107,10 @@ class product_product(osv.osv):
                 product = self.browse(cr, uid, rec_id, context=c)
                 qty = product.qty_available
                 diff = product.standard_price - new_price
-                if not diff: raise osv.except_osv(_('Error!'), _("Could not find any difference between standard price and new price!"))
+                if not diff: raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
                 if qty:
                     company_id = location.company_id and location.company_id.id or False
-                    if not company_id: raise osv.except_osv(_('Error!'), _('Company is not specified in Location'))
+                    if not company_id: raise osv.except_osv(_('Error!'), _('Please specify company in Location.'))
                     #
                     # Accounting Entries
                     #
@@ -118,8 +118,8 @@ class product_product(osv.osv):
                         journal_id = product.categ_id.property_stock_journal and product.categ_id.property_stock_journal.id or False
                     if not journal_id:
                         raise osv.except_osv(_('Error!'),
-                            _('There is no journal defined '\
-                                'on the product category: "%s" (id: %d)') % \
+                            _('Please define journal '\
+                              'on the product category: "%s" (id: %d).') % \
                                 (product.categ_id.name,
                                     product.categ_id.id,))
                     move_id = move_obj.create(cr, uid, {
@@ -139,8 +139,8 @@ class product_product(osv.osv):
                                     property_stock_account_input_categ.id
                         if not stock_input_acc:
                             raise osv.except_osv(_('Error!'),
-                                    _('There is no stock input account defined ' \
-                                            'for this product: "%s" (id: %d)') % \
+                                    _('Please define stock input account ' \
+                                            'for this product: "%s" (id: %d).') % \
                                             (product.name,
                                                 product.id,))
                         amount_diff = qty * diff
@@ -165,8 +165,8 @@ class product_product(osv.osv):
                                     property_stock_account_output_categ.id
                         if not stock_output_acc:
                             raise osv.except_osv(_('Error!'),
-                                    _('There is no stock output account defined ' \
-                                            'for this product: "%s" (id: %d)') % \
+                                    _('Please define stock output account ' \
+                                            'for this product: "%s" (id: %d).') % \
                                             (product.name,
                                                 product.id,))
                         amount_diff = qty * -diff
@@ -243,13 +243,16 @@ class product_product(osv.osv):
             child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
         
-        # this will be a dictionary of the UoM resources we need for conversion purposes, by UoM id
-        uoms_o = {}
         # this will be a dictionary of the product UoM by product id
         product2uom = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            product2uom[product.id] = product.uom_id.id
-            uoms_o[product.uom_id.id] = product.uom_id
+        uom_ids = []
+        for product in self.read(cr, uid, ids, ['uom_id'], context=context):
+            product2uom[product['id']] = product['uom_id'][0]
+            uom_ids.append(product['uom_id'][0])
+        # this will be a dictionary of the UoM resources we need for conversion purposes, by UoM id
+        uoms_o = {}
+        for uom in self.pool.get('product.uom').browse(cr, uid, uom_ids, context=context):
+            uoms_o[uom.id] = uom
 
         results = []
         results2 = []

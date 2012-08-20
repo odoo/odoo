@@ -19,20 +19,18 @@
 #
 ##############################################################################
 
-from base_status.base_stage import base_stage
+import logging
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
+import tools
 from osv import fields, osv
-from crm import crm
-import tools
-import collections
-import binascii
-import tools
+from openerp.modules.registry import RegistryManager
+from openerp import SUPERUSER_ID
+from base_status.base_stage import base_stage
 from tools.translate import _
-from crm import wizard
 
-wizard.mail_compose_message.SUPPORTED_MODELS.append('hr.applicant')
+_logger = logging.getLogger(__name__)
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
@@ -67,8 +65,8 @@ class hr_recruitment_stage(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
-        'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
-        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
+        'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
+        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change according to the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
         'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
         'requirements': fields.text('Requirements'),
     }
@@ -98,6 +96,7 @@ class hr_applicant(base_stage, osv.Model):
     _description = "Applicant"
     _order = "id desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _mail_compose_message = True
 
     def _get_default_department_id(self, cr, uid, context=None):
         """ Gives default department by checking if present in the context """
@@ -199,8 +198,9 @@ class hr_applicant(base_stage, osv.Model):
                       When the case is over, the state is set to \'Done\'.\
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
+        'categ_ids': fields.many2many('hr.applicant_category', string='Categories'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'user_id': fields.many2one('res.users', 'HR Manager'),
+        'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True, select=True),
         'date_open': fields.datetime('Opened', readonly=True, select=True),
@@ -213,7 +213,7 @@ class hr_applicant(base_stage, osv.Model):
         'salary_expected_extra': fields.char('Expected Salary Extra', size=100, help="Salary Expected by Applicant, extra advantages"),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
         'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
-        'availability': fields.integer('Availability (Days)'),
+        'availability': fields.integer('Availability'),
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
@@ -229,7 +229,7 @@ class hr_applicant(base_stage, osv.Model):
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
         'emp_id': fields.many2one('hr.employee', 'employee'),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }
 
     _defaults = {
@@ -239,7 +239,7 @@ class hr_applicant(base_stage, osv.Model):
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
         'priority': lambda *a: '',
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.applicant', context=c),
         'color': 0,
     }
 
@@ -257,8 +257,6 @@ class hr_applicant(base_stage, osv.Model):
         return {'value': {'department_id': False}}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, context=None):
-        if not department_id:
-            return {'value': {'stage_id': False}}
         obj_recru_stage = self.pool.get('hr.recruitment.stage')
         stage_ids = obj_recru_stage.search(cr, uid, ['|',('department_id','=',department_id),('department_id','=',False)], context=context)
         stage_id = stage_ids and stage_ids[0] or False
@@ -293,49 +291,20 @@ class hr_applicant(base_stage, osv.Model):
         return False
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
+        """ This opens Meeting's calendar view to schedule meeting on current applicant
+            @return: Dictionary value for created Meeting view
         """
-        This opens Meeting's calendar view to schedule meeting on current Opportunity
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Opportunity to Meeting IDs
-        @param context: A standard dictionary for contextual values
-
-        @return: Dictionary value for created Meeting view
-        """
-        data_obj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        value = {}
-        for opp in self.browse(cr, uid, ids, context=context):
-            # Get meeting views
-            search_view = data_obj.get_object(cr, uid, 'crm', 'view_crm_case_meetings_filter', context)
-            calendar_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_calendar_view_meet', context)
-            form_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_form_view_meet', context)
-            tree_view = data_obj.get_object(cr, uid, 'crm', 'crm_case_tree_view_meet', context)
-            category = data_obj.get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
-            context.update({
-                'default_applicant_id': opp.id,
-                'default_partner_id': opp.partner_id and opp.partner_id.id or False,
-                'default_email_from': opp.email_from,
-                'default_state': 'open',
-                'default_categ_id': category.id,
-                'default_name': opp.name,
-            })
-            value = {
-                'name': ('Meetings'),
-                'domain': "[('user_id','=',%s)]" % (uid),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(calendar_view.id, 'calendar'), (form_view.id, 'form'), (tree_view.id, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view.id,
-                'nodestroy': True,
-            }
-        return value
+        applicant = self.browse(cr, uid, ids[0], context)
+        category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res['context'] = {
+            'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
+            'default_user_id': uid,
+            'default_state': 'open',
+            'default_name': applicant.name,
+            'default_categ_ids': category and [category.id] or False,
+        }
+        return res
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """
@@ -382,7 +351,7 @@ class hr_applicant(base_stage, osv.Model):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
         if update_vals is None: vals = {}
-        
+
         update_vals.update({
             'description': msg.get('body'),
             'email_from': msg.get('from'),
@@ -493,13 +462,10 @@ class hr_applicant(base_stage, osv.Model):
     # OpenChatter methods and notifications
     # -------------------------------------------------------
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        """ Override to add responsible user. """
-        user_ids = super(hr_applicant, self).message_get_subscribers(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id and not obj.user_id.id in user_ids:
-                user_ids.append(obj.user_id.id)
-        return user_ids
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' to the monitored fields """
+        res = super(hr_applicant, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['user_id']
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
@@ -542,10 +508,73 @@ class hr_applicant(base_stage, osv.Model):
 class hr_job(osv.osv):
     _inherit = "hr.job"
     _name = "hr.job"
+    _inherits = {'mail.alias': 'alias_id'}
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
+                                    help="Email alias for this job position. New emails will automatically "
+                                         "create new applicants for this job position."),
     }
-    
+
+    _defaults = {
+        'alias_domain': False, # always hide alias during creation
+    }
+
+    def _auto_init(self, cr, context=None):
+        """Installation hook to create aliases for all jobs and avoid constraint errors."""
+
+        # disable the unique alias_id not null constraint, to avoid spurious warning during
+        # super.auto_init. We'll reinstall it afterwards.
+        self._columns['alias_id'].required = False
+
+        super(hr_job,self)._auto_init(cr, context=context)
+
+        registry = RegistryManager.get(cr.dbname)
+        mail_alias = registry.get('mail.alias')
+        hr_jobs = registry.get('hr.job')
+        jobs_no_alias = hr_jobs.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
+        # Use read() not browse(), to avoid prefetching uninitialized inherited fields
+        for job_data in hr_jobs.read(cr, SUPERUSER_ID, jobs_no_alias, ['name']):
+            alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, {'alias_name': 'job+'+job_data['name'],
+                                                                         'alias_defaults': {'job_id': job_data['id']}},
+                                                      model_name='hr.applicant')
+            hr_jobs.write(cr, SUPERUSER_ID, job_data['id'], {'alias_id': alias_id})
+            _logger.info('Mail alias created for hr.job %s (uid %s)', job_data['name'], job_data['id'])
+
+        # Finally attempt to reinstate the missing constraint
+        try:
+            cr.execute('ALTER TABLE hr_job ALTER COLUMN alias_id SET NOT NULL')
+        except Exception:
+            _logger.warning("Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
+                            "If you want to have it, you should update the records and execute manually:\n"\
+                            "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL",
+                            self._table, 'alias_id', self._table, 'alias_id')
+
+        self._columns['alias_id'].required = True
+
+    def create(self, cr, uid, vals, context=None):
+        mail_alias = self.pool.get('mail.alias')
+        if not vals.get('alias_id'):
+            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_id = mail_alias.create_unique_alias(cr, uid,
+                          # Using '+' allows using subaddressing for those who don't
+                          # have a catchall domain setup.
+                          {'alias_name': 'jobs+'+vals['name']},
+                          model_name="hr.applicant",
+                          context=context)
+            vals['alias_id'] = alias_id
+        res = super(hr_job, self).create(cr, uid, vals, context)
+        mail_alias.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade-delete mail aliases as well, as they should not exist without the job position.
+        mail_alias = self.pool.get('mail.alias')
+        alias_ids = [job.alias_id.id for job in self.browse(cr, uid, ids, context=context) if job.alias_id]
+        res = super(hr_job, self).unlink(cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
+        return res
+
     def action_print_survey(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -563,11 +592,12 @@ class hr_job(osv.osv):
                 'nodestroy':True,
             }
 
-
-class crm_meeting(osv.osv):
-    _inherit = 'crm.meeting'
+class applicant_category(osv.osv):
+    """ Category of applicant """
+    _name = "hr.applicant_category"
+    _description = "Category of applicant"
     _columns = {
-        'applicant_id': fields.many2one('hr.applicant','Applicant'),
+        'name': fields.char('Name', size=64, required=True, translate=True),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

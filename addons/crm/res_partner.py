@@ -38,13 +38,21 @@ class res_partner(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
             'Leads and Opportunities', domain=[('state','in', ('draft','open','pending'))]),
-        'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
+        'meeting_ids': fields.many2many('crm.meeting', 'crm_meeting_partner_rel','partner_id', 'meeting_id',
             'Meetings'),
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
         'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
         'meeting_count': fields.function(_opportunity_meeting_count, string="Meeting", type='integer', multi='opp_meet'),
     }
+
+    def copy(self, cr, uid, record_id, default=None, context=None):
+        if default is None:
+            default = {}
+
+        default.update({'opportunity_ids': [], 'meeting_ids' : [], 'phonecall_ids' : []})
+
+        super(res_partner, self).copy(cr, uid, record_id, default, context)
 
     def redirect_partner_form(self, cr, uid, partner_id, context=None):
         search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')
@@ -74,7 +82,7 @@ class res_partner(osv.osv):
                 'planned_revenue' : planned_revenue,
                 'probability' : probability,
                 'partner_id' : partner_id,
-                'categ_id' : categ_ids and categ_ids[0] or '',
+                'categ_ids' : categ_ids and categ_ids[0:1] or [],
                 'state' :'draft',
                 'type': 'opportunity'
             }, context=context)

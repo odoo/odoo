@@ -2,57 +2,55 @@
 <openerp>
     <data>
 
-        <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"
-            web_icon="images/hr.png"
-            web_icon_hover="images/hr-hover.png"
-            groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
+        <!-- Top menu item -->
+        <menuitem name="Human Resources"
+            id="menu_hr_root"
+            groups="base.group_hr_manager,base.group_hr_user,base.group_user"
+            sequence="110"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
-        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25"/>
+        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" groups="base.group_no_one" sequence="25"/>
         <menuitem id="menu_hr_reporting_timesheet" name="Reports"
-            parent="menu_hr_reporting" sequence="6" />
+            parent="menu_hr_reporting" sequence="6"/>
 
         <!--Employee form view -->
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee" version="7.0">
                     <sheet>
-                        <field name="photo" widget='image' class="oe_right" on_change="onchange_photo(photo)"/>    
-                        <div class="oe_right oe_button_box" name="button_box">
-                            <!-- Put here related buttons -->
-                        </div>
+                        <field name="image_small" widget='image' class="oe_right oe_image_small"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" class="oe_inline"/>
-                                <label class="oe_inline" string="," attrs="{'invisible': [('job_id', '=', False)]}"/>
-                                <field class="oe_inline" name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
-                                <label class="oe_inline" string="at" attrs="{'invisible': [('company_id', '=', False)]}" groups="base.group_multi_company"/>
-                                <field class="oe_inline" name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                                <field name="name"/>
                             </h1>
-                            <label for="department_id" class="oe_edit_only"/>
-                            <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
+                            <label for="job_id" class="oe_edit_only"/>
+                            <h2>
+                                <field name="job_id" options='{"no_open": true}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                            </h2>
                             <label for="category_ids" class="oe_edit_only"/>
-                            <h3><field name="category_ids" widget="many2many_tags"/></h3>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
                         </div>
-                        <group colspan="4" col="4">
-                            <field name="work_email" widget="email" />
-                            <field name="work_phone"/>
-                            <field name="address_id" on_change="onchange_address_id(address_id)" />
-                            <field name="mobile_phone"/>
-                        </group>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <!-- Put here related buttons -->
+                        </div>
                         <notebook>
                             <page string="Information">
                                 <group>
                                     <group>
+                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
                                         <field name="user_id" on_change="onchange_user(user_id)"/>
-                                        <field name="parent_id" />
+                                        <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
+                                        <field name="work_email" widget="email"/>
+                                        <field name="work_phone"/>
+                                        <field name="address_id" on_change="onchange_address_id(address_id)"/>
+                                        <field name="mobile_phone"/>
                                         <field name="identification_id" groups="base.group_hr_user"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="otherid" groups="base.group_hr_user"/>
@@ -66,7 +64,7 @@
                             <page string="Personal Information" groups="base.group_hr_user">
                                 <group col="4">
                                     <group>
-                                        <field name="country_id"/>
+                                        <field name="country_id" options='{"no_open": true}'/>
                                         <field name="bank_account_id"/>
                                         <field name="address_home_id"/>
                                     </group>
@@ -86,7 +84,6 @@
         <record id="view_employee_tree" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
@@ -104,20 +101,16 @@
         <record id="view_employee_filter" model="ir.ui.view">
             <field name="name">Employees</field>
             <field name="model">hr.employee</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees"/>
-                    <separator orientation="vertical"/>
-                    <field name="department_id" widget="selection"/>
-                    <field name="job_id" widget="selection"/>
+                    <field name="department_id" />
+                    <field name="job_id"/>
                     <field name="parent_id"/>
                     <field name="category_ids"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -130,7 +123,6 @@
     <record model="ir.ui.view" id="hr_kanban_view_employees">
         <field name="name">HR - Employess Kanban</field>
         <field name="model">hr.employee</field>
-        <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban>
                 <field name="last_login"/>
@@ -138,10 +130,12 @@
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
                             <div class="oe_employee_image">
-                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
+                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
                             </div>
                             <div class="oe_employee_details">
-                                <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
+                                <h4>
+                                    <a type="edit"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
+                                </h4>
                                 <ul>
                                     <li id="last_login">
                                         <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
@@ -193,7 +187,15 @@
             <field name="context">{}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
-            <field name="help">Here you can manage your work force by creating employees and assigning them specific properties in the system. Maintain all employee related information and keep track of anything that needs to be recorded for them. The personal information tab will help you maintain their identity data. The Categories tab gives you the opportunity to assign them related employee categories depending on their position and activities within the company. A category can be a seniority level within the company or a department. The Timesheets tab allows to assign them a specific timesheet and analytic journal where they will be able to enter time through the system. In the note tab, you can enter text data that should be recorded for a specific employee.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the OpenERP employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
         </record>
 
         <record id="open_view_employee_list_my_kanban" model="ir.actions.act_window.view">
@@ -213,7 +215,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_employee_form"/>
             <field name="act_window_id" ref="open_view_employee_list_my"/>
-        </record> 
+        </record>
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
 
@@ -224,16 +226,10 @@
             <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
         </record>
 
-        <!--
-        =======================
-        Employee architecture
-        =======================
-        -->
-
+        <!-- Employee architecture -->
         <record id="view_partner_tree2" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
@@ -268,16 +264,10 @@
             <field eval="True" name="replace"/>
         </ir_set>
 
-        <!--
-        ============
-        Employee Category
-        ============
-        -->
-
+        <!-- Employee Category -->
        <record id="view_employee_category_form" model="ir.ui.view">
             <field name="name">hr.employee.category.form</field>
             <field name="model">hr.employee.category</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee Category" version="7.0">
                     <group>
@@ -291,7 +281,6 @@
         <record id="view_employee_category_list" model="ir.ui.view">
             <field name="name">hr.employee.category.list</field>
             <field name="model">hr.employee.category</field>
-            <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Employees Categories">
@@ -303,7 +292,6 @@
         <record id="view_employee_category_tree" model="ir.ui.view">
             <field name="name">hr.employee.category.tree</field>
             <field name="model">hr.employee.category</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Employees Categories">
@@ -347,12 +335,11 @@
         </record>
 
         <menuitem action="open_view_categ_tree"
-            id="menu_view_employee_category_tree" parent="menu_hr_management" sequence="2"/>
+            id="menu_view_employee_category_tree" parent="menu_hr_management" groups="base.group_no_one" sequence="2"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
             <field name="model">hr.job</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <header>
@@ -370,14 +357,10 @@
                             <field name="department_id" class="oe_inline"/>
                             <label class="oe_inline" string=")" attrs="{'invisible': [('department_id', '=', False)]}"/>
                         </h1>
-                        <label for="employee_ids" class="oe_edit_only"/>
-                        <h2>
-                            <field name="employee_ids" widget="many2many_tags" mode="tree,form"/>
-                        </h2>
                         <group>
                             <group>
-                                <field name="no_of_employee"/>
-                                <field name="expected_employees"/>
+                                <field name="no_of_employee" groups="base.group_user"/>
+                                <field name="expected_employees" groups="base.group_user"/>
                                 <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
                             </group>
                             <group>
@@ -400,7 +383,6 @@
         <record id="view_hr_job_tree" model="ir.ui.view">
             <field name="name">hr.job.tree</field>
             <field name="model">hr.job</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Job">
                     <field name="name"/>
@@ -417,20 +399,12 @@
         <record id="view_job_filter" model="ir.ui.view">
             <field name="name">Job</field>
             <field name="model">hr.job</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-camera_test"  
-                            domain="[('state','=','open')]" 
-                            string="In Position"
-                            help="In Position"/>
-                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment"
-                        help="In Recruitment"/>
-                    <separator orientation="vertical"/>
-                    <field name="department_id" widget="selection"/>
-                    <newline />
+                    <filter icon="terp-camera_test" domain="[('state','=','open')]" string="In Position" help="In Position"/>
+                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment" help="In Recruitment"/>
+                    <field name="department_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -439,11 +413,10 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="view_hr_job_employee_form" model="ir.ui.view">
             <field name="name">hr.job.employee.form</field>
             <field name="model">hr.job</field>
-            <field name="type">form</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
@@ -456,7 +429,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_hr_job">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
@@ -464,7 +437,20 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_job_filter"/>
             <field name="context">{"search_default_Current":1}</field>
-            <field name="help">Job Positions are used to define jobs and their requirements. You can keep track of the number of employees you have per job position and how many you expect in the future. You can also attach a survey to a job position that will be used in the recruitment process to evaluate the applicants for this job position.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new job position.
+              </p><p>
+                Job Positions are used to define jobs and their requirements.
+                You can keep track of the number of employees you have per job
+                position and follow the evolution according to what you planned
+                for the future.
+              </p><p>
+                You can attach a survey to a job position. It will be used in
+                the recruitment process to evaluate the applicants for this job
+                position.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>

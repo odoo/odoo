@@ -6,12 +6,11 @@
         <record id="view_partners_form_crm1" model="ir.ui.view">
                 <field name="name">view.res.partner.form.crm.inherited1</field>
                 <field name="model">res.partner</field>
-                <field name="type">form</field>
                 <field name="inherit_id" ref="base.view_partner_form"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="user_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1"/>
                     </field>
                 </field>
         </record>
@@ -19,12 +18,11 @@
         <record id="view_partners_tree_crm2" model="ir.ui.view">
                 <field name="name">view.res.partner.tree.crm.inherited2</field>
                 <field name="model">res.partner</field>
-                <field name="type">tree</field>
                 <field name="inherit_id" ref="base.view_partner_tree"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="phone" position="after">
-                        <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1" invisible="context.get('invisible_section', True)"/>
                     </field>
                 </field>
         </record>
@@ -32,15 +30,20 @@
         <record id="view_partners_form_crm3" model="ir.ui.view">
                 <field name="name">view.res.partner.search.crm.inherited3</field>
                 <field name="model">res.partner</field>
-                <field name="type">search</field>
                 <field name="inherit_id" ref="base.view_res_partner_filter"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="category_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1"/>
+                        <field name="section_id" completion="1" widget="selection" context="{'invisible_section': False}"/>
                     </field>
                     <xpath expr="//field[@name='user_id']" position="after">
                         <field name="country_id"/>
+                    </xpath>
+                    <xpath expr="//group[@string='Group By...']" position="after">
+                        <group string="Display">
+                            <filter string="Show Sales Team" context="{'invisible_section': False}"/>
+                        </group>
                     </xpath>
                 </field>
         </record>
@@ -51,7 +54,7 @@
             <field name="src_model">res.partner</field>
             <field name="res_model">crm.meeting</field>
             <field name="view_mode">calendar,tree,form,gantt</field>
-            <field name="context">{'search_default_partner_id': active_id}</field>
+            <field name="context">{'search_default_partner_ids': active_id}</field>
         </record>
 
         <!-- open opportunities related to given partner -->
@@ -64,10 +67,17 @@
                 'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
-            <field name="help">
-                With opportunities you can manage and keep track of your sales pipeline by creating specific customer- or prospect-related sales documents to follow up potential sales. Information such as expected revenue, opportunity stage, expected closing date, communication history and much more can be stored. Opportunities can be connected to the email gateway: new emails may create opportunities, each of them automatically gets the history of the conversation with the customer.
-
-                You and your team(s) will be able to plan meetings and phone calls from opportunities, convert them into quotations, manage related documents, track all customer related activities, and much more.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an opportunity related to this customer.
+              </p><p>
+                Use opportunities to keep track of your sales pipeline, follow
+                up potential sales and better forecast your future revenues.
+              </p><p>
+                You will be able to plan meetings and phone calls from
+                opportunities, convert them into quotations, attach related
+                documents, track all discussions, and much more.
+              </p>
             </field>
         </record>
         <record model="ir.actions.act_window.view" id="relate_partner_opportunities_kanban">
@@ -88,30 +98,24 @@
             <field name="view_id" ref="crm_case_form_view_oppor"/>
             <field name="act_window_id" ref="relate_partner_opportunities"/>
         </record>
-        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_graph">
-            <field name="sequence" eval="4"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="crm_case_graph_view_opportunity"/>
-            <field name="act_window_id" ref="relate_partner_opportunities"/>
-        </record>
 
         <!-- Partner kanban view inherte -->
         <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
             <field name="name">res.partner.kanban.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">kanban</field>
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <field name="mobile" position="after">
                     <field name="opportunity_count"/>
                     <field name="meeting_count"/>
                 </field>
-                <xpath expr="//h4[@class='oe_partner_heading']" position="after">
-                    <a name="%(relate_partner_opportunities)d" type="action">
-                        <t t-if="record.opportunity_count.value"><t t-esc="record.opportunity_count.value"/> Opportunities</t>
+                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                    <a name="%(relate_partner_opportunities)d" type="action" t-if="record.opportunity_count.value>0">
+                        <t t-esc="record.opportunity_count.value"/> Opportunities
                     </a>
-                    <a name="%(crm_meeting_partner)d" type="action">
-                        <t t-if="record.meeting_count.value"><t t-esc="record.meeting_count.value"/> Meetings</t>
+                    <a name="%(crm_meeting_partner)d" type="action" t-if="record.meeting_count.value>0">
+                        <t t-esc="record.meeting_count.value"/> Meetings
                     </a>
                 </xpath>
             </field>
@@ -121,18 +125,18 @@
         <record model="ir.ui.view" id="res_partner_view_buttons">
             <field name="name">res.partner.view.buttons</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action"
                         string="Schedule a Meeting"
-                        name="%(crm.crm_case_categ_meet_create_partner)d"
-                        context="{'search_default_partner_id': active_id, 'default_duration': 4.0}"/>
+                        name="%(base_calendar.action_crm_meeting)d"
+                        context="{'search_default_partner_ids': active_id, 'default_partner_ids' : [active_id]}"/>
                     <button type="action" string="Schedule a Call" 
                         name="%(crm.crm_case_categ_phone_create_partner)d" 
                         context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
-                    <button type="action" string="Opportunities"
+                    <button type="action" string="Opportunities" attrs="{'invisible': [('customer', '=', False)]}"
                         name="%(crm.crm_case_category_act_oppor11)d" context="{'search_default_partner_id': active_id}"/>
                 </xpath>
             </field>
