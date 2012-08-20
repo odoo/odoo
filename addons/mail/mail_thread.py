@@ -69,7 +69,7 @@ class mail_thread(osv.Model):
     # TODO: may be we should make it _inherit ir.needaction
 
     def _get_is_follower(self, cr, uid, ids, name, args, context=None):
-        subobj = self.pool.get('mail.subscription')
+        subobj = self.pool.get('mail.followers')
         subids = subobj.search(cr, uid, [
             ('res_model','=',self._name),
             ('res_id', 'in', ids),
@@ -109,7 +109,7 @@ class mail_thread(osv.Model):
     _columns = {
         'message_is_follower': fields.function(_get_is_follower,
             type='boolean', string='Is a Follower'),
-        'message_follower_ids': fields.many2many('res.partner', 'mail_subscription', 'res_id', 'partner_id',
+        'message_follower_ids': fields.many2many('res.partner', 'mail_followers', 'res_id', 'partner_id',
             # FP Note: implement this domain=lambda self: [('res_model','=',self._name)],
             string='Followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
