@@ -12,13 +12,13 @@
         <menuitem id="mail_feeds" name="Feeds" parent="mail_feeds_main" groups="base.group_user" sequence="10"/>
 
         <record id="mail_wallfeeds" model="ir.ui.menu">
-          <field name="name">News Feed</field>
+          <field name="name">My Feeds</field>
           <field name="sequence" eval="10"/>
           <field name="action" ref="action_mail_all_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
         <record id="mail_myfeeds" model="ir.ui.menu">
-          <field name="name">My Feeds</field>
+          <field name="name">My Posts</field>
           <field name="sequence" eval="11"/>
           <field name="action" ref="action_mail_my_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
