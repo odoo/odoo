@@ -232,12 +232,9 @@ class res_company(osv.osv):
         return super(res_company, self).write(cr, *args, **argv)
 
     def _get_euro(self, cr, uid, context=None):
-        try:
-            data_obj = self.pool.get('ir.model.data')
-            data_id = data_obj._get_id(cr, uid, 'base', 'EUR')
-            return data_obj.browse(cr, uid, data_id, context=context).res_id
-        except:
-            return False
+        rate_obj = self.pool.get('res.currency.rate')
+        rate_id = rate_obj.search(cr, uid, [('rate', '=', 1)], context=context)
+        return rate_id and rate_obj.browse(cr, uid, rate_id[0], context=context).currency_id.id or False
 
     def _get_logo(self, cr, uid, ids):
         return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
