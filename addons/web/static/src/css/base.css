@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -1037,14 +1037,6 @@
   -webkit-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
   box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
 }
-.openerp .oe_topbar .oe_topbar_item .oe_active {
-  background: #303030;
-  font-weight: bold;
-  color: white;
-  -moz-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
-  -webkit-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
-  box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
-}
 .openerp .oe_topbar .oe_topbar_avatar {
   width: 24px;
   height: 24px;
@@ -1155,10 +1147,10 @@
   padding: 0;
   margin: 0;
 }
-.openerp .oe_menu li {
+.openerp .oe_menu > li {
   float: left;
 }
-.openerp .oe_menu a {
+.openerp .oe_menu > li > a {
   display: block;
   padding: 5px 10px 7px;
   line-height: 20px;
@@ -1167,14 +1159,14 @@
   vertical-align: top;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
-.openerp .oe_menu a:hover {
+.openerp .oe_menu > li > a:hover {
   background: #303030;
   color: white;
   -moz-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
   -webkit-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
   box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
 }
-.openerp .oe_menu .oe_active {
+.openerp .oe_menu > li > .oe_active {
   background: #303030;
   font-weight: bold;
   color: white;
@@ -1960,7 +1952,7 @@
   padding: 16px 0 48px;
 }
 .openerp .oe_form div.oe_form_configuration div.oe_horizontal_separator {
-  margin: 25px 0 10px 0;
+  margin: 12px 0 8px 0;
 }
 .openerp .oe_form div.oe_form_configuration p {
   color: #aaaaaa;
@@ -1968,6 +1960,12 @@
 }
 .openerp .oe_form div.oe_form_configuration label {
   min-width: 150px;
+}
+.openerp .oe_form div.oe_form_configuration .oe_form_group_cell_label {
+  padding: 2px 0;
+}
+.openerp .oe_form div.oe_form_configuration .oe_form_group_cell div div {
+  padding: 1px 0;
 }
 .openerp ul.oe_form_steps, .openerp ul.oe_form_steps_clickable {
   display: inline-block;
@@ -2160,7 +2158,7 @@
 .openerp .oe_form td.oe_form_group_cell_label label {
   line-height: 18px;
   display: block;
-  min-width: 120px;
+  min-width: 160px;
 }
 .openerp .oe_form td.oe_form_group_cell + .oe_form_group_cell {
   padding-left: 6px;
@@ -2192,7 +2190,7 @@
   font-weight: bold;
   font-size: 20px;
   margin: 8px 0px 8px 0px;
-  color: #53637e;
+  color: #7c7bad;
 }
 .openerp .oe_horizontal_separator:empty {
   height: 5px;

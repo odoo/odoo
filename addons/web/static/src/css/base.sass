@@ -814,11 +814,6 @@ $sheet-max-width: 860px
                 background: #303030
                 color: white
                 @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
-            .oe_active
-                background: #303030
-                font-weight: bold
-                color: white
-                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
 
         .oe_topbar_avatar
             width: 24px
@@ -906,25 +901,25 @@ $sheet-max-width: 860px
         float: left
         padding: 0
         margin: 0
-        li
+        > li
             float: left
-        a
-            display: block
-            padding: 5px 10px 7px
-            line-height: 20px
-            height: 20px
-            color: #eee
-            vertical-align: top
-            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-            &:hover
+            > a
+                display: block
+                padding: 5px 10px 7px
+                line-height: 20px
+                height: 20px
+                color: #eee
+                vertical-align: top
+                text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+                &:hover
+                    background: #303030
+                    color: white
+                    @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+            > .oe_active
                 background: #303030
+                font-weight: bold
                 color: white
                 @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
-        .oe_active
-            background: #303030
-            font-weight: bold
-            color: white
-            @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
     .oe_secondary_menu_section
         font-weight: bold
         margin-left: 8px
@@ -1526,12 +1521,16 @@ $sheet-max-width: 860px
             padding: 16px 0 48px
         div.oe_form_configuration
             div.oe_horizontal_separator 
-                margin: 25px 0 10px 0
+                margin: 12px 0 8px 0
             p
                 color: #aaa
                 max-width: 650px
             label
                 min-width: 150px
+            .oe_form_group_cell_label
+                padding: 2px 0
+            .oe_form_group_cell div div
+                padding: 1px 0
                 
 
     ul.oe_form_steps, ul.oe_form_steps_clickable
@@ -1654,7 +1653,7 @@ $sheet-max-width: 860px
             label
                 line-height: 18px
                 display: block
-                min-width: 120px
+                min-width: 160px
         td.oe_form_group_cell + .oe_form_group_cell
             padding-left: 6px
         .oe_form_group
@@ -1684,7 +1683,7 @@ $sheet-max-width: 860px
         font-weight: bold
         font-size: 20px
         margin: 8px 0px 8px 0px
-        color: #53637e
+        color: $section-title-color
     .oe_horizontal_separator:empty
         height: 5px
     .oe_vertical_separator

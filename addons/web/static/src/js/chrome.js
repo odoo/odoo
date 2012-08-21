@@ -730,6 +730,7 @@ instance.web.Menu =  instance.web.Widget.extend({
             var $more = $(QWeb.render('Menu.more')),
                 $index = this.$element.find('li').eq(maximum_visible_links - 1);
             $index.after($more);
+            //$('.oe_topbar').append($more);
             $more.find('.oe_menu_more').append($index.next().nextAll());
         }
     },
