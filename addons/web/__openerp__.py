@@ -38,6 +38,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/backbone/backbone.js",
         "static/lib/cleditor/jquery.cleditor.js",
         "static/lib/py.js/lib/py.js",
+        "static/lib/jquery.autosize/jquery.autosize.js",
         "static/src/js/boot.js",
         "static/src/js/corelib.js",
         "static/src/js/coresetup.js",
