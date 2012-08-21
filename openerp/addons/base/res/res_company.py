@@ -145,7 +145,7 @@ class res_company(osv.osv):
         if phone: val.append(_('Phone: ')+phone)
         if fax: val.append(_('Fax: ')+fax)
         if website: val.append(_('Website: ')+website)
-        if vat: val.append(_('VAT: ')+vat)
+        if vat: val.append(_('TIN: ')+vat)
         if reg: val.append(_('Reg: ')+reg)
         return {'value': {'rml_footer':' | '.join(val)}}
 
