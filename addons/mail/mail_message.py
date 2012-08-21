@@ -114,6 +114,7 @@ class mail_message(osv.Model):
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'body': fields.html('Content', required=True),
     }
+
     def _get_default_author(self, cr, uid, context={}):
         return self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
 

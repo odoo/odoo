@@ -376,7 +376,6 @@ openerp.mail = function(session) {
             console.groupCollapsed('New Thread: model', this.options.context.res_model, 'id', this.options.context.res_id, 'parent_id', this.options.context.parent_id, 'thread level', this.options.thread_level);
             console.log('records:', this.options.records, 'ids:', this.options.ids);
             console.log('options:', this.options);
-            console.log('options:', options);
             console.log('display:', this.display);
             console.groupEnd();
         },
@@ -519,73 +518,23 @@ openerp.mail = function(session) {
             var read_defer = this.ds_msg.call('message_read',
                 [false, fetch_domain, this.options.thread_level, fetch_context]
                 ).then(this.proxy('message_display'));
-                // function (records) {
-                    // if (records.length <= self.options.limit) self.display.show_more = false;
-                    // else { self.display.show_more = true; records.pop(); }
-                    // else { self.display.show_more = true; records.splice(0, 1); }
-                    // else { self.display.show_more = true; }
-                    // self.display_comments(records);
-                    // TODO: move to customize display
-                    // if (self.display.show_more == true) self.$element.find('div.oe_mail_thread_more:last').show();
-                    // else  self.$element.find('div.oe_mail_thread_more:last').hide();
-                // });
             return read_defer;
         },
-
-        /* TDE: not necessary as we can read on ids or false */
-        // display_comments_from_parameters: function (records) {
-        //     if (records.length > 0 && records.length < (records[0].child_ids.length+1) ) this.display.show_more = true;
-        //     else this.display.show_more = false;
-        //     var defer = this.display_comments(records);
-        //     // TODO: move to customize display
-        //     if (this.display.show_more == true) $('div.oe_mail_thread_more').eq(-2).show();
-        //     else $('div.oe_mail_thread_more').eq(-2).hide();
-        //     return defer;
-        // },
-
-        /** Display comments
-         * @param {Array} records tree structure of records
-         */
-        // display_comments: function (records) {
-        //     console.log(records);
-        //     // debugger
-        //     var self = this;
-        //     var _expendable = false;
-        //     _(records).each(function (root_record) {
-        //         /* expandable type: add a 'Show more button' */
-        //         if (root_record.type == 'expandable') {
-        //             _expendable = true;
-        //             self.update_fetch_more(true);
-        //             self.fetch_more_domain = root_record.domain;
-        //             self.fetch_more_context = root_record.context;
-        //         }
-        //         // display classic root record
-        //         else {
-        //             var render_res = session.web.qweb.render('mail.wall_thread_container', {});
-        //             $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('ul.oe_mail_wall_threads'));
-        //             var thread = new mail.Thread(self, {
-        //                 'res_model': root_record.model, 'res_id': root_record.res_id,
-        //                 'uid': self.session.uid, 'records': [root_record],
-        //                 'parent_id': false, 'thread_level': self.options.thread_level,
-        //                 'show_hide': true, 'is_wall': true
-        //                 }
-        //             );
-        //             self.thread_list.push(thread);
-        //             thread.appendTo(self.$element.find('li.oe_mail_wall_thread:last'));
-        //         }
-        //     });
-        //     if (! _expendable) {
-        //         self.update_fetch_more(false);
-        //     }
-        // },
 
         /* Display a list of records
          * - */
         message_display: function (records) {
             var self = this;
+            var _expendable = false;
+            console.groupCollapsed('message_display');
+            console.log('records', records)
+            console.groupEnd();
             _(records).each(function (record) {
                 if (record.type == 'expandable') {
-                    // TDE: do something :)
+                    _expendable = true;
+                    self.update_fetch_more(true);
+                    self.fetch_more_domain = record.domain;
+                    self.fetch_more_context = record.context;
                 }
                 else {
                     self.display_record(record);
@@ -598,6 +547,9 @@ openerp.mail = function(session) {
                     self.thread.appendTo(self.$element.find('div.oe_mail_thread_subthread:last'));
                 }
             });
+            if (! _expendable) {
+                this.update_fetch_more(false);
+            }
         },
 
         /** Displays a record and performs some formatting on the record :
@@ -636,13 +588,12 @@ openerp.mail = function(session) {
                 });
         },
 
-
         /** Display 'show more' button */
         update_fetch_more: function (new_value) {
             if (new_value) {
-                    this.$element.find('div.oe_mail_wall_more:last').show();
+                    this.$element.find('div.oe_mail_thread_more:last').show();
             } else {
-                    this.$element.find('div.oe_mail_wall_more:last').hide();
+                    this.$element.find('div.oe_mail_thread_more:last').hide();
             }
         },
 
@@ -667,7 +618,7 @@ openerp.mail = function(session) {
             return this.message_fetch(this.fetch_more_domain, this.fetch_more_context);
         },
 
-        // TDE: not necessary, rewritten above
+        // TDE: keep currently because need something similar
         // /**
         //  * Create a domain to fetch new comments according to
         //  * comment already present in comments_structure
@@ -697,11 +648,6 @@ openerp.mail = function(session) {
         //         domain.push(['id', 'not in', ids2]);
         //     }
         //     return domain;
-        // },
-        
-        // do_more: function () {
-        //     domain = this.get_fetch_domain(this.comments_structure);
-        //     return this.fetch_comments(domain);
         // },
     });
 
