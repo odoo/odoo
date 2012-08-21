@@ -324,9 +324,8 @@ openerp.mail = function(session) {
             // check in parents, should not define multiple times
             this.options.context.res_model = options.context.res_model || 'mail.thread';
             this.options.context.res_id = options.context.res_id || false;
-            // this.options.context.parent_id = options.context.parent_id || false;
+            this.options.context.parent_id = options.context.parent_id || false;
             this.options.thread_level = options.thread_level || 0;
-            // this.options.fetch_limit = options.fetch_limit || 100;
             this.options.composer = options.composer || false;
             // TDE: not sure, here for testing / compatibility
             this.options.records = options.records || null;
@@ -337,7 +336,7 @@ openerp.mail = function(session) {
             // display customization vars
             this.display = {};
             this.display.truncate_limit = options.truncate_limit || 250;
-            // this.display.show_header_compose = options.show_header_compose || false;
+            this.display.show_header_compose = options.show_header_compose || false;
             this.display.show_reply = options.show_reply || false;
             this.display.show_delete = options.show_delete || false;
             this.display.show_hide = options.show_hide || false;

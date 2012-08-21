@@ -112,7 +112,7 @@ class mail_message(osv.Model):
         'subject': fields.char('Subject', size=128),
         'date': fields.datetime('Date'),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
-        'body': fields.html('Content', required=True),
+        'body': fields.html('Content'),
     }
 
     def _get_default_author(self, cr, uid, context={}):

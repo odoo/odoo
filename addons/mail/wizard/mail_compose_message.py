@@ -114,19 +114,16 @@ class mail_compose_message(osv.TransientModel):
             'wizard_id', 'attachment_id', 'Attachments'),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
-        'body_html': fields.html('HTML Editor Body'),
+        'body_text': fields.text('Plain-text editor body'),
         'content_subtype': fields.char('Message content subtype', size=32, readonly=1,
             help="Type of message, usually 'html' or 'plain', used to select "\
                   "plain-text or rich-text contents accordingly"),
-        # boolean fields to control
-        'formatting': fields.boolean('Toggle advanced formatting mode'),
     }
 
     _defaults = {
         'content_subtype': lambda self,cr, uid, context={}: 'plain',
-        'body_html': lambda self,cr, uid, context={}: '',
+        'body_text': lambda self,cr, uid, context={}: '',
         'body': lambda self,cr, uid, context={}: '',
-        'formatting': False,
     }
 
     def get_value(self, cr, uid, model, res_id, context=None):
@@ -159,24 +156,23 @@ class mail_compose_message(osv.TransientModel):
         """ hit toggle formatting mode button: calls onchange_formatting to 
             emulate an on_change, then writes the value to update the form. """
         for record in self.browse(cr, uid, ids, context=context):
-            onchange_res = self.onchange_formatting(cr, uid, ids, not record.formatting, record.model, record.res_id, context=context)
+            content_st_new_value = 'plain' if record.content_subtype == 'html' else 'html'
+            onchange_res = self.onchange_content_subtype(cr, uid, ids, content_st_new_value, record.model, record.res_id, context=context)
             self.write(cr, uid, [record.id], onchange_res['value'], context=context)
         return False
 
 
-    def onchange_formatting(self, cr, uid, ids, value, model, res_id, context=None):
-        """ onchange_formatting (values: True or False). This onchange on the
-            formatting allows to have some specific behavior when going in 
-            formatting mode, or when going out of formatting.
-            Basically, subject is reset when going out of formatting mode.
+    def onchange_content_subtype(self, cr, uid, ids, value, model, res_id, context=None):
+        """ onchange_content_subtype (values: 'plain' or 'html'). This onchange
+            on the subtype allows to have some specific behavior when switching
+            between text or html mode.
+            Basically, subject is reset when going out of html mode.
             This method can be overridden for models that want to have their
             specific behavior.
-            Note that currently, this onchange is used in mail.js and called
-            manually on the form instantiated in the Chatter.
         """
-        if not value:
-            return {'value': {'subject': False, 'formatting': value}}
-        return {'value': {'formatting': value}}
+        if value == 'plain':
+            return {'value': {'subject': False, 'content_subtype': value}}
+        return {'value': {'content_subtype': value}}
 
     def onchange_dest_partner_ids(self, cr, uid, ids, value, context=None):
         """ onchange_dest_partner_ids (value format: [[6, False, [3, 4]]]). The

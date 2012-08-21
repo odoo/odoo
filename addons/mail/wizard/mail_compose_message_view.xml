@@ -39,19 +39,19 @@
                 <form string="Compose Email" version="7.0" >
                     <group>
                         <!-- truly invisible fields for control and options -->
-                        <field name="email_mode" colspan="2" nolabel="1" invisible="1"/>
-                        <field name="formatting" colspan="2" nolabel="1" invisible="1"/>
+                        <field name="content_subtype" colspan="2" nolabel="1" invisible="1"/>
                         <field name="subject" colspan="2" nolabel="1" placeholder="Subject..."
-                                class="oe_mail_compose_message_subject oe_mail_compose_message_invisible"/>
+                                class="oe_mail_compose_message_subject"
+                                attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
+                        <field name="body_text" colspan="2" nolabel="1" placeholder="What are you working on ?"
+                                class="oe_mail_compose_message_body"
+                                attrs="{'invisible':[('content_subtype', '=', 'html')]}"/>
                         <field name="body" colspan="2" nolabel="1" placeholder="What are you working on ?"
-                                class="oe_mail_compose_message_body"/>
-                        <field name="body_html" colspan="2" nolabel="1" placeholder="What are you working on HTML ?"
-                                class="oe_mail_compose_message_body_html" widget="text_html"
-                                attrs="{'invisible':[('formatting', '=', False)]}"/>
+                                class="oe_mail_compose_message_body_html"
+                                attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
                         <field name="dest_partner_ids" colspan="2" nolabel="1" widget="many2many_tags" placeholder="Add contacts to notify..."
                                 on_change="onchange_dest_partner_ids(dest_partner_ids)"
-                                class="oe_mail_compose_message_partner_ids"
-                                attrs="{'invisible':[('email_mode', '=', False)]}"/>
+                                class="oe_mail_compose_message_partner_ids"/>
                         <field name="attachment_ids" colspan="2" nolabel="1" widget="many2many_tags"
                                 placeholder="Add attachments..." invisible="1"
                                 class="oe_mail_compose_message_attachment_ids"/>
