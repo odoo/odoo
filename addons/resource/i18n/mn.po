@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:10+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:29+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -45,7 +45,7 @@ msgstr "Чөлөөний дэлгэрэнгүй"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr ""
+msgstr "Нөөцийн амралт, чөлөө"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
@@ -93,6 +93,7 @@ msgstr "Нөөцүүд"
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
+"Ажлын цаг нь зөв гарагуудаар тохируулагдсан эсэхийг нягтлаж шалгаарай!"
 
 #. module: resource
 #: field:resource.calendar,manager:0
@@ -102,12 +103,13 @@ msgstr "Ажлын багийн менежер"
 #. module: resource
 #: help:resource.calendar.attendance,hour_from:0
 msgid "Working time will start from"
-msgstr ""
+msgstr "Ажлын цагийн эхлэх цаг"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
+"Алдаа! Амралт, чөлөө эхлэх огноо амралт дуусах огноогоос бага байх ёстой."
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
@@ -136,7 +138,7 @@ msgstr "Гариг"
 #. module: resource
 #: help:resource.calendar.attendance,hour_to:0
 msgid "Working time will end at"
-msgstr ""
+msgstr "Ажлын цагийн дуусах цаг"
 
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
@@ -146,12 +148,12 @@ msgstr "Эхлэл огноо"
 #. module: resource
 #: view:resource.calendar:0
 msgid "Search Working Time"
-msgstr ""
+msgstr "Ажлын цагийг хайх"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Reason"
-msgstr ""
+msgstr "Шалтгаан"
 
 #. module: resource
 #: view:resource.resource:0
@@ -167,7 +169,7 @@ msgstr "Огноо"
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Search Working Period Leaves"
-msgstr ""
+msgstr "Ажлын мөчлөгийн амралт чөлөө хайх"
 
 #. module: resource
 #: field:resource.resource,time_efficiency:0
@@ -182,7 +184,7 @@ msgstr "Дуусах огноо"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
-msgstr ""
+msgstr "Хаах өдөр"
 
 #. module: resource
 #: model:ir.ui.menu,name:resource.menu_resource_config
@@ -228,6 +230,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Хэрэв энэ идэвхтэй талбар нь худал буюу тэмдэглэгдээгүй байвал нөөцийн "
+"бичлэгийг устгалгүйгээр нууна."
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
@@ -237,7 +241,7 @@ msgstr "Нөөцийн календарь"
 #. module: resource
 #: field:resource.calendar.attendance,hour_from:0
 msgid "Work from"
-msgstr ""
+msgstr "Ажлын эхлэх"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -245,6 +249,7 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"Танай төслийн гишүүдийн товлолтыг хийх ажлын цаг, цагийн хуваарийг тодорхойл"
 
 #. module: resource
 #: help:resource.resource,user_id:0
@@ -259,7 +264,7 @@ msgstr "Нөөцийн хувиарлалтыг тодорхойлох"
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Starting Date of Leave"
-msgstr ""
+msgstr "Амралт, чөлөөний эхлэх огноо"
 
 #. module: resource
 #: field:resource.resource,code:0
@@ -274,7 +279,7 @@ msgstr "Даваа"
 #. module: resource
 #: field:resource.calendar.attendance,hour_to:0
 msgid "Work to"
-msgstr ""
+msgstr "Хүртэл ажиллах"
 
 #. module: resource
 #: help:resource.resource,time_efficiency:0
@@ -284,6 +289,10 @@ msgid ""
 "show a load of 100% for this phase by default, but if we put a efficency of "
 "200%, then his load will only be 50%."
 msgstr ""
+"Энэ талбар нь дууссан даалгаврын хэмнэлтийг илэрхийлнэ. Ө.Х. даалгавар дээр "
+"оноогдсон нэг нөөцийн хувьд 5 өдөрт 5 даалгавар хийхээр тавигдсан бол энэ нь "
+"100% гэж харуулна. Харин хэмнэлтийг 200% гэж тавьбал нөөцийн ачаалал 50% "
+"байх юм."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -299,7 +308,7 @@ msgstr "Ажлын цаг"
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Нөөцийн Амралт, Чөлөө"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -308,11 +317,14 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
+"Нөөц нь төслийн тухайлсан шатанд холбогдох нөөцийг үүсгэх, менеж хийх "
+"боломжийг олгодог. Түүнчлэн нөөцийн ажиллах цаг дээр үндэслэн ажлын ачаалал, "
+"хэмнэлтийг тохируулах боломжтой."
 
 #. module: resource
 #: view:resource.resource:0
 msgid "Inactive"
-msgstr ""
+msgstr "Идэвхгүй"
 
 #. module: resource
 #: code:addons/resource/faces/resource.py:340
@@ -324,7 +336,7 @@ msgstr "(эзгүй)"
 #: code:addons/resource/resource.py:392
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Тохиргооны алдаа!"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -345,7 +357,7 @@ msgstr "Эхлэл огноо"
 #: code:addons/resource/resource.py:310
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (хуулбар)"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

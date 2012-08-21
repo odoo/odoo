@@ -5,13 +5,8 @@
         <record id="view_vat_declaration" model="ir.ui.view">
             <field name="name">Vat Declaraion</field>
             <field name="model">l1on_be.vat.declaration</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Periodical VAT Declaration">
-                    <header>
-                        <button icon="gtk-execute"  name="create_xml" string="Create XML" type="object" default_focus="1" />
-                        <button special="cancel" string="Close" icon="gtk-cancel"/>
-                    </header>
+                <form string="Periodical VAT Declaration" version="7.0">
                     <group>
                         <group string="Declare Periodical VAT">
                             <field name="period_id" widget="selection"/>
@@ -25,6 +20,11 @@
                     </group>
                     <separator string="Comments"/>
                     <field name="comments"/>
+                    <footer>
+                        <button name="create_xml" string="Create XML" type="object" default_focus="1" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -32,12 +32,8 @@
         <record id="view_vat_save" model="ir.ui.view">
             <field name="name">Save XML</field>
             <field name="model">l1on_be.vat.declaration</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Save xml">
-                    <header>
-                        <button special="cancel" string="Ok" icon="gtk-ok"/>
-                    </header>
+                <form string="Save xml" version="7.0">
                     <label string="Save the File with '.xml' extension."/>
                     <field name="name"/>
                     <field name="file_save" readonly="True" filename="name"/>

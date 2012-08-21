@@ -5,7 +5,6 @@
         <record model="ir.ui.view" id="view_email_server_tree">
             <field name="name">fetchmail.server.list</field>
             <field name="model">fetchmail.server</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft'" string="POP/IMAP Servers">
                     <field name="name"/>
@@ -22,7 +21,6 @@
         <record model="ir.ui.view" id="view_email_server_form">
             <field name="name">fetchmail.server.form</field>
             <field name="model">fetchmail.server</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Incoming Mail Server" version="7.0">
                     <header attrs="{'invisible' : [('type', '=', 'local')]}">
@@ -31,12 +29,13 @@
                         <button string="Reset Confirmation" type="object" name="set_draft" icon="gtk-convert" states="done"/>
                         <field name="state" widget="statusbar"/>
                     </header>
-                    <group col="4">
+                    <sheet>
+                     <group col="4">
                         <field name="name"/>
                         <field name="type" on_change="onchange_server_type(type, is_ssl, object_id)"/>
                         <field name="date"/>
-                    </group>
-                    <notebook>
+                     </group>
+                     <notebook>
                         <page string="Server &amp; Login">
                             <group>
                                 <group attrs="{'invisible' : [('type', '=', 'local')]}" string="Server Information">
@@ -67,6 +66,7 @@
                             </group>
                         </page>
                     </notebook>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -74,15 +74,13 @@
         <record model="ir.ui.view" id="view_email_server_search">
             <field name="name">fetchmail.server.search</field>
             <field name="model">fetchmail.server</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Incoming Mail Servers">
+                    <field name="name" string="Incoming Mail Server"/>
                     <filter string="IMAP" icon="terp-folder-green" domain="[('type','=','imap')]" help="Server type IMAP."/>
                     <filter string="POP" icon="terp-folder-orange" domain="[('type','=','pop')]" help="Server type POP."/>
-                    <separator orientation="vertical"/>
+                    <separator/>
                     <filter string="SSL" icon="terp-camera_test" domain="[('is_ssl','=',True)]" help="If SSL required."/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
                 </search>
             </field>
         </record>
@@ -108,7 +106,6 @@
       <record model="ir.ui.view" id="email_message_tree_view">
           <field name="name">mail.message.list.fetchmail</field>
           <field name="model">mail.message</field>
-          <field name="type">tree</field>
           <field name="inherit_id" ref="mail.view_email_message_tree"/>
           <field name="arch" type="xml">
               <field name="user_id" position="after">
@@ -120,7 +117,6 @@
       <record model="ir.ui.view" id="email_message_search_view">
           <field name="name">mail.message.inherit.search</field>
           <field name="model">mail.message</field>
-          <field name="type">search</field>
           <field name="inherit_id" ref="mail.view_email_message_search"/>
           <field name="arch" type="xml">
             <xpath expr="/search/group/filter[@string='Thread']" position="before">

@@ -5,24 +5,23 @@
         <record id="view_hr_holidays_summary_dept" model="ir.ui.view">
             <field name="name">hr.holidays.summary.dept.form</field>
             <field name="model">hr.holidays.summary.dept</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Holidays by Department" version="7.0">
-                <header>
-                    <button icon="gtk-print" name="print_report" string="Print" type="object"/>
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                </header>
+            <form string="Leaves by Department" version="7.0">
                 <group>
                     <field name="date_from" />
                     <field name="holiday_type"/>
                     <field name="depts"/>
                 </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/> or
+                    <button string="Cancel" special="cancel" class="oe_link"/>
+                </footer>
             </form>
             </field>
         </record>
 
         <record id="action_hr_holidays_summary_dept" model="ir.actions.act_window">
-            <field name="name">Holidays by Department</field>
+            <field name="name">Leaves by Department</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays.summary.dept</field>
             <field name="view_type">form</field>
@@ -30,11 +29,9 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_hr_leaves_reports" parent="base.menu_hr_reports" sequence="10" name="Leaves"/>
-        
         <menuitem
             name="Leaves by Department"
-            parent="menu_hr_leaves_reports"
+            parent="hr.menu_hr_reporting_timesheet"
             action="action_hr_holidays_summary_dept"
             id="menu_account_central_journal"
             icon="STOCK_PRINT"/>

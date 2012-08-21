@@ -86,7 +86,7 @@ class stock_picking(osv.osv):
         grid_id = carrier_obj.grid_get(cr, uid, [picking.carrier_id.id],
                 picking.partner_id.id, context=context)
         if not grid_id:
-            raise osv.except_osv(_('Warning'),
+            raise osv.except_osv(_('Warning!'),
                     _('The carrier %s (id: %d) has no delivery grid!') \
                             % (picking.carrier_id.name,
                                 picking.carrier_id.id))

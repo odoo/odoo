@@ -5,10 +5,9 @@
     <record model="ir.ui.view" id="view_idea_category_search">
         <field name="name">idea.category.search</field>
         <field name="model">idea.category</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Ideas Categories">
-                <field name="name"/>
+                <field name="name" string="Category"/>
             </search>
         </field>
     </record>
@@ -17,7 +16,6 @@
         <record model="ir.ui.view" id="view_idea_category_form">
             <field name="name">idea.category.form</field>
             <field name="model">idea.category</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Category of Ideas" version="7.0">
                     <group>
@@ -31,7 +29,6 @@
         <record model="ir.ui.view" id="view_idea_category_tree">
             <field name="name">idea.category.tree</field>
             <field name="model">idea.category</field>
-            <field name="type">tree</field>
             <field name="field_parent"></field>
             <field name="arch" type="xml">
                 <tree string="Category of ideas">
@@ -63,25 +60,26 @@
     <record model="ir.ui.view" id="view_idea_idea_form">
         <field name="name">idea.idea.form</field>
         <field name="model">idea.idea</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Idea" version="7.0">
                 <header>
-                    <button name="idea_open" string="Open" states="draft"/>
-                    <button name="idea_close" string="Accept" states="open"/>
-                    <button name="idea_cancel" string="Refuse" states="open" />
+                    <button name="idea_open" string="Open" states="draft" class="oe_highlight"/>
+                    <button name="idea_close" string="Accept" states="open" class="oe_highlight"/>
+                    <button name="idea_cancel" string="Refuse" states="open"  class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
                 </header>
                 <sheet>
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                    <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="category_ids"/>
-                    <h2><field name="category_ids"/></h2>
+                    <label for="category_ids" class="oe_edit_only"/>
+                    <field name="category_ids" widget="many2many_tags"/>
+                    <label for="description"/><newline/>
                     <field name="description"/>
                 </sheet>
-                <footer>
-                    <field name="message_ids" widget="ThreadView"/>
-                </footer>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                </div>
             </form>
         </field>
     </record>
@@ -91,7 +89,6 @@
     <record model="ir.ui.view" id="view_idea_idea_tree">
         <field name="name">idea.idea.tree</field>
         <field name="model">idea.idea</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
         <tree colors="blue:state == 'draft';black:state in ('open','close');gray:state == 'cancel'" string="Ideas">
             <field name="name"/>
@@ -106,24 +103,16 @@
     <record model="ir.ui.view" id="view_idea_idea_search">
         <field name="name">idea.idea.search</field>
         <field name="model">idea.idea</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Ideas">
-                <group>
-                    <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="New Ideas"/>
-                    <filter icon="terp-camera_test" string="In Progress" domain="[('state','=', 'open')]" help="Open Ideas"/>
-                    <filter icon="terp-check" string="Accepted"
-                        domain="[('state','=','close')]" help="Accepted Ideas" />
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
-                    <field name="category_ids"/>
-                </group>
-                <newline/>
+                <field name="name" string="Idea"/>
+                <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="New Ideas"/>
+                <filter icon="terp-camera_test" string="In Progress" domain="[('state','=', 'open')]" help="Open Ideas"/>
+                <filter icon="terp-check" string="Accepted" domain="[('state','=','close')]" help="Accepted Ideas" />
+                <field name="category_ids"/>
                 <group expand="0" string="Group By...">
                     <filter icon="terp-personal" string="Creator" help="By Creators" context="{'group_by':'create_uid'}"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-stock_symbol-selection" string="Category" help="By Idea Category" context="{'group_by':'category_ids'}"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-stock_effects-object-colorize" string="Status" help="By States" context="{'group_by':'state'}"/>
                 </group>
             </search>

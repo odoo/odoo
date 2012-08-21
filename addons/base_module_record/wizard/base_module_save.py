@@ -33,7 +33,7 @@ def _create_yaml(self, cr, uid, data, context=None):
     try:
         res_xml = mod.generate_yaml(cr, uid)
     except Exception, e:
-        raise osv.except_osv(_('Error'),_(str(e)))
+        raise osv.except_osv(_('Error!'),_(str(e)))
     return {
     'yaml_file': base64.encodestring(res_xml),
 }

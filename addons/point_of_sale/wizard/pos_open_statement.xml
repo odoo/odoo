@@ -6,16 +6,15 @@
         <record id="view_pos_open_statement" model="ir.ui.view">
             <field name="name">Open Statements</field>
             <field name="model">pos.open.statement</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Open Statements" version="7.0">
-                    <header>
-                         <button name="open_statement" string="Open Registers"
-                             type="object" icon="gtk-ok"/>
-                         <button icon='gtk-stop' special="cancel" string="Cancel"/>
-                    </header>
                     <separator string="Do you want to open cash registers?"/>
                     <label string="The system will open all cash registers, so that you can start recording payments. We suggest you to control the opening balance of each register, using their CashBox tab."/>
+                    <footer>
+                        <button name="open_statement" type="object" string="Open Registers" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

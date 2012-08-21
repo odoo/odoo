@@ -5,25 +5,15 @@
         <record id="view_voucher_filter_customer_pay" model="ir.ui.view">
             <field name="name">account.voucher.customer.pay.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
-                        <field name="partner_id" string="Customer"/>
-                    </group>
-                    <newline/>
-                    <group>
-                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
-                        <field name="period_id"/>
-                    </group>
-                   <newline/>
+                    <field name="number" string="Voucher"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <field name="partner_id" string="Customer"/>
+                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
+                    <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -38,25 +28,15 @@
         <record id="view_voucher_filter_vendor_pay" model="ir.ui.view">
             <field name="name">account.voucher.purchase.pay.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
-                        <field name="partner_id" string="Supplier"/>
-                    </group>
-                    <newline/>
-                    <group>
-                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
-                        <field name="period_id"/>
-                    </group>
-                   <newline/>
+                    <field name="number" string="Voucher"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <field name="partner_id" string="Supplier"/>
+                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
+                    <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -69,12 +49,11 @@
         <record model="ir.ui.view" id="view_low_priority_payment_form">
             <field name="name">account.voucher.payment.low.priority.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Bill Payment" version="7.0">
                     <group col="6">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Supplier" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'invoice_currency': currency_id}" />
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Supplier" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'invoice_currency': currency_id}"/>
                         <field name="amount" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
@@ -92,12 +71,11 @@
                     </group>
                     <notebook>
                         <page string="Payment Information">
-                            <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Open Supplier Journal Entries" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
-                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        />
+                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"/>
                                     <field name="account_id" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
@@ -106,12 +84,11 @@
                                     <field name="amount" sum="Total Allocation"/>
                                 </tree>
                             </field>
-                            <field name="line_cr_ids" attrs="{'invisible': [('type', '=', 'payment')]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_cr_ids" attrs="{'invisible': [('type', '=', 'payment')]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Open Customer Journal Entries" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
-                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        />
+                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"/>
                                     <field name="account_id" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
@@ -141,36 +118,40 @@
         <record model="ir.ui.view" id="view_vendor_payment_form">
             <field name="name">account.voucher.payment.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Voucher Payment" version="7.0">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
+                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
-                <sheet string="Bill Payment">
-                    <group col="6">
-                        <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id, 'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"  string="Supplier"/>
-                        <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
-                        <field name="journal_id"
-                            domain="[('type','in',['bank', 'cash'])]"
-                            invisible="context.get('line_type', False)"
-                            widget="selection"
-                            on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, company_id, context)"
-                            string="Payment Method"/>
-                        <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
-                        <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="account_id"
-                            widget="selection"
-                            invisible="True"/>
-                        <field name="pre_line" invisible="1"/>
-                        <field name="type" invisible="True"/>
-                        <field name="currency_id" invisible="1" colspan="4"/>
+                <sheet>
+                    <field name="account_id" invisible="True"/>
+                    <field name="pre_line" invisible="1"/>
+                    <field name="type" invisible="True"/>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id, 'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"  string="Supplier"/>
+                            <label for="amount" string="Amount"/>
+                            <div>
+                                <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)" class="oe_inline"/>
+                                <field name="currency_id" class="oe_inline"/>
+                            </div>
+                            <field name="journal_id"
+                                domain="[('type','in',['bank', 'cash'])]"
+                                invisible="context.get('line_type', False)"
+                                widget="selection"
+                                on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, company_id, context)"
+                                string="Payment Method"/>
+                        </group>
+                        <group>
+                            <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
+                            <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="e.g. 003/10"/>
+                            <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="e.g. Invoice SAJ/0042"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Payment Information">
@@ -179,14 +160,13 @@
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        required="1"
-                                        />
+                                        required="1"/>
                                     <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
-                                    <field name="amount_unreconciled" readonly="1"/>
-                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)"/>
+                                    <field name="amount_unreconciled" readonly="1" groups="account.group_account_user"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)" groups="account.group_account_user"/>
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)"/>
                                 </tree>
                             </field>
@@ -195,14 +175,13 @@
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        required="1"
-                                        />
+                                        required="1"/>
                                     <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
-                                    <field name="amount_unreconciled" readonly="1"/>
-                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)"/>
+                                    <field name="amount_unreconciled" readonly="1" groups="account.group_account_user"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)" groups="account.group_account_user"/>
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)"/>
                                 </tree>
                             </field>
@@ -259,6 +238,10 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -272,7 +255,14 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_vendor_pay"/>
             <field name="target">current</field>
-            <field name="help">The supplier payment form allows you to track the payment you do to your suppliers. When you select a supplier, the payment method and an amount for the payment, OpenERP will propose to reconcile your payment with the open supplier invoices or bills.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new supplier payment.
+              </p><p>
+                OpenERP helps you easily track payments you do and remining
+                balance to pay to your supplier.
+              </p>
+            </field>
         </record>
         <record id="action_vendor_payment_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -293,43 +283,52 @@
         <record model="ir.ui.view" id="view_vendor_receipt_form">
             <field name="name">account.voucher.receipt.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Receipt" version="7.0">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)"/>
+                    <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
                 <sheet>
-                    <group col="6">
-                        <field name="partner_id" domain="[('customer','=',True)]" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="amount"
-                            invisible="context.get('line_type', False)"
-                            string="Paid Amount"
-                            on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
-                        <field name="journal_id"
-                            domain="[('type','in',['bank', 'cash'])]"
-                            invisible="context.get('line_type', False)"
-                            widget="selection"
-                            on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
-                            string="Payment Method"/>
-                        <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
-                        <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="003/10"/>
-                        <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="Invoice SAJ/0042"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="account_id"
-                            widget="selection"
-                            invisible="True"/>
-                        <field name="pre_line" invisible="1"/>
-                        <field name="type" invisible="True"/>
+                    <h1><field name="number"/></h1>
+                    <group>
+                        <group>
+                            <field name="partner_id" domain="[('customer','=',True)]" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
+                            <label for="amount" string="Paid Amount"/>
+                            <div>
+                                <field name="amount" class="oe_inline"
+                                    invisible="context.get('line_type', False)"
+                                    on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
+                                <field name="currency_id" class="oe_inline"/>
+                            </div>
+
+                            <field name="journal_id"
+                                domain="[('type','in',['bank', 'cash'])]"
+                                invisible="context.get('line_type', False)"
+                                widget="selection"
+                                on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
+                                string="Payment Method"/>
+                        </group>
+                        <group>
+                            <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
+                            <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="e.g. 003/10"/>
+                            <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="e.g. Invoice SAJ/0042"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+
+                            <field name="account_id"
+                                widget="selection"
+                                invisible="True"/>
+                            <field name="pre_line" invisible="1"/>
+                            <field name="type" invisible="True"/>
+                        </group>
                     </group>
+
                     <notebook>
-                        <page string="Payment Information">
-                            <field name="line_cr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                        <page string="Payment Information" groups="base.group_user">
+                            <field name="line_cr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Invoices and outstanding transactions" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -345,13 +344,12 @@
                                     <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)" string="Allocation"/>
                                 </tree>
                             </field>
-                            <field name="line_dr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, context)">
+                            <field name="line_dr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        required="1"
-                                        />
+                                        required="1"/>
                                     <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
@@ -362,18 +360,16 @@
                                 </tree>
                             </field>
                             <group col="3">
-                                <group col="2" string="Internal Notes">
+                                <group>
                                     <field name="narration" colspan="2" nolabel="1"/>
                                 </group>
                                 <group col="4" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
-                                    <separator string="Currency Options" colspan="4"/>
                                     <field name="is_multi_currency" invisible="1"/>
                                     <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3"/>
                                     <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"/>
                                     <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
                                 </group>
-                                <group col="2">
-                                    <separator string="Payment Options" colspan="2"/>
+                                <group>
                                     <field name="writeoff_amount"/>
                                     <field name="payment_option" required="1"/>
                                     <field name="writeoff_acc_id"
@@ -390,28 +386,31 @@
                             <group col="4">
                                 <field name="period_id"/>
                                 <field name="audit"/>
-                                <field name="number"/>
                             </group>
                             <field name="move_ids" readonly="1">
-                               <tree string="Journal Items">
-                                   <field name="move_id"/>
-                                   <field name="ref"/>
-                                   <field name="date"/>
-                                   <field name="statement_id"/>
-                                   <field name="partner_id"/>
-                                   <field name="account_id"/>
-                                   <field name="name"/>
-                                   <field name="debit"/>
-                                   <field name="credit"/>
-                                   <field name="state"/>
-                                   <field name="reconcile_id"/>
-                                   <field name="amount_currency"/>
-                                   <field name="currency_id"/>
-                               </tree>
+                                <tree string="Journal Items">
+                                    <field name="move_id"/>
+                                    <field name="ref"/>
+                                    <field name="date"/>
+                                    <field name="statement_id"/>
+                                    <field name="partner_id"/>
+                                    <field name="account_id"/>
+                                    <field name="name"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+                                    <field name="state"/>
+                                    <field name="reconcile_id"/>
+                                    <field name="amount_currency"/>
+                                    <field name="currency_id"/>
+                                </tree>
                             </field>
                         </page>
                     </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -425,7 +424,16 @@
             <field name="search_view_id" ref="view_voucher_filter_customer_pay"/>
             <field name="view_id" eval="False"/>
             <field name="target">current</field>
-            <field name="help">Sales payment allows you to register the payments you receive from your customers. In order to record a payment, you must enter the customer, the payment method (=the journal) and the payment amount. OpenERP will propose to you automatically the reconciliation of this payment with the open invoices or sales receipts.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a new payment. 
+              </p><p>
+                Enter the customer and the payment method and then, either
+                create manually a payment record or OpenERP will propose to you
+                automatically the reconciliation of this payment with the open
+                invoices or sales receipts.
+              </p>
+            </field>
         </record>
         <record id="action_vendor_receipt_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -441,5 +449,6 @@
 
         <menuitem action="action_vendor_receipt" icon="STOCK_JUSTIFY_FILL" sequence="12"
             id="menu_action_vendor_receipt"  parent="account.menu_finance_receivables"/>
+
     </data>
 </openerp>

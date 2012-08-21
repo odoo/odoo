@@ -1,36 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_mrp_menu" model="ir.actions.client">
+            <field name="name">Open MRP Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.menu_mrp_root')}"/>
+        </record>
+        <record id="todo_open_mrp_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_mrp_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
     <data>
-
         <record id="view_mrp_config" model="ir.ui.view">
             <field name="name">mrp settings</field>
             <field name="model">mrp.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Manufacturing" version="7.0">
+                <form string="Configure Manufacturing" class= "oe_form_configuration" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet layout="auto">
-                        <group col="4" string="Manufacturing Order">
-                            <field name="module_mrp_operations"/>
-                            <field name="module_stock_planning"/>
-                            <field name="module_mrp_subproduct"/>
-                            <field name="module_mrp_repair"/>
-                        </group>
-                        <group string="Logistics" col="4">
-                            <field name="module_mrp_jit"/>
-                            <field name="module_stock_no_autopicking"/>
-                        </group>
-                        <group string="Bill Of Material" col="4">
-                            <field name="group_mrp_routings"/>
-                            <field name="group_mrp_properties"/>
-                        </group>
-                    </sheet>
+                    <separator string="Manufacturing Order"/>
+                    <group>
+                        <label for="id" string="Order"/>
+                        <div>
+                            <div>
+                                <field name="module_mrp_subproduct" class="oe_inline"/>
+                                <label for="module_mrp_subproduct"/>
+                            </div>
+                            <div>
+                                <field name="module_mrp_repair" class="oe_inline"/>
+                                <label for="module_mrp_repair"/>
+                            </div>
+                             <div>
+                                 <field name="module_stock_no_autopicking" class="oe_inline"/>
+                                 <label for="module_stock_no_autopicking" />
+                            </div>
+                        </div>
+                    </group>
+                    <group >
+                        <label for="id" string="Planning"/>
+                        <div>
+                            <div>
+                                <field name="module_mrp_jit" class="oe_inline"/>
+                                <label for="module_mrp_jit"/>
+                            </div>
+                            <div>
+                                <field name="group_mrp_routings" class="oe_inline"/>
+                                <label for="group_mrp_routings"/>
+                            </div>
+                             <div>
+                                <field name="module_mrp_operations" class="oe_inline"/>
+                                <label for="module_mrp_operations" />
+                            </div>
+                            <div>
+                                <field name="module_stock_planning" class="oe_inline"/>
+                                <label for="module_stock_planning"/>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="Master Data"/>
+                    <group >
+                        <label for="id" string="Products"/>
+                        <div>
+                            <div>
+                                <field name="module_product_manufacturer" class="oe_inline"/>
+                                <label for="module_product_manufacturer"/>
+                            </div>
+                            <div>
+                                <field name="group_mrp_properties" class="oe_inline"/>
+                                <label for="group_mrp_properties" />
+                            </div>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
-
         <record id="action_mrp_configuration" model="ir.actions.act_window">
             <field name="name">Configure Manufacturing</field>
             <field name="type">ir.actions.act_window</field>

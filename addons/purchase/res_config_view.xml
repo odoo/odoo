@@ -1,34 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_purchase_menu" model="ir.actions.client">
+            <field name="name">Open Purchase Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.menu_purchase_root')}"/>
+        </record>
+        <record id="todo_open_purchase_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_purchase_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
     <data>
-
         <record id="view_purchase_configuration" model="ir.ui.view">
             <field name="name">purchase settings</field>
             <field name="model">purchase.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Purchases" version="7.0">
+                <form string="Configure Purchases" class="oe_form_configuration" version="7.0">
                     <header>
-                        <button string="Apply" type="object" name="execute"/>
-                        <button string="Cancel" special="cancel"/>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                    <group col="4">
-                        <separator string="Invoicing" colspan="4"/>
-                        <field name="default_invoice_method"/>
-                        <field name="decimal_precision"/>
-
-                        <separator string="Purchase Order" colspan="4"/>
-                        <field name="group_purchase_pricelist"/>
-                        <field name="group_uom"/>
-                        <field name="module_purchase_double_validation"/>
-                        <field name="module_purchase_requisition"/>
-                        <field name="module_warning"/>
-                        <field name="module_purchase_analytic_plans"/>
-
-                        <separator string="Products" colspan="4"/>
-                        <field name="module_product_manufacturer"/>
+                    <separator string="Invoicing Process"/>
+                    <group>
+                        <label for="id" string="Invoicing Settings"/>
+                        <div>
+                            <div>
+                                <label for="default_invoice_method"/>
+                                <field name="default_invoice_method" class="oe_inline"/>
+                            </div>
+                        </div>
                     </group>
-                    </sheet>
+                    <separator string="Purchase Order"/>
+                    <group>
+                        <label for="id" string="Supplier Features"/>
+                        <div>
+                            <div>
+                                <field name="group_purchase_pricelist" class="oe_inline"/>
+                                <label for="group_purchase_pricelist"/>
+                            </div>
+                            <div>
+                                <field name="module_warning" class="oe_inline"/>
+                                <label for="module_warning"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Purchase Order"/>
+                        <div>
+                            <div>
+                                <field name="group_uom" class="oe_inline"/>
+                                <label for="group_uom"/>
+                            </div>
+                            <div>
+                                <field name="group_purchase_delivery_address" class="oe_inline"/>
+                                <label for="group_purchase_delivery_address"/>
+                            </div>
+                            <div name="module_purchase_double_validation">
+                                <field name="module_purchase_double_validation" class="oe_inline"/>
+                                <label for="module_purchase_double_validation"/>
+                            </div>
+                            <div>
+                                <field name="module_purchase_requisition" class="oe_inline"/>
+                                <label for="module_purchase_requisition"/>
+                            </div>
+                            <div>
+                                <field name="module_purchase_analytic_plans" class="oe_inline"/>
+                                <label for="module_purchase_analytic_plans"/>
+                            </div>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
@@ -47,17 +91,25 @@
         <record id="view_account_config" model="ir.ui.view">
             <field name="name">account settings</field>
             <field name="model">account.config.settings</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_config_settings"/>
             <field name="priority" eval="18"/>
             <field name="arch" type="xml">
-                <group name="analytic_accounting" position="attributes">
+                <separator name="analytic_account" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </separator>
+                <group name="analytic_account_purchase" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </group>
-                <group name="analytic_accounting" position="inside">
-                    <field name="group_analytic_account_for_purchases"/>
-                    <field name="module_purchase_analytic_plans"/>
-                </group>
+                <xpath expr="//group[@name='analytic_account_purchase']/div" position="inside">
+                    <div>
+                        <field name="group_analytic_account_for_purchases" class="oe_inline"/>
+                        <label for="group_analytic_account_for_purchases"/>
+                    </div>
+                    <div>
+                        <field name="module_purchase_analytic_plans" on_change="onchange_purchase_analytic_plans(module_purchase_analytic_plans)" class="oe_inline"/>
+                        <label for="module_purchase_analytic_plans"/>
+                    </div>
+                </xpath>
             </field>
         </record>
 

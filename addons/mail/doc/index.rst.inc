@@ -10,3 +10,4 @@ Mail Module documentation topics
    mail_openchatter_howto
    mail_needaction_howto
    mail_partner
+   mail_state

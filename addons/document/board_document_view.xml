@@ -4,7 +4,6 @@
         <record model="ir.ui.view" id="board_document_manager_form">
             <field name="name">board.document.manager.form</field>
              <field name="model">board.board</field>
-             <field name="type">form</field>
              <field name="arch" type="xml">
                 <form string="Document board" version="7.0">
                      <board style="2-1" >
@@ -12,10 +11,13 @@
                             <action string="New Files"
                                 name="%(document.action_view_all_document_tree1)d"
                                 view_mode="tree,form"/>
+                             <action string="Files by Month"
+                                name="%(document.action_view_files_by_month_graph)d"
+                                view_mode="graph,tree"/>
                         </column>
                         <column>
-                            <action string="File Size by Month"
-                                name="%(document.action_view_size_month)d"
+                            <action string="Files by user"
+                                name="%(document.action_view_files_by_user_graph)d"
                                 view_mode="graph,tree"/>
                         </column>
                      </board>
@@ -25,71 +27,18 @@
 
 
         <record model="ir.actions.act_window" id="open_board_document_manager">
-            <field name="name">Document Dashboard</field>
+            <field name="name">Knowledge</field>
              <field name="res_model">board.board</field>
              <field name="view_type">form</field>
              <field name="view_mode">form</field>
-
             <field name="view_id" ref="board_document_manager_form"/>
          </record>
+        
+         <menuitem id="menu_reports_document"
+                   parent="base.menu_reporting_dashboard"
+                   sequence="55"
+                   action="open_board_document_manager"
+                   icon="terp-graph"/>
 
-        <menuitem id="menu_reporting" name="Reporting" sequence="2" parent="knowledge.menu_document"/>
-         <menuitem
-            name="Knowledge"
-            id="menu_reports_document"
-            parent="base.menu_reporting_dashboard"
-            sequence="45"
-            groups="base.group_system"/>
-
-
-         <menuitem
-            parent="menu_reports_document"
-            action="open_board_document_manager"
-            sequence="1"
-            id="menu_reports_document_manager"
-            icon="terp-graph"/>
-
-        <record model="ir.ui.view" id="board_document_manager_form1">
-            <field name="name">board.document.manager.form1</field>
-             <field name="model">board.board</field>
-             <field name="type">form</field>
-             <field name="arch" type="xml">
-                <form string="Document board" layout="manual" version="7.0">
-                     <board style="2-1">
-                        <column>
-                            <action string="Wall of Shame"
-                                name="%(document.action_view_wall)d"
-                                view_mode="tree"/>
-
-                        </column>
-                        <column>
-                            <action string="Files by Users"
-                                name="%(document.action_view_user_graph)d"
-                                view_mode="graph,tree"/>
-
-                            <action string="Files by Month"
-                                name="%(document.action_view_files_by_month_graph)d"
-                                view_mode="graph,tree"/>
-                        </column>
-                     </board>
-                 </form>
-            </field>
-        </record>
-
-
-        <record model="ir.actions.act_window" id="open_board_document_manager1">
-            <field name="name">Statistics by User</field>
-            <field name="res_model">board.board</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="board_document_manager_form1"/>
-        </record>
-
-        <menuitem
-            parent="menu_reports_document"
-            action="open_board_document_manager1"
-            sequence="1"
-            id="menu_reports_document_manager1"
-            icon="terp-graph"/>
      </data>
  </openerp>

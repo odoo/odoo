@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <record model="ir.module.category" id="module_category_portal">
+
+        <!-- Don't use any implied_ids here; this group's behavior is particular -->
+        <record id="group_portal_member" model="res.groups">
+            <field name="name">Portal Member</field>
+            <field name="comment">Portal members can access information through the portal menu.  Also, they are chrooted in this specific menu.</field>
+        </record>
+
+        <record id="module_category_portal" model="ir.module.category">
             <field name="name">Portal</field>
             <field name="parent_id" ref="base.module_category_tools"/>
             <field name="sequence">25</field>
         </record>
 
+        <!-- No implied ids with 'member' since this group is highly restrictive (chrooted menu) -->
         <record id="group_portal_officer" model="res.groups">
             <field name="name">Officer</field>
             <field name="comment">Portal officers can create new portal users with the portal wizard.</field>
             <field name="category_id" ref="module_category_portal"/>
         </record>
+
         <record id="group_portal_manager" model="res.groups">
             <field name="name">Manager</field>
             <field name="comment">Portal managers have access to the portal definitions, and can easily configure the users, access rights and menus of portal users.</field>
@@ -19,5 +28,6 @@
             <field name="implied_ids" eval="[(4, ref('group_portal_officer'))]"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
+
     </data>
 </openerp>

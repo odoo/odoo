@@ -15,12 +15,10 @@
         <record id="view_budget_post_search" model="ir.ui.view">
             <field name="name">account.budget.post.search</field>
             <field name="model">account.budget.post</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Budgetary Position">
-                    <field name="code"/>
-                    <field name="name"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budgetary Position"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
         </record>
@@ -28,7 +26,6 @@
         <record id="view_budget_post_tree" model="ir.ui.view">
             <field name="name">account.budget.post.tree</field>
             <field name="model">account.budget.post</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Budgetary Position">
                     <field name="code"/>
@@ -53,7 +50,6 @@
         <record model="ir.ui.view" id="view_budget_post_form">
             <field name="name">account.budget.post.form.inherit</field>
             <field name="model">account.budget.post</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Budgetary Position" version="7.0">
                     <group col="4">
@@ -106,51 +102,73 @@
         <record model="ir.ui.view" id="crossovered_budget_view_form">
             <field name="name">crossovered.budget.view.form</field>
             <field name="model">crossovered.budget</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
-                <header>
-                    <button string="Confirm" name="confirm" states="draft" type="workflow" />
-                    <button string="Approve" name="validate" states="confirm" type="workflow"/>
-                    <button string="Done" name="done" states="validate" type="workflow"   />
-                    <button name="draft" states="cancel" string="Reset to Draft" type="workflow"/>
-                    <button string="Cancel" name="cancel" states="confirm,validate" type="workflow"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
-                </header>
-                <sheet string="Budget">
-                    <group col="4">
-                            <field name="name" colspan="1" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="code" colspan="1" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="validating_user_id" readonly="True" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="date_from" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="date_to" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="crossovered_budget_line" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
-                                <tree string="Budget Lines">
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="general_budget_id"/>
-                                    <field name="date_from"/>
-                                    <field name="date_to"/>
-                                    <field name="paid_date"/>
-                                    <field name="planned_amount" sum="Planned Amount"/>
-                                    <field name="practical_amount" sum="Practical Amount"/>
-                                    <field name="theoritical_amount" sum="Theoretical Amount"/>
-                                    <field name="percentage"/>
-                                </tree>
-                                <form string="Budget Lines" version="7.0">
-                                    <group col="4">
+                <form string="Budget" version="7.0">
+                    <header>
+                        <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
+                        <button string="Approve" name="validate" states="confirm" type="workflow" class="oe_highlight"/>
+                        <button string="Done" name="done" states="validate" type="workflow" class="oe_highlight"/>
+                        <button name="draft" states="cancel" string="Reset to Draft" type="workflow" />
+                        <button string="Cancel" name="cancel" states="confirm,validate" type="workflow"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    </header>
+                    <sheet string="Budget">
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="validating_user_id" readonly="True" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="code" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <label for="date_from" string="Duration"/>
+                                <div>
+                                    <field name="date_from" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> - 
+                                    <field name="date_to" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}" nolabel="1"/>
+                                </div>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Budget Lines">
+                                <field name="crossovered_budget_line" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
+                                    <tree string="Budget Lines">
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                         <field name="general_budget_id"/>
                                         <field name="date_from"/>
                                         <field name="date_to"/>
                                         <field name="paid_date"/>
-                                        <field name="planned_amount"/>
-                                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                    </group>
-                                </form>
-                            </field>
-                        </group>
+                                        <field name="planned_amount" sum="Planned Amount"/>
+                                        <field name="practical_amount" sum="Practical Amount"/>
+                                        <field name="theoritical_amount" sum="Theoretical Amount"/>
+                                        <field name="percentage"/>
+                                    </tree>
+                                    <form string="Budget Lines" version="7.0">
+                                        <group>
+                                            <group>
+                                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                                <field name="general_budget_id"/>
+                                                <field name="planned_amount"/>
+                                            </group>
+                                            <group>
+                                                <label for="date_from" string="Duration"/>
+                                                <div>
+                                                    <field name="date_from" class="oe_inline"/> - 
+                                                    <field name="date_to" class="oe_inline"/>
+                                                </div>
+                                                <field name="paid_date"/>
+                                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -159,7 +177,6 @@
         <record model="ir.ui.view" id="crossovered_budget_view_tree">
             <field name="name">crossovered.budget.view.tree</field>
             <field name="model">crossovered.budget</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree colors="blue:state == 'draft';gray:state in ('done','cancel');black:state in ('confirm','validate')" string="Budget">
                     <field name="name" colspan="1"/>
@@ -176,21 +193,16 @@
         <record id="view_crossovered_budget_search" model="ir.ui.view">
            <field name="name">crossovered.budget.search</field>
            <field name="model">crossovered.budget</field>
-           <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Budget">
-                   <group>
-                       <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
-                       <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
-                       <separator orientation="vertical"/>
-                       <field name="name"/>
-                       <field name="code" />
-                       <field name="state"/>
-                       <field name="date_from"/>
-                       <field name="date_to"/>
-                   </group>
-               </search>
-           </field>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budget"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
+                    <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
+                    <field name="state"/>
+                </search>
+            </field>
         </record>
 
         <record model="ir.actions.act_window" id="act_crossovered_budget_view">
@@ -200,7 +212,20 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="crossovered_budget_view_tree"/>
             <field name="search_view_id" ref="view_crossovered_budget_search"/>
-            <field name="help">A budget is a forecast of your company's income and expenses expected for a period in the future. With a budget, a company is able to carefully look at how much money they are taking in during a given period, and figure out the best way to divide it among various categories. By keeping track of where your money goes, you may be less likely to overspend, and more likely to meet your financial goals. Forecast a budget by detailing the expected revenue per analytic account and monitor its evolution based on the actuals realised during that period.</field>
+            <field name="help" type="html">
+              <p>
+                A budget is a forecast of your company's income and/or expenses
+                expected for a period in the future. A budget is defined on some
+                financial accounts and/or analytic accounts (that may represent
+                projects, departments, categories of products, etc.)
+              </p><p>
+                By keeping track of where your money goes, you may be less
+                likely to overspend, and more likely to meet your financial
+                goals. Forecast a budget by detailing the expected revenue per
+                analytic account and monitor its evolution based on the actuals
+                realised during that period.
+              </p>
+            </field>
         </record>
         <menuitem parent="next_id_31"
             id="menu_act_crossovered_budget_view"
@@ -209,7 +234,6 @@
         <record model="ir.ui.view" id="view_crossovered_budget_line_tree">
             <field name="name">crossovered.budget.line.tree</field>
             <field name="model">crossovered.budget.lines</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Budget Lines">
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
@@ -228,22 +252,23 @@
         <record model="ir.ui.view" id="view_crossovered_budget_line_form">
             <field name="name">crossovered.budget.line.form</field>
             <field name="model">crossovered.budget.lines</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Budget Lines" version="7.0">
-                    <group col="4">
-                        <field name="crossovered_budget_id"/>
-                        <field name="analytic_account_id"/>
-                        <field name="general_budget_id"/>
-                        <field name="date_from"/>
-                        <field name="date_to"/>
-                        <field name="paid_date"/>
-                        <field name="planned_amount"/>
-                        <field name="practical_amount"/>
-                        <field name="theoritical_amount"/>
-                        <field name="percentage"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="crossovered_budget_id"/>
+                            <field name="analytic_account_id"/>
+                            <field name="general_budget_id"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="paid_date"/>
+                            <field name="planned_amount"/>
+                            <field name="practical_amount"/>
+                            <field name="theoritical_amount"/>
+                            <field name="percentage"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -270,9 +295,8 @@
 
         <record model="ir.ui.view" id="view_account_analytic_account_form_inherit_budget">
             <field name="name">account.analytic.account.form.inherot.budget</field>
-            <field name="type">form</field>
             <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Budget Lines">
@@ -288,15 +312,13 @@
                                     <field name="theoritical_amount" sum="Theoritical Amount"/>
                                     <field name="percentage"/>
                                 </tree>
-                                <form string="Budget Lines" version="7.0">
-                                    <group col="4">
-                                        <field name="crossovered_budget_id"/>
-                                        <field name="general_budget_id"/>
-                                        <field name="date_from"/>
-                                        <field name="date_to"/>
-                                        <field name="paid_date"/>
-                                        <field name="planned_amount"/>
-                                    </group>
+                                <form string="Budget Lines">
+                                    <field name="crossovered_budget_id"/>
+                                    <field name="general_budget_id"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="paid_date"/>
+                                    <field name="planned_amount"/>
                                 </form>
                                 <graph type="bar" string="Lines">
                                     <field name="general_budget_id" />

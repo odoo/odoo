@@ -5,13 +5,8 @@
         <record model="ir.ui.view" id="asset_modify_form">
             <field name="name">wizard.asset.modify.form</field>
             <field name="model">asset.modify</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Modify Asset" version="7.0">
-                    <header>
-                        <button name="modify" string="Modify" type="object" icon="terp-camera_test"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    </header>
                     <group string="Asset Durations to Modify" col="4">
                         <field name="name" colspan="4"/>
                         <group colspan="2" col="2">
@@ -22,10 +17,15 @@
                     </group>
                     <separator string="Notes"/>
                     <field name="note"/>
+                    <footer>
+                        <button name="modify" string="Modify" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
-	    
+        
         <record id="action_asset_modify" model="ir.actions.act_window">
              <field name="name">Modify Asset</field>
              <field name="res_model">asset.modify</field>
@@ -35,6 +35,6 @@
              <field name="view_id" ref="asset_modify_form"/>
              <field name="target">new</field>
        </record>
-	
+    
     </data>
 </openerp>

@@ -52,10 +52,20 @@ class project_task_type(osv.osv):
     }
     _order = 'sequence'
 
+
+def short_name(name):
+        """Keep first word(s) of name to make it small enough
+           but distinctive"""
+        if not name: return name
+        # keep 7 chars + end of the last word
+        keep_words = name[:7].strip().split()
+        return ' '.join(name.split()[:len(keep_words)])
+
 class project(osv.osv):
     _name = "project.project"
     _description = "Project"
-    _inherits = {'account.analytic.account': "analytic_account_id"}
+    _inherits = {'account.analytic.account': "analytic_account_id",
+                 "mail.alias": "alias_id"}
     _inherit = ['ir.needaction_mixin', 'mail.thread']
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -153,10 +163,17 @@ class project(osv.osv):
         return res
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
+        alias_ids = []
+        mail_alias = self.pool.get('mail.alias')
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
-                raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. I suggest you to desactivate it.'))
-        return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
+                raise osv.except_osv(_('Invalid Action!'),
+                                     _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
+            elif proj.alias_id:
+                alias_ids.append(proj.alias_id.id)
+        res =  super(project, self).unlink(cr, uid, ids, *args, **kwargs)
+        mail_alias.unlink(cr, uid, alias_ids, *args, **kwargs)
+        return res
 
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
@@ -165,14 +182,36 @@ class project(osv.osv):
             res[task.project_id.id] += 1
         return res
 
+    def _get_alias_models(self, cr, uid, context=None):
+        """Overriden in project_issue to offer more options"""
+        return [('project.task', "Tasks")]
+
+    def _get_followers(self, cr, uid, ids, name, arg, context=None):
+        '''
+        Functional field that computes the users that are 'following' a thread.
+        '''
+        res = {}
+        for project in self.browse(cr, uid, ids, context=context):
+            l = set()
+            for message in project.message_ids:
+                l.add(message.user_id and message.user_id.id or False)
+            res[project.id] = list(filter(None, l))
+        return res
+
+    def _search_followers(self, cr, uid, obj, name, args, context=None):
+        project_obj = self.pool.get('project.project')
+        project_ids = project_obj.search(cr, uid, [('message_ids.user_id.id', 'in', args[0][2])], context=context)
+        return [('id', 'in', project_ids)]
+
+    # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
+    _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
+
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying the list of projects"),
-        'warn_manager': fields.boolean('Notify Manager', help="If you check this field, the project manager will receive an email each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
@@ -197,19 +236,23 @@ class project(osv.osv):
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'state'], 20),
             }),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
-        'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'use_tasks': fields.boolean('Use Tasks', help="Check this field if this project is aimed at managing tasks"),
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
         'color': fields.integer('Color Index'),
-        'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
+                                    help="Internal email associated with this project. Incoming emails are automatically synchronized"
+                                         "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
+        'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
+                                        help="The kind of document created when an email is received on this project's email alias"),
+        'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
+        'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
+                        type='many2many', relation='res.users', string='Followers'),
      }
-    
+
     def dummy(self, cr, uid, ids, context):
         return True
-       
+
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('case_default','=',1)], context=context)
         return ids
@@ -217,10 +260,14 @@ class project(osv.osv):
     _order = "sequence"
     _defaults = {
         'active': True,
+        'type': 'contract',
+        'state': 'open',
         'priority': 1,
         'sequence': 10,
         'type_ids': _get_type_common,
-        'use_tasks': True,
+        'alias_model': 'project.task',
+        'privacy_visibility': 'public',
+        'alias_domain': False, # always hide alias during creation
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -291,10 +338,11 @@ class project(osv.osv):
         context['active_test'] = False
         default['state'] = 'open'
         default['tasks'] = []
+        default.pop('alias_name', None)
+        default.pop('alias_id', None)
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default['name'] = proj.name + _(' (copy)')
-
         res = super(project, self).copy(cr, uid, id, default, context)
         self.map_tasks(cr,uid,id,res,context)
         return res
@@ -370,7 +418,7 @@ class project(osv.osv):
 
         for project in projects:
             if (not project.members) and force_members:
-                raise osv.except_osv(_('Warning !'),_("You must assign members on the project '%s' !") % (project.name,))
+                raise osv.except_osv(_('Warning!'),_("You must assign members on the project '%s' !") % (project.name,))
 
         resource_pool = self.pool.get('resource.resource')
 
@@ -465,26 +513,30 @@ def Project():
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
-    
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = []
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' to the monitored fields """
+        res = super(project, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['user_id']
 
     def create(self, cr, uid, vals, context=None):
-        obj_id = super(project, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
+        if context is None: context = {}
+        # Prevent double project creation when 'use_tasks' is checked!
+        context = dict(context, project_creation_in_progress=True)
+        mail_alias = self.pool.get('mail.alias')
+        if not vals.get('alias_id'):
+            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_id = mail_alias.create_unique_alias(cr, uid, 
+                          # Using '+' allows using subaddressing for those who don't
+                          # have a catchall domain setup.
+                          {'alias_name': "project+"+short_name(vals['name'])},
+                          model_name=vals.get('alias_model', 'project.task'),
+                          context=context)
+            vals['alias_id'] = alias_id
+        project_id = super(project, self).create(cr, uid, vals, context)
+        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)
+        self.create_send_note(cr, uid, [project_id], context=context)
+        return project_id
 
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Project has been <b>created</b>."), context=context)
@@ -505,6 +557,12 @@ def Project():
         message = _("Project has been <b>closed</b>.")
         return self.message_append_note(cr, uid, ids, body=message, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        # if alias_model has been changed, update alias_model_id accordingly
+        if vals.get('alias_model'):
+            model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', vals.get('alias_model', 'project.task'))])
+            vals.update(alias_model_id=model_ids[0])
+        return super(project, self).write(cr, uid, ids, vals, context=context)
 
 class task(base_stage, osv.osv):
     _name = "project.task"
@@ -557,7 +615,7 @@ class task(base_stage, osv.osv):
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
         return result
-    
+
     def _read_group_user_id(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         res_users = self.pool.get('res.users')
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
@@ -691,6 +749,7 @@ class task(base_stage, osv.osv):
                       When the case is over, the state is set to \'Done\'.\
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
+        'categ_ids': fields.many2many('project.category', string='Categories'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
@@ -705,14 +764,14 @@ class task(base_stage, osv.osv):
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
-        'planned_hours': fields.float('Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
+        'planned_hours': fields.float('Initially Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'effective_hours': fields.function(_hours_get, string='Hours Spent', multi='hours', help="Computed using the sum of the task work done.",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
-        'total_hours': fields.function(_hours_get, string='Total Hours', multi='hours', help="Computed as: Time Spent + Remaining Time.",
+        'total_hours': fields.function(_hours_get, string='Total', multi='hours', help="Computed as: Time Spent + Remaining Time.",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
@@ -729,13 +788,13 @@ class task(base_stage, osv.osv):
             }),
         'user_id': fields.many2one('res.users', 'Assigned to'),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Contact'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
         'id': fields.integer('ID', readonly=True),
         'color': fields.integer('Color Index'),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }
 
     _defaults = {
@@ -753,7 +812,7 @@ class task(base_stage, osv.osv):
 
     _order = "priority, sequence, date_start, name, id"
 
-    def set_priority(self, cr, uid, ids, priority):
+    def set_priority(self, cr, uid, ids, priority, *args):
         """Set task priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
@@ -894,33 +953,17 @@ class task(base_stage, osv.osv):
         return True
 
     def action_close(self, cr, uid, ids, context=None):
-        """ This action closes the task, then opens the wizard to send an 
-            email to the partner or the project manager.
+        """ This action closes the task
         """
         task_id = len(ids) and ids[0] or False
         self._check_child_task(cr, uid, ids, context=context)
         if not task_id: return False
-        task = self.browse(cr, uid, task_id, context=context)
-        project = task.project_id
-        res = self.do_close(cr, uid, [task_id], context=context)
-        if project.warn_manager or project.warn_customer:
-            return {
-                'name': _('Send Email after close task'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'mail.compose.message',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'nodestroy': True,
-                'context': {'active_id': task.id,
-                            'active_model': 'project.task'}
-           }
-        return res
+        return self.do_close(cr, uid, [task_id], context=context)
 
     def do_close(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_close. """
         return self.case_close(cr, uid, ids, context=context)
-    
+
     def case_close(self, cr, uid, ids, context=None):
         """ Closes Task """
         if not isinstance(ids, list): ids = [ids]
@@ -953,7 +996,7 @@ class task(base_stage, osv.osv):
     def do_cancel(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_cancel. """
         return self.case_cancel(cr, uid, ids, context=context)
-    
+
     def case_cancel(self, cr, uid, ids, context=None):
         tasks = self.browse(cr, uid, ids, context=context)
         self._check_child_task(cr, uid, ids, context=context)
@@ -965,7 +1008,7 @@ class task(base_stage, osv.osv):
     def do_open(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_open. """
         return self.case_open(cr, uid, ids, context=context)
-    
+
     def case_open(self, cr, uid, ids, context=None):
         if not isinstance(ids,list): ids = [ids]
         self.case_set(cr, uid, ids, 'open', {'date_start': fields.datetime.now()}, context=context)
@@ -975,7 +1018,7 @@ class task(base_stage, osv.osv):
     def do_draft(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_draft. """
         return self.case_draft(cr, uid, ids, context=context)
-    
+
     def case_draft(self, cr, uid, ids, context=None):
         self.case_set(cr, uid, ids, 'draft', {}, context=context)
         self.case_draft_send_note(cr, uid, ids, context=context)
@@ -984,11 +1027,11 @@ class task(base_stage, osv.osv):
     def do_pending(self, cr, uid, ids, context=None):
         """ Compatibility when changing to case_pending. """
         return self.case_pending(cr, uid, ids, context=context)
-    
+
     def case_pending(self, cr, uid, ids, context=None):
         self.case_set(cr, uid, ids, 'pending', {}, context=context)
         return self.case_pending_send_note(cr, uid, ids, context=context)
-    
+
     def _delegate_task_attachments(self, cr, uid, task_id, delegated_task_id, context=None):
         attachment = self.pool.get('ir.attachment')
         attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', task_id)], context=context)
@@ -1051,12 +1094,15 @@ class task(base_stage, osv.osv):
 
     def set_kanban_state_blocked(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
+        return False
 
     def set_kanban_state_normal(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
+        return False
 
     def set_kanban_state_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
+        return False
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
@@ -1087,12 +1133,13 @@ class task(base_stage, osv.osv):
             new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
-                #TO FIX:Kanban view doesn't raise warning 
+                #TO FIX:Kanban view doesn't raise warning
                 #stages = [stage.id for stage in t.project_id.type_ids]
                 #if new_stage not in stages:
-                    #raise osv.except_osv(_('Warning !'), _('Stage is not defined in the project.'))
+                    #raise osv.except_osv(_('Warning!'), _('Stage is not defined in the project.'))
                 write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
                 super(task,self).write(cr, uid, [t.id], write_vals, context=context)
+                self.stage_set_send_note(cr, uid, [t.id], new_stage, context=context)
             result = True
         else:
             result = super(task,self).write(cr, uid, ids, vals, context=context)
@@ -1133,7 +1180,7 @@ class task(base_stage, osv.osv):
 
         result += "\n"
         return result
-    
+
     # ---------------------------------------------------
     # OpenChatter methods and notifications
     # ---------------------------------------------------
@@ -1143,20 +1190,21 @@ class task(base_stage, osv.osv):
         return 'Task'
 
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
+        """ Returns the user_ids that have to perform an action.
+            Add to the previous results given by super the document responsible
+            when in draft mode.
+            :return: dict { record_id: [user_ids], }
+        """
+        result = super(task, self).get_needaction_user_ids(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
+                result[obj.id].append(obj.user_id.id)
         return result
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-            if obj.manager_id:
-                sub_ids.append(obj.manager_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' and 'manager_id' to the monitored fields """
+        res = super(task, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['user_id', 'manager_id']
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
@@ -1217,23 +1265,70 @@ class project_work(osv.osv):
 
 
 class account_analytic_account(osv.osv):
-
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
+    _columns = {
+        'use_tasks': fields.boolean('Tasks Mgmt.',help="If check,this contract will be available in the project menu and you will be able to manage tasks or track issues"),
+        'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
+    }
+
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['use_tasks'] = template.use_tasks
+        return res
+
+    def _trigger_project_creation(self, cr, uid, vals, context=None):
+        '''
+        This function is used to decide if a project needs to be automatically created or not when an analytic account is created. It returns True if it needs to be so, False otherwise.
+        '''
+        if context is None: context = {}
+        return vals.get('use_tasks') and not 'project_creation_in_progress' in context
+
+    def project_create(self, cr, uid, analytic_account_id, vals, context=None):
+        '''
+        This function is called at the time of analytic account creation and is used to create a project automatically linked to it if the conditions are meet.
+        '''
+        project_pool = self.pool.get('project.project')
+        project_id = project_pool.search(cr, uid, [('analytic_account_id','=', analytic_account_id)])
+        if not project_id and self._trigger_project_creation(cr, uid, vals, context=context):
+            project_values = {
+                'name': vals.get('name'),
+                'analytic_account_id': analytic_account_id,
+            }
+            return project_pool.create(cr, uid, project_values, context=context)
+        return False
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
-        return super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        analytic_account_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        self.project_create(cr, uid, analytic_account_id, vals, context=context)
+        return analytic_account_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        name = vals.get('name')
+        for account in self.browse(cr, uid, ids, context=context):
+            if not name:
+                vals['name'] = account.name
+            self.project_create(cr, uid, account.id, vals, context=context)
+        return super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         project_obj = self.pool.get('project.project')
         analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
         if analytic_ids:
-            raise osv.except_osv(_('Warning !'), _('Please delete the project linked with this account first.'))
+            raise osv.except_osv(_('Warning!'), _('Please delete the project linked with this account first.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
+
+class project_project(osv.osv):
+    _inherit = 'project.project'
+    _defaults = {
+        'use_tasks': True
+    }
 
 
 #
@@ -1324,3 +1419,11 @@ class project_task_history_cumulative(osv.osv):
         )
         """)
 
+
+class project_category(osv.osv):
+    """ Category of project's task (or issue) """
+    _name = "project.category"
+    _description = "Category of project's task, issue, ..."
+    _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+    }

@@ -7,32 +7,32 @@
         <record model="ir.ui.view" id="opportunity2phonecall_view">
             <field name="name">crm.opportunity2phonecall.form</field>
             <field name="model">crm.opportunity2phonecall</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Schedule/Log a Call" layout="manual" version="7.0">
-                <header>
-                    <button name="action_schedule" type="object" string="Log call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'log')]}" />
-                    <button name="action_schedule" type="object" string="Schedule Call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'schedule')]}" />
-                    <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
-                </header>
-                <group>
+                <form string="Schedule/Log a Call" version="7.0">
                     <group>
-                        <field name="action"/>
-                        <field name="name"/>
-                        <field name="date" string="Planned Date" attrs="{'invisible': [('action','=','log')]}"/>
+                        <group>
+                            <field name="action"/>
+                            <field name="name"/>
+                            <field name="date" string="Planned Date" attrs="{'invisible': [('action','=','log')]}"/>
+                        </group>
+                        <group>
+                            <field name="partner_id" readonly="True"/>
+                            <field name="categ_id" string="Type"
+                                widget="selection"
+                            domain="[('object_id.model', '=', 'crm.phonecall')]"
+                            groups="base.group_no_one"/>
+                            <field name="phone"/>
+                            <field name="user_id" attrs="{'invisible': [('action','=','log')]}"/>
+                            <field name="section_id" widget="selection" attrs="{'invisible': [('action','=','log')]}"/>
+                        </group>
                     </group>
-                    <group>
-                        <field name="partner_id" readonly="True"/>
-                        <field name="categ_id" string="Type"
-                            widget="selection"
-                        domain="[('object_id.model', '=', 'crm.phonecall')]"
-                        groups="base.group_no_one"/>
-                        <field name="phone"/>
-                        <field name="user_id" attrs="{'invisible': [('action','=','log')]}"/>
-                        <field name="section_id" widget="selection" attrs="{'invisible': [('action','=','log')]}"/>
-                    </group>
-                </group>
-                <field name="note"/>
+                    <field name="note" placeholder="Call Description" />
+                    <footer>
+                        <button name="action_schedule" type="object" string="Log call" attrs="{'invisible' : [('action', '!=', 'log')]}" class="oe_highlight"/>
+                        <button name="action_schedule" type="object" string="Schedule Call" attrs="{'invisible' : [('action', '!=', 'schedule')]}" class="oe_highlight"  />
+                        or
+                        <button name="action_cancel" string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

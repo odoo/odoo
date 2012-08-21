@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+        <record id="view_stock_graph_board" model="ir.ui.view">
+            <field name="name">report.stock.move.graph</field>
+            <field name="model">report.stock.move</field>
+            <field name="arch" type="xml">
+                <graph string="Moves Analysis" type="bar">
+                    <field name="day"/>
+                    <field name="product_qty" operator="+"/>
+                    <field name="categ_id" group="True"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="action_incoming_product_board" model="ir.actions.act_window">
             <field name="name">Incoming Shipments</field>
             <field name="res_model">stock.move</field>
@@ -27,7 +40,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="domain">[('type','=','in'),('day','&lt;=', time.strftime('%Y-%m-%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]</field>
-            <field name="view_id" ref="stock.view_stock_graph_board"></field>
+            <field name="view_id" ref="view_stock_graph_board"></field>
             <field name="context">{'search_default_in':1}</field>
          </record>
         <record model="ir.actions.act_window" id="action_stock_outgoing_product_delay">
@@ -36,13 +49,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="domain">[('type','=','out'),('day','&lt;=', time.strftime('%Y-%m-%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]</field>
-            <field name="view_id" ref="stock.view_stock_graph_board"></field>
+            <field name="view_id" ref="view_stock_graph_board"></field>
             <field name="context">{'search_default_out':1}</field>
          </record>
         <record id="board_warehouse_form" model="ir.ui.view">
             <field name="name">board.warehouse.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Warehouse board" version="7.0">
                     <board style="2-1">
@@ -61,16 +73,18 @@
         </record>
 
         <record id="open_board_warehouse" model="ir.actions.act_window">
-            <field name="name">Warehouse Dashboard</field>
+            <field name="name">Warehouse</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_warehouse_form"/>
         </record>
 
-        <menuitem id="menu_board_warehouse" parent="base.menu_reporting_dashboard" action="open_board_warehouse" sequence="20" groups="group_stock_manager"/>
-        <menuitem icon="terp-stock" id="stock.menu_stock_root" name="Warehouse" groups="group_stock_manager" sequence="5"/>
-
+        <menuitem   id="menu_board_warehouse" 
+                    parent="base.menu_reporting_dashboard" 
+                    action="open_board_warehouse" 
+                    sequence="25" 
+                    groups="group_stock_manager"/>
 
     </data>
 </openerp>

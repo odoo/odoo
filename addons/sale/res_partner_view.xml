@@ -1,23 +1,82 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-       <!-- Partner kanban view inherte -->
+        <record id="act_res_partner_2_sale_order" model="ir.actions.act_window">
+            <field name="name">Quotations and Sales</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{'search_default_partner_id': active_id}</field>
+            <field name="groups_id" eval="[(4, ref('base.group_sale_salesman'))]"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation or sale order for this customer.
+              </p><p>
+                OpenERP will help you efficiently handle the complete sale flow:
+                quotation, sale order, delivery, invoicing and
+                payment.
+              </p><p>
+                The social feature helps you organize discussions on each sale
+                order, and allow your customer to keep track of the evolution
+                of the sale order.
+              </p>
+            </field>
+        </record>
+
+        <!-- Partner kanban view inherte -->
         <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
             <field name="name">res.partner.kanban.saleorder.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">kanban</field>
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <field name="mobile" position="after">
                     <field name="sale_order_count"/>
                 </field>
-                <xpath expr="//h4[@class='oe_partner_heading']" position="after">
-                    <a name="%(sale.act_res_partner_2_sale_order)d" type="action">
-                        <t t-if="record.sale_order_count.value">Sales(<t t-esc="record.sale_order_count.value" />)</t>
+                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                    <a name="%(sale.act_res_partner_2_sale_order)d" type="action" t-if="record.sale_order_count.value>0">
+                        <t t-esc="record.sale_order_count.value"/> Sales
                     </a>
                 </xpath>
             </field>
         </record>
+
+        <record id="res_partner_view_buttons" model="ir.ui.view">
+            <field name="name">res.partner.view.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button name="%(sale.act_res_partner_2_sale_order)d" type="action"
+                        string="Quotations and Sales"
+                        groups="base.group_sale_salesman"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_address_type" model="ir.ui.view">
+            <field name="name">res.partner.view.address_type</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='type']" position="attributes">
+                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
+                </xpath>
+                <xpath expr="//label[@for='type']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                </xpath>
+                <xpath expr="//div[@name='div_type']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                </xpath>
+                <xpath expr="//div[@name='div_type']" position="attributes">
+                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
     </data>
 </openerp>
 
