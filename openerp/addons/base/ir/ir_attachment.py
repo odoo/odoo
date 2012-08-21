@@ -66,6 +66,7 @@ class ir_attachment(osv.osv):
 
         # Work with a set, as list.remove() is prohibitive for large lists of documents
         # (takes 20+ seconds on a db with 100k docs during search_count()!)
+        orig_ids = ids
         ids = set(ids)
 
         # For attachments, the permissions of the document they are attached to
@@ -100,9 +101,9 @@ class ir_attachment(osv.osv):
                 for attach_id in targets[res_id]:
                     ids.remove(attach_id)
 
-        if count:
-            return len(ids)
-        return list(ids)
+        # sort result according to the original sort ordering
+        result = [id for id in orig_ids if id in ids]
+        return len(result) if count else list(result)
 
     def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
         self.check(cr, uid, ids, 'read', context=context)
