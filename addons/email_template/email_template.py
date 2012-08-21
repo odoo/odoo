@@ -389,12 +389,12 @@ class email_template(osv.osv):
            :returns: id of the mail.message that was created 
         """
         if context is None: context = {}
-        mail_message = self.pool.get('mail.message')
+        mail_mail = self.pool.get('mail.mail')
         ir_attachment = self.pool.get('ir.attachment')
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         assert 'email_from' in values, 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
         attachments = values.pop('attachments') or {}
-        msg_id = mail_message.create(cr, uid, values, context=context)
+        msg_id = mail_mail.create(cr, uid, values, context=context)
         # link attachments
         attachment_ids = []
         for fname, fcontent in attachments.iteritems():
@@ -402,15 +402,15 @@ class email_template(osv.osv):
                     'name': fname,
                     'datas_fname': fname,
                     'datas': fcontent,
-                    'res_model': mail_message._name,
+                    'res_model': mail_mail._name,
                     'res_id': msg_id,
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
         if attachment_ids:
-            mail_message.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
+            mail_mail.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
         if force_send:
-            mail_message.send(cr, uid, [msg_id], context=context)
+            mail_mail.send(cr, uid, [msg_id], context=context)
         return msg_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

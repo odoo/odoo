@@ -174,7 +174,7 @@ class mail_mail(osv.Model):
                 if message.state == 'sent':
                     self._postprocess_sent_message(cr, uid, message, context=context)
             except Exception:
-                _logger.exception('failed sending mail.message %s', message.id)
+                _logger.exception('failed sending mail.mail %s', message.id)
                 message.write({'state':'exception'})
 
             if auto_commit == True:
