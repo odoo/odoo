@@ -117,25 +117,6 @@
 
                                 </group>
                             </page>
-                            <page string="Procurement &amp; Locations" groups="base.group_user">
-                                <group>
-                                    <group name="delay" string="Delays">
-                                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                                        <field name="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
-                                        <field name="warranty"/>
-                                    </group>
-                                    <group name="store" string="Storage Localisation">
-                                        <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
-                                    </group>
-                                    <group name="misc" string="Miscellaneous">
-                                        <field name="active"/>
-                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                    </group>
-                                </group>
-
-                            </page>
                             <page string="Descriptions" groups="base.group_user">
                                 <separator string="Description"/>
                                 <field name="description"/>
