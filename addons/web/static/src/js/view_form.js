@@ -4655,7 +4655,6 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         $img.load(function() {
             if (! self.options.size)
                 return;
-            debugger;
             $img.css("max-width", "" + self.options.size[0] + "px");
             $img.css("max-height", "" + self.options.size[1] + "px");
             $img.css("margin-left", "" + (self.options.size[0] - $img.width()) / 2 + "px");
