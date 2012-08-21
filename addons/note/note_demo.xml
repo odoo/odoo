@@ -12,7 +12,7 @@
       </field>
       <field name="note_pad"></field>
       <field name="stage_id" ref="note_stage_01"/>
-      <field name="user_id" eval="ref('base.user_root')"/>
+      <field name="user_id" ref="base.user_root"/>
       <field name="color">2</field>
     </record>
     <record id="note_2" model="note.note">
@@ -24,8 +24,8 @@
     ]]>
       </field>
       <field name="note_pad"></field>
-      <field name="stage_id" ref="note_stage_02"/>
-      <field name="user_id" eval="ref('base.user_root')"/>
+      <field name="stage_id" ref="note_stage_01"/>
+      <field name="user_id" ref="base.user_root"/>
     </record>
 
     <record id="note_3" model="note.note">
@@ -53,18 +53,18 @@
       </field>
       <field name="note_pad"></field>
       <field name="stage_id" ref="note_stage_01"/>
-      <field name="user_id" eval="ref('base.user_root')"/>
+      <field name="user_id" ref="base.user_root"/>
     </record>
 
     <record id="note_4" model="note.note">
-      <field name="note"><![CDATA[Read those books
+      <field name="note"><![CDATA[Read some documentation about OpenERP before diving into the code
       * Open ERP Version 6: a modern approach to integrated business management
       * Open ERP for Retail and Industrial Management
       ]]>
       </field>
       <field name="note_pad"></field>
       <field name="stage_id" ref="note_stage_02"/>
-      <field name="user_id" eval="ref('base.user_root')"/>
+      <field name="user_id" ref="base.user_root"/>
     </record>
 
     <record id="note_5" model="note.note">
@@ -87,7 +87,7 @@
       </field>
       <field name="note_pad"></field>
       <field name="stage_id" ref="note_stage_02"/>
-      <field name="user_id" eval="ref('base.user_root')"/>
+      <field name="user_id" ref="base.user_root"/>
       <field name="color">3</field>
     </record>
 
@@ -99,18 +99,18 @@
       </field>
       <field name="note_pad"></field>
       <field name="stage_id" ref="note_stage_02"/>
-      <field name="user_id" eval="ref('base.user_root')"/>
+      <field name="user_id" ref="base.user_root"/>
     </record>
 
     <record id="note_7" model="note.note">
-      <field name="note"><![CDATA[Read those books
+      <field name="note"><![CDATA[Read some documentation about OpenERP before diving into the code
       * Open ERP Version 6: a modern approach to integrated business management
       * Open ERP for Retail and Industrial Management
       ]]>
       </field>
       <field name="note_pad"></field>
-      <field name="stage_id" ref="note_stage_02"/>
-      <field name="user_id" eval="ref('base.user_root')"/>
+      <field name="stage_id" ref="note_stage_03"/>
+      <field name="user_id" ref="base.user_root"/>
     </record>
 
     <record id="note_8" model="note.note">
@@ -120,20 +120,21 @@
       ]]>
       </field>
       <field name="note_pad"></field>
-      <field name="stage_id" ref="note_stage_02"/>
-      <field name="user_id" eval="ref('base.user_root')"/>
+      <field name="stage_id" ref="note_stage_03"/>
+      <field name="user_id" ref="base.user_root"/>
       <field name="color">5</field>
     </record>
 
     <record id="note_9" model="note.note">
-      <field name="note"><![CDATA[Read those books
+      <field name="note"><![CDATA[Read some documentation about OpenERP before diving into the code
       * Open ERP Version 6: a modern approach to integrated business management
       * Open ERP for Retail and Industrial Management
       ]]>
       </field>
       <field name="note_pad"></field>
       <field name="stage_id" ref="note_stage_03"/>
-      <field name="user_id" eval="ref('base.user_root')"/>
+      <field name="user_id" ref="base.user_root"/>
+      <field name="color">7</field>
     </record>
 
     <record id="note_10" model="note.note">
@@ -144,8 +145,7 @@
       </field>
       <field name="note_pad"></field>
       <field name="stage_id" ref="note_stage_03"/>
-      <field name="user_id" eval="ref('base.user_root')"/>
-      <field name="color">7</field>
+      <field name="user_id" ref="base.user_root"/>
     </record>
 
   </data>
