@@ -270,6 +270,7 @@ openerp.web_linkedin = function(instance) {
         template: "LinkedIn.KeyWizard", 
         init: function(parent, text) {
             this._super(parent, {title:_t("LinkedIn API Key")});
+            this.api_domain = window.location.origin;
         },
         start: function() {
             this._super();
