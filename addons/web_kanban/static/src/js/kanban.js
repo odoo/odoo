@@ -865,7 +865,8 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         var email_md5 = $.md5(email);
         return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size + '&d=' + default_;
     },
-    kanban_image: function(model, field, id, cache) {
+    kanban_image: function(model, field, id, cache, options) {
+        options = options || {};
         var url;
         if (this.record[field] && this.record[field].value && ! /^\d+(\.\d*)? \w+$/.test(this.record[field].value)) {
             url = 'data:image/png;base64,' + this.record[field].value;
@@ -873,6 +874,8 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             url = "/web/static/src/img/placeholder.png";
         } else {
             id = escape(JSON.stringify(id));
+            if (options.preview_image)
+                field = options.preview_image;
             url = instance.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
             if (cache !== undefined) {
                 // Set the cache duration in seconds.
