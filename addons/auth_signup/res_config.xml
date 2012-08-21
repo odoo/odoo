@@ -7,16 +7,15 @@
             <field name="model">base.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_general_configuration"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[last()]" position="after">
-                    <group>
-                        <label for="id" string="External Users"/>
-                        <div>
-                            <div>
-                                <label for="auth_signup_template_user_id"/>
-                                <field name="auth_signup_template_user_id" class="oe_inline"/>
-                            </div>
-                        </div>
-                    </group>
+                <xpath expr="//field[@name='module_auth_anonymous']/.." position="after">
+                    <div>
+                        <field name="auth_signup_uninvited" class="oe_inline"/>
+                        <label for="auth_signup_uninvited"/>
+                    </div>
+                    <div>
+                        <label for="auth_signup_template_user_id"/>
+                        <field name="auth_signup_template_user_id" class="oe_inline"/>
+                    </div>
                 </xpath>
             </field>
         </record>

@@ -21,9 +21,7 @@ openerp.auth_oauth = function(instance) {
         },
         on_oauth_loaded: function(result) {
             this.oauth_providers = result;
-            console.log(result);
             var buttons = QWeb.render("auth_oauth.Login.button",{"widget":this});
-            console.log(buttons);
             this.$(".oe_login_pane form ul").after(buttons);
         },
         on_oauth_sign_in: function(ev) {
