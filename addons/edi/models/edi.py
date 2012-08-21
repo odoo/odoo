@@ -472,7 +472,7 @@ class EDIMixin(object):
                     _logger.warning('Ignoring EDI mail notification, template %s cannot be located', template_ext_id)
                     return
                 for edi_record in self.browse(local_cr, uid, ids, context=context):
-                    edi_context = dict(context, edi_web_url_view=self._edi_get_object_web_url_view(cr, uid, edi_record, context=context))
+                    edi_context = dict(context, edi_web_url_view=self._edi_get_object_web_url_view(local_cr, uid, edi_record, context=context))
                     self.pool.get('email.template').send_mail(local_cr, uid, mail_tmpl.id, edi_record.id,
                                                               force_send=False, context=edi_context)
                     _logger.info('EDI export successful for %s #%s, email notification sent.', self._name, edi_record.id)
