@@ -208,8 +208,10 @@ product_ul()
 class product_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
+        if isinstance(ids, (list, tuple)) and not len(ids):
             return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
