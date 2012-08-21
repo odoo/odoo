@@ -617,7 +617,7 @@ openerp.mail = function(session) {
             this.options.thread_level = this.options.thread_level || 0;
             this.thread_list = [];
         },
-        
+
         start: function() {
             // this._super.apply(this, arguments);
             // NB: all the widget should be modified to check the actual_mode property on view, not use

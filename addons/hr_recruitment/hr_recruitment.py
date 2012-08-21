@@ -197,6 +197,7 @@ class hr_applicant(base_stage, osv.Model):
                       When the case is over, the state is set to \'Done\'.\
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
+        'categ_ids': fields.many2many('hr.applicant_category', string='Categories'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
@@ -348,7 +349,7 @@ class hr_applicant(base_stage, osv.Model):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
         if update_vals is None: vals = {}
-        
+
         update_vals.update({
             'description': msg.get('body'),
             'email_from': msg.get('from'),
@@ -503,7 +504,7 @@ class hr_job(osv.osv):
     _inherits = {'mail.alias': 'alias_id'}
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
     }
@@ -514,13 +515,13 @@ class hr_job(osv.osv):
 
     def _auto_init(self, cr, context=None):
         """Installation hook to create aliases for all jobs and avoid constraint errors."""
-        
-        # disable the unique alias_id not null constraint, to avoid spurious warning during 
+
+        # disable the unique alias_id not null constraint, to avoid spurious warning during
         # super.auto_init. We'll reinstall it afterwards.
         self._columns['alias_id'].required = False
 
         super(hr_job,self)._auto_init(cr, context=context)
-        
+
         registry = RegistryManager.get(cr.dbname)
         mail_alias = registry.get('mail.alias')
         hr_jobs = registry.get('hr.job')
@@ -548,7 +549,7 @@ class hr_job(osv.osv):
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
             vals.pop('alias_name', None) # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid, 
+            alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
                           # have a catchall domain setup.
                           {'alias_name': 'jobs+'+vals['name']},
@@ -566,7 +567,7 @@ class hr_job(osv.osv):
         res = super(hr_job, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
-    
+
     def action_print_survey(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -583,5 +584,13 @@ class hr_job(osv.osv):
                 'context' : context,
                 'nodestroy':True,
             }
+
+class applicant_category(osv.osv):
+    """ Category of applicant """
+    _name = "hr.applicant_category"
+    _description = "Category of applicant"
+    _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
