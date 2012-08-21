@@ -413,7 +413,8 @@ openerp.mail = function(session) {
          * in the composition form. */
         do_action: function(action, on_close) {
             console.log('thread do_action');
-            this.init_comments();
+            this.message_clean();
+            this.message_fetch();
             if (this.compose_message_widget) {
                 this.compose_message_widget.reinit(); }
             return this._super(action, on_close);
@@ -709,6 +710,7 @@ openerp.mail = function(session) {
          * in the composition form. */
         //TDE: still useful ? TO CHECK
         do_action: function(action, on_close) {
+            console.log('wall do_action');
             if (this.compose_message_widget) {
                 this.compose_message_widget.reinit(); }
             this.message_clean();
