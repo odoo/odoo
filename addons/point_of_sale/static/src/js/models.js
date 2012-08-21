@@ -54,6 +54,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'taxes':            null,
                 'pos_session':      null,
                 'pos_config':       null,
+                'units':            null,
+                'units_by_id':      null,
 
                 'selectedOrder':    undefined,
             });
@@ -63,10 +65,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
 
-            var user_def = fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
+            var loaded = fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
                 .pipe(function(users){
-                    var user = users[0];
-                    self.set('user',user);
+                    self.set('user',users[0]);
 
                     return fetch('res.company',
                     [
@@ -79,147 +80,110 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'phone',
                         'partner_id',
                     ],
-                    [['id','=',user.company_id[0]]])
+                    [['id','=',users[0].company_id[0]]]);
                 }).pipe(function(companies){
-                    var company = companies[0];
-                    self.set('company',company);
-                    fetch('res.partner',['contact_address'],[['id','=',company.partner_id[0]]])
-                        .then(function(partner){
-                            company.contact_address = partner[0].contact_address;
-                        });
-                    return fetch('res.currency',['symbol','position'],[['id','=',company.currency_id[0]]]);
-                }).pipe(function (currencies){
+                    self.set('company',companies[0]);
+
+                    return fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
+                }).pipe(function(company_partners){
+                    self.get('company').contact_address = company_partners[0].contact_address;
+
+                    return fetch('res.currency',['symbol','position'],[['id','=',self.get('company').currency_id[0]]]);
+                }).pipe(function(currencies){
                     self.set('currency',currencies[0]);
-                });
 
-
-            var uom_def = fetch(    //unit of measure
-                'product.uom',
-                null,
-                null
-                ).then(function(result){
-                    self.set({'units': result});
+                    return fetch('product.uom', null, null);
+                }).pipe(function(units){
+                    self.set('units',units);
                     var units_by_id = {};
-                    for(var i = 0, len = result.length; i < len; i++){
-                        units_by_id[result[i].id] = result[i];
+                    for(var i = 0, len = units.length; i < len; i++){
+                        units_by_id[units[i].id] = units[i];
                     }
-                    self.set({'units_by_id':units_by_id});
-                });
-
-            var pack_def = fetch(
-                'product.packaging',
-                null,
-                null
-                ).then(function(packaging){
-                    self.set('product.packaging',packaging);
-                });
-
-            var users_def = fetch(
-                'res.users',
-                ['name','ean13'],
-                [['ean13', '!=', false]]
-                ).then(function(result){
-                    self.set({'user_list':result});
-                });
-
-            var tax_def = fetch('account.tax', ['amount','price_include','type'])
-                .then(function(result){
-                    self.set({'taxes': result});
-                });
-
-            var session_def = fetch(    // loading the PoS Session.
-                    'pos.session',
-                    ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at'],
-                    [['state', '=', 'opened'], ['user_id', '=', this.session.uid]]
-                ).pipe(function(result) {
-
-                    // some data are associated with the pos session, like the pos config and bank statements.
-                    // we must have a valid session before we can read those. 
+                    self.set('units_by_id',units_by_id);
                     
-                    var session_data_def = new $.Deferred();
+                    return fetch('product.packaging', null, null);
+                }).pipe(function(packagings){
+                    self.set('product.packaging',packagings);
 
-                    if( result.length !== 0 ) {
-                        var pos_session = result[0];
+                    return fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
+                }).pipe(function(users){
+                    self.set('user_list',users);
 
-                        self.set({'pos_session': pos_session});
+                    return fetch('account.tax', ['amount', 'price_include', 'type']);
+                }).pipe(function(taxes){
+                    self.set('taxes', taxes);
 
-                        var pos_config_def = fetch(
-                                'pos.config',
-                                ['name','journal_ids','shop_id','journal_id',
-                                 'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
-                                 'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
-                                 'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
-                                [['id','=', pos_session.config_id[0]]]
-                            ).pipe(function(result){
-                                var pos_config = result[0]
-                                
-                                self.set({'pos_config': pos_config});
-                                self.use_scale              = pos_config.iface_electronic_scale  || false;
-                                self.use_proxy_printer      = pos_config.iface_print_via_proxy   || false;
-                                self.use_virtual_keyboard   = pos_config.iface_vkeyboard         || false;
-                                self.use_barcode_scanner    = pos_config.iface_barscan           || false;
-                                self.use_selfcheckout       = pos_config.iface_self_checkout     || false;
-                                self.use_cashbox            = pos_config.iface_cashdrawer        || false;
+                    return fetch(
+                        'pos.session', 
+                        ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at'],
+                        [['state', '=', 'opened'], ['user_id', '=', self.session.uid]]
+                    );
+                }).pipe(function(sessions){
+                    self.set('pos_session', sessions[0]);
 
-                                return fetch('sale.shop',[], [['id','=',pos_config.shop_id[0]]])
-                            }).pipe(function(shops){
-                                self.set('shop',shops[0]);
-                                return fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'image'])
-                            }).pipe( function(categories){
-                                self.db.add_categories(categories);
-                                return fetch( 
-                                    'product.product', 
-                                    ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
-                                    [['pos_categ_id','!=', false]],
-                                    {pricelist: self.get('shop').pricelist_id[0]} // context for price
-                                );
-                            }).pipe( function(products){
-                                self.db.add_products(products);
-                            });
+                    return fetch(
+                        'pos.config',
+                        ['name','journal_ids','shop_id','journal_id',
+                         'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
+                         'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
+                         'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
+                        [['id','=', self.get('pos_session').config_id[0]]]
+                    );
+                }).pipe(function(configs){
+                    var pos_config = configs[0];
+                    self.set('pos_config', pos_config);
+                    self.use_scale             =  !!pos_config.iface_electronic_scale;
+                    self.use_proxy_printer     =  !!pos_config.iface_print_via_proxy;
+                    self.use_virtual_keyboard  =  !!pos_config.iface_vkeyboard;
+                    self.use_barcode_scanner   =  !!pos_config.iface_barscan;
+                    self.use_selfcheckout      =  !!pos_config.iface_self_checkout;
+                    self.use_cashbox           =  !!pos_config.iface_cashdrawer;
 
-                        var bank_def = fetch(
-                            'account.bank.statement',
-                            ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
-                            [['state','=','open'],['pos_session_id', '=', pos_session.id]]
-                            ).then(function(result){
-                                self.set({'bank_statements':result});
-                            });
+                    return fetch('sale.shop',[],[['id','=',pos_config.shop_id[0]]]);
+                }).pipe(function(shops){
+                    self.set('shop',shops[0]);
 
-                        var journal_def = fetch(
-                            'account.journal',
-                            undefined,
-                            [['user_id','=',pos_session.user_id[0]]]
-                            ).then(function(result){
-                                self.set({'journals':result});
-                            });
+                    return fetch('pos.category', ['id','name','parent_id','child_id','image'])
+                }).pipe(function(categories){
+                    self.db.add_categories(categories);
 
-                        // associate the bank statements with their journals. 
-                        var bank_process_def = $.when(bank_def, journal_def)
-                            .then(function(){
-                                var bank_statements = self.get('bank_statements');
-                                var journals = self.get('journals');
-                                for(var i = 0, ilen = bank_statements.length; i < ilen; i++){
-                                    for(var j = 0, jlen = journals.length; j < jlen; j++){
-                                        if(bank_statements[i].journal_id[0] === journals[j].id){
-                                            bank_statements[i].journal = journals[j];
-                                            bank_statements[i].self_checkout_payment_method = journals[j].self_checkout_payment_method;
-                                        }
-                                    }
-                                }
-                            });
+                    return fetch(
+                        'product.product', 
+                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
+                        [['pos_categ_id','!=', false]],
+                        {pricelist: self.get('shop').pricelist_id[0]} // context for price
+                    );
+                }).pipe(function(products){
+                    self.db.add_products(products);
 
-                        session_data_def = $.when(pos_config_def,bank_def,journal_def,bank_process_def);
+                    return fetch(
+                        'account.bank.statement',
+                        ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
+                        [['state','=','open'],['pos_session_id', '=', self.get('pos_session').id]]
+                    );
+                }).pipe(function(bank_statements){
+                    self.set('bank_statements', bank_statements);
 
-                    }else{
-                        session_data_def.reject();
+                    return fetch('account.journal', undefined, [['user_id','=', self.get('pos_session').user_id[0]]]);
+                }).pipe(function(journals){
+                    self.set('journals',journals);
+
+                    // associate the bank statements with their journals. 
+                    var bank_statements = self.get('bank_statements');
+                    for(var i = 0, ilen = bank_statements.length; i < ilen; i++){
+                        for(var j = 0, jlen = journals.length; j < jlen; j++){
+                            if(bank_statements[i].journal_id[0] === journals[j].id){
+                                bank_statements[i].journal = journals[j];
+                                bank_statements[i].self_checkout_payment_method = journals[j].self_checkout_payment_method;
+                            }
+                        }
                     }
-                    return session_data_def;
+                    self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
                 });
 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(pack_def, user_def, users_def, uom_def, session_def, tax_def, user_def, this.flush())
+            $.when(loaded)
                 .then(function(){ 
-                    self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
                     //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
                     self.ready.resolve();
                 },function(){
