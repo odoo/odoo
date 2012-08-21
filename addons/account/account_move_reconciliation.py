@@ -19,8 +19,6 @@
 #
 ##############################################################################
 import time
-from datetime import datetime
-
 
 import tools
 from osv import fields,osv

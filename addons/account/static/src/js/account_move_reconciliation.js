@@ -74,12 +74,15 @@ instance.account.extend_form_view = instance.web.FormView.extend({
     },
     
     do_nothing_to_reconcile:function(){
-        self = this
+        var self = this
+        if (!_.isEmpty(this.dataset.ids)){
         this.dataset.call(event.target.name, [[self.datarecord.id], self.dataset.context]).then(function() {
             self.dataset.read_slice().done(function(){
-                self.on_pager_action('first');
+                if (!_.isEmpty(self.dataset.ids)) 
+                    self.on_pager_action('first');
             });
         })
+        }
     },
     
     do_update_pager: function(hide_index) {
