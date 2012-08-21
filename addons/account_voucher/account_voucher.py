@@ -919,7 +919,8 @@ class account_voucher(osv.osv):
         :param amount_residual: Amount to be posted.
         :param company_currency: id of currency of the company to which the voucher belong
         :param current_currency: id of currency of the voucher
-        :return: the account move line and its counterpart to create, depicted as mapping between fieldname and value
+        :return: the account move line and its counterpart to create, depicted as mapping between fieldname and value. 
+            The first element returned is the one that gonna be reconciled (with the receivalble or payable account)
         :rtype: tuple of dict
         '''
         if amount_residual > 0:
@@ -930,14 +931,14 @@ class account_voucher(osv.osv):
             account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
                 raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Expense Currency Rate' on the company! "))
-        # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
+        # Even if the amount_currency is never filled, we need to pass the foreign currency because
         # the receivable/payable account may have a secondary currency, which render this field mandatory
         account_currency_id = company_currency <> current_currency and current_currency or False
         move_line = {
             'journal_id': line.voucher_id.journal_id.id,
             'period_id': line.voucher_id.period_id.id,
             'name': _('change')+': '+(line.name or '/'),
-            'account_id': line.account_id.id,
+            'account_id': line.voucher_id.type in ('sale', 'receipt') and line.account_id.id or account_id.id,
             'move_id': move_id,
             'partner_id': line.voucher_id.partner_id.id,
             'currency_id': account_currency_id,
@@ -951,7 +952,7 @@ class account_voucher(osv.osv):
             'journal_id': line.voucher_id.journal_id.id,
             'period_id': line.voucher_id.period_id.id,
             'name': _('change')+': '+(line.name or '/'),
-            'account_id': account_id.id,
+            'account_id': line.voucher_id.type in ('sale', 'receipt') and account_id.id or line.account_id.id,
             'move_id': move_id,
             'amount_currency': 0.0,
             'partner_id': line.voucher_id.partner_id.id,
@@ -961,6 +962,10 @@ class account_voucher(osv.osv):
             'credit': amount_residual < 0 and -amount_residual or 0.0,
             'date': line.voucher_id.date,
         }
+        if line.voucher_id.type not in ('sale', 'receipt'):
+            # in case of supplier vouchers, the line with the payable account is 'move_line_counterpart', 
+            # and thus it must be returned as first element
+            return (move_line_counterpart, move_line)
         return (move_line, move_line_counterpart)
 
     def _convert_amount(self, cr, uid, amount, voucher_id, context=None):
