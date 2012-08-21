@@ -144,6 +144,7 @@ class res_company(osv.osv):
             return {}
         if phone: val.append(_('Phone: ')+phone)
         if fax: val.append(_('Fax: ')+fax)
+        if email: val.append(_('Email: ')+email)
         if website: val.append(_('Website: ')+website)
         if vat: val.append(_('TIN: ')+vat)
         if reg: val.append(_('Reg: ')+reg)
