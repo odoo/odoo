@@ -55,10 +55,14 @@
                                     </group>
                                 </form>
                             </field>
-                            <group class="oe_subtotal_footer">
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="order_total">
                                 <field name="amount_tax"/>
-                                <field name="amount_total"/>
-                                <button name="button_dummy" string="Update" class="oe_link" states="draft"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="amount_total" />
+                                    <button name="button_dummy"
+                                        states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>
                             </group>
                         </page>
                         <page string="Payments">
