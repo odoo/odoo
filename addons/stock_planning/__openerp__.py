@@ -200,9 +200,7 @@ When you are in the same period (current period is the same as calculated) Stock
 
 When you calculate period next to current:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-**Stock Simulation =** Stock of beginning of current Period - Planned Out of current Period
-    + Confirmed In of current Period  (incl. Already In) - Planned Out of calculated Period
-    + Planned In of calculated Period .
+**Stock Simulation =** Stock of beginning of current Period - Planned Out of current Period + Confirmed In of current Period  (incl. Already In) - Planned Out of calculated Period + Planned In of calculated Period .
 
 As you see the calculated Period is taken the same way as in previous case, but
 the calculation in the current Period is a little bit different. First you should
@@ -212,11 +210,7 @@ going to the next one.
 
 When you plan for future Periods:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-**Stock Simulation =** Stock of beginning of current Period
-    - Sum of Planned Out of Periods before calculated
-    + Sum of Confirmed In of Periods before calculated (incl. Already In) 
-    - Planned Out of calculated Period
-    + Planned In of calculated Period.
+**Stock Simulation =** Stock of beginning of current Period - Sum of Planned Out of Periods before calculated + Sum of Confirmed In of Periods before calculated (incl. Already In) - Planned Out of calculated Period + Planned In of calculated Period.
 
 Here "Periods before calculated" designates all periods starting with the current
 until the period before the one being calculated.
