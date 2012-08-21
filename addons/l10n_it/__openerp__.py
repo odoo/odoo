@@ -9,7 +9,7 @@
 #    Domsense srl
 #    Albatos srl
 #
-#    Copyright (C) 2011
+#    Copyright (C) 2011-2012
 #    Associazione OpenERP Italia (<http://www.openerp-italia.org>)
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,6 @@ Italian accounting chart and localization.
     'init_xml': [
         ],
     'update_xml': [
-        'data/account.account.type.csv',
         'data/account.account.template.csv',
         'data/account.tax.code.template.csv',
         'account_chart.xml',

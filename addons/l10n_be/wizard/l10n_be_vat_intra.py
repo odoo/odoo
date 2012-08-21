@@ -4,7 +4,7 @@
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
-#    Adapted by Noviat to 
+#    Adapted by Noviat to
 #     - make the 'mand_id' field optional
 #     - support Noviat tax code scheme
 #
@@ -60,7 +60,7 @@ class partner_vat_intra(osv.osv_memory):
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
         'mand_id' : fields.char('Reference', size=14, help="Reference given by the Representative of the sending company."),
         'msg': fields.text('File created', size=14, readonly=True),
-        'no_vat': fields.text('Partner With No VAT', size=14, readonly=True, help="The Partner whose VAT number is not defined they doesn't include in XML File."),
+        'no_vat': fields.text('Partner With No VAT', size=14, readonly=True, help="The Partner whose VAT number is not defined  and they are not included in XML File."),
         'file_save' : fields.binary('Save File', readonly=True),
         'country_ids': fields.many2many('res.country', 'vat_country_rel', 'vat_id', 'country_id', 'European Countries'),
         'comments': fields.text('Comments'),
@@ -92,7 +92,6 @@ class partner_vat_intra(osv.osv_memory):
         obj_user = self.pool.get('res.users')
         obj_sequence = self.pool.get('ir.sequence')
         obj_partner = self.pool.get('res.partner')
-        obj_partner_add = self.pool.get('res.partner.address')
 
         xmldict = {}
         post_code = street = city = country = data_clientinfo = ''
@@ -105,23 +104,23 @@ class partner_vat_intra(osv.osv_memory):
             data_company = wiz_data.tax_code_id.company_id
         else:
             data_company = obj_user.browse(cr, uid, uid, context=context).company_id
-        
+
         # Get Company vat
         company_vat = data_company.partner_id.vat
         if not company_vat:
-            raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No VAT number associated with the company.'))
         company_vat = company_vat.replace(' ','').upper()
         issued_by = company_vat[:2]
 
         if len(wiz_data.period_code) != 6:
-            raise osv.except_osv(_('Wrong Period Code'), _('The period code you entered is not valid.'))
+            raise osv.except_osv(_('Error!'), _('Period code is not valid.'))
 
         if not wiz_data.period_ids:
-            raise osv.except_osv(_('Data Insufficient!'),_('Please select at least one Period.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('Please select at least one Period.'))
 
         p_id_list = obj_partner.search(cr, uid, [('vat','!=',False)], context=context)
         if not p_id_list:
-            raise osv.except_osv(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No partner has a VAT number asociated with him.'))
 
         seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
         dnum = company_vat[2:] + seq_declarantnum[-4:]
@@ -131,7 +130,7 @@ class partner_vat_intra(osv.osv_memory):
         phone = data_company.partner_id.phone or ''
 
         if addr.get('invoice',False):
-            ads = obj_partner_add.browse(cr, uid, [addr['invoice']])[0]
+            ads = obj_partner.browse(cr, uid, [addr['invoice']])[0]
             city = (ads.city or '')
             post_code = (ads.zip or '')
             if ads.street:
@@ -145,14 +144,14 @@ class partner_vat_intra(osv.osv_memory):
         if not country:
             country = company_vat[:2]
         if not email:
-            raise osv.except_osv(_('Data Insufficient!'),_('No email address associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No email address associated with the company.'))
         if not phone:
-            raise osv.except_osv(_('Data Insufficient!'),_('No phone associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No phone associated with the company.'))
         xmldict.update({
                         'company_name': data_company.name,
-                        'company_vat': company_vat, 
+                        'company_vat': company_vat,
                         'vatnum':  company_vat[2:],
-                        'mand_id': wiz_data.mand_id, 
+                        'mand_id': wiz_data.mand_id,
                         'sender_date': str(time.strftime('%Y-%m-%d')),
                         'street': street,
                         'city': city,
@@ -161,13 +160,13 @@ class partner_vat_intra(osv.osv_memory):
                         'email': email,
                         'phone': phone.replace('/','').replace('.','').replace('(','').replace(')','').replace(' ',''),
                         'period': wiz_data.period_code,
-                        'clientlist': [], 
+                        'clientlist': [],
                         'comments': comments,
                         'issued_by': issued_by,
                         })
-        
+
         codes = ('44', '46L', '46T', '48s44', '48s46L', '48s46T')
-        cr.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat, 
+        cr.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat,
                       (CASE WHEN t.code = '48s44' THEN '44'
                             WHEN t.code = '48s46L' THEN '46L'
                             WHEN t.code = '48s46T' THEN '46T'
@@ -196,8 +195,8 @@ class partner_vat_intra(osv.osv_memory):
 
             xmldict['clientlist'].append({
                                         'partner_name': row['partner_name'],
-                                        'seq': seq, 
-                                        'vatnum': row['vat'][2:].replace(' ','').upper(), 
+                                        'seq': seq,
+                                        'vatnum': row['vat'][2:].replace(' ','').upper(),
                                         'vat': row['vat'],
                                         'country': row['vat'][:2],
                                         'amount': amt,
@@ -244,7 +243,7 @@ class partner_vat_intra(osv.osv_memory):
         data_clientinfo = ''
         for client in xml_data['clientlist']:
             if not client['vatnum']:
-                raise osv.except_osv(_('Data Insufficient!'),_('No vat number defined for %s') % client['partner_name'])
+                raise osv.except_osv(_('Insufficient Data!'),_('No vat number defined for %s.') % client['partner_name'])
             data_clientinfo +='\n\t\t<ns2:IntraClient SequenceNumber="%(seq)s">\n\t\t\t<ns2:CompanyVATNumber issuedBy="%(country)s">%(vatnum)s</ns2:CompanyVATNumber>\n\t\t\t<ns2:Code>%(code)s</ns2:Code>\n\t\t\t<ns2:Amount>%(amount)s</ns2:Amount>\n\t\t</ns2:IntraClient>' % (client)
 
         data_decl = '\n\t<ns2:IntraListing SequenceNumber="1" ClientsNbr="%(clientnbr)s" DeclarantReference="%(dnum)s" AmountSum="%(amountsum)s">' % (xml_data)

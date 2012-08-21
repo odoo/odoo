@@ -174,7 +174,7 @@ class Fields(unohelper.Base, XJobExecutor ):
 
             self.win.doModalDialog("lstFields",self.sValue)
         else:
-            ErrorDialog("Please insert user define field Field-1 or Field-4","Just go to File->Properties->User Define \nField-1 Eg. http://localhost:8069 \nOR \nField-4 Eg. account.invoice")
+            ErrorDialog("Please insert user define field Field-1 or Field-4","Just go to File->Properties->User Define \nField-1 E.g. http://localhost:8069 \nOR \nField-4 E.g. account.invoice")
             self.win.endExecute()
 
     def lstbox_selected(self,oItemEvent):
@@ -279,7 +279,7 @@ class Fields(unohelper.Base, XJobExecutor ):
                     widget.insertTextContent(cursor,oInputList,False)
                     self.win.endExecute()
                 else:
-                    ErrorDialog("Please Fill appropriate data in Name field \nor select perticular value from the list of fields")
+                    ErrorDialog("Please fill appropriate data in Name field \nor select particular value from the list of fields.")
 
     def btnCancel_clicked( self, oActionEvent ):
         self.win.endExecute()

@@ -1,284 +1,329 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-    
-        <!--Resource: sale.order-->
-        
-        <record id="order" model="sale.order">
-            <field name="shop_id" ref="shop"/>
-            <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field ref="base.res_partner_agrolait" name="partner_id"/>
-            <field ref="base.res_partner_address_8" name="partner_invoice_id"/>
-            <field ref="base.res_partner_address_8" name="partner_shipping_id"/>
-            <field ref="base.res_partner_address_8" name="partner_order_id"/>
-            <field name="order_policy">picking</field>
-            <field name="invoice_quantity">procurement</field> 
-            <field name="note">Invoice after delivery</field>          
-        </record>
 
-        <!--Resource: sale.order.line-->
-        
-        <record id="line" model="sale.order.line">
-            <field name="order_id" ref="order"/>
-            <field name="name">New server config + material</field>
-            <field name="product_id" ref="product.product_product_mb1"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">123.20</field>
-            <field name="type">make_to_stock</field>
-        </record>
-
-        <record id="line1" model="sale.order.line">
-            <field name="order_id" ref="order"/>
-            <field name="name">[PC1] Basic PC</field>
-            <field name="product_id" ref="product.product_product_pc1"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">450.50</field>
-            <field name="product_uom_qty">3</field>
-            <field name="product_uos_qty">3</field>
-            <field name="type">make_to_stock</field>
-        </record>
-        <record id="line13" model="sale.order.line">
-            <field name="order_id" ref="order"/>
-            <field name="name">[PC3] Medium PC</field>
-            <field name="product_id" ref="product.product_product_pc3"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">900</field>
-            <field name="product_uom_qty">5</field>
-            <field name="type">make_to_stock</field>
-            <field name="delay">1</field>
-        </record>
-        <record id="line12" model="sale.order.line">
-            <field name="order_id" ref="order"/>
-            <field name="name">[MB1] Mainboard ASUStek A7N8X</field>
-            <field name="product_id" ref="product.product_product_mb1"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">88</field>
-            <field name="product_uom_qty">5</field>
-            <field name="product_uos_qty">5</field>
-            <field name="type">make_to_stock</field>
-        </record>
-
-        <!--Resource: sale.order-->
-        
-        <record id="order2" model="sale.order">
-            <field name="shop_id" ref="shop"/>
-            <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field name="user_id" ref="base.user_demo"/>
+        <record id="sale_order_1" model="sale.order">
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_9"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_9"/>
-            <field name="partner_order_id" ref="base.res_partner_address_9"/>
-            <field name="invoice_quantity">order</field>
-            <field name="order_policy">postpaid</field>
-            
-        </record>
-
-        <!--Resource: sale.order.line-->
-        
-        <record id="line3" model="sale.order.line">
-            <field name="order_id" ref="order2"/>
-            <field name="name">[PC2] Computer assembled on demand</field>
-            <field name="product_id" ref="product.product_product_pc2"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">540</field>
-            <field name="type">make_to_order</field>
-        </record>
-        <record id="line4" model="sale.order.line">
-            <field name="order_id" ref="order2"/>
-            <field name="name">[MB1] Mainboard ASUStek (purchased on order)</field>
-            <field name="product_id" ref="product.product_product_mb1"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">88</field>
-            <field name="product_uom_qty">8</field>
-            <field name="product_uos_qty">8</field>
-            <field name="type">make_to_order</field>
-        </record>
-
-        <!--Resource: sale.order-->
-        
-        <record id="order3" model="sale.order">
-            <field name="shop_id" ref="shop"/>
-            <field model="product.pricelist" name="pricelist_id" search="[]"/>
+            <field name="partner_invoice_id" ref="base.res_partner_2"/>
+            <field name="partner_shipping_id" ref="base.res_partner_2"/>
+            <field name="shop_id" ref="sale_shop_1"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="partner_id" ref="base.res_partner_agrolait"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_8"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_8"/>
-            <field name="partner_order_id" ref="base.res_partner_address_8"/>
+            <field name="pricelist_id" ref="product.list0"/>
             <field name="order_policy">prepaid</field>
         </record>
-        <record id="line5" model="sale.order.line">
-            <field name="order_id" ref="order3"/>
-            <field name="name">[PC1] Basic PC</field>
-            <field name="product_id" ref="product.product_product_pc1"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_uom_qty">3</field>
-            <field name="price_unit">450</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">2</field>
-        </record>
-        <record id="line6" model="sale.order.line">
-            <field name="order_id" ref="order3"/>
-            <field name="name">[PC2] Basic+ PC (assembly on order)</field>
-            <field name="product_id" ref="product.product_product_pc2"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">750</field>
-            <field name="product_uom_qty">3</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">7</field>
-        </record>
 
-        <!--Resource: sale.order-->
-        
-        <record id="order4" model="sale.order">
-            <field name="shop_id" ref="shop"/>
-            <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="partner_id" ref="base.res_partner_5"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_10"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_10"/>
-            <field name="partner_order_id" ref="base.res_partner_address_10"/>
-        </record>
-        <record id="line7" model="sale.order.line">
-            <field name="order_id" ref="order4"/>
-            <field name="name">[PC1] Basic PC</field>
-            <field name="product_id" ref="product.product_product_pc1"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_uom_qty">2</field>
-            <field name="price_unit">450</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">8</field>
-        </record>
-        <record id="line8" model="sale.order.line">
-            <field name="order_id" ref="order4"/>
-            <field name="name">[PC3] Medium PC</field>
-            <field name="product_id" ref="product.product_product_pc3"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">900</field>
-            <field name="product_uom_qty">5</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">1</field>
-        </record>
-        <workflow action="order_confirm" model="sale.order" ref="order4"/>
-
-        <!--Resource: sale.order-->
-        
-        <record id="order5" model="sale.order">
-            <field name="shop_id" ref="shop"/>
-            <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_zen"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_zen"/>
-            <field name="partner_order_id" ref="base.res_partner_address_zen"/>
-        </record>
-        <record id="line9" model="sale.order.line">
-            <field name="order_id" ref="order5"/>
-            <field name="name">[PC2] Basic+ PC (assembly on order)</field>
-            <field name="product_id" ref="product.product_product_pc2"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_uom_qty">4</field>
-            <field name="price_unit">750</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">15</field>
-        </record>
-        <record id="line52" model="sale.order.line">
-            <field name="order_id" ref="order5"/>
-            <field name="name">[CPU1] Processor AMD Athlon XP 1800+</field>
-            <field name="product_id" ref="product.product_product_cpu1"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">75</field>
+        <record id="sale_order_line_1" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">3</field>
             <field name="product_uos_qty">3</field>
-            <field name="type">make_to_stock</field>
-        </record>
-        <workflow action="order_confirm" model="sale.order" ref="order5"/>
-
-        <!--Resource: sale.order-->
-
-        <record id="order6" model="sale.order">
-            <field name="shop_id" ref="shop"/>
-            <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="partner_id" ref="base.res_partner_maxtor"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_wong"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_wong"/>
-            <field name="partner_order_id" ref="base.res_partner_address_wong"/>
-        </record>
-        <record id="order6_line0" model="sale.order.line">
-            <field name="order_id" ref="order6"/>
-            <field name="name">Onsite Senior Intervention</field>
-            <field name="product_id" ref="product.product_product_0"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_uom_qty">4</field>
-            <field name="price_unit">250</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">15</field>
+            <field name="price_unit">2950.00</field>
         </record>
-        <record id="order6_line1" model="sale.order.line">
-            <field name="order_id" ref="order6"/>
-            <field name="name">Onsite Intervention</field>
-            <field name="product_id" ref="product.product_product_1"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_uom_qty">4</field>
-            <field name="price_unit">500</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">15</field>
-        </record>
-        <workflow action="order_confirm" model="sale.order" ref="order6"/>
-        <workflow action="manual_invoice" model="sale.order" ref="order6"/>
 
-        <!--Resource: sale.order-->
-
-        <record id="order7" model="sale.order">
-            <field name="shop_id" ref="shop"/>
-            <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_3000"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_3000"/>
-            <field name="partner_order_id" ref="base.res_partner_address_3000"/>
-        </record>
-        <record id="order7_line0" model="sale.order.line">
-            <field name="order_id" ref="order7"/>
-            <field name="name">[MB1] Mainboard ASUStek A7N8X</field>
-            <field name="product_id" ref="product.product_product_mb1"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_uom_qty">15</field>
-            <field name="price_unit">250</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">15</field>
-        </record>
-        <record id="order7_line1" model="sale.order.line">
-            <field name="order_id" ref="order7"/>
-            <field name="name">[MB2] Mainboard ASUStek A7V8X-X</field>
-            <field name="product_id" ref="product.product_product_mb2"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+        <record id="sale_order_line_2" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1"/>
+            <field name="name">Pen drive, 16GB</field>
+            <field name="product_id" ref="product.product_product_30"/>
             <field name="product_uom_qty">5</field>
-            <field name="price_unit">500</field>
-            <field name="type">make_to_order</field>
-            <field name="delay">15</field>
+            <field name="product_uos_qty">5</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">145.00</field>
         </record>
-        
-        <!-- Run all schedulers -->
-        <function model="procurement.order" name="run_scheduler"/>
+
+        <record id="sale_order_line_3" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1"/>
+            <field name="name">Headset USB</field>
+            <field name="product_id" ref="product.product_product_33"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uos_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">65.00</field>
+        </record>
+
+        <record id="sale_order_2" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_7"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_13"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_13"/>
+            <field name="shop_id" ref="sale_shop_1"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">manual</field>
+        </record>
+
+        <record id="sale_order_line_4" model="sale.order.line">
+            <field name="order_id" ref="sale_order_2"/>
+            <field name="name">Service on demand</field>
+            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="product_uom_qty">24</field>
+            <field name="product_uos_qty">24</field>
+            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="price_unit">75.00</field>
+            <field name="type">make_to_order</field>
+        </record>
+
+        <record id="sale_order_line_5" model="sale.order.line">
+            <field name="order_id" ref="sale_order_2"/>
+            <field name="name">On Site Assistance</field>
+            <field name="product_id" ref="product.product_product_2"/>
+            <field name="product_uom_qty">30</field>
+            <field name="product_uos_qty">30</field>
+            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="price_unit">38.25</field>
+            <field name="type">make_to_order</field>
+        </record>
+
+        <record id="sale_order_3" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_14"/>
+            <field name="partner_invoice_id" ref="base.res_partner_14"/>
+            <field name="partner_shipping_id" ref="base.res_partner_14"/>
+            <field name="shop_id" ref="sale_shop_1"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">manual</field>
+        </record>
+
+        <record id="sale_order_line_6" model="sale.order.line">
+            <field name="order_id" ref="sale_order_3"/>
+            <field name="name">On Site Monitoring</field>
+            <field name="product_id" ref="product.product_product_1"/>
+            <field name="product_uom_qty">10</field>
+            <field name="product_uos_qty">10</field>
+            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="price_unit">30.75</field>
+            <field name="type">make_to_order</field>
+        </record>
+
+        <record id="sale_order_line_7" model="sale.order.line">
+            <field name="order_id" ref="sale_order_3"/>
+            <field name="name">Toner Cartridge</field>
+            <field name="product_id" ref="product.product_product_39"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uos_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">70.00</field>
+        </record>
+
+        <record id="sale_order_4" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_15"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="shop_id" ref="sale_shop_1"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">prepaid</field>
+        </record>
+
+        <record id="sale_order_line_8" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4"/>
+            <field name="name">Service on demand</field>
+            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="product_uom_qty">16</field>
+            <field name="product_uos_qty">16</field>
+            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="price_unit">75.00</field>
+            <field name="type">make_to_order</field>
+        </record>
+
+        <record id="sale_order_line_9" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4"/>
+            <field name="name">Webcam</field>
+            <field name="product_id" ref="product.product_product_34"/>
+            <field name="product_uom_qty">10</field>
+            <field name="product_uos_qty">10</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">45.00</field>
+        </record>
+
+        <record id="sale_order_line_10" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4"/>
+            <field name="name">Multimedia Speakers</field>
+            <field name="product_id" ref="product.product_product_31"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uos_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">150.00</field>
+        </record>
+
+        <record id="sale_order_line_11" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4"/>
+            <field name="name">Switch, 24 ports</field>
+            <field name="product_id" ref="product.product_product_47"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uos_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">70.00</field>
+        </record>
+
+        <record id="sale_order_5" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="partner_invoice_id" ref="base.res_partner_2"/>
+            <field name="partner_shipping_id" ref="base.res_partner_2"/>
+            <field name="shop_id" ref="sale_shop_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">picking</field>
+        </record>
+
+        <record id="sale_order_line_12" model="sale.order.line">
+            <field name="order_id" ref="sale_order_5"/>
+            <field name="name">External Hard disk</field>
+            <field name="product_id" ref="product.product_product_28"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uos_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">405.00</field>
+        </record>
+
+        <record id="sale_order_line_13" model="sale.order.line">
+            <field name="order_id" ref="sale_order_5"/>
+            <field name="name">Blank DVD-RW</field>
+            <field name="product_id" ref="product.product_product_36"/>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uos_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_dozen"/>
+            <field name="price_unit">24.00</field>
+        </record>
+
+        <record id="sale_order_line_14" model="sale.order.line">
+            <field name="order_id" ref="sale_order_5"/>
+            <field name="name">Printer, All-in-one</field>
+            <field name="product_id" ref="product.product_product_37"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uos_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">4410.00</field>
+        </record>
+
+        <record id="sale_order_6" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_18"/>
+            <field name="partner_invoice_id" ref="base.res_partner_18"/>
+            <field name="partner_shipping_id" ref="base.res_partner_18"/>
+            <field name="shop_id" ref="sale_shop_1"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">picking</field>
+        </record>
+
+        <record id="sale_order_line_15" model="sale.order.line">
+            <field name="order_id" ref="sale_order_6"/>
+            <field name="name">PC Assamble + 2GB RAM</field>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uos_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">750.00</field>
+        </record>
+
+        <record id="sale_order_7" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_11"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_20"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_20"/>
+            <field name="shop_id" ref="sale_shop_1"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">manual</field>
+        </record>
+
+        <record id="sale_order_line_16" model="sale.order.line">
+            <field name="order_id" ref="sale_order_7"/>
+            <field name="name">Laptop E5023</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">5</field>
+            <field name="product_uos_qty">5</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">2950.00</field>
+        </record>
+
+        <record id="sale_order_line_17" model="sale.order.line">
+            <field name="order_id" ref="sale_order_7"/>
+            <field name="name">GrapWorks Software</field>
+            <field name="product_id" ref="product.product_product_44"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uos_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">173.00</field>
+        </record>
+
+        <record id="sale_order_line_18" model="sale.order.line">
+            <field name="order_id" ref="sale_order_7"/>
+            <field name="name">Datacard</field>
+            <field name="product_id" ref="product.product_product_46"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uos_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">40.00</field>
+        </record>
+
+        <record id="sale_order_line_19" model="sale.order.line">
+            <field name="order_id" ref="sale_order_7"/>
+            <field name="name">USB Adapter</field>
+            <field name="product_id" ref="product.product_product_48"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uos_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">18.00</field>
+        </record>
+
+        <record id="sale_order_8" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_15"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="shop_id" ref="sale_shop_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">manual</field>
+        </record>
+
+        <record id="sale_order_line_20" model="sale.order.line">
+            <field name="order_id" ref="sale_order_8"/>
+            <field name="name">Laptop Customized</field>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uos_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">3645.00</field>
+        </record>
+
+        <record id="sale_order_line_21" model="sale.order.line">
+            <field name="order_id" ref="sale_order_8"/>
+            <field name="name">Mouse, Wireless</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uos_qty">2</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">12.50</field>
+        </record>
+
+        <!-- Confirm some Sale Orders-->
+        <workflow action="order_confirm" model="sale.order" ref="sale_order_1"/>
+        <workflow action="order_confirm" model="sale.order" ref="sale_order_5"/>
+        <workflow action="order_confirm" model="sale.order" ref="sale_order_7"/>
 
         <!-- sale advance demo.. -->
         <!-- Demo Data for Product -->
-        
+
         <record id="advance_product_0" model="product.product">
             <field name="name">Advance</field>
-            <field name="categ_id" ref="product.cat1"/>
+            <field name="categ_id" ref="product.product_category_1"/>
             <field name="type">service</field>
             <field name="list_price">150.0</field>
             <field name="standard_price">100.0</field>
             <field name="supply_method">produce</field>
-            <field name="uom_id" ref="product.uom_day"/>
-            <field name="uom_po_id" ref="product.uom_day"/>
+            <field name="uom_id" ref="product.product_uom_day"/>
+            <field name="uom_po_id" ref="product.product_uom_day"/>
+            <field name="company_id" eval="[]"/>
+            <field name="image">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</field>
         </record>
 
-    <record id="base.user_demo" model="res.users">
-        <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
-    </record>
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
+        </record>
+
+
+        <!-- Run all schedulers -->
+        <function model="procurement.order" name="run_scheduler"/>
+
     </data>
 </openerp>

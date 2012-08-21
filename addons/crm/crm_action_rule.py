@@ -23,6 +23,7 @@ import re
 import tools
 
 from tools.translate import _
+from tools import ustr
 from osv import fields
 from osv import osv
 
@@ -48,18 +49,18 @@ class base_action_rule(osv.osv):
         mail_message = self.pool.get('mail.message')
         body = self.format_mail(obj, body)
         if not emailfrom:
-            if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.user_email:
-                emailfrom = obj.user_id.user_email
+            if hasattr(obj, 'user_id') and obj.user_id and obj.user_id.email:
+                emailfrom = obj.user_id.email
 
         name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
         emailfrom = tools.ustr(emailfrom)
-        if hasattr(obj, 'section_id') and obj.section_id and obj.section_id.reply_to:
-            reply_to = obj.section_id.reply_to
+        if hasattr(obj, 'section_id') and obj.section_id and obj.section_id.alias_id:
+            reply_to = obj.section_id.alias_id.name_get()[0][1]
         else:
             reply_to = emailfrom
         if not emailfrom:
-            raise osv.except_osv(_('Error!'), _("No E-Mail Found for your Company address!"))
-        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=obj.id)
+            raise osv.except_osv(_('Error!'), _("There is no email for your company address."))
+        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model=obj._name, reply_to=reply_to, res_id=obj.id)
 
     def do_check(self, cr, uid, action, obj, context=None):
         ok = super(base_action_rule, self).do_check(cr, uid, action, obj, context=context)
@@ -73,9 +74,9 @@ class base_action_rule(osv.osv):
         regex = action.regex_history
         if regex:
             res = False
-            ptrn = re.compile(str(regex))
+            ptrn = re.compile(ustr(regex))
             for history in obj.message_ids:
-                _result = ptrn.search(str(history.name))
+                _result = ptrn.search(ustr(history.subject))
                 if _result:
                     res = True
                     break
@@ -90,7 +91,6 @@ class base_action_rule(osv.osv):
         return ok
 
     def do_action(self, cr, uid, action, model_obj, obj, context=None):
-        res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         write = {}
         if hasattr(action, 'act_section_id') and action.act_section_id:
             obj.section_id = action.act_section_id

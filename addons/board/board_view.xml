@@ -1,74 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <!-- Board Search View  -->
-    <record id="view_board_search" model="ir.ui.view">
-        <field name="name">board.board.search</field>
-        <field name="model">board.board</field>
-        <field name="type">search</field>
+    <record id="view_board_create" model="ir.ui.view">
+        <field name="name">board.create.form</field>
+        <field name="model">board.create</field>
         <field name="arch" type="xml">
-            <search string="Dashboard">
-                <field name="name"/>
-                <field name="line_ids"/>
-            </search>
-        </field>
-    </record>
-
-    <!-- Board Tree View  -->
-    <record id="view_board_tree" model="ir.ui.view">
-        <field name="name">board.board.tree</field>
-        <field name="model">board.board</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Dashboard">
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-
-    <!-- Board Form View  -->
-    <record id="view_board_form" model="ir.ui.view">
-        <field name="name">board.board.form</field>
-        <field name="model">board.board</field>
-        <field name="type">form</field>
-        <field eval="1" name="priority"/>
-        <field name="arch" type="xml">
-            <form string="Dashboard">
-                <group col="6" colspan="4">
+            <form string="Create New Dashboard" version="7.0">
+                <group colspan="4">
                     <field name="name"/>
-                    <field name="view_id"/>
-                    <button colspan="2" name="%(action_board_menu_create)d" string="Create Menu" type="action" icon="gtk-justify-fill" />
+                    <field name="menu_parent_id"/>
                 </group>
-                <field colspan="4" name="line_ids" nolabel="1">
-                    <tree string="Dashboard View">
-                        <field name="name"/>
-                        <field name="sequence"/>
-                        <field name="action_id"/>
-                        <field name="position"/>
-                    </tree>
-                    <form string="Dashboard View">
-                        <field name="name"/>
-                        <field name="sequence"/>
-                        <field name="width"/>
-                        <field name="height"/>
-                        <field name="action_id" domain="[('view_type','!=','tree')]" />
-                        <field name="position"/>
-                    </form>
-                </field>
-            </form>
+                <footer>
+                    <button string="Create" name="board_create" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+           </form>
         </field>
     </record>
 
-    <!-- Action for DashBoard Definition form -->
-    <record id="action_view_board_list_form" model="ir.actions.act_window">
-        <field name="name">Dashboard Definition</field>
-        <field name="res_model">board.board</field>
+    <record id="action_board_create" model="ir.actions.act_window">
+        <field name="name">Create Board</field>
+        <field name="res_model">board.create</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="view_board_search"/>
+        <field name="view_mode">form</field>
+       <field name="view_id" ref="view_board_create"/>
+       <field name="target">new</field>
     </record>
-
-    <menuitem action="action_view_board_list_form" id="menu_view_board_form" parent="base.reporting_menu" sequence="1"/>
-
+    
+    <menuitem action="action_board_create"
+        id="menu_board_create" parent="base.menu_reporting_config"
+        groups="base.group_no_one"
+        sequence="2"/>
 </data>
 </openerp>

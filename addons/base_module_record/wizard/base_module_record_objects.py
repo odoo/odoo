@@ -39,7 +39,7 @@ class base_module_record(osv.osv_memory):
 
     def _get_default_objects(self, cr, uid, context=None):
         names = ('ir.ui.view', 'ir.ui.menu', 'ir.model', 'ir.model.fields', 'ir.model.access',
-            'res.partner', 'res.partner.address', 'res.partner.category', 'workflow',
+            'res.partner', 'res.partner.category', 'workflow',
             'workflow.activity', 'workflow.transition', 'ir.actions.server', 'ir.server.object.lines')
         return self.pool.get('ir.model').search(cr, uid, [('model', 'in', names)])
 

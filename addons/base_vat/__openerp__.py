@@ -23,10 +23,9 @@
     'name': 'VAT Number Validation',
     'version': '1.0',
     "category": 'Hidden/Dependency',
-    'complexity': "easy",
     'description': """
-VAT validation for Partners' VAT numbers
-========================================
+VAT validation for Partner's VAT numbers.
+=========================================
 
 After installing this module, values entered in the VAT field of Partners will
 be validated for all supported countries. The country is inferred from the
@@ -51,7 +50,6 @@ There are two different levels of VAT number validation:
 Supported countries currently include EU countries, and a few non-EU countries
 such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,
 only the country code will be validated.
-
     """,
     'author': 'OpenERP SA',
     'depends': ['account'],

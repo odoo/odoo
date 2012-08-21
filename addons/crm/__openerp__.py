@@ -25,13 +25,14 @@
     'version': '1.0',
     'category': 'Customer Relationship Management',
     "sequence": 2,
-    'complexity': "easy",
+    "summary": "Leads, Opportunities, Agenda",
     'description': """
 The generic OpenERP Customer Relationship Management.
 =====================================================
 
 This system enables a group of people to intelligently and efficiently manage
-leads, opportunities, meeting, phonecall etc.
+leads, opportunities, meeting, phonecall.
+
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
@@ -42,22 +43,26 @@ specific methods and lots of other actions based on your own enterprise rules.
 The greatest thing about this system is that users don't need to do anything
 special. They can just send email to the request tracker. OpenERP will take
 care of thanking them for their message, automatically routing it to the
-appropriate staff, and make sure all future correspondence gets to the right
+appropriate staff and make sure all future correspondence gets to the right
 place.
 
 The CRM module has a email gateway for the synchronisation interface
 between mails and OpenERP.
 
 Creates a dashboard for CRM that includes:
-    * Opportunities by Categories (graph)
-    * Opportunities by Stage (graph)
+------------------------------------------
+    * List of New Leads
+    * List of My Opportunities
+    * List of My Next Meetings
     * Planned Revenue by Stage and User (graph)
+    * Opportunities by Stage (graph)
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
         'base_action_rule',
         'base_setup',
+        'base_status',
         'process',
         'mail',
         'base_calendar',
@@ -67,9 +72,7 @@ Creates a dashboard for CRM that includes:
     ],
     'init_xml': [
         'crm_data.xml',
-        'crm_meeting_data.xml',
         'crm_lead_data.xml',
-        'crm_meeting_data.xml',
         'crm_phonecall_data.xml',
     ],
     'update_xml': [
@@ -86,7 +89,6 @@ Creates a dashboard for CRM that includes:
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
-        'wizard/crm_add_note_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
@@ -106,17 +108,16 @@ Creates a dashboard for CRM that includes:
         'report/crm_phonecall_report_view.xml',
 
         'process/crm_configuration_process.xml',
-        'crm_installer_view.xml',
 
         'res_partner_view.xml',
-        'board_crm_statistical_view.xml',
         'board_crm_view.xml',
+        
+        'res_config_view.xml',
 
     ],
     'demo_xml': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
-        'crm_meeting_demo.xml',
         'crm_phonecall_demo.xml',
     ],
     'test': [

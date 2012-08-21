@@ -11,7 +11,7 @@
         <td colspan="2" valign="top" id="oe_header" class="header">
             <div> <a href="/" class="company_logo_link">
                     <div class="company_logo"
-                         t-att-style="'background: url('+ (doc.company_address ? '/edi/binary?db='+widget.db+'&amp;token='+widget.token : '/web/static/src/img/logo.png')+')'"/></a> </div>
+                         t-att-style="'background-size: 180px 46px; background: url('+ (doc.company_address ? '/edi/binary?db='+widget.db+'&amp;token='+widget.token : '/web/static/src/img/logo.png')+')'"/></a> </div>
         </td>
     </tr>
     <tr>
@@ -19,7 +19,7 @@
             <table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
                 <tr>
                     <td class="oe_edi_view">
-                        <p class="oe_form_paragraph"><t t-raw="widget.content"/></p>
+                        <p class="oe_paragraph"><t t-raw="widget.content"/></p>
                         <button type="button" class="oe_edi_action_print">
                             View/Print <img src="/edi/static/src/img/pdf.png"/>
                         </button>

@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Project Management',
     "sequence": 20,
-    'complexity': "easy",
+    "summary": "Personal Tasks",
     'description': """
 This module implements all concepts defined by the Getting Things Done methodology.
 ===================================================================================

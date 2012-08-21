@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="base.view_country_form"/>
             <field name="arch" type="xml">
                 <field name="code" position="after">
-                    <field name="intrastat" select="1"/>
+                    <field name="intrastat"/>
                 </field>
             </field>
         </record>
@@ -40,7 +40,6 @@
         <record id="view_report_intrastat_code_tree" model="ir.ui.view">
             <field name="name">report.intrastat.code.tree</field>
             <field name="model">report.intrastat.code</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Intrastat code">
                     <field name="name"/>
@@ -51,11 +50,12 @@
         <record id="view_report_intrastat_code_form" model="ir.ui.view">
             <field name="name">report.intrastat.code.form</field>
             <field name="model">report.intrastat.code</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Intrastat code">
-                    <field name="name" select="1"/>
-                    <field name="description" select="1"/>
+                <form string="Intrastat Code" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -68,13 +68,12 @@
         </record>
 
         <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code" 
-                parent="base.menu_config_address_book" sequence="2"/>
+                parent="base.menu_config_address_book" sequence="2" groups="base.group_no_one"/>
 
 
         <record id="view_report_intrastat_tree" model="ir.ui.view">
             <field name="name">report.intrastat.view</field>
             <field name="model">report.intrastat</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Intrastat Data">
                     <field name="name" />
@@ -94,19 +93,12 @@
         <record id="view_report_intrastat_search" model="ir.ui.view">
             <field name="name">report.intrastat.search</field>
             <field name="model">report.intrastat</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Intrastat Data">
-                    <group>
-                        <filter string="This Year" icon="terp-go-year" domain="[('name','=',time.localtime()[0])]"/>
-                        <filter string="This Month" icon="terp-go-month" domain="[('month','=',time.localtime()[1])]"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="month"/>
-                        <field name="code"/>
-                        <field name="intrastat_id"/>
-                        <field name="type"/>
-                    </group>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Intrastat Data"/>
+                    <field name="month"/>
+                    <field name="type"/>
+                    <field name="intrastat_id"/>
                 </search>
             </field>
         </record>

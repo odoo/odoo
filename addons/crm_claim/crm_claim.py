@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,30 +19,60 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from crm import crm
-import time
-from crm import wizard
+from base_status.base_stage import base_stage
 import binascii
+from crm import crm
+from osv import fields, osv
+import time
 import tools
 from tools.translate import _
 
-wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.claim')
 CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-
-class crm_claim(crm.crm_case, osv.osv):
+class crm_claim_stage(osv.osv):
+    """ Model for claim stages. This models the main stages of a claim
+        management flow. Main CRM objects (leads, opportunities, project 
+        issues, ...) will now use only stages, instead of state and stages.
+        Stages are for example used to display the kanban view of records.
     """
-    Crm claim
+    _name = "crm.claim.stage"
+    _description = "Claim stages"
+    _rec_name = 'name'
+    _order = "sequence"
+
+    _columns = {
+        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
+        'section_ids':fields.many2many('crm.case.section', 'section_claim_stage_rel', 'stage_id', 'section_id', string='Sections',
+                        help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
+        'state': fields.selection(crm.AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. For example, if a stage is related to the state 'Close', when your document reaches this stage, it will be automatically have the 'closed' state."),
+        'case_refused': fields.boolean('Refused stage',
+                        help='Refused stages are specific stages for done.'),
+        'case_default': fields.boolean('Common to All Teams',
+                        help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
+        'fold': fields.boolean('Hide in Views when Empty',
+                        help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+    }
+
+    _defaults = {
+        'sequence': lambda *args: 1,
+        'state': 'draft',
+        'fold': False,
+        'case_refused': False,
+    }
+
+class crm_claim(base_stage, osv.osv):
+    """ Crm claim
     """
     _name = "crm.claim"
     _description = "Claim"
     _order = "priority,date desc"
     _inherit = ['mail.thread']
+    _mail_compose_message = True
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Claim Subject', size=128, required=True),
@@ -70,34 +100,74 @@ class crm_claim(crm.crm_case, osv.osv):
                                 " mail gateway."),
         'company_id': fields.many2one('res.company', 'Company'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                # domain="[('partner_id','=',partner_id)]"
-                                 ),
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids','=',section_id)]"), 
+        'stage_id': fields.many2one ('crm.claim.stage', 'Stage',
+                        domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"), 
         'cause': fields.text('Root Cause'),
-        'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'state': fields.related('stage_id', 'state', type="selection", store=True,
+                selection=crm.AVAILABLE_STATES, string="State", readonly=True,
+                help='The state is set to \'Draft\', when a case is created.\
+                      If the case is in progress the state is set to \'Open\'.\
+                      When the case is over, the state is set to \'Done\'.\
+                      If the case needs to be reviewed then the state is \
+                      set to \'Pending\'.'),
     }
 
     _defaults = {
-        'user_id': crm.crm_case._get_default_user,
-        'partner_id': crm.crm_case._get_default_partner,
-        'partner_address_id': crm.crm_case._get_default_partner_address,
-        'email_from':crm.crm_case. _get_default_email,
-        'state': lambda *a: 'draft',
-        'section_id':crm.crm_case. _get_section,
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'user_id':  lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
+        'partner_id':  lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
+        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
+        'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'active': lambda *a: 1
     }
+
+    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+        """ Override of the base.stage method
+            Parameter of the stage search taken from the lead:
+            - section_id: if set, stages must belong to this section or
+              be a default case
+        """
+        if isinstance(cases, (int, long)):
+            cases = self.browse(cr, uid, cases, context=context)
+        # collect all section_ids
+        section_ids = []
+        if section_id:
+            section_ids.append(section_id)
+        for claim in cases:
+            if claim.section_id:
+                section_ids.append(claim.section_id.id)
+        # OR all section_ids and OR with case_default
+        search_domain = []
+        if section_ids:
+            search_domain += [('|')] * len(section_ids)
+            for section_id in section_ids:
+                search_domain.append(('section_ids', '=', section_id))
+        search_domain.append(('case_default', '=', True))
+        # AND with the domain in parameter
+        search_domain += list(domain)
+        # perform search, return the first found
+        stage_ids = self.pool.get('crm.claim.stage').search(cr, uid, search_domain, order=order, context=context)
+        if stage_ids:
+            return stage_ids[0]
+        return False
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_claim, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def case_refuse(self, cr, uid, ids, context=None):
+        """ Mark the case as refused: state=done and case_refused=True """
+        for lead in self.browse(cr, uid, ids):
+            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, ['&', ('state', '=', 'done'), ('case_refused', '=', True)], context=context)
+            if stage_id:
+                self.case_set(cr, uid, [lead.id], values_to_update={}, new_stage_id=stage_id, context=context)
+        return self.case_refuse_send_note(cr, uid, ids, context=context)
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
@@ -105,90 +175,81 @@ class crm_claim(crm.crm_case, osv.osv):
            :param email: ignored
         """
         if not part:
-            return {'value': {'partner_address_id': False,
-                            'email_from': False,
-                            'partner_phone': False
-                            }}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-        data = {'partner_address_id': addr['contact']}
-        data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
-        return {'value': data}
-
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        """This function returns value of partner email based on Partner Address
-           :param part: Partner's id
-           :param email: ignored
-        """
-        if not add:
-            return {'value': {'email_from': False}}
-        address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            return {'value': {'email_from': False,
+                              'partner_phone': False
+                            }
+                   }
+        address = self.pool.get('res.partner').browse(cr, uid, part)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone}}
 
-    def case_open(self, cr, uid, ids, *args):
-        """Opens Claim"""
-        for l in self.browse(cr, uid, ids):
-            # When coming from draft override date and stage otherwise just set state
-            if l.state == 'draft':
-                message = _("The claim '%s' has been opened.") % l.name
-                self.log(cr, uid, l.id, message)
-                stage_id = self.stage_find(cr, uid, l.section_id.id or False, [('sequence','>',0)])
-                if stage_id:
-                    self.stage_set(cr, uid, [l.id], stage_id)
-        res = super(crm_claim, self).case_open(cr, uid, ids, *args)
-        return res
-    
-    def message_new(self, cr, uid, msg, custom_values=None, context=None):
-        """Automatically called when new email message arrives"""
-        res_id = super(crm_claim,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-        subject = msg.get('subject')
-        body = msg.get('body_text')
-        msg_from = msg.get('from')
-        priority = msg.get('priority')
-        vals = {
-            'name': subject,
-            'email_from': msg_from,
-            'email_cc': msg.get('cc'),
-            'description': body,
-            'user_id': False,
-        }
-        if priority:
-            vals['priority'] = priority
-        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
-        self.write(cr, uid, [res_id], vals, context=context)
-        return res_id
+    # -------------------------------------------------------
+    # Mail gateway
+    # -------------------------------------------------------
 
-    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        if custom_values is None: custom_values = {}
+        custom_values.update({
+            'name': msg.get('subject') or _("No Subject"),
+            'description': msg.get('body_text'),
+            'email_from': msg.get('from'),
+            'email_cc': msg.get('cc'),
+        })
+        if msg.get('priority'):
+            custom_values['priority'] = msg.get('priority')
+        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
+        return super(crm_claim,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Overrides mail_thread message_update that is called by the mailgateway
+            through message_process.
+            This method updates the document according to the email.
+        """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-
-        res_id = super(crm_claim,self).message_update(cr, uid, ids, msg, context=context)
+        if update_vals is None: update_vals = {}
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-            vals['priority'] = msg.get('priority')
+            update_vals['priority'] = msg.get('priority')
 
         maps = {
             'cost':'planned_cost',
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
-        vls = {}
         for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
-                vls[key] = res.group(2).lower()
-        vals.update(vls)
+                update_vals[key] = res.group(2).lower()
 
-        # Unfortunately the API is based on lists
-        # but we want to update the state based on the
-        # previous state, so we have to loop:
-        for case in self.browse(cr, uid, ids, context=context):
-            values = dict(vals)
-            if case.state in CRM_CLAIM_PENDING_STATES:
-                values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
-            res = self.write(cr, uid, [case.id], values, context=context)
-        return res
+        return  super(crm_claim,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+
+    # ---------------------------------------------------
+    # OpenChatter methods and notifications
+    # ---------------------------------------------------
+
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        """ Override of default prefix for notifications. """
+        return 'Claim'
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        msg = _('Claim has been <b>created</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def case_refuse_send_note(self, cr, uid, ids, context=None):
+        msg = _('Claim has been <b>refused</b>.')
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        stage_name = self.pool.get('crm.claim.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'

@@ -7,7 +7,6 @@
         <record id="view_report_crm_phonecall_tree" model="ir.ui.view">
             <field name="name">crm.phonecall.report.tree</field>
             <field name="model">crm.phonecall.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Phone calls">
                     <field name="name" invisible="1"/>
@@ -33,7 +32,6 @@
         <record id="view_report_crm_phonecall_graph" model="ir.ui.view">
             <field name="name">crm.phonecall.report.graph</field>
             <field name="model">crm.phonecall.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Phone calls" type="bar">
                     <field name="state"/>
@@ -48,80 +46,39 @@
     <record id="view_report_crm_phonecall_filter" model="ir.ui.view">
             <field name="name">crm.phonecall.report.select</field>
             <field name="model">crm.phonecall.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group>
-                        <filter string="Year" icon="terp-go-year" name="year"
-                               domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                               help="Phone calls made in current year"/>
-                        <separator orientation="vertical" />
-                        <filter string="Month" icon="terp-go-month" name="This Month"
-                           domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                           help="Phone calls made in current month"/>
-                        <filter icon="terp-go-month" string="Month-1"
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Phone calls made in last month"/>
-                        <separator orientation="vertical" />
-                        <filter icon="terp-gtk-go-back-rtl"
-                            string="Todo"
-                            domain="[('state','in',('draft','open'))]"
-                            help="Phone calls which are in draft and open state"/>
-                        <filter icon="terp-camera_test"
-                            string="Held"
-                            domain="[('state','=','done')]"
-                            help="Phone calls which are in closed state"/>
-                        <filter icon="gtk-media-pause"
-                            string="Not Held"
-                            domain="[('state','=','pending')]"
-                            help="Phone calls which are in pending state"/>
-                        <separator orientation="vertical" />
-                        <field name="section_id" string="Sales Team"
-                            context="{'invisible_section': False}">
-                            <filter icon="terp-personal+" groups="base.group_extended"
-                                context="{'invisible_section': False}"
-                                domain="[('section_id.user_id','=',uid)]"
-                                help="My Sales Team(s)" />
-                        </field>
-                        <field name="user_id" string="Salesman">
-                            <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                        </field>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..."  groups="base.group_extended">
+                    <filter icon="terp-gtk-go-back-rtl" string="Todo" domain="[('state','in',('draft','open'))]"
+                        help="Phone calls which are in draft and open state"/>
+                    <filter icon="terp-camera_test" string="Held" domain="[('state','=','done')]"
+                        help="Phone calls which are in closed state"/>
+                    <filter icon="gtk-media-pause" string="Not Held" domain="[('state','=','pending')]"
+                        help="Phone calls which are in pending state"/>
+                    <separator/>
+                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]"
+                            help="Phone calls that are assigned to one of the sale teams I manage"/>
+                    <separator/>
+                    <filter icon="terp-personal" string="My Phone Calls" help="Phone Calls that are assigned to me" domain="[('user_id','=',uid)]" />
+                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <group expand="0" string="Extended Filters...">
                         <field name="partner_id"/>
-                        <separator orientation="vertical"/>
                         <field name="company_id" groups="base.group_multi_company"/>
-                        <newline/>
                         <field name="creation_date"/>
                         <field name="opening_date"/>
                         <field name="date_closed"/>
                     </group>
-                    <newline/>
                     <group expand="1" string="Group By...">
-                        <filter string="Salesman" name="Salesman" icon="terp-personal"
-                            domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+"
-                            domain="[]"
-                            context="{'group_by':'section_id'}" />
+                        <filter string="Salesperson" name="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
-                        <separator orientation="vertical" />
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Category" icon="terp-stock_symbol-selection"
-                            domain="[]" context="{'group_by':'categ_id'}" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize"
-                            domain="[]" context="{'group_by':'state'}" />
-                        <separator orientation="vertical" />
-                        <filter string="Company" icon="terp-go-home"
-                            domain="[]"
-                            context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <separator orientation="vertical" />
-                        <filter string="Day" icon="terp-go-today"
-                            domain="[]" context="{'group_by':'day'}" help="Date of call"/>
-                        <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}" help="Month of call"/>
-                        <filter string="Year" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'name'}" help="Year of call"/>
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}" help="Date of call"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Month of call"/>
+                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'name'}" help="Year of call"/>
                     </group>
                 </search>
             </field>
@@ -155,9 +112,9 @@
         </record>
 
         <menuitem name="Phone Calls Analysis"
-            groups="base.group_extended"
+            groups="base.group_sale_salesman"
             action="action_report_crm_phonecall"
-            id="menu_report_crm_phonecalls_tree" parent="base.next_id_64" sequence="5"/>
+            id="menu_report_crm_phonecalls_tree" parent="base.next_id_64" sequence="15"/>
 
     </data>
 </openerp>

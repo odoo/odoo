@@ -23,9 +23,8 @@
     'name': 'Payroll Accounting',
     'version': '1.0',
     'category': 'Human Resources',
-    'complexity': "expert",
     'description': """
-Generic Payroll system Integrated with Accountings.
+Generic Payroll system Integrated with Accounting.
 ===================================================
 
     * Expense Encoding

@@ -5,23 +5,22 @@
 -
   !record {model: account.invoice, id: invoice_edi_1}:
     journal_id: 1
-    partner_id: base.res_partner_agrolait
+    partner_id: base.res_partner_2
     currency_id: base.EUR
-    address_invoice_id: base.res_partner_address_8invoice
     company_id: 1
     account_id: account.a_pay
     date_invoice: !eval "'%s' % (time.strftime('%Y-%m-%d'))"
     name: selling product
     type: 'out_invoice'
     invoice_line:
-      - product_id: product.product_product_pc1
+      - product_id: product.product_product_3
         uos_id: 1
         quantity: 1.0
         price_unit: 10.0
         name: 'basic pc'
         account_id: account.a_pay
     invoice_line:
-      - product_id: product.product_product_pc3
+      - product_id: product.product_product_5
         uos_id: 1
         quantity: 5.0
         price_unit: 100.0
@@ -58,11 +57,12 @@
         "company_address": {
                 "__id": "base:b22acf7a-ddcd-11e0-a4db-701a04e25543.main_address",
                 "__module": "base",
-                "__model": "res.partner.address",
-                "city": "Gerompont",
-                "zip": "1367",
-                "country_id": ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.be", "Belgium"],
-                "phone": "(+32).81.81.37.00",
+                "__model": "res.partner", 
+                "city": "Gerompont", 
+                "name": "Company main address",
+                "zip": "1367", 
+                "country_id": ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.be", "Belgium"], 
+                "phone": "(+32).81.81.37.00", 
                 "street": "Chaussee de Namur 40",
                 "bank_ids": [
                     ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_partner_bank-ZrTWzesfsdDJzGbp","Sample bank: 123465789-156113"]
@@ -80,12 +80,13 @@
         "partner_address": {
                 "__id": "base:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_address_7wdsjasdjh",
                 "__module": "base",
-                "__model": "res.partner.address",
-                "phone": "(+32).81.81.37.00",
-                "street": "Chaussee de Namur 40",
-                "city": "Gerompont",
-                "zip": "1367",
-                "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"],
+                "__model": "res.partner",
+                "name": "Default Address",
+                "phone": "(+32).81.81.37.00", 
+                "street": "Chaussee de Namur 40", 
+                "city": "Gerompont", 
+                "zip": "1367", 
+                "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"], 
         },
         "date_invoice": time.strftime('%Y-%m-%d'),
         "name": "sample invoice",
@@ -105,7 +106,7 @@
                 "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "Unit"],
                 "name": "Basic PC",
                 "price_unit": 10.0,
-                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc1", "[PC1] Basic PC"],
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_3", "[PC1] Basic PC"],
                 "quantity": 1.0
         },
         {
@@ -115,7 +116,7 @@
                 "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "Unit"],
                 "name": "Medium PC",
                 "price_unit": 100.0,
-                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc3", "[PC3] Medium PC"],
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_5", "[PC3] Medium PC"],
                 "quantity": 5.0
         }]
     }

@@ -3,8 +3,8 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#    
-#    Adapted by Noviat to 
+#
+#    Adapted by Noviat to
 #     - enforce correct vat number
 #     - support negative balance
 #     - assign amount of tax code 71-72 correclty to grid 71 or 72
@@ -45,7 +45,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], required=True),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
-        'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
+        'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a restitution is to made or not?'),
         'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to made or not?'),
         'client_nihil': fields.boolean('Last Declaration, no clients in client listing', help='Tick this case only if it concerns only the last statement on the civil or cessation of activity: ' \
             'no clients to be included in the client listing.'),
@@ -83,7 +83,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
             obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
         vat_no = obj_company.partner_id.vat
         if not vat_no:
-            raise osv.except_osv(_('Data Insufficient'), _('No VAT Number Associated with Main Company!'))
+            raise osv.except_osv(_('Insufficient Data!'), _('No VAT Number Associated with Main Company.'))
         vat_no = vat_no.replace(' ','').upper()
         vat = vat_no[2:]
 
@@ -94,22 +94,22 @@ class l10n_be_vat_declaration(osv.osv_memory):
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
         name = email = phone = address = post_code = city = country_code = ''
-        name, email, phone, city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
+        name, email, phone, city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id)
 
         account_period = obj_acc_period.browse(cr, uid, data['period_id'][0], context=context)
-        issued_by = vat_no[:2] 
+        issued_by = vat_no[:2]
         comments = data['comments'] or ''
-            
+
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
-        
+
         starting_month = account_period.date_start[5:7]
         ending_month = account_period.date_stop[5:7]
         quarter = str(((int(starting_month) - 1) / 3) + 1)
-    
+
         if not email:
-            raise osv.except_osv(_('Data Insufficient!'),_('No email address associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No email address associated with the company.'))
         if not phone:
-            raise osv.except_osv(_('Data Insufficient!'),_('No phone associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No phone associated with the company.'))
         file_data = {
                         'issued_by': issued_by,
                         'vat_no': vat_no,
@@ -130,7 +130,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
                         'ask_payment': (data['ask_payment'] and 'YES' or 'NO'),
                         'comments': comments,
                      }
-        
+
         data_of_file = """<?xml version="1.0"?>
 <ns2:VATConsignment xmlns="http://www.minfin.fgov.be/InputCommon" xmlns:ns2="http://www.minfin.fgov.be/VATConsignment" VATDeclarationsNbr="1">
     <ns2:Representative>
@@ -186,7 +186,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
                     'amount': str(abs(item['sum_period'])),
                     }
             data_of_file += '\n\t\t\t<ns2:Amount GridNumber="%(code)s">%(amount)s</ns2:Amount''>' % (grid_amount_data)
-            
+
         data_of_file += '\n\t\t</ns2:Data>'
         data_of_file += '\n\t\t<ns2:ClientListingNihil>%(client_nihil)s</ns2:ClientListingNihil>' % (file_data)
         data_of_file += '\n\t\t<ns2:Ask Restitution="%(ask_restitution)s" Payment="%(ask_payment)s"/>' % (file_data)

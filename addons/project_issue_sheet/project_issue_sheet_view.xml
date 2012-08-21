@@ -5,19 +5,20 @@
             <field name="name">Project Issue Tracker Form</field>
             <field name="model">project.issue</field>
             <field name="inherit_id" ref="project_issue.project_issue_form_view" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="project_id" position="attributes">
                     <attribute name="on_change">on_change_project(project_id)</attribute>
                 </field>
-                <xpath expr="/form/notebook" position="before">
-                    <field invisible="1" name="analytic_account_id"
-                        domain="[('parent_id','!=',False),('partner_id', '=', partner_id),('type', '!=', 'view')]"
-                        on_change='on_change_account_id(analytic_account_id)'
-                        groups="base.group_extended" />
-                </xpath>
+                <field name="active" position="after">
+                    <newline/>
+                    <group colspan="4"> 
+                        <field name="analytic_account_id"
+                            domain="[('parent_id','!=',False),('partner_id', '=', partner_id),('type', '!=', 'view')]"
+                            on_change='on_change_account_id(analytic_account_id)'/>
+                    </group>
+                </field>
                 <xpath expr="//notebook/page[@string='Extra Info']" position="before">
-                	<page string="Worklogs">
+                    <page string="Worklogs">
                         <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : user_id, 'default_account_id' : analytic_account_id}">
                             <tree editable="top" string="Timesheets">
                                 <field name="name"/>

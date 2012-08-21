@@ -24,13 +24,12 @@
     'name': 'Document Management System',
     'version': '2.1',
     'category': 'Knowledge Management',
-    'complexity': "normal",
     'description': """
 This is a complete document management system.
 ==============================================
 
     * User Authentication
-    * Document Indexation :- .pptx and .docx files are not supported in Windows platform.
+    * Document Indexation:- .pptx and .docx files are not supported in Windows platform.
     * Dashboard for Document that includes:
         * New Files (list)
         * Files by Resource Type (graph)
@@ -38,8 +37,8 @@ This is a complete document management system.
         * Files Size by Month (graph)
 
 ATTENTION:
-    - When you install this module in a running company that have already PDF files stored into the database,
-      you will lose them all.
+    - When you install this module in a running company that have already PDF 
+      files stored into the database, you will lose them all.
     - After installing this module PDF's are no longer stored into the database,
       but in the servers rootpad like /server/bin/filestore.
 """,

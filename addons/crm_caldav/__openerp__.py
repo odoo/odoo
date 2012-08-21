@@ -25,12 +25,11 @@
     'name': 'Meetings Synchronization',
     'version': '1.1',
     'category': 'Customer Relationship Management',
-    'complexity': "normal",
     'description': """
 Caldav features in Meeting.
 ===========================
 
-    *  Share meeting with other calendar clients like sunbird
+    * Share meeting with other calendar clients like sunbird
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

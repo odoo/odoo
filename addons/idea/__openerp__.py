@@ -24,10 +24,9 @@
     'name': 'Ideas',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
-This module allows your user to easily and efficiently participate in enterprise innovation.
-============================================================================================
+This module allows user to easily and efficiently participate in enterprise innovation.
+=======================================================================================
 
 It allows everybody to express ideas about different subjects.
 Then, other users can comment on these ideas and vote for particular ideas.
@@ -36,24 +35,20 @@ The managers can obtain an easy view of best ideas from all the users.
 Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'depends': ['base_tools'],
+    'depends': ['base_tools','mail'],
     'init_xml': [],
     'update_xml': [
         'security/idea_security.xml',
         'security/ir.model.access.csv',
-        'wizard/idea_post_vote_view.xml',
         'idea_view.xml',
         'idea_workflow.xml',
-        'report/report_vote_view.xml',
     ],
     'demo_xml': [
         "idea_data.xml"
     ],
     'test':[
-        'test/test_idea.yml'
     ],
     'installable': True,
-    'certificate': '0071515601309',
-    'images': ['images/1_ideas.jpeg','images/2_idea_categories.jpeg','images/3_vote_idea.jpeg'],
+    'images': [],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

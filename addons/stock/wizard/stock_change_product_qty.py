@@ -26,15 +26,17 @@ import tools
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
+    _inherit = ['mail.thread']
     _description = "Change Product Quantity"
     _columns = {
         'product_id' : fields.many2one('product.product', 'Product'),
-        'new_quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, help='This quantity is expressed in the Default UoM of the product.'),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
+        'new_quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, help='This quantity is expressed in the Default Unit of Measure of the product.'),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None: context = {}
         fvg = super(stock_change_product_qty, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         product_id = context and context.get('active_id', False) or False
 
@@ -60,6 +62,9 @@ class stock_change_product_qty(osv.osv_memory):
             res.update({'new_quantity': 1})
         if 'product_id' in fields:
             res.update({'product_id': product_id})
+        if 'location_id' in fields:
+            location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
+            res.update({'location_id': location_id and location_id.id or False})
         return res
 
     def change_product_qty(self, cr, uid, ids, context=None):
@@ -98,8 +103,17 @@ class stock_change_product_qty(osv.osv_memory):
 
             inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
-
+            self.change_product_qty_send_note(cr, uid, [data.id], context)
         return {}
+
+    def change_product_qty_send_note(self, cr, uid, ids, context=None):
+        prod_obj = self.pool.get('product.product')
+        location_obj = self.pool.get('stock.location')
+
+        for data in self.browse(cr, uid, ids, context=context):
+            location_name = location_obj.browse(cr, uid, data.location_id.id, context=context).name
+            message = _("<b>Quantity has been changed</b> to <em>%s %s </em> for <em>%s</em> location.") % (data.new_quantity, data.product_id.uom_id.name, location_name)
+            prod_obj.message_append_note(cr, uid, [data.product_id.id], body=message, context=context)
 
 stock_change_product_qty()
 

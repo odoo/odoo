@@ -24,14 +24,13 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Accounting & Finance",
-    'complexity': "easy",
     "description": """
 Module to manage the payment of your supplier invoices.
 =======================================================
 
 This module allows you to create and manage your payment orders, with purposes to 
-* serve as base for an easy plug-in of various automated payment mechanisms.
-* provide a more efficient way to manage invoice payment.
+    * serve as base for an easy plug-in of various automated payment mechanisms.
+    * provide a more efficient way to manage invoice payment.
 
 Warning:
 --------

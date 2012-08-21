@@ -3,8 +3,6 @@
 -
   !record {model: account.invoice, id: account_invoice_0}:
     account_id: account.a_recv
-    address_contact_id: base.res_partner_address_7
-    address_invoice_id: base.res_partner_address_7
     company_id: base.main_company
     currency_id: base.EUR
     invoice_line:
@@ -12,10 +10,10 @@
         name: '[PC1] Basic PC'
         price_unit: 450.0
         quantity: 1.0
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
 
 -
   I check that the customer invoice is in draft state
@@ -42,14 +40,14 @@
     import netsvc
     vals = {}
     journal_id = self.default_get(cr, uid, ['journal_id']).get('journal_id',None)
-    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_seagate"), journal_id, 0.0, 1, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_19"), journal_id, 0.0, 1, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 450.0,
         'company_id': ref('base.main_company'),
         'currency_id': ref('base.EUR'),
         'journal_id': ref('account.bank_journal'),
-        'partner_id': ref('base.res_partner_seagate'),
+        'partner_id': ref('base.res_partner_19'),
         'period_id': ref('account.period_8'),
         'type': 'receipt',
     }

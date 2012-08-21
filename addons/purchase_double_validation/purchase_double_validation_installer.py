@@ -21,35 +21,29 @@
 
 from osv import fields, osv
 
-class purchase_double_validation_installer(osv.osv_memory):
-    _name = 'purchase.double.validation.installer'
-    _inherit = 'res.config'
+class purchase_config_settings(osv.osv_memory):
+    _inherit = 'purchase.config.settings'
     _columns = {
-        'limit_amount': fields.integer('Maximum Purchase Amount', required=True, help="Maximum amount after which validation of purchase is required."),
+        'limit_amount': fields.integer('limit to require a second approval',required=True,
+            help="Amount after which validation of purchase is required."),
     }
 
     _defaults = {
         'limit_amount': 5000,
     }
 
-    def execute(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, context=context)
-        if not data:
-            return {}
-        amt = data[0]['limit_amount']
-        data_pool = self.pool.get('ir.model.data')
-        transition_obj = self.pool.get('workflow.transition')
-        waiting = data_pool._get_id(cr, uid, 'purchase', 'trans_confirmed_router')
-        waiting_id = data_pool.browse(cr, uid, waiting, context=context).res_id
-        confirm = data_pool._get_id(cr, uid, 'purchase_double_validation', 'trans_waiting_confirmed')
-        confirm_id = data_pool.browse(cr, uid, confirm, context=context).res_id
-        transition_obj.write(cr, uid, waiting_id, {'condition': 'amount_total>=%s' % (amt)})
-        transition_obj.write(cr, uid, confirm_id, {'condition': 'amount_total<%s' % (amt)})
-        return {}
+    def get_default_limit_amount(self, cr, uid, fields, context=None):
+        ir_model_data = self.pool.get('ir.model.data')
+        transition = ir_model_data.get_object(cr, uid, 'purchase_double_validation', 'trans_waiting_confirmed')
+        field, value = transition.condition.split('<', 1)
+        return {'limit_amount': int(value)}
 
-purchase_double_validation_installer()
-
-
+    def set_limit_amount(self, cr, uid, ids, context=None):
+        ir_model_data = self.pool.get('ir.model.data')
+        config = self.browse(cr, uid, ids[0], context)
+        waiting = ir_model_data.get_object(cr, uid, 'purchase', 'trans_confirmed_router')
+        waiting.write({'condition': 'amount_total >= %s' % config.limit_amount})
+        confirm = ir_model_data.get_object(cr, uid, 'purchase_double_validation', 'trans_waiting_confirmed')
+        confirm.write({'condition': 'amount_total < %s' % config.limit_amount})
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

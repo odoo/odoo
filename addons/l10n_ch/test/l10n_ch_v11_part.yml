@@ -13,9 +13,7 @@
     currency_id: base.EUR
     account_id: account.a_recv
     type : out_invoice
-    partner_id: base.res_partner_agrolait
-    address_contact_id: base.res_partner_address_8
-    address_invoice_id: base.res_partner_address_8
+    partner_id: base.res_partner_2
     reference_type: bvr
     reference: 20009997
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
@@ -32,7 +30,7 @@
     name: '[PC1] Basic PC'
     price_unit: 250.00
     quantity: 1.0
-    product_id: product.product_product_pc1
+    product_id: product.product_product_3
     uos_id: product.product_uom_unit
     invoice_id: v11_part_test_invoice
 

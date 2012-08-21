@@ -20,21 +20,19 @@
 ##############################################################################
 
 {
-    'name': 'Specifications on PADs',
+    'name': 'Pad on tasks',
     'version': '1.0',
     "category": "Project Management",
-    'complexity': "easy",
     'description': """
-This module adds a PAD in all project kanban views
-==================================================
+This module adds a PAD in all project kanban views.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['project', 'pad'],
     'init_xml': [],
-    'update_xml': ['models/project_task.xml'],
+    'update_xml': ['project_task.xml'],
     'demo_xml': [],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

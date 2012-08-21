@@ -24,7 +24,6 @@
     'name': 'Claims Management',
     'version': '1.0',
     'category': 'Customer Relationship Management',
-    'complexity': "easy",
     'description': """
 This modules allows you to track your customers/suppliers claims and grievances.
 ================================================================================
@@ -44,6 +43,7 @@ automatically new claims based on incoming emails.
         'crm_claim_menu.xml',
         'security/ir.model.access.csv',
         'report/crm_claim_report_view.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': [
         'crm_claim_demo.xml',

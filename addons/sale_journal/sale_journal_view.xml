@@ -5,16 +5,15 @@
         <record model="ir.ui.view" id="view_sale_journal_invoice_type_form">
             <field name="name">sale_journal.invoice.type.form</field>
             <field name="model">sale_journal.invoice.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Invoice Type">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                        <field name="invoicing_method" select="1"/>
-                        <field name="active" select="1"/>
+                <form string="Invoice Type" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="invoicing_method"/>
+                        <field name="active"/>
                     </group>
-                    <separator string="Notes" colspan="4"/>
-                    <field name="note" colspan="4" nolabel="1"/>
+                    <separator string="Notes"/>
+                    <field name="note"/>
                 </form>
             </field>
         </record>
@@ -24,7 +23,6 @@
         <record model="ir.ui.view" id="view_sale_journal_invoice_type_tree">
             <field name="name">sale_journal.invoice.type.tree</field>
             <field name="model">sale_journal.invoice.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Invoice Type">
                     <field name="name"/>
@@ -43,14 +41,13 @@
             <field name="help">Invoice types are used for partners, sales orders and delivery orders. You can create a specific invoicing journal to group your invoicing according to your customer's needs: daily, each Wednesday, monthly, etc.</field>
         </record>
 
-     <menuitem id="menu_definition_journal_invoice_type"
-        parent="base.menu_sale_config_sales" action="action_definition_journal_invoice_type"/>
+     <menuitem id="menu_definition_journal_invoice_type" sequence="15"
+        parent="base.menu_sales_configuration_misc" action="action_definition_journal_invoice_type" groups="base.group_no_one"/>
 
     <!-- Inherit sales order form view -->
 
         <record model="ir.ui.view" id="sale_journal_sale_order">
             <field name="name">sale.order.journal.view.form</field>
-            <field name="type">form</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form" />
             <field name="arch" type="xml">
@@ -64,7 +61,6 @@
 
         <record model="ir.ui.view" id="sale_journal_sale_order_tree">
             <field name="name">sale.order.journal.view.tree</field>
-            <field name="type">tree</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_tree" />
             <field name="arch" type="xml">
@@ -78,7 +74,6 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order">
             <field name="name">stock.picking.journal.view.form</field>
-            <field name="type">form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form" />
             <field name="arch" type="xml">
@@ -92,60 +87,55 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order_tree">
             <field name="name">stock.picking.journal.view.tree</field>
-            <field name="type">tree</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.vpicktree" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id"/>
                 </field>
             </field>
         </record>
 
         <record model="ir.ui.view" id="sale_journal_picking_order_in">
             <field name="name">stock.picking.journal.view.form</field>
-            <field name="type">form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_in_form" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id"/>
                 </field>
             </field>
         </record>
 
         <record model="ir.ui.view" id="sale_journal_picking_order_tree_in">
             <field name="name">stock.picking.journal.view.tree</field>
-            <field name="type">tree</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_in_tree" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id"/>
                 </field>
             </field>
         </record>
 
         <record model="ir.ui.view" id="sale_journal_picking_order_out">
             <field name="name">stock.picking.journal.view.form</field>
-            <field name="type">form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_out_form" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id"/>
                 </field>
             </field>
         </record>
 
         <record model="ir.ui.view" id="sale_journal_picking_order_tree_out">
             <field name="name">stock.picking.journal.view.tree</field>
-            <field name="type">tree</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_out_tree" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id"/>
                 </field>
             </field>
         </record>
@@ -153,7 +143,6 @@
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.journal.property.form.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <page string="Sales &amp; Purchases" position="inside">

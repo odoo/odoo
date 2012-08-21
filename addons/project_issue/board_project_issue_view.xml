@@ -2,117 +2,27 @@
 <openerp>
     <data>
 
-        <record id="action_view_current_project_issue_tree" model="ir.actions.act_window">
-            <field name="name">Project issues</field>
-            <field name="res_model">project.issue</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','in',['draft','open'])]</field>
-           <field name="view_id" ref="project_issue.project_issue_tree_view"/>
-        </record>
-
-        <record id="action_view_pending_project_issue_tree" model="ir.actions.act_window">
-            <field name="name">Project issues</field>
-            <field name="res_model">project.issue</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','pending')]</field>
-           <field name="view_id" ref="project_issue.project_issue_tree_view"/>
-        </record>
-
-        <record id="action_project_issue_graph_state" model="ir.actions.act_window">
-            <field name="name">Project Issue</field>
-            <field name="res_model">project.issue.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph</field>
-            <field name="domain">[]</field>
-            <field name="view_id" ref="project_issue.view_project_issue_report_graph"/>
-        </record>
-
-        <record id="view_project_issue_graph_stage" model="ir.ui.view">
-            <field name="name">project.issue.report.graph</field>
-            <field name="model">project.issue.report</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph orientation="vertical" string="Project Issue" type="bar">
-                    <field name="type_id"/>
-                    <field name="nbr" operator="+"/>
-                    <field group="True" name="user_id"/>
-                </graph>
-            </field>
-        </record>
-
-        <record id="action_project_issue_graph_stage" model="ir.actions.act_window">
-            <field name="name">Project Issue</field>
-            <field name="res_model">project.issue.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph</field>
-            <field name="domain">[]</field>
-            <field name="view_id" ref="view_project_issue_graph_stage"/>
-        </record>
-
-        <record id="board_project_issue_form" model="ir.ui.view">
-            <field name="name">board.project.issue.form</field>
-            <field name="model">board.board</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Issues Dashboard">
-                    <board style="2-1">
-                        <column>
-                            <action name="%(action_view_current_project_issue_tree)d" string="Current Issues"/>
-                            <action name="%(action_view_pending_project_issue_tree)d" string="Pending Issues"/>
-                        </column>
-                        <column>
-                            <action name="%(action_project_issue_graph_state)d" string="Issues By State" />
-                            <action name="%(action_project_issue_graph_stage)d" string="Issues By Stage" />
-                        </column>
-                    </board>
-                </form>
-            </field>
-        </record>
-
-        <record id="open_board_project_issue" model="ir.actions.act_window">
-            <field name="name">Project Issue Dashboard</field>
-            <field name="res_model">board.board</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="usage">menu</field>
-            <field name="view_id" ref="board_project_issue_form"/>
-        </record>
-        <menuitem id="menu_deshboard_project_issue" name="Project Issue Dashboard" parent="project.next_id_86"
-             icon="terp-graph"
-            action="open_board_project_issue"/>
-
-    <!-- For Project Dashboard -->
-            <record model="ir.ui.view" id="project_issue_board_tree_view">
+        <record model="ir.ui.view" id="project_issue_board_tree_view">
             <field name="name">Project Issue Board Tree</field>
             <field name="model">project.issue</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Issue Tracker Tree" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="id"/>
                     <field name="create_date"/>
                     <field name="name"/>
-                    <field name="partner_id" groups="base.group_extended"/>
+                    <field name="partner_id"/>
                     <field name="project_id" />
                     <field name="priority" string="Priority"/>
-                    <field name="type_id" widget="selection" readonly="1"/>
-                    <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
-                    <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id" widget="selection"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
-                    <field name="state"/>
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                    <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
-                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" help="To Do"/>
-                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                    <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
-                    <field name="categ_id" invisible="1"/>
+                    <field name="stage_id" widget="selection" readonly="1"/>
+                    <field name="state" groups="base.group_no_one"/>
+                    <field name="categ_ids" invisible="1"/>
                     <field name="task_id" invisible="1"/>
                 </tree>
             </field>
         </record>
+
         <record id="action_view_my_project_issue_tree" model="ir.actions.act_window">
             <field name="name">My Project Issues</field>
             <field name="res_model">project.issue</field>
@@ -121,40 +31,16 @@
             <field name="domain">[('state','not in',('cancel','done')),('user_id','=',uid)]</field>
            <field name="view_id" ref="project_issue_board_tree_view"/>
         </record>
-         <record id="view_my_open_project_issue_graph" model="ir.ui.view">
-            <field name="name">my.open.project.issue.graph</field>
-            <field name="model">project.issue.report</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph orientation="vertical" string="My Open Project Issue" type="bar">
-                    <field name="creation_date"/>
-                    <field name="nbr" operator="+"/>
-                </graph>
-            </field>
-        </record>
-        <record id="action_view_my_open_project_issue_tree" model="ir.actions.act_window">
-            <field name="name">My Open Project issues</field>
-            <field name="res_model">project.issue.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree,form,</field>
-            <field name="domain">[('state','=','open'),('user_id','=',uid)]</field>
-            <field name="context">{'default_user_id': uid}</field>
-           <field name="view_id" ref="view_my_open_project_issue_graph"/>
-        </record>
-       <record id="board_my_project_issue_form" model="ir.ui.view">
+
+        <record id="board_my_project_issue_form" model="ir.ui.view">
             <field name="name">board.my.project.issue.form.inherit</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="project.board_project_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/board/column/action[@string='My Delegated Tasks']" position="after">
-                        <action name="%(action_view_my_project_issue_tree)d" string="My Issues" creatable="true"/>
-                </xpath>
-                <xpath expr="/form/board/column/action[@string='My Remaining Hours by Project']" position="after">
-                        <action name="%(action_view_my_open_project_issue_tree)d" string="My Open Issues by Creation Date"/>
+                <xpath expr="/form/board/column/action[@string='My Tasks']" position="after">
+                    <action name="%(action_view_my_project_issue_tree)d" string="My Issues"/>
                 </xpath>
             </field>
         </record>
-
     </data>
 </openerp>

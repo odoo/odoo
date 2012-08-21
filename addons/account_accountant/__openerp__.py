@@ -24,20 +24,20 @@
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
     "sequence": 10,
-    'complexity': "normal",
+    "summary": "Financial and Analytic Accounting",
     "description": """
 Accounting Access Rights.
 =========================
 
-This module gives the admin user the access to all the accounting features
+This module gives the Admin user the access to all the accounting features
 like the journal items and the chart of accounts.
 
-It assigns manager and user access rights to the Administrator, and only
+It assigns manager and user access rights to the Administrator and only
 user rights to Demo user.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
-    "depends" : ["account"],
+    "depends" : ["account_voucher"],
     'update_xml': [
         'security/account_security.xml',
         'account_accountant_data.xml'

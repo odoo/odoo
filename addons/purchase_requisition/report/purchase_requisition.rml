@@ -148,7 +148,7 @@
           <para style="terp_tblheader_General_Centre">Type</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Origin</para>
+          <para style="terp_tblheader_General_Centre">Source</para>
         </td>
       </tr>
     </blockTable>
@@ -223,7 +223,7 @@
       <blockTable colWidths="338.0,96.0,96.0" style="Table7">
         <tr>
           <td>
-            <para style="terp_default_9">[[ (purchase_ids.partner_address_id and purchase_ids.partner_address_id.partner_id and purchase_ids.partner_address_id.partner_id.name) or '' ]]</para>
+            <para style="terp_default_9">[[ (purchase_ids.partner_id and purchase_ids.partner_id.name) or '' ]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ formatLang(purchase_ids.date_order,date='True') ]]</para>

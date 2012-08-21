@@ -21,30 +21,31 @@
 
 
 {
-    'name': 'Timesheets Validation',
+    'name': 'Timesheets',
     'version': '1.0',
     'category': 'Human Resources',
     "sequence": 16,
+    "summary": "Timesheets, Attendances, Activities",
     'description': """
 This module helps you to easily encode and validate timesheet and attendances within the same view.
 ===================================================================================================
 
-The upper part of the view is for attendances and track (sign in/sign out) events.
-The lower part is for timesheet.
+    * It will maintain attendances and track (sign in/sign out) events.
+    * Track the timesheet lines.
 
 Other tabs contains statistics views to help you analyse your
 time or the time of your team:
-* Time spent by day (with attendances)
-* Time spent by project
+    * Time spent by day (with attendances)
+    * Time spent by project
 
 This module also implements a complete timesheet validation process:
-* Draft sheet
-* Confirmation at the end of the period by the employee
-* Validation by the project manager
+    * Draft sheet
+    * Confirmation at the end of the period by the employee
+    * Validation by the project manager
 
 The validation can be configured in the company:
-* Period size (day, week, month, year)
-* Maximal difference between timesheet and attendances
+    * Period size (day, week, month, year)
+    * Maximal difference between timesheet and attendances
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -61,7 +62,8 @@ The validation can be configured in the company:
         'report/hr_timesheet_report_view.xml',
         'report/timesheet_report_view.xml',
         'wizard/hr_timesheet_current_view.xml',
-        'hr_timesheet_sheet_data.xml'
+        'hr_timesheet_sheet_data.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': ['hr_timesheet_sheet_demo.xml',
 

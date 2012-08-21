@@ -23,18 +23,21 @@ import base64
 from osv import osv, fields
 import os
 
-# from psycopg2 import Binary
+#from psycopg2 import Binary
 #from tools import config
 import tools
 from tools.translate import _
 import nodes
 import logging
 
+_logger = logging.getLogger(__name__)
+
 DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['root_path'], 'filestore'))
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _rec_name = 'datas_fname'
+
 
     def _attach_parent_id(self, cr, uid, ids=None, context=None):
         """Migrate ir.attachments to the document module.
@@ -54,11 +57,11 @@ class document_file(osv.osv):
 
         parent_id = self.pool.get('document.directory')._get_root_directory(cr,uid)
         if not parent_id:
-            logging.getLogger('document').warning("at _attach_parent_id(), still not able to set the parent!")
+            _logger.warning("at _attach_parent_id(), still not able to set the parent!")
             return False
 
         if ids is not None:
-            raise NotImplementedError("Ids is just there by convention! Don't use it yet, please.")
+            raise NotImplementedError("Ids are just there by convention, please do not use it.")
 
         cr.execute("UPDATE ir_attachment " \
                     "SET parent_id = %s, db_datas = decode(encode(db_datas,'escape'), 'base64') " \
@@ -140,8 +143,8 @@ class document_file(osv.osv):
 
     _defaults = {
         'user_id': lambda self, cr, uid, ctx:uid,
+        'parent_id': __get_def_directory,
         'file_size': lambda self, cr, uid, ctx:0,
-        'parent_id': __get_def_directory
     }
     _sql_constraints = [
         # filename_uniq is not possible in pure SQL
@@ -291,7 +294,7 @@ class document_file(osv.osv):
                 ('datas_fname', '=', vals['datas_fname']),
             ]
             attach_ids = self.search(cr, uid, domain, context=context)
-            super(document_file, self).write(cr, uid, attach_ids, 
+            super(document_file, self).write(cr, uid, attach_ids,
                                              {'datas' : vals['datas']},
                                              context=context)
             result = attach_ids[0]
@@ -311,9 +314,6 @@ class document_file(osv.osv):
         elif 'partner_id' in obj_model._columns and obj_model._columns['partner_id']._obj == 'res.partner':
             bro = obj_model.browse(cr, uid, res_id, context=context)
             return bro.partner_id.id
-        elif 'address_id' in obj_model._columns and obj_model._columns['address_id']._obj == 'res.partner.address':
-            bro = obj_model.browse(cr, uid, res_id, context=context)
-            return bro.address_id.partner_id.id
         return False
 
     def unlink(self, cr, uid, ids, context=None):
@@ -339,7 +339,7 @@ class document_file(osv.osv):
                 if r:
                     unres.append(r)
             else:
-                logging.getLogger('document').warning("Unlinking attachment #%s %s that has no storage",
+                self.loggerdoc.warning("Unlinking attachment #%s %s that has no storage.",
                                                 f.id, f.name)
         res = super(document_file, self).unlink(cr, uid, ids, context)
         stor.do_unlink(cr, uid, unres)

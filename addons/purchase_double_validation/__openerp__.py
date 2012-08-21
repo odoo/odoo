@@ -23,7 +23,6 @@
     "name" : "Double Validation on Purchases",
     "version" : "1.1",
     'category': 'Purchase Management',
-    'complexity': "easy",
     "images" : ["images/purchase_validation.jpeg"],
     "depends" : ["base","purchase"],
     "author" : 'OpenERP SA',
@@ -31,14 +30,15 @@
 Double-validation for purchases exceeding minimum amount.
 =========================================================
 
-This module modifies the purchase workflow in order to validate purchases
-that exceeds minimum amount set by configuration wizard.
+This module modifies the purchase workflow in order to validate purchases that
+exceeds minimum amount set by configuration wizard.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
         'purchase_double_validation_workflow.xml',
         'purchase_double_validation_installer.xml',
+        'purchase_double_validation_view.xml',
         'board_purchase_view.xml'
     ],
     'test': [

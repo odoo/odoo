@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Human Resources',
     "sequence": 30,
-    'complexity': "easy",
+    "summary": "Expenses Validation, Invoicing",
     'description': """
 This module aims to manage employee's expenses.
 ===============================================
@@ -34,8 +34,7 @@ The whole workflow is implemented:
     * Draft expense
     * Confirmation of the sheet by the employee
     * Validation by his manager
-    * Validation by the accountant and invoice creation
-    * Payment of the invoice to the employee
+    * Validation by the accountant and receipt creation
 
 This module also uses the analytic accounting and is compatible with
 the invoice on timesheet module so that you will be able to automatically
@@ -44,7 +43,7 @@ re-invoice your customer's expenses if your work by project.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_expenses_analysis.jpeg', 'images/hr_expenses.jpeg'],
-    'depends': ['hr', 'account'],
+    'depends': ['hr', 'account_voucher'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
@@ -57,7 +56,6 @@ re-invoice your customer's expenses if your work by project.
         'security/ir_rule.xml',
         'report/hr_expense_report_view.xml',
         'board_hr_expense_view.xml',
-        'board_hr_expense_manager_view.xml',
         'hr_expense_installer_view.xml',
     ],
     'demo_xml': [

@@ -2,19 +2,18 @@
   I create a draft Sale Order
 -
   !record {model: sale.order, id: sale_order_edi_1}:
-    partner_id: base.res_partner_agrolait
-    partner_invoice_id: base.res_partner_address_8invoice
-    partner_order_id: base.res_partner_address_8invoice
-    partner_shipping_id: base.res_partner_address_8invoice
+    partner_id: base.res_partner_2
+    partner_invoice_id: base.res_partner_address_3
+    partner_shipping_id: base.res_partner_address_3
     pricelist_id: 1
     order_line:
-      - product_id: product.product_product_pc1
+      - product_id: product.product_product_3
         product_uom_qty: 1.0
         product_uom: 1
         price_unit: 150.0
         name: 'Basic pc'
     order_line:
-      - product_id: product.product_product_pc3
+      - product_id: product.product_product_5
         product_uom_qty: 10.0
         product_uom: 1
         price_unit: 200.0
@@ -56,7 +55,7 @@
         "company_address": {
                 "__id": "base:5af1272e-dd26-11e0-b65e-701a04e25543.some_address",
                 "__module": "base",
-                "__model": "res.partner.address",
+                "__model": "res.partner",
                 "phone": "(+32).81.81.37.00",
                 "street": "Chaussee de Namur 40",
                 "city": "Gerompont",
@@ -67,16 +66,6 @@
                 ],
         },
         "partner_id": ["purchase:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_test20", "jones white"],
-        "partner_address": {
-                "__id": "base:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_address_7wdsjasdjh",
-                "__module": "base",
-                "__model": "res.partner.address",
-                "phone": "(+32).81.81.37.00",
-                "street": "Chaussee de Namur 40",
-                "city": "Gerompont",
-                "zip": "1367",
-                "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"],
-        },
         "order_line": [{
                 "__id": "purchase:5af1272e-dd26-11e0-b65e-701a04e25543.purchase_order_line-AlhsVDZGoKvJ",
                 "__module": "purchase",
@@ -86,7 +75,7 @@
                 "name": "Basic PC",
                 "date_planned": "2011-09-30",
                 "price_unit": 150.0,
-                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_pc1", "[PC1] Basic PC"],
+                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_3", "[PC1] Basic PC"],
                 "product_qty": 1.0,
                 "product_uom": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_uom_unit", "Unit"],
         },
@@ -99,7 +88,7 @@
                 "name": "Medium PC",
                 "date_planned": "2011-09-15",
                 "price_unit": 100.0,
-                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_pc3", "[PC3] Medium PC"],
+                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_5", "[PC3] Medium PC"],
                 "product_qty": 2.0,
                 "product_uom": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_uom_unit", "Unit"],
         }],

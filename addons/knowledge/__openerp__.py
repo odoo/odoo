@@ -21,12 +21,11 @@
 
 
 {
-    "name" : "Document Management System",
+    "name" : "Knowledge Management System",
     "version" : "1.0",
     "depends" : ["base","base_setup"],
     "author" : "OpenERP SA",
     'category': 'Hidden/Dependency',
-    'complexity': "easy",
     "description": """
 Installer for knowledge-based Hidden.
 =====================================
@@ -40,6 +39,7 @@ document and Wiki based Hidden.
         'security/knowledge_security.xml',
         'security/ir.model.access.csv',
         'knowledge_view.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': ['knowledge_demo.xml'],
     'installable': True,

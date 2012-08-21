@@ -28,13 +28,12 @@
     "category" : "Localization/Account Charts",
     "website" : "https://launchpad.net/openerp-uruguay",
     "description": """
-General Chart of Accounts
-=========================
+General Chart of Accounts.
+==========================
 
-Provide Templates for Chart of Accounts, Taxes for Uruguay
+Provide Templates for Chart of Accounts, Taxes for Uruguay.
 
 """,
-    "complexity": "normal",
     "license"   : "AGPL-3",
     "depends"   : [
                     "account",

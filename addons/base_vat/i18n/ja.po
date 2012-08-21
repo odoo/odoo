@@ -1,0 +1,78 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-07-28 00:19+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:01+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:141
+#, python-format
+msgid ""
+"This VAT number does not seem to be valid.\n"
+"Note: the expected format is %s"
+msgstr ""
+"この付加価値税の値は正しくありません。\n"
+"注：形式は %s です。"
+
+#. module: base_vat
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "会社名は固有でなければいけません。"
+
+#. module: base_vat
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "エラー：重複した会員を作ることはできません。"
+
+#. module: base_vat
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr "VIES付加価値税のチェック"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: base_vat
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "エラー。再帰的な会社を作ることはできません。"
+
+#. module: base_vat
+#: help:res.partner,vat_subjected:0
+msgid ""
+"Check this box if the partner is subjected to the VAT. It will be used for "
+"the VAT legal statement."
+msgstr "このパートナが付加価値税の対象になるのであれば，このボックスをチェックしてください。それに付加価値税が適用されます。"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "パートナ"
+
+#. module: base_vat
+#: help:res.company,vat_check_vies:0
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr ""
+"これをチェックすると，パートナの付加価値税番号が，単なるフォーマットの検証（チェックサム）ではなく，EUのVIEAサービスに対して検証されます。"
+
+#. module: base_vat
+#: field:res.partner,vat_subjected:0
+msgid "VAT Legal Statement"
+msgstr "付加価値税の記述"

@@ -6,7 +6,6 @@
         <record model="ir.ui.view" id="report_event_registration_tree">
             <field name="name">report.event.registration.tree</field>
             <field name="model">report.event.registration</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:event_state == 'draft';black:event_state == 'confirm';gray:event_state in('done','cancel')" string="Events Analysis">
                     <field name="event_date" invisible="1"/>
@@ -33,7 +32,6 @@
         <record model ="ir.ui.view" id="report_event_registration_graph">
             <field name="name">report.event.registration.graph</field>
             <field name="model">report.event.registration</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Event on Registration"  type="bar" >
                     <field name="event_id"/>
@@ -49,70 +47,36 @@
         <record model="ir.ui.view" id="view_report_event_registration_search">
             <field name="name">report.event.registration.search</field>
             <field name="model">report.event.registration</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Event on Registration">
-                    <group>
-                    <filter string="Year" icon="terp-go-year" name="year"
-                          domain="[('event_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('event_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                          help="Events happening this year"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-go-month" name="this_month"
-                          domain="[('event_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('event_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                          help="Events happening in current month"/>
-                    <filter icon="terp-go-month" string="    Month-1    "
-                          domain="[('event_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('event_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                          help="Events happened in last month"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-document-new"
-                        string="New"
-                        domain="[('event_state','=','draft')]"
-                        help="Events which are in New state"/>
-                    <filter icon="terp-check"
-                        string="Confirm"
-                        domain="[('event_state','=','confirm')]"
-                        help="Events which are in confirm state"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-camera_test"
-                          string="Confirmed Registrations"
-                          help="Registrations in confirmed or done state"
-                          context="{'no_of_draft_invisible':1}"/>
-                    <separator orientation="vertical"/>
+                    <filter icon="terp-document-new" string="New" domain="[('event_state','=','draft')]" help="Events which are in New state"/>
+                    <filter icon="terp-check" string="Confirm" domain="[('event_state','=','confirm')]" help="Events which are in confirm state"/>
+                    <separator/>
+                    <filter icon="terp-personal" string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <field name="event_id" string="Event"/>
-                    <field name="user_id" widget="selection">
-                        <filter icon="terp-personal"
-                        string="My Events"
-                        help="My Events"
-                        domain="[('user_id','=',uid)]"/>
-                    </field>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                    <field name="user_id"/>
+                    <group expand="0" string="Extended Filters...">
                         <field name="event_type" widget="selection"/>
                         <field name="event_date"/>
                     </group>
                     <newline/>
-
                     <group expand="1" string="Group By...">
                         <filter string="Participant / Contact" icon="terp-personal" context="{'group_by':'name_registration'}" help="Registration contact"/>
                         <filter string="Register" icon="terp-personal" context="{'group_by':'user_id_registration'}" help="Registration contact" groups="base.extended"/>
                         <filter string="Speaker" name="speaker" icon="terp-personal+" context="{'group_by': 'speaker_id'}" groups="base.extended"/>
                         <filter string="Event Responsible" name="user_id" icon="terp-personal" context="{'group_by': 'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Event" name="event" icon="terp-crm" context="{'group_by':'event_id', 'max_reg_event_visible':0}"/>
                         <filter string="Event Type" icon="terp-crm"  context="{'group_by':'event_type'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Event State" icon="terp-stock_effects-object-colorize" context="{'group_by':'event_state'}"/>
                         <filter string="Registration State" icon="terp-stock_effects-object-colorize" context="{'group_by':'registration_state'}"/>
-                        <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <separator orientation="vertical" />
-                        <filter string="Day" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'event_date'}" help="Event Beginning Date"/>
-                        <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}" help="Event Beginning Date"/>
-                        <filter string="Year" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'year'}" help="Event Beginning Date"/>
+                        <filter string="Day" icon="terp-go-month" domain="[]" context="{'group_by':'event_date'}" help="Event Beginning Date"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Event Beginning Date"/>
+                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}" help="Event Beginning Date"/>
+                    </group>
+                    <group expand="0" string="Display">
+                        <filter icon="terp-camera_test" string="Show Confirmed Registrations"
+                              help="Registrations in confirmed or done state" context="{'no_of_draft_invisible':1}"/>
                     </group>
                 </search>
             </field>
@@ -141,7 +105,8 @@
             <field name="act_window_id" ref="action_report_event_registration"/>
        </record>
 
-        <menuitem parent="base.menu_report_association" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="event.group_event_manager"/>
+        <menuitem parent="base.menu_reporting" id="menu_reporting_events" sequence="30" groups="event.group_event_manager" name="Events"/>
+        <menuitem parent="menu_reporting_events" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="event.group_event_manager"/>
 
     </data>
 </openerp>

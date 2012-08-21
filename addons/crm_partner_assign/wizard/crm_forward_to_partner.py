@@ -37,23 +37,19 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         'user_id': fields.many2one('res.users', "User"),
         'attachment_ids': fields.many2many('ir.attachment','lead_forward_to_partner_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
         'partner_id' : fields.many2one('res.partner', 'Partner'),
-        'address_id' : fields.many2one('res.partner.address', 'Address'),
         'history': fields.selection([('info', 'Case Information'), ('latest', 'Latest email'), ('whole', 'Whole Story')], 'Send history', required=True),
     }
 
     _defaults = {
         'send_to' : 'email',
         'history': 'latest',
-        'email_from': lambda self, cr, uid, *a: self.pool.get('res.users')._get_email_from(cr, uid, uid)[uid],
+        'email_from': lambda s, cr, uid, c: s.pool.get('res.users').browse(cr, uid, uid, c).email,
     }
 
-
-    
-    def on_change_email(self, cr, uid, ids, user):
+    def on_change_email(self, cr, uid, ids, user, context=None):
         if not user:
             return {'value': {'email_to': False}}
-        email = self.pool.get('res.users')._get_email_from(cr, uid, [user])[user]
-        return {'value': {'email_to': email}}
+        return {'value': {'email_to': self.pool.get('res.users').browse(cr, uid, uid, context=context).email}}
 
     def on_change_history(self, cr, uid, ids, history_type, context=None):
         """Gives message body according to type of history selected
@@ -75,27 +71,15 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         """This function fills address information based on partner/user selected
         """
         if not partner_id:
-            return {'value' : {'email_to' : False, 'address_id': False}}
-
+            return {'value' : {'email_to' : False}}
         partner_obj = self.pool.get('res.partner')
-        addr = partner_obj.address_get(cr, uid, [partner_id], ['contact'])
-        data = {'address_id': addr['contact']}
-        data.update(self.on_change_address(cr, uid, ids, addr['contact'])['value'])
-
+        data = {}
         partner = partner_obj.browse(cr, uid, [partner_id])
         user_id = partner and partner[0].user_id or False
-        email = user_id and user_id.user_email or ''
-        data.update({'email_cc' : email, 'user_id': user_id and user_id.id or False})
-        return {
-            'value' : data,
-            'domain' : {'address_id' : partner_id and "[('partner_id', '=', partner_id)]" or "[]"}
-        }
-
-    def on_change_address(self, cr, uid, ids, address_id):
-        email = ''
-        if address_id:
-            email = self.pool.get('res.partner.address').browse(cr, uid, address_id).email
-        return {'value': {'email_to' : email}}
+        data.update({'email_from': partner and partner[0].email or "", 
+                     'email_cc' : user_id and user_id.user or '', 
+                     'user_id': user_id and user_id.id or False})
+        return {'value' : data}
 
     def action_forward(self, cr, uid, ids, context=None):
         """
@@ -138,7 +122,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                 if email_to not in new_cc:
                     new_cc.append(to)
             update_vals = {'email_cc' : ', '.join(new_cc) }
-            lead.write(cr, uid, case.id, update_vals, context=context)
+            lead.write(cr, uid, [case.id], update_vals, context=context)
         return res
 
     def _get_info_body_text(self, cr, uid, lead, context=None):
@@ -198,7 +182,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             if partner_assigned_id:
                 assigned_partner = partner.browse(cr, uid, partner_assigned_id, context=context)
                 user_id = assigned_partner.user_id and assigned_partner.user_id.id or False
-                email_cc = assigned_partner.user_id and assigned_partner.user_id.user_email or ''
+                email_cc = assigned_partner.user_id and assigned_partner.user_id.email or ''
                 email = assigned_partner.email
             
             res.update({

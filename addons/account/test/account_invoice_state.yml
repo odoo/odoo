@@ -3,8 +3,6 @@
 -
   !record {model: account.invoice, id: account_invoice_state}:
     account_id: account.a_recv
-    address_contact_id: base.res_partner_address_3000
-    address_invoice_id: base.res_partner_address_3000
     company_id: base.main_company
     currency_id: base.EUR
     invoice_line:
@@ -12,10 +10,10 @@
         name: '[PC1] Basic PC'
         price_unit: 450.0
         quantity: 1.0
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         uos_id: product.product_uom_unit
     journal_id: account.bank_journal
-    partner_id: base.res_partner_desertic_hispafuentes
+    partner_id: base.res_partner_12
     reference_type: none
 -
   I check that Initially customer invoice state is "Draft"

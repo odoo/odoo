@@ -99,7 +99,7 @@ class record:
         Must instanciate a fields list, field = (name,size)
         and update a local_values dict.
         """
-        raise _('not implemented')
+        raise _('Not implemented.')
 
     def generate(self):
         res=''
@@ -372,23 +372,23 @@ def _create_dta(obj, cr, uid, data, context=None):
         # raise osv.except_osv(_('Order not confirmed'),
         #         _('Please confirm it'))
     if not payment.mode:
-        raise osv.except_osv(_('Error'),
-                _('No payment mode'))
+        raise osv.except_osv(_('Error!'),
+                _('No payment mode.'))
     bank = payment.mode.bank_id
     if not bank:
-        raise osv.except_osv(_('Error'), _('No bank account for the company.'))
+        raise osv.except_osv(_('Error!'), _('No bank account for the company.'))
 
     v['comp_bank_name']= bank.bank and bank.bank.name or False
     v['comp_bank_clearing'] = bank.bank.clearing
 
     if not v['comp_bank_clearing']:
-        raise osv.except_osv(_('Error'),
+        raise osv.except_osv(_('Error!'),
                 _('You must provide a Clearing Number for your bank account.'))
 
     user = pool.get('res.users').browse(cr,uid,[uid])[0]
     company = user.company_id
     #XXX dirty code use get_addr
-    co_addr = company.partner_id.address[0]
+    co_addr = company.partner_id
     v['comp_country'] = co_addr.country_id and co_addr.country_id.name or ''
     v['comp_street'] = co_addr.street or ''
     v['comp_zip'] = co_addr.zip
@@ -404,7 +404,7 @@ def _create_dta(obj, cr, uid, data, context=None):
     #else:
     #    v['comp_bank_iban'] = ''
     if not v['comp_bank_iban']:
-        raise osv.except_osv(_('Error'),
+        raise osv.except_osv(_('Error!'),
                 _('No IBAN for the company bank account.'))
 
     res_partner_bank_obj = pool.get('res.partner.bank')
@@ -415,10 +415,10 @@ def _create_dta(obj, cr, uid, data, context=None):
 
     for pline in payment.line_ids:
         if not pline.bank_id:
-            raise osv.except_osv(_('Error'), _('No bank account defined\n' \
+            raise osv.except_osv(_('Error!'), _('No bank account defined\n' \
                     'on line: %s') % pline.name)
         if not pline.bank_id.bank:
-            raise osv.except_osv(_('Error'), _('No bank defined\n' \
+            raise osv.except_osv(_('Error!'), _('No bank defined\n' \
                     'for the bank account: %s\n' \
                     'on the partner: %s\n' \
                     'on line: %s') + (pline.bank_id.state, pline.partner_id.name, pline.name))
@@ -431,7 +431,7 @@ def _create_dta(obj, cr, uid, data, context=None):
         v['partner_bank_name'] =  pline.bank_id.bank.name or False
         v['partner_bank_clearing'] =  pline.bank_id.bank.clearing or False
         if not v['partner_bank_name'] :
-            raise osv.except_osv(_('Error'), _('No bank name defined\n' \
+            raise osv.except_osv(_('Error!'), _('No bank name defined\n' \
                     'for the bank account: %s\n' \
                     'on the partner: %s\n' \
                     'on line: %s') % (pline.bank_id.state, pline.partner_id.name, pline.name))
@@ -460,7 +460,7 @@ def _create_dta(obj, cr, uid, data, context=None):
                 v['partner_bvr'] = v['partner_bvr'].rjust(9, '0')
                 is_9_pos_adherent = False
             else:
-                raise osv.except_osv(_('Error'),
+                raise osv.except_osv(_('Error!'),
                                      _('Wrong postal number format.\n'
                                        'It must be 12-123456-9 or 12345 format'))
 
@@ -479,20 +479,19 @@ def _create_dta(obj, cr, uid, data, context=None):
         else:
             v['partner_name'] = pline.partner_id and pline.partner_id.name or ''
 
-        if pline.partner_id and pline.partner_id.address \
-                and pline.partner_id.address[0]:
-            v['partner_street'] = pline.partner_id.address[0].street
-            v['partner_city'] = pline.partner_id.address[0].city
-            v['partner_zip'] = pline.partner_id.address[0].zip
+        if pline.partner_id and pline.partner_id:
+            v['partner_street'] = pline.partner_id.street
+            v['partner_city'] = pline.partner_id.city
+            v['partner_zip'] = pline.partner_id.zip
             # If iban => country=country code for space reason
             elec_pay = pline.bank_id.state #Bank type
             if elec_pay == 'iban':
-                v['partner_country']= pline.partner_id.address[0].country_id \
-                        and pline.partner_id.address[0].country_id.code+'-' \
+                v['partner_country']= pline.partner_id.country_id \
+                        and pline.partner_id.country_id.code+'-' \
                         or ''
             else:
-                v['partner_country']= pline.partner_id.address[0].country_id \
-                        and pline.partner_id.address[0].country_id.name \
+                v['partner_country']= pline.partner_id.country_id \
+                        and pline.partner_id.country_id.name \
                         or ''
         else:
             v['partner_street'] =''
@@ -520,7 +519,7 @@ def _create_dta(obj, cr, uid, data, context=None):
             v['comp_country'] = co_addr.country_id and co_addr.country_id.code+'-' or ''
             record_type = record_gt836
             if not v['partner_bank_iban']:
-                raise osv.except_osv(_('Error'), _('No IBAN defined \n' \
+                raise osv.except_osv(_('Error!'), _('No IBAN defined \n' \
                         'for the bank account: %s\n' + \
                         'on line: %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1] , pline.name))
 
@@ -536,37 +535,37 @@ def _create_dta(obj, cr, uid, data, context=None):
                         + ' ' + v['partner_bank_city'] \
                         + ' ' + v['partner_bank_country']
             else:
-                raise osv.except_osv(_('Error'), _('You must provide the bank city '
+                raise osv.except_osv(_('Error!'), _('You must provide the bank city '
                         'or the bic code for the partner bank: \n %d\n' + \
                         'on line: %s') %(res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1], pline.name))
 
         elif elec_pay == 'bvrbank' or elec_pay == 'bvrpost':
             from tools import mod10r
             if not v['reference']:
-                raise osv.except_osv(_('Error'), 
+                raise osv.except_osv(_('Error!'), 
                                      _('You must provide ' \
                                        'a BVR reference number \n' \
                                        'for the line: %s') % pline.name)
             v['reference'] = v['reference'].replace(' ', '')
             if is_9_pos_adherent:
                 if len(v['reference']) > 27: 
-                    raise osv.except_osv(_('Error'),
+                    raise osv.except_osv(_('Error!'),
                                          _('BVR reference number is not valid \n' 
                                            'for the line: %s. \n'
                                            'Reference is too long.') % pline.name)
                 # do a mod10 check
                 if mod10r(v['reference'][:-1]) != v['reference']:
-                    raise osv.except_osv(_('Error'),
+                    raise osv.except_osv(_('Error!'),
                                          _('BVR reference number is not valid \n'
                                            'for the line: %s. \n'
-                                           'Mod10 check failed') % pline.name)
+                                           'Mod10 check failed.') % pline.name)
                 # fill reference with 0
                 v['reference'] = v['reference'].rjust(27, '0')
             else:
                 # reference of BVR adherent with 5 positions number
                 # have 15 positions references
                 if len(v['reference']) > 15:
-                    raise osv.except_osv(_('Error'),
+                    raise osv.except_osv(_('Error!'),
                                          _('BVR reference number is not valid \n'
                                            'for the line: %s. \n'
                                            'Reference is too long '
@@ -576,19 +575,19 @@ def _create_dta(obj, cr, uid, data, context=None):
                 v['reference'] = v['reference'].rjust(15, '0').ljust(27, ' ')
 
             if not v['partner_bvr']:
-                raise osv.except_osv(_('Error'), _('You must provide a BVR number\n'
+                raise osv.except_osv(_('Error!'), _('You must provide a BVR number\n'
                     'for the bank account: %s' \
                     'on line: %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id],context)[0][1] ,pline.name))
             record_type = record_gt826
 
         elif elec_pay == 'bvbank':
             if not v['partner_bank_number'] :
-                raise osv.except_osv(_('Error'), _('You must provide ' \
+                raise osv.except_osv(_('Error!'), _('You must provide ' \
                         'a bank number \n' \
                         'for the partner bank: %s\n' \
                         'on line: %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1] , pline.name))
             if not  v['partner_bank_clearing']:
-                raise osv.except_osv(_('Error'), _('You must provide ' \
+                raise osv.except_osv(_('Error!'), _('You must provide ' \
                         'a Clearing Number\n' \
                         'for the partner bank: %s\n' \
                         'on line %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1] , pline.name))
@@ -596,7 +595,7 @@ def _create_dta(obj, cr, uid, data, context=None):
             record_type = record_gt827
         elif elec_pay == 'bvpost':
             if not v['partner_post_number']:
-                raise osv.except_osv(_('Error'), _('You must provide ' \
+                raise osv.except_osv(_('Error!'), _('You must provide ' \
                         'a post number \n' \
                         'for the partner bank: %s\n' \
                         'on line: %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1] ,pline.name))
@@ -604,7 +603,7 @@ def _create_dta(obj, cr, uid, data, context=None):
             v['partner_bank_number'] = '/C/'+v['partner_post_number']
             record_type = record_gt827
         else:
-            raise osv.except_osv(_('Error'), _('The Bank type %s of the bank account: %s is not supported') \
+            raise osv.except_osv(_('Error!'), _('The Bank type %s of the bank account: %s is not supported.') \
                     % (elec_pay, res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1],))
 
         dta_line = record_type(v).generate()

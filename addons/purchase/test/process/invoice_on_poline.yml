@@ -1,27 +1,26 @@
 -
    I confirm purchase order which has invoicing control method "Based on Purchase Order Lines".
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase6}
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_6}
 -
   In order to test create invoice for purchase order line.
 -
   !python {model: purchase.order}: |
     invoice_line_obj = self.pool.get('purchase.order.line_invoice')
-    purchase_order = self.browse(cr, uid, ref("order_purchase6"))
-    context.update({'active_model': 'purchase.order', 'active_ids': [ref("order_purchase6")]})
+    purchase_order = self.browse(cr, uid, ref("purchase_order_6"))
+    context.update({'active_model': 'purchase.order', 'active_ids': [ref("purchase_order_6")]})
     for purchase_line in purchase_order.order_line:
         invoice_line_obj.makeInvoices(cr, uid, purchase_line.id, context=context)
 -
   I check the invoice of order.
 -
    !python {model: purchase.order}: |
-     purchase_order = self.browse(cr, uid, ref("order_purchase6"))
+     purchase_order = self.browse(cr, uid, ref("purchase_order_6"))
      for purchase_line in purchase_order.order_line:
        assert len(purchase_order.invoice_ids) == 1, "Invoice should be generated."
 -
   I set the default invoicing control method "Based on Purchase Order Lines".
 -
-  !python {model: purchase.config.wizard}: |
-    new_id = self.create(cr ,uid, {'default_method': 'manual'})
+  !python {model: purchase.config.settings}: |
+    new_id = self.create(cr, uid, {'default_invoice_method': 'manual'})
     self.execute(cr, uid, [new_id])
-

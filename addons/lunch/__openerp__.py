@@ -22,23 +22,15 @@
 {
     "name": "Lunch Orders",
     "author": "OpenERP SA",
-    'complexity': "easy",
-    "Description": """
-    The lunch module is for keeping a record of the order placed and payment of the orders.
-    =======================================================================================
-
-    The products are defined under categories and the payment records are maintained user-wise.
-    Every user has a cashbox which keeps track of the amount paid for a particular order.
-
-    """,
     "version": "0.1",
     "depends": ["base_tools"],
     "category" : "Tools",
     'description': """
-    The base module to manage lunch
+The base module to manage lunch.
+================================
 
-    keep track for the Lunch Order ,Cash Moves ,CashBox ,Product.
-    Apply Different Category for the product.
+keep track for the Lunch Order, Cash Moves, CashBox, Product. Apply Different
+Category for the product.
     """,
     "init_xml": [],
     "update_xml": [

@@ -3,14 +3,15 @@
     <data noupdate="1">
 
     <record id="base.group_hr_user" model="res.groups">
-        <field name="name">HR Officer</field>
+        <field name="name">Officer</field>
         <field name="category_id" ref="base.module_category_human_resources"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
     <record id="base.group_hr_manager" model="res.groups">
-        <field name="name">HR Manager</field>
+        <field name="name">Manager</field>
         <field name="category_id" ref="base.module_category_human_resources"/>
         <field name="implied_ids" eval="[(4, ref('base.group_hr_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
     <record id="hr_dept_comp_rule" model="ir.rule">
         <field name="name">Department multi company rule</field>

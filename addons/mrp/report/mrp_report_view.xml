@@ -5,7 +5,6 @@
         <record id="view_workcenter_load_tree" model="ir.ui.view">
             <field name="name">report.workcenter.load.tree</field>
             <field name="model">report.workcenter.load</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Work Center Loads">
                     <field name="name"/>
@@ -19,7 +18,6 @@
         <record id="view_workcenter_load_graph" model="ir.ui.view">
             <field name="name">report.workcenter.load.graph</field>
             <field name="model">report.workcenter.load</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Work Center load" type="bar">
                     <field name="name"/>
@@ -33,23 +31,21 @@
         <record id="view_workcenter_load_search" model="ir.ui.view">
             <field name="name">report.workcenter.load.search</field>
             <field name="model">report.workcenter.load</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Work Center load">
-                    <field name="name"/>
-                    <field name="workcenter_id" widget="selection"/>
+                    <field name="name" string="Week"/>
+                    <field name="workcenter_id"/>
                 </search>
             </field>
         </record>
-        <menuitem id="next_id_77" name="Reporting"
-            parent="base.menu_mrp_root" sequence="49"/>
+        <menuitem id="next_id_77" name="Manufacturing"
+            parent="base.menu_reporting" sequence="20"/>
 
         <!-- stock.move compared to internal location src/dest -->
 
         <record id="view_report_in_out_picking_tree" model="ir.ui.view">
             <field name="name">report.mrp.inout.tree</field>
             <field name="model">report.mrp.inout</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Stock value variation">
                     <field name="date"/>
@@ -61,11 +57,12 @@
         <record id="view_report_in_out_picking_form" model="ir.ui.view">
             <field name="name">report.mrp.inout.form</field>
             <field name="model">report.mrp.inout</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock value variation" type="bar">
-                    <field name="date" select="1"/>
-                    <field name="value" select="1"/>
+                <form string="Stock value variation" version="7.0">
+                    <group col="4">
+                        <field name="date"/>
+                        <field name="value"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -74,7 +71,6 @@
         <record id="view_report_in_out_picking_graph" model="ir.ui.view">
             <field name="name">report.mrp.inout.graph</field>
             <field name="model">report.mrp.inout</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Stock value variation" type="bar">
                     <field name="date"/>

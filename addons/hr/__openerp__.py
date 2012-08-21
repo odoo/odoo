@@ -25,10 +25,10 @@
     "author": "OpenERP SA",
     "category": "Human Resources",
     "sequence": 12,
-    'complexity': "easy",
     "website": "http://www.openerp.com",
+    "summary": "All Infos on Employees",
     "description": """
-Module for human resource management.
+Module for Human Resource Management.
 =====================================
 
 You can manage:
@@ -38,18 +38,24 @@ You can manage:
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/hr_department.jpeg', 'images/hr_employee.jpeg','images/hr_job_position.jpeg'],
+    'images': [
+        'images/hr_department.jpeg',
+        'images/hr_employee.jpeg',
+        'images/hr_job_position.jpeg',
+        'static/src/img/default_image.png',
+    ],
     'depends': ['base_setup','mail', 'resource', 'board'],
     'init_xml': [],
     'update_xml': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
+        'board_hr_view.xml',
         'hr_view.xml',
         'hr_department_view.xml',
         'process/hr_process.xml',
         'hr_installer.xml',
         'hr_data.xml',
-        'hr_board.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': [
         'hr_demo.xml',

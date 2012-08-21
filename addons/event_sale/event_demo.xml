@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <record id="event_technical_training" model="event.event">
+        <field name="name">Technical training in Grand-Rosiere</field>
+        <field eval="(DateTime.now() + timedelta(15)).strftime('%Y-%m-%d 7:00:00')" name="date_begin"/>
+        <field eval="(DateTime.now() + timedelta(20)).strftime('%Y-%m-%d 16:00:00')" name="date_end"/>
+        <field name="type" ref="event.event_type_4"/>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <record id="event_product" model="product.product">
+        <field name="name">Technical Training</field>
+        <field name="event_ok">True</field>
+        <field name="event_type_id" ref="event.event_type_4"/>
+        <field name="categ_id" ref="product.product_category_1"/>
+        <field name="type">service</field>
+        <field name="list_price">2500.0</field>
+        <field name="standard_price">1000.0</field>
+        <field name="supply_method">produce</field>
+        <field name="uom_id" ref="product.product_uom_unit"/>
+        <field name="uom_po_id" ref="product.product_uom_unit"/>
+    </record>
+    </data>
+</openerp>

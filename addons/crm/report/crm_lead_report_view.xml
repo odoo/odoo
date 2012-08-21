@@ -7,7 +7,6 @@
         <record id="view_report_crm_lead_tree" model="ir.ui.view">
             <field name="name">crm.lead.report.tree</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree string="Leads Analysis">
                 <field name="creation_year" invisible="1"/>
@@ -16,7 +15,6 @@
                 <field name="deadline_month" invisible="1"/>
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
-                <field name="categ_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
                 <field name="type" invisible="1"/>
@@ -40,7 +38,6 @@
         <record id="view_report_crm_lead_graph" model="ir.ui.view">
             <field name="name">crm.lead.report.graph</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="vertical" string="Leads Analysis" type="bar">
                     <field name="stage_id"/>
@@ -53,7 +50,6 @@
         <record id="view_report_crm_opportunity_graph" model="ir.ui.view">
             <field name="name">crm.opportunity.report.graph</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="vertical" string="Leads Analysis" type="bar">
                     <field name="stage_id"/>
@@ -68,67 +64,30 @@
         <record id="view_report_crm_lead_filter" model="ir.ui.view">
             <field name="name">crm.lead.report.select</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <group>
-                        <filter string="Year" icon="terp-go-year" name="year"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                            help="Leads/Opportunities created in current year"/>
-                        <separator orientation="vertical" />
-                        <filter string="Month" icon="terp-go-month" name="this_month"
-                            domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Leads/Opportunities created in current month"/>
-                        <filter icon="terp-go-month" string="Month-1"
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Leads/Opportunities created in last month"/>
-                        <separator orientation="vertical" />
-                        <filter icon="terp-personal"
-                            name="lead"
-                            string="Lead"
-                            domain="[('type','=', 'lead')]"
-                            help="Show only lead"/>
-                        <filter icon="terp-personal+"
-                            string="Opportunity"
-                            name="opportunity"
-                            domain="[('type','=','opportunity')]"
-                            help="Show only opportunity"/>
-                        <separator orientation="vertical" />
-                        <filter icon="terp-check"
-                            string="New"
-                            domain="[('state','=','draft')]"
-                            help="Leads/Opportunities which are in New state"/>
-                        <filter icon="terp-camera_test"
-                            string="Open"
-                            domain="[('state','=','open')]"
-                            help="Leads/Opportunities which are in open state"/>
-                        <filter icon="gtk-media-pause"
-                            string="Pending"
-                            domain="[('state','=','pending')]"
-                            help="Leads/Opportunities which are in pending state"/>
-                        <filter icon="terp-dialog-close"
-                            string="Closed"
-                            domain="[('state','=','done')]"
-                            help="Leads/Opportunities which are in done state"/>
-
-                        <separator orientation="vertical" />
-                        <field name="section_id"
-                            context="{'invisible_section': False}">
-                            <filter icon="terp-personal+" groups="base.group_extended"
-                                context="{'invisible_section': False}"
-                                domain="[('section_id.user_id','=',uid)]"
-                                help="My Sales Team(s)" />
-                        </field>
-                        <field name="user_id" string="Salesman">
-                            <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                        </field>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                    <filter icon="terp-personal" name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
+                    <filter icon="terp-personal+" string="Opportunity" name="opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
+                    <separator/>
+                    <filter icon="terp-check" string="New" domain="[('state','=','draft')]" help="Leads/Opportunities which are in New state"/>
+                    <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Leads/Opportunities which are in open state"/>
+                    <filter icon="gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Leads/Opportunities which are in pending state"/>
+                    <filter icon="terp-dialog-close" string="Closed" domain="[('state','=','done')]" help="Leads/Opportunities which are in done state"/>
+                    <separator/>
+                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]"
+                            help="Leads/Opportunities that are assigned to one of the sale teams I manage"/>
+                    <separator/>
+                    <filter icon="terp-personal" string="My Case(s)" help="Leads/Opportunities that are assigned to me" domain="[('user_id','=',uid)]"/>
+                    <field name="section_id" context="{'invisible_section': False}"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <group expand="0" string="Extended Filters...">
                         <field name="partner_id"/>
+                        <field name="stage_id" domain="[('section_ids', '=', 'section_id')]" />
+                        <field name="type_id"/>
+                        <field name="channel_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
                         <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]" />
-                        <field name="categ_id" widget="selection"/>
                         <field name="type_id" widget="selection"/>
                         <field name="channel_id" widget="selection"/>
                         <separator orientation="vertical"/>
@@ -138,30 +97,27 @@
                         <field name="opening_date"/>
                         <field name="date_closed"/>
                     </group>
-                    <newline/>
                     <group expand="1" string="Group By...">
-                        <filter string="Salesman" name="user" icon="terp-personal"
-                            domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+"
-                            domain="[]"
-                            context="{'group_by':'section_id'}" />
+                        <filter string="Salesperson" name="user" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
-                        <filter string="Company" icon="terp-go-home"
-                            domain="[]"
-                            context="{'group_by':'company_id'}"
-                            groups="base.group_multi_company"/>
-                        <separator orientation="vertical" />
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Stage" name="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Category" name="Category" icon="terp-stock_symbol-selection"
-                            domain="[]" context="{'group_by':'categ_id'}" />
+                        <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}" />
+                        <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
+                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'creation_year'}"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'creation_month'}"/>
+                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'creation_day'}"/>
+                        <filter string="Exp. Closing"  icon="terp-go-month" domain="[]" context="{'group_by':'deadline_month'}"/>
                         <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
                             domain="[]" context="{'group_by':'type_id'}" />
                         <filter string="Channel" icon="terp-call-start"
                             domain="[]" context="{'group_by':'channel_id'}" />
                         <separator orientation="vertical" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize"
+                        <filter string="Status" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
                         <filter string="Year" icon="terp-go-year"
@@ -183,21 +139,19 @@
         <record id="view_report_crm_opportunity_tree" model="ir.ui.view">
             <field name="name">crm.lead.report.tree</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state in ('open','pending','done');gray:state == 'cancel' " string="Opportunities Analysis">
                 <field name="creation_year" invisible="1"/>
                 <field name="creation_month" invisible="1"/>
                 <field name="creation_day" invisible="1"/>
                 <field name="deadline_month" invisible="1"/>
-                <field name="section_id" invisible="1" groups="base.group_extended"/>
+                <field name="section_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="country_id" invisible="1"/>
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="priority"  invisible="1"/>
-                <field name="categ_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
                 <field name="type" invisible="1"/>
@@ -262,11 +216,11 @@
        </record>
 
        <menuitem name="Leads Analysis" id="menu_report_crm_leads_tree"
-            groups="base.group_extended"
-            parent="base.next_id_64" action="action_report_crm_lead" sequence="3"/>
+            groups="base.group_sale_manager"
+            parent="base.next_id_64" action="action_report_crm_lead" sequence="1"/>
 
        <menuitem name="Opportunities Analysis" id="menu_report_crm_opportunities_tree"
-            parent="base.next_id_64" action="action_report_crm_opportunity" sequence="4"/>
+            parent="base.next_id_64" action="action_report_crm_opportunity" sequence="5"/>
 
     </data>
 </openerp>

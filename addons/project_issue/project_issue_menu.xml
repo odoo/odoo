@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
+
     <!--
         ALL BUGS
     -->
@@ -11,9 +12,16 @@
         <field name="view_mode">kanban,tree,calendar</field>
         <field name="view_id" eval="False"/>
         <field name="domain" eval=""/>
-        <field name="context">{"search_default_user_id": uid, "search_default_draft": 1,"search_default_todo": 1, "search_default_project_id":project_id}</field>
         <field name="search_view_id" ref="view_project_issue_filter"/>
-        <field name="help">Issues such as system bugs, customer complaints, and material breakdowns are collected here. You can define the stages assigned when solving the project issue (analysis, development, done). With the mailgateway module, issues can be integrated through an email address (example: support@mycompany.com)</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to report a new issue.
+          </p><p>
+            The OpenERP issues tacker allows you to efficiantly manage things
+            like internal requests, software development bugs, customer
+            complaints, project troubles, material breakdowns, etc.
+          </p>
+        </field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view0">
@@ -44,16 +52,7 @@
         <field name="act_window_id" ref="project_issue_categ_act0"/>
     </record>
 
-    <act_window
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-            id="act_project_project_2_project_issue_all"
-            name="Issues"
-            res_model="project.issue"
-            src_model="project.project"
-            view_mode="tree,form,calendar,graph"
-            view_type="form"/>
-
     <menuitem name="Issues" id="menu_project_issue_track"  parent="project.menu_project_management"
-            action="project_issue_categ_act0" sequence="4"/>
+            action="project_issue_categ_act0" sequence="15"/>
 </data>
 </openerp>

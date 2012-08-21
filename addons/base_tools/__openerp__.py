@@ -5,12 +5,11 @@
     "version": "1.0",
     "depends": ["base"],
     "category" : "Hidden/Dependency",
-    'complexity': "easy",
     'description': """
 Common base for tools modules.
 ==============================
 
-Creates menu link for Tools from where tools like survey, lunch, idea, etc. are accessible if installed.
+Creates menu link for Tools from where tools like survey, lunch, idea are accessible if installed.
     """,
     "init_xml": [],
     "update_xml": [

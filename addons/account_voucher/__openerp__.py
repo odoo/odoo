@@ -23,21 +23,24 @@
     "name" : "eInvoicing & Payments",
     "version" : "1.0",
     "author" : 'OpenERP SA',
-    'complexity': "normal",
+    "summary": 'Send Invoices and Track Payments',
     "description": """
-Account Voucher module includes all the basic requirements of Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc.
-====================================================================================================================================
+eInvoicing & Payments module manage all Voucher Entries such as "Reconciliation Entries", "Adjustment Entries", "Closing or Opening Entries" for Sales, Purchase, Bank, Cash, Expense, Contra.
+==============================================================================================================================================================================================
 
     * Voucher Entry
-    * Voucher Receipt
+    * Voucher Receipt [Sales & Purchase]
+    * Voucher Payment [Customer & Supplier]
     * Cheque Register
     """,
     "category": 'Accounting & Finance',
     "sequence": 4,
-    "website" : "http://tinyerp.com",
+    "website" : "http://openerp.com",
     "images" : ["images/customer_payment.jpeg","images/journal_voucher.jpeg","images/sales_receipt.jpeg","images/supplier_voucher.jpeg"],
     "depends" : ["account"],
-    "init_xml" : [],
+    "init_xml" : [
+        'account_voucher_data.xml',
+    ],
 
     "demo_xml" : [],
 
@@ -46,7 +49,6 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
         "account_voucher_sequence.xml",
         "account_voucher_workflow.xml",
         "account_voucher_report.xml",
-        "wizard/account_voucher_unreconcile_view.xml",
         "wizard/account_statement_from_invoice_view.xml",
         "account_voucher_view.xml",
         "voucher_payment_receipt_view.xml",
@@ -66,6 +68,7 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
         "test/case2_usd_eur_debtor_in_usd.yml",
         "test/case3_eur_eur.yml",
         "test/case4_cad_chf.yml",
+        "test/case_eur_usd.yml",
     ],
     'certificate': '0037580727101',
     "auto_install": False,

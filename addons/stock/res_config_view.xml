@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_stock_config_settings" model="ir.ui.view">
+            <field name="name">stock settings</field>
+            <field name="model">stock.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Warehouse" version="7.0" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <separator string="Traceability"/>
+                    <group>
+                        <label for="id" string="Traceability"/>
+                        <div>
+                            <div>
+                                <field name="group_stock_production_lot" class="oe_inline"/>
+                                <label for="group_stock_production_lot"/>
+                            </div>
+                            <div attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
+                                <field name="module_product_expiry" class="oe_inline"/>
+                                <label for="module_product_expiry"/>
+                            </div>
+                            <div>
+                                <field name="group_stock_tracking_lot" class="oe_inline"/>
+                                <label for="group_stock_tracking_lot"/>
+                            </div>
+                        </div>    
+                    </group>
+                    <separator string="Accounting"/>
+                    <group>
+                        <label for="id" string="Accounting"/>
+                        <div>
+                            <div>
+                                <field name="group_stock_inventory_valuation" class="oe_inline"/>
+                                <label for="group_stock_inventory_valuation"/>
+                            </div>
+                            <div>
+                                <field name="module_stock_invoice_directly" class="oe_inline"/>
+                                <label for="module_stock_invoice_directly"/>
+                            </div>
+                         </div>
+                    </group>
+                    <separator string="Location &amp; Warehouse"/>
+                    <group>
+                        <label for="id" string="Logistic"/>
+                        <div>
+                            <div>
+                                <field name="group_stock_multiple_locations" class="oe_inline"/>
+                                <label for="group_stock_multiple_locations"/>  
+                            </div>
+                            <div>
+                                <field name="module_stock_location" class="oe_inline"/>
+                                <label for="module_stock_location"/>
+                            </div>
+                            <div>
+                                <field name="module_claim_from_delivery" class="oe_inline"/>
+                                <label for="module_claim_from_delivery"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Products"/>
+                        <div>
+                            <div>
+                                <field name="group_stock_packaging" class="oe_inline"/>
+                                <label for="group_stock_packaging"/>
+                            </div>
+                             <div>
+                                <label for="decimal_precision"/>
+                                <field name="decimal_precision" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <field name="group_uom" class="oe_inline"/>
+                                <label for="group_uom"/>
+                            </div>
+                            <div>
+                                <field name="group_uos" class="oe_inline"/>
+                                <label for="group_uos" />
+                            </div>
+                            <div>
+                                <field name="group_product_variant" class="oe_inline"/>
+                                <label for="group_product_variant"/>
+                            </div>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_config_settings" model="ir.actions.act_window">
+            <field name="name">Configure Warehouse</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_stock_config_settings" name="Warehouse" parent="base.menu_config"
+            sequence="5" action="action_stock_config_settings"/>
+
+    </data>
+</openerp>

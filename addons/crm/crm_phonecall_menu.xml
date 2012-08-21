@@ -6,10 +6,9 @@
         id="crm_case_categ_phone_create_partner"
         name="Schedule a Call"
         res_model="crm.phonecall"
-        src_model="res.partner"
         view_mode="calendar,tree,form"
         context="{'search_default_partner_id': [active_id], 'default_duration': 1.0, 'default_partner_id': active_id}"
-        groups="base.group_extended"
+        groups="base.group_sale_salesman"
         />
 
     <!-- TO CONFIRM: This is fine -->
@@ -31,7 +30,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
+        <field name="context">{"search_default_user_id":uid}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
     </record>
 
@@ -57,7 +56,7 @@
     </record>
 
     <menuitem name="Phone Calls" id="menu_crm_case_phone"
-        groups="base.group_extended,base.group_sale_salesman"
+        groups="base.group_sale_salesman"
         parent="base.menu_base_partner" sequence="4" />
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_incoming0">
@@ -67,10 +66,20 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_inbound_phone_tree_view"/>
         <field name="domain">[]</field>
-        <field name="context" eval="'{\'search_default_section_id\':section_id}'"/>
+        <field name="context">{}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help">This tool allows you to log your inbound calls on the fly. Each call you get will appear on the partner form to trace every contact you have with a partner. From the phone call form, you can trigger a request for another call, a meeting or an opportunity.</field>
-
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to log the summary of a phone call. 
+          </p><p>
+            OpenERP allows you to log inbound calls on the fly to track the
+            history of the communication with a customer or to inform another
+            team member.
+          </p><p>
+            In order to follow up on the call, you can trigger a request for
+            another call, a meeting or an opportunity.
+          </p>
+        </field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_incoming0">
@@ -105,9 +114,19 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain">[('state','!=','done')]</field>
-        <field name="context" eval="'{\'search_default_section_id\':section_id, \'default_state\':\'open\', \'search_default_current\':1}'"/>
-        <field name="search_view_id" ref="crm.view_crm_case_scheduled_phonecalls_filter"/>
-        <field name="help">Scheduled calls list all the calls to be done by your sales team. A salesman can record the information about the call in the form view. This information will be stored in the partner form to trace every contact you have with a customer. You can also import a .CSV file with a list of calls to be done by your sales team.</field>
+        <field name="context" eval="'{\'default_state\':\'open\'}'"/>
+        <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to schedule a call 
+          </p><p>
+            OpenERP allows you to easily define all the calls to be done
+            by your sales team and follow up based on their summary.
+          </p><p>  
+            You can use the import feature to massicely import a new list of
+            prospects to qualify.
+          </p>
+        </field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_outgoing0">

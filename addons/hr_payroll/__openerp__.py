@@ -24,7 +24,6 @@
     'version': '1.0',
     'category': 'Human Resources',
     "sequence": 38,
-    'complexity': "normal",
     'description': """
 Generic Payroll system.
 =======================
@@ -32,8 +31,8 @@ Generic Payroll system.
     * Employee Details
     * Employee Contracts
     * Passport based Contract
-    * Allowances / Deductions
-    * Allow to configure Basic / Grows / Net Salary
+    * Allowances/Deductions
+    * Allow to configure Basic/Gross/Net Salary
     * Employee Payslip
     * Monthly Payroll Register
     * Integrated with Holiday Management
@@ -59,6 +58,7 @@ Generic Payroll system.
         'hr_payroll_data.xml',
         'security/ir.model.access.csv',
         'wizard/hr_payroll_contribution_register_report.xml',
+        'res_config_view.xml',
     ],
     'test': [
          'test/payslip.yml',
@@ -72,7 +72,7 @@ Generic Payroll system.
     'installable': True,
     'auto_install': False,
     'certificate' : '001046261404562128861',
-    'application': True,
+    'application': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -24,6 +24,7 @@ from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv, orm
 from edi import EDIMixin
+from edi.models import edi
 from tools import DEFAULT_SERVER_DATE_FORMAT
 
 SALE_ORDER_LINE_EDI_STRUCT = {
@@ -35,7 +36,6 @@ SALE_ORDER_LINE_EDI_STRUCT = {
     'price_unit': True,
     #custom: 'product_qty'
     'discount': True,
-    'notes': True,
 
     # fields used for web preview only - discarded on import
     'price_subtotal': True,
@@ -59,16 +59,26 @@ SALE_ORDER_EDI_STRUCT = {
     'payment_term': True,
     'order_policy': True,
     'user_id': True,
+    'state': True,
 }
 
 class sale_order(osv.osv, EDIMixin):
     _inherit = 'sale.order'
 
+    def action_quotation_send(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        sale_objs = self.browse(cr, uid, ids, context=context) 
+        edi_token = self.pool.get('edi.document').export_edi(cr, uid, sale_objs, context = context)[0]
+        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        ctx = dict(context, edi_web_url_view=edi.EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
+        return super(sale_order, self).action_quotation_send(cr, uid, ids, context=ctx)
+
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a Sale order"""
         edi_struct = dict(edi_struct or SALE_ORDER_EDI_STRUCT)
         res_company = self.pool.get('res.company')
-        res_partner_address = self.pool.get('res.partner.address')
+        res_partner_obj = self.pool.get('res.partner')
         edi_doc_list = []
         for order in records:
             # generate the main report
@@ -82,7 +92,7 @@ class sale_order(osv.osv, EDIMixin):
                     '__import_module': 'purchase',
 
                     'company_address': res_company.edi_export_address(cr, uid, order.company_id, context=context),
-                    'partner_address': res_partner_address.edi_export(cr, uid, [order.partner_order_id], context=context)[0],
+                    'partner_address': res_partner_obj.edi_export(cr, uid, [order.partner_id], context=context)[0],
 
                     'currency': self.pool.get('res.currency').edi_export(cr, uid, [order.pricelist_id.currency_id],
                                                                          context=context)[0],
@@ -99,32 +109,27 @@ class sale_order(osv.osv, EDIMixin):
         #       the desired company among the user's allowed companies
 
         self._edi_requires_attributes(('company_id','company_address'), edi_document)
-        res_partner_address = self.pool.get('res.partner.address')
-        res_partner = self.pool.get('res.partner')
-
-        # imported company = as a new partner
-        src_company_id, src_company_name = edi_document.pop('company_id')
-        partner_id = self.edi_import_relation(cr, uid, 'res.partner', src_company_name,
-                                              src_company_id, context=context)
-        partner_value = {'supplier': True}
-        res_partner.write(cr, uid, [partner_id], partner_value, context=context)
+        res_partner_obj = self.pool.get('res.partner')
 
         # imported company_address = new partner address
+        src_company_id, src_company_name = edi_document.pop('company_id')
+
         address_info = edi_document.pop('company_address')
-        address_info['partner_id'] = (src_company_id, src_company_name)
-        address_info['type'] = 'default'
-        address_id = res_partner_address.edi_import(cr, uid, address_info, context=context)
+        address_info['supplier'] = True
+        if 'name' not in address_info:
+            address_info['name'] = src_company_name
+
+        address_id = res_partner_obj.edi_import(cr, uid, address_info, context=context)
 
         # modify edi_document to refer to new partner/address
-        partner_address = res_partner_address.browse(cr, uid, address_id, context=context)
-        edi_document['partner_id'] = (src_company_id, src_company_name)
+        partner_address = res_partner_obj.browse(cr, uid, address_id, context=context)
         edi_document.pop('partner_address', False) # ignored
         address_edi_m2o = self.edi_m2o(cr, uid, partner_address, context=context)
-        edi_document['partner_order_id'] = address_edi_m2o
+        edi_document['partner_id'] = address_edi_m2o
         edi_document['partner_invoice_id'] = address_edi_m2o
         edi_document['partner_shipping_id'] = address_edi_m2o
 
-        return partner_id
+        return address_id
 
     def _edi_get_pricelist(self, cr, uid, partner_id, currency, context=None):
         # TODO: refactor into common place for purchase/sale, e.g. into product module
@@ -212,7 +217,7 @@ class sale_order_line(osv.osv, EDIMixin):
                                product_qty=line.product_uos_qty)
 
             # company.security_days is for internal use, so customer should only
-            # see the expected date_planned based on line.delay 
+            # see the expected date_planned based on line.delay
             date_planned = datetime.strptime(line.order_id.date_order, DEFAULT_SERVER_DATE_FORMAT) + \
                             relativedelta(days=line.delay or 0.0)
             edi_doc['date_planned'] = date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)

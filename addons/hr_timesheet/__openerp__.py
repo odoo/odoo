@@ -24,7 +24,6 @@
     'name': 'Timesheets',
     'version': '1.0',
     "category": "Human Resources",
-    'complexity': "easy",
     'description': """
 This module implements a timesheet system.
 ==========================================
@@ -35,8 +34,8 @@ the analytic account.
 
 Lots of reporting on time and employee tracking are provided.
 
-It is completely integrated with the cost accounting module. It allows you
-to set up a management by affair.
+It is completely integrated with the cost accounting module. It allows you to set
+up a management by affair.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

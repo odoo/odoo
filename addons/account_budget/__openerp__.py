@@ -24,26 +24,24 @@
     'name': 'Budgets Management',
     'version': '1.0',
     'category': 'Accounting & Finance',
-    'complexity': "normal",
     'description': """
 This module allows accountants to manage analytic and crossovered budgets.
 ==========================================================================
 
-Once the Master Budgets and the Budgets are defined (in Accounting/Budgets/),
-the Project Managers can set the planned amount on each Analytic Account.
+Once the Budgets are defined (in Invoicing/Budgets/Budgets), the Project Managers 
+can set the planned amount on each Analytic Account.
 
 The accountant has the possibility to see the total of amount planned for each
-Budget and Master Budget in order to ensure the total planned is not
-greater/lower than what he planned for this Budget/Master Budget. Each list of
-record can also be switched to a graphical view of it.
+Budget in order to ensure the total planned is not greater/lower than what he planned
+for this Budget. Each list of record can also be switched to a graphical view of it.
 
 Three reports are available:
-    1. The first is available from a list of Budgets. It gives the spreading, for these Budgets, of the Analytic Accounts per Master Budgets.
+
+    1. The first is available from a list of Budgets. It gives the spreading, for these Budgets, of the Analytic Accounts.
 
     2. The second is a summary of the previous one, it only gives the spreading, for the selected Budgets, of the Analytic Accounts.
 
-    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.
-
+    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts of Budgets.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

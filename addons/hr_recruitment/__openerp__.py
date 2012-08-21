@@ -19,12 +19,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 {
     'name': 'Recruitment Process',
     'version': '1.0',
     'category': 'Human Resources',
-    "sequence": 24,
-    'complexity': "easy",
+    'sequence': 24,
+    'summary': 'Recruitment Process, Job Descriptions',
     'description': """
 Manages job positions and the recruitment process.
 ==================================================
@@ -38,9 +39,15 @@ system to store and search in your CV base.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg'],
-    'depends': ['decimal_precision', 'hr', 'survey', 'crm', 'fetchmail'],
-    'update_xml': [
-        'wizard/hr_recruitment_phonecall_view.xml',
+    'depends': [
+        'base_status',
+        'decimal_precision',
+        'hr',
+        'survey',
+        'base_calendar',
+        'fetchmail',
+    ],
+    'data': [
         'wizard/hr_recruitment_employee_hired.xml',
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
@@ -49,20 +56,20 @@ system to store and search in your CV base.
         'security/ir.model.access.csv',
         'report/hr_recruitment_report_view.xml',
         'board_hr_recruitment_statistical_view.xml',
-        'hr_recruitment_installer_view.xml'
-     ],
-    'init_xml': [
+        'hr_recruitment_installer_view.xml',
+        'res_config_view.xml',
         'hr_recruitment_data.xml'
     ],
-    'demo_xml': [
+    'demo': [
         'hr_recruitment_demo.yml',
     ],
-    'test':[
-            'test/recruitment_process.yml',
-            ],
+    'js': ['static/src/js/hr_recruitment.js'],
+    'test': [
+        'test/recruitment_process.yml',
+    ],
     'installable': True,
     'auto_install': False,
-    'certificate' : '001073437025460275621',
+    'certificate': '001073437025460275621',
     'application': True,
 }
 

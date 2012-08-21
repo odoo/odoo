@@ -2,11 +2,17 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" 
+        <!-- Top menu item -->
+        <!--
+            This menu item's purpose is to overwrite another one defined in
+            the base module in order to set new groups.
+        -->
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
             groups="base.group_sale_manager,base.group_sale_salesman"/>
 
         <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
-            parent="base.menu_base_config" sequence="1" groups="base.group_sale_manager"/>
+            parent="base.menu_base_config" sequence="80" groups="base.group_sale_manager"/>
 
         <menuitem id="base.menu_crm_config_opportunity" name="Opportunities"
             parent="base.menu_base_config" sequence="1" groups="base.group_sale_manager"/>
@@ -15,32 +21,34 @@
             parent="base.menu_base_config" sequence="0" groups="base.group_sale_manager"/>
 
         <menuitem id="menu_crm_config_phonecall" name="Phone Calls"
-            parent="base.menu_base_config" sequence="5" groups="base.group_extended"/>
+            parent="base.menu_base_config" sequence="45" groups="base.group_sale_salesman"/>
 
-        <menuitem id="base.next_id_64" name="Reporting"
-            parent="base.menu_base_partner" sequence="11" />
+        <menuitem id="base.next_id_64" name="Sales"
+            parent="base.menu_reporting" sequence="1" />
+
+        <menuitem id="base.menu_sales_configuration_misc" name="Miscellaneous" parent="base.menu_base_config" sequence="75"/>
 
 
         <!-- crm.case.channel -->
         <record id="crm_case_channel_view_tree" model="ir.ui.view">
             <field name="name">crm.case.channel.tree</field>
             <field name="model">crm.case.channel</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Channels">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
+                    <field name="name"/>
+                    <field name="active"/>
                 </tree>
             </field>
         </record>
         <record id="crm_case_channel_view_form" model="ir.ui.view">
             <field name="name">crm.case.channel.form</field>
             <field name="model">crm.case.channel</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Channel">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
+                <form string="Channel" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -49,50 +57,62 @@
             <field name="res_model">crm.case.channel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Track from where is coming your leads and opportunities by creating specific channels that will be maintained at the creation of a document in the system. Some examples of channels can be: Website, Phone Call, Reseller, etc.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new channel.
+              </p><p>
+                Use channels to track the soure of your leads and opportunities. Channels
+                are mostly used in reporting to analyse sales performance
+                related to marketing efforts.
+              </p><p>
+                Some examples of channels: company website, phone call
+                campaign, reseller, etc.
+              </p>
+            </field>
         </record>
 
-        <menuitem action="crm_case_channel_action" id="menu_crm_case_channel" parent="base.menu_crm_config_lead" sequence="4"/>
+        <menuitem action="crm_case_channel_action" id="menu_crm_case_channel" parent="base.menu_crm_config_lead" sequence="4" groups="base.group_no_one"/>
 
         <!-- Case Sections Form View -->
 
         <record id="crm_case_section_view_form" model="ir.ui.view">
             <field name="name">crm.case.section.form</field>
             <field name="model">crm.case.section</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Team">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1" colspan="2"/>
-                        <field name="parent_id" select="2"/>
-                        <field name="code" select="1"/>
-                        <newline/>
-                        <field name="user_id" select="2"/>
-                        <field name="resource_calendar_id" select="2"/>
-                        <field name="active" select="2"/>
+                <form string="Sales Team" version="7.0">
+                    <group>
+                        <group>
+                            <field name="name" colspan="2"/>
+                            <field name="parent_id"/>
+                            <field name="code"/>
+                        </group>
+                        
+                        <group>
+                            <field name="user_id"/>
+                            <field name="resource_calendar_id"/>
+                            <field name="active"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Team">
-                            <group col="2" colspan="1">
-                                <separator string="Mail Gateway" colspan="2"/>
-                                <field name="reply_to" select="2"/>
-                            </group>
-                            <group col="2" colspan="1">
-                                <separator string="Configuration" colspan="2"/>
-                                <field name="allow_unlink" select="2"/>
+                           <group>
+                                <field name="alias_id" invisible="1" required="0"/>
+                                <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                                 </div>
                                 <field name="change_responsible"/>
+                                <field name="allow_unlink"/>
                             </group>
-                            <group col="1" colspan="4" groups="base.group_extended">
-                                <separator string="Team Members" colspan="4"/>
-                                <field name="member_ids" nolabel="1" colspan="4"   height="250"/>
-                            </group>
+                            <separator string="Team Members"/>
+                            <field name="member_ids"/>
                         </page>
                         <page string="Stages">
-                            <separator string="Select stages for this Sales Team" colspan="4"/>
-                            <field name="stage_ids" colspan="4" nolabel="1"/>
+                            <separator string="Select Stages for this Sales Team"/>
+                            <field name="stage_ids"/>
                         </page>
                         <page string="Notes">
-                            <field name="note" select="1" colspan="4" nolabel="1"/>
+                            <field name="note"/>
                         </page>
                     </notebook>
                 </form>
@@ -104,13 +124,12 @@
         <record id="crm_case_section_view_tree" model="ir.ui.view">
             <field name="name">crm.case.section.tree</field>
             <field name="model">crm.case.section</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Sales Team">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
@@ -122,12 +141,20 @@
             <field name="res_model">crm.case.section</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
-            <field name="help">Define a Sales Team to organize your different salesmen or sales departments into separate teams. Each team will work in its own list of opportunities, sales orders, etc. Each user can set a default team in his user preferences. The opportunities and sales order displayed, will automatically be filtered according to his team.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new sales team. 
+              </p><p>
+                Use sales team to organize your different salespersons or
+                departments into separate teams. Each team will work in
+                its own list of opportunities.
+              </p>
+            </field>
         </record>
 
         <menuitem action="crm_case_section_act"
-            id="menu_crm_case_section_act" sequence="4"
-            parent="base.menu_sale_config_sales" />
+            id="menu_crm_case_section_act" sequence="15"
+            parent="base.menu_sales_configuration_misc" groups="base.group_no_one"/>
 
 
         <!-- CRM Stage Tree View -->
@@ -135,12 +162,13 @@
         <record model="ir.ui.view" id="crm_case_stage_tree">
             <field name="name">crm.case.stage.tree</field>
             <field name="model">crm.case.stage</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Stages">
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="probability"/>
+                    <field name="state"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
@@ -150,20 +178,22 @@
         <record model="ir.ui.view" id="crm_case_stage_form">
             <field name="name">crm.case.stage.form</field>
             <field name="model">crm.case.stage</field>
-            <field name="type">form</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <form string="Stage">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
+                <form string="Stage" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="state" string="Related State" />
                         <field name="probability"/>
+                        <field name="type"/>
                         <field name="on_change"/>
-                        <field name="case_default"/>
                         <field name="sequence"/>
+                        <field name="case_default"/>
+                        <field name="fold"/>
                     </group>
-                    <separator string="Requirements" colspan="4"/>
-                    <field name="requirements" nolabel="1" colspan="4"/>
-                    <field name="section_ids" invisible="1" colspan="4"/>
+                    <separator string="Requirements"/>
+                    <field name="requirements" nolabel="1"/>
+                    <field name="section_ids" invisible="1"/>
                 </form>
             </field>
         </record>
@@ -183,12 +213,13 @@
         <record id="crm_case_categ-view" model="ir.ui.view">
             <field name="name">crm.case.categ.form</field>
             <field name="model">crm.case.categ</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Case Category">
-                    <field name="name" select="1"/>
-                    <field name="section_id" select="1"/>
-                    <field name="object_id"  invisible="1" />
+                <form string="Case Category" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="section_id"/>
+                        <field name="object_id"  invisible="1" />
+                    </group>
                 </form>
             </field>
         </record>
@@ -198,7 +229,6 @@
         <record id="crm_case_categ_tree-view" model="ir.ui.view">
             <field name="name">crm.case.categ.tree</field>
             <field name="model">crm.case.categ</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Case Category">
                     <field name="name"/>
@@ -212,7 +242,6 @@
         <record model="ir.ui.view" id="crm_case_resource_type_tree">
             <field name="name">crm.case.resource.type.tree</field>
             <field name="model">crm.case.resource.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Campaign">
                     <field name="name"/>
@@ -226,11 +255,12 @@
         <record model="ir.ui.view" id="crm_case_resource_type_form">
             <field name="name">crm.case.resource.type.form</field>
             <field name="model">crm.case.resource.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Campaign">
-                    <field name="name" select="1"/>
-                    <field name="section_id"/>
+                <form string="Campaign" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="section_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -246,7 +276,7 @@
 
          <menuitem action="crm_case_resource_type_act"
             id="menu_crm_case_resource_type_act" sequence="4"
-            groups="base.group_extended"
+            groups="base.group_no_one"
             parent="base.menu_crm_config_lead" />
 
         <record id="crm_case_section_act_tree" model="ir.actions.act_window">
@@ -262,7 +292,6 @@
         <record id="crm_segmentation_line_tree-view" model="ir.ui.view">
             <field name="name">crm.segmentation.line.tree</field>
             <field name="model">crm.segmentation.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Partner Segmentation Lines">
                     <field name="name"/>
@@ -279,17 +308,17 @@
         <record id="crm_segmentation_line-view" model="ir.ui.view">
             <field name="name">crm.segmentation.line.form</field>
             <field name="model">crm.segmentation.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partner Segmentation Lines">
-                    <field colspan="4" name="name" select="1"/>
-                    <group col="2" colspan="4">
-                        <field name="expr_name"/>
-                        <field name="expr_operator"/>
-                        <field name="expr_value"/>
+                <form string="Partner Segmentation Lines" version="7.0">
+                    <group col="4">
+                        <field colspan="4" name="name"/>
+                        <group col="2" colspan="4">
+                            <field name="expr_name"/>
+                            <field name="expr_operator"/>
+                            <field name="expr_value"/>
+                        </group>
+                        <field name="operator"/>
                     </group>
-                    <newline/>
-                    <field name="operator"/>
                 </form>
             </field>
         </record>
@@ -299,31 +328,9 @@
         <record id="crm_segmentation-view" model="ir.ui.view">
             <field name="name">crm.segmentation.form</field>
             <field name="model">crm.segmentation</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partner Segmentation">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="categ_id"/>
-                        <field name="exclusif"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Sales Purchase">
-                            <field name="sales_purchase_active"/>
-                            <separator colspan="4" string="State of Mind Computation"/>
-                            <field name="som_interval"/>
-                            <field name="som_interval_max"/>
-                            <field name="som_interval_decrease"/>
-                            <field name="som_interval_default"/>
-                            <separator colspan="4" string="Segmentation Test"/>
-                            <field colspan="4" name="segmentation_line" widget="one2many_list" nolabel="1"/>
-                        </page>
-                        <page string="Description">
-                               <field colspan="4" name="description" nolabel="1"/>
-                           </page>
-                    </notebook>
-                    <field name="state"/>
-                    <group col="3" colspan="2">
+                <form string="Partner Segmentation" version="7.0">
+                    <header>
                         <button name="process_start"
                             states="not running"
                             string="Compute Segmentation" type="object"
@@ -334,7 +341,25 @@
                         <button name="process_continue" states="running"
                             string="Continue Process" type="object"
                             icon="gtk-go-forward" />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="categ_id"/>
+                        <field name="exclusif"/>
                     </group>
+                    <notebook>
+                       <page string="Sales Purchase">
+                           <group>
+                               <field name="sales_purchase_active"/>
+                           </group>
+                           <separator string="Segmentation Test"/>
+                           <field name="segmentation_line" widget="one2many_list"/>
+                       </page>
+                       <page string="Description">
+                           <field name="description"/>
+                       </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -344,7 +369,6 @@
         <record id="crm_segmentation_tree-view" model="ir.ui.view">
             <field name="name">crm.segmentation.tree</field>
             <field name="model">crm.segmentation</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Partner Segmentations">
                     <field name="name"/>
@@ -362,46 +386,73 @@
         </record>
 
         <record id="crm_segmentation_tree-act" model="ir.actions.act_window">
-            <field name="name">Partners Segmentation</field>
+            <field name="name">Contacts Segmentation</field>
             <field name="res_model">crm.segmentation</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Create specific partner categories which you can assign to your partners to better manage your interactions with them. The segmentation tool is able to assign categories to partners according to criteria you set.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new customer segmentation. 
+              </p><p>
+                Create specific categories which you can assign to your
+                contacts to better manage your interactions with them. The
+                segmentation tool is able to assign categories to contacts
+                according to criteria you set.
+              </p>
+            </field>
         </record>
 
        <menuitem action="crm_segmentation_tree-act"
             id="menu_crm_segmentation-act"
-            groups="base.group_extended" sequence="2"
-            parent="base.menu_base_action_rule" />
-
-        <record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">
-            <field name="name">view.users.form.crm.modif.inherited1</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <group name="default_filters" position="inside">
-                    <field name="context_section_id" completion="1"
-                        readonly="0"/>
-                </group>
-            </field>
-        </record>
-
-        <record id="view_users_form_simple_modif_inherited2" model="ir.ui.view">
-                <field name="name">view.users.form.crm.modif.inherited2</field>
-                <field name="model">res.users</field>
-                <field name="type">form</field>
-                <field name="inherit_id" ref="base.view_users_form"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <group name="default_filters" position="inside">
-                        <field name="context_section_id" completion="1"/>
-                    </group>
-                </field>
-        </record>
+            groups="base.group_no_one" sequence="15"
+            parent="base.menu_base_config" />
 
         <!-- menu for the working time -->
         <menuitem action="resource.action_resource_calendar_form" id="menu_action_resource_calendar_form" parent="resource.menu_resource_config" sequence="1"/>
 
+        <!-- Payment Mode Tree View -->
+
+        <record model="ir.ui.view" id="view_crm_payment_mode_tree">
+            <field name="name">crm.payment.mode.tree</field>
+            <field name="model">crm.payment.mode</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Mode">
+                    <field name="name"/>
+                    <field name="section_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Payment Mode Form View -->
+
+        <record model="ir.ui.view" id="view_crm_payment_mode_form">
+            <field name="name">crm.payment.mode.form</field>
+            <field name="model">crm.payment.mode</field>
+            <field name="arch" type="xml">
+                <form string="Payment Mode" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="section_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Payment Mode Action -->
+
+        <record id="action_crm_payment_mode" model="ir.actions.act_window">
+            <field name="name">Payment Mode</field>
+            <field name="res_model">crm.payment.mode</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem id="menu_crm_payment_mode" name="Fund Raising"
+            parent="base.menu_base_config" sequence="85" groups="crm.group_fund_raising"/>
+            
+        <menuitem action="action_crm_payment_mode"
+            id="menu_crm_payment_mode_act"
+            name="Payment Modes"
+            parent="menu_crm_payment_mode" />
     </data>
 </openerp>
