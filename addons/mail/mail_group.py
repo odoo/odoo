@@ -98,7 +98,7 @@ class mail_group(osv.Model):
                  "Use this field anywhere a small image is required."),
         'last_month_msg_nbr': fields.function(_get_last_month_msg_nbr, type='integer',
             string='Messages count for last month'),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", 
+        'alias_id': fields.many2one('mail.alias', 'Alias', required=True, ondelete="cascade",
                                     help="The email address associated with this group. New emails received will automatically "
                                          "create new topics."),
     }
