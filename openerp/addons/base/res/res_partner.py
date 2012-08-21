@@ -366,22 +366,14 @@ class res_partner(osv.osv):
             - ([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]:
               Raoul Grosbedon, raoul@grosbedon.fr
         """
-        contact_regex = re.compile('([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]')
-        email_regex = re.compile('([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})')
-        contact_regex_res = contact_regex.findall(name)
-        email_regex_res = email_regex.findall(name)
-        if contact_regex_res:
-            name = contact_regex_res[0][0].rstrip(' ') # remove extra spaces on the right
-            email = contact_regex_res[0][1]
-            rec_id = self.create(cr, uid, {self._rec_name: name, 'email': email}, context);
-            return self.name_get(cr, uid, [rec_id], context)[0]
-        elif email_regex_res:
-            email = '%s' % (email_regex_res[0])
-            rec_id = self.create(cr, uid, {self._rec_name: email, 'email': email}, context);
-            return self.name_get(cr, uid, [rec_id], context)[0]
-        else:
-            rec_id = super(res_partner, self).create(cr, uid, {self._rec_name: name}, context)
-            return self.name_get(cr, uid, [rec_id], context)[0]
+        regex = re.compile('^(.*?)(?: ?[\<]?([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]?)?$')
+        result = regex.match(name)
+        if not result or (context.get('force_create',False) and result.group(2) is None):
+            raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address !"))
+        name = result.group(1).strip()
+        email = result.group(2)
+        rec_id = self.create(cr, uid, {self._rec_name: name or email, 'email': email or False}, context=context)
+        return self.name_get(cr, uid, [rec_id], context)[0]
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
