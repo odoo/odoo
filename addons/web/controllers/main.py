@@ -34,6 +34,50 @@ openerpweb = common.http
 # OpenERP Web helpers
 #----------------------------------------------------------
 
+def rjsmin(script):
+    """ Minify js with a clever regex.
+    Taken from http://opensource.perlig.de/rjsmin
+    Apache License, Version 2.0 """
+    def subber(match):
+        """ Substitution callback """
+        groups = match.groups()
+        return (
+            groups[0] or
+            groups[1] or
+            groups[2] or
+            groups[3] or
+            (groups[4] and '\n') or
+            (groups[5] and ' ') or
+            (groups[6] and ' ') or
+            (groups[7] and ' ') or
+            ''
+        )
+
+    result = re.sub(
+        r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?'
+        r'\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|'
+        r'\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|(?:(?<=[(,=:\[!&|?{};\r\n]'
+        r')(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/'
+        r'))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*'
+        r'(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*'
+        r'))|(?:(?<=[\000-#%-,./:-@\[-^`{-~-]return)(?:[\000-\011\013\014\01'
+        r'6-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*((?:/(?![\r\n/*])[^/'
+        r'\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]'
+        r'*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*))|(?<=[^\000-!#%&(*,./'
+        r':-@\[\\^`{|~])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/'
+        r'*][^*]*\*+)*/))*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\01'
+        r'4\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#'
+        r'%-\047)*,./:-@\\-^`|-~])|(?<=[^\000-#%-,./:-@\[-^`{-~-])((?:[\000-'
+        r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=[^'
+        r'\000-#%-,./:-@\[-^`{-~-])|(?<=\+)((?:[\000-\011\013\014\016-\040]|'
+        r'(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-\011\0'
+        r'13\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=-)|(?:[\0'
+        r'00-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:'
+        r'(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*'
+        r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
+    ).strip()
+    return result
+
 def sass2scss(src):
     # Validated by diff -u of sass2scss against:
     # sass-convert -F sass -T scss openerp.sass openerp.scss
@@ -86,6 +130,7 @@ def sass2scss(src):
     return write(sass)
 
 def db_list(req):
+    dbs = []
     proxy = req.session.proxy("db")
     dbs = proxy.list()
     h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
@@ -182,14 +227,19 @@ def module_installed_bypass_session(dbname):
     return sorted_modules
 
 def module_boot(req):
-    dbs = db_list(req)
     serverside = []
     dbside = []
     for i in req.config.server_wide_modules:
         if i in openerpweb.addons_manifest:
             serverside.append(i)
+    # if only one db load every module at boot
+    dbs = []
+    try:
+        dbs = db_list(req)
+    except xmlrpclib.Fault:
+        # ignore access denied
+        pass
     if len(dbs) == 1:
-        # if only one db load every module at boot
         dbside = module_installed_bypass_session(dbs[0])
         dbside = [i for i in dbside if i not in serverside]
     addons = serverside + dbside
@@ -249,6 +299,11 @@ def concat_files(file_list, reader=None, intersperse=""):
 
     files_concat = intersperse.join(files_content)
     return files_concat, checksum.hexdigest()
+
+def concat_js(file_list):
+    content, checksum = concat_files(file_list, intersperse=';')
+    content = rjsmin(content)
+    return content, checksum 
 
 def manifest_glob(req, addons, key):
     if addons is None:
@@ -322,6 +377,9 @@ def make_conditional(req, response, last_modified=None, etag=None):
 
 def login_and_redirect(req, db, login, key, redirect_url='/'):
     req.session.authenticate(db, login, key, {})
+    return set_cookie_and_redirect(req, redirect_url)
+
+def set_cookie_and_redirect(req, redirect_url):
     redirect = werkzeug.utils.redirect(redirect_url, 303)
     redirect.autocorrect_location_header = False
     cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
@@ -582,7 +640,7 @@ class WebClient(openerpweb.Controller):
         if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
             return werkzeug.wrappers.Response(status=304)
 
-        content, checksum = concat_files(files, intersperse=';')
+        content, checksum = concat_js(files)
 
         return make_conditional(
             req, req.make_response(content, [('Content-Type', 'application/javascript')]),
@@ -802,9 +860,8 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        loaded = module_boot(req)
-        modules = module_installed(req)
-        return [module for module in modules if module not in loaded]
+        # return all installed modules. Web client is smart enough to not load a module twice
+        return module_installed(req)
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
@@ -1132,6 +1189,15 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
         return req.session.exec_workflow(model, id, signal)
+
+    @openerpweb.jsonrequest
+    def resequence(self, req, model, ids):
+        m = req.session.model(model)
+        if not len(m.fields_get(['sequence'])):
+            return False
+        for i in range(len(ids)):
+            m.write([ids[i]], { 'sequence': i })
+        return True
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/web/group"

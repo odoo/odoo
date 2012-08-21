@@ -11,7 +11,33 @@ instance.web_mobile.mobilewebclient = function(element_id) {
     return client;
 };
 
-instance.web_mobile.MobileWebClient = instance.web.OldWidget.extend({
+/**
+ * @deprecated use :class:`instance.web.Widget`
+ */
+instance.web_mobile.MobileWidget = instance.web.Widget.extend({
+    init: function(parent, element_id) {
+        this._super(parent);
+        this.element_id = element_id;
+        this.element_id = this.element_id || _.uniqueId('widget-');
+
+        var tmp = document.getElementById(this.element_id);
+        this.setElement(tmp || this._make_descriptive());
+    },
+    renderElement: function() {
+        var rendered = this.render();
+        if (rendered) {
+            this.replaceElement($(rendered));
+        }
+        return this;
+    },
+    render: function (additional) {
+        if (this.template)
+            return instance.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        return null;
+    }
+});
+
+instance.web_mobile.MobileWebClient = instance.web_mobile.MobileWidget.extend({
 
     template: "WebClient",
 
@@ -31,7 +57,7 @@ instance.web_mobile.MobileWebClient = instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Login =  instance.web.OldWidget.extend({
+instance.web_mobile.Login =  instance.web_mobile.MobileWidget.extend({
 
     template: "Login",
 
@@ -118,7 +144,7 @@ instance.web_mobile.Login =  instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Header =  instance.web.OldWidget.extend({
+instance.web_mobile.Header =  instance.web_mobile.MobileWidget.extend({
 
     template: "Header",
 
@@ -130,7 +156,7 @@ instance.web_mobile.Header =  instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Footer =  instance.web.OldWidget.extend({
+instance.web_mobile.Footer =  instance.web_mobile.MobileWidget.extend({
 
     template: "Footer",
 
@@ -142,7 +168,7 @@ instance.web_mobile.Footer =  instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Shortcuts =  instance.web.OldWidget.extend({
+instance.web_mobile.Shortcuts =  instance.web_mobile.MobileWidget.extend({
 
     template: "Shortcuts",
 
@@ -181,7 +207,7 @@ instance.web_mobile.Shortcuts =  instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Menu =  instance.web.OldWidget.extend({
+instance.web_mobile.Menu =  instance.web_mobile.MobileWidget.extend({
 
     template: "Menu",
 
@@ -247,7 +273,7 @@ instance.web_mobile.Menu =  instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Secondary =  instance.web.OldWidget.extend({
+instance.web_mobile.Secondary =  instance.web_mobile.MobileWidget.extend({
 
     template: "Menu.secondary",
 
@@ -304,7 +330,7 @@ instance.web_mobile.Secondary =  instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Options =  instance.web.OldWidget.extend({
+instance.web_mobile.Options =  instance.web_mobile.MobileWidget.extend({
 
     template: "Options",
 

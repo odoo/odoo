@@ -33,28 +33,28 @@ openerp.testing = (function () {
             instance.web.qweb.add_template(doc);
         },
         /**
-         * Alter provided instance's ``connection`` attribute to make response
+         * Alter provided instance's ``session`` attribute to make response
          * mockable:
          *
          * * The ``responses`` parameter can be used to provide a map of (RPC)
          *   paths (e.g. ``/web/view/load``) to a function returning a response
          *   to the query.
-         * * ``instance,connection`` grows a ``responses`` attribute which is
+         * * ``instance.session`` grows a ``responses`` attribute which is
          *   a map of the same (and is in fact initialized to the ``responses``
          *   parameter if one is provided)
          *
          * Note that RPC requests to un-mocked URLs will be rejected with an
          * error message: only explicitly specified urls will get a response.
          *
-         * Mocked connections will *never* perform an actual RPC connection.
+         * Mocked sessions will *never* perform an actual RPC connection.
          *
          * @param instance openerp instance being initialized
          * @param {Object} [responses]
          */
         mockifyRPC: function (instance, responses) {
-            var connection = instance.connection;
-            connection.responses = responses || {};
-            connection.rpc_function = function (url, payload) {
+            var session = instance.session;
+            session.responses = responses || {};
+            session.rpc_function = function (url, payload) {
                 var fn = this.responses[url.url + ':' + payload.params.method]
                       || this.responses[url.url];
 
