@@ -38,26 +38,28 @@ def mail_tools_to_email(text):
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
 
 class mail_compose_message(osv.TransientModel):
-    """Generic Email composition wizard. This wizard is meant to be inherited
-       at model and view level to provide specific wizard features.
+    """ Generic Email composition wizard. This wizard is meant to be inherited
+        at model and view levels to provide specific wizard features.
 
-       The behavior of the wizard can be modified through the use of context
-       parameters, among which are:
-
-         * mail.compose.message.mode: if set to 'reply', the wizard is in 
-            reply to a previous message mode and pre-populated with the original
-            quote. If set to 'comment', it means you are writing a new message to
-            be attached to a document. If set to 'mass_mail', the wizard is in
-            mass mailing where the mail details can contain template placeholders
-            that will be merged with actual data before being sent to each
-            recipient.
-         * active_model: model name of the document to which the mail being
-                        composed is related
-         * active_id: id of the document to which the mail being composed is
-                      related, or id of the message to which user is replying,
-                      in case ``mail.compose.message.mode == 'reply'``
-         * active_ids: ids of the documents to which the mail being composed is
-                      related, in case ``mail.compose.message.mode == 'mass_mail'``.
+        The behavior of the wizard can be modified through the use of context
+        parameters, among which are:
+        - mail.compose.message.mode:
+            - if set to 'reply', the wizard is a reply to a previous message.
+                It is pre-populated with the original quote
+            - if set to 'comment', it means you are writing a new message to
+                be attached to a document. It is pre-populated with values
+                coming from ``get_value``, related to the document, and that
+                can be overridden to add specific model-related behavior.
+            - if set to 'mass_mail', the wizard is in mass mailing mode where
+                the mail details can contain template placeholders that will be
+                merged with actual data before being sent to each recipient.
+        - active_model: model name of the document to which the mail being
+            composed is related
+        - active_id: id of the document to which the mail being composed is
+            related, or id of the message to which user is replying, in case
+            ``mail.compose.message.mode == 'reply'``
+        - active_ids: ids of the documents to which the mail being composed is
+            related, in case ``mail.compose.message.mode == 'mass_mail'``.
     """
     _name = 'mail.compose.message'
     _inherit = 'mail.message'
@@ -69,14 +71,14 @@ class mail_compose_message(osv.TransientModel):
 
             Composition mode
             - comment: default mode; active_model, active_id = model and ID of a
-            document we are commenting,
-            - reply: active_id = ID of a mail.message to which we are replying.
-            From this message we can find the related model and res_id,
+                document we are commenting,
             - mass_mailing mode: active_model, active_id  = model and ID of a
-            document we are commenting,
+                document we are commenting,
+            - reply: active_id = ID of a mail.message to which we are replying.
+                From this message we can find the related model and res_id,
 
            :param dict context: several context values will modify the behavior
-                                of the wizard, cfr. the class description.
+                of the wizard, cfr. the class description.
         """
         if context is None:
             context = {}
@@ -104,25 +106,28 @@ class mail_compose_message(osv.TransientModel):
 
     _columns = {
         'dest_partner_ids': fields.many2many('res.partner',
-            'email_message_send_partner_rel',
+            'mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Destination partners',
             help="When sending emails through the social network composition wizard"\
                  "you may choose to send a copy of the mail to partners."),
-        'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
+        'attachment_ids': fields.many2many('ir.attachment','mail_compose_message_ir_attachments_rel',
+            'wizard_id', 'attachment_id', 'Attachments'),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
         'body_html': fields.html('HTML Editor Body'),
-        'content_subtype': fields.char('Message content subtype', size=32,
-            oldname="subtype", readonly=1,
+        'content_subtype': fields.char('Message content subtype', size=32, readonly=1,
             help="Type of message, usually 'html' or 'plain', used to select "\
                   "plain-text or rich-text contents accordingly"),
+        # boolean fields to control
+        'formatting': fields.boolean('Toggle advanced formatting mode'),
     }
+
     _defaults = {
         'content_subtype': lambda self,cr, uid, context={}: 'plain',
         'body_html': lambda self,cr, uid, context={}: '',
-        'body': lambda self,cr, uid, context={}: ''
+        'body': lambda self,cr, uid, context={}: '',
+        'formatting': False,
     }
-
 
     def get_value(self, cr, uid, model, res_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
@@ -150,20 +155,14 @@ class mail_compose_message(osv.TransientModel):
         })
         return result
 
-    def onchange_email_mode(self, cr, uid, ids, value, model, res_id, context=None):
-        """ email_mode (values: True or False). This onchange on the email mode
-            allows to have some specific behavior when going in email mode, or
-            when going out of email mode.
-            Basically, dest_partner_ids is reset when going out of email
-            mode.
-            This method can be overridden for models that want to have their
-            specific behavior.
-            Note that currently, this onchange is used in mail.js and called
-            manually on the form instantiated in the Chatter.
-        """
-        if not value:
-            return {'value': {'dest_partner_ids': []}}
-        return {'value': {}}
+    def toggle_formatting(self, cr, uid, ids, context=None):
+        """ hit toggle formatting mode button: calls onchange_formatting to 
+            emulate an on_change, then writes the value to update the form. """
+        for record in self.browse(cr, uid, ids, context=context):
+            onchange_res = self.onchange_formatting(cr, uid, ids, not record.formatting, record.model, record.res_id, context=context)
+            self.write(cr, uid, [record.id], onchange_res['value'], context=context)
+        return False
+
 
     def onchange_formatting(self, cr, uid, ids, value, model, res_id, context=None):
         """ onchange_formatting (values: True or False). This onchange on the
@@ -176,8 +175,29 @@ class mail_compose_message(osv.TransientModel):
             manually on the form instantiated in the Chatter.
         """
         if not value:
-            return {'value': {'subject': False}}
-        return {'value': {}}
+            return {'value': {'subject': False, 'formatting': value}}
+        return {'value': {'formatting': value}}
+
+    def onchange_dest_partner_ids(self, cr, uid, ids, value, context=None):
+        """ onchange_dest_partner_ids (value format: [[6, False, [3, 4]]]). The
+            basic purpose of this method is to check that destination partners
+            effectively have email addresses. Otherwise a warning is thrown.
+        """
+        partner_ids = value[0][2]
+        partner_wo_email_lst = []
+        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
+            if not partner.email:
+                partner_wo_email_lst.append(partner)
+        if not partner_wo_email_lst:
+            return {'value': {}}
+        warning_msg = _('The following partners chosen as recipients for the email have no email address linked :')
+        for partner in partner_wo_email_lst:
+            warning_msg += '\n- %s' % (partner.name)
+        warning = {
+            'title': _('Partners email addresses not found'),
+            'message': warning_msg,
+        }
+        return {'warning': warning, 'value': {}}
 
     def get_message_data(self, cr, uid, message_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
@@ -243,7 +263,6 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
 
-        email_mode = context.get('email_mode')
         formatting = context.get('formatting')
         mass_mail_mode = context.get('mail.compose.message.mode') == 'mass_mail'
 
@@ -299,66 +318,8 @@ class mail_compose_message(osv.TransientModel):
             return tools.ustr(result)
         return template and EXPRESSION_PATTERN.sub(merge, template)
 
+    def dummy(self, cr, uid, ids, context=None):
+        return False
 
-class mail_compose_message_extended(osv.TransientModel):
-    """ Extension of 'mail.compose.message' to support default field values related
-        to CRM-like models that follow the following conventions:
 
-        1. The model object must have an attribute '_mail_compose_message' equal to True.
-
-        2. The model should define the following fields:
-            - 'name' as subject of the message (required);
-            - 'email_from' as destination email address (required);
-            - 'email_cc' as cc email addresses (required);
-            - 'section_id.reply_to' as reply-to address (optional).
-    """
-    _inherit = 'mail.compose.message'
-
-    def get_value(self, cr, uid, model, res_id, context=None):
-        return {}
-
-    def onchange_email_mode(self, cr, uid, ids, value, model, res_id, context=None):
-        """ Overrides the default implementation to provide default values for
-            dest_partner_ids. This method checks that a partner maching the
-            ``email_from`` of the record exists. It it does not exist, it
-            creates a new partner. The found or created partner is then added
-            in dest_partner_ids.
-            Partner check/creation valid inly if the value is True, and if 
-            the model has the ``_mail_compose_message`` attribute.
-        """
-        result = super(mail_compose_message_extended, self).onchange_email_mode(cr, uid, ids, value, model, res_id, context=context)
-        model_obj = self.pool.get(model)
-        if not value or not (getattr(model_obj, '_mail_compose_message', False) and res_id):
-            return result
-        data = model_obj.browse(cr, uid , res_id, context=context)
-        partner_obj = self.pool.get('res.partner')
-        partner_ids = partner_obj.search(cr, uid, [('email', '=', data.email_from)], context=context)
-        if partner_ids:
-            partner_id = partner_ids[0]
-        else:
-            partner_id = partner_obj.name_create(cr, uid, data.email_from, context=context)[0]
-        result['value'].update({
-            'dest_partner_ids': [partner_id],
-            'email_cc': tools.ustr(data.email_cc or ''),
-        })
-        if hasattr(data, 'section_id'):
-            result['value']['reply_to'] = data.section_id and data.section_id.reply_to or False
-        return result
-
-    def onchange_formatting(self, cr, uid, ids, value, model, res_id, context=None):
-        """ Overrides the default implementation to provide default values for
-            the subject.
-            Subject re-creation valid only if the value is True, and if the
-            model has the ``_mail_compose_message`` attribute.
-        """
-        result = super(mail_compose_message_extended, self).onchange_formatting(cr, uid, ids, value, model, res_id, context=context)
-        model_obj = self.pool.get(model)
-        if not value or not (getattr(model_obj, '_mail_compose_message', False) and res_id):
-            return result
-        data = model_obj.browse(cr, uid , res_id, context=context)
-        result['value'].update({
-            'subject': data.name or False,
-        })
-        return result
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+#FIXME: check for models defining '_mail_compose_message'

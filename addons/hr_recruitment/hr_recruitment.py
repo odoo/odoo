@@ -96,7 +96,6 @@ class hr_applicant(base_stage, osv.Model):
     _description = "Applicant"
     _order = "id desc"
     _inherit = ['ir.needaction_mixin', 'mail.thread']
-    _mail_compose_message = True
 
     def _get_default_department_id(self, cr, uid, context=None):
         """ Gives default department by checking if present in the context """

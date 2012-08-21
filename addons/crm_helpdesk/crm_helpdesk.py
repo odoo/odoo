@@ -38,7 +38,7 @@ class crm_helpdesk(base_state, osv.osv):
     _description = "Helpdesk"
     _order = "id desc"
     _inherit = ['mail.thread']
-    _mail_compose_message = True
+
     _columns = {
             'id': fields.integer('ID', readonly=True),
             'name': fields.char('Name', size=128, required=True),

@@ -225,73 +225,48 @@ openerp.mail = function(session) {
             });
             // event: click on 'Send an Email' link that toggles the form for
             // sending an email (partner_ids)
-            this.$element.find('a.oe_mail_compose_message_email').click(function (event) {
+            this.$element.on('click', 'button.oe_mail_compose_message_email', function (event) {
                 event.preventDefault();
-                self.toggle_email_mode();
+                event.stopPropagation();
+                self.toggle_email_mode(event);
             });
             // event: click on 'Formatting' icon-link that toggles the advanced
             // formatting options for writing a message (subject, body_html)
-            this.$element.find('a.oe_mail_compose_message_formatting').click(function (event) {
+            this.$element.on('click', 'button.oe_mail_compose_message_formatting', function (event) {
                 event.preventDefault();
-                self.toggle_formatting_mode();
+                event.stopPropagation();
+                self.toggle_formatting_mode(event);
             });
             // event: click on 'Attachment' icon-link that opens the dialog to
             // add an attachment.
-            this.$element.find('a.oe_mail_compose_message_attachment').click(function (event) {
-                event.preventDefault();
-                // not yet implemented
-                self.set_body_value('attachment', 'attachment');
-            });
-            // event: click on 'Checklist' icon-link that toggles the options
-            // for adding checklist.
-            this.$element.find('a.oe_mail_compose_message_checklist').click(function (event) {
-                event.preventDefault();
-                // not yet implemented
-                self.set_body_value('checklist', 'checklist');
+            this.$element.on('click', 'button.oe_mail_compose_message_attachment', function (event) {
+                event.stopImmediatePropagation();
             });
         },
 
         /**
          * Toggle the formatting mode. */
-        toggle_formatting_mode: function() {
-            var self = this;
+        toggle_formatting_mode: function(event) {
             this.formatting = ! this.formatting;
-            // calls onchange
-            var call_defer = this.ds_compose.call('onchange_formatting', [[], this.formatting, this.options.res_model, this.options.res_id]).then(
-                function (result) {
-                    self.form_view.on_processed_onchange(result, []);
-                });
             // update context of datasetsearch
             this.ds_compose.context.formatting = this.formatting;
-            // toggle display
-            this.$element.find('span.oe_mail_compose_message_subject').toggleClass('oe_mail_compose_message_invisible');
-            this.$element.find('div.oe_mail_compose_message_body').toggleClass('oe_mail_compose_message_invisible');
-            this.$element.find('div.oe_mail_compose_message_body_html').toggleClass('oe_mail_compose_message_invisible');
         },
 
         /**
          * Toggle the email mode. */
-        toggle_email_mode: function() {
-            var self = this;
+        toggle_email_mode: function(event) {
             this.email_mode = ! this.email_mode;
-            // calls onchange
-            var call_defer = this.ds_compose.call('onchange_email_mode', [[], this.email_mode, this.options.res_model, this.options.res_id]).then(
-                function (result) {
-                    self.form_view.on_processed_onchange(result, []);
-                });
             // update context of datasetsearch
             this.ds_compose.context.email_mode = this.email_mode;
             // update 'Post' button -> 'Send'
             // update 'Send an Email' link -> 'Post a comment'
             if (this.email_mode) {
                 this.$element.find('button.oe_mail_compose_message_button_send').html('<span>Send</span>');
-                this.$element.find('a.oe_mail_compose_message_email').html('Comment');
+                this.$element.find('button.oe_mail_compose_message_email_mode').html('<span>Comment</span>');
             } else {
                 this.$element.find('button.oe_mail_compose_message_button_send').html('<span>Post</span>');
-                this.$element.find('a.oe_mail_compose_message_email').html('Send an Email');
+                this.$element.find('button.oe_mail_compose_message_email_mode').html('<span>Send an Email</span>');
             }
-            // toggle display
-            this.$element.find('div.oe_mail_compose_message_partner_ids').toggleClass('oe_mail_compose_message_invisible');
         },
 
         /**
@@ -350,9 +325,9 @@ openerp.mail = function(session) {
             // check in parents, should not define multiple times
             this.options.context.res_model = options.context.res_model || 'mail.thread';
             this.options.context.res_id = options.context.res_id || false;
-            this.options.context.parent_id = options.context.parent_id || false;
+            // this.options.context.parent_id = options.context.parent_id || false;
             this.options.thread_level = options.thread_level || 0;
-            this.options.fetch_limit = options.fetch_limit || 100;
+            // this.options.fetch_limit = options.fetch_limit || 100;
             this.options.composer = options.composer || false;
             // TDE: not sure, here for testing / compatibility
             this.options.records = options.records || null;
@@ -363,7 +338,7 @@ openerp.mail = function(session) {
             // display customization vars
             this.display = {};
             this.display.truncate_limit = options.truncate_limit || 250;
-            this.display.show_header_compose = options.show_header_compose || false;
+            // this.display.show_header_compose = options.show_header_compose || false;
             this.display.show_reply = options.show_reply || false;
             this.display.show_delete = options.show_delete || false;
             this.display.show_hide = options.show_hide || false;

@@ -91,7 +91,7 @@ class mail_message(osv.Model):
 
         'author_id': fields.many2one('res.partner', 'Author', required=True),
         'partner_ids': fields.many2many('res.partner',
-            'mail_notification', 'message_id', 'partner_id', 
+            'mail_notification', 'message_id', 'partner_id',
             'Recipients'),
 
         'attachment_ids': fields.one2many('ir.attachment', 'res_id',

@@ -72,7 +72,7 @@ class crm_claim(base_stage, osv.osv):
     _description = "Claim"
     _order = "priority,date desc"
     _inherit = ['mail.thread']
-    _mail_compose_message = True
+
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Claim Subject', size=128, required=True),
