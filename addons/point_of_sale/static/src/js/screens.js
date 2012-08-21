@@ -276,7 +276,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.set_left_action_bar_visible(this.show_leftpane && !cashier_mode);
             this.pos_widget.set_cashier_controls_visible(cashier_mode);
 
-            if(cashier_mode && this.pos.use_selfcheckout){
+            if(cashier_mode && this.pos.iface_self_checkout){
                 this.pos_widget.client_button.show();
             }else{
                 this.pos_widget.client_button.hide();
@@ -603,7 +603,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.product_list_widget = new module.ProductListWidget(this,{
                 click_product_action: function(product){
-                    if(product.get('to_weight') && self.pos.use_scale){
+                    if(product.get('to_weight') && self.pos.iface_electronic_scale){
                         self.pos_widget.screen_selector.set_current_screen(self.scale_screen, {product: product});
                     }else{
                         self.pos.get('selectedOrder').addProduct(product);
@@ -620,7 +620,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.product_categories_widget.reset_category();
 
             this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
-            if(this.pos.use_virtual_keyboard){
+            if(this.pos.iface_vkeyboard){
                 this.pos_widget.onscreen_keyboard.connect();
             }
 
@@ -719,7 +719,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
 
-            if(this.pos.use_cashbox){
+            if(this.pos.iface_cashdrawer){
                 this.pos.proxy.open_cashbox();
             }
 
@@ -753,7 +753,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var currentOrder = this.pos.get('selectedOrder');
 
             this.pos.push_order(currentOrder.exportAsJSON()) 
-            if(this.pos.use_proxy_printer){
+            if(this.pos.iface_print_via_proxy){
                 this.pos.proxy.print_receipt(currentOrder.export_for_printing());
                 this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
             }else{

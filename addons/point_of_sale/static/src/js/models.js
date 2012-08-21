@@ -28,12 +28,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.db = new module.PosLS();                       // a database used to store the products and categories
             this.db.clear('products','categories');
 
-            // pos settings
-            this.use_scale              = false;
-            this.use_proxy_printer      = false;
-            this.use_virtual_keyboard   = false;
-            this.use_barcode_scanner    = false;
-
             // default attributes values. If null, it will be loaded below.
             this.set({
                 'nbr_pending_operations': 0,    
@@ -132,12 +126,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).pipe(function(configs){
                     var pos_config = configs[0];
                     self.set('pos_config', pos_config);
-                    self.use_scale             =  !!pos_config.iface_electronic_scale;
-                    self.use_proxy_printer     =  !!pos_config.iface_print_via_proxy;
-                    self.use_virtual_keyboard  =  !!pos_config.iface_vkeyboard;
-                    self.use_barcode_scanner   =  !!pos_config.iface_barscan;
-                    self.use_selfcheckout      =  !!pos_config.iface_self_checkout;
-                    self.use_cashbox           =  !!pos_config.iface_cashdrawer;
+                    self.iface_electronic_scale    =  !!pos_config.iface_electronic_scale;  
+                    self.iface_print_via_proxy     =  !!pos_config.iface_print_via_proxy;
+                    self.iface_vkeyboard           =  !!pos_config.iface_vkeyboard; 
+                    self.iface_self_checkout       =  !!pos_config.iface_self_checkout;
+                    self.iface_cashdrawer          =  !!pos_config.iface_cashdrawer;
 
                     return fetch('sale.shop',[],[['id','=',pos_config.shop_id[0]]]);
                 }).pipe(function(shops){

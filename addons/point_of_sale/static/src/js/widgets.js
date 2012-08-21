@@ -875,7 +875,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
-                default_mode: this.pos.use_selfcheckout ?  'client' : 'cashier',
+                default_mode: this.pos.iface_self_checkout ?  'client' : 'cashier',
             });
 
         },
