@@ -418,51 +418,50 @@ openerp.mail = function(session) {
                 else if (charCode == 13) { return self.do_message_post(); }
             });
             // event: click on 'Reply' in msg
-            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
-                var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_action:first');
+            this.$element.on('click', 'a.oe_mail_msg_reply', function (event) {
+                var act_dom = $(this).parents('li.oe_mail_thread_msg').eq(0).find('div.oe_mail_thread_action:first');
                 act_dom.toggle();
                 event.preventDefault();
+                event.stopPropagation();
             });
             // event: click on 'attachment(s)' in msg
-            this.$element.delegate('a.oe_mail_msg_view_attachments', 'click', function (event) {
+            this.$element.on('click', 'a.oe_mail_msg_view_attachments', function (event) {
                 var act_dom = $(this).parent().parent().parent().find('.oe_mail_msg_attachments');
                 act_dom.toggle();
                 event.preventDefault();
+                event.stopPropagation();
             });
             // event: click on 'Delete' in msg side menu
-            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_delete', 'click', function (event) {
+            this.$element.on('click', 'a.oe_mail_msg_delete', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
                 var call_defer = self.ds_msg.unlink([parseInt(msg_id)]);
-                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
-                if (self.params.thread_level > 0) {
-                    $(event.srcElement).parents('.oe_mail_thread').eq(0).hide();
-                }
-                event.preventDefault();
+                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
                 return call_defer;
             });
             // event: click on 'Hide' in msg side menu
-            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide', 'click', function (event) {
+            this.$element.on('click', 'a.oe_mail_msg_hide', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
                 var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
-                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
-                if (self.params.thread_level > 0) {
-                    $(event.srcElement).parents('.oe_mail_thread').eq(0).hide();
-                }
-                event.preventDefault();
+                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
                 return call_defer;
             });
             // event: click on "Reply by email" in msg side menu (email style)
-            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply_by_email', 'click', function (event) {
+            this.$element.on('click', 'a.oe_mail_msg_reply_by_email', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 var msg_id = event.srcElement.dataset.msg_id;
                 var email_mode = (event.srcElement.dataset.type == 'email');
                 var formatting = (event.srcElement.dataset.formatting == 'html');
                 if (! msg_id) return false;
                 self.instantiate_composition_form('reply', email_mode, formatting, msg_id);
-                event.preventDefault();
             });
         },
 
