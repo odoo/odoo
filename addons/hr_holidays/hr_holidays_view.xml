@@ -94,7 +94,7 @@
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Refuse" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" groups="base.group_hr_user" />
+                    <button string="Reset to New" name="set_to_draft" states="refuse" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet string="Leave Request">
@@ -138,8 +138,8 @@
                 <header>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Reset to New" name="set_to_draft" states="cancel,validate,refuse" type="object" groups="base.group_hr_user" />
+                    <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Reset to New" name="set_to_draft" states="cancel,refuse" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet>
