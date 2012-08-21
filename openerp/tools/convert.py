@@ -591,7 +591,22 @@ form: module.record_id""" % (xml_id,)
 
         if rec.get('action'):
             a_action = rec.get('action','').encode('utf8')
-            a_type = rec.get('type','').encode('utf8') or 'act_window'
+
+            # determine the type of action
+            # either the type is explicitly provided in the menuitem
+            if (rec.get('type','')):
+                a_type = rec.get('type','').encode('utf8')
+            # either we have to find it by ourselves
+            else:
+                # prevent redundant appearance of the module name for external xml ids
+                a_action_simplified = a_action.split('.')[1] if '.' in a_action else a_action
+
+                ir_action_ref = self.pool.get('ir.model.data').get_object_reference(cr, self.uid, self.module, a_action_simplified)
+                ir_action = self.pool.get(ir_action_ref[0]).browse(cr, self.uid, [ir_action_ref[1]])[0]
+
+                # isolate the last part of the type field, which is the only one revelant in this case
+                a_type = ir_action.type.split('.')[-1]
+
             icons = {
                 "act_window": 'STOCK_NEW',
                 "report.xml": 'STOCK_PASTE',
@@ -601,6 +616,7 @@ form: module.record_id""" % (xml_id,)
                 "server": 'STOCK_EXECUTE',
             }
             values['icon'] = icons.get(a_type,'STOCK_NEW')
+
             if a_type=='act_window':
                 a_id = self.id_get(cr, a_action)
                 cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%s', (int(a_id),))
@@ -627,7 +643,7 @@ form: module.record_id""" % (xml_id,)
                     values['icon'] = 'STOCK_EXECUTE'
                 if not values.get('name', False):
                     values['name'] = action_name
-            
+
             elif a_type in ['wizard', 'url', 'client', 'server'] and not values.get('name'):
                 a_id = self.id_get(cr, a_action)
                 a_table = 'ir_act_%s' % a_type
