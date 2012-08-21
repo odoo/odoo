@@ -149,15 +149,33 @@ class survey(osv.osv):
         return report
     
     def fill_survey(self, cr, uid, ids, context=None):
+        sur_obj = self.read(cr, uid, ids,['title'], context=context)
+        for sur in sur_obj:
+            name = sur['title']
+            context.update({'active':False,'survey_id': ids[0]})
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'survey_id': ids[0]}
+            'name': name,
+            'context': context
         }
-
+    def test_survey(self, cr, uid, ids, context=None):
+        sur_obj = self.read(cr, uid, ids,['title'], context=context)
+        for sur in sur_obj:
+            name = sur['title']
+            context.update({'active':True,'survey_id': ids[0]})
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'name': name,
+            'context': context
+        }
 survey()
 
 class survey_history(osv.osv):

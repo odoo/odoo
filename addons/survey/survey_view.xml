@@ -26,8 +26,8 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box oe_right">
-                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel" string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
-                        <button name="%(action_view_survey_question_message)d" states="open" string="Answer Survey" type="action" icon="gtk-execute" context="{'active':False, 'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
+                        <button name="test_survey" states="open,draft,close,cancel" string="Test Survey" type="object" icon="gtk-new" context="{'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
+                        <button name="fill_survey" states="open" string="Answer Survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
                     </div>
                     <div class="oe_title">
                         <label for="title" class="oe_edit_only"/>
@@ -254,11 +254,11 @@
                     <field name="tot_start_survey" string="Started"/>
                     <field name="tot_comp_survey" string="Completed"/>
                     <field name="state"/>
-                    <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                        string="Test Survey" type="action" icon="gtk-new"
-                        context="{'active':True,'survey_id': active_id}"/>
+                    <button name="test_survey" states="open,draft,close,cancel"
+                        string="Test Survey" type="object" icon="gtk-new"
+                        context="{'survey_id': active_id}"/>
                     <button name="fill_survey" states="open"
-                        string="Answer Survey" type="object" icon="gtk-execute" context="{'active':False,'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>                   
+                        string="Answer Survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>                   
                     <button name="action_print_survey" states="open,draft,close,cancel"
                                     string="Print Answer" type="object" icon="gtk-print"/>
                 </tree>
