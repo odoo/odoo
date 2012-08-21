@@ -358,7 +358,7 @@ openerp.mail = function(session) {
             this.$element.find('textarea.oe_mail_compose_textarea').keyup(function (event) {
                 var charCode = (event.which) ? event.which : window.event.keyCode;
                 if (event.shiftKey && charCode == 13) { this.value = this.value+"\n"; }
-                else if (charCode == 13) { return self.do_message_post(); }
+                else if (charCode == 13) { return self.message_post(); }
             });
             // event: click on 'Reply' in msg
             this.$element.on('click', 'a.oe_mail_msg_reply', function (event) {
@@ -437,7 +437,7 @@ openerp.mail = function(session) {
 
         /** Clean the thread */
         message_clean: function() {
-            this.$el.find('div.oe_mail_thread_display').empty();
+            this.$element.find('div.oe_mail_thread_display').empty();
         },
 
         /** Fetch messages
@@ -552,7 +552,7 @@ openerp.mail = function(session) {
             }
             return this.ds_post.call('message_post', [
                 [this.options.context.res_id], body, false, 'comment', this.options.context.parent_id]
-                ).then(this.proxy('init_comments'));
+                ).then(this.proxy('message_fetch'));
         },
 
         /** Action: 'shows more' to fetch new messages */

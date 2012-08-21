@@ -77,7 +77,7 @@ class mail_notification(osv.Model):
         msg = msg_obj.browse(cr, uid, msg_id, context=context)
 
         towrite = {
-            'email_to': '',
+            'email_to': [],
             'subject': msg.subject
         }
         for partner in partner_obj.browse(cr, uid, partner_ids, context=context):
@@ -92,16 +92,14 @@ class mail_notification(osv.Model):
                 continue
 
             towrite['state'] = 'outgoing'
-            if not towrite.get('email_to', False):
-                towrite['email_to'] = email_to
-            else:
-                if email_to not in towrite['email_to']:
-                    towrite['email_to'] = towrite['email_to'] + ', ' + email_to
+            if partner.email not in towrite['email_to']:
+                towrite['email_to'].append(partner.email)
 
         if towrite.get('state', False) and not context.get('noemail', False):
             if towrite.get('subject', False):
                 towrite['subject'] = msg.name_get(cr, uid, [msg.id], context=context)[0][1]
             towrite['message_id'] = msg.id
+            towrite['email_to'] = ', '.join(towrite['email_to'])
             mail_message_obj = self.pool.get('mail.mail')
             newid = mail_message_obj.create(cr, uid, towrite, context=context)
             mail_message_obj.send(cr, uid, [newid], context=context)
