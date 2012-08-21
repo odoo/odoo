@@ -26,6 +26,12 @@
     -moz-box-shadow: $bsval
     -webkit-box-shadow: $bsval
     -box-shadow: $bsval
+
+@mixin transform($transform)
+    -moz-transform: $transform
+    -webkit-transform: $transform
+    -o-transform: $transform
+    -ms-transform: $transform
 // }}}
 
 .openerp .oe_kanban_view
@@ -38,6 +44,9 @@
         border: 1px dotted black
         visibility: visible !important
         height: 60px !important
+    .ui-sortable-helper
+        @include box-shadow(0 1px 20px rgba(0, 0, 0, 0.9))
+        @include transform(rotate(3deg))
     .oe_kanban_left
         float: left
     .oe_kanban_right
@@ -304,7 +313,8 @@
         &:last-child
             margin-bottom: 0
         &:hover
-            @include box-shadow(0 0 3px rgba(0,0,0,0.6))
+            border: 1px solid #7C7BAD
+            @include box-shadow(0 0 4px #7C7BAD)
             .oe_dropdown_kanban > span
                 visibility: visible
         h3

@@ -1908,6 +1908,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this.field = this.field_manager.get_field(this.name);
         this.widget = this.node.attrs.widget;
         this.string = this.node.attrs.string || this.field.string || this.name;
+        this.options = JSON.parse(this.node.attrs.options || '{}');
         this.set({'value': false});
         this.set({required: this.modifiers['required'] === true});
 
@@ -1992,16 +1993,6 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     },
     focus: function() {
         return false;
-    },
-    /**
-     * Utility method to get the widget options defined in the field xml description.
-     */
-    get_definition_options: function() {
-        if (!this.definition_options) {
-            var str = this.node.attrs.options || '{}';
-            this.definition_options = JSON.parse(str);
-        }
-        return this.definition_options;
     },
     set_input_id: function(id) {
         this.id_for_label = id;
@@ -2667,7 +2658,7 @@ instance.web.form.CompletionFieldMixin = {
         var slow_create = function () {
             self._search_create_popup("form", undefined, {"default_name": name});
         };
-        if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
+        if (self.options.quick_create === undefined || self.options.quick_create) {
             new instance.web.DataSet(this, this.field.relation, self.build_context())
                 .name_create(name, function(data) {
                     self.add_id(data[0]);
@@ -2924,7 +2915,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             var lines = _.escape(str).split("\n");
             var link = "";
             var follow = "";
-            if (! this.get_definition_options().highlight_first_line) {
+            if (! this.options.highlight_first_line) {
                 link = lines.join("<br />");
             } else {
                 link = lines[0];
@@ -2935,7 +2926,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             var $link = this.$element.find('.oe_form_uri')
                  .unbind('click')
                  .html(link);
-            if (! this.get_definition_options().no_open)
+            if (! this.options.no_open)
                 $link.click(function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
@@ -2954,7 +2945,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var self = this;
         if (value_ instanceof Array) {
             this.display_value = {};
-            if (! this.get_definition_options().always_reload) {
+            if (! this.options.always_reload) {
                 this.display_value["" + value_[0]] = value_[1];
             }
             value_ = value_[0];
@@ -4675,17 +4666,22 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
 
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     template: "FieldStatus",
-    clickable: false,
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
+        this.options.clickable = this.options.clickable || (this.node.attrs || {}).clickable || false;
+        this.options.visible = this.options.visible || (this.node.attrs || {}).statusbar_visible || false;
+        this.selected_value = null;
+    },
     start: function() {
         this._super();
-        this.selected_value = null;
-        this.clickable = !!this.node.attrs.clickable;
+        // backward compatibility
+        this.loaded = new $.Deferred();
+        if (this.options.clickable) {
+            this.$element.on('click','li',this.on_click_stage);
+        }
+        // TODO move the following into css :after
         if (this.$element.parent().is('header')) {
             this.$element.after('<div class="oe_clear"/>');
-        }
-        // preview in start only for selection fields, because of the dynamic behavior of many2one fields.
-        if (this.field.type in ['selection']) {
-            this.render_list();
         }
     },
     set_value: function(value_) {
@@ -4701,115 +4697,72 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         }
         // trick to be sure all values are loaded in the form, therefore
         // enabling the evaluation of dynamic domains
+        self.selection = [];
         $.async_when().then(function() {
-            return self.render_list();
+            self.get_selection();
         });
+        return this.loaded;
     },
-
-    /** Get the status list and render them
-     *  to_show: [[identifier, value_to_display]] where
-     *   - identifier = key for a selection, id for a many2one
-     *   - display_val = label that will be displayed
-     *   - ex: [[0, "New"]] (many2one) or [["new", "In Progress"]] (selection)
-     */
-    render_list: function() {
-        var self = this;
-        // get selection values, filter them and render them
-        var selection_done = this.get_selection().pipe(self.proxy('filter_selection')).pipe(self.proxy('render_elements'));
-    },
-
-    /** Get the selection list to be displayed in the statusbar widget.
+    /** Get the selection and render it
+     *  selection: [[identifier, value_to_display], ...]
      *  For selection fields: this is directly given by this.field.selection
-     *  For many2one fields :
-     *  - perform a search on the relation of the many2one field (given by
-     *    field.relation )
-     *  - get the field domain for the search
-     *    - self.build_domain() gives the domain given by the view or by
-     *      the field
-     *    - if the optional statusbar_fold attribute is set to true, make
-     *      an AND with build_domain to hide all 'fold=true' columns
-     *    - make an OR with current value, to be sure it is displayed,
-     *      with the correct order, even if it is folded
+     *  For many2one fields:  perform a search on the relation of the many2one field
      */
     get_selection: function() {
         var self = this;
         if (this.field.type == "many2one") {
-            this.selection = [];
-            // get fold information from widget
-            var fold = ((this.node.attrs || {}).statusbar_fold || true);
-            // build final domain: if fold option required, add the
-            if (fold == true) {
-                var domain = new instance.web.CompoundDomain(['|'], ['&'], self.build_domain(), [['fold', '=', false]], [['id', '=', self.selected_value]]);
-            } else {
-                var domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
+            var domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
+            var ds = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
+            ds.read_slice(['name'], {}).done( function (records) {
+                for(var i = 0; i < records.length; i++) {
+                    self.selection.push([records[i].id, records[i].name]);
+                }
+                self.render_elements();
+                self.loaded.resolve();
+            });
+        } else {
+            this.loaded.resolve();
+            // For field type selection filter values according to
+            // statusbar_visible attribute of the field. For example:
+            // statusbar_visible="draft,open".
+            var selection = this.field.selection;
+            console.log(selection);
+            for(var i=0; i< selection.length; i++) {
+                var key = selection[i][0];
+                if(key == this.selected_value || !this.options.visible || this.options.visible.indexOf(key) != -1) {
+                    this.selection.push(selection[i]);
+                }
             }
-            // get a DataSetSearch on the current field relation (ex: crm.lead.stage_id -> crm.case.stage)
-            var model_ext = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
-            // fetch selection
-            var read_defer = model_ext.read_slice(['name'], {}).pipe( function (records) {
-                _(records).each(function (record) {
-                    self.selection.push([record.id, record.name]);
-                });
-            });
-        } else {
-            this.selection = this.field.selection;
-            var read_defer = new $.Deferred().resolve();
-        }
-        return read_defer;
-    },
-
-    /** Filters this.selection, according to values coming from the statusbar_visible
-     *  attribute of the field. For example: statusbar_visible="draft,open"
-     *  Currently, the key of (key, label) pairs has to be used in the
-     *  selection of visible items. This feature is not meant to be used
-     *  with many2one fields.
-     */
-    filter_selection: function() {
-        var self = this;
-        var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
-            function(x) { return _.str.trim(x); });
-        shown = _.select(shown, function(x) { return x.length > 0; });
-
-        if (shown.length == 0) {
-            this.to_show = this.selection;
-        } else {
-            this.to_show = _.select(this.selection, function(x) {
-                return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
-            });
+            console.log(this.selection);
+            this.render_elements();
         }
     },
-
     /** Renders the widget. This function also checks for statusbar_colors='{"pending": "blue"}'
      *  attribute in the widget. This allows to set a given color to a given
      *  state (given by the key of (key, label)).
      */
     render_elements: function () {
         var self = this;
-        var content = instance.web.qweb.render("FieldStatus.content", {widget: this, _:_});
+        var content = instance.web.qweb.render("FieldStatus.content", {widget: this});
         this.$element.html(content);
-        if (this.clickable) {
-            this.$element.addClass("oe_form_steps_clickable");
-            $('.oe_form_steps_arrow').remove();
-            var elemts = this.$element.find('li');
-            _.each(elemts, function(element){
-                $item = $(element);
-                if ($item.attr("data-id") != self.selected_value) {
-                    $item.click(function(event){
-                        var data_id = parseInt($(this).attr("data-id"))
-                        self.view.dataset.call('stage_set', [[self.view.datarecord.id],data_id]).then(function() {
-                            return self.view.reload();
-                        });
-                    });
-                }
-            });
-        } else {
-            this.$element.addClass("oe_form_steps");
-        }
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
-        if (color) {            
-            var elem = this.$element.find("li.oe_form_steps_active span");
-            elem.css("color", color);            
+        if (color) {
+            this.$("oe_active").css("color", color);
+        }
+    },
+    on_click_stage: function (ev) {
+        var self = this;
+        var $li = $(ev.currentTarget);
+        var val = parseInt($li.data("id"));
+        if (val != self.selected_value) {
+            this.view.recursive_save().then(function() {
+                var change = {};
+                change[self.name] = val;
+                self.view.dataset.write(self.view.datarecord.id, change).then(function() {
+                    self.view.reload();
+                });
+            });
         }
     },
 });
