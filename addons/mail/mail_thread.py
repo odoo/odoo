@@ -311,7 +311,7 @@ class mail_thread(osv.Model):
         routes = self.message_route(cr, uid, msg_txt, model,
                                     thread_id, custom_values,
                                     context=context)
-        msg = self.pool.get('mail.message').parse_message(msg_txt, save_original=save_original, context=context)
+        msg = self.parse_message(msg_txt, save_original=save_original, context=context)
         msg['state'] = 'received'
         if strip_attachments and 'attachments' in msg:
             del msg['attachments']
