@@ -2342,8 +2342,8 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     render_value: function() {
         var show_value = instance.web.format_value(this.get('value'), this, '');
         this.$textarea.val(show_value);
-        if (show_value && this.view.options.resize_textareas) {
-            this.do_resize(this.view.options.resize_textareas);
+        if (show_value) {
+            this.$textarea.autosize();
         }
     },
     is_syntax_valid: function() {
@@ -2362,26 +2362,6 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     },
     focus: function($element) {
         this.$textarea.focus();
-    },
-    do_resize: function(max_height) {
-        max_height = parseInt(max_height, 10);
-        var $input = this.$textarea,
-            $div = $('<div style="position: absolute; z-index: 1000; top: 0"/>').width($input.width()),
-            new_height;
-        $div.text($input.val());
-        _.each('font-family,font-size,white-space'.split(','), function(style) {
-            $div.css(style, $input.css(style));
-        });
-        $div.appendTo($('body'));
-        new_height = $div.height();
-        if (new_height < 90) {
-            new_height = 90;
-        }
-        if (!isNaN(max_height) && new_height > max_height) {
-            new_height = max_height;
-        }
-        $div.remove();
-        $input.height(new_height);
     },
 });
 
@@ -2407,7 +2387,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
             self._updating_editor = false;
             this.$textarea = this.$element.find('textarea');
             var width = ((this.node.attrs || {}).editor_width || 468);
-            var height = ((this.node.attrs || {}).editor_height || 100);
+            var height = ((this.node.attrs || {}).editor_height || 250);
             this.$textarea.cleditor({
                 width:      width, // width not including margins, borders or padding
                 height:     height, // height not including margins, borders or padding
