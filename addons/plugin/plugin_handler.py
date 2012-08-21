@@ -44,7 +44,7 @@ class plugin_handler(osv.osv_memory):
         res_id = 0
         url = ""
         name = ""
-        msg = mail_message_obj.parse_message(email)
+        msg = self.pool.get('mail.thread').parse_message(cr, uid, email)
         references = [msg.get('message-id')]
         refs =  msg.get('references',False)
         if refs:
@@ -91,7 +91,7 @@ class plugin_handler(osv.osv_memory):
         """
         mail_message = self.pool.get('mail.message')
         model_obj = self.pool.get(model)
-        msg = mail_message.parse_message(email)
+        msg = self.pool.get('mail.thread').parse_message(cr, uid, email)
         message_id = msg.get('message-id')
         mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
         
@@ -146,7 +146,7 @@ class plugin_handler(osv.osv_memory):
         mail_message = self.pool.get('mail.message')        
         ir_attachment_obj = self.pool.get('ir.attachment')
         attach_ids = []
-        msg = mail_message.parse_message(headers)
+        msg = self.pool.get('mail.thread').parse_message(cr, uid, headers)
         message_id = msg.get('message-id')    
         push_mail = self.push_message(cr, uid, model, headers, res_id)
         res_id = push_mail[1]
