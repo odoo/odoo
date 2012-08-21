@@ -593,19 +593,18 @@ form: module.record_id""" % (xml_id,)
             a_action = rec.get('action','').encode('utf8')
 
             # determine the type of action
-            # either the type is explicitly provided in the menuitem
-            if (rec.get('type','')):
-                a_type = rec.get('type','').encode('utf8')
-            # either we have to find it by ourselves
+            if ('.' in a_action):
+                # this is an action refering to another module: extract this module's name
+                a_action_module, a_action_name = a_action.split('.')
             else:
-                # prevent redundant appearance of the module name for external xml ids
-                a_action_simplified = a_action.split('.')[1] if '.' in a_action else a_action
+                # this is a local action: fetch the current module's name
+                a_action_module = self.module
+                a_action_name = a_action
 
-                ir_action_ref = self.pool.get('ir.model.data').get_object_reference(cr, self.uid, self.module, a_action_simplified)
-                ir_action = self.pool.get(ir_action_ref[0]).browse(cr, self.uid, [ir_action_ref[1]])[0]
-
-                # isolate the last part of the type field, which is the only one revelant in this case
-                a_type = ir_action.type.split('.')[-1]
+            # fetch the model and the res id
+            ir_action_ref = self.pool.get('ir.model.data').get_object_reference(cr, self.uid, a_action_module, a_action_name)
+            # get the part of the model we need
+            a_type = ir_action_ref[0].split('.')[-1]
 
             icons = {
                 "act_window": 'STOCK_NEW',
