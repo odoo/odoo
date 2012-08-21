@@ -95,7 +95,7 @@
             <field name="arch" type="xml">
                 <form string="Partners" version="7.0">
                 <sheet>
-                    <field name="image" widget='image' class="oe_avatar oe_left" widget_options='{"preview_image": "image_medium"}'/>
+                    <field name="image" widget='image' class="oe_left" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
                             <label for="name"/> (
@@ -204,7 +204,7 @@
                                     </templates>
                                 </kanban>
                                 <form string="Contact" version="7.0">
-                                    <field name="image" widget='image' class="oe_avatar oe_left" widget_options='{"preview_image": "image_medium"'/>
+                                    <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"'/>
                                     <div class="oe_title">
                                         <group>
                                             <field name="name"/>
