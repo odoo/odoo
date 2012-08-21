@@ -386,7 +386,7 @@ class survey_question_wiz(osv.osv_memory):
                         etree.SubElement(xml_button_group, 'button', {'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context), 'class':"oe_right oe_highlight"})
                     else:
                         etree.SubElement(xml_button_group, 'button', {'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_right oe_highlight"})
-                    etree.SubElement(xml_button_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_survey_title_page"})
+                    etree.SubElement(xml_button_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_survey_title_page oe_right"})
 
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
