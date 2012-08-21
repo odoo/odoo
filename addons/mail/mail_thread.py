@@ -540,14 +540,6 @@ class mail_thread(osv.Model):
 
     def message_post(self, cr, uid, res_id, body, subject=False,
             mtype='notification', parent_id=False, attachments=None, context=None, **kwargs):
-        print res_id
-        print body
-        print subject
-        print mtype
-        print parent_id
-        print attachments
-        print context
-        print kwargs
         context = context or {}
         attachments = attachments or {}
         if type(res_id) in (list, tuple):
