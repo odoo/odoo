@@ -132,6 +132,10 @@ openerp.mail = function(session) {
             }
             this.email_mode = false;
             this.formatting = false;
+            // debug
+            console.groupCollapsed('New ComposeMessage: model', this.options.res_model, ', id', this.options.res_id);
+            console.log('context:', this.options.context);
+            console.groupEnd();
         },
 
         /**
@@ -341,22 +345,38 @@ openerp.mail = function(session) {
             this._super(parent);
             // options
             this.options = options || {};
-            this.options.parent_id = this.options.parent_id || false;
-            this.options.thread_level = this.options.thread_level || 0;
-            this.options.fetch_limit = this.options.fetch_limit || 100;
-            this.options.records = this.options.records || null;
+            this.options.domain = options.domain || [];
+            this.options.context = options.context || {};
+            // check in parents, should not define multiple times
+            this.options.context.res_model = options.context.res_model || 'mail.thread';
+            this.options.context.res_id = options.context.res_id || false;
+            this.options.context.parent_id = options.context.parent_id || false;
+            this.options.thread_level = options.thread_level || 0;
+            this.options.fetch_limit = options.fetch_limit || 100;
+            // TDE: not sure, here for testing / compatibility
+            this.options.records = options.records || null;
+            this.options.ids = options.ids || null;
             // datasets and internal vars
-            this.ds = new session.web.DataSetSearch(this, this.options.res_model);
+            // this.ds = new session.web.DataSetSearch(this, this.options.res_model);
             this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
             // display customization vars
             this.display = {};
-            this.display.truncate_limit = this.options.truncate_limit || 250;
-            this.display.show_header_compose = this.options.show_header_compose || false; // only for thread record
-            this.display.show_reply = this.options.show_reply || true;
-            this.display.show_delete = this.options.show_delete || true;
-            this.display.show_hide = this.options.show_hide || true;
-            this.display.show_reply_by_email = this.options.show_reply_by_email || true;
-            this.display.show_more = this.options.show_more || true;
+            this.display.truncate_limit = options.truncate_limit || 250;
+            this.display.show_header_compose = options.show_header_compose || true;
+            this.display.show_reply = options.show_reply || true;
+            this.display.show_delete = options.show_delete || true;
+            this.display.show_hide = options.show_hide || true;
+            this.display.show_reply_by_email = options.show_reply_by_email || true;
+            this.display.show_more = options.show_more || true;
+            // for search view
+            this.search = {'domain': [], 'context': {}, 'groupby': {}}
+            this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
+            // debug
+            console.group('New Thread: model', this.options.context.res_model, 'id', this.options.context.res_id, 'thread level', this.options.thread_level);
+            console.log('records:', this.options.records, 'ids:', this.options.ids);
+            console.log('options:', this.options);
+            console.log('display:', this.display);
+            console.groupEnd();
         },
         
         start: function() {
@@ -366,8 +386,11 @@ openerp.mail = function(session) {
             // display user, fetch comments
             this.display_current_user();
 
-            if (this.options.records) var display_done = this.display_comments_from_parameters(this.options.records);
+            // if (this.options.records) var display_done = this.display_comments_from_parameters(this.options.records);
+            if (this.options.records) var display_done = this.display_comments(this.options.records);
+
             else var display_done = this.init_comments();
+
             // customize display
             $.when(display_done).then(this.proxy('do_customize_display'));            
             // add message composition form view
@@ -479,36 +502,88 @@ openerp.mail = function(session) {
 
             this.$element.find('div.oe_mail_thread_display').empty();
             // var domain = this.get_fetch_domain(this.comments_structure);
-            return this.fetch_comments(this.options.domain || []).then();
-        },
-        
-        fetch_comments: function (domain) {
-            var self = this;
-            var defer = this.ds.call('message_read', [[this.options.res_id], (this.options.thread_level > 0), (this.comments_structure['root_ids']),
-                                    (limit+1) || (this.options.limit+1), offset||this.options.offset, domain||undefined ]).then(function (records) {
-                if (records.length <= self.options.limit) self.display.show_more = false;
-                // else { self.display.show_more = true; records.pop(); }
-                // else { self.display.show_more = true; records.splice(0, 1); }
-                else { self.display.show_more = true; }
-                self.display_comments(records);
-                // TODO: move to customize display
-                if (self.display.show_more == true) self.$element.find('div.oe_mail_thread_more:last').show();
-                else  self.$element.find('div.oe_mail_thread_more:last').hide();
-            });
-            
-            return defer;
+            return this.message_fetch(this.options.domain || []).then();
         },
 
-        display_comments_from_parameters: function (records) {
-            if (records.length > 0 && records.length < (records[0].child_ids.length+1) ) this.display.show_more = true;
-            else this.display.show_more = false;
-            var defer = this.display_comments(records);
-            // TODO: move to customize display
-            if (this.display.show_more == true) $('div.oe_mail_thread_more').eq(-2).show();
-            else $('div.oe_mail_thread_more').eq(-2).hide();
-            return defer;
+        /** Fetch messages
+         * @param {Array} domain
+         * @param {Array} context
+         */
+        message_fetch: function (additional_domain, additional_context) {
+            var self = this;
+
+            this.search['domain'] = _.union(this.options.domain, this.search_results.domain);
+            this.search['context'] = _.extend(this.options.context, this.search_results.context);
+            if (additional_domain) var fetch_domain = this.search['domain'].concat(additional_domain);
+            else var fetch_domain = this.search['domain'];
+            if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
+            else var fetch_context = this.search['context'];
+
+            // first use: use IDS, otherwise set false
+            var read_defer = this.ds_msg.call('message_read',
+                [false, fetch_domain, this.options.thread_level, fetch_context]
+                ).then(function (records) {
+                    // if (records.length <= self.options.limit) self.display.show_more = false;
+                    // else { self.display.show_more = true; records.pop(); }
+                    // else { self.display.show_more = true; records.splice(0, 1); }
+                    // else { self.display.show_more = true; }
+                    self.display_comments(records);
+                    // TODO: move to customize display
+                    // if (self.display.show_more == true) self.$element.find('div.oe_mail_thread_more:last').show();
+                    // else  self.$element.find('div.oe_mail_thread_more:last').hide();
+                });
+            return read_defer;
         },
+
+        /* TDE: not necessary as we can read on ids or false */
+        // display_comments_from_parameters: function (records) {
+        //     if (records.length > 0 && records.length < (records[0].child_ids.length+1) ) this.display.show_more = true;
+        //     else this.display.show_more = false;
+        //     var defer = this.display_comments(records);
+        //     // TODO: move to customize display
+        //     if (this.display.show_more == true) $('div.oe_mail_thread_more').eq(-2).show();
+        //     else $('div.oe_mail_thread_more').eq(-2).hide();
+        //     return defer;
+        // },
+
+        /** Display comments
+         * @param {Array} records tree structure of records
+         */
+        // display_comments: function (records) {
+        //     console.log(records);
+        //     // debugger
+        //     var self = this;
+        //     var _expendable = false;
+        //     _(records).each(function (root_record) {
+        //         /* expandable type: add a 'Show more button' */
+        //         if (root_record.type == 'expandable') {
+        //             _expendable = true;
+        //             self.update_fetch_more(true);
+        //             self.fetch_more_domain = root_record.domain;
+        //             self.fetch_more_context = root_record.context;
+        //         }
+        //         // display classic root record
+        //         else {
+        //             var render_res = session.web.qweb.render('mail.wall_thread_container', {});
+        //             $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('ul.oe_mail_wall_threads'));
+        //             var thread = new mail.Thread(self, {
+        //                 'res_model': root_record.model, 'res_id': root_record.res_id,
+        //                 'uid': self.session.uid, 'records': [root_record],
+        //                 'parent_id': false, 'thread_level': self.options.thread_level,
+        //                 'show_hide': true, 'is_wall': true
+        //                 }
+        //             );
+        //             self.thread_list.push(thread);
+        //             thread.appendTo(self.$element.find('li.oe_mail_wall_thread:last'));
+        //         }
+        //     });
+        //     if (! _expendable) {
+        //         self.update_fetch_more(false);
+        //     }
+        // },
         
+
+
         display_comments: function (records) {
             var self = this;
             // sort the records
@@ -525,7 +600,10 @@ openerp.mail = function(session) {
             }
             _(records).each(function (record) {
                 var sub_msgs = [];
-                if ((record.parent_id == undefined || record.parent_id == false || record.parent_id[0] == self.options.parent_id) && self.options.thread_level > 0 ) {
+                if (record.type == 'expandable') {
+                    // TDE: do something :)
+                }
+                else if ((record.parent_id == undefined || record.parent_id == false || record.parent_id[0] == self.options.parent_id) && self.options.thread_level > 0 ) {
                     // var sub_list = self.comments_structure['tree_struct'][record.id]['direct_childs'];
                     // _(records).each(function (record) {
                     //     //if (record.parent_id == false || record.parent_id[0] == self.params.parent_id) return;
@@ -576,6 +654,23 @@ openerp.mail = function(session) {
                 });
         },
 
+
+        /** Display 'show more' button */
+        update_fetch_more: function (new_value) {
+            if (new_value) {
+                    this.$element.find('div.oe_mail_wall_more:last').show();
+            } else {
+                    this.$element.find('div.oe_mail_wall_more:last').hide();
+            }
+        },
+        
+        /** Action: 'shows more' to fetch new messages */
+        do_fetch_more: function () {
+            return this.message_fetch(this.fetch_more_domain, this.fetch_more_context);
+        },
+
+
+
         display_current_user: function () {
             var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.options.uid);
             return this.$element.find('img.oe_mail_icon').attr('src', avatar);
@@ -589,41 +684,42 @@ openerp.mail = function(session) {
                 this.proxy('init_comments'));
         },
         
-        /**
-         * Create a domain to fetch new comments according to
-         * comment already present in comments_structure
-         * @param {Object} comments_structure (see chatter utils)
-         * @returns {Array} fetch_domain (OpenERP domain style)
-         */
-        get_fetch_domain: function (comments_structure) {
-            var domain = [];
-            var ids = comments_structure.root_ids.slice();
-            var ids2 = [];
-            // must be child of current parent
-            if (this.options.parent_id) { domain.push(['id', 'child_of', this.options.parent_id]); }
-            _(comments_structure.root_ids).each(function (id) { // each record
-                ids.push(id);
-                ids2.push(id);
-            });
-            if (this.options.parent_id != false) {
-                ids2.push(this.options.parent_id);
-            }
-            // must not be children of already fetched messages
-            if (ids.length > 0) {
-                domain.push('&');
-                domain.push('!');
-                domain.push(['id', 'child_of', ids]);
-            }
-            if (ids2.length > 0) {
-                domain.push(['id', 'not in', ids2]);
-            }
-            return domain;
-        },
+        // TDE: not necessary, rewritten above
+        // /**
+        //  * Create a domain to fetch new comments according to
+        //  * comment already present in comments_structure
+        //  * @param {Object} comments_structure (see chatter utils)
+        //  * @returns {Array} fetch_domain (OpenERP domain style)
+        //  */
+        // get_fetch_domain: function (comments_structure) {
+        //     var domain = [];
+        //     var ids = comments_structure.root_ids.slice();
+        //     var ids2 = [];
+        //     // must be child of current parent
+        //     if (this.options.parent_id) { domain.push(['id', 'child_of', this.options.parent_id]); }
+        //     _(comments_structure.root_ids).each(function (id) { // each record
+        //         ids.push(id);
+        //         ids2.push(id);
+        //     });
+        //     if (this.options.parent_id != false) {
+        //         ids2.push(this.options.parent_id);
+        //     }
+        //     // must not be children of already fetched messages
+        //     if (ids.length > 0) {
+        //         domain.push('&');
+        //         domain.push('!');
+        //         domain.push(['id', 'child_of', ids]);
+        //     }
+        //     if (ids2.length > 0) {
+        //         domain.push(['id', 'not in', ids2]);
+        //     }
+        //     return domain;
+        // },
         
-        do_more: function () {
-            domain = this.get_fetch_domain(this.comments_structure);
-            return this.fetch_comments(domain);
-        },
+        // do_more: function () {
+        //     domain = this.get_fetch_domain(this.comments_structure);
+        //     return this.fetch_comments(domain);
+        // },
     });
 
 
@@ -643,7 +739,7 @@ openerp.mail = function(session) {
         // QWeb template to use when rendering the object
         template: 'mail.record_thread',
 
-       init: function() {
+        init: function() {
             this._super.apply(this, arguments);
             this.params = this.options || {};
             this.params.thread_level = this.params.thread_level || 0;
@@ -661,10 +757,6 @@ openerp.mail = function(session) {
             this.$element.toggle(this.view.get("actual_mode") !== "create");
         },
         
-        destroy: function () {
-            this._super.apply(this, arguments);
-        },
-        
         set_value: function() {
             this._super.apply(this, arguments);
             if (! this.view.datarecord.id ||
@@ -672,7 +764,6 @@ openerp.mail = function(session) {
                 this.$element.find('.oe_mail_thread').hide();
                 return;
             }
-            // debugger
             // create and render Thread widget
             this.$element.find('div.oe_mail_recthread_main').empty();
             if (this.thread) this.thread.destroy();
@@ -710,8 +801,10 @@ openerp.mail = function(session) {
             this.options = options || {};
             this.options.domain = options.domain || [];
             this.options.context = options.context || {};
-            this.options.context.res_model = options.res_model || 'mail.thread';
-            this.options.context.res_id = options.res_id || false;
+            // TDE: default values in thread
+            // this.options.context.res_model = options.res_model || 'mail.thread';
+            // this.options.context.parent_id = options.parent_id || false;
+            // this.options.context.res_id = options.res_id || false;
             this.options.thread_level = options.thread_level || 1;
             this.thread_list = [];
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
@@ -722,14 +815,16 @@ openerp.mail = function(session) {
 
         start: function () {
             this._super.apply(this, arguments);
-            this.bind_events();
+            // this.bind_events();
             // load mail.message search view
             var search_view_ready = this.load_search_view({}, false);
             // load composition form
-            var compose_done = this.instantiate_composition_form();
+            // var compose_done = this.instantiate_composition_form();
             // fetch first threads
-            var messages_fetched = this.message_fetch();
-            return (search_view_ready && compose_done && messages_fetched);
+            // var messages_fetched = this.message_fetch();
+            var thread_displayed = this.display_thread();
+            // return (search_view_ready && compose_done && messages_fetched);
+            return (search_view_ready && thread_displayed);
         },
 
         destroy: function () {
@@ -740,18 +835,19 @@ openerp.mail = function(session) {
 
         },
 
-        instantiate_composition_form: function(mode, msg_id) {
-            if (this.compose_message_widget) {
-                this.compose_message_widget.destroy();
-            }
-            this.compose_message_widget = new mail.ComposeMessage(this, {
-                'extended_mode': false, 'uid': this.session.uid, 'res_model': this.options.res_model,
-                'res_id': this.options.res_id, 'mode': mode || 'comment', 'msg_id': msg_id });
-            var composition_node = this.$element.find('div.oe_mail_wall_action');
-            composition_node.empty();
-            var compose_done = this.compose_message_widget.appendTo(composition_node);
-            return compose_done;
-        },
+        // TDE: move to thread
+        // instantiate_composition_form: function(mode, msg_id) {
+        //     if (this.compose_message_widget) {
+        //         this.compose_message_widget.destroy();
+        //     }
+        //     this.compose_message_widget = new mail.ComposeMessage(this, {
+        //         'extended_mode': false, 'uid': this.session.uid, 'res_model': this.options.res_model,
+        //         'res_id': this.options.res_id, 'mode': mode || 'comment', 'msg_id': msg_id });
+        //     var composition_node = this.$element.find('div.oe_mail_wall_action');
+        //     composition_node.empty();
+        //     var compose_done = this.compose_message_widget.appendTo(composition_node);
+        //     return compose_done;
+        // },
 
         /**
          * Override-hack of do_action: automatically reload the chatter.
@@ -765,14 +861,15 @@ openerp.mail = function(session) {
             return this._super(action, on_close);
         },
 
-        /** Bind events */
-        bind_events: function () {
-            var self = this;
-            // Click on 'show more'
-            this.$element.find('button.oe_mail_wall_button_more').click(function () {
-                return self.do_fetch_more(); 
-            });
-        },
+        // TDE: move to thread
+        // /** Bind events */
+        // bind_events: function () {
+        //     var self = this;
+        //     // Click on 'show more'
+        //     this.$element.find('button.oe_mail_wall_button_more').click(function () {
+        //         return self.do_fetch_more(); 
+        //     });
+        // },
 
         /**
          * Load the mail.message search view
@@ -806,7 +903,7 @@ openerp.mail = function(session) {
                 self.search_results['domain'] = results.domain;
                 self.search_results['groupby'] = results.group_by;
                 self.message_clean();
-                return self.message_fetch();
+                return self.display_thread();
             });
         },
 
@@ -815,70 +912,90 @@ openerp.mail = function(session) {
             this.$element.find('ul.oe_mail_wall_threads').empty();
         },
 
-        /** Fetch messages
-         * @param {Array} domain
-         * @param {Array} context
-         */
-        message_fetch: function (additional_domain, additional_context) {
-            this.search['domain'] = _.union(this.options.domain, this.search_results.domain);
-            this.search['context'] = _.extend(this.options.context, this.search_results.context);
-            if (additional_domain) var fetch_domain = this.search['domain'].concat(additional_domain);
-            else var fetch_domain = this.search['domain'];
-            if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
-            else var fetch_context = this.search['context'];
-            return this.ds_msg.call('message_read',
-                [false, fetch_domain, this.options.thread_level, fetch_context]
-                ).then(this.proxy('display_comments'));
-        },
+        // TDE: move to thread
+        // /** Fetch messages
+        //  * @param {Array} domain
+        //  * @param {Array} context
+        //  */
+        // message_fetch: function (additional_domain, additional_context) {
+        //     this.search['domain'] = _.union(this.options.domain, this.search_results.domain);
+        //     this.search['context'] = _.extend(this.options.context, this.search_results.context);
+        //     if (additional_domain) var fetch_domain = this.search['domain'].concat(additional_domain);
+        //     else var fetch_domain = this.search['domain'];
+        //     if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
+        //     else var fetch_context = this.search['context'];
+        //     return this.ds_msg.call('message_read',
+        //         [false, fetch_domain, this.options.thread_level, fetch_context]
+        //         ).then(this.proxy('display_comments'));
+        // },
 
         /** Display comments
          * @param {Array} records tree structure of records
          */
-        display_comments: function (records) {
-            console.log(records);
-            // debugger
-            var self = this;
-            var _expendable = false;
-            _(records).each(function (root_record) {
-                /* expandable type: add a 'Show more button' */
-                if (root_record.type == 'expandable') {
-                    _expendable = true;
-                    self.update_fetch_more(true);
-                    self.fetch_more_domain = root_record.domain;
-                    self.fetch_more_context = root_record.context;
+        display_thread: function () {
+            var render_res = session.web.qweb.render('mail.wall_thread_container', {});
+            $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(this.$element.find('ul.oe_mail_wall_threads'));
+            var thread = new mail.Thread(self, {
+                'domain': this.options.domain, 'context': this.options.context,
+                'uid': this.session.uid, 'thread_level': this.options.thread_level,
+                // display options
+                'show_hide': true, 'show_delete': false,
                 }
-                // display classic root record
-                else {
-                    var render_res = session.web.qweb.render('mail.wall_thread_container', {});
-                    $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('ul.oe_mail_wall_threads'));
-                    var thread = new mail.Thread(self, {
-                        'res_model': root_record.model, 'res_id': root_record.res_id,
-                        'uid': self.session.uid, 'records': [root_record],
-                        'parent_id': false, 'thread_level': self.options.thread_level,
-                        'show_hide': true, 'is_wall': true
-                        }
-                    );
-                    self.thread_list.push(thread);
-                    thread.appendTo(self.$element.find('li.oe_mail_wall_thread:last'));
-                }
-            });
-            if (! _expendable) {
-                self.update_fetch_more(false);
-            }
+            );
+            thread.appendTo(this.$element.find('li.oe_mail_wall_thread:last'));
+            this.thread_list.push(thread);
         },
+
+        // TDE: move to thread
+        // /** Display comments
+        //  * @param {Array} records tree structure of records
+        //  */
+        // display_comments: function (records) {
+        //     console.log(records);
+        //     // debugger
+        //     var self = this;
+        //     var _expendable = false;
+        //     _(records).each(function (root_record) {
+        //         /* expandable type: add a 'Show more button' */
+        //         if (root_record.type == 'expandable') {
+        //             _expendable = true;
+        //             self.update_fetch_more(true);
+        //             self.fetch_more_domain = root_record.domain;
+        //             self.fetch_more_context = root_record.context;
+        //         }
+        //         // display classic root record
+        //         else {
+        //             var render_res = session.web.qweb.render('mail.wall_thread_container', {});
+        //             $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('ul.oe_mail_wall_threads'));
+        //             var thread = new mail.Thread(self, {
+        //                 'res_model': root_record.model, 'res_id': root_record.res_id,
+        //                 'uid': self.session.uid, 'records': [root_record],
+        //                 'parent_id': false, 'thread_level': self.options.thread_level,
+        //                 'show_hide': true, 'is_wall': true
+        //                 }
+        //             );
+        //             self.thread_list.push(thread);
+        //             thread.appendTo(self.$element.find('li.oe_mail_wall_thread:last'));
+        //         }
+        //     });
+        //     if (! _expendable) {
+        //         self.update_fetch_more(false);
+        //     }
+        // },
         
-        /** Display 'show more' button */
-        update_fetch_more: function (new_value) {
-            if (new_value) {
-                    this.$element.find('div.oe_mail_wall_more:last').show();
-            } else {
-                    this.$element.find('div.oe_mail_wall_more:last').hide();
-            }
-        },
+        // TDE: move to thread
+        // /** Display 'show more' button */
+        // update_fetch_more: function (new_value) {
+        //     if (new_value) {
+        //             this.$element.find('div.oe_mail_wall_more:last').show();
+        //     } else {
+        //             this.$element.find('div.oe_mail_wall_more:last').hide();
+        //     }
+        // },
         
-        /** Action: 'shows more' to fetch new messages */
-        do_fetch_more: function () {
-            return this.message_fetch(this.fetch_more_domain, this.fetch_more_context);
-        },
+        // /** Action: 'shows more' to fetch new messages */
+        // do_fetch_more: function () {
+        //     return this.message_fetch(this.fetch_more_domain, this.fetch_more_context);
+        // },
     });
 };
