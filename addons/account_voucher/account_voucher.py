@@ -238,7 +238,7 @@ class account_voucher(osv.osv):
                     voucher_rate = self.browse(cr, uid, voucher.id, context=ctx).currency_id.rate
                     company_currency_rate = voucher.company_id.currency_id.rate
                     rate = voucher_rate * company_currency_rate
-            res[voucher.id] =  voucher.amount / rate
+            res[voucher.id] =  self.pool.get('res.currency').round(cr, uid, voucher.company_id.currency_id, (voucher.amount / rate))
         return res
 
     _name = 'account.voucher'
