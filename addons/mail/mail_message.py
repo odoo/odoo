@@ -131,7 +131,9 @@ class mail_message(osv.Model):
     _limit = 3
     def _message_dict_get(self, cr, uid, msg, context={}):
         attachs = self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)
-        author = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id,], context=context)[0]
+        author = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
+        # TDE: need user to show 'delete' link -> necessary ?
+        author_user = self.pool.get('res.users').name_get(cr, uid, [x.id for x in msg.author_id.user_ids], context=context)[0]
         partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
         return {
             'id': msg.id,
@@ -144,6 +146,7 @@ class mail_message(osv.Model):
             'subject': msg.subject,
             'date': msg.date,
             'author_id': author,
+            'author_user_id': author_user,
             'partner_ids': partner_ids,
             'child_ids': []
         }

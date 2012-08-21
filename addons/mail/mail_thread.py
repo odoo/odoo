@@ -539,8 +539,15 @@ class mail_thread(osv.Model):
         self.message_post(cr, uid, id, message, context=context)
 
     def message_post(self, cr, uid, res_id, body, subject=False,
-            mtype='notification', attachments=None, context=None, **kwargs):
-
+            mtype='notification', parent_id=False, attachments=None, context=None, **kwargs):
+        print res_id
+        print body
+        print subject
+        print mtype
+        print parent_id
+        print attachments
+        print context
+        print kwargs
         context = context or {}
         attachments = attachments or {}
         if type(res_id) in (list, tuple):
@@ -565,6 +572,7 @@ class mail_thread(osv.Model):
             'body': body,
             'subject': subject,
             'type': mtype,
+            'parent_id': parent_id,
             'attachment_ids': to_attach
         })
         return self.pool.get('mail.message').create(cr, uid, value, context=context)
