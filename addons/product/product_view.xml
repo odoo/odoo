@@ -87,7 +87,6 @@
                                     <group string="Procurement">
                                         <field name="type"/>
                                         <field name="procure_method" groups="base.group_user"/>
-                                        <field name="supply_method" groups="base.group_user"/>
                                     </group>
                                     <group string="Prices">
                                         <field name="list_price"/>
@@ -136,9 +135,6 @@
                                     </group>
                                 </group>
 
-                            </page>
-                            <page string="Suppliers" groups="base.group_user">
-                                <field name="seller_ids" context="{'uom_id': uom_id}"/>
                             </page>
                             <page string="Descriptions" groups="base.group_user">
                                 <separator string="Description"/>

@@ -987,6 +987,9 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
+            	<xpath expr="//field[@name='procure_method']" position="after">
+            		<field name="supply_method" groups="base.group_user"/>
+            	</xpath>
                 <page string="Procurement &amp; Locations" position="inside">
                     <separator string="Bill of Materials"/>
                     <field name="bom_ids" widget="one2many_list" mode="tree" context="{'default_product_id': active_id}">
