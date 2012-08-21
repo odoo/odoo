@@ -8,7 +8,7 @@ instance.web.Login = instance.web.Login.extend({
         this._super.apply(this, arguments);
         var self = this;
 
-        this._default_error_message = this.$element.find('.login_error_message').text();
+        this._default_error_message = this.$element.find('.oe_login_error_message').text();
 
         this.$openid_selected_button = $();
         this.$openid_selected_input = $();
@@ -40,8 +40,7 @@ instance.web.Login = instance.web.Login.extend({
             }
         });
 
-        this._check_fragment();
-
+        this._check_error();
     },
 
 
@@ -67,11 +66,9 @@ instance.web.Login = instance.web.Login.extend({
 
     },
 
-    _check_fragment: function() {
+    _check_error: function() {
         var self = this;
-        var fragment = jQuery.deparam.fragment();
-        console.log(fragment);
-        if (fragment.loginerror !== undefined) {
+        if (this.params.loginerror !== undefined) {
             this.rpc('/auth_openid/login/status', {}, function(result) {
                 if (_.contains(['success', 'failure'], result.status) && result.message) {
                     self.do_warn('Invalid OpenID Login', result.message);
@@ -132,11 +129,12 @@ instance.web.Login = instance.web.Login.extend({
 
     do_warn: function(title, msg) {
         //console.warn(title, msg);
-        this.$element.find('.login_error_message').text(msg).show();
+        this.$element.find('.oe_login_error_message').text(msg).show();
+        this._super(title, msg);
     },
 
     reset_error_message: function() {
-        this.$element.find('.login_error_message').text(this._default_error_message);
+        this.$element.find('.oe_login_error_message').text(this._default_error_message);
     }
 
 });

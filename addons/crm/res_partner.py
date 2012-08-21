@@ -82,7 +82,7 @@ class res_partner(osv.osv):
                 'planned_revenue' : planned_revenue,
                 'probability' : probability,
                 'partner_id' : partner_id,
-                'categ_id' : categ_ids and categ_ids[0] or '',
+                'categ_ids' : categ_ids and categ_ids[0:1] or [],
                 'state' :'draft',
                 'type': 'opportunity'
             }, context=context)

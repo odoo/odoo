@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,21 +21,30 @@
 
 
 {
-    'name': 'Portal HR recruitment',
-    'version': '0.1',
+    'name': 'OAuth2 Authentication',
+    'version': '1.0',
     'category': 'Tools',
-    'complexity': "easy",
-    'description': """
-This module adds a jobs page to your portal if hr and portal are installed.
-    """,
-    'author': 'OpenERP SA',
-    'depends': ['hr','portal'],
+    'description': """Allow users to login through Google OAuth2.""",
+    'author': 'Victor Tabuenca',
+    'maintainer': 'OpenERP s.a.',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'web', 'base_setup'],
     'data': [
-        'portal_jobs_view.xml',
-        'security/ir.model.access.csv',
+        'auth_oauth_data.xml',
+    ],
+    'update_xml': [
+        'auth_oauth_view.xml',
+        'res_config.xml',
+    ],
+    'js': [
+        'static/src/js/auth_oauth.js',
+    ],
+    'css': [
+        'static/lib/zocial/css/zocial.css',
+    ],
+    'qweb': [
+        'static/src/xml/auth_oauth.xml',
     ],
     'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
+    'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

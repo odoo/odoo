@@ -20,10 +20,14 @@
 ##############################################################################
 
 {
-    'name' : "Portal",
-    'version' : "1.0",
-    'depends' : ["base", "share", "auth_anonymous"],
-    'author' : "OpenERP SA",
+    'name' : 'Portal',
+    'version' : '1.0',
+    'depends' : [
+        'base',
+        'share',
+        'auth_signup',
+    ],
+    'author' : 'OpenERP SA',
     'category': 'Portal',
     'description': """
 Customize access to your OpenERP database to external users by creating portals.
@@ -43,7 +47,6 @@ very handy when used in combination with the module 'share'.
         'security/ir.model.access.csv',
         'portal_view.xml',
         'portal_data.xml',
-        'res_user_view.xml',
         'wizard/portal_wizard_view.xml',
         'wizard/share_wizard_view.xml',
     ],
