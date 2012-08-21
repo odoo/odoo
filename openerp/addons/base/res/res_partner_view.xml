@@ -186,13 +186,10 @@
                                                                     <td class="oe_kanban_title1" align="left" valign="middle">
                                                                         <h4><a type="edit"><field name="name"/></a></h4>
                                                                         <i><div t-if="record.function.raw_value">
-                                                                            <field name="function"/><br/></div></i>
-                                                                    </td>
-                                                                    <td valign="top" align="right">
-                                                                        <a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
-                                                                            <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
-                                                                        </a>
-
+                                                                            <field name="function"/></div></i>
+                                                                        <div><a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
+                                                                            <field name="email"/>
+                                                                        </a></div>
                                                                     </td>
                                                                 </tr>
                                                             </table>
