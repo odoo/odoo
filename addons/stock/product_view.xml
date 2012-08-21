@@ -98,7 +98,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="status" position="before" version="7.0">
-                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}">
+                    <group string="Stock and Expected Variations" attrs="{'invisible':[('type','in', ('service', 'consu'))]}">
                         <label for="qty_available"/>
                         <div>
                             <field name="qty_available" class="oe_inline"/>
