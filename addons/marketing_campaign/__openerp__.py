@@ -35,6 +35,7 @@ This module provides leads automation through marketing campaigns (campaigns can
 =========================================================================================================================================
 
 The campaigns are dynamic and multi-channels. The process is as follows:
+------------------------------------------------------------------------
     * Design marketing campaigns like workflows, including email templates to
       send, reports to print and send by email, custom actions
     * Define input segments that will select the items that should enter the
@@ -49,7 +50,7 @@ The campaigns are dynamic and multi-channels. The process is as follows:
 While the campaign runs you can of course continue to fine-tune the parameters,
 input segments, workflow.
 
-Note: If you need demo data, you can install the marketing_campaign_crm_demo
+**Note:** If you need demo data, you can install the marketing_campaign_crm_demo
       module, but this will also install the CRM application as it depends on
       CRM Leads.
     """,

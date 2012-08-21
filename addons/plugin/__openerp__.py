@@ -26,6 +26,7 @@
     'category': 'Hidden/Dependency',
     'description': """
 The common interface for plug-in.
+=================================
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

@@ -36,6 +36,7 @@ Allows creating tasks based on new emails arriving at a given mailbox,
 similarly to what the CRM application has for Leads/Opportunities.
 
 There are two common alternatives to configure the mailbox integration:
+-----------------------------------------------------------------------
     * Install the ``fetchmail`` module and configure a new mailbox, then select
       ``Project Tasks`` as the target for incoming emails.
     * Set it up manually on your mail server based on the 'mail gateway' script

@@ -35,9 +35,8 @@ these accounts will be automatically downloaded into your OpenERP system. All
 POP3/IMAP-compatible servers are supported, included those that require an
 encrypted SSL/TLS connection.
 
-This can be used to easily create email-based workflows for many email-enabled
-OpenERP documents, such as:
-
+This can be used to easily create email-based workflows for many email-enabled OpenERP documents, such as:
+----------------------------------------------------------------------------------------------------------
     * CRM Leads/Opportunities
     * CRM Claims
     * Project Issues

@@ -29,12 +29,13 @@ This module supplements the Warehouse application by effectively implementing Pu
 ============================================================================================================
 
 Typically this could be used to:
+--------------------------------
     * Manage product manufacturing chains
     * Manage default locations per product
     * Define routes within your warehouse according to business needs, such as:
-       - Quality Control
-       - After Sales Services
-       - Supplier Returns
+        - Quality Control
+        - After Sales Services
+        - Supplier Returns
 
     * Help rental management, by generating automated return moves for rented products
 
@@ -84,9 +85,10 @@ Use-Case:
 ---------
 
 You can use the demo data as follow:
-  CPU1: Sell some CPU1 from Chicago Shop and run the scheduler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  **CPU1:** Sell some CPU1 from Chicago Shop and run the scheduler
      - Warehouse: delivery order, Chicago Shop: reception
-  CPU3:
+  **CPU3:**
      - When receiving the product, it goes to Quality Control location then
        stored to shelf 2.
      - When delivering the customer: Pick List -> Packing -> Delivery Order from Gate A

@@ -35,8 +35,7 @@ questionnaire and directly use it on a partner.
 It also has been merged with the earlier CRM & SRM segmentation tool because they 
 were overlapping.
 
-    * Note: this module is not compatible with the module segmentation, since 
-            it's the same which has been renamed.
+    **Note:** this module is not compatible with the module segmentation, since it's the same which has been renamed.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

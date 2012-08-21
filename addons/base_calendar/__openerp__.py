@@ -28,6 +28,7 @@ This is a full-featured calendar system.
 ========================================
 
 It supports:
+------------
     - Calendar of events
     - Alerts (create requests)
     - Recurring events

@@ -30,13 +30,16 @@ Module that extends the standard account_bank_statement_line object for improved
 ===================================================================================================
 
 This module adds:
+-----------------
     - valuta date
     - batch payments
     - traceability of changes to bank statement lines
     - bank statement line views
     - bank statements balances report
-    - performance improvements for digital import of bank statement (via 'ebanking_import' context flag)
-    - name_search on res.partner.bank enhanced to allow search on bank and iban account numbers
+    - performance improvements for digital import of bank statement (via 
+      'ebanking_import' context flag)
+    - name_search on res.partner.bank enhanced to allow search on bank 
+      and iban account numbers
     ''',
     'depends': ['account'],
     'demo_xml': [],

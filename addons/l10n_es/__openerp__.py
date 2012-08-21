@@ -37,7 +37,7 @@ Spanish Charts of Accounts (PGCE 2008).
     * Defines templates for sale and purchase VAT
     * Defines tax code templates
 
-Note: You should install the l10n_ES_account_balance_report module for yearly
+**Note:** You should install the l10n_ES_account_balance_report module for yearly
       account reporting (balance, profit & losses).
 """,
     "license" : "GPL-3",

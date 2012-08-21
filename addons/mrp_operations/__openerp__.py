@@ -33,11 +33,13 @@ When finishing/confirming, cancelling manufacturing orders set all state lines
 to the according state.
 
 Create menus:
-    Manufacturing > Manufacturing > Work Orders
+-------------
+    **Manufacturing** > **Manufacturing** > **Work Orders**
 
 Which is a view on "Work Orders" lines in manufacturing order.
 
 Add buttons in the form view of manufacturing order under workorders tab:
+-------------------------------------------------------------------------
     * start (set state to confirm), set date_start
     * done (set state to done), set date_stop
     * set to draft (set state to draft)

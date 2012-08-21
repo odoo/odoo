@@ -26,8 +26,8 @@
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-This module adds issue menu and features to your portal if project_issue and
-portal are installed.
+This module adds issue menu and features to your portal if project_issue and portal are installed.
+==================================================================================================
     """,
     'author': 'OpenERP SA',
     'depends': ['project_issue','portal'],

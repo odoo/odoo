@@ -30,14 +30,16 @@
 Organization and management of Events.
 ======================================
 
-This module allows you
+This module allows you:
+-----------------------
     * to manage your events and their registrations
     * to use emails to automatically confirm and send acknowledgements for any
       registration to an event
 
 Note that:
+----------
     - You can define new types of events in
-        Events/Configuration/Types of Events
+        **Events** / **Configuration** / **Types of Events**
 """,
     'author': 'OpenERP SA',
     'depends': ['base_setup', 'board', 'email_template', 'google_map'],

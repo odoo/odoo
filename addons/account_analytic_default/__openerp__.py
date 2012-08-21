@@ -25,7 +25,7 @@
     "category": 'Accounting & Finance',
     'description': """
 Set default values for your analytic accounts.
-=============================================
+==============================================
 
 Allows to automatically select analytic accounts based on criterions:
 ---------------------------------------------------------------------

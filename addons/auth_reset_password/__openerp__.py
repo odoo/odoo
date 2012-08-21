@@ -1,6 +1,9 @@
 {
  'name': 'Reset Password',
- 'description': 'Allow users to reset their password from the login page',
+ 'description': """
+Allow users to reset their password from the login page.
+========================================================
+""",
  'author': 'OpenERP SA',
  'version': '1.0',
  'category': 'Authentication',

@@ -26,6 +26,7 @@
     "category": 'Customer Relationship Management',
     'description': """
 Todo list for CRM leads and opportunities.
+==========================================
     """,
     'author': 'OpenERP SA',
     'depends': ['crm','project_gtd'],

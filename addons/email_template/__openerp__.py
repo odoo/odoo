@@ -53,8 +53,7 @@ These email templates are also at the heart of the marketing campaign system
 (see the ``marketing_campaign`` application), if you need to automate larger
 campaigns on any OpenERP document.
 
-Technical note: only the templating system of the original Power Email by
-Openlabs was kept.
+    **Technical note:** only the templating system of the original Power Email by Openlabs was kept.
     """,
     "data": [
         'wizard/email_template_preview_view.xml',

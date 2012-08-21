@@ -30,6 +30,7 @@ This module maintains internal sequence number for accounting entries.
 Allows you to configure the accounting sequences to be maintained.
 
 You can customize the following attributes of the sequence:
+-----------------------------------------------------------
     * Prefix
     * Suffix
     * Next Number

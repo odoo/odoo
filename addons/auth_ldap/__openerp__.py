@@ -30,7 +30,7 @@ Adds support for authentication by LDAP server.
 This module allows users to login with their LDAP username and password, and
 will automatically create OpenERP users for them on the fly.
 
-Note: This module only work on servers who have Python's ``ldap`` module installed.
+**Note:** This module only work on servers who have Python's ``ldap`` module installed.
 
 Configuration:
 --------------
@@ -64,7 +64,7 @@ It is also possible to have local OpenERP users in the database along with
 LDAP-authenticated users (the Administrator account is one obvious example).
 
 Here is how it works:
-
+---------------------
     * The system first attempts to authenticate users against the local OpenERP
       database;
     * if this authentication fails (for example because the user has no local
@@ -84,7 +84,7 @@ Template*. If set, this user will be used as template to create the local users
 whenever someone authenticates for the first time via LDAP authentication. This
 allows pre-setting the default groups and menus of the first-time users.
 
-Warning: if you set a password for the user template, this password will be
+**Warning:** if you set a password for the user template, this password will be
          assigned as local password for each new LDAP user, effectively setting
          a *master password* for these users (until manually changed). You
          usually do not want this. One easy way to setup a template user is to

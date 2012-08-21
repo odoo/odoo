@@ -21,20 +21,21 @@
 
 {"name" : "Switzerland - Accounting",
  "description" :  """
-Swiss localisation :
- - DTA generation for a lot of payment types
- - BVR management (number generation, report.)
- - Import account move from the bank file (like v11)
- - Simplify the way you handle the bank statement for reconciliation
+Swiss localization :
+====================
+    - DTA generation for a lot of payment types
+    - BVR management (number generation, report.)
+    - Import account move from the bank file (like v11)
+    - Simplify the way you handle the bank statement for reconciliation
 
 You can also add ZIP and bank completion with:
- - l10n_ch_zip
- - l10n_ch_bank
+----------------------------------------------
+    - l10n_ch_zip
+    - l10n_ch_bank
  
- Author: Camptocamp SA
- Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
-
-------------------------------------------------------------------------
+ **Author:** Camptocamp SA
+ 
+ **Donors:** Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 
 Module incluant la localisation Suisse de OpenERP revu et corrigé par Camptocamp.
 Cette nouvelle version comprend la gestion et l'émissionde BVR, le paiement
@@ -43,16 +44,18 @@ et l'import du relevé de compte depuis la banque de manière automatisée. De p
 nous avons intégré la définition de toutes les banques Suisses(adresse, swift et clearing).
 
 Par ailleurs, conjointement à ce module, nous proposons la complétion NPA:
-
-Vous pouvez ajouter la completion des banques et des NPA avec with:
- - l10n_ch_zip
- - l10n_ch_bank
- 
- Auteur: Camptocamp SA
- Donateurs: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
-
 --------------------------------------------------------------------------
+Vous pouvez ajouter la completion des banques et des NPA avec with:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    - l10n_ch_zip
+    - l10n_ch_bank
+ 
+ **Auteur:** Camptocamp SA
+ 
+ **Donateurs:** Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
+
 TODO :
+------
     - Implement bvr import partial reconciliation
     - Replace wizard by osv_memory when possible
     - Add mising HELP

@@ -34,16 +34,20 @@ After installing this module, the Configuration wizard for accounting is launche
 Thus, the pure copy of Chart Template is generated.
 
 Wizards provided by this module:
+--------------------------------
     * Partner VAT Intra: Enlist the partners with their related VAT and invoiced
       amounts. Prepares an XML file format.
-            Path to access : Invoicing/Reporting/Legal Reports/Belgium Statements/Partner VAT Intra
+      
+        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Partner VAT Intra
     * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of
       the Main company of the User currently Logged in.
-            Path to access : Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration
+      
+        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration
     * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat
       Declaration of the Main company of the User currently Logged in Based on
       Fiscal year.
-            Path to access : Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers
+      
+        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
     'author': 'Noviat & OpenERP SA',
