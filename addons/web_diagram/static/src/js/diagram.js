@@ -43,9 +43,17 @@ instance.web.DiagramView = instance.web.View.extend({
         this.connectors = this.fields_view.arch.children[1],
         this.node = this.nodes.attrs.object,
         this.connector = this.connectors.attrs.object;
+        this.labels = _.filter(this.fields_view.arch.children, function(label) {
+            return label.tag == "label";
+        });
 
         this.$element.html(QWeb.render("DiagramView",  {'widget':self}));
         this.$element.addClass(this.fields_view.arch.attrs['class']);
+
+        _.each(self.labels,function(label){
+            html_label = '<p style="padding: 4px;">' + label.attrs.string + "</p>";
+            self.$element.find('.oe_diagram_header').append(html_label);
+        })
 
         this.$element.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
