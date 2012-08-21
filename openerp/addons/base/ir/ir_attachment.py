@@ -64,10 +64,17 @@ class ir_attachment(osv.osv):
                 return 0
             return []
 
+        # Work with a set, as list.remove() is prohibitive for large lists of documents
+        # (takes 20+ seconds on a db with 100k docs during search_count()!)
+        ids = set(ids)
+
         # For attachments, the permissions of the document they are attached to
         # apply, so we must remove attachments for which the user cannot access
         # the linked document.
-        targets = super(ir_attachment,self).read(cr, uid, ids, ['id', 'res_model', 'res_id'])
+        # Use pure SQL rather than read() as it is about 50% faster for large dbs (100k+ docs),
+        # and the permissions are checked in super() and below anyway.
+        cr.execute("""SELECT id, res_model, res_id FROM ir_attachment WHERE id = ANY(%s)""", (list(ids),))
+        targets = cr.dictfetchall()
         model_attachments = {}
         for target_dict in targets:
             if not (target_dict['res_id'] and target_dict['res_model']):
@@ -92,9 +99,10 @@ class ir_attachment(osv.osv):
             for res_id in disallowed_ids:
                 for attach_id in targets[res_id]:
                     ids.remove(attach_id)
+
         if count:
             return len(ids)
-        return ids
+        return list(ids)
 
     def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
         self.check(cr, uid, ids, 'read', context=context)
