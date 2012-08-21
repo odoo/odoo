@@ -860,11 +860,10 @@ class act_client(osv.osv):
     _order = 'name'
 
     def _get_params(self, cr, uid, ids, field_name, arg, context):
-        return dict([
-            ((record.id, ast.literal_eval(record.params_store))
-             if record.params_store else (record.id, False))
-            for record in self.browse(cr, uid, ids, context=context)
-        ])
+        result = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            result[record.id] = record.params_store and eval(record.params_store, {'uid': uid}) or False
+        return result
 
     def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
         if isinstance(field_value, dict):
