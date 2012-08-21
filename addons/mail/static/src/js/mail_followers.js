@@ -93,7 +93,7 @@ openerp_mail_followers = function(session, mail) {
             this.$element.find('div.oe_mail_recthread_followers h4').html(this.params.title + ' (' + records.length + ')');
             _(records).each(function (record) {
                 if (record.id == self.session.uid) { self.is_follower = true; }
-                record.avatar_url = mail.ChatterUtils.get_image(self.session.prefix, self.session.session_id, 'res.users', 'image_small', record.id);
+                record.avatar_url = mail.ChatterUtils.get_image(self.session.prefix, self.session.session_id, 'res.partner', 'image_small', record.id);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(user_list);
             });
             if (this.is_follower) {
