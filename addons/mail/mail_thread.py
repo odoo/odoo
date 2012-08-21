@@ -311,7 +311,7 @@ class mail_thread(osv.Model):
         routes = self.message_route(cr, uid, msg_txt, model,
                                     thread_id, custom_values,
                                     context=context)
-        msg = self.parse_message(msg_txt, save_original=save_original, context=context)
+        msg = self.parse_message(cr, msg_txt, save_original=save_original, context=context)
         msg['state'] = 'received'
         if strip_attachments and 'attachments' in msg:
             del msg['attachments']
@@ -385,7 +385,7 @@ class mail_thread(osv.Model):
             self.write(cr, uid, ids, update_vals, context=context)
         return True
 
-    def parse_message(self, message, save_original=False, context=None):
+    def parse_message(self, cr, message, save_original=False, context=None):
         """Parses a string or email.message.Message representing an
            RFC-2822 email, and returns a generic dict holding the
            message details.
