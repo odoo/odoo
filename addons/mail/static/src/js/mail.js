@@ -363,12 +363,12 @@ openerp.mail = function(session) {
             // display customization vars
             this.display = {};
             this.display.truncate_limit = options.truncate_limit || 250;
-            this.display.show_header_compose = options.show_header_compose === undefined ? true : options.show_header_compose
-            this.display.show_reply = options.show_reply || true;
-            this.display.show_delete = options.show_delete || true;
-            this.display.show_hide = options.show_hide || true;
-            this.display.show_reply_by_email = options.show_reply_by_email || true;
-            this.display.show_more = options.show_more || true;
+            this.display.show_header_compose = options.show_header_compose || false;
+            this.display.show_reply = options.show_reply || false;
+            this.display.show_delete = options.show_delete || false;
+            this.display.show_hide = options.show_hide || false;
+            this.display.show_reply_by_email = options.show_reply_by_email || false;
+            this.display.show_more = options.show_more || false;
             // for search view
             this.search = {'domain': [], 'context': {}, 'groupby': {}}
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
@@ -539,7 +539,8 @@ openerp.mail = function(session) {
                     self.display_record(record);
                     self.thread = new mail.Thread(self, {
                         'context': { 'res_model': record.model, 'res_id': record.res_id, 'parent_id': record.id},
-                        'show_header_compose': false,
+                        'show_header_compose': false, 'show_reply': self.options.thread_level > 1,
+                        'show_hide': self.display.show_hide, 'show_delete': self.display.show_delete,
                         'uid': self.options.uid, 'records': record.child_ids, 'thread_level': (self.options.thread_level-1),
                     });
                     self.$element.find('li.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
