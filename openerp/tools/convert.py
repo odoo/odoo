@@ -593,11 +593,11 @@ form: module.record_id""" % (xml_id,)
             a_action = rec.get('action','').encode('utf8')
 
             # determine the type of action
-            if ('.' in a_action):
-                # this is an action refering to another module: extract this module's name
+            if '.' in a_action:
+                # action referring to another module
                 a_action_module, a_action_name = a_action.split('.')
             else:
-                # this is a local action: fetch the current module's name
+                # local action: use current module
                 a_action_module = self.module
                 a_action_name = a_action
 
