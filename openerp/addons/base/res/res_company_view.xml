@@ -55,14 +55,14 @@
                                    <div>
                                        <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
                                    </div>
-                                    <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
+                                    <field name="website" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)" widget="url" placeholder="e.g. www.openerp.com"/>
                                 </group>
                                 <group>
-                                    <field name="phone" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
-                                    <field name="fax" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
-                                    <field name="email" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
-                                    <field name="vat" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
-                                    <field name="company_registry" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
+                                    <field name="phone" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)"/>
+                                    <field name="fax" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)"/>
+                                    <field name="email" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)"/>
+                                    <field name="vat" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)"/>
+                                    <field name="company_registry" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)"/>
                                 </group>
                             </group>
                             <group string="Bank Accounts">

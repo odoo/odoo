@@ -137,10 +137,10 @@ class res_company(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
-    def on_change_header(self, cr, uid, ids, phone, email, fax, website, vat, reg=False, context=None):
+    def on_change_header(self, cr, uid, ids, customize_footer, phone, email, fax, website, vat, reg=False, context=None):
         val = []
         res_id=self.browse(cr, uid, ids, context=context)[0]
-        if res_id.customize_footer:
+        if customize_footer:
             return {}
         if phone: val.append(_('Phone: ')+phone)
         if fax: val.append(_('Fax: ')+fax)
