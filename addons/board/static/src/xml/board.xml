@@ -23,13 +23,15 @@
 <t t-name="DashBoard.action">
     <div t-att-data-id="action.attrs.name" class="oe_action">
         <h2 t-attf-class="oe_header #{action.attrs.string ? '' : 'oe_header_empty'}">
-            <t t-esc="action.attrs.string"/>
+            <span><t t-esc="action.attrs.string"/></span>
+            <input class = "oe_header_text" type="text"/>
             <t t-if="!action.attrs.string">&amp;nbsp;</t>
             <button t-if="action.attrs.creatable and action.attrs.creatable !== 'false'" class="oe_button oe_button_create">Create</button>
             <span class='oe_icon oe_close'></span>
             <span class='oe_icon oe_minimize oe_fold' t-if="!action.attrs.fold"></span>
             <span class='oe_icon oe_maximize oe_fold' t-if="action.attrs.fold"></span>
         </h2>
+        
         <div t-attf-id="#{view.element_id}_action_#{column_index}_#{action_index}" class="oe_content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
     </div>
 </t>
