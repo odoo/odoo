@@ -157,7 +157,8 @@
             <field name="code">ARRE</field>
             <field name="name">Arrears</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.ARS.amount</field>
             <field eval="0.0" name="amount_fix"/>
             <field name="sequence" eval="28"/>
             <field name="note">Generally arrears are fully taxable, but employee may claim exemption u/s 89(1).
@@ -181,8 +182,8 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="name">Leave Encashment</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="condition_select">none</field>
-            <field name="amount_select">fix</field>
-            <field name="amount_fix">0.0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.LE.amount</field>
             <field name="sequence" eval="30"/>
             <field name="note">Payment by way of leave encashment received by Central and State Govt.employees at the time of retirement in respect of the period of earned leave at credit is fully exempt. In case of other employees, the exemption is to be limited to minimum of all below:
     1.The actual amount received
@@ -217,15 +218,15 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="name">Medical Reimbursement</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
-            <field eval="1200.0" name="amount_fix"/>
+            <field eval="1250.0" name="amount_fix"/>
             <field name="sequence" eval="32"/>
             <field name="note">This component is on-taxable up to 15000 per year (or Rs 1250 per month) on producing medical bills.</field>
         </record>
 
          <record id="hr_salary_rule_food_coupon" model="hr.salary.rule">
             <field name="amount_select">fix</field>
-            <field eval="20" name="amount_fix"/>
-            <field name="quantity">worked_days.WORK100.number_of_days</field>
+            <field eval="50" name="amount_fix"/>
+            <field name="quantity">22</field>
             <field name="code">FC</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Food Coupons Allowance</field>
@@ -237,19 +238,29 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="code">PERJ</field>
             <field name="name">Periodical Journals</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.PJ.amount</field>
             <field name="sequence" eval="34"/>
             <field name="note">Some employers may provide component for buying magazines, journals and books as a part of knowledge enhancement for business growth.This part would become non taxable on providing original bills.</field>
         </record>
 
-        <record id="hr_salary_rule_uniform" model="hr.salary.rule">
-            <field name="code">UNIF</field>
-            <field name="name">Uniform/Dress Allowance</field>
+        <record id="hr_salary_rule_uniform_senior" model="hr.salary.rule">
+            <field name="code">UNIFS</field>
+            <field name="name">Uniform/Dress Allowance for Senior Employees</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
+            <field eval="500" name="amount_fix"/>
             <field name="sequence" eval="35"/>
+            <field name="note">Some sections of employees mat get allowance for purchase of office dress/uniform.In such case, the component would become non-taxable.</field>
+        </record>
+
+        <record id="hr_salary_rule_uniform_junior" model="hr.salary.rule">
+            <field name="code">UNIFJ</field>
+            <field name="name">Uniform/Dress Allowance for Junior Employee</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">fix</field>
+            <field eval="400" name="amount_fix"/>
+            <field name="sequence" eval="42"/>
             <field name="note">Some sections of employees mat get allowance for purchase of office dress/uniform.In such case, the component would become non-taxable.</field>
         </record>
 
@@ -257,8 +268,8 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="code">TELR</field>
             <field name="name">Telephone Reimbursement</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field name="amount_fix">1500</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.TR.amount</field>
             <field name="sequence" eval="36"/>
             <field name="note">In some of the cases, companies may provide a component for telephone bills.Employees may provide actual phone usage bills to reimburse this component and make it non-taxable.
             </field>
@@ -277,8 +288,8 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="code">CAR</field>
             <field name="name">Car Expenses Reimbursement</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field name="amount_fix">1800</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.CEI.amount</field>
             <field name="sequence" eval="38"/>
             <field name="note">In case company provides component for this and employee use self owned car for official and personal purposes, Rs 1800 per month would be non-taxable on showing bills for fuel or can maintenance. This amount would be Rs 2400 in case car is more capacity than 1600cc.</field>
         </record>
@@ -287,8 +298,8 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="code">INT</field>
             <field name="name">Internet Expense</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.IE.amount</field>
             <field name="sequence" eval="39"/>
             <field name="note">Employer may also provide reimbursement of internet expenses and thus this would become non taxable.</field>
         </record>
@@ -338,7 +349,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="name">Employee's PF Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 8.33 / 100) or - (contract.wage * 8.33 / 100)</field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) or - (contract.wage * 0.12)</field>
             <field name= "note">Employer contribution does not become part of employee’s income and hence income tax is not payable on this part.</field>
             <field name="register_id" ref="hr_register_provident_fund"/>
             <field name="sequence" eval="150"/>
@@ -374,15 +385,16 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="condition_select">none</field>
             <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
+            <field eval="1500.0" name="amount_fix"/>
             <field name="register_id" ref="hr_company_transport_register"/>
             <field name="sequence" eval="165"/>
+            <field name="note">Company provided transport amount is based on company.</field>
         </record>
 
          <record id="hr_salary_rule_food_coupon_ded" model="hr.salary.rule">
             <field name="amount_select">fix</field>
-            <field eval="-20" name="amount_fix"/>
-            <field name="quantity">worked_days.WORK100.number_of_days</field>
+            <field eval="-50" name="amount_fix"/>
+            <field name="quantity">22</field>
             <field name="code">FD</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="name">Deduction Towards Food Coupons</field>
@@ -395,7 +407,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="name">Deduction Towards State Labour Welfare Fund</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
+            <field eval="3.0" name="amount_fix"/>
             <field name="sequence" eval="170"/>
             <field name="register_id" ref="hr_labour_Welfare_fund_register"/>
             <field name="note">The LWF is applicable to all the members of the organisation except the Management staff (Staffs having authority to sign on the cheque/official documents on behalf of the organisation). for e.x. Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 Total Rs 9.00 and deposited to the LWF office.It is half yearly contribution (June and December).</field>
@@ -406,7 +418,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="name">Deduction Towards Company Provided Group Term Insurance</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
+            <field eval="1000.0" name="amount_fix"/>
             <field name="register_id" ref="hr_group_term_insurance_register"/>
             <field name="sequence" eval="175"/>
         </record>
@@ -416,8 +428,8 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="name">Deduction Towards Leave Availed</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="condition_select">none</field>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.LAI.amount</field>
             <field name="register_id" ref="hr_leave_availed_register"/>
             <field name="sequence" eval="180"/>
         </record>
@@ -477,8 +489,50 @@ Now difference of income tax between payment year and actual year would be allow
 
         <record id="hr_rule_input_bonus" model="hr.rule.input">
             <field name="code">BNS</field>
-            <field name="name">Bonus</field>
+            <field name="name">Bonus of Employee</field>
             <field name="input_id" ref="hr_salary_rule_bonus"/>
+        </record>
+
+        <record id="hr_rule_input_arrears" model="hr.rule.input">
+            <field name="code">ARS</field>
+            <field name="name">Arrears Input</field>
+            <field name="input_id" ref="hr_salary_rule_arrears"/>
+        </record>
+
+        <record id="hr_rule_input_le" model="hr.rule.input">
+            <field name="code">LE</field>
+            <field name="name">Leave Encashment Input</field>
+            <field name="input_id" ref="hr_salary_rule_le"/>
+        </record>
+
+        <record id="hr_rule_input_journals" model="hr.rule.input">
+            <field name="code">PJ</field>
+            <field name="name">Periodical Journals Input</field>
+            <field name="input_id" ref="hr_salary_rule_journals"/>
+        </record>
+
+        <record id="hr_rule_input_telephone" model="hr.rule.input">
+            <field name="code">TR</field>
+            <field name="name">Telephone Reimbursement Input</field>
+            <field name="input_id" ref="hr_salary_rule_telephone"/>
+        </record>
+
+        <record id="hr_rule_input_car" model="hr.rule.input">
+            <field name="code">CEI</field>
+            <field name="name">Car Expenses Input</field>
+            <field name="input_id" ref="hr_payroll_rule_car"/>
+        </record>
+
+        <record id="hr_rule_input_internet" model="hr.rule.input">
+            <field name="code">IE</field>
+            <field name="name">Internet Expence Input</field>
+            <field name="input_id" ref="hr_salary_rule_internet"/>
+        </record>
+
+        <record id="hr_rule_input_leave_avail" model="hr.rule.input">
+            <field name="code">LAI</field>
+            <field name="name">Leave Availed Input</field>
+            <field name="input_id" ref="hr_payslip_rule_dla"/>
         </record>
     </data>
 </openerp>
