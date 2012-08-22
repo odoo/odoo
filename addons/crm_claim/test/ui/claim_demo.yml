@@ -1,7 +1,7 @@
 -
   I create claim record to call of partner onchange method.
 -
-  !record {model: crm.claim, id: crm_case_claim04}:
+  !record {model: crm.claim, id: crm_claim_4}:
     name: 'Damaged Product'
     partner_id: base.res_partner_6
 -
@@ -9,7 +9,7 @@
 -
   !python {model: crm.claim}: |
     try:
-      self.message_update(cr, uid,[ref('crm_case_claim04')], {'subject': 'Claim Update record','body_text': 'first training session completed',})
+      self.message_update(cr, uid,[ref('crm_claim_4')], {'subject': 'Claim Update record','body_text': 'first training session completed',})
     except:
       pass
   

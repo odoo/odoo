@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+    <!--
+        ((((((((((( Demo Cases )))))))))))
+    -->
+
+    <!--For Meetings-->
+        <record id="crm_meeting_1" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">Follow-up for Project proposal</field>
+            <field name="description">Meeting to discuss project plan and hash out the details of implementation.</field>
+            <field eval="time.strftime('%Y-%m-03 10:20:00')" name="date"/>
+            <field name="categ_ids" eval="[(6,0,[ref('categ_meet1')])]"/>
+            <field eval="time.strftime('%Y-%m-03 16:30:00')" name="date_deadline"/>
+            <field eval="6.3" name="duration"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="crm_meeting_2" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">Initial discussion</field>
+            <field name="description">Discussion with partner for product.</field>
+            <field name="categ_ids" eval="[(6,0,[ref('categ_meet3')])]"/>
+            <field eval="time.strftime('%Y-%m-05 12:00:00')" name="date"/>
+            <field eval="time.strftime('%Y-%m-05 19:00:00')" name="date_deadline"/>
+            <field eval="7.0" name="duration"/>
+            <field name="state">draft</field>
+        </record>
+
+        <record id="crm_meeting_3" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">Pricing Discussion</field>
+            <field name="description">Internal meeting for discussion for new pricing for product and services.</field>
+            <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
+            <field eval="time.strftime('%Y-%m-12 15:55:05')" name="date"/>
+            <field eval="time.strftime('%Y-%m-12 18:55:05')" name="date_deadline"/>
+            <field eval="3.0" name="duration"/>
+            <field name="state">done</field>
+        </record>
+
+        <record id="crm_meeting_4" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="name">Requirements review</field>
+            <field name="categ_ids" eval="[(6,0,[ref('categ_meet3')])]"/>
+            <field eval="time.strftime('%Y-%m-20 8:00:00')" name="date"/>
+            <field eval="time.strftime('%Y-%m-20 10:30:00')" name="date_deadline"/>
+            <field eval="2.5" name="duration"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="crm_meeting_5" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="name">Changes in Designing</field>
+            <field name="categ_ids" eval="[(6,0,[ref('categ_meet1')])]"/>
+            <field eval="time.strftime('%Y-%m-22 11:05:00')" name="date"/>
+            <field eval="time.strftime('%Y-%m-22 16:05:00')" name="date_deadline"/>
+            <field eval="5" name="duration"/>
+            <field name="state">draft</field>
+        </record>
+
+        <record id="crm_meeting_6" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">Presentation for new Services</field>
+            <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
+            <field eval="time.strftime('%Y-%m-18 2:00:00')" name="date"/>
+            <field eval="time.strftime('%Y-%m-18 10:30:00')" name="date_deadline"/>
+            <field eval="8.5" name="duration"/>
+            <field name="state">done</field>
+        </record>
+    </data>
+</openerp>

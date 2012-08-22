@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:37+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:40+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -44,7 +44,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_location_id:0
 msgid "Chained Location If Fixed"
-msgstr "Vastgelegde locatie"
+msgstr "Gekoppelde locatie"
 
 #. module: stock
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
@@ -139,7 +139,7 @@ msgstr "Hoeveelheid mag niet negatief zijn."
 #. module: stock
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr "Picking lijst"
+msgstr "Verzamellijst"
 
 #. module: stock
 #: report:lot.stock.overview:0 report:lot.stock.overview_all:0
@@ -166,7 +166,7 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
-"Dit is een lijst van alle leveringsopdrachten die moeten worden "
+"Dit is een lijst van alle uitgaande leveringen die moeten worden "
 "klaargemaakt, volgens de verschillende verkooporders en logistieke afspraken."
 
 #. module: stock
@@ -209,7 +209,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2516
 #, python-format
 msgid "Missing partial picking data for move #%s"
-msgstr "Er ontbreekt gedeeltelijke picking data voor mutatie #%s"
+msgstr "Er ontbreekt gedeeltelijke verzamelopdracht data voor mutatie #%s"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
@@ -226,12 +226,12 @@ msgstr "U kunt dit record niet verwijderen!"
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders to invoice"
-msgstr "Leveringsopdrachten te factureren"
+msgstr "Uitgaande leveringen te factureren"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Assigned Delivery Orders"
-msgstr "Toegewezen leveringsopdrachten"
+msgstr "Toegewezen uitgaande leveringen"
 
 #. module: stock
 #: field:stock.partial.move.line,update_cost:0
@@ -315,8 +315,8 @@ msgstr "_Valideren"
 #, python-format
 msgid "You cannot cancel picking because stock move is in done state !"
 msgstr ""
-"Het is niet mogelijk het picken te annuleren omdat de voorraadmutatie al in "
-"de gereed status is!"
+"Het is niet mogelijk het order verzamelen te annuleren omdat de "
+"voorraadmutatie al in de verwerkt status is!"
 
 #. module: stock
 #: code:addons/stock/stock.py:2337 code:addons/stock/stock.py:2379
@@ -331,7 +331,7 @@ msgstr "Waarschuwing!"
 #. module: stock
 #: field:stock.invoice.onshipping,group:0
 msgid "Group by partner"
-msgstr "Sorteer op relatie"
+msgstr "Samenvoegen op één factuur"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner view:report.stock.inventory:0
@@ -356,7 +356,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "No invoicing"
-msgstr "Geen facturatie"
+msgstr "Geen credit factuur"
 
 #. module: stock
 #: view:stock.move:0
@@ -470,7 +470,7 @@ msgstr "Geen producten op deze locatie"
 #. module: stock
 #: field:stock.warehouse,lot_output_id:0
 msgid "Location Output"
-msgstr "Locatie Uitgang"
+msgstr "Locatie uitgaand"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.split_into
@@ -562,7 +562,7 @@ msgstr "Interne leveringen"
 #. module: stock
 #: field:stock.move,location_dest_id:0
 msgid "Destination Location"
-msgstr "Afleverlocatie"
+msgstr "Bestemmingslocatie"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move_line
@@ -574,7 +574,8 @@ msgstr "stock.partial.move.line"
 #, python-format
 msgid "You can not process picking without stock moves"
 msgstr ""
-"Het is niet mogelijk om een 'Picking' te verwerken zonder voorraadmutatie"
+"Het is niet mogelijk om een verzamelopdracht te verwerken zonder "
+"voorraadmutatie"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
@@ -652,7 +653,7 @@ msgstr ""
 "Met het voorraad dagboek kunt u elk bestand voorraadmutatie toewijzen aan "
 "een specifiek dagboek, volgens de aard van de te verrichten werkzaamheden of "
 "de werknemer/ team dat deze werkzaamheden dient uit te voeren. Voorbeelden "
-"van voorraaddagboeken kunnen zijn: kwaliteitscontrole, picklijsten, "
+"van voorraaddagboeken kunnen zijn: kwaliteitscontrole, verzamellijsten, "
 "verpakking, enz."
 
 #. module: stock
@@ -804,7 +805,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_picking
 msgid "Process Picking"
-msgstr "Verwerk picking"
+msgstr "Verwerk verzamelopdracht"
 
 #. module: stock
 #: sql_constraint:stock.picking:0
@@ -863,7 +864,7 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
 msgid "Location Input"
-msgstr "Locatie binnenkomst"
+msgstr "Locatie inkomend"
 
 #. module: stock
 #: help:stock.picking,date:0
@@ -971,7 +972,7 @@ msgstr "Zoek verpakkingen"
 #. module: stock
 #: view:stock.picking:0
 msgid "Pickings already processed"
-msgstr "Pickingen reeds verwerkt"
+msgstr "Verzamelopdracht reeds verwerkt"
 
 #. module: stock
 #: field:stock.partial.move.line,currency:0
@@ -982,7 +983,7 @@ msgstr "Valuta"
 #. module: stock
 #: view:stock.picking:0 report:stock.picking.list:0
 msgid "Journal"
-msgstr "Journaal"
+msgstr "Dagboek"
 
 #. module: stock
 #: code:addons/stock/stock.py:1345
@@ -1053,7 +1054,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Pickings"
-msgstr "Bevestig pickingen"
+msgstr "Bevestig verzamelopdrachten"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -1064,7 +1065,7 @@ msgstr "Economische Voorraad"
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "View"
-msgstr "Beeld"
+msgstr "Weergave"
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -1109,7 +1110,7 @@ msgstr "Productielocatie"
 #. module: stock
 #: help:stock.picking,address_id:0
 msgid "Address of partner"
-msgstr "Contactadres"
+msgstr "Adres van relatie"
 
 #. module: stock
 #: field:report.stock.lines.date,date:0
@@ -1178,12 +1179,12 @@ msgstr "Auteur"
 #: code:addons/stock/stock.py:1332
 #, python-format
 msgid "Delivery Order"
-msgstr "Leveringsopdracht"
+msgstr "Leveringsbon"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Manual Operation"
-msgstr "Handmatige werking"
+msgstr "Handmatige verwerking"
 
 #. module: stock
 #: view:stock.location:0 view:stock.move:0
@@ -1249,7 +1250,7 @@ msgid ""
 "The company the Picking List containing the chained move will belong to "
 "(leave empty to use the default company determination rules"
 msgstr ""
-"De dopinglijst, welke de gekoppelde mutatie bevat zal behoren tot dit "
+"De verzamelopdracht, welke de gekoppelde mutatie bevat zal behoren tot dit "
 "bedrijf (laat leeg om de standaard regels van het bedrijf te gebruiken)"
 
 #. module: stock
@@ -1259,9 +1260,9 @@ msgid ""
 "empty to automatically detect the type based on the source and destination "
 "locations)."
 msgstr ""
-"Verzendsoort van de picklijst die de gekoppelde mutatie bevat (leeg laten om "
-"automatisch het soort op basis van de bron en de bestemming locaties te "
-"baseren)."
+"Verzendsoort van de verzamellijst die de gekoppelde mutatie bevat (leeg "
+"laten om automatisch het soort op basis van de bron en de bestemming "
+"locaties te baseren)."
 
 #. module: stock
 #: view:stock.move.split:0
@@ -1272,7 +1273,7 @@ msgstr "Partij nummer"
 #: field:stock.inventory.line,product_uom:0
 #: field:stock.move.consume,product_uom:0 field:stock.move.scrap,product_uom:0
 msgid "Product UOM"
-msgstr "Product eenh."
+msgstr "Product maateenheid"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
@@ -1320,10 +1321,10 @@ msgid ""
 "location is replaced in the original move."
 msgstr ""
 "Dit wordt alleen gebruikt indien u een gekoppelde locatiesoort kiest.\n"
-"De 'Automatische mutatie' waarde zal een voorraadmutatie maken na de huidige "
-"mutatie, welke direct wordt goedgekeurd. Bij 'Handmatige verwerking' moet de "
-"voorraadmutatie worden goedgekeurd door werknemer. Bij 'Automatisch, geen "
-"stap toegevoegd' wordt de locatie vervangen in de originele mutatie"
+"De 'Automatische verwerking' waarde zal een voorraadmutatie maken na de "
+"huidige mutatie, welke direct wordt goedgekeurd. Bij 'Handmatige verwerking' "
+"moet de voorraadmutatie worden goedgekeurd door werknemer. Bij 'Automatisch, "
+"geen stap toegevoegd' wordt de locatie vervangen in de originele mutatie."
 
 #. module: stock
 #: view:stock.tracking:0
@@ -1333,7 +1334,7 @@ msgstr "Verpakking idetificatie"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Packing List:"
-msgstr "Pakbon"
+msgstr "Verzamellijst"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -1363,8 +1364,8 @@ msgid ""
 "picking confirmation (when average price costing method is used)"
 msgstr ""
 "Technisch veld, welke wordt gebruikt om de product kosten op te slaan, zoals "
-"ingesteld door de gebruiker, tijdens het bevestigen van de picking (wanneer "
-"de gemiddelde kostprijs methode is gebruikt)"
+"ingesteld door de gebruiker, tijdens het bevestigen van de verzamelopdracht "
+"(wanneer de gemiddelde kostprijs methode is gebruikt)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1350
@@ -1385,7 +1386,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "To be refunded/invoiced"
-msgstr "Terug te betalen/gefactureerd"
+msgstr "Terug te betalen (Credit factuur)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
@@ -1438,7 +1439,7 @@ msgstr "Inkomende leveringen welke reeds zijn verwerkt"
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
-"Alleen retouren, welke zijn in de status Bevestigd, Beschikbaar of Gereed, "
+"Alleen retouren, welke zijn in de status Bevestigd, Beschikbaar of Verwerkt, "
 "zijn toegestaan"
 
 #. module: stock
@@ -1454,7 +1455,7 @@ msgstr "Productie partij herzieningen"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking List"
-msgstr "Interne picklijst"
+msgstr "Interne verzamellijst"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -1470,7 +1471,7 @@ msgstr "Splitsen"
 #. module: stock
 #: view:stock.picking:0
 msgid "Search Stock Picking"
-msgstr "Zoek voorraad picking"
+msgstr "Zoek voorraad verzamelopdracht"
 
 #. module: stock
 #: code:addons/stock/product.py:92
@@ -1486,7 +1487,7 @@ msgstr "Type"
 #. module: stock
 #: view:stock.picking:0
 msgid "Available Pickings"
-msgstr "Beschikbare pickings"
+msgstr "Beschikbare verzamelopdrachten"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
@@ -1517,7 +1518,7 @@ msgstr ""
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Picking List:"
-msgstr "Pickinglijst:"
+msgstr "Verzamellijst:"
 
 #. module: stock
 #: field:stock.inventory,date:0 field:stock.move,create_date:0
@@ -1545,7 +1546,7 @@ msgstr "Verpakking"
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Afleverlocatie"
+msgstr "Klant locatie"
 
 #. module: stock
 #: code:addons/stock/stock.py:2312
@@ -1608,7 +1609,7 @@ msgstr "Orderdatum"
 #: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
 msgid "INV: %s"
-msgstr "VRD: %s"
+msgstr "TEL: %s"
 
 #. module: stock
 #: view:stock.location:0 field:stock.location,location_id:0
@@ -1632,7 +1633,8 @@ msgstr ""
 "Beschikbaar: Producten zijn ontvangen, wachtend op bevestiging\n"
 "Wachtend: Wachten op een andere mutatie welke gedaan moet worden, voordat "
 "deze automatisch beschikbaar komt (bijv. bij \"Maak op bestelling\")\n"
-"Gereed: Is verwerkt, kan neut meer worden aangepast of worden geannuleerd \n"
+"Verwerkt: Is verwerkt, kan niet meer worden aangepast of worden geannuleerd "
+"\n"
 "Geannuleerd: Is geannuleerd, kan niet meer worden bevestigd"
 
 #. module: stock
@@ -1681,7 +1683,8 @@ msgstr ""
 "geen producten kan vinden.\n"
 " Als de producten zijn gereserveerd, wordt de status ingesteld op "
 "'Beschikbaar'.\n"
-" Wanneer de picking gedaan is, dan wordt de status ingesteld op 'Gereed'.\n"
+" Wanneer de verzamelopdracht gedaan is, dan wordt de status ingesteld op "
+"'Verwerkt'.\n"
 "De status is 'Wachtend' als een mutatie aan het wachten is op een andere "
 "mutatie."
 
@@ -1690,7 +1693,7 @@ msgstr ""
 #: field:res.partner,property_stock_supplier:0
 #: selection:stock.location,usage:0
 msgid "Supplier Location"
-msgstr "Toeleverlocatie"
+msgstr "Leveranciers locatie"
 
 #. module: stock
 #: code:addons/stock/stock.py:2358
@@ -1716,8 +1719,8 @@ msgid ""
 "If this picking was split this field links to the picking that contains the "
 "other part that has been processed already."
 msgstr ""
-"Indien de picking is gesplitst, dan koppelt dit veld naar het andere deel "
-"van de picking, welke al is verwerkt."
+"Indien de verzamelopdracht is gesplitst, dan koppelt dit veld naar het "
+"andere deel van de verzamelopdracht, welke al is verwerkt."
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
@@ -1758,7 +1761,7 @@ msgstr "Voorraadmutaties"
 #: selection:stock.location,chained_picking_type:0
 #: selection:stock.picking,type:0
 msgid "Sending Goods"
-msgstr "Goederen Verzenden"
+msgstr "Goederen verzenden"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
@@ -1863,7 +1866,7 @@ msgstr "Uitgebreide filters..."
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
-msgstr "Locatievoorraad"
+msgstr "Locatie voorraad"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:64
@@ -1908,7 +1911,8 @@ msgstr "Afval producten"
 #: code:addons/stock/stock.py:1157
 #, python-format
 msgid "You cannot remove the picking which is in %s state !"
-msgstr "Het is niet mogelijk een picking in de %s status te verwijderen."
+msgstr ""
+"Het is niet mogelijk een verzamelopdracht in de %s status te verwijderen."
 
 #. module: stock
 #: view:stock.inventory.line.split:0 view:stock.move.consume:0
@@ -1920,7 +1924,7 @@ msgstr "Annuleer"
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Retouren"
+msgstr "Retour boeken"
 
 #. module: stock
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
@@ -2158,7 +2162,7 @@ msgstr "]"
 #. module: stock
 #: field:product.template,property_stock_inventory:0
 msgid "Inventory Location"
-msgstr "Voorraadlocatie"
+msgstr "Voorraadtellingen locatie"
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -2219,7 +2223,7 @@ msgstr "Deellevering"
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
-msgstr "Automatisch"
+msgstr "Automatisch, geen stap toegevoegd"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2245,7 +2249,7 @@ msgstr "Groepeer op..."
 #. module: stock
 #: view:stock.location:0
 msgid "Chained Locations"
-msgstr "Vastgelegde locaties"
+msgstr "Gekoppelde locaties"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
@@ -2261,7 +2265,7 @@ msgstr "Document"
 #. module: stock
 #: view:stock.picking:0
 msgid "Input Picking List"
-msgstr "Inkomende picklijst"
+msgstr "Inkomende verzamellijst"
 
 #. module: stock
 #: field:stock.move,product_uom:0 field:stock.partial.move.line,product_uom:0
@@ -2282,7 +2286,7 @@ msgid ""
 "generated by a Manufacturing Order"
 msgstr ""
 "Forceert het specificeren van een productie partij voor alle mutaties van "
-"dit product en welek gegenereerd zijn door een productieorder"
+"dit product en welke gegenereerd zijn door een productieorder"
 
 #. module: stock
 #: view:product.product:0
@@ -2410,11 +2414,11 @@ msgid ""
 "products received using the buttons on the right of each line."
 msgstr ""
 "Hier kunt u individuele producten ontvangen, ongeacht van welke inkooporder "
-"of picking deze afkomstig is. Hier vind u een lijst van alle producten "
-"waarop u wacht. Wanneer u en inkooporder ontvangt, dan kunt u filteren op de "
-"naam van de leverancier of de referentie van de inkooporder. Vervolgens kan "
-"u de ontvangst van de producten bevestigen door gebruik te maken van de "
-"knoppen aan de rechterzijde van iedere regel."
+"of verzamelopdracht deze afkomstig is. Hier vind u een lijst van alle "
+"producten waarop u wacht. Wanneer u en inkooporder ontvangt, dan kunt u "
+"filteren op de naam van de leverancier of de referentie van de inkooporder. "
+"Vervolgens kan u de ontvangst van de producten bevestigen door gebruik te "
+"maken van de knoppen aan de rechterzijde van iedere regel."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -2435,7 +2439,7 @@ msgstr "Verwerking niet toegestaan"
 #. module: stock
 #: help:stock.picking,min_date:0
 msgid "Expected date for the picking to be processed"
-msgstr "Verwachte datum waarop de picking verwerkt kan worden"
+msgstr "Verwachte datum waarop de verzamelopdracht verwerkt kan worden"
 
 #. module: stock
 #: code:addons/stock/product.py:435
@@ -2446,7 +2450,7 @@ msgstr "Winst&Verlies hoeveelheid"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Pickings to invoice"
-msgstr "Interne pickings te factureren"
+msgstr "Interne verzamelopdrachten te factureren"
 
 #. module: stock
 #: view:stock.production.lot:0 field:stock.production.lot,revisions:0
@@ -2543,12 +2547,12 @@ msgstr "Bron"
 #: field:stock.inventory.line,inventory_id:0 report:stock.inventory.move:0
 #: selection:stock.location,usage:0
 msgid "Inventory"
-msgstr "Voorraad"
+msgstr "Voorraadtelling"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
 msgid "Picking List"
-msgstr "Picklijst"
+msgstr "Verzamellijst"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
@@ -2560,7 +2564,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Cancel Inventory"
-msgstr "Verwijder Voorraad"
+msgstr "Verwijder voorraadtelling"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -2640,7 +2644,7 @@ msgstr "Voorraadniveau prognose"
 #: field:report.stock.move,stock_journal:0 view:stock.journal:0
 #: field:stock.journal,name:0 field:stock.picking,stock_journal_id:0
 msgid "Stock Journal"
-msgstr "Voorraad dagboek"
+msgstr "Voorraadboek"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -2685,7 +2689,7 @@ msgstr "Producten leveren"
 #. module: stock
 #: view:stock.location.product:0
 msgid "View Stock of Products"
-msgstr "Beeld productenvoorraad"
+msgstr "Voorraad overzicht"
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -2810,7 +2814,7 @@ msgstr "Productie partijnummer"
 #: code:addons/stock/stock.py:2697
 #, python-format
 msgid "Inventory '%s' is done."
-msgstr "Telling '%s' is gereed."
+msgstr "Telling '%s' is verwerkt."
 
 #. module: stock
 #: field:stock.move,product_uos_qty:0
@@ -2913,7 +2917,7 @@ msgstr "Voorraadtelling referentie"
 #: code:addons/stock/stock.py:1334
 #, python-format
 msgid "Internal picking"
-msgstr "Interne picking"
+msgstr "Interne verzamelopdracht"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2945,7 +2949,7 @@ msgstr "Magazijn"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Confirm Inventory"
-msgstr "Bevestig Voorraad"
+msgstr "Bevestig Voorraadtelling"
 
 #. module: stock
 #: view:product.category:0
@@ -2963,7 +2967,7 @@ msgstr "Klant verpakkingen"
 #: view:stock.move:0 selection:stock.move,state:0 view:stock.picking:0
 #: selection:stock.picking,state:0
 msgid "Done"
-msgstr "Gereed"
+msgstr "Verwerkt"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_standard_price
@@ -2985,14 +2989,15 @@ msgstr "Te factureren"
 #. module: stock
 #: field:stock.inventory,date_done:0
 msgid "Date done"
-msgstr "Datum Gereed"
+msgstr "Datum verwerkt"
 
 #. module: stock
 #: code:addons/stock/stock.py:1083
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
-msgstr "Selecteer een relatie op een factuur aan te maken."
+msgstr ""
+"Voer een relatie bij de levering in, om een factuur aan te kunnen maken."
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -3100,7 +3105,7 @@ msgstr "Bovenliggende"
 #. module: stock
 #: field:stock.picking,address_id:0
 msgid "Address"
-msgstr "Adres"
+msgstr "Relatie"
 
 #. module: stock
 #: report:lot.stock.overview:0 report:lot.stock.overview_all:0
@@ -3175,12 +3180,13 @@ msgid ""
 "preconfigured logistics rules, but you can also record manual stock "
 "operations."
 msgstr ""
-"Interne leveringen geeft alle leveringsopdrachten weer, welke moeten worden "
-"uitgevoerd in het magazijn. Alle opdrachten  kunnen worden gecatalogiseerd "
-"in voorraad journaalposten, zodat iedere werknemer zijn eigen lijst met uit "
-"te voeren opdrachten heeft in zijn eigen dagboek. De meeste opdrachten "
-"worden door OpenERP automatisch voorbereid, volgens de voorgedefinieerde "
-"regels, maar het kunnen ook handmatige voorraadverwerkingen zijn."
+"Interne leveringen geeft alle voorraadmutatie opdrachten weer, welke moeten "
+"worden uitgevoerd in het magazijn. Alle opdrachten  kunnen worden "
+"gecatalogiseerd in voorraad journaalposten, zodat iedere werknemer zijn "
+"eigen lijst met uit te voeren opdrachten heeft in zijn eigen dagboek. De "
+"meeste opdrachten worden door OpenERP automatisch voorbereid, volgens de "
+"voorgedefinieerde regels, maar het kunnen ook handmatige "
+"voorraadverwerkingen zijn."
 
 #. module: stock
 #: view:stock.move:0
@@ -3258,7 +3264,7 @@ msgstr "Bestemming"
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "All at once"
-msgstr "Allen te gelijk"
+msgstr "Lever alles tegelijk"
 
 #. module: stock
 #: code:addons/stock/stock.py:1698
@@ -3331,7 +3337,7 @@ msgstr "Ijs"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking
 msgid "Partial Picking Processing Wizard"
-msgstr "Deel picking verwerking wizard"
+msgstr "Gedeeltelijke verzamelopdracht verwerking wizard"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -3425,13 +3431,13 @@ msgstr "Geannuleerd"
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Delivery Orders"
-msgstr "Bevestigde leveringsopdrachten"
+msgstr "Bevestigde uitgaande leveringen"
 
 #. module: stock
 #: view:stock.move:0 field:stock.partial.move,picking_id:0
 #: field:stock.partial.picking,picking_id:0
 msgid "Picking"
-msgstr "Picking"
+msgstr "Verzamelen"
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -3442,14 +3448,14 @@ msgstr "Het specificeert goederen welke in één keer geleverd moeten worden"
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:96
 #, python-format
 msgid "This picking list does not require invoicing."
-msgstr "Deze picklijst hoeft niet te worden gefactureerd"
+msgstr "Deze verzamellijst hoeft niet te worden gefactureerd"
 
 #. module: stock
 #: selection:report.stock.move,type:0
 #: selection:stock.location,chained_picking_type:0
 #: selection:stock.picking,type:0
 msgid "Getting Goods"
-msgstr "Getting Goods"
+msgstr "Goederen ontvangen"
 
 #. module: stock
 #: help:stock.location,chained_location_type:0
@@ -3470,9 +3476,9 @@ msgstr ""
 "zou direct moeten gaan naar de gekoppelde locatie. De gekoppelde locatie "
 "wordt bepaald volgens het soort:\n"
 "* Geen: Geen enkele koppeling\n"
-"* Klant: De gekoppelde locatie van het klantlocatie veld in het relatie "
-"bestand, van de relatie gespecificeerd in de picklijst van de inkomende "
-"producten, wordt gebruikt.\n"
+"* Klant: Voor de gekoppelde locatie wordt het locatieveld (in het "
+"relatiebestand)  van de relatie welke is ingevoerd in de inkomende of "
+"uitgaande levering.\n"
 "* Vaste locatie: De gekoppelde locatie wordt gebruikt van het volgende veld: "
 "Gekoppelde locatie is vast."
 
@@ -3489,7 +3495,7 @@ msgstr "Waarschuwing"
 #: code:addons/stock/stock.py:1348
 #, python-format
 msgid "is done."
-msgstr "is gereed."
+msgstr "is verwerkt."
 
 #. module: stock
 #: field:stock.production.lot.revision,date:0
@@ -3502,12 +3508,12 @@ msgstr "Revisiedatum"
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree view:stock.picking:0
 msgid "Delivery Orders"
-msgstr "Leveringsopdrachten"
+msgstr "Uitgaande leveringen"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders already processed"
-msgstr "Leveringsopdrachten reeds verwerkt"
+msgstr "Uitgaande leveringen reeds verwerkt"
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
@@ -3563,7 +3569,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
 msgid "Related Picking"
-msgstr "Gekoppelde picking"
+msgstr "Gekoppelde verzamelopdracht"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -3664,7 +3670,7 @@ msgstr "Gekoppeld dagboek"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
 msgid "Packing list"
-msgstr "Pakbon"
+msgstr "Verzamellijst"
 
 #. module: stock
 #: code:addons/stock/stock.py:738
@@ -3763,7 +3769,7 @@ msgstr "Retour producten"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Validate Inventory"
-msgstr "Bevestig voorraadtelling"
+msgstr "Goedkeuren voorraadtelling"
 
 #. module: stock
 #: help:stock.move,price_currency_id:0
@@ -3772,8 +3778,8 @@ msgid ""
 "picking confirmation (when average price costing method is used)"
 msgstr ""
 "Technisch veld wat wordt gebruikt om de door de gebruiker gekozen valuta op "
-"te slaan, tijdens een picking bevestiging (wanneer de gemiddelde inkoopprijs "
-"methode wordt gebruikt)"
+"te slaan, tijdens een verzamelopdracht bevestiging (wanneer de gemiddelde "
+"inkoopprijs methode wordt gebruikt)"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
@@ -3799,7 +3805,7 @@ msgstr "Max. datum verwacht"
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Picking"
-msgstr "Auto-Picking"
+msgstr "Auto-verzamelopdracht"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
@@ -3843,7 +3849,8 @@ msgstr ""
 "Wanneer een voorraadmutatie is aangemaakt is deze in de 'Concept' status.\n"
 " Daarna wordt deze ingesteld op de 'Bevestigd'.\n"
 " Als voorraad beschikbaar is wordt de status ingesteld op 'Beschikbaar'.\n"
-" Wanneer de picking gedaan is, dan wordt de status ingesteld op 'Gereed'.\n"
+" Wanneer de verzamelopdracht gedaan is, dan wordt de status ingesteld op "
+"'Verwerkt'.\n"
 "De status is 'Wachtend' als een mutatie aan het wachten is op een andere "
 "mutatie."
 
@@ -3877,7 +3884,8 @@ msgstr "is gereed om te verwerken"
 #. module: stock
 #: help:stock.picking,origin:0
 msgid "Reference of the document that produced this picking."
-msgstr "Referentie van het document dat deze picking heeft veroorzaakt"
+msgstr ""
+"Referentie van het document dat deze verzamelopdracht heeft veroorzaakt"
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
@@ -3893,7 +3901,7 @@ msgstr "Gebruiker"
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:98
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr "Geen van deze pickinglijsten vereist factureering"
+msgstr "Geen van deze verzamellijsten vereist factureering"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -3952,7 +3960,7 @@ msgstr "Mutatiehistorie (bovenliggende mutaties)"
 #: code:addons/stock/product.py:423
 #, python-format
 msgid "Future Stock"
-msgstr "Voorraad in de tijd"
+msgstr "Virtuele voorraad"
 
 #. module: stock
 #: code:addons/stock/stock.py:513 code:addons/stock/stock.py:1149
@@ -4100,8 +4108,8 @@ msgid ""
 "There are no products to return (only lines in Done state and not fully "
 "returned yet can be returned)!"
 msgstr ""
-"Er zijn geen producten retour te nemen (alleen regels die gereed zijn en nog "
-"niet volledig retour genomen zijn kunnen retour genomen worden)!"
+"Er zijn geen producten retour te nemen (alleen regels die verwerkt zijn en "
+"nog niet volledig retour genomen zijn kunnen retour genomen worden)!"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -4163,7 +4171,7 @@ msgstr "Voorraadafname rekening"
 #. module: stock
 #: field:stock.location,chained_location_type:0
 msgid "Chained Location Type"
-msgstr "Vastgezette locatiesoort"
+msgstr "Gekoppelde locatiesoort"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots

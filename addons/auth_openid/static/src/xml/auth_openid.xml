@@ -3,7 +3,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-extend="Login">
-        <t t-jquery=".login .pane div#logo" t-operation="after">
+        <t t-jquery=".oe_login .oe_login_logo" t-operation="after">
             <ul class="openid_providers">
                 <li><a href="#login,password" title="Password" data-url="" id="btn_password">Password</a></li>
                 <li><a href="#google" title="Google" data-url="https://www.google.com/accounts/o8/id">Google</a></li>
@@ -13,25 +13,8 @@
             </ul>
         </t>
     </t>
-
     <t t-extend="Login">
-        <t t-jquery=".oe_box2 tr:first" t-operation="after">
-            <tr>
-                <td><label for="googleapps">Google Apps Domain:</label></td>
-                <td><input type="text" name="googleapps" /></td>
-            </tr>
-            <tr>
-                <td><label for="launchpad">Username:</label></td>
-                <td><input type="text" name="launchpad" /></td>
-            </tr>
-            <tr>
-                <td><label for="openid_url">OpenID URL:</label></td>
-                <td><input type="text" name="openid_url" /></td>
-            </tr>
-        </t>
-    </t>
-    <t t-extend="Login">
-        <t t-jquery=".login .pane form ul li:nth-child(4)" t-operation="after">
+        <t t-jquery=".oe_login .oe_login_pane form ul li:nth-child(4)" t-operation="after">
             <li>
                 Google Apps Domain
             </li>
@@ -54,7 +37,7 @@
     </t>
 
     <t t-extend="Login">
-        <t t-jquery=".login .pane form ul li:has(input)">
+        <t t-jquery=".oe_login .oe_login_pane form ul li:has(input)">
             this.each(function() {
                 var $i = $(this),
                     dp = $i.find('input').attr('name');

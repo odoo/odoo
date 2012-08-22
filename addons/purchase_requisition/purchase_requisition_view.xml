@@ -4,11 +4,10 @@
 
     <record model="ir.ui.view" id="purchase_order_form_inherit">
         <field name="name">purchase.order.form.inherit</field>
-        <field name="type">form</field>
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
-            <field name="shipped" position="after">
+            <field name="validator" position="before">
                 <field name="requisition_id"/>
             </field>
         </field>
@@ -16,7 +15,6 @@
 
     <record model="ir.ui.view" id="purchase_order_search_inherit">
         <field name="name">purchase.order.list.select.inherit</field>
-        <field name="type">form</field>
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
@@ -28,25 +26,25 @@
 
     <record model="ir.ui.view" id="view_purchase_requisition_form">
         <field name="name">purchase.requisition.form</field>
-        <field name="type">form</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <form string="Purchase Requisition" version="7.0">
             <header>
-                <button name="tender_in_progress" states="draft" string="Send to Suppliers" type="object" />
+                <button name="tender_in_progress" states="draft" string="Send to Suppliers" type="object" class="oe_highlight"/>
                 <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" />
-                <button name="tender_done" states="in_progress" string=" Purchase Done" type="object" />
+                <button name="tender_done" states="in_progress" string="Purchase Done" type="object" class="oe_highlight"/>
                 <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" />
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
                 <div class="oe_edit_only">
-                    <label for="name" class="oe_inline"/>,
+                    <label for="name" class="oe_inline"/>
                     <label for="origin" class="oe_inline"/>
                 </div>
                 <h1>
-                    <field name="name" class="oe_inline"/>, 
-                    <field name="origin" class="oe_inline"/>
+                    <field name="name" class="oe_inline"/>
+                    <label string="," attrs="{'invisible':[('origin','=',False)]}"/>
+                    <field name="origin" class="oe_inline" placeholder="e.g. PO0025"/>
                 </h1>
                 <group>
                     <group>
@@ -93,7 +91,7 @@
                                 <field name="minimum_planned_date"/>
                                 <field name="origin"/>
                                 <field name="state"/>
-                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>                                
+                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>
                                 <button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-apply"/>
                                 <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-ok"/>
                             </tree>
@@ -103,15 +101,15 @@
                     </page>
                 </notebook>
             </sheet>
-            <footer>
-                  <field name="message_ids" widget="ThreadView"/>
-            </footer> 
+            <div class="oe_chatter">
+                  <field name="message_ids" widget="mail_thread"/>
+                  <field name="message_follower_ids" widget="mail_followers"/>
+            </div> 
             </form>
         </field>
     </record>
     <record model="ir.ui.view" id="view_purchase_requisition_tree">
         <field name="name">purchase.requisition.tree</field>
-        <field name="type">tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <tree fonts="bold:needaction_pending==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Purchase Requisition">
@@ -130,31 +128,23 @@
     <record id="view_purchase_requisition_filter" model="ir.ui.view">
             <field name="name">purchase.requisition.list.select</field>
             <field name="model">purchase.requisition</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
-                <group>
                     <field name="name" string="Purchase Requisition"/>
-                    <separator orientation="vertical"/>
+                    <field name="exclusive" />
                     <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Purchase Requisition"/>
                     <filter icon="terp-camera_test" string="Sent to Suppliers" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>
                     <filter icon="terp-dialog-close" string="Purchase Done" domain="[('state','=','done')]" help="Current Purchase Requisition"/>
-                    <separator orientation="vertical"/>
+                    <separator/>
                     <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
-                    <separator orientation="vertical"/>
                     <field name="user_id" />
-                    <field name="exclusive" />
-                </group>
-                <newline/>
-                <group expand="0" string="Group By...">
-                    <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
-                    <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
-                </group>
+                    <group expand="0" string="Group By...">
+                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -168,7 +158,17 @@
         <field name="view_mode">tree,form</field>
         <field name="context">{"search_default_create_uid":uid}</field>
         <field name="search_view_id" ref="view_purchase_requisition_filter"/>
-        <field name="help">A purchase requisition is the step before a request for quotation. In a purchase requisition (or purchase tender), you can record the products you need to buy and trigger the creation of RfQs to suppliers. After the negotiation, once you have reviewed all the supplier's offers, you can validate some and cancel others.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to start a new purchase requisition process. 
+          </p><p>
+            A purchase requisition is the step before a request for quotation.
+            In a purchase requisition (or purchase tender), you can record the
+            products you need to buy and trigger the creation of RfQs to
+            suppliers. After the negotiation, once you have reviewed all the
+            supplier's offers, you can validate some and cancel others.
+          </p>
+        </field>
     </record>
 
     <menuitem
@@ -179,7 +179,6 @@
 
     <record model="ir.ui.view" id="product_normal_form_view_inherit">
         <field name="name">product.form.inherit</field>
-        <field name="type">form</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
@@ -193,7 +192,6 @@
 
     <record model="ir.ui.view" id="procurement_normal_form_view_inherit">
         <field name="name">procurement.form.inherit</field>
-        <field name="type">form</field>
         <field name="model">procurement.order</field>
         <field name="inherit_id" ref="procurement.procurement_form_view"/>
         <field name="arch" type="xml">

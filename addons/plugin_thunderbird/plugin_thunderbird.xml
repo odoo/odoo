@@ -4,20 +4,13 @@
         <record id="view_thunderbird_installer" model="ir.ui.view">
             <field name="name">plugin_thunderbird.installer.view</field>
             <field name="model">plugin_thunderbird.installer</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
                 <data>
                     <form position="attributes">
                         <attribute name="string">Install Thunderbird Plug-In</attribute>
                     </form>
-                     <separator string="title" position="before">
-                        <label string="This plug-in allows you to link your email to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."/>
-                    </separator>
-                    <xpath expr="//button[@string='Install Modules']" position="replace">
-                        <button colspan="1" icon="gtk-close" special="cancel" string="_Close"/>
-                    </xpath>
-                    <xpath expr="//button[@string='Cancel']" position="replace"></xpath>
+                    <xpath expr="//footer" position="replace"/>
                     <xpath expr="//separator[@string='title']" position="after">
                         <group>
                             <field name="thunderbird" invisible="1"/>
@@ -38,7 +31,7 @@
                         </ul>
                     </xpath>
                     <separator string="title" position="attributes">
-                         <attribute name="string">Install Thunderbird Plug-In</attribute>
+                        <attribute name="string"></attribute>
                     </separator>
                 </data>
             </field>
@@ -58,17 +51,16 @@
         <record id="view_config_thunderbird_installer" model="ir.ui.view">
             <field name="name">Sales Application</field>
             <field name="model">sale.config.settings</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <field name="module_plugin_thunderbird" version="7.0" position="replace">
-                    <label for="module_plugin_thunderbird"/>
+                <div name="module_plugin_thunderbird" version="7.0" position="replace">
                     <div>
-                        <field name="module_plugin_thunderbird"/>
-                        <button name="%(action_thunderbird_installer)d" type="action" string="Configure" icon="gtk-execute"
-                            attrs="{'invisible': [('module_plugin_thunderbird','=',False)]}"/>
+                        <field name="module_plugin_thunderbird" class="oe_inline"/>
+                        <label for="module_plugin_thunderbird"/>
+                        <button name="%(action_thunderbird_installer)d" type="action" string="Download and install the plugin" icon="gtk-execute"
+                            attrs="{'invisible': [('module_plugin_thunderbird','=',False)]}" class="oe_link"/>
                     </div>
-                </field>
+                </div>
             </field>
         </record>
 

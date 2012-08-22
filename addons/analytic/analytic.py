@@ -140,7 +140,7 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             if account.company_id:
                 if account.company_id.currency_id.id != value:
-                    raise osv.except_osv(_('Error !'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
+                    raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
         return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
 
     def _currency(self, cr, uid, ids, field_name, arg, context=None):
@@ -161,6 +161,7 @@ class account_analytic_account(osv.osv):
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
                                   "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
                                   "The special type 'Template of Project' allows you to define a template with default data that you can reuse easily."),
+        'template_id': fields.many2one('account.analytic.account', 'Template of Contract'),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
@@ -183,6 +184,17 @@ class account_analytic_account(osv.osv):
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
     }
+    
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        if not template_id:
+            return {}
+        res = {'value':{}}
+        template = self.browse(cr, uid, template_id, context=context)
+        res['value']['date_start'] = template.date_start
+        res['value']['date'] = template.date
+        res['value']['quantity_max'] = template.quantity_max
+        res['value']['description'] = template.description
+        return res
     
     def on_change_partner_id(self, cr, uid, ids,partner_id, name, context={}):
         res={}
@@ -220,7 +232,7 @@ class account_analytic_account(osv.osv):
 
     _order = 'name asc'
     _constraints = [
-        (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id']),
+        (check_recursion, 'Error! You cannot create recursive analytic accounts.', ['parent_id']),
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -285,7 +297,6 @@ class account_analytic_account(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
             self.message_append_note(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
 
 account_analytic_account()
@@ -321,7 +332,7 @@ class account_analytic_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_no_view, 'You can not create analytic line on view account.', ['account_id']),
+        (_check_no_view, 'You cannot create analytic line on view account.', ['account_id']),
     ]
 
 account_analytic_line()

@@ -4,7 +4,6 @@
         <record id="account_analytic_account_form_expense_form" model="ir.ui.view">
             <field name="name">account.analytic.account.form.expense.inherit</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field eval="60" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//tr[@name="total"]' position='before'>
@@ -35,7 +34,6 @@
         <!--<record id="project_form_expense_form" model="ir.ui.view">
             <field name="name">project.project.form.expense.inherit</field>
             <field name="model">project.project</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="analytic_contract_project.project_account_analytic_account_form"/>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">

@@ -16,35 +16,26 @@
         <record id="view_account_analytic_account_overdue_search" model="ir.ui.view">
             <field name="name">account.analytic.account.search</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Account">
-                    <group col="8" colspan="4">
-                        <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-camera_test" name="open" string="Open" domain="[('state','in',('open','draft'))]" help="Contracts in progress"/>
-                        <filter icon="terp-gtk-media-pause" name="pending" string="Pending" domain="[('state','=','pending')]" help="Pending contracts to renew with your customer"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="To Renew" domain="['|', '&amp;', ('date', '!=', False), ('date', '&lt;=', time.strftime('%%Y-%%m-%%d')), ('is_overdue_quantity', '=', True)]"
-                            name="renew"
-                            help="The contracts to be renewed because the deadline is passed or the working hours are higher than the allocated hours" />
-                        <separator orientation="vertical"/>
-                        <filter string="Contracts Having a Partner" help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
-                        <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
-                        <separator orientation="vertical"/>
-                        <field name="partner_id"/>
-                        <field name="user_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
+                    <field name="date"/>
+                    <filter icon="terp-camera_test" name="open" string="Open" domain="[('state','in',('open','draft'))]" help="Contracts in progress"/>
+                    <filter icon="terp-gtk-media-pause" name="pending" string="Pending" domain="[('state','=','pending')]" help="Pending contracts to renew with your customer"/>
+                    <separator/>
+                    <filter icon="terp-go-today" string="To Renew" domain="['|', '&amp;', ('date', '!=', False), ('date', '&lt;=', time.strftime('%%Y-%%m-%%d')), ('is_overdue_quantity', '=', True)]" name="renew"
+                        help="The contracts to be renewed because the deadline is passed or the working hours are higher than the allocated hours" />
+                    <separator/>
+                    <filter string="Contracts Having a Partner" help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
+                    <separator/>
+                    <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Status" icon="terp-personal" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Parent" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by' : 'date_start'}" />
                         <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
                     </group>
@@ -61,7 +52,19 @@
             <field name="context">{'search_default_user_id':uid, 'search_default_draft':1, 'search_default_pending':1, 'search_default_open':1, 'search_default_renew':1}</field>
             <field name="domain">[('type','=','contract')]</field>
             <field name="search_view_id" ref="view_account_analytic_account_overdue_search"/>
-            <field name="help">You will find here the contracts to be renewed because the deadline is passed or the working hours are higher than the allocated hours. OpenERP automatically sets these analytic accounts to the pending state, in order to raise a warning during the timesheets recording. Salesmen should review all pending accounts and reopen or close the according to the negotiation with the customer.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new contract.
+              </p><p>
+                You will find here the contracts to be renewed because the
+                end date is passed or the working effort is higher than the
+                maximum authorized one.
+              </p><p>
+                OpenERP automatically sets contracts to be renewed in a pending
+                state. After the negociation, the salesman should close or renew
+                pending contracts.
+              </p>
+            </field>
         </record>
         <menuitem action="action_account_analytic_overdue" id="menu_action_account_analytic_overdue" sequence="50" parent="base.menu_invoiced"/>
 
@@ -77,7 +80,7 @@
         <menuitem id="base.menu_sales" name="Sales"
             parent="base.menu_base_partner"
             sequence="1"/>
-        <menuitem action="action_account_analytic_overdue_all" id="menu_action_account_analytic_overdue_all" sequence="6" parent="base.menu_sales"/>
+        <menuitem action="action_account_analytic_overdue_all" id="menu_action_account_analytic_overdue_all" sequence="7" parent="base.menu_sales"/>
 
 
     </data>

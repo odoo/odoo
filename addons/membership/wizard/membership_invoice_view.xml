@@ -5,17 +5,17 @@
         <record id="view_membership_invoice_view" model="ir.ui.view">
             <field name="name">membership.invoice.view.form</field>
             <field name="model">membership.invoice</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Membership Invoice" version="7.0">
-                    <header>
-                        <button  icon="gtk-apply" string="Join" name="membership_invoice" type="object"/>
-                        <button  icon="gtk-close" special="cancel" string="Close"/>
-                    </header>
                     <group>
                         <field name="product_id" domain="[('membership','=',True)]" widget="selection" on_change="onchange_product(product_id)"/>
                         <field name="member_price"/>
                     </group>
+                    <footer>
+                        <button string="Join" name="membership_invoice" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

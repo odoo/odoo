@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-22 04:41+0000\n"
-"X-Generator: Launchpad (build 15461)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:07+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -479,11 +479,10 @@ msgid ""
 "amount of each area of the tax declaration for your country. It’s presented "
 "in a hierarchical structure, which can be modified to fit your needs."
 msgstr ""
-"Skattetabellen är en trädvy som återspeglar strukturen i de skatteklasser "
-"(eller skattekoder) och visar den aktuella skattesituationen. Tabellen "
-"representerar den mängd varje område av deklarationen för ditt land. Det "
-"presenteras i en hierarkisk struktur, som kan ändras för att passa dina "
-"behov."
+"Skattetabellen är en trädvy som återspeglar skatteklassernas (eller "
+"skattekodernas) struktur och visar den aktuella skattesituationen. Tabellen "
+"representerar de belopp för varje ruta i ditt lands deklaration, presenterat "
+"i en hierarkisk struktur, som kan ändras för att passa dina behov."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -660,7 +659,7 @@ msgstr "Period saknas eller flera perioder finns för det givna datumet."
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
 msgid "Tax Code Amount"
-msgstr "Tax Code Amount"
+msgstr "Skattekodsbelopp"
 
 #. module: account
 #: code:addons/account/account.py:3116
@@ -730,7 +729,7 @@ msgstr "Skriv ut faktura"
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr "Partners Sammanslagna Idag"
+msgstr "Avstämda företag idag"
 
 #. module: account
 #: view:report.hr.timesheet.invoice.journal:0
@@ -1249,7 +1248,7 @@ msgstr "Moms vid inköp"
 #: field:account.tax.template,tax_code_id:0
 #: model:ir.model,name:account.model_account_tax_code
 msgid "Tax Code"
-msgstr "Momskod"
+msgstr "Skattekod"
 
 #. module: account
 #: field:account.account,currency_mode:0
@@ -1466,7 +1465,7 @@ msgstr "Central Journal"
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With balance is not equal to 0"
-msgstr "With balance is not equal to 0"
+msgstr "Med balans skilt från 0"
 
 #. module: account
 #: view:account.tax:0
@@ -1577,7 +1576,7 @@ msgstr "Mall för skatteregion"
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
 msgid "Reconciled transactions"
-msgstr "Reconciled transactions"
+msgstr "Avstämda transaktioner"
 
 #. module: account
 #: field:account.journal.view,columns_id:0
@@ -1726,7 +1725,7 @@ msgstr "Okänt företag"
 #. module: account
 #: field:account.tax.code,sum:0
 msgid "Year Sum"
-msgstr "Year Sum"
+msgstr "Årtotal"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1429
@@ -2075,7 +2074,7 @@ msgstr "Öppna verifikat"
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
-msgstr "Konton att balansera"
+msgstr "Konton att stämma av"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
@@ -2472,7 +2471,7 @@ msgstr "30 dagar månadsskiftet"
 #. module: account
 #: view:account.entries.report:0
 msgid "Unreconciled entries"
-msgstr "Ej avstämda transaktioner"
+msgstr "Oavstämda poster"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -2713,13 +2712,13 @@ msgstr "Automatisk avstämning"
 #. module: account
 #: field:account.invoice,reconciled:0
 msgid "Paid/Reconciled"
-msgstr "Betald/Återbetald"
+msgstr "Betald/avstämd"
 
 #. module: account
 #: field:account.tax,ref_base_code_id:0
 #: field:account.tax.template,ref_base_code_id:0
 msgid "Refund Base Code"
-msgstr "Refund Base Code"
+msgstr "Återbetalningskod"
 
 #. module: account
 #: selection:account.tax.template,applicable_type:0
@@ -3337,7 +3336,7 @@ msgstr "  Värdebelopp: 0.02"
 #: model:ir.actions.act_window,name:account.open_board_account
 #: model:ir.ui.menu,name:account.menu_board_account
 msgid "Accounting Dashboard"
-msgstr "Redovisningsdashboard"
+msgstr "Redovisningsinfopanel"
 
 #. module: account
 #: field:account.bank.statement,balance_start:0
@@ -3387,7 +3386,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "Unreconcile Entries"
+msgstr "Oavstämda poster"
 
 #. module: account
 #: field:account.tax.code,notprintable:0
@@ -3462,7 +3461,7 @@ msgstr "Sök affärshändelse"
 #: field:account.tax.code,name:0
 #: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
-msgstr "Tax Case Name"
+msgstr "Skatteklass"
 
 #. module: account
 #: report:account.invoice:0
@@ -3520,7 +3519,7 @@ msgstr "Försäljningskonto per kontotyp"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr "Obalanserade transaktioner"
+msgstr "Oavstämda verifikat"
 
 #. module: account
 #: sql_constraint:res.currency:0
@@ -3646,7 +3645,7 @@ msgstr "Bokför"
 #: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconcile"
-msgstr "Unreconcile"
+msgstr "Oavstäm"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3678,7 +3677,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:837
 #, python-format
 msgid "Some entries are already reconciled !"
-msgstr "Some entries are already reconciled !"
+msgstr "Vissa poster är redan avstämda !"
 
 #. module: account
 #: view:account.tax:0
@@ -3726,14 +3725,14 @@ msgid ""
 "If not applicable (computed through a Python code), the tax won't appear on "
 "the invoice."
 msgstr ""
-"If not applicable (computed through a Python code), the tax won't appear on "
-"the invoice."
+"Om ej tillämpligt (beräknas med Pythonkod), kommer skatten inte att visas på "
+"fakturan."
 
 #. module: account
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Applicable Code (if type=code)"
-msgstr "Applicable Code (if type=code)"
+msgstr "Gäller Kod (om type = kod)"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -3771,7 +3770,8 @@ msgstr "Betalorder"
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
-"Check this option if you want the user to reconcile entries in this account."
+"Markera det här alternativet om du vill att användaren ska stämma av poster "
+"i detta konto."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_account_balance_landscape
@@ -4019,7 +4019,7 @@ msgstr "Visningskonton"
 #. module: account
 #: view:account.state.open:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(Invoice should be unreconciled if you want to open it)"
+msgstr "(fakturan skall vara oavstämd om du vill öppna den)"
 
 #. module: account
 #: field:account.chart,period_from:0
@@ -4243,7 +4243,7 @@ msgstr "Tax Lines"
 #. module: account
 #: field:account.tax,base_code_id:0
 msgid "Account Base Code"
-msgstr "Konto bas kod"
+msgstr "Kontobaskod"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:93
@@ -4387,7 +4387,7 @@ msgstr "Kontoutdrag är registrerade"
 #: code:addons/account/wizard/account_reconcile.py:133
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr "Beräkna avskrivning"
+msgstr "Stäm av avskrivning"
 
 #. module: account
 #: view:report.account.receivable:0
@@ -4641,7 +4641,7 @@ msgstr "Unreconciliation Transactions"
 #: field:account.tax,ref_tax_code_id:0
 #: field:account.tax.template,ref_tax_code_id:0
 msgid "Refund Tax Code"
-msgstr "Refund Tax Code"
+msgstr "Återbetalningsskattekod"
 
 #. module: account
 #: view:validate.account.move:0
@@ -4710,7 +4710,7 @@ msgstr "Mina fakturor"
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
 msgid "Check"
-msgstr "Markera"
+msgstr "Check"
 
 #. module: account
 #: view:account.invoice:0
@@ -5069,7 +5069,7 @@ msgstr "Betalningar"
 #. module: account
 #: view:account.tax:0
 msgid "Reverse Compute Code"
-msgstr "Backberäknings kod"
+msgstr "Återberäkningskod"
 
 #. module: account
 #: field:account.subscription.line,move_id:0
@@ -5080,7 +5080,7 @@ msgstr "Konteringspost"
 #: field:account.tax,python_compute_inv:0
 #: field:account.tax.template,python_compute_inv:0
 msgid "Python Code (reverse)"
-msgstr "Python Code (reverse)"
+msgstr "Pythonkod (bakåt)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -5222,7 +5222,7 @@ msgstr "Ingen period är vald för fakturan!"
 #. module: account
 #: view:account.tax.template:0
 msgid "Compute Code (if type=code)"
-msgstr "Compute Code (if type=code)"
+msgstr "Beräkna kod (if type=code)"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -5413,7 +5413,7 @@ msgstr "Du kan inte skapa mer än en transaktion per period i huvudboken."
 #: field:account.tax.template,ref_tax_sign:0
 #: field:account.tax.template,tax_sign:0
 msgid "Tax Code Sign"
-msgstr "Tax Code Sign"
+msgstr "Skattekodstecken"
 
 #. module: account
 #: model:ir.model,name:account.model_report_invoice_created
@@ -5532,7 +5532,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_move_line
 msgid "Lines to reconcile"
-msgstr "Rader att balansera"
+msgstr "Rader att stämma av"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -6895,7 +6895,7 @@ msgstr ""
 "Du kan inte göra denna ändring på en avstämd transaktion! Du kan bara ändra "
 "vissa icke bokföringsinformation eller så måste du göra transaktionen "
 "oavstämd först!\n"
-"% s"
+"%s"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -7081,7 +7081,7 @@ msgstr ""
 #: field:account.tax.code,child_ids:0
 #: field:account.tax.code.template,child_ids:0
 msgid "Child Codes"
-msgstr "Child Codes"
+msgstr "Underkoder"
 
 #. module: account
 #: view:account.tax.template:0
@@ -7380,7 +7380,7 @@ msgstr "Ok"
 #. module: account
 #: field:account.chart.template,tax_code_root_id:0
 msgid "Root Tax Code"
-msgstr "Root Tax Code"
+msgstr "skattekodsrot"
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -7701,7 +7701,7 @@ msgstr "Icke bokförda verifikat"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Sales Properties"
-msgstr "Sales Properties"
+msgstr "Försäljningsegenskaper"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
@@ -7802,7 +7802,7 @@ msgstr "Numreringsfältet används för stigande sortering"
 #: field:account.tax.code,code:0
 #: field:account.tax.code.template,code:0
 msgid "Case Code"
-msgstr "Ärendekod"
+msgstr "Skatteklasskod"
 
 #. module: account
 #: view:validate.account.move:0
@@ -8229,7 +8229,7 @@ msgstr "You must first select a partner !"
 #: view:account.invoice:0
 #: field:account.invoice,comment:0
 msgid "Additional Information"
-msgstr "Additional Information"
+msgstr "Ytterligare information"
 
 #. module: account
 #: help:account.invoice,state:0
@@ -8681,7 +8681,7 @@ msgstr "Kontakter"
 #: view:account.tax.code.template:0
 #: field:account.tax.code.template,parent_id:0
 msgid "Parent Code"
-msgstr "Parent Code"
+msgstr "Överliggande kod"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
@@ -9033,7 +9033,7 @@ msgstr "Öppna transaktionsjournal"
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
 msgid "Draft invoices are checked, validated and printed."
-msgstr "Priliminära fakturor är kontrollerade, validerade och utskrivna."
+msgstr "Preliminära fakturor är kontrollerade, validerade och utskrivna."
 
 #. module: account
 #: help:account.chart.template,property_reserve_and_surplus_account:0
@@ -9317,7 +9317,7 @@ msgstr "Obetald"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
 msgid "Tax Code Template"
-msgstr "Tax Code Template"
+msgstr "Skattekodsmall"
 
 #. module: account
 #: report:account.overdue:0
@@ -9446,7 +9446,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_reconcile.py:152
 #, python-format
 msgid "You must select accounts to reconcile"
-msgstr "You must select accounts to reconcile"
+msgstr "Du måste välja konton att stämma av"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
@@ -9558,8 +9558,8 @@ msgid ""
 "The journal must have centralised counterpart without the Skipping draft "
 "state option checked!"
 msgstr ""
-"The journal must have centralised counterpart without the Skipping draft "
-"state option checked!"
+"Journalen ska ha centraliserat motkonto som inte har alternativet att hoppar "
+"över utkastläget!"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -10458,7 +10458,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:832
 #, python-format
 msgid "Entry is already reconciled"
-msgstr "Entry is already reconciled"
+msgstr "Verifikat är redan avstämd"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
@@ -10509,7 +10509,7 @@ msgstr "Account Data"
 #. module: account
 #: view:account.tax.code.template:0
 msgid "Account Tax Code Template"
-msgstr "Account Tax Code Template"
+msgstr "Kontoskattekodsmall"
 
 #. module: account
 #: model:process.node,name:account.process_node_manually0
@@ -10592,11 +10592,11 @@ msgid ""
 msgstr ""
 "Skapa och hantera ditt företags journaler från denna meny. En journal som "
 "används för att registrera transaktioner för alla redovisningsdata knutet "
-"till den dagliga verksamheten i ditt företag som använder dubbel bokföring "
-"system. Beroende på arten av sin verksamhet och antalet dagliga "
-"transaktioner kan ett företag ha flera typer av specialiserade journaler som "
-"till exempel journalen för kontantförsäljning,  inköpsjournalen och "
-"försäljningsjournalen ..."
+"till den dagliga verksamheten i ditt företag som använder dubbel bokföring. "
+"Beroende på arten av sin verksamhet och antalet dagliga transaktioner kan "
+"ett företag ha flera typer av specialiserade journaler som till exempel "
+"journalen för kontantförsäljning,  inköpsjournalen och försäljningsjournalen "
+"..."
 
 #. module: account
 #: view:account.payment.term:0
@@ -12903,9 +12903,6 @@ msgstr ""
 #~ msgid "Receivable Accounts"
 #~ msgstr "Kundfordringskonton"
 
-#~ msgid "Tax codes"
-#~ msgstr "Skattedeklarationsrubriker"
-
 #~ msgid "Install your Chart of Accounts"
 #~ msgstr "Installera din kontoplan"
 
@@ -12929,3 +12926,6 @@ msgstr ""
 
 #~ msgid "Reconciliation transactions"
 #~ msgstr "Avstämningstransaktioner"
+
+#~ msgid "Tax codes"
+#~ msgstr "Skattekoder"

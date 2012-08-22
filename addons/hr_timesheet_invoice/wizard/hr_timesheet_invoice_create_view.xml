@@ -5,13 +5,8 @@
         <record id="view_hr_timesheet_invoice_create" model="ir.ui.view">
             <field name="name">hr.timesheet.invoice.create.form</field>
             <field name="model">hr.timesheet.invoice.create</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Create Invoice" version="7.0">
-                <header>
-                    <button name="do_create" string="Create Invoices" type="object" icon="terp-gtk-go-back-rtl"/>
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                </header>
                 <notebook>
                     <page string="Billing Data">
                        <group>
@@ -24,13 +19,14 @@
                        <group  string="Force to use a specific product">
                            <field name="product"/>
                        </group>
-                       <group colspan="4">
-                          <button special="cancel" string="Cancel" icon='gtk-cancel' colspan="1"/>
-                          <button name="do_create" string="Create Invoices" colspan="1" type="object" icon="terp-gtk-go-back-rtl"/>
-                       </group>
                        </group>
                     </page>
                 </notebook>
+                <footer>
+                    <button name="do_create" string="Create Invoices" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>

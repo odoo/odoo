@@ -5,16 +5,14 @@
     <record id="view_hr_expense_report_tree" model="ir.ui.view">
         <field name="name">hr.expense.report.tree</field>
         <field name="model">hr.expense.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'" string="Expenses Analysis">
-                <field name="date" invisible="1"/>
+            <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','done');gray:state == 'cancelled'" string="Expenses Analysis">
                 <field name="employee_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="day" invisible="1"/>
-                <field name="invoice_id" invisible="1"/>
+                <field name="voucher_id" invisible="1"/>
                 <field name="analytic_account" invisible="1" groups="analytic.group_analytic_accounting"/>
                 <field name="department_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
@@ -24,7 +22,6 @@
                 <field name="state" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="no_of_products" sum="# of Products"/>
-                <field name="invoiced" sum="Total Invoiced Lines"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay_confirm"/>
@@ -36,7 +33,6 @@
     <record id="view_hr_expense_report_graph" model="ir.ui.view">
          <field name="name">hr.expense.report.graph</field>
          <field name="model">hr.expense.report</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Expenses Analysis" type="bar">
                  <field name="employee_id"/>
@@ -49,49 +45,33 @@
     <record id="view_hr_expense_report_search" model="ir.ui.view">
         <field name="name">hr.expense.report.search</field>
         <field name="model">hr.expense.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Expenses Analysis">
-              <group>
-                    <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]"
-                      help = "Confirm Expenses"/>
-                    <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]"
-                      help = "Approved Expenses"/>
-                    <filter string="Invoiced" icon="terp-dolar" domain="[('state','in', ('invoiced', 'paid'))]"
-                      help = "Invoiced Expenses"/>
-                    <separator orientation="vertical"/>
-                    <field name="employee_id"/>
-                    <field name="department_id"/>
-            </group>
-            <newline/>
-            <group expand="0" string="Extended Filters...">
-                <field name="product_id"/>
-                <separator orientation="vertical"/>
-                <field name="user_id"/>
-                <separator orientation="vertical"/>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                <newline/>
-                <field name="date" string="Creation Date"/>
-                <field name="date_confirm"/>
-                <field name="date_valid"/>
-            </group>
-            <newline/>
-            <group expand="1" string="Group By...">
-                <filter string="Employee" name="employee" icon="terp-personal" context="{'group_by':'employee_id'}"/>
-                <filter string="Validation User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
-                <separator orientation="vertical"/>
-                <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
-                <filter string="Analytic account" icon="terp-folder-green" context="{'group_by':'analytic_account'}" groups="analytic.group_analytic_accounting"/>
-                <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
-                <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                <separator orientation="vertical"/>
-                <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Creation Date"/>
-                <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Creation Date"/>
-                <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Creation Date"/>
-            </group>
+                <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]" help = "Confirm Expenses"/>
+                <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]" help = "Approved Expenses"/>
+                <filter string="Done" icon="terp-dolar" domain="[('state','=', 'done')]" help = "Done Expenses"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <group expand="0" string="Extended Filters...">
+                    <field name="product_id"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date" string="Creation Date"/>
+                    <field name="date_confirm"/>
+                    <field name="date_valid"/>
+                </group>
+                <group expand="1" string="Group By...">
+                    <filter string="Employee" name="employee" icon="terp-personal" context="{'group_by':'employee_id'}"/>
+                    <filter string="Validation User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                    <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                    <filter string="Analytic account" icon="terp-folder-green" context="{'group_by':'analytic_account'}" groups="analytic.group_analytic_accounting"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Creation Date"/>
+                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Creation Date"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Creation Date"/>
+                </group>
             </search>
         </field>
     </record>
@@ -105,7 +85,7 @@
         <field name="search_view_id" ref="view_hr_expense_report_search"/>
     </record>
 
-    <menuitem action="action_hr_expense_report_all" id="menu_hr_expense_report_all" parent="hr.menu_hr_reporting" sequence="2"/>
+    <menuitem action="action_hr_expense_report_all" id="menu_hr_expense_report_all" parent="hr.menu_hr_reporting" sequence="1"/>
 
 </data>
 </openerp>

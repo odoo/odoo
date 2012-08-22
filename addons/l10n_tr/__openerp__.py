@@ -23,10 +23,11 @@
     'category': 'Localization/Account Charts',
     'description': """
 Türkiye için Tek düzen hesap planı şablonu OpenERP Modülü.
-==============================================================================
+==========================================================
 
 Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
-    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket,banka hesap bilgileriniz,ilgili para birimi gibi bilgiler isteyecek.
+    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap
+      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.
     """,
     'author': 'Ahmet Altınışık',
     'maintainer':'https://launchpad.net/~openerp-turkey',

@@ -25,6 +25,7 @@
     'version': '1.0',
     'category': 'Project Management',
     "sequence": 22,
+    "summary": "Support, Bug Traker, Helpdesk",
     'description': """
 This module provides Issues/Bugs Management in Project.
 =======================================================
@@ -38,7 +39,7 @@ and decide on their status as they evolve.
     'website': 'http://www.openerp.com',
     'images': ['images/issue_analysis.jpeg','images/project_issue.jpeg'],
     'depends': [
-        'base_status', 
+        'base_status',
         'crm',
         'project',
     ],
@@ -65,6 +66,9 @@ and decide on their status as they evolve.
     'auto_install': False,
     'application': True,
     'certificate' : '001236490750848623845',
+    'js': [
+        'static/src/js/project_issue.js',
+    ],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

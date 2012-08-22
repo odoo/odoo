@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:04+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 04:53+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -120,11 +120,14 @@ msgid ""
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
 msgstr ""
+"تسمح لك قائمة أسعار التسليم  لحساب التكلفة وسعر البيع للتسليم وفقا لوزن "
+"المنتجات وغيرها من المعايير. يمكنك تحديد عدة قوائم للأسعار لطريقة تسليم "
+"واحدة، في كل بلد أو منطقة في بلد معين محدد من قبل مجموعة اكواد بريدية."
 
 #. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "المقدار"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -344,7 +347,7 @@ msgstr ""
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
-msgstr ""
+msgstr "لا يمكنك نقل المنتجات أو المكان من المستعرض."
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:70
@@ -388,7 +391,7 @@ msgstr "تاريخ الشحن"
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr "منتج التسليم"
+msgstr "المنتج المُسلم"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -403,7 +406,7 @@ msgstr "سعر التكلفة"
 #. module: delivery
 #: field:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Picking Policy"
-msgstr ""
+msgstr "سياسة الالتقاط"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -419,7 +422,7 @@ msgstr "سيستخدم اسلوب التسليم عندما تكون الفات�
 #. module: delivery
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "المرجع يجب أن يكون فريداً لكل شركة علي حدا!"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -458,7 +461,7 @@ msgstr "اكمل هذا الحقل اذا كنت تخطط لعمل فاتورة 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:130
@@ -469,7 +472,7 @@ msgstr ""
 #. module: delivery
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -502,7 +505,7 @@ msgstr ""
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "Create Deliveries"
-msgstr "انشأ تسليمات"
+msgstr "انشيء عمليات التسليم"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -522,7 +525,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
-"اذا كان الحقل النشط خاطيء, ستسمح لك بإخفاء ناقل التسليك بدون إزالتها."
+"اذا كان الحقل النشط خاطيء, ستسمح لك بإخفاء ناقل التسليم بدون إزالتها."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -563,7 +566,7 @@ msgstr "="
 #: code:addons/delivery/stock.py:90
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "الناقل %s (id: %d( لا يوجد لديها شبكة تسليم!"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -609,7 +612,7 @@ msgstr "يُسجل حالة الامر كمسودة ليضاف الى خطوط �
 #. module: delivery
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -635,7 +638,7 @@ msgstr ""
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
 msgid "Apply"
-msgstr ""
+msgstr "تطبيق"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
@@ -661,3 +664,26 @@ msgstr "نوع السعر"
 
 #~ msgid "Carriers and deliveries"
 #~ msgstr "الناقلات و التسليمات"
+
+#~ msgid ""
+#~ "Allows you to add delivery methods in sale orders and picking.\n"
+#~ "     You can define your own carrier and delivery grids for prices.\n"
+#~ "     When creating invoices from picking, OpenERP is able to add and compute "
+#~ "the shipping line.\n"
+#~ "\n"
+#~ "     "
+#~ msgstr ""
+#~ "يسمح لك بإضافة طرق التسليم في أوامر البيع و الاختيار.\n"
+#~ "يمكنك تحديد الناقل الخاص وشبكات تسليم للأسعار.\n"
+#~ "عند إنشاء الفواتير من الاختيار، OpenERP قادر على إضافة وحساب خط الشحن.\n"
+#~ "\n"
+#~ "     "
+
+#~ msgid ""
+#~ "Create and manage the delivery methods you need for your sales activities. "
+#~ "Each delivery method can be assigned to a price list which computes the "
+#~ "price of the delivery according to the products sold or delivered."
+#~ msgstr ""
+#~ "قم بإنشاء وإدارة وسائل التسليم التي تحتاجها لأنشطة المبيعات الخاصة بك. يمكن "
+#~ "تعيين كل طريقة تسليم إلى قائمة السعر الذي يحسب على سعر التسليم وفقا للمنتجات "
+#~ "المباعة او المسلمة."

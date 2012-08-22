@@ -5,26 +5,23 @@
         <record id="view_account_followup_print" model="ir.ui.view">
             <field name="name">account.followup.print.form</field>
             <field name="model">account.followup.print</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Send follow-ups" version="7.0">
-                <header>
-                    <button name="do_continue" string="Continue" colspan="1" type="object" icon="gtk-ok"/>
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                </header>
-                <separator string="Send Follow-ups"/>
-                <label string ="This feature allows you to send reminders to partners with pending invoices. You can send them the default message for unpaid invoices or manually enter a message should you need to remind them of a specific information."/>
                 <group col="4">
                     <field name="followup_id"/>
                     <field name="date"/>
                 </group>
+                <footer>
+                    <button name="do_continue" string="Continue" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
             </form>
             </field>
         </record>
 
         <record id="action_account_followup_print" model="ir.actions.act_window">
-            <field name="name">Send follow-ups</field>
-            <field name="type">ir.actions.act_window</field>
+            <field name="name">Send Follow-Ups</field>
             <field name="res_model">account.followup.print</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -39,13 +36,10 @@
         <record id="account_followup_stat_by_partner_search" model="ir.ui.view">
             <field name="name">account_followup.stat.by.partner.search</field>
             <field name="model">account_followup.stat.by.partner</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Partner to Remind">
                     <field name="date_followup"/>
-                    <separator orientation="vertical"/>
                     <filter string="Balance > 0" domain="[('balance','&gt;',0)]" icon="terp-dolar" name="balance_positive"/>
-                    <separator orientation="vertical"/>
                     <field name="partner_id"/>
                     <field name="max_followup_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -57,7 +51,6 @@
            <record id="account_followup_stat_by_partner_tree" model="ir.ui.view">
             <field name="name">account_followup.stat.by.partner.tree</field>
             <field name="model">account_followup.stat.by.partner</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Partner to Remind">
                    <field name="partner_id"/>
@@ -73,13 +66,13 @@
            <record id="view_account_followup_print_all" model="ir.ui.view">
             <field name="name">account.followup.print.all.form</field>
             <field name="model">account.followup.print.all</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Send follow-ups" version="7.0">
+            <form string="Send Follow-Ups" version="7.0">
                 <header>
-                    <button name="do_mail" string="Send Mails" colspan="1" type="object" icon="gtk-execute"/>
-                    <button name="do_print" string="Print Follow Ups" colspan="1" type="object" icon="gtk-print"/>
-                    <button special="cancel" string="Cancel" icon='gtk-cancel'/>
+                    <button name="do_mail" string="Send Mails" type="object" class="oe_highlight"/>
+                    <button name="do_print" string="Print Follow Ups" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
                 </header>
                 <notebook>
                     <page string="Partner Selection">
@@ -91,7 +84,6 @@
                             <field name="partner_lang" colspan="4"/>
                             <field name="test_print" colspan="4"/>
                             <field name="email_subject" colspan="4"/>
-                            <separator string="Email Body" colspan="4" />
                             <field name="email_body" colspan="4" nolabel="1"/>
                         </group>
                         <group string="Legend">
@@ -113,12 +105,8 @@
            <record id="view_account_followup_print_all_msg" model="ir.ui.view">
             <field name="name">account.followup.print.all.msg.form</field>
             <field name="model">account.followup.print.all</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Summary" version="7.0">
-                <header>
-                    <button special="cancel" string="Ok" icon='gtk-cancel'/>
-                </header>
                 <separator string="Summary"/>
                 <field name="summary"/>
             </form>
@@ -126,7 +114,7 @@
         </record>
 
         <record id="action_account_followup_print_all" model="ir.actions.act_window">
-            <field name="name">Send follow-ups</field>
+            <field name="name">Send Follow-Ups</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.followup.print.all</field>
             <field name="view_type">form</field>

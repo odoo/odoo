@@ -4,21 +4,26 @@
         <record id="view_account_chart" model="ir.ui.view">
             <field name="name">account.chart.form</field>
             <field name="model">account.chart</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account charts" version="7.0">
-                    <header>
-                        <button icon="terp-gtk-go-back-rtl" string="Open Charts" name="account_chart_open_window" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    </header>
-                    <group colspan="4">
-                        <field name="fiscalyear" on_change="onchange_fiscalyear(fiscalyear)"/>
+                    <group>
+                        <label for="fiscalyear"/>
+                        <div> 
+                            <field name="fiscalyear" on_change="onchange_fiscalyear(fiscalyear)" class="oe_inline"/>
+                            <label align="0.7" string="(If you do not select Fiscal year it will take all open fiscal years)" class="oe_inline"/>
+                        </div>
                         <field name="target_move"/>
-                        <label align="0.7" colspan="4" string="(If you do not select Fiscal year it will take all open fiscal years)"/>
-                        <separator string="Periods" colspan="4"/>
-                        <field name="period_from"/>
-                        <field name="period_to"/>
+                        <label for="period_from" string="Periods"/>
+                        <div>
+                            <field name="period_from" class="oe_inline"/> - 
+                            <field name="period_to" class="oe_inline"/>
+                        </div>
                     </group>
+                    <footer>
+                        <button string="Open Charts" name="account_chart_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -30,7 +35,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_chart"/>
             <field name="target">new</field>
-            <field name="help">Display your company chart of accounts per fiscal year and filter by period. Have a complete tree view of all journal items per account code by clicking on an account.</field>
         </record>
 
         <menuitem icon="STOCK_INDENT" action="action_account_chart"

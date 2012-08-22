@@ -5,14 +5,16 @@
         <record id="cdr_report_view" model="ir.ui.view">
             <field name="name">Compte de resultat Report</field>
             <field name="model">account.cdr.report</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string='Compte de resultat' version="7.0">
-                    <header>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                        <button name="print_cdr_report" string="Print" type="object" icon="gtk-ok"/>
-                    </header>
-                    <field name="fiscalyear_id"/>
+                    <group>
+                        <field name="fiscalyear_id"/>
+                    </group>
+                    <footer>
+                        <button name="print_cdr_report" string="Print" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                  </form>
             </field>
         </record>

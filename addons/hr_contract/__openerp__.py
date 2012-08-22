@@ -28,9 +28,10 @@
 Add all information on the employee form to manage contracts.
 =============================================================
 
-    * Marital status,
-    * Security number,
-    * Place of birth, birth date, ...
+    * Contract
+    * Place of Birth,
+    * Medical Examination Date
+    * Company Vehicle
 
 You can assign several contracts per employee.
     """,

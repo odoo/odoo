@@ -28,8 +28,8 @@
 This module lets administrator track every user operation on all the objects of the system.
 ===========================================================================================
 
-The administrator can subscribe to rules for read, write and
-delete on objects and can check logs.
+The administrator can subscribe to rules for read, write and delete on objects 
+and can check logs.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -39,7 +39,6 @@ delete on objects and can check logs.
         'wizard/audittrail_view_log_view.xml',
         'audittrail_view.xml',
         'security/ir.model.access.csv',
-        'security/audittrail_security.xml'
     ],
     'demo_xml': ['audittrail_demo.xml'],
     'installable': True,

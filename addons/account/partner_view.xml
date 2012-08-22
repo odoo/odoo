@@ -5,7 +5,6 @@
         <record id="view_account_position_form" model="ir.ui.view">
             <field name="name">account.fiscal.position.form</field>
             <field name="model">account.fiscal.position</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
                     <group col="4">
@@ -42,7 +41,6 @@
         <record id="view_account_position_tree" model="ir.ui.view">
             <field name="name">account.fiscal.position.tree</field>
             <field name="model">account.fiscal.position</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Fiscal Position">
                     <field name="name"/>
@@ -65,67 +63,67 @@
 
         <!--
         Partners Extension
-    	-->
+        -->
 
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.property.form.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <page string="History" position="before" version="7.0">
                 <page string="Accounting" col="4">
-                    <group col="4">
-                        <group string="Customer Accounting Properties" col="4">
-                            <field name="property_account_receivable" groups="account.group_account_invoice" />
+                    <group>
+                        <group>
                             <field name="property_account_position" widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="last_reconciliation_date"/>
+                        </group>
+                        <group>
+                            <field name="property_account_receivable" groups="account.group_account_invoice" />
                             <field name="property_payment_term" widget="selection"/>
-                        </group>
-                        <group string="Supplier Accounting Properties" col="4">
-                            <field name="property_account_payable" groups="account.group_account_invoice"/>
-                        </group>
-                        <group string="Customer Credit" col="4">
                             <field name="credit"/>
                             <field name="credit_limit"/>
                         </group>
-                        <group string="Supplier Debit" col="4">
+                        <group>
+                            <field name="property_account_payable" groups="account.group_account_invoice"/>
                             <field name="debit"/>
                         </group>
-                        <field name="bank_ids">
-                            <form string="Bank account" version="7.0">
-                                <field name="state"/>
-                                <field name="acc_number"/>
-                                <group>
-                                    <group name="owner" string="Bank Account Owner">
-                                        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                                        <field name="owner_name"/>
-                                        <label for="street" string="Address"/>
-                                        <div>
-                                            <field name="street" placeholder="Street..."/>
-                                            <div>
-                                                <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                                <field name="city" class="oe_inline" placeholder="City"/>
-                                            </div>
-                                            <field name="state_id" placeholder="State"/>
-                                            <field name="country_id" placeholder="Country"/>
-                                        </div>
-                                    </group>
-                                    <group name="bank" string="Information About the Bank">
-                                        <field name="bank" on_change="onchange_bank_id(bank)"/>
-                                        <field name="bank_name"/>
-                                        <field name="bank_bic" placeholder="[Identifier code]"/>
-                                    </group>
-                                </group>
-                            </form>
-                            <tree string="Bank Details">
-                                <field name="sequence" invisible="1"/>
-                                <field name="acc_number"/>
-                                <field name="bank_name"/>
-                                <field name="owner_name"/>
-                            </tree>
-                        </field>
                     </group>
+                    <field name="bank_ids">
+                        <form string="Bank account" version="7.0">
+                            <field name="state"/>
+                            <field name="acc_number"/>
+                            <group>
+                                <group name="owner" string="Bank Account Owner">
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                                    <field name="owner_name"/>
+                                    <label for="street" string="Address"/>
+                                    <div>
+                                        <field name="street" placeholder="Street..."/>
+                                        <div>
+                                            <field name="zip" class="oe_inline" placeholder="ZIP"/>
+                                            <field name="city" class="oe_inline" placeholder="City"/>
+                                        </div>
+                                        <field name="state_id" placeholder="State" options='{"no_open": true}'/>
+                                        <field name="country_id" placeholder="Country" options='{"no_open": true}'/>
+                                    </div>
+                                </group>
+                                <group name="bank" string="Information About the Bank">
+                                    <field name="bank" on_change="onchange_bank_id(bank)"/>
+                                    <field name="bank_name"/>
+                                    <field name="bank_bic" placeholder="e.g. GEBABEBB"/>
+                                </group>
+                            </group>
+                        </form>
+                        <tree string="Bank Details">
+                            <field name="sequence" invisible="1"/>
+                            <field name="acc_number"/>
+                            <field name="bank_name"/>
+                            <field name="owner_name"/>
+                        </tree>
+                    </field>
                 </page>
                 </page>
             </field>
@@ -141,17 +139,6 @@
             src_model="res.partner"
             view_type="form"
             view_mode="tree,form,graph,calendar"/>
-
-        <record id="view_res_partner_reconcile" model="ir.ui.view">
-            <field name="name">res.partner.form.reconcile</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <field name="credit_limit" position="after">
-                    <field name="last_reconciliation_date"/>
-                </field>
-            </field>
-        </record>
 
     </data>
 </openerp>

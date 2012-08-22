@@ -69,7 +69,7 @@ class purchase_requisition(osv.osv):
         purchase_order_obj = self.pool.get('purchase.order')
         for purchase in self.browse(cr, uid, ids, context=context):
             for purchase_id in purchase.purchase_ids:
-                if str(purchase_id.state) in('draft','wait'):
+                if str(purchase_id.state) in('draft'):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
         self.write(cr, uid, ids, {'state': 'cancel'})
         self.cancel_send_note(cr, uid, ids, context=context)
@@ -150,7 +150,7 @@ class purchase_requisition(osv.osv):
         res = {}
         for requisition in self.browse(cr, uid, ids, context=context):
             if supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
-                 raise osv.except_osv(_('Warning'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
+                 raise osv.except_osv(_('Warning!'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
             location_id = requisition.warehouse_id.lot_input_id.id
             purchase_id = purchase_order.create(cr, uid, {
                         'origin': requisition.name,
@@ -183,13 +183,6 @@ class purchase_requisition(osv.osv):
                 
         return res
     
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            if (obj.state == 'draft') and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-    
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>created</b>."), context=context)  
 
@@ -206,19 +199,20 @@ class mail_message(osv.osv):
     
     def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None,
                              email_bcc=None, reply_to=False, attachments=None, message_id=False, references=False,
-                             res_id=False, subtype='plain', headers=None, mail_server_id=False, auto_delete=False,
+                             res_id=False, content_subtype='plain', headers=None, mail_server_id=False, auto_delete=False,
                              context=None):
-        purchase_order_obj = self.pool.get('purchase.order')
-        requisition_id = purchase_order_obj.browse(cr, uid, res_id, context=context).requisition_id.id
         result = super(mail_message, self).schedule_with_attach(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc,
-                     email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
-                     res_id=res_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
-                     context=context)
-        if requisition_id:
-            result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, 'purchase.requisition', email_cc=email_cc,
-                             email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
-                             res_id=requisition_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
-                             context=context)
+            email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
+            res_id=res_id, content_subtype=content_subtype, headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
+            context=context)
+        # check model is purchase.order
+        if model and model == 'purchase.order' and res_id:
+            requisition_id = self.pool.get('purchase.order').browse(cr, uid, res_id, context=context).requisition_id
+            if requisition_id:
+                result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, model='purchase.requisition', email_cc=email_cc,
+                    email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
+                    res_id=requisition_id.id, content_subtype=content_subtype, headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
+                    context=context)
         return result
 
 class purchase_requisition_line(osv.osv):
