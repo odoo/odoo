@@ -43,6 +43,7 @@ class actions(osv.osv):
     _table = 'ir_actions'
     _order = 'name'
     _columns = {
+        'name': fields.char('Name', size=64, required=True),
         'type': fields.char('Action Type', required=True, size=32,readonly=True),
         'usage': fields.char('Action Usage', size=32),
     }
