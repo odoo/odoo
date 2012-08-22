@@ -109,6 +109,13 @@ class mail_message(osv.Model):
         'body': fields.html('Content'),
     }
 
+    def _needaction_domain_get(self, cr, uid, context={}):
+        if self._needaction:
+            partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+            return [('notification_ids.partner_id','=',partner_id),('notification_ids.read','=',False)]
+        return []
+
+
     def _get_default_author(self, cr, uid, context={}):
         return self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
 

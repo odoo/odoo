@@ -132,8 +132,7 @@ class mail_group(osv.Model):
             params = {
                 'search_view_id': search_ref and search_ref[1] or False,
                 'domain': [('model','=','mail.group'),('res_id','=',mail_group_id)],
-                'res_model': 'mail.group',
-                'res_id': mail_group_id,
+                'res_model': 'mail.message',
                 'thread_level': 2
             }
             cobj = self.pool.get('ir.actions.client')
