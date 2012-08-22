@@ -103,7 +103,7 @@ class event_event(osv.osv):
         for self.event in self.browse(cr, uid, ids, context=context):
             total_confirmed = self.event.register_current
             if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
-                raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (self.event.name))
+                raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. Please reconsider those limits before going further.") % (self.event.name))
 
     def check_registration_limits_before(self, cr, uid, ids, no_of_registration, context=None):
         for event in self.browse(cr, uid, ids, context=context):
@@ -230,7 +230,7 @@ class event_event(osv.osv):
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
         #the subscription is done with SUPERUSER_ID because in case we share the kanban view, we want anyone to be able to subscribe
         if not curr_reg_ids:
-            curr_reg_ids = [register_pool.create(cr, SUPERUSER_ID, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats})]
+            curr_reg_ids = [register_pool.create(cr, SUPERUSER_ID, {'event_id': ids[0] ,'email': user.email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats})]
         else:
             register_pool.write(cr, uid, curr_reg_ids, {'nb_register': num_of_seats}, context=context)
         return register_pool.confirm_registration(cr, SUPERUSER_ID, curr_reg_ids, context=context)
@@ -366,7 +366,7 @@ class event_registration(osv.osv):
                 self.write(cr, uid, ids, values)
                 self.message_append(cr, uid, ids, _('State set to Done'), body_text=_('Done'))
             else:
-                raise osv.except_osv(_('Error!'),_("You must wait the event starting day to do this action.") )
+                raise osv.except_osv(_('Error!'),_("You must wait for the starting day of the event to do this action.") )
         return True
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):

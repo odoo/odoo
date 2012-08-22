@@ -17,7 +17,6 @@
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>
             <field name="model">sale.shop</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Shop" version="7.0">
                     <label for="name" class="oe_edit_only"/>
@@ -40,7 +39,6 @@
         <record id="view_shop_tree" model="ir.ui.view">
             <field name="name">sale.shop</field>
             <field name="model">sale.shop</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales Shop">
                     <field name="name"/>
@@ -112,7 +110,6 @@
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
             <field name="model">sale.order</field>
-            <field name="type">calendar</field>
             <field name="arch" type="xml">
                 <calendar string="Sales Orders" color="state" date_start="date_order">
                     <field name="partner_id"/>
@@ -123,7 +120,6 @@
         <record model="ir.ui.view" id="view_sale_order_graph">
             <field name="name">sale.order.graph</field>
             <field name="model">sale.order</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Sales Orders" type="bar">
                     <field name="partner_id"/>
@@ -135,7 +131,6 @@
         <record id="view_order_tree" model="ir.ui.view">
             <field name="name">sale.order.tree</field>
             <field name="model">sale.order</field>
-            <field name="type">tree</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <tree string="Sales Orders" fonts="bold:needaction_pending==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
@@ -153,7 +148,6 @@
         <record id="view_order_form" model="ir.ui.view">
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Order" version="7.0">
                     <header>
@@ -303,7 +297,7 @@
                             <group name="sale_margin_grp">
                             </group>
                             <div class="oe_clear"/>
-                            <label for="note"/>
+                            <label for="note"/><br/>
                             <field name="note" class="oe_inline"/>
                         </page>
                         <page string="Other Information" groups="base.group_user">
@@ -357,6 +351,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
             </field>
@@ -365,7 +360,6 @@
         <record id="view_sales_order_filter" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
             <field name="model">sale.order</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <field name="name" string="Sales Order" filter_domain="['|',('name','ilike',self),('client_order_ref','ilike',self)]"/>
@@ -472,7 +466,6 @@
         <record id="view_order_line_graph" model="ir.ui.view">
             <field name="name">sale.order.line.graph</field>
             <field name="model">sale.order.line</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Sales Order Lines">
                     <field name="product_id"/>
@@ -484,7 +477,6 @@
         <record id="view_order_line_tree" model="ir.ui.view">
             <field name="name">sale.order.line.tree</field>
             <field name="model">sale.order.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales Order Lines">
                     <field name="order_id"/>
@@ -502,7 +494,6 @@
         <record id="view_order_line_form2" model="ir.ui.view">
             <field name="name">sale.order.line.form2</field>
             <field name="model">sale.order.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Order Lines" version="7.0">
                     <header>
@@ -521,7 +512,7 @@
                     <group>
                         <group>
                             <field name="product_id" readonly="1"/>
-                            <label name="product_uom_qty"/>
+                            <label for="product_uom_qty"/>
                             <div>
                                 <field name="product_uom_qty" readonly="1" class="oe_inline"/>
                                 <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
@@ -545,7 +536,6 @@
         <record id="view_sales_order_line_filter" model="ir.ui.view">
             <field name="name">sale.order.line.select</field>
             <field name="model">sale.order.line</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]"  help="Sale Order Lines ready to be invoiced"/>
@@ -568,7 +558,6 @@
         <record id="view_sales_order_uninvoiced_line_filter" model="ir.ui.view">
             <field name="name">sale.order.uninvoiced.line</field>
             <field name="model">sale.order.line</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Uninvoiced Lines">
                     <filter icon="terp-gtk-go-back-rtl" string="To Do" domain="[('state','=','confirmed')]" name="sale order" help="Confirmed sale order lines, not yet delivered"/>

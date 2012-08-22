@@ -5,7 +5,6 @@
        <record id="view_report_lunch_order_tree" model="ir.ui.view">
         <field name="name">report.lunch.order.tree</field>
         <field name="model">report.lunch.order</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Sales Analysis">
                 <field name="date" invisible="1"/>
@@ -22,7 +21,6 @@
     <record id="view_report_lunch_order_search" model="ir.ui.view">
         <field name="name">report.lunch.order.search</field>
         <field name="model">report.lunch.order</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Lunch Order Analysis">
                 <field name="date"/>

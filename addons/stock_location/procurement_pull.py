@@ -55,7 +55,7 @@ class procurement_order(osv.osv):
             for line in proc.product_id.flow_pull_ids:
                 if line.location_id == proc.location_id:
                     break
-            assert line, 'Line can not be False if we are on this state of the workflow'
+            assert line, 'Line cannot be False if we are on this state of the workflow'
             origin = (proc.origin or proc.name or '').split(':')[0] +':'+line.name
             picking_id = picking_obj.create(cr, uid, {
                 'origin': origin,

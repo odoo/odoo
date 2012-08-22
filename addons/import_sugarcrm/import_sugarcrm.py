@@ -76,7 +76,7 @@ class sugar_import(import_framework):
         #login
         PortType,sessionid = sugar.login(self.context.get('username',''), self.context.get('password',''), self.context.get('url',''))
         if sessionid == '-1':
-            raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password or bad SugarSoap Api url !'))
+            raise osv.except_osv(_('Error!'), _('Authentication error!\nBad username or password or bad SugarSoap Api url!'))
         self.context['port'] = PortType
         self.context['session_id'] = sessionid
         
@@ -877,7 +877,7 @@ class sugar_import(import_framework):
         else:
             val['password'] = 'sugarcrm' #default password for all user #TODO needed in documentation
             
-        val['context_lang'] = self.context.get('lang','en_US')
+        val['lang'] = self.context.get('lang','en_US')
         return val
     
     def get_users_department(self, val):
@@ -895,10 +895,10 @@ class sugar_import(import_framework):
             'map' : { 
                 'name': concat('first_name', 'last_name'),
                 'login': value('user_name', fallback='last_name'),
-                'context_lang' : 'context_lang',
+                'lang' : 'context_lang',
                 'password' : 'password',
                 '.id' : '.id',
-                'user_email' : 'email1',
+                'email' : 'email1',
             }
         }
 
@@ -929,8 +929,8 @@ class sugar_import(import_framework):
     """   
     def get_email_subject(self, result, error=False):
         if error:
-            return "Sugarcrm data import failed at %s due to an unexpected error" % self.date_ended
-        return "your sugarcrm data were successfully imported at %s" % self.date_ended 
+            return "Sugarcrm data import failed at %s due to an unexpected error." % self.date_ended
+        return "your sugarcrm data were successfully imported at %s." % self.date_ended 
     
     def get_body_header(self, result):
         return "Sugarcrm import : report of last import" 
@@ -964,7 +964,7 @@ class import_sugarcrm(osv.osv):
     }
     
     def _get_email_id(self, cr, uid, context=None):
-        return self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context).email
     
     def _module_installed(self, cr, uid, model, context=None):
         module_id = self.pool.get('ir.module.module').search(cr, uid, [('name', '=', model), ('state', "=", "installed")], context=context)
@@ -1094,14 +1094,14 @@ class import_sugarcrm(osv.osv):
     def import_from_scheduler_all(self, cr, uid, ids, context=None):
         keys, module_list = self.get_key(cr, uid, ids, context)
         if not keys:
-            raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
+            raise osv.except_osv(_('Warning!'), _('Select Module to Import.'))
         key_list = module_list.keys()
         for module in key_list :
             module = module_list[module]
             state = self.get_all(cr,uid,module,context=context)
             if state == False:
                 keys =  ', '.join(key_list)
-                raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module") %(keys,module,module))
+                raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module.") %(keys,module,module))
         cron_obj = self.pool.get('ir.cron')
         url = self.parse_valid_url(context)
         args = (keys,context.get('email_user'), context.get('instance_name'), url, context.get('username'), context.get('password') )
@@ -1120,14 +1120,14 @@ class import_sugarcrm(osv.osv):
 #        """Import all sugarcrm data into openerp module"""
         keys, module_list = self.get_key(cr, uid, ids, context)
         if not keys:
-            raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
+            raise osv.except_osv(_('Warning!'), _('Select Module to Import.'))
         key_list = module_list.keys()
         for module in key_list :
             module = module_list[module]
             state = self._module_installed(cr,uid,module,context=context)
             if state == False:
                 keys =  ', '.join(key_list)
-                raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module") %(keys,module,module))
+                raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module.") %(keys,module,module))
         url = self.parse_valid_url(context)
         context.update({'url': url})
         imp = sugar_import(self, cr, uid, context.get('instance_name'), "import_sugarcrm", context.get('email_user'), context)

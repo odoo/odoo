@@ -5,7 +5,6 @@
         <record id="view_account_analytic_account_list" model="ir.ui.view">
             <field name="name">account.analytic.account.list</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree toolbar="1" colors="red:state=='pending';grey:state in ('cancelled','close');blue:type=='view'" string="Analytic Accounts">
@@ -27,7 +26,6 @@
         <record id="view_account_analytic_account_search" model="ir.ui.view">
             <field name="name">account.analytic.account.search</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Account">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
@@ -49,7 +47,6 @@
         <record id="view_account_analytic_account_tree" model="ir.ui.view">
             <field name="name">account.analytic.account.tree</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state=='pending';grey:state in ('close','cancelled');blue:type=='view'" string="Analytic account" toolbar="1">
@@ -124,7 +121,6 @@
         <record id="view_account_analytic_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">form</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry" version="7.0">
@@ -166,7 +162,6 @@
         <record id="view_account_analytic_line_tree" model="ir.ui.view">
             <field name="name">account.analytic.line.tree</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="top" string="Analytic Entries">
                     <field name="date"/>
@@ -187,7 +182,6 @@
         <record id="view_account_analytic_line_filter" model="ir.ui.view">
             <field name="name">account.analytic.line.select</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
                     <field name="name" string="Analytic Line"/>
@@ -239,7 +233,6 @@
         <record id="account_analytic_line_extended_form" model="ir.ui.view">
             <field name="name">account.analytic.line.extended_form</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project line" version="7.0">
                     <group>
@@ -288,7 +281,6 @@
         <record id="view_account_analytic_journal_tree" model="ir.ui.view">
             <field name="name">account.analytic.journal.tree</field>
             <field name="model">account.analytic.journal</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Analytic Journal">
                     <field name="code"/>
@@ -301,7 +293,6 @@
         <record id="view_analytic_journal_search" model="ir.ui.view">
             <field name="name">account.analytic.journal.search</field>
             <field name="model">account.analytic.journal</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Journals">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Journal"/>
@@ -316,7 +307,6 @@
         <record id="view_account_analytic_journal_form" model="ir.ui.view">
             <field name="name">account.analytic.journal.form</field>
             <field name="model">account.analytic.journal</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic Journal" version="7.0">
                     <group col="4">
@@ -381,7 +371,6 @@
             <field name="name">account.journal.form.1</field>
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="type" position="after">
                     <field name="analytic_journal_id"/>
@@ -392,7 +381,6 @@
      <record id="analytic_accounts_graph" model="ir.ui.view">
             <field name="name">analytic.accounts.graph</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Analytic Account Statistics" type="bar">
                     <field name="complete_name"/>
