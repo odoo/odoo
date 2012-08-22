@@ -21,22 +21,23 @@
 
 
 {
-    'name': 'Point Of Sale',
+    'name': 'Point of Sale',
     'version': '1.0.1',
     'category': 'Point Of Sale',
     "sequence": 6,
+    "summary": "Touchscreen Interface for Shops",
     'description': """
 This module provides a quick and easy sale process.
 ===================================================
 
-Main features :
----------------
-    * Fast encoding of the sale.
-    * Allow to choose one payment mode (the quick way) or to split the payment between several payment mode.
-    * Computation of the amount of money to return.
-    * Create and confirm picking list automatically.
-    * Allow the user to create invoice automatically.
-    * Allow to refund former sales.
+Main features:
+--------------
+    * Fast encoding of the sale
+    * Allow to choose one payment mode (the quick way) or to split the payment between several payment mode
+    * Computation of the amount of money to return
+    * Create and confirm picking list automatically
+    * Allow the user to create invoice automatically
+    * Allow to refund former sales
     """,
     'author': 'OpenERP SA',
     'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
@@ -50,23 +51,23 @@ Main features :
         'wizard/pos_confirm.xml',
         'wizard/pos_discount.xml',
         'wizard/pos_open_statement.xml',
-        'wizard/pos_close_statement.xml',
-        'wizard/pos_box_entries.xml',
         'wizard/pos_payment_report_user_view.xml',
-        'wizard/pos_box_out.xml',
         'wizard/pos_sales_user.xml',
         'wizard/pos_receipt_view.xml',
         'wizard/pos_payment_report_user.xml',
         'wizard/pos_payment_report.xml',
         'wizard/pos_payment.xml',
+        'wizard/pos_box.xml',
+        'wizard/pos_session_opening.xml',
         'point_of_sale_report.xml',
         'point_of_sale_view.xml',
+        'point_of_sale_data.xml',
         'report/pos_order_report_view.xml',
-        'report/report_cash_register_view.xml',
         'point_of_sale_sequence.xml',
         'point_of_sale_workflow.xml',
         'account_statement_view.xml',
         'account_statement_report.xml',
+        'res_users_view.xml',
     ],
     'demo_xml': [
         'point_of_sale_demo.xml',
@@ -80,10 +81,24 @@ Main features :
     ],
     'installable': True,
     'application': True,
-    'certificate' : '001156338024966477869',
     # Web client
-    'js': ['static/lib/backbone/backbone-0.5.3.js', 'static/src/js/pos.js'],
-    'css': ['static/src/css/pos.css'],
+    'js': [
+            'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
+            'static/src/js/db.js',
+            'static/src/js/models.js',
+            'static/src/js/widget_base.js',
+            'static/src/js/widget_keyboard.js',
+            'static/src/js/widget_scrollbar.js',
+            'static/src/js/widgets.js',
+            'static/src/js/devices.js',
+            'static/src/js/screens.js',
+            'static/src/js/main.js'
+    ],
+    'css': [
+        'static/src/css/pos.css',
+        'static/src/css/keyboard.css'
+    ],
     'qweb': ['static/src/xml/pos.xml'],
+    'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

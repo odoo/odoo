@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
 
-    <div t-name="mail.Wall" class="oe_view_manager oe_mail_wall oe_view_manager_global">
+    <!-- 
+        wall main template
+        Template used to display the communication history in the wall.
+        -->
+    <div t-name="mail.wall" class="oe_view_manager oe_mail_wall oe_view_manager_current">
         <table class="oe_view_manager_header">
           <colgroup>
             <col width="33%"/>
@@ -9,10 +13,13 @@
             <col width="34%"/>
           </colgroup>
           <tbody>
-            <tr class="oe_header_row">
+            <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                     <h2 class="oe_view_title">
-                        <span class="oe_view_title_text">All Feeds</span>
+                        <span class="oe_view_title_text">
+                            <t t-if="! widget.params.res_model">News Feeds</t>
+                            <t t-if="widget.params.res_model" t-esc="widget.params.res_model"/>
+                        </span>
                     </h2>
                 </td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
@@ -21,30 +28,44 @@
         </table>
         <div class="oe_mail_wall_main">
             <div class="oe_mail_wall_action">
-                <img class="oe_mail_msg_image oe_left" alt="User img"/>
-                <textarea class="oe_mail oe_mail_wall_action_textarea" placeholder="What are you working on?"/>
-                <button class="oe_right oe_mail_wall_button_comment" type="button">Post comment</button>
+                <!-- call the composition form -->
+                <t t-call ="mail.compose_message"/>
             </div>
-            <div class="oe_clear"></div>
+            <div class="oe_clear"/>
             <ul class="oe_mail_wall_threads">
+                <!-- contains threads -->
             </ul>
             <div class="oe_mail_wall_more">
-                <button class="oe_mail_wall_button_more" type="button">See more discussions</button>
+                <button class="oe_mail_wall_button_more" type="button">See more...</button>
             </div>
         </div>
-        <div class="oe_mail_wall_aside"></div>
+        <div class="oe_mail_wall_aside">
+                <!-- contains currently nothing -->
+        </div>
     </div>
 
-    <t t-name="mail.WallThreadContainer">
+    <!--
+        wall_thread_container template for the wall
+        Each discussion thread is contained inside this template
+        -->
+    <t t-name="mail.wall_thread_container">
     </t>
 
-    <div t-name="mail.RecordThread" class="oe_mail_recthread">
-        <div class="oe_mail_recthread_left"></div>
-        <div class="oe_mail_recthread_right">
+    <!--
+        record_thread main template
+        Template used to display the communication history in documents
+        form view.
+        -->
+    <div t-name="mail.record_thread" class="oe_mail_recthread">
+        <!-- <h4>History and Comments</h4> -->
+        <div class="oe_mail_recthread_main">
+            <!-- contains the document thread -->
+        </div>
+        <div class="oe_mail_recthread_aside">
             <div class="oe_mail_recthread_actions">
-                <button type="button" class="oe_mail_button_follow oe_mail_button_mouseout">Not following</button>
+                <button type="button" class="oe_mail_button_follow">Follow</button>
                 <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
-                <button type="button" class="oe_mail_button_followers">Display followers</button>
+                <button type="button" class="oe_mail_button_followers">Show followers</button>
             </div>
             <div class="oe_mail_recthread_followers">
                 <h4>Followers</h4>
@@ -53,45 +74,80 @@
         </div>
     </div>
 
-    <div t-name="mail.Thread" class="oe_mail oe_mail_thread">
-        <div class="oe_mail_thread_action">
-            <img class="oe_mail_msg_image oe_left" alt="User img"/>
-            <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/>
+    <!--
+        mail.compose_message template
+        This template holds the composition form to write a note or send
+        an e-mail. It contains by default a textarea, that will be replaced
+        by another composition form in the main wall composition form, or
+        for main thread composition form in document form view.
+        -->
+    <t t-name="mail.compose_message">
+        <div>
+            <img class="oe_mail_icon oe_mail_frame oe_left" alt="User img"/>
+            <div class="oe_mail_msg_content">
+                <!-- contains the composition form -->
+                <!-- default content: old basic textarea -->
+                <textarea class="oe_mail_compose_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/>
+            </div>
+            <div class="oe_clear"/>
         </div>
-        <div class="oe_mail_thread_display"></div>
+    </t>
+
+    <!--
+        thread template
+        This template holds a thread of comments. It begins with an actions
+        container, holding the composition form. Then come the various
+        messages. Then comes the 'more' button.
+        -->
+    <ul t-name="mail.thread" class="oe_mail oe_mail_thread">
+        <div class="oe_mail_thread_action">
+            <!-- contains the composition box (form + image) -->
+            <t t-call="mail.compose_message"/>
+        </div>
+        <div class="oe_mail_thread_display">
+            <!-- contains the threads -->
+        </div>
         <div class="oe_mail_thread_more">
             <button class="oe_mail_button_more" type="button">Load more messages</button>
         </div>
-    </div>
+    </ul>
 
     <!-- default layout -->
-    <div t-name="mail.Thread.message" class="oe_mail oe_mail_thread_msg">
+    <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg">
         <div t-attf-class="oe_mail_msg_#{record.type}">
-            <img class="oe_email_icon oe_left" t-att-src="record.mini_url"/>
+            <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="record.mini_url"/>
             <div class="oe_mail_msg_content">
+                <!-- dropdown menu with message options and actions -->
                 <span class="oe_dropdown_toggle oe_dropdown_arrow">
                     <ul class="oe_dropdown_menu">
-                        <t t-if="thread._is_author(record.user_id[0]) &amp;&amp; display['show_delete']">
-                            <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a></li>
+                        <t t-if="display['show_delete']">
+                                <li t-if="record.is_author"><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
                         </t>
-                        <t t-if="!thread._is_author(record.user_id[0]) &amp;&amp; display['show_hide']">
-                            <li><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Hide</a></li>
-                        </t>
-                        <li t-if="record.type == 'email'"><a href="#" class="oe_mail_msg_details">Details</a></li>
+                        <li t-if="display['show_hide']"><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Hide</a></li>
+<!--                    Uncomment when adding subtype hiding
+                        <li t-if="display['show_hide']">
+                            <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
+                        </li> -->
+                        <li><a href="#" t-attf-data-msg_id="{record.id}" t-attf-data-type="{record.type}" t-attf-data-formatting="{record.content_subtype}" class="oe_mail_msg_reply_by_email">Reply by email</a></li>
+                        <li t-if="record.type == 'email'"><a t-attf-href="#model=mail.message&amp;id=#{record.id}" class="oe_mail_msg_details">Details</a></li>
                     </ul>
                 </span>
+                <!-- message itself -->
                 <div class="oe_mail_msg">
-                    <h1 t-if="record.subject &amp;&amp; record.subject != 'Reply'" class="oe_mail_msg_title">
+                    <h1 t-if="record.subject" class="oe_mail_msg_title">
                         <t t-raw="record.subject"/>
                     </h1>
-                    <div t-if="params.thread_level > 0" class="oe_mail_msg_subtitle">
-                        <a href="#" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}' class="oe_mail_internal_link"><t t-raw="record.record_name"/></a>
-                    </div>
                     <div class="oe_mail_msg_body">
-                        <a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}' class="oe_mail_internal_link"><t t-raw="record.user_id[1]"/></a>
-                        <t t-raw="record.body"/>
+                        
+                        <div class="oe_mail_msg_record_body">
+                            <a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}" t-if="(params.thread_level > 0) &amp; (!record.subject)"><t t-raw="record.record_name"/></a>
+                            <t t-raw="record.body"/>
+                        </div>
                     </div>
+                    <div class="oe_clear"/>
                     <ul class="oe_mail_msg_footer">
+                      <li t-if="record.subject &amp; params.thread_level > 0"><a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}"><t t-raw="record.record_name"/></a></li>
+                      <li><a t-attf-href="#model=res.users&amp;id=#{record.user_id[0]}"><t t-raw="record.user_id[1]"/></a></li>
                       <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
                       <li t-if="display['show_reply']"><a href="#" class="oe_mail_msg_reply">Reply</a></li>
                       <!-- uncomment when merging vote
@@ -99,8 +155,8 @@
                       -->
                       <li t-if="record.attachment_ids.length > 0">
                           <a href="#" class="oe_mail_msg_view_attachments">
-                              <t t-if="record.attachment_ids.length == 1">Attachment</t>
-                              <t t-if="record.attachment_ids.length > 1">Attachments (<t t-raw="record.attachment_ids.length"/>)</t>
+                              <t t-if="record.attachment_ids.length == 1">1 Attachment</t>
+                              <t t-if="record.attachment_ids.length > 1"><t t-raw="record.attachment_ids.length"/> Attachments</t>
                           </a>
                       </li>
                     </ul>
@@ -115,5 +171,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </li>
+
 </template>

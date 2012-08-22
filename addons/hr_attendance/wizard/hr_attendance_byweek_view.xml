@@ -4,18 +4,17 @@
         <record id="view_hr_attendance_week" model="ir.ui.view">
             <field name="name">Attendances Report Weekly</field>
             <field name="model">hr.attendance.week</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Print Attendance Report Weekly" version="7.0">
-                <header>
-                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel" />
-                </header>
                 <group>
                     <field name="init_date"/>
                     <field name="end_date"/>
                 </group>    
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>

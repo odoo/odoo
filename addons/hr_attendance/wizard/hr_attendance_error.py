@@ -46,7 +46,7 @@ class hr_attendance_error(osv.osv_memory):
         cr.execute("SELECT id FROM hr_attendance WHERE employee_id IN %s AND to_char(name,'YYYY-mm-dd')<=%s AND to_char(name,'YYYY-mm-dd')>=%s AND action IN %s ORDER BY name" ,(tuple(context['active_ids']), date_to, date_from, tuple(['sign_in','sign_out'])))
         attendance_ids = [x[0] for x in cr.fetchall()]
         if not attendance_ids:
-            raise osv.except_osv(_('No Data Available'), _('No records found for your selection!'))
+            raise osv.except_osv(_('No Data Available !'), _('No records are found for your selection!'))
         attendance_records = self.pool.get('hr.attendance').browse(cr, uid, attendance_ids, context=context)
 
         for rec in attendance_records:

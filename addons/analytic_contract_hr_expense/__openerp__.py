@@ -26,7 +26,6 @@
     'category': 'Hidden',
     'description': """
 This module is for modifying account analytic view to show some data related to the hr_expense module.
-======================================================================================================
 
 """,
     "author": "OpenERP S.A.",
@@ -41,7 +40,6 @@ This module is for modifying account analytic view to show some data related to 
              ],
     'installable': True,
     'auto_install': True,
-    'certificate': '',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

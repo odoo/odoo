@@ -1,40 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
 
         <record id="view_general_configuration" model="ir.ui.view">
             <field name="name">General Settings</field>
             <field name="model">base.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="General Settings" version="7.0">
+                <form string="General Settings" version="7.0" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                        <group string="Company Settings">
-                            <group>
-                                <field name="module_multi_company"/>
-                            </group>
-                            <group>
-                                <div>
-                                    You will also find several configuration options on your company data:
-                                    address for the header and footer, overdue payments texts, etc.
-                                </div>
-                                <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute"/>
-                            </group>
-                        </group>
-                        <group string="External Accesses">
-                            <field name="module_share"/>
-                            <field name="module_portal"/>
-                        </group>
-                        <group string="Others">
-                            <label for="id" string="Outgoing Mail Servers"/>
-                            <button type="action" name="%(base.action_ir_mail_server_list)d"
-                                string="Configure" icon="gtk-execute"/>
-                        </group>
-                    </sheet>
+                    <separator string="General Settings"/>
+                    <div>
+                        <label string="You will also find several configuration options on your company data:
+                            address for the header and footer, overdue payments texts, etc."/>
+                        <button type="object" name="open_company" string="Configure Your Company Data" icon="gtk-execute" class="oe_inline oe_link"/>
+                    </div>
+                    <group>
+                        <label for="id" string="Options"/>
+                        <div>
+                            <div name="multi_company">
+                                <field name="module_multi_company" class="oe_inline"/>
+                                <label for="module_multi_company"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Email"/>
+                        <div name="email">
+                            <div>
+                                <button type="action"
+                                    name="%(base.action_ir_mail_server_list)d"
+                                    string="Configure outgoing email servers" class="oe_link"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Portal access"/>
+                        <div>
+                            <div>
+                                <field name="module_portal" class="oe_inline"/>
+                                <label for="module_portal"/>
+                            </div>
+                            <div>
+                                <field name="module_auth_anonymous" class="oe_inline"/>
+                                <label for="module_auth_anonymous"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Authentication"/>
+                        <div>
+                            <div>
+                                <field name="module_auth_oauth" class="oe_inline"/>
+                                <label for="module_auth_oauth"/>
+                            </div>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
@@ -52,23 +76,61 @@
         <record id="view_sale_config_settings" model="ir.ui.view">
             <field name="name">sale settings</field>
             <field name="model">sale.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Sales" version="7.0">
+                <form string="Configure Sales" version="7.0" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                        <field name="module_crm" invisible="1"/>
-                        <group name="config_sale"/>
-                        <group name="config_fetchmail" string="Emails" attrs="{'invisible': [('module_crm','=',False)]}">
-                            <field name="module_plugin_thunderbird"/>
-                            <field name="module_plugin_outlook"/>
+                    <div name="linkedin">
+                        <separator string="Social Network Integration"/>
+                        <group name="LinkedIn">
+                            <label for="id" string="Contacts"/>
+                            <div name="LinkedIn">
+                                <div name="module_web_linkedin" class="oe_inline">
+                                    <field name="module_web_linkedin"/>
+                                    <label for="module_web_linkedin"/>
+                                </div>
+                            </div>
                         </group>
-                        <group name="config_crm"/>
-                    </sheet>
+                    </div>
+                    <div name="customer feature">
+                        <separator string="Quotations and Sales Orders"/>
+                        <group name="Customer">
+                            <label for="id" string="Customer Features"/>
+                            <div name="Customer Features"/>
+                        </group>
+                        <group name="Sale">
+                            <label for="id" string="Sale Features"/>
+                            <div name="Sale Features"/>
+                        </group>
+                    </div>
+                    <div name="config_sale">
+                        <field name="module_crm" invisible="1"/>
+                        <separator string="Emails Integration" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                        <p attrs="{'invisible': [('module_crm','=',False)]}">
+                            OpenERP allows to automatically create leads (or others documents)
+                            from incoming emails. You can automatically synchronize emails with OpenERP
+                            using regular POP/IMAP accounts, using a direct email integration script for your
+                            email server, or by manually pushing emails to OpenERP using specific
+                            plugins for your preferred email application.
+                        </p>
+                        <group name="On Mail Client" attrs="{'invisible': [('module_crm','=',False)]}">
+                            <label for="id" string="On Mail Client"/>
+                            <div>
+                                <div name="module_plugin_thunderbird" attrs="{'invisible': [('module_crm','=',False)]}" class="oe_inline">
+                                    <field name="module_plugin_thunderbird"/>
+                                    <label for="module_plugin_thunderbird"/>
+                                </div>
+                                <div name="module_plugin_outlook" attrs="{'invisible': [('module_crm','=',False)]}">
+                                    <field name="module_plugin_outlook" class="oe_inline"/>
+                                    <label for="module_plugin_outlook"/>
+                                </div>
+                            </div>
+                        </group>
+                    </div>
+                    <div name="config_other"/>
                 </form>
             </field>
         </record>

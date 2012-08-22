@@ -2,17 +2,21 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" parent="" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager" sequence="8"
-            web_icon="images/manufacturing.png"
-            web_icon_hover="images/manufacturing-hover.png"/>
+        <!-- Top menu item -->
+        <menuitem name="Manufacturing"
+            id="base.menu_mrp_root"
+            groups="group_mrp_user,group_mrp_manager"
+            sequence="60"/>
 
-        <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
+        <menuitem name="Manufacturing"
+            id="menu_mrp_manufacturing"
+            parent="base.menu_mrp_root"
+            sequence="1"/>
 
         <menuitem name="Master Data"
             id="menu_mrp_bom"
             parent="base.menu_mrp_root"
-            sequence="5" />
+            sequence="5"/>
 
         <!--
         Property / Property Group
@@ -21,12 +25,11 @@
         <record id="mrp_property_group_form_view" model="ir.ui.view">
             <field name="name">mrp.property.group.form</field>
             <field name="model">mrp.property.group</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Properties categories" version="7.0">
                     <label for="name"/>
                     <field name="name"/>
-                    <label name="description"/>
+                    <label for="description"/>
                     <field name="description"/>
                 </form>
             </field>
@@ -37,8 +40,20 @@
             <field name="res_model">mrp.property.group</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">
-                Define specific property groups that can be assigned to the properties of your bill of materials.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a group of properties.
+              </p><p>
+                Define specific property groups that can be assigned to your
+                bill of materials and sales orders. Properties allows OpenERP
+                to automatically select the right bill of materials according
+                to properties selected in the sale order by salesperson.
+              </p><p>
+                For instance, in the property group "Warranty", you an have
+                two properties: 1 year warranty, 3 years warranty. Depending
+                on the propoerties selected in the sale order, OpenERP will
+                schedule a production using the matching bill of materials.
+              </p>
             </field>
         </record>
         <menuitem
@@ -46,12 +61,11 @@
             name="Configuration"
             parent="base.menu_mrp_root"
             groups="group_mrp_manager"
-            sequence="50" />
+            sequence="50"/>
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
             <field name="name">mrp.property.tree</field>
             <field name="model">mrp.property</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Properties">
                     <field name="name"/>
@@ -63,7 +77,6 @@
         <record id="mrp_property_form_view" model="ir.ui.view">
             <field name="name">mrp.property.form</field>
             <field name="model">mrp.property</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Properties" version="7.0">
                     <group col="4">
@@ -80,17 +93,12 @@
         <record id="view_mrp_property_search" model="ir.ui.view">
             <field name="name">mrp.property.search</field>
             <field name="model">mrp.property</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                   <group>
-                       <field name="name" string="Name"/>
-                       <separator orientation="vertical"/>
-                       <field name="group_id"  widget="selection" />
-                       <field name="composition"/>
-                   </group>
-                   <newline/>
-                   <group expand="0" string="Group By...">
+                    <field name="name" string="Name"/>
+                    <field name="composition"/>
+                    <field name="group_id" />
+                    <group expand="0" string="Group By...">
                         <filter string="Property Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                </search>
@@ -105,29 +113,37 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_mrp_property_search"/>
-            <field name="help">
-                The Properties in OpenERP are used to select the right bill of materials for manufacturing
-                a product when you have different ways of building the same product.
-                You can assign several properties to each bill of materials.
-                When a salesperson creates a sale order, they can relate it to several properties
-                and OpenERP will automatically select the BoM to use according the needs.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new property.
+              </p><p>
+                The Properties in OpenERP are used to select the right bill of
+                materials for manufacturing a product when you have different
+                ways of building the same product.  You can assign several
+                properties to each bill of materials.  When a salesperson
+                creates a sale order, they can relate it to several properties
+                and OpenERP will automatically select the BoM to use according
+                the needs.
+              </p>
             </field>
         </record>
         <menuitem name="Master Bill of Materials"
             id="menu_mrp_property"
             parent="menu_mrp_configuration"
             groups="mrp.group_mrp_routings,product.group_mrp_properties"
-            sequence="20" />
+            sequence="20"/>
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
             groups="product.group_mrp_properties"
-            parent="menu_mrp_property"/>
+            parent="menu_mrp_configuration"
+            sequence="30"/>
         <menuitem
             action="mrp_property_group_action"
-            parent="menu_mrp_property"
-            groups="product.group_mrp_properties"
-            id="menu_mrp_property_group_action"/>
+            parent="menu_mrp_configuration"
+            groups="base.group_no_one,product.group_mrp_properties"
+            id="menu_mrp_property_group_action"
+            sequence="35"/>
 
         <!--
         Work Centers
@@ -136,7 +152,6 @@
         <record id="mrp_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.workcenter.tree</field>
             <field name="model">mrp.workcenter</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Work Center">
                     <field name="code"/>
@@ -149,16 +164,19 @@
         <record id="mrp_workcenter_view" model="ir.ui.view">
             <field name="name">mrp.workcenter.form</field>
             <field name="model">mrp.workcenter</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Work Center" version="7.0">
                     <group col="4">
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="active"/>
-                        <field name="resource_type"/>
-                        <field name="calendar_id" widget="selection"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="resource_type"/>
+                            <field name="calendar_id" widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="active"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="General Information">
@@ -193,23 +211,16 @@
         <record id="view_mrp_workcenter_search" model="ir.ui.view">
             <field name="name">mrp.workcenter.search</field>
             <field name="model">mrp.workcenter</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search for mrp workcenter">
-                   <group>
-                        <field name="name" string="Mrp Workcenter" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="resource_type"/>
-                   </group>
-                   <newline/>
-                   <group expand="0" string="Group By...">
+                    <field name="name" string="Mrp Workcenter" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <field name="resource_type"/>
+                    <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                    <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
-                        <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                   </group>
-               </search>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -220,7 +231,6 @@
         <record id="mrp_routing_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.tree</field>
             <field name="model">mrp.routing.workcenter</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Routing Work Centers">
                     <field name="sequence"/>
@@ -236,7 +246,6 @@
         <record id="mrp_routing_workcenter_form_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.form</field>
             <field name="model">mrp.routing.workcenter</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Routing Work Centers" version="7.0">
                     <group col="4" string="General Information">
@@ -256,22 +265,25 @@
         <record id="mrp_routing_form_view" model="ir.ui.view">
             <field name="name">mrp.routing.form</field>
             <field name="model">mrp.routing</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Routing" version="7.0">
                     <group col="4">
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="active"/>
-                        <field name="location_id"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="location_id"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                       </group>
                     </group>
                     <notebook>
                         <page string="Work Center Operations">
-                           <field name="workcenter_lines"/>
+                            <field name="workcenter_lines"/>
                         </page>
                         <page string="Notes">
-                           <field name="note"/>
+                            <field name="note"/>
                         </page>
                     </notebook>
                 </form>
@@ -280,7 +292,6 @@
         <record id="mrp_routing_tree_view" model="ir.ui.view">
             <field name="name">mrp.routing.tree</field>
             <field name="model">mrp.routing</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Routing">
                     <field name="code"/>
@@ -293,13 +304,10 @@
         <record id="mrp_routing_search_view" model="ir.ui.view">
             <field name="name">mrp.routing.search</field>
             <field name="model">mrp.routing</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Routing">
                     <field name="name" string="Routing" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <separator orientation="vertical"/>
                     <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
-                    <separator orientation="vertical"/>
                     <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
@@ -315,10 +323,15 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
             <field name="search_view_id" ref="mrp_routing_search_view"/>
-            <field name="help">
-                Routings allow you to create and manage the manufacturing operations that should be
-                followed within your work centers in order to produce a product.
-                They are attached to bills of materials that will define the required raw materials.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a routing.
+              </p><p>
+                Routings allow you to create and manage the manufacturing
+                operations that should be followed within your work centers in
+                order to produce a product.  They are attached to bills of
+                materials that will define the required raw materials.
+              </p>
             </field>
         </record>
         <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_bom" groups="mrp.group_mrp_routings" sequence="15"/>
@@ -330,69 +343,70 @@
         <record id="mrp_bom_form_view" model="ir.ui.view">
             <field name="name">mrp.bom.form</field>
             <field name="model">mrp.bom</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material" version="7.0">
-                    <sheet>
-                        <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
-                        <h1>
-                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>: 
-                            <field name="product_qty" class="oe_inline"/>
-                            <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
-                        </h1>
-                        <div groups="mrp.group_mrp_routings">
-                            <label for="routing_id" class="oe_edit_only"/>
-                            <h2><field name="routing_id" class="oe_inline"/></h2>
-                        </div>
+                    <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
+                    <h1>
+                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>:
+                        <field name="product_qty" class="oe_inline"/>
+                        <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                    </h1>
+                    <div groups="mrp.group_mrp_routings">
+                        <label for="routing_id" class="oe_edit_only"/>
+                        <h2><field name="routing_id" class="oe_inline"/></h2>
+                    </div>
+                    <group>
                         <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="code" string="Reference"/>
-                            </group>
-                            <group>
-                                <field name="type"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="product_uos_qty" groups="product.group_uos" />
-                                <field name="product_uos"  groups="product.group_uos"/>
-                            </group>
+                            <field name="name"/>
+                            <field name="code" string="Reference"/>
                         </group>
-                        <notebook>
-                            <page string="Components">
-                                <field name="bom_lines" widget="one2many_list">
-                                    <tree string="Components" editable="bottom">
-                                        <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
-                                        <field name="product_qty"/>
-                                        <field name="product_uom" groups="product.group_uom"/>
-                                        <field name="name" invisible="1"/>
-                                        <field name="date_start"/>
-                                        <field name="date_stop"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            <page string="Revisions" attrs="{'invisible': [('bom_id','!=',False)]}">
-                                <field name="revision_ids"/>
-                            </page>
-                            <page string="Properties" groups="product.group_mrp_properties">
+                        <group>
+                            <field name="type"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <label for="product_uos_qty" groups="product.group_uos"/>
+                            <div groups="product.group_uos" >
+                                <field name="product_uos_qty"
+                                    class="oe_inline"/>
+                                <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
+                                <field name="product_uos" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Components">
+                            <field name="bom_lines" widget="one2many_list">
+                                <tree string="Components" editable="bottom">
+                                    <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="name" invisible="1"/>
+                                    <field name="date_start"/>
+                                    <field name="date_stop"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Revisions" attrs="{'invisible': [('bom_id','!=',False)]}">
+                            <field name="revision_ids"/>
+                        </page>
+                        <page string="Properties" groups="product.group_mrp_properties">
+                            <group>
                                 <group>
-                                    <group>
-                                        <field name="position"/>
-                                        <field name="bom_id"/>
-                                        <field name="sequence"/>
-                                        <field name="active"/>
-                                    </group>
-                                    <group>
-                                        <field name="date_start"/>
-                                        <field name="date_stop"/>
-                                        <field name="product_rounding"/>
-                                        <field name="product_efficiency"/>
-                                    </group>
+                                    <field name="position"/>
+                                    <field name="bom_id"/>
+                                    <field name="sequence"/>
+                                    <field name="active"/>
                                 </group>
-                                <separator string="Properties"/>
-                                <field name="property_ids" widget="many2many_tags" />
-                            </page>
-                        </notebook>
-                        <newline/>
-                    </sheet>
+                                <group>
+                                    <field name="date_start"/>
+                                    <field name="date_stop"/>
+                                    <field name="product_rounding"/>
+                                    <field name="product_efficiency"/>
+                                </group>
+                            </group>
+                            <separator string="Properties"/>
+                            <field name="property_ids" widget="many2many_tags"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -400,23 +414,16 @@
         <record id="view_mrp_bom_filter" model="ir.ui.view">
             <field name="name">mrp.bom.select</field>
             <field name="model">mrp.bom</field>
-           <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
-                    <group>
-                         <field name="name" string="Bill Of Material" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                         <separator orientation="vertical"/>
-                         <field name="product_id"/>
-                         <field name="company_id" groups="base.group_multi_company"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Bill Of Material" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <field name="product_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
-                        <separator orientation="vertical"/>
+                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
-                        <separator orientation="vertical"/>
+                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Starting Date"/>
                    </group>
                 </search>
@@ -426,7 +433,6 @@
        <record id="mrp_bom_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.tree</field>
             <field name="model">mrp.bom</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree string="Bill of Materials" colors="blue:method">
@@ -447,7 +453,6 @@
        <record id="mrp_bom_component_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.component.tree</field>
             <field name="model">mrp.bom</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree string="BoM Structure" colors="blue:method">
@@ -473,12 +478,17 @@
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','=',False)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
-            <field name="help">
-                Master Bills of Materials allow you to create and manage the list of necessary
-                raw materials used to make a finished product.
-                OpenERP uses these BoMs to automatically propose manufacturing orders according to product needs.
-                You can either create a bill of materials to define specific production steps,
-                or define a single multi-level bill of materials.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a bill of material. 
+              </p><p>
+                Bills of Materials allow you to define the list of required raw
+                materials used to make a finished product; through a manufacturing
+                order or a pack of products.
+              </p><p>
+                OpenERP uses these BoMs to automatically propose manufacturing
+                orders according to procurement needs.
+              </p>
             </field>
         </record>
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
@@ -488,9 +498,14 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_bom_component_tree_view"/>
             <field name="domain">[('bom_id','!=',False)]</field>
-            <field name="help">
-                Bills of materials components are components and sub-products used to create master bills of materials.
-                Use this menu to search in which BoM a specific component is used.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a component to a bill of material.
+              </p><p>
+                Bills of materials components are components and sub-products
+                used to create master bills of materials.  Use this menu to
+                search in which BoM a specific component is used.
+              </p>
             </field>
         </record>
 
@@ -504,7 +519,7 @@
         <menuitem
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
-            parent="menu_mrp_bom"
+            parent="menu_mrp_configuration"
             sequence="20"/>
 
         <record id="action2" model="ir.actions.act_window">
@@ -526,7 +541,6 @@
         <record id="mrp_bom_revision_tree" model="ir.ui.view">
             <field name="name">mrp.bom.revision</field>
             <field name="model">mrp.bom.revision</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="BoM Revisions">
                     <field name="indice"/>
@@ -539,7 +553,6 @@
         <record id="mrp_bom_revision_form" model="ir.ui.view">
             <field name="name">mrp.bom.revision</field>
             <field name="model">mrp.bom.revision</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="BoM Revisions" version="7.0">
                     <group col="4">
@@ -560,9 +573,8 @@
         <record id="mrp_production_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="blue:state in ('draft','confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date and state not in ('done','cancel');gray:state in ('done','cancel')" string="Manufacturing Orders">
+                <tree fonts="bold:needaction_pending==True" colors="blue:state in ('draft','confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date;gray:state in ('done','cancel') " string="Manufacturing Orders">
                     <field name="needaction_pending" invisible="1"/>
                     <field name="name"/>
                     <field name="date_planned"/>
@@ -581,7 +593,6 @@
         <record id="view_production_calendar" model="ir.ui.view">
             <field name="name">mrp.production.calendar</field>
             <field name="model">mrp.production</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="routing_id" date_start="date_planned" string="Manufacturing Orders">
@@ -596,7 +607,6 @@
         <record id="view_production_gantt" model="ir.ui.view">
             <field name="name">mrp.production.gantt</field>
             <field name="model">mrp.production</field>
-            <field name="type">gantt</field>
             <field name="arch" type="xml">
                 <gantt date_stop="date_finished" date_start="date_start" string="Productions" default_group_by="routing_id">
                 </gantt>
@@ -607,7 +617,6 @@
         <record model="ir.ui.view" id="view_production_graph">
             <field name="name">mrp.production.graph</field>
             <field name="model">mrp.production</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Manufacturing Orders" type="bar">
                     <field name="date_planned_date"/>
@@ -620,7 +629,6 @@
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders" version="7.0">
                 <header>
@@ -635,21 +643,22 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box oe_right">
-                        <button name="%(mrp.action_change_production_qty)d" type="action" states="ready,confirmed"
-                            string="Change Quantity" icon="terp-accessories-archiver+"/>
-                    </div>
-                    <div class="oe_title">
-                        <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
-                        <h1>
-                            <field name="product_id" on_change="product_id_change(product_id)" domain="[('supply_method','=','produce')]" class="oe_inline"/>:
-                            <field name="product_qty" class="oe_inline"/>
-                            <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
-                        </h1>
-                        <div groups="mrp.group_mrp_routings">
-                            <label for="routing_id" class="oe_edit_only"/>
-                            <h2><field name="routing_id" class="oe_inline"/></h2>
-                        </div>
+                    <label for="product_id" class="oe_edit_only"/>
+                    <h1>
+                        <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" class="oe_inline"/>
+                    </h1>
+                    <label for="product_qty" class="oe_edit_only"/>
+                    <h2>
+                        <field name="product_qty" class="oe_inline"/>
+                        <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
+                        <button type="action"
+                            icon="terp-accessories-archiver+"
+                            name="%(mrp.action_change_production_qty)d"
+                            string="Change Qty" states="ready,confirmed" class="oe_inline"/>
+                    </h2>
+                    <div groups="mrp.group_mrp_routings">
+                        <label for="routing_id" class="oe_edit_only"/>
+                        <h2><field name="routing_id" class="oe_inline"/></h2>
                     </div>
                     <group>
                         <group>
@@ -659,95 +668,107 @@
                         </group>
                         <group>
                             <field name="user_id"/>
-                            <field name="product_uos_qty" groups="product.group_uos"/>
-                            <field name="product_uos" groups="product.group_uos"/>
+                            <label for="product_uos_qty" groups="product.group_uos"/>
+                            <div groups="product.group_uos">
+                                <field name="product_uos_qty" class="oe_inline"/>
+                                <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
+                                <field name="product_uos" class="oe_inline"/>
+                            </div>
                         </group>
                     </group>
                     <notebook>
                         <page string="Consumed Products">
-                            <group>
-                                <group groups="stock.group_locations">
-                                    <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
-                                    <field name="location_dest_id" domain="[('usage','=','internal')]"/>
-                                </group>
+                            <group groups="stock.group_locations">
                                 <group>
                                     <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)"/>
                                 </group>
+                                <group>
+                                    <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
+                                    <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                                </group>
                             </group>
                             <group>
-                                <field name="move_lines" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
-                                    <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
-                                        <field name="product_id"/>
-                                        <field name="product_qty"/>
-                                        <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                        <field name="location_id" string="Source Loc." groups="stock.group_locations"/>
-                                        <field name="state" invisible="1"/>
-                                        <button name="%(stock.move_consume)d"
-                                            string="Consume Products" type="action"
-                                            icon="gtk-go-forward" context="{'consume': True}"
-                                            states="draft,waiting,confirmed,assigned" />
-                                        <button
-                                               name="%(stock.track_line)d"
-                                               string="Split in Serial Numbers"
-                                               type="action" icon="gtk-justify-fill"
-                                               states="draft,waiting,confirmed,assigned" />
-                                        <button name="%(stock.move_scrap)d"
-                                            string="Scrap Products" type="action"
-                                            icon="gtk-convert" context="{'scrap': True}"
-                                            states="draft,waiting,confirmed,assigned"/>
-                                    </tree>
-                                </field>
-                                <field name="move_lines2" domain="[('state','in', ('done', 'cancel'))]">
-                                   <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
-                                       <field name="product_id" readonly="1"/>
-                                       <field name="product_qty" readonly="1"/>
-                                       <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
-                                       <field name="prodlot_id" context="{'product_id': product_id}"/>
-                                       <field name="state" invisible="1"/>
-                                       <field name="scrapped" invisible="1"/>
-                                       <button
-                                           name="%(stock.move_scrap)d"
-                                           string="Scrap Products" type="action"
-                                           icon="gtk-convert"
-                                           states="done,cancel"/>
-                                   </tree>
-                                </field>
+                                <group string="Products to Consume">
+                                    <field name="move_lines" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
+                                        <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
+                                            <field name="product_id"/>
+                                            <field name="product_qty"  string="Quantity"/>
+                                            <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                                            <field name="location_id"  string="Source Loc." groups="stock.group_locations"/>
+                                            <field name="state" invisible="1"/>
+                                            <button name="%(stock.move_consume)d"
+                                                string="Consume Products" type="action"
+                                                icon="gtk-go-forward" context="{'consume': True}"
+                                                states="draft,waiting,confirmed,assigned"/>
+                                            <button
+                                                   name="%(stock.track_line)d"
+                                                   string="Split in Serial Numbers"
+                                                   type="action" icon="gtk-justify-fill"
+                                                   states="draft,waiting,confirmed,assigned"/>
+                                            <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action"
+                                                icon="gtk-convert" context="{'scrap': True}"
+                                                states="draft,waiting,confirmed,assigned"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Consumed Product">
+                                    <field name="move_lines2" domain="[('state','in', ('done', 'cancel'))]" nolabel="1">
+                                       <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
+                                           <field name="product_id" readonly="1"/>
+                                           <field name="product_qty" readonly="1"/>
+                                           <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
+                                           <field name="prodlot_id" context="{'product_id': product_id}"/>
+                                           <field name="state" invisible="1"/>
+                                           <field name="scrapped" invisible="1"/>
+                                           <button
+                                               name="%(stock.move_scrap)d"
+                                               string="Scrap Products" type="action"
+                                               icon="gtk-convert"
+                                               states="done,cancel"/>
+                                       </tree>
+                                    </field>
+                                </group>
                             </group>
                         </page>
                         <page string="Finished Products">
                             <group>
-                            <field name="move_created_ids" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
-                                <tree string="Products to Finish">
-                                    <field name="product_id"/>
-                                    <field name="product_qty"/>
-                                    <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
-                                    <field name="state" invisible="1"/>
-                                    <button name="%(stock.action_partial_move_server)d"
-                                        string="Partial"
-                                        type="action" states="confirmed,assigned"
-                                        icon="gtk-justify-fill"/>
-                                    <button name="%(stock.move_scrap)d"
-                                        string="Scrap Products" type="action"
-                                        icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned" />
-                                </tree>
-                            </field>
-                            <field name="move_created_ids2" domain="[('state','in', ('done', 'cancel'))]">
-                                <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
-                                    <field name="product_id" readonly="1"/>
-                                    <field name="product_qty" readonly="1"/>
-                                    <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
-                                    <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
-                                    <field name="prodlot_id" context="{'product_id': product_id}"/>
-                                    <field name="scrapped" invisible="1"/>
-                                    <field name="state" invisible="1"/>
-                                    <button name="%(stock.track_line)d"
-                                         string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
-                                    <button name="%(stock.move_scrap)d"
-                                        string="Scrap Products" type="action" icon="gtk-convert"
-                                        states="done,cancel" />
-                                </tree>
-                            </field>
+                                <group string="Products to Produce">
+                                    <field name="move_created_ids" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
+                                        <tree string="Products to Finish">
+                                            <field name="product_id"/>
+                                            <field name="product_qty"/>
+                                            <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
+                                            <field name="state" invisible="1"/>
+                                            <button name="%(stock.action_partial_move_server)d"
+                                                string="Partial"
+                                                type="action" states="confirmed,assigned"
+                                                icon="gtk-justify-fill"/>
+                                            <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action"
+                                                icon="gtk-convert" context="{'scrap': True}"
+                                                states="draft,waiting,confirmed,assigned"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Produced Products">
+                                    <field name="move_created_ids2" domain="[('state','in', ('done', 'cancel'))]" nolabel="1">
+                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
+                                            <field name="product_id" readonly="1"/>
+                                            <field name="product_qty" readonly="1"/>
+                                            <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
+                                            <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
+                                            <field name="prodlot_id" context="{'product_id': product_id}"/>
+                                            <field name="scrapped" invisible="1"/>
+                                            <field name="state" invisible="1"/>
+                                            <button name="%(stock.track_line)d"
+                                                 string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
+                                            <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action" icon="gtk-convert"
+                                                states="done,cancel"/>
+                                        </tree>
+                                    </field>
+                                </group>
                             </group>
                         </page>
                         <page string="Work Orders">
@@ -758,7 +779,7 @@
                                 <form string="Production Work Centers" version="7.0">
                                     <group col="4">
                                         <field colspan="4" name="name"/>
-                                        <field name="workcenter_id" widget="selection"/>
+                                        <field name="workcenter_id"/>
                                         <field name="sequence"/>
                                         <field name="cycle"/>
                                         <field name="hour"/>
@@ -767,7 +788,7 @@
                                 <tree string="Production Work Centers">
                                     <field name="sequence"/>
                                     <field name="name"/>
-                                    <field name="workcenter_id" widget="selection"/>
+                                    <field name="workcenter_id"/>
                                     <field name="cycle"/>
                                     <field name="hour"/>
                                 </tree>
@@ -782,22 +803,23 @@
                         <page string="Extra Information">
                             <group>
                                 <group>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                     <field name="priority"/>
-                                    <field name="picking_id"/>
-                                    <field name="move_prod_id" groups="stock.group_locations"/>
-                                </group>
-                                <group>
                                     <field name="date_start"/>
                                     <field name="date_finished"/>
+                                </group>
+                                <group>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="picking_id"/>
+                                    <field name="move_prod_id" groups="stock.group_locations"/>
                                 </group>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
-                <footer>
+                <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                </footer>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -805,35 +827,24 @@
         <record id="view_mrp_production_filter" model="ir.ui.view">
             <field name="name">mrp.production.select</field>
             <field name="model">mrp.production</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Production">
-                   <group>
-                       <field name="name" string="Production" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
-                       <separator orientation="vertical"/>
-                       <filter icon="terp-gtk-media-pause" string="Pending" name="pending"
-                           domain="[('state','=','confirmed')]"
-                           help="Manufacturing Orders which are waiting for raw materials."/>
-                       <filter icon="terp-camera_test" string="Ready" name="ready"
-                           domain="[('state','=','ready')]"
-                           help="Manufacturing Orders which are ready to start production."/>
-                       <filter icon="terp-check" string="In Production" name="inprogress"
-                           domain="[('state','=','in_production')]"
-                           help="Manufacturing Orders which are currently in production."/>
-                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                           domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
-                           help="Production started late" />
-                       <separator orientation="vertical"/>
-                       <field name="product_id"/>
-                       <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Production" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
+                    <filter icon="terp-gtk-media-pause" string="Pending" name="pending" domain="[('state','=','confirmed')]"
+                        help="Manufacturing Orders which are waiting for raw materials."/>
+                    <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','ready')]"
+                        help="Manufacturing Orders which are ready to start production."/>
+                    <filter icon="terp-check" string="In Production" name="inprogress" domain="[('state','=','in_production')]"
+                        help="Manufacturing Orders which are currently in production."/>
+                    <separator/>
+                    <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                        help="Production started late"/>
+                    <field name="product_id"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" help="Scheduled Date"/>
                     </group>
                </search>
@@ -849,11 +860,17 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{}</field>
-            <field name="help">
-                Click here to create a new Manufacturing Order.
-                &lt;p&gt;
-                To process the production, do not forget to create a Bill of Material.
-                Manufacturing orders can be automatically generated based on procurement rules specified on the product.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a manufacturing order. 
+              </p><p>
+                A manufacuring order, based on a bill of materials, will
+                consume raw materials and produce finished products.
+              </p><p>
+                Manufacturing orders are usually proposed automatically based
+                on customer requirements or automated rules like the minimum
+                stock rule.
+              </p>
             </field>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action"
@@ -866,13 +883,17 @@
             <field name="view_type">form</field>
             <field name="view_mode">calendar,tree,form,graph</field>
             <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
-            <field name="help">
-                Manufacturing Orders describe the operations that need to be carried out,
-                and the raw materials usage for each production stage.
-                You use specifications (bills of materials or BoM) to work out the raw material requirements
-                and the manufacturing orders needed for the finished products.
-                Once the bills of materials have been defined, OpenERP is capable of automatically deciding
-                on the manufacturing route depending on the needs of the company.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new manufacturing order. 
+              </p><p>
+                A manufacuring order, based on a bill of materials, will
+                consume raw materials and produce finished products.
+              </p><p>
+                Manufacturing orders are usually proposed automatically based
+                on customer requirements or automated rules like the minimum
+                stock rule.
+              </p>
             </field>
         </record>
 
@@ -912,7 +933,6 @@
         <record id="mrp_production_product_form_view" model="ir.ui.view">
             <field name="name">mrp.production.product.line.form</field>
             <field name="model">mrp.production.product.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scheduled Products" version="7.0">
                     <group col="4">
@@ -929,7 +949,6 @@
         <record id="mrp_production_product_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.product.line.tree</field>
             <field name="model">mrp.production.product.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Scheduled Products">
                     <field name="product_id"/>
@@ -949,7 +968,6 @@
             <field name="name">procurement.order.form.inherit</field>
             <field name="model">procurement.order</field>
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='move_id']" position="before">
@@ -967,20 +985,27 @@
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.mrp.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <page string="Procurement &amp; Locations" position="inside">
                     <separator string="Bill of Materials"/>
                     <field name="bom_ids" widget="one2many_list" mode="tree" context="{'default_product_id': active_id}">
                         <tree string="Bill of Materials">
-                             <field name="name" string="Component Name"/>
+                            <field name="name" string="Component Name"/>
                             <field name="bom_id"/>
                             <field name="product_qty" string="Quantity of Product"/>
                             <field name="type"/>
                             <field name="date_start"/>
                             <field name="date_stop"/>
                         </tree>
+                        <form string="Bill of Material">
+                            <field name="name" string="Component Name"/>
+                            <field name="bom_id"/>
+                            <field name="product_qty" string="Quantity of Product"/>
+                            <field name="type"/>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                        </form>
                     </field>
                 </page>
             </field>
@@ -1009,22 +1034,26 @@
         <!-- Menu for Resource for MRP-->
 
         <record id="mrp_workcenter_action" model="ir.actions.act_window">
-            <field name="name">Work Centers</field>
+            <field name="name">Work Center</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.workcenter</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
-            <field name="help">
-                Work Centers allow you to create and manage manufacturing units.
-                They consist of workers and/or machines, which are considered as units for capacity and planning forecast.
-                Keep in mind that the working time and resource leave are not taken into account in the time computation
-                of the work center.
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a work center.
+              </p><p>
+                Work Centers allow you to create and manage manufacturing
+                units. They consist of workers and/or machines, which are
+                considered as units for task assignation as well as capacity
+                and planning forecast.
+              </p>
             </field>
         </record>
 
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
-        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" groups="mrp.group_mrp_routings" parent="mrp.menu_mrp_bom" sequence="25"/>
+        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" groups="mrp.group_mrp_routings" parent="mrp.menu_mrp_configuration" sequence="25"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
 

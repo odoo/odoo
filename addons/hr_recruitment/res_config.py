@@ -26,10 +26,10 @@ class hr_applicant_settings(osv.osv_memory):
     _inherit = ['hr.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'module_document_ftp': fields.boolean('Automatic Indexation of Resumes',
+        'module_document_ftp': fields.boolean('allow the automatic indexation of resumes',
             help="""Manage your CV's and motivation letter related to all applicants.
                 This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"""),
-        'fetchmail_applicants': fields.boolean('Create Applicants from Incoming Mails',
+        'fetchmail_applicants': fields.boolean('create applicants from an incoming email account',
             fetchmail_model='hr.applicant', fetchmail_name='Incoming HR Applications',   
             help ="""Allow applicants to send their job application to an email address (jobs@mycompany.com),
                 and create automatically application documents in the system."""),
