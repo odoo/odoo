@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "OHADA - Accounting",
-    "version" : "1.0",
-    "author" : "Baamtu Senegal",
-    "category" : "Localization/Account Charts",
-    "description": """
+    'name' : 'OHADA - Accounting',
+    'version' : '1.0',
+    'author' : 'Baamtu Senegal',
+    'category' : 'Localization/Account Charts',
+    'description': """
 This module implements the accounting chart for OHADA area.
 ===========================================================
     
@@ -38,12 +38,11 @@ Countries that use OHADA are the following:
     
     Replica of Democratic Congo, Senegal, Chad, Togo.
     """,
-    "website": "http://www.baamtu.com",
-    "depends" : ["account", "base_vat"],
-    "demo_xml" : [],
-    "init_xml":[],
-    "update_xml" : ["l10n_syscohada_data.xml","l10n_syscohada_wizard.xml"],
-    "auto_install": False,
-    "installable": True
+    'website': 'http://www.baamtu.com',
+    'depends' : ['account', 'base_vat'],
+    'demo' : [],
+    'data' : ['l10n_syscohada_data.xml','l10n_syscohada_wizard.xml'],
+    'auto_install': False,
+    'installable': True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

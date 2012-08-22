@@ -52,12 +52,12 @@ Some statistics by journals are provided.
     'website': 'http://www.openerp.com',
     'images': ['images/invoice_type.jpeg'],
     'depends': ['sale'],
-    'init_xml': ['sale_journal_data.xml'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'sale_journal_view.xml',
+        'sale_journal_data.xml'
     ],
-    'demo_xml': ['sale_journal_demo.xml'],
+    'demo': ['sale_journal_demo.xml'],
     'test': [ ],
     'installable': True,
     'auto_install': False,

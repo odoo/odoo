@@ -23,7 +23,7 @@
 {
     'name': 'Intrastat Reporting',
     'version': '1.0',
-    "category": 'Accounting & Finance',
+    'category': 'Accounting & Finance',
     'description': """
 A module that adds intrastat reports.
 =====================================
@@ -33,13 +33,13 @@ European Union.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'product', 'stock', 'sale', 'purchase'],
-    'init_xml': ['report_intrastat_data.xml'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'report_intrastat_view.xml',
-        'intrastat_report.xml'
+        'intrastat_report.xml',
+        'report_intrastat_data.xml'
     ],
-    'demo_xml': [],
+    'demo': [],
     'test': ['test/report_intrastat_report.yml'],
     'installable': True,
     'auto_install': False,

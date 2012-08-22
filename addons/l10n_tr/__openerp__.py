@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{   'name': 'Turkey - Accounting',
+{
+    'name': 'Turkey - Accounting',
     'version': '1.beta',
     'category': 'Localization/Account Charts',
     'description': """
@@ -37,16 +38,15 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
         'base_vat',
         'account_chart',
     ],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'account_code_template.xml',
         'account_tdhp_turkey.xml',
         'account_tax_code_template.xml',
         'account_chart_template.xml',
         'account_tax_template.xml',
         'l10n_tr_wizard.xml',
-		],
-    'demo_xml': [],
+        ],
+    'demo': [],
     'installable': True,
     'images': ['images/chart_l10n_tr_1.jpg','images/chart_l10n_tr_2.jpg','images/chart_l10n_tr_3.jpg'],
 }

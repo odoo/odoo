@@ -43,8 +43,7 @@ Note that:
 """,
     'author': 'OpenERP SA',
     'depends': ['base_setup', 'board', 'email_template', 'google_map'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',
         'wizard/event_confirm_view.xml',
@@ -54,7 +53,7 @@ Note that:
         'res_partner_view.xml',
         'email_template.xml',
     ],
-    'demo_xml': ['event_demo.xml'],
+    'demo': ['event_demo.xml'],
     'test': ['test/process/event_draft2done.yml'],
     'css': ['static/src/css/event.css'],
     'installable': True,

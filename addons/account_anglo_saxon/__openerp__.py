@@ -19,11 +19,11 @@
 ##############################################################################
 
 {
-    "name": "Anglo-Saxon Accounting",
-    "version": "1.2",
-    "author": "OpenERP SA, Veritos",
-    "website": "http://openerp.com - http://veritos.nl",
-    "description": """
+    'name': 'Anglo-Saxon Accounting',
+    'version': '1.2',
+    'author': 'OpenERP SA, Veritos',
+    'website': 'http://openerp.com - http://veritos.nl',
+    'description': """
 This module supports the Anglo-Saxon accounting methodology by changing the accounting logic with stock transactions.
 =====================================================================================================================
 
@@ -39,15 +39,14 @@ account when the invoice is created to transfer this amount to the
 debtor or creditor account. Secondly, price differences between actual 
 purchase price and fixed product standard price are booked on a separate 
 account.""",
-    "images": ["images/account_anglo_saxon.jpeg"],
-    "depends": ["product", "purchase"],
-    "category": "Accounting & Finance",
-    "init_xml": [],
-    "demo_xml": [],
-    "update_xml": ["product_view.xml",],
-    "auto_install": False,
-    "installable": True,
-    "certificate":"00557423080410733581",
+    'images': ['images/account_anglo_saxon.jpeg'],
+    'depends': ['product', 'purchase'],
+    'category': 'Accounting & Finance',
+    'demo': [],
+    'data': ['product_view.xml',],
+    'auto_install': False,
+    'installable': True,
+    'certificate':'00557423080410733581',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

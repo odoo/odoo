@@ -29,12 +29,12 @@
 ##############################################################################
 
 {
-        "name" : "Shared Repositories (WebDAV)",
-        "version" : "2.3",
-        "author" : "OpenERP SA",
-        "category" : "Knowledge Management",
-        "website": "http://www.openerp.com",
-        "description": """
+        'name': 'Shared Repositories (WebDAV)',
+        'version': '2.3',
+        'author': 'OpenERP SA',
+        'category': 'Knowledge Management',
+        'website': 'http://www.openerp.com',
+        'description': """
 With this module, the WebDAV server for documents is activated.
 ===============================================================
 
@@ -60,18 +60,17 @@ Server Configuration Parameter:
 Also implements IETF RFC 5785 for services discovery on a http server,
 which needs explicit configuration in openerp-server.conf too.
 """,
-        "depends" : ["base", "document"],
-        "init_xml" : [],
-        "update_xml" : ['security/ir.model.access.csv',
-                        'webdav_view.xml',
-                        'webdav_setup.xml',
-                        ],
-        "demo_xml" : [],
-        "test": [ #'test/webdav_test1.yml',
+        'depends': ['base', 'document'],
+        'data': ['security/ir.model.access.csv',
+                'webdav_view.xml',
+                'webdav_setup.xml',
                 ],
-        "auto_install": False,
-        "installable": True,
-        "certificate" : "001236490750845657973",
+        'demo': [],
+        'test': [ #'test/webdav_test1.yml',
+                ],
+        'auto_install': False,
+        'installable': True,
+        'certificate' : '001236490750845657973',
         'images': ['images/dav_properties.jpeg','images/directories_structure_principals.jpeg'],
 }
 

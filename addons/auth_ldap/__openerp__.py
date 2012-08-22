@@ -19,12 +19,12 @@
 ##############################################################################
 
 {
-    "name" : "Authentication via LDAP",
-    "version" : "1.0",
-    "depends" : ["base"],
-    "images" : ["images/ldap_configuration.jpeg"],
-    "author" : "OpenERP SA",
-    "description": """
+    'name' : 'Authentication via LDAP',
+    'version' : '1.0',
+    'depends' : ['base'],
+    'images' : ['images/ldap_configuration.jpeg'],
+    'author' : 'OpenERP SA',
+    'description': """
 Adds support for authentication by LDAP server.
 ===============================================
 This module allows users to login with their LDAP username and password, and
@@ -100,17 +100,17 @@ authentication if installed at the same time.
     """,
 
 
-    "website" : "http://www.openerp.com",
-    "category" : "Authentication",
-    "data" : [
-        "users_ldap_view.xml",
-        "user_ldap_installer.xml",
-        "security/ir.model.access.csv",
+    'website' : 'http://www.openerp.com',
+    'category' : 'Authentication',
+    'data' : [
+        'users_ldap_view.xml',
+        'user_ldap_installer.xml',
+        'security/ir.model.access.csv',
     ],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "001141446349334700221",
-    "external_dependencies" : {
+    'auto_install': False,
+    'installable': True,
+    'certificate' : '001141446349334700221',
+    'external_dependencies' : {
         'python' : ['ldap'],
     }
 }

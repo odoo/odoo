@@ -21,14 +21,14 @@
 
 
 {
-    "name": "Leaves Management",
-    "version": "1.5",
-    "author": "OpenERP SA",
-    "category": "Human Resources",
-    "sequence": 28,
-    "summary": "Holidays, Allocation and Leave Requests",
-    "website": "http://www.openerp.com",
-    "description": """
+    'name': 'Leaves Management',
+    'version': '1.5',
+    'author': 'OpenERP SA',
+    'category': 'Human Resources',
+    'sequence': 28,
+    'summary': 'Holidays, Allocation and Leave Requests',
+    'website': 'http://www.openerp.com',
+    'description': """
 This module allows you to manage leaves and leave's requests.
 =============================================================
 
@@ -59,8 +59,7 @@ Note that:
 """,
     'images': ['images/hr_allocation_requests.jpeg', 'images/hr_leave_requests.jpeg', 'images/leaves_analysis.jpeg'],
     'depends': ['hr', 'base_calendar', 'process', 'resource'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'hr_holidays_workflow.xml',
@@ -73,7 +72,7 @@ Note that:
         'wizard/hr_holidays_summary_employees_view.xml',
         'board_hr_holidays_view.xml',
         ],
-    'demo_xml': ['hr_holidays_demo.xml',],
+    'demo': ['hr_holidays_demo.xml',],
     'test': ['test/test_hr_holiday.yml',
              'test/hr_holidays_report.yml',
              ],

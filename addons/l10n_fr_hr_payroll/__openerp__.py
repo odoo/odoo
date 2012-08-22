@@ -45,7 +45,7 @@ TODO :
     """,
 
     'active': False,
-    'update_xml':[
+    'data':[
      'l10n_fr_hr_payroll_view.xml',
      'l10n_fr_hr_payroll_data.xml',
     ],

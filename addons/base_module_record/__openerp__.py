@@ -46,13 +46,12 @@ Select datetime criteria of recording and objects to be recorded and Record modu
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'wizard/base_module_record_object_view.xml',
         'wizard/base_module_record_data_view.xml',
     ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'certificate': '0083134865813',
     'images': ['images/base_module_record1.jpeg','images/base_module_record2.jpeg','images/base_module_record3.jpeg',]

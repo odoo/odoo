@@ -63,7 +63,7 @@ for online use of 'private modules'.""",
     'website': 'http://openerpbrasil.org',
     'version': '0.6',
     'depends': ['account','account_chart'],
-    'init_xml': [        
+    'data': [        
         'data/account.account.type.csv',
         'data/account.tax.code.template.csv',
         'data/account.account.template.csv',
@@ -71,11 +71,9 @@ for online use of 'private modules'.""",
         'data/account_tax_template.xml',
         'data/l10n_br_data.xml',
         'security/ir.model.access.csv',
-                ],
-    'update_xml': [
         'account_view.xml',
         'l10n_br_view.xml',
-    ],
+                ],
     'installable': True,
     'certificate' : '001280994939126801405',
 }

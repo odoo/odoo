@@ -48,8 +48,7 @@ Note that if you want to check the follow-up level for a given partner/account e
     'website': 'http://www.openerp.com',
     'images': ['images/follow_ups.jpeg','images/send_followups.jpeg'],
     'depends': ['account_accountant', 'mail'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/account_followup_security.xml',
         'security/ir.model.access.csv',
         'wizard/account_followup_print_view.xml',
@@ -58,7 +57,7 @@ Note that if you want to check the follow-up level for a given partner/account e
         'account_followup_view.xml',
         'account_followup_data.xml',
     ],
-    'demo_xml': [],
+    'demo': [],
     'test': [
         'test/account_followup.yml',
         'test/account_followup_report.yml',

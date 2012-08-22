@@ -63,13 +63,12 @@ confirmation email to communicate the login/password of moodle to your subscribe
 """,
     'author': 'OpenERP SA',
     'depends': ['event'],
-    'init_xml': [],
     'data': [
             'wizard_moodle.xml',
             'event_view.xml',
             'security/ir.model.access.csv'
             ],
-    'demo_xml': [],
+    'demo': [],
     'test': [],
     'installable': True,
     'auto_install': False,

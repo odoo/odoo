@@ -24,8 +24,8 @@
     'name': 'Point of Sale',
     'version': '1.0.1',
     'category': 'Point Of Sale',
-    "sequence": 6,
-    "summary": "Touchscreen Interface for Shops",
+    'sequence': 6,
+    'summary': 'Touchscreen Interface for Shops',
     'description': """
 This module provides a quick and easy sale process.
 ===================================================
@@ -42,9 +42,7 @@ Main features:
     'author': 'OpenERP SA',
     'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
     'depends': ['sale'],
-    'init_xml': [],
-
-    'update_xml': [
+    'data': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'wizard/pos_details.xml',
@@ -69,7 +67,7 @@ Main features:
         'account_statement_report.xml',
         'res_users_view.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'point_of_sale_demo.xml',
         'account_statement_demo.xml',
         'test/00_register_open.yml'

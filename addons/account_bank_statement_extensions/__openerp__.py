@@ -42,10 +42,8 @@ This module adds:
       and iban account numbers
     ''',
     'depends': ['account'],
-    'demo_xml': [],
-    'init_xml': [
-    ],
-    'update_xml' : [
+    'demo': [],
+    'data' : [
         'security/ir.model.access.csv',
         'account_bank_statement_view.xml',
         'account_bank_statement_report.xml',

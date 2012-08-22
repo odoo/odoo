@@ -23,7 +23,7 @@
     'name': 'Payroll',
     'version': '1.0',
     'category': 'Human Resources',
-    "sequence": 38,
+    'sequence': 38,
     'description': """
 Generic Payroll system.
 =======================
@@ -46,9 +46,7 @@ Generic Payroll system.
         'hr_holidays',
         'decimal_precision',
     ],
-    'init_xml': [
-    ],
-    'update_xml': [
+    'data': [
         'security/hr_security.xml',
         'wizard/hr_payroll_payslips_by_employees.xml',
         'hr_payroll_view.xml',
@@ -66,7 +64,7 @@ Generic Payroll system.
 #         'test/payroll_register.yml',
         # 'test/hr_payroll_report.yml',
     ],
-    'demo_xml': [
+    'demo': [
         'hr_payroll_demo.xml'
     ],
     'installable': True,

@@ -20,11 +20,11 @@
 #
 ##############################################################################
 {
-    "name": 'Belgium - Import Bank CODA Statements',
-    "version": '2.1',
-    "author": 'Noviat',
-    "category": 'Accounting & Finance',
-    "description": '''
+    'name': 'Belgium - Import Bank CODA Statements',
+    'version': '2.1',
+    'author': 'Noviat',
+    'category': 'Accounting & Finance',
+    'description': '''
 Module to import CODA bank statements.
 ======================================
 
@@ -89,25 +89,23 @@ description provided by the CODA configuration tables is based upon the CODA
 V2.2 specifications.
 If required, you can manually adjust the descriptions via the CODA configuration menu.
 ''',
-    "images"   : ["images/coda_logs.jpeg","images/import_coda_logs.jpeg"],
-    "depends": ['account_voucher','base_iban', 'l10n_be_invoice_bba', 'account_bank_statement_extensions'],
-    "demo_xml": [],
-    "init_xml": [
+    'images'   : ['images/coda_logs.jpeg','images/import_coda_logs.jpeg'],
+    'depends': ['account_voucher','base_iban', 'l10n_be_invoice_bba', 'account_bank_statement_extensions'],
+    'demo': [],
+    'data': [
         'account_coda_trans_type.xml',
         'account_coda_trans_code.xml',
         'account_coda_trans_category.xml',
         'account_coda_comm_type.xml',
-    ],
-    "update_xml" : [
         'security/ir.model.access.csv',
         'security/account_security.xml',
         'account_coda_wizard.xml',
         'account_coda_view.xml',
     ],
-    "auto_install": False,
-    "installable": True,
-    "license": 'AGPL-3',
-    "certificate" : "001237207321716002029",
+    'auto_install': False,
+    'installable': True,
+    'license': 'AGPL-3',
+    'certificate' : '001237207321716002029',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

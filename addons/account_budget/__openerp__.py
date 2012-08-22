@@ -51,8 +51,7 @@ Three reports are available:
     'website': 'http://www.openerp.com',
     'images': ['images/budget.jpeg','images/budgetary_position.jpeg'],
     'depends': ['account'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'security/account_budget_security.xml',
         'account_budget_view.xml',
@@ -63,7 +62,7 @@ Three reports are available:
         'wizard/account_budget_crossovered_summary_report_view.xml',
         'wizard/account_budget_crossovered_report_view.xml',
     ],
-    'demo_xml': ['account_budget_demo.xml'],
+    'demo': ['account_budget_demo.xml'],
     'test':[
             'test/account_budget.yml',
             'test/account_budget_report.yml',

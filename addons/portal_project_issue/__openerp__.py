@@ -24,7 +24,7 @@
     'name': 'Portal Issue',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
 This module adds issue menu and features to your portal if project_issue and portal are installed.
 ==================================================================================================

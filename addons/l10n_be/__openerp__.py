@@ -58,8 +58,7 @@ Wizards provided by this module:
         'account_chart',
         'account_coda',
     ],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'account_financial_report.xml',
         'account_pcmn_belgium.xml',
         'account_tax_code_template.xml',
@@ -74,7 +73,7 @@ Wizards provided by this module:
         'security/ir.model.access.csv',
         'l10n_be_wizard.yml'
     ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'certificate': '0031977724637',
     'images': ['images/1_config_chart_l10n_be.jpeg','images/2_l10n_be_chart.jpeg'],

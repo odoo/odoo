@@ -31,9 +31,9 @@ This Module Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Emp
     'website': 'http://www.openerp.com',
     'depends': ['import_base','crm', 'document'],
     'data': [
-        "wizard/import_message_view.xml",
-        "import_sugarcrm_view.xml",
-        "security/ir.model.access.csv",
+        'wizard/import_message_view.xml',
+        'import_sugarcrm_view.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [],
     'test': [],

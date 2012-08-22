@@ -30,8 +30,8 @@
 ##############################################################################
 
 {
-    "name": "Webkit Report Engine",
-    "description": """
+    'name': 'Webkit Report Engine',
+    'description': """
 This module adds a new Report Engine based on WebKit library (wkhtmltopdf) to support reports designed in HTML + CSS.
 =====================================================================================================================
 
@@ -66,7 +66,7 @@ After installing the library on the OpenERP Server machine, you need to set the
 path to the ``wkthtmltopdf`` executable file on each Company.
 
 If you are experiencing missing header/footer problems on Linux, be sure to
-install a "static" version of the library. The default ``wkhtmltopdf`` on
+install a 'static' version of the library. The default ``wkhtmltopdf`` on
 Ubuntu is known to have this issue.
 
 
@@ -77,21 +77,21 @@ TODO:
     * Zip return for separated PDF
     * Web client WYSIWYG
 """,
-    "version": "0.9",
-    "depends": ["base"],
-    "author": "Camptocamp",
-    "category": "Reporting", # i.e a technical module, not shown in Application install menu
-    "url": "http://http://www.camptocamp.com/",
-    "data": [ "security/ir.model.access.csv",
-              "data.xml",
-              "wizard/report_webkit_actions_view.xml",
-              "company_view.xml",
-              "header_view.xml",
-              "ir_report_view.xml",
+    'version': '0.9',
+    'depends': ['base'],
+    'author': 'Camptocamp',
+    'category': 'Reporting', # i.e a technical module, not shown in Application install menu
+    'url': 'http://http://www.camptocamp.com/',
+    'data': [ 'security/ir.model.access.csv',
+              'data.xml',
+              'wizard/report_webkit_actions_view.xml',
+              'company_view.xml',
+              'header_view.xml',
+              'ir_report_view.xml',
     ],
-    "installable": True,
-    "auto_install": False,
-    "certificate": "001159699313338995949",
+    'installable': True,
+    'auto_install': False,
+    'certificate': '001159699313338995949',
     'images': ['images/companies_webkit.jpeg','images/header_html.jpeg','images/header_img.jpeg'],
 }
 

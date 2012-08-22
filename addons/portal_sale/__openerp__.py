@@ -24,7 +24,7 @@
     'name': 'Portal Sale',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
 This module adds sale menu and features to your portal if sale and portal are installed.
 ========================================================================================
@@ -34,7 +34,7 @@ This module adds sale menu and features to your portal if sale and portal are in
     'data': [
         'security/portal_security.xml',
         'portal_sale_view.xml',
-        "security/ir.model.access.csv",
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'auto_install':True,

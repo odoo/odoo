@@ -21,26 +21,25 @@
 
 
 {
-    "name" : "Marketing",
-    "version" : "1.1",
-    "depends" : ["base", "base_setup"],
-    "author" : "OpenERP SA",
-    "category": 'Hidden/Dependency',
-    "description": """
+    'name' : 'Marketing',
+    'version' : '1.1',
+    'depends' : ['base', 'base_setup'],
+    'author' : 'OpenERP SA',
+    'category': 'Hidden/Dependency',
+    'description': """
 Menu for Marketing.
 ===================
 
 Contains the installer for marketing-related modules.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/marketing_security.xml',
         'security/ir.model.access.csv',
         'marketing_view.xml',
         'res_config_view.xml',
     ],
-    'demo_xml': ['marketing_demo.xml'],
+    'demo': ['marketing_demo.xml'],
     'installable': True,
     'auto_install': False,
     'certificate' : '00598574977629228189',

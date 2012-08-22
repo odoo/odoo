@@ -34,19 +34,19 @@ The user can also publish notes.
     """,
     'author': 'OpenERP SA',
     'depends': ['base'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'board_view.xml',
         'board_mydashboard_view.xml'
     ],
-    "js": [
+    'js': [
         'static/src/js/dashboard.js',
     ],
-    "css": [
+    'css': [
         'static/src/css/dashboard.css',
     ],
     'qweb': [
-        "static/src/xml/*.xml",
+        'static/src/xml/*.xml',
     ],
 
     'installable': True,

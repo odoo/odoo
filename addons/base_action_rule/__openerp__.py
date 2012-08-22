@@ -36,14 +36,12 @@ trigger an automatic reminder email.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'mail'],
-    'init_xml': [
-        'base_action_rule_data.xml'
-    ],
-    'update_xml': [
+    'data': [
         'base_action_rule_view.xml',
         'security/ir.model.access.csv',
+        'base_action_rule_data.xml'
     ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate' : '001017908446466333429',

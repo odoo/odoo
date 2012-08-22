@@ -34,18 +34,15 @@ automatically new claims based on incoming emails.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['crm'],
-    'init_xml': [
-         'crm_claim_data.xml',
-    ],
-
-    'update_xml': [
+    'data': [
         'crm_claim_view.xml',
         'crm_claim_menu.xml',
         'security/ir.model.access.csv',
         'report/crm_claim_report_view.xml',
         'res_config_view.xml',
+        'crm_claim_data.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'crm_claim_demo.xml',
     ],
     'test': ['test/process/claim.yml',

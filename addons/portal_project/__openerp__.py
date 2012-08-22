@@ -24,7 +24,7 @@
     'name': 'Portal Project',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
 This module adds project menu and features (tasks) to your portal if project and portal are installed.
 ======================================================================================================

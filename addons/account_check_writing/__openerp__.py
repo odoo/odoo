@@ -19,26 +19,25 @@
 #
 ##############################################################################
 {
-    "name" : "Check Writing",
-    "version" : "1.1",
-    "author" : "OpenERP SA, NovaPoint Group",
-    "category": "Generic Modules/Accounting",
-    "description": """
+    'name' : 'Check Writing',
+    'version' : '1.1',
+    'author' : 'OpenERP SA, NovaPoint Group',
+    'category': 'Generic Modules/Accounting',
+    'description': """
 Module for the Check Writing and Check Printing.
 ================================================
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    "depends" : [
-        "account_voucher",
+    'depends' : [
+        'account_voucher',
         ],
-    'update_xml': [
+    'data': [
         'account_check_writing_report.xml',
         'account_view.xml',
         'account_voucher_view.xml',
         'account_check_writing_data.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'account_demo.xml',
     ],
     'test': [

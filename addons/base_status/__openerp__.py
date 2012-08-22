@@ -33,9 +33,8 @@ This module handles state and stage. It is derived from the crm_base and crm_cas
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [],
+    'data': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
 }

@@ -29,7 +29,7 @@
     'auto_install': False,
     'web': True,
     'js': ['static/src/js/gdocs.js'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'res_config_user_view.xml'
     ],

@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Multi Language Chart of Accounts",
-    "version" : "1.1",
-    "author" : "OpenERP SA",
-    "category": 'Hidden/Dependency',
-    "description": """
+    'name' : 'Multi Language Chart of Accounts',
+    'version' : '1.1',
+    'author' : 'OpenERP SA',
+    'category': 'Hidden/Dependency',
+    'description': """
     * Multi language support for Chart of Accounts, Taxes, Tax Codes, Journals,
       Accounting Templates, Analytic Chart of Accounts and Analytic Journals.
     * Setup wizard changes
@@ -32,12 +32,9 @@
           templates to target objects.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    "depends" : ['account_accountant'],
-    'update_xml': [
-                ],
-    'demo_xml': [
-                ],
+    'depends' : ['account_accountant'],
+    'data': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
 }

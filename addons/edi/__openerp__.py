@@ -45,11 +45,11 @@ documentation at http://doc.openerp.com.
     'js': [
         'static/src/js/edi.js',
     ],
-    "css": [
-        "static/src/css/edi.css"
+    'css': [
+        'static/src/css/edi.css'
     ],
     'qweb': [
-        "static/src/xml/*.xml",
+        'static/src/xml/*.xml',
     ],
     'installable': True,
     'auto_install': False,

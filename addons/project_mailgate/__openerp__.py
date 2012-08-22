@@ -21,14 +21,14 @@
 
 
 {
-    "name": "Tasks-Mail Integration",
-    "version": "1.1",
-    "author": "OpenERP SA",
-    "website": "http://www.openerp.com",
-    "category": "Project Management",
-    "images": ["images/project_mailgate_task.jpeg"],
-    "depends": ["project", "mail"],
-    "description": """
+    'name': 'Tasks-Mail Integration',
+    'version': '1.1',
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'category': 'Project Management',
+    'images': ['images/project_mailgate_task.jpeg'],
+    'depends': ['project', 'mail'],
+    'description': """
 This module can automatically create Project Tasks based on incoming emails.
 ============================================================================
 
@@ -42,11 +42,8 @@ There are two common alternatives to configure the mailbox integration:
     * Set it up manually on your mail server based on the 'mail gateway' script
       provided in the ``mail`` module - and connect it to the `project.task` model.
     """,
-    "init_xml": [],
-    "update_xml": [
-    ],
-    'demo_xml': [
-    ],
+    'data': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate': '001075048780413258261',

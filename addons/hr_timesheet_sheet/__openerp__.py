@@ -24,8 +24,8 @@
     'name': 'Timesheets',
     'version': '1.0',
     'category': 'Human Resources',
-    "sequence": 16,
-    "summary": "Timesheets, Attendances, Activities",
+    'sequence': 16,
+    'summary': 'Timesheets, Attendances, Activities',
     'description': """
 This module helps you to easily encode and validate timesheet and attendances within the same view.
 ===================================================================================================
@@ -53,8 +53,7 @@ The validation can be configured in the company:
     'website': 'http://www.openerp.com',
     'images': ['images/hr_my_timesheet.jpeg','images/hr_timesheet_analysis.jpeg','images/hr_timesheet_sheet_analysis.jpeg','images/hr_timesheets.jpeg'],
     'depends': ['hr_timesheet', 'hr_timesheet_invoice', 'process'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_sheet_security.xml',
         'hr_timesheet_sheet_view.xml',
@@ -67,7 +66,7 @@ The validation can be configured in the company:
         'hr_timesheet_sheet_data.xml',
         'res_config_view.xml',
     ],
-    'demo_xml': ['hr_timesheet_sheet_demo.xml',
+    'demo': ['hr_timesheet_sheet_demo.xml',
 
                  ],
     'test':['test/test_hr_timesheet_sheet.yml'],

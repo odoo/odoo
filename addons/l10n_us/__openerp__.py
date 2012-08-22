@@ -19,21 +19,20 @@
 #
 ##############################################################################
 {
-    "name": "United States - Chart of accounts",
-    "version": "1.1",
-    "author": "OpenERP SA",
-    "category": 'Localization/Account Charts',
-    "description": """
+    'name': 'United States - Chart of accounts',
+    'version': '1.1',
+    'author': 'OpenERP SA',
+    'category': 'Localization/Account Charts',
+    'description': """
 United States - Chart of accounts.
 ==================================
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    "depends": [
-        "account_chart",
+    'depends': [
+        'account_chart',
         ],
-    'update_xml': [
-        "l10n_us_account_type.xml",
+    'data': [
+        'l10n_us_account_type.xml',
         'account_chart_template.xml',
         'account.account.template.csv',
         'account_tax_code_template.xml',
@@ -41,10 +40,8 @@ United States - Chart of accounts.
         'account_chart_template_after.xml',
         'l10n_us_wizard.xml'
     ],
-    'demo_xml': [
-    ],
-    'test': [
-    ],
+    'demo': [],
+    'test': [],
     'installable': True,
     'auto_install': False,
 }
