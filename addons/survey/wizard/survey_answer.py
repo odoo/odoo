@@ -152,8 +152,6 @@ class survey_question_wiz(osv.osv_memory):
 
                     etree.SubElement(xml_header_title, 'label', {'string': tools.ustr(pag_rec.title) ,'colspan': '2' ,'class' : 'oe_survey_title'})
                     xml_header_group = etree.SubElement(xml_header_title, 'group', {'col': '4', 'colspan': '1'})
-
-# Button and page
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
                         etree.SubElement(xml_form, 'separator', {'string' : '','colspan': '4'})
                         context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
@@ -405,20 +403,21 @@ class survey_question_wiz(osv.osv_memory):
                     if sur_rec.send_response:
                         survey_data = survey_obj.browse(cr, uid, survey_id)
                         response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
-
                         report = self.create_report(cr, uid, [survey_id], 'report.survey.browse.response', survey_data.title,context)
                         attachments = {}
-                        file = open(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
-                        file_data = ""
-                        while 1:
-                            line = file.readline()
-                            file_data += line
-                            if not line:
-                                break
+                        pdf_filename = addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf" 
+                        if os.path.exists(pdf_filename):
+                            file = open(pdf_filename)
+                            file_data = ""
+                            while 1:
+                                line = file.readline()
+                                file_data += line
+                                if not line:
+                                    break
 
-                        attachments[survey_data.title + ".pdf"] = file_data
-                        file.close()
-                        os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
+                            attachments[survey_data.title + ".pdf"] = file_data
+                            file.close()
+                            os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         context.update({'response_id':response_id})
                         user_email = user_obj.browse(cr, uid, uid, context).email
                         resp_email = survey_data.responsible_id and survey_data.responsible_id.email or False
@@ -471,7 +470,6 @@ class survey_question_wiz(osv.osv_memory):
 
         except Exception,e:
             return (False, str(e))
-
         return (True, ret_file_name)
 
     def default_get(self, cr, uid, fields_list, context=None):
