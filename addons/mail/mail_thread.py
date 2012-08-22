@@ -86,7 +86,6 @@ class mail_thread(osv.Model):
             res[thread.id]['message_is_follower'] = user.partner_id.id in [follower.id for follower in thread.message_follower_ids]
         return res
 
-    # FP Note: todo
     def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         res = {}
@@ -103,8 +102,8 @@ class mail_thread(osv.Model):
     _columns = {
         'message_is_follower': fields.function(_get_message_data,
             type='boolean', string='Is a Follower', multi='_get_message_data'),
+        # missing domain on model
         'message_follower_ids': fields.many2many('res.partner', 'mail_followers', 'res_id', 'partner_id',
-            domain=lambda self: [('res_model','=',self._name)],
             string='Followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model','=',self._name)],
@@ -112,6 +111,7 @@ class mail_thread(osv.Model):
             help="All messages related to the current document."),
         'message_unread': fields.function(_get_message_data, fnct_search=_search_unread, 
             string='Has Unread Messages',
+            type='boolean',
             help="When checked, new messages require your attention.",
             multi="_get_message_data"),
         'message_summary': fields.function(_get_message_data, method=True,
