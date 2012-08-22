@@ -297,7 +297,6 @@ class mail_thread(osv.Model):
                                     thread_id, custom_values,
                                     context=context)
         msg = self.parse_message(cr, uid, msg_txt, save_original=save_original, context=context)
-        msg['state'] = 'received'
         if strip_attachments and 'attachments' in msg:
             del msg['attachments']
         for model, thread_id, custom_values, user_id in routes:
@@ -543,7 +542,7 @@ class mail_thread(osv.Model):
 
         values = kwargs
         values.update( {
-            'model': thread_id and self._name or False,
+            'model': thread_id and context.get('thread_model', self._name) or False,
             'res_id': thread_id or False,
             'body': body,
             'subject': subject,

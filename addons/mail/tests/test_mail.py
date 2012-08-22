@@ -82,26 +82,27 @@ class test_mail(common.TransactionCase):
         self.group_tech_id = self.mail_group.create(self.cr, self.uid, {'name': 'tech'})
 
     def test_message_process(self):
+        cr, uid = self.cr, self.uid
         # Incoming mail creates a new mail_group "frogs"
-        self.assertEqual(self.mail_group.search(self.cr, self.uid, [('name','=','frogs')]), [])
+        self.assertEqual(self.mail_group.search(cr, uid, [('name','=','frogs')]), [])
         mail_frogs = MAIL_TEMPLATE.format(to='groups@example.com, other@gmail.com', subject='frogs', extra='')
-        self.mail_thread.message_process(self.cr, self.uid, None, mail_frogs)
-        frog_groups = self.mail_group.search(self.cr, self.uid, [('name','=','frogs')])
+        self.mail_thread.message_process(cr, uid, None, mail_frogs)
+        frog_groups = self.mail_group.search(cr, uid, [('name','=','frogs')])
         self.assertTrue(len(frog_groups) == 1)
 
         # Previously-created group can be emailed now - it should have an implicit alias group+frogs@...
-        frog_group = self.mail_group.browse(self.cr, self.uid, frog_groups[0])
+        frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         group_messages = frog_group.message_ids
         self.assertTrue(len(group_messages) == 1, 'New group should only have the original message')
         mail_frog_news = MAIL_TEMPLATE.format(to='Friendly Frogs <group+frogs@example.com>', subject='news', extra='')
-        self.mail_thread.message_process(self.cr, self.uid, None, mail_frog_news)
+        self.mail_thread.message_process(cr, uid, None, mail_frog_news)
         frog_group.refresh()
         self.assertTrue(len(frog_group.message_ids) == 2, 'Group should contain 2 messages now')
 
         # Even with a wrong destination, a reply should end up in the correct thread
         mail_reply = MAIL_TEMPLATE.format(to='erroneous@example.com>', subject='Re: news',
                                           extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n'%frog_group.id)
-        self.mail_thread.message_process(self.cr, self.uid, None, mail_reply)
+        self.mail_thread.message_process(cr, uid, None, mail_reply)
         frog_group.refresh()
         self.assertTrue(len(frog_group.message_ids) == 3, 'Group should contain 3 messages now')
         
@@ -109,4 +110,4 @@ class test_mail(common.TransactionCase):
         mail_spam = MAIL_TEMPLATE.format(to='noone@example.com', subject='spam', extra='')
         self.assertRaises(Exception,
                           self.mail_thread.message_process,
-                          self.cr, self.uid, None, mail_spam)
+                          cr, uid, None, mail_spam)
