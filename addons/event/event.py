@@ -52,10 +52,13 @@ class event_event(osv.osv):
     _inherit = ['ir.needaction_mixin','mail.thread']
 
     def name_get(self, cr, uid, ids, context=None):
+        event_obj = self.browse(cr, uid, ids, context=context)
         if not ids:
               return []
+        if not isinstance(event_obj,list):
+            event_obj = [event_obj]
         res = []
-        for record in self.browse(cr, uid, ids, context=context):
+        for record in event_obj:
             date = record.date_begin.split(" ")[0]
             date_end = record.date_end.split(" ")[0]
             if date != date_end:
