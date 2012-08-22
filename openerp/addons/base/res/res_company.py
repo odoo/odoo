@@ -139,7 +139,6 @@ class res_company(osv.osv):
     ]
     def on_change_header(self, cr, uid, ids, customize_footer, phone, email, fax, website, vat, reg=False, context=None):
         val = []
-        res_id=self.browse(cr, uid, ids, context=context)[0]
         if customize_footer:
             return {}
         if phone: val.append(_('Phone: ')+phone)
