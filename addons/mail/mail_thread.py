@@ -20,19 +20,20 @@
 ##############################################################################
 
 import base64
+import dateutil
 import email
 import logging
-import re
-import time
-import xmlrpclib
 from email.utils import parsedate
 from email.message import Message
-
 from osv import osv, fields
 from mail_message import decode
+import re
+import time
 import tools
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
+import pytz
+import xmlrpclib
 
 _logger = logging.getLogger(__name__)
 
@@ -163,12 +164,13 @@ class mail_thread(osv.Model):
     # Mail gateway
     #------------------------------------------------------
 
-    def _message_find_partners(self, cr, uid, message, headers=['From'], context=None):
-        s = ', '.join([decode(message.get(h)) for h in headers])
+    def _message_find_partners(self, cr, uid, message, header_fields=['From'], context=None):
+        """ Find partners related to some header fields of the message. """
+        s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
         mails = tools.email_split(s)
         result = []
-        for m in mails:
-            result += self.pool.get('res.partner').search(cr, uid, [('email','ilike',m)], context=context)
+        for email in mails:
+            result += self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], context=context)
         return result
 
     def _message_find_user_id(self, cr, uid, message, context=None):
@@ -463,28 +465,12 @@ class mail_thread(osv.Model):
         partner_ids = self._message_find_partners(cr, uid, msg_txt, ['From','To','Delivered-To','CC','Cc'], context=context)
         msg['partner_ids'] = partner_ids
 
-        #if 'To' in msg_fields:
-        #    msg['to'] = decode(msg_txt.get('To'))
-
-        #if 'Delivered-To' in msg_fields:
-        #    msg['to'] = decode(msg_txt.get('Delivered-To'))
-
-        #if 'CC' in msg_fields:
-        #    msg['cc'] = decode(msg_txt.get('CC'))
-
-        #if 'Cc' in msg_fields:
-        #    msg['cc'] = decode(msg_txt.get('Cc'))
-
-        #if 'Reply-To' in msg_fields:
-        #    msg['reply'] = decode(msg_txt.get('Reply-To'))
-
-        # FP Note: I propose to store the current datetime rather than the email date
-        #if 'Date' in msg_fields:
-        #    date_hdr = decode(msg_txt.get('Date'))
-        #    # convert from email timezone to server timezone
-        #    date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
-        #    date_server_datetime_str = date_server_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        #    msg['date'] = date_server_datetime_str
+        if 'Date' in msg_fields:
+           date_hdr = decode(msg_txt.get('Date'))
+           # convert from email timezone to server timezone
+           date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
+           date_server_datetime_str = date_server_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+           msg['date'] = date_server_datetime_str
 
         #if 'Content-Transfer-Encoding' in msg_fields:
         #    msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
