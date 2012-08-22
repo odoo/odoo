@@ -94,7 +94,7 @@ class hr_holidays(osv.osv):
     _name = "hr.holidays"
     _description = "Leave"
     _order = "type desc, date_from asc"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = [ 'mail.thread','ir.needaction_mixin']
 
     def _employee_get(self, cr, uid, context=None):
         ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)

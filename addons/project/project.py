@@ -66,7 +66,7 @@ class project(osv.osv):
     _description = "Project"
     _inherits = {'account.analytic.account': "analytic_account_id",
                  "mail.alias": "alias_id"}
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
@@ -544,7 +544,7 @@ class task(base_stage, osv.osv):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_start"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """

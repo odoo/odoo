@@ -43,7 +43,7 @@ class crm_meeting(base_state, osv.Model):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ["calendar.event", 'ir.needaction_mixin', "mail.thread"]
+    _inherit = ["calendar.event", "mail.thread", 'ir.needaction_mixin']
     _columns = {
         # base_state required fields
         'create_date': fields.datetime('Creation Date', readonly=True),

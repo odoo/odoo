@@ -47,7 +47,7 @@ class event_event(osv.osv):
     _name = 'event.event'
     _description = __doc__
     _order = 'date_begin'
-    _inherit = ['ir.needaction_mixin','mail.thread']
+    _inherit = ['mail.thread','ir.needaction_mixin']
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
