@@ -24,13 +24,14 @@
     'name': 'Expenses Management',
     'version': '1.0',
     'category': 'Human Resources',
-    "sequence": 30,
-    "summary": "Expenses Validation, Invoicing",
+    'sequence': 30,
+    'summary': 'Expenses Validation, Invoicing',
     'description': """
 This module aims to manage employee's expenses.
 ===============================================
 
 The whole workflow is implemented:
+----------------------------------
     * Draft expense
     * Confirmation of the sheet by the employee
     * Validation by his manager
@@ -44,8 +45,7 @@ re-invoice your customer's expenses if your work by project.
     'website': 'http://www.openerp.com',
     'images': ['images/hr_expenses_analysis.jpeg', 'images/hr_expenses.jpeg'],
     'depends': ['hr', 'account_voucher'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'hr_expense_data.xml',
         'hr_expense_sequence.xml',
@@ -58,13 +58,11 @@ re-invoice your customer's expenses if your work by project.
         'board_hr_expense_view.xml',
         'hr_expense_installer_view.xml',
     ],
-    'demo_xml': [
-        'hr_expense_demo.xml',
-        ],
+    'demo': ['hr_expense_demo.xml'],
     'test': [
-             'test/expense_demo.yml',
-             'test/expense_process.yml',
-             ],
+        'test/expense_demo.yml',
+        'test/expense_process.yml',
+    ],
     'installable': True,
     'auto_install': False,
     'certificate': '0062479841789',
