@@ -1,11 +1,39 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <record id="base.user_root" model="res.users">
+            <field name="ean13">0410100000006</field>
+        </record>
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
+            <field name="ean13">0410200000005</field>
         </record>
-    	<record id="account.cash_journal" model="account.journal">
+    	  <record id="account.cash_journal" model="account.journal">
             <field eval="True" name="journal_user"/>
+        </record>
+        <record id="base.user_jsmith" model="res.users">
+            <field name="name">John Smith (Cashier)</field>
+            <field name="login">jsmith</field>
+            <field name="ean13">0410300000004</field>
+            <field name="groups_id" eval="[(4,ref('group_pos_manager'))]"/>
+        </record>
+        <record id="base.user_jdoe" model="res.users">
+            <field name="name">John Doe (Cashier)</field>
+            <field name="login">jdoe</field>
+            <field name="ean13">0410400000003</field>
+            <field name="groups_id" eval="[(4,ref('group_pos_manager'))]"/>
+        </record>
+        <record id="base.user_jbloggs" model="res.users">
+            <field name="name">Joe Bloggs (Client)</field>
+            <field name="login">jbloggs</field>
+            <field name="ean13">0420100000005</field>
+            <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
+        </record>
+        <record id="base.user_bsoap" model="res.users">
+            <field name="name">Bob Soap (Client)</field>
+            <field name="login">bsoap</field>
+            <field name="ean13">0420200000004</field>
+            <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
         </record>
 
         <!-- Resource: pos.category -->
@@ -154,6 +182,7 @@
           <field name="list_price">1.98</field>
           <field name="name">Boni Oranges</field>
           <field name="to_weight">True</field>
+          <field name="ean13">2100002000003</field>
           <field name="pos_categ_id" ref="oranges"/>
           <field name="uom_id" ref="product.product_uom_kgm" />
           <field name="uom_po_id" ref="product.product_uom_kgm" />
@@ -248,6 +277,7 @@
           <field name="list_price">5.10</field>
           <field name="name">Fishing</field>
           <field name="to_weight">True</field>
+          <field name="ean13">2300001000008</field>
           <field name="pos_categ_id" ref="rouges_noyau_fruits"/>
           <field name="uom_id" ref="product.product_uom_kgm" />
           <field name="uom_po_id" ref="product.product_uom_kgm" />
@@ -316,6 +346,7 @@
           <field name="list_price">1.28</field>
           <field name="name">Onions</field>
           <field name="to_weight">True</field>
+          <field name="ean13">2100001000004</field>
           <field name="pos_categ_id" ref="oignons_ail_echalotes"/>
           <field name="uom_id" ref="product.product_uom_kgm" />
           <field name="uom_po_id" ref="product.product_uom_kgm" />
@@ -389,6 +420,7 @@
         <record id="coca_regular_33cl" model="product.product">
           <field name="list_price">0.51</field>
           <field name="name">Coca-Cola Regular 33cl</field>
+          <field name="ean13">5449000000996</field>
           <field name="pos_categ_id" ref="coke"/>
           <field name="image">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</field>
         </record>
@@ -1022,3 +1054,4 @@
 
     </data>
 </openerp>
+
