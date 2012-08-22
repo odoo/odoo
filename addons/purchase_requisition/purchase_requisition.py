@@ -167,7 +167,10 @@ class purchase_requisition(osv.osv):
             for line in requisition.line_ids:
                 product = line.product_id
                 seller_price, qty, default_uom_po_id, date_planned = self._seller_details(cr, uid, line, supplier, context=context)
-                taxes_ids = product.supplier_taxes_id
+                if product.supplier_taxes_id:
+                    taxes_ids = product.supplier_taxes_id
+                else:
+                    taxes_ids = product.categ_id.supplier_taxes_id
                 taxes = fiscal_position.map_tax(cr, uid, supplier.property_account_position, taxes_ids)
                 purchase_order_line.create(cr, uid, {
                     'order_id': purchase_id,
