@@ -1490,4 +1490,10 @@ class mail_message(osv.osv):
 
 mail_message()
 
+class procurement_order(osv.osv):
+    _inherit = "procurement.order"
+
+    _columns = {
+        'property_ids': fields.many2many('sale.order', 'sale_order_property_rel', 'procurement_id','order_id', 'Properties'),
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
