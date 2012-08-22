@@ -2,22 +2,8 @@
     Testing for hierarchical search in M2M
 -
     !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('category_id', 'child_of','supplier')])
+        ids = self.search(cr, uid, [('category_id', 'child_of',ref('res_partner_category_0'))])
         assert len(ids) >= 1, ids
-
--
-    Test hierarchical search in M2M with child ID1
--
-    !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('category_id', 'child_of','Components Supplier')])
-        assert len(ids) >= 1, ids
--
-    Test hierarchical search in M2M with child ID2
--
-    !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('category_id', 'child_of','Miscellaneous Suppliers')])
-        assert len(ids) >= 1, ids
-
 -
     "1.0 Setup test partner categories: parent root"
 -
@@ -463,8 +449,8 @@
     !python {model: res.partner }: |
         all_ids = self.search(cr, uid, [('name', '=like', 'A_e_or')])
         assert len(all_ids) == 1, "Must match one partner (Axelor), got %r"%all_ids
-        all_ids = self.search(cr, uid, [('name', '=ilike', 'm_____')])
-        assert len(all_ids) == 1, "Must match *only* one partner (Maxtor), got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=ilike', 'v%')])
+        assert len(all_ids) >= 1, "Must match one partner (Vicking Direct), got %r"%all_ids
 -
     Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on translated field.
 -
@@ -511,7 +497,7 @@
     Testing for Many2Many field with category supplier and active=False
 -
     !python {model: res.partner }: |
-        vals = {'category_id': [(6, 0, [ref("base.res_partner_category_8")])],
+        vals = {'category_id': [(6, 0, [ref("base.res_partner_category_1")])],
                 'name': 'OpenERP Test',
                 'active': False,
                 'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': ref("base.be")})]

@@ -279,7 +279,11 @@ email_re = re.compile(r"""
     """, re.VERBOSE)
 res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-reference_re = re.compile("<.*-open(?:object|erp)-(\\d+).*@(.*)>", re.UNICODE)
+
+# Updated in 7.0 to match the model name as well
+# Typical form of references is <timestamp-openerp-record_id-model_name@domain>
+# group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
+reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?.*@(.*)>", re.UNICODE)
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     """ From an HTML text, convert the HTML to plain text.
@@ -1136,4 +1140,37 @@ class UnquoteEvalContext(defaultdict):
     def __missing__(self, key):
         return unquote(key)
 
+
+class mute_logger(object):
+    """Temporary suppress the logging.
+    Can be used as context manager or decorator.
+
+        @mute_logger('openerp.plic.ploc')
+        def do_stuff():
+            blahblah()
+
+        with mute_logger('openerp.foo.bar'):
+            do_suff()
+
+    """
+    def __init__(self, *loggers):
+        self.loggers = loggers
+
+    def filter(self, record):
+        return 0
+
+    def __enter__(self):
+        for logger in self.loggers:
+            logging.getLogger(logger).addFilter(self)
+
+    def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):
+        for logger in self.loggers:
+            logging.getLogger(logger).removeFilter(self)
+
+    def __call__(self, func):
+        @wraps(func)
+        def deco(*args, **kwargs):
+            with self:
+                return func(*args, **kwargs)
+        return deco
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

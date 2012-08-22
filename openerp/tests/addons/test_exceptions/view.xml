@@ -5,7 +5,6 @@
         <record id="view_test_exceptions_model" model="ir.ui.view">
             <field name="name">Test exceptions</field>
             <field name="model">test.exceptions.model</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Test exceptions">
                       <label string="Each button generates a specific exception on the server. The text on the right is the expected representation of the exception when displayed on the client."/>
@@ -51,7 +50,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem icon="STOCK_PREFERENCES" id="base.menu_tests" name="Tests"/>
+        <menuitem icon="STOCK_PREFERENCES" id="base.menu_tests" name="Tests" sequence="1000000"/>
 
         <menuitem id="menu_test_exceptions" parent="base.menu_tests" name="Test exceptions"/>
 
