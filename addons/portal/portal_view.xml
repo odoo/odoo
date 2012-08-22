@@ -2,6 +2,25 @@
 <openerp>
     <data>
 
+        <!-- Top menu item -->
+        <menuitem name="Portal"
+            id="portal_menu"
+            groups="base.group_no_one,portal.group_portal_member,auth_anonymous.group_anonymous"
+            sequence="20"/>
+
+            <menuitem name="Our company" id="portal_company" parent="portal_menu" sequence="10"/>
+                <menuitem name="News" id="portal_company_news" parent="portal_company" sequence="10" action="action_news"/>
+                <menuitem name="Jobs" id="portal_jobs" parent="portal_company" sequence="20" action="action_jobs"/>
+
+            <!--
+                Create menu items that we'll leave empty for now - they'll be
+                filled up by other portal modules.
+            -->
+            <menuitem name="Orders" id="portal_orders" parent="portal_menu" sequence="20"/>
+            <menuitem name="Invoices and Payments" id="portal_invoices_payements" parent="portal_menu" sequence="30"/>
+            <menuitem name="Projects" id="portal_projects" parent="portal_menu" sequence="40"/>
+            <menuitem name="After Sale Services" id="portal_after_sales" parent="portal_menu" sequence="50"/>
+
         <!-- portal tree view -->
         <record id="portal_list_view" model="ir.ui.view">
             <field name="name">Portal List</field>
