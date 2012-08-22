@@ -845,8 +845,7 @@ class sale_order(osv.osv):
             'procure_method': line.type,
             'move_id': move_id,
             'company_id': order.company_id.id,
-            'note': '\n'.join(line.name.split('\n')[1:]),
-            'property_ids': [(6, 0, [x.id for x in line.property_ids])]
+            'note': '\n'.join(line.name.split('\n')[1:])
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
@@ -1490,10 +1489,4 @@ class mail_message(osv.osv):
 
 mail_message()
 
-class procurement_order(osv.osv):
-    _inherit = "procurement.order"
-
-    _columns = {
-        'property_ids': fields.many2many('sale.order', 'sale_order_property_rel', 'procurement_id','order_id', 'Properties'),
-    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
