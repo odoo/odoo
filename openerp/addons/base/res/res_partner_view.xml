@@ -95,7 +95,7 @@
             <field name="arch" type="xml">
                 <form string="Partners" version="7.0">
                 <sheet>
-                    <field name="image_medium" widget='image' class="oe_avatar oe_left"/>
+                    <field name="image" widget='image' class="oe_left" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
                             <label for="name"/> (
@@ -164,7 +164,7 @@
                                     <field name="phone"/>
                                     <field name="street"/>
                                     <field name="street2"/>
-                                    <field name="image_small"/>
+                                    <field name="image"/>
                                     <field name="zip"/>
                                     <field name="city"/>
                                     <field name="country_id"/>
@@ -177,7 +177,7 @@
                                                 <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
                                                 <div class="oe_module_vignette">
                                                 <a type="edit">
-                                                    <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
+                                                    <img t-att-src="kanban_image('res.partner', 'image', record.id.value, {'preview_image': 'image_small'})" class="oe_avatar oe_kanban_avatar_smallbox"/>
                                                 </a>
                                                     <div class="oe_module_desc">
                                                         <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
@@ -201,7 +201,7 @@
                                     </templates>
                                 </kanban>
                                 <form string="Contact" version="7.0">
-                                    <field name="image_small" widget='image' class="oe_avatar oe_left"/>
+                                    <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"'/>
                                     <div class="oe_title">
                                         <group>
                                             <field name="name"/>
@@ -290,7 +290,6 @@
                     <field name="phone"/>
                     <field name="street"/>
                     <field name="street2"/>
-                    <field name="image_small"/>
                     <field name="zip"/>
                     <field name="city"/>
                     <field name="country_id"/>
