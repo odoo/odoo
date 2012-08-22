@@ -1,51 +1,6 @@
 function openerp_pos_models(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
-    module.LocalStorageDAO = instance.web.Class.extend({
-        add_operation: function(operation) {
-            var self = this;
-            return $.async_when().pipe(function() {
-                var tmp = self._get('oe_pos_operations', []);
-                var last_id = self._get('oe_pos_operations_sequence', 1);
-                tmp.push({'id': last_id, 'data': operation});
-                self._set('oe_pos_operations', tmp);
-                self._set('oe_pos_operations_sequence', last_id + 1);
-            });
-        },
-        remove_operation: function(id) {
-            var self = this;
-            return $.async_when().pipe(function() {
-                var tmp = self._get('oe_pos_operations', []);
-                tmp = _.filter(tmp, function(el) {
-                    return el.id !== id;
-                });
-                self._set('oe_pos_operations', tmp);
-            });
-        },
-        get_operations: function() {
-            var self = this;
-            return $.async_when().pipe(function() {
-                return self._get('oe_pos_operations', []);
-            });
-        },
-        _get: function(key, default_) {
-            var txt = localStorage['oe_pos_dao_'+key];
-            if (! txt)
-                return default_;
-            return JSON.parse(txt);
-        },
-        _set: function(key, value) {
-            localStorage['oe_pos_dao_'+key] = JSON.stringify(value);
-        },
-        reset_stored_data: function(){
-            for(key in localStorage){
-                if(key.indexOf('oe_pos_dao_') === 0){
-                    delete localStorage[key];
-                }
-            }
-        },
-    });
-
     var fetch = function(model, fields, domain, ctx){
         return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
     };
@@ -58,29 +13,20 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     // this is done asynchronously, a ready deferred alows the GUI to wait interactively 
     // for the loading to be completed 
     // There is a single instance of the PosModel for each Front-End instance, it is usually called
-    // 'pos' and is available to almost all widgets.
+    // 'pos' and is available to all widgets extending PosWidget.
 
     module.PosModel = Backbone.Model.extend({
         initialize: function(session, attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
             var  self = this;
-            this.dao = new module.LocalStorageDAO();            // used to store the order's data on the Hard Drive
+            this.session = session;                 
             this.ready = $.Deferred();                          // used to notify the GUI that the PosModel has loaded all resources
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
-            //this.build_tree = _.bind(this.build_tree, this);    // ???
-            this.session = session;                 
-            this.categories = {};
-            this.root_category = null;
-            this.weightable_categories = [];                    // a flat list of all categories that directly contain weightable products
-            this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
-            this.proxy = new module.ProxyDevice();             // used to communicate to the hardware devices via a local proxy
 
-            // pos settings
-            this.use_scale              = false;
-            this.use_proxy_printer      = false;
-            this.use_virtual_keyboard   = false;
-            this.use_websql             = false;
-            this.use_barcode_scanner    = false;
+            this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
+            this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
+            this.db = new module.PosLS();                       // a database used to store the products and categories
+            this.db.clear('products','categories');
 
             // default attributes values. If null, it will be loaded below.
             this.set({
@@ -98,12 +44,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'products':         new module.ProductCollection(), 
                 'cashRegisters':    null, 
 
-                'product_list':     null,   // the list of all products, does not change. 
                 'bank_statements':  null,
                 'taxes':            null,
                 'pos_session':      null,
                 'pos_config':       null,
-                'categories':       null,
+                'units':            null,
+                'units_by_id':      null,
 
                 'selectedOrder':    undefined,
             });
@@ -113,10 +59,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
 
-            var user_def = fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
+            var loaded = fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
                 .pipe(function(users){
-                    var user = users[0];
-                    self.set('user',user);
+                    self.set('user',users[0]);
 
                     return fetch('res.company',
                     [
@@ -124,171 +69,114 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'email',
                         'website',
                         'company_registry',
-                        //TODO contact_address
                         'vat',
                         'name',
-                        'phone'
+                        'phone',
+                        'partner_id',
                     ],
-                    [['id','=',user.company_id[0]]])
+                    [['id','=',users[0].company_id[0]]]);
                 }).pipe(function(companies){
-                    var company = companies[0];
-                    self.set('company',company);
+                    self.set('company',companies[0]);
 
-                    return fetch('res.currency',['symbol','position'],[['id','=',company.currency_id[0]]]);
-                }).pipe(function (currencies){
+                    return fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
+                }).pipe(function(company_partners){
+                    self.get('company').contact_address = company_partners[0].contact_address;
+
+                    return fetch('res.currency',['symbol','position'],[['id','=',self.get('company').currency_id[0]]]);
+                }).pipe(function(currencies){
                     self.set('currency',currencies[0]);
-                });
 
-            var cat_def = fetch('pos.category', ['id','name', 'parent_id', 'child_id', 'image_medium'])
-                .pipe(function(result){
-                    return self.set({'categories': result});
-                });
-
-            var uom_def = fetch(    //unit of measure
-                'product.uom',
-                null,
-                null
-                ).then(function(result){
-                    self.set({'units': result});
+                    return fetch('product.uom', null, null);
+                }).pipe(function(units){
+                    self.set('units',units);
                     var units_by_id = {};
-                    for(var i = 0, len = result.length; i < len; i++){
-                        units_by_id[result[i].id] = result[i];
+                    for(var i = 0, len = units.length; i < len; i++){
+                        units_by_id[units[i].id] = units[i];
                     }
-                    self.set({'units_by_id':units_by_id});
-                });
-
-            var pack_def = fetch(
-                'product.packaging',
-                null,
-                null
-                ).then(function(packaging){
-                    self.set('product.packaging',packaging);
-                });
-
-            var users_def = fetch(
-                'res.users',
-                ['name','ean13'],
-                [['ean13', '!=', false]]
-                ).then(function(result){
-                    self.set({'user_list':result});
-                });
-
-            var tax_def = fetch('account.tax', ['amount','price_include','type'])
-                .then(function(result){
-                    self.set({'taxes': result});
-                });
-
-            var session_def = fetch(    // loading the PoS Session.
-                    'pos.session',
-                    ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at'],
-                    [['state', '=', 'opened'], ['user_id', '=', this.session.uid]]
-                ).pipe(function(result) {
-
-                    // some data are associated with the pos session, like the pos config and bank statements.
-                    // we must have a valid session before we can read those. 
+                    self.set('units_by_id',units_by_id);
                     
-                    var session_data_def = new $.Deferred();
+                    return fetch('product.packaging', null, null);
+                }).pipe(function(packagings){
+                    self.set('product.packaging',packagings);
 
-                    if( result.length !== 0 ) {
-                        var pos_session = result[0];
+                    return fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
+                }).pipe(function(users){
+                    self.set('user_list',users);
 
-                        self.set({'pos_session': pos_session});
+                    return fetch('account.tax', ['amount', 'price_include', 'type']);
+                }).pipe(function(taxes){
+                    self.set('taxes', taxes);
 
-                        var pos_config_def = fetch(
-                                'pos.config',
-                                ['name','journal_ids','shop_id','journal_id',
-                                 'iface_self_checkout', 'iface_websql', 'iface_led', 'iface_cashdrawer',
-                                 'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
-                                 'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
-                                [['id','=', pos_session.config_id[0]]]
-                            ).pipe(function(result){
-                                var pos_config = result[0]
-                                
-                                self.set({'pos_config': pos_config});
-                                self.use_scale              = pos_config.iface_electronic_scale  || false;
-                                self.use_proxy_printer      = pos_config.iface_print_via_proxy   || false;
-                                self.use_virtual_keyboard   = pos_config.iface_vkeyboard         || false;
-                                self.use_websql             = pos_config.iface_websql            || false;
-                                self.use_barcode_scanner    = pos_config.iface_barscan           || false;
-                                self.use_selfcheckout       = pos_config.iface_self_checkout     || false;
-                                self.use_cashbox            = pos_config.iface_cashdrawer        || false;
+                    return fetch(
+                        'pos.session', 
+                        ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at'],
+                        [['state', '=', 'opened'], ['user_id', '=', self.session.uid]]
+                    );
+                }).pipe(function(sessions){
+                    self.set('pos_session', sessions[0]);
 
-                                return shop_def = fetch('sale.shop',[], [['id','=',pos_config.shop_id[0]]])
-                            }).pipe(function(shops){
-                                self.set('shop',shops[0]);
-                                return fetch( 
-                                    'product.product', 
-                                    //context {pricelist: shop.pricelist_id[0]} 
-                                    ['name', 'list_price','price','pos_categ_id', 'taxes_id','image_medium', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
-                                    [['pos_categ_id','!=', false]],
-                                    {pricelist: shops[0].pricelist_id[0]} // context for price
-                                    );
-                            }).pipe( function(product_list){
-                                self.set({'product_list': product_list});
-                            });
+                    return fetch(
+                        'pos.config',
+                        ['name','journal_ids','shop_id','journal_id',
+                         'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
+                         'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
+                         'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
+                        [['id','=', self.get('pos_session').config_id[0]]]
+                    );
+                }).pipe(function(configs){
+                    var pos_config = configs[0];
+                    self.set('pos_config', pos_config);
+                    self.iface_electronic_scale    =  !!pos_config.iface_electronic_scale;  
+                    self.iface_print_via_proxy     =  !!pos_config.iface_print_via_proxy;
+                    self.iface_vkeyboard           =  !!pos_config.iface_vkeyboard; 
+                    self.iface_self_checkout       =  !!pos_config.iface_self_checkout;
+                    self.iface_cashdrawer          =  !!pos_config.iface_cashdrawer;
 
-                        var bank_def = fetch(
-                            'account.bank.statement',
-                            ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
-                            [['state','=','open'],['pos_session_id', '=', pos_session.id]]
-                            ).then(function(result){
-                                self.set({'bank_statements':result});
-                            });
+                    return fetch('sale.shop',[],[['id','=',pos_config.shop_id[0]]]);
+                }).pipe(function(shops){
+                    self.set('shop',shops[0]);
 
-                        var journal_def = fetch(
-                            'account.journal',
-                            undefined,
-                            [['user_id','=',pos_session.user_id[0]]]
-                            ).then(function(result){
-                                self.set({'journals':result});
-                            });
+                    return fetch('pos.category', ['id','name','parent_id','child_id','image'])
+                }).pipe(function(categories){
+                    self.db.add_categories(categories);
 
-                        // associate the bank statements with their journals. 
-                        var bank_process_def = $.when(bank_def, journal_def)
-                            .then(function(){
-                                var bank_statements = self.get('bank_statements');
-                                var journals = self.get('journals');
-                                for(var i = 0, ilen = bank_statements.length; i < ilen; i++){
-                                    for(var j = 0, jlen = journals.length; j < jlen; j++){
-                                        if(bank_statements[i].journal_id[0] === journals[j].id){
-                                            bank_statements[i].journal = journals[j];
-                                            bank_statements[i].self_checkout_payment_method = journals[j].self_checkout_payment_method;
-                                        }
-                                    }
-                                }
-                            });
+                    return fetch(
+                        'product.product', 
+                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
+                        [['pos_categ_id','!=', false]],
+                        {pricelist: self.get('shop').pricelist_id[0]} // context for price
+                    );
+                }).pipe(function(products){
+                    self.db.add_products(products);
 
-                        session_data_def = $.when(pos_config_def,bank_def,journal_def,bank_process_def);
+                    return fetch(
+                        'account.bank.statement',
+                        ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
+                        [['state','=','open'],['pos_session_id', '=', self.get('pos_session').id]]
+                    );
+                }).pipe(function(bank_statements){
+                    self.set('bank_statements', bank_statements);
 
-                    }else{
-                        session_data_def.reject();
+                    return fetch('account.journal', undefined, [['user_id','=', self.get('pos_session').user_id[0]]]);
+                }).pipe(function(journals){
+                    self.set('journals',journals);
+
+                    // associate the bank statements with their journals. 
+                    var bank_statements = self.get('bank_statements');
+                    for(var i = 0, ilen = bank_statements.length; i < ilen; i++){
+                        for(var j = 0, jlen = journals.length; j < jlen; j++){
+                            if(bank_statements[i].journal_id[0] === journals[j].id){
+                                bank_statements[i].journal = journals[j];
+                                bank_statements[i].self_checkout_payment_method = journals[j].self_checkout_payment_method;
+                            }
+                        }
                     }
-                    return session_data_def;
-                });
-
-            // associate the products with their categories
-            var prod_process_def = $.when(cat_def, session_def)
-                .pipe(function(){
-                    var product_list = self.get('product_list');
-                    var categories = self.get('categories');
-                    var cat_by_id = {};
-                    for(var i = 0; i < categories.length; i++){
-                        cat_by_id[categories[i].id] = categories[i];
-                    }
-                    //set the parent in the category
-                    for(var i = 0; i < categories.length; i++){
-                        categories[i].parent_category = cat_by_id[categories[i].parent_id[0]];
-                    }
-                    for(var i = 0; i < product_list.length; i++){
-                        product_list[i].pos_category = cat_by_id[product_list[i].pos_categ_id[0]];
-                    }
+                    self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
                 });
 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(pack_def, cat_def, user_def, users_def, uom_def, session_def, tax_def, prod_process_def, user_def, this.flush())
+            $.when(loaded)
                 .then(function(){ 
-                    self.build_categories(); 
-                    self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
                     //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
                     self.ready.resolve();
                 },function(){
@@ -302,7 +190,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         log_loaded_data: function(){
             console.log('PosModel data has been loaded:');
             console.log('PosModel: categories:',this.get('categories'));
-            console.log('PosModel: product_list:',this.get('product_list'));
             console.log('PosModel: units:',this.get('units'));
             console.log('PosModel: bank_statements:',this.get('bank_statements'));
             console.log('PosModel: journals:',this.get('journals'));
@@ -316,7 +203,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             console.log('PosModel: user_list:',this.get('user_list'));
             console.log('PosModel: user:',this.get('user'));
             console.log('PosModel.session:',this.session);
-            console.log('PosModel.categories:',this.categories);
             console.log('PosModel end of data log.');
         },
         
@@ -324,7 +210,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // order and a valid selected order
         on_removed_order: function(removed_order){
             if( this.get('orders').isEmpty()){
-                this.add_and_select_order(new module.Order({ pos: this }));
+                this.add_new_order();
             }
             if( this.get('selectedOrder') === removed_order){
                 this.set({ selectedOrder: this.get('orders').last() });
@@ -333,175 +219,70 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         // saves the order locally and try to send it to the backend. 'record' is a bizzarely defined JSON version of the Order
         push_order: function(record) {
-            var self = this;
-            return this.dao.add_operation(record).pipe(function(){
-                return self.flush();
-            });
+            this.db.add_order(record);
+            this.flush();
         },
 
-        add_and_select_order: function(newOrder) {
-            (this.get('orders')).add(newOrder);
-            return this.set({
-                selectedOrder: newOrder
-            });
+        //creates a new empty order and sets it as the current order
+        add_new_order: function(){
+            var order = new module.Order({pos:this});
+            this.get('orders').add(order);
+            this.set('selectedOrder', order);
         },
-        
-        // attemps to send all pending orders ( stored in the DAO ) to the server.
-        // it will do it one by one, and remove the successfully sent ones from the DAO once
-        // it has been confirmed that they have been received.
+
+        // attemps to send all pending orders ( stored in the pos_db ) to the server,
+        // and remove the successfully sent ones from the db once
+        // it has been confirmed that they have been sent correctly.
         flush: function() {
             //this makes sure only one _int_flush is called at the same time
             return this.flush_mutex.exec(_.bind(function() {
-                return this._int_flush();
+                return this._flush(0);
             }, this));
         },
-        _int_flush : function() {
+        // attempts to send an order of index 'index' in the list of order to send. The index
+        // is used to skip orders that failed. do not call this method outside the mutex provided
+        // by flush() 
+        _flush: function(index){
             var self = this;
+            var orders = this.db.get_orders();
+            self.set('nbr_pending_operations',orders.length);
 
-            this.dao.get_operations().pipe(function(operations) {
-                // operations are really Orders that are converted to json.
-                // they are saved to disk and then we attempt to send them to the backend so that they can
-                // be applied. 
-                // since the network is not reliable we potentially have many 'pending operations' that have not been sent.
-                self.set( {'nbr_pending_operations':operations.length} );
-                if(operations.length === 0){
-                    return $.when();
-                }
-                var order = operations[0];
-
-                 // we prevent the default error handler and assume errors
-                 // are a normal use case, except we stop the current iteration
-
-                 return (new instance.web.Model('pos.order')).get_func('create_from_ui')([order])
-                            .fail(function(unused, event){
-                                // wtf ask niv
-                                event.preventDefault();
-                            })
-                            .pipe(function(){
-                                // success: remove the successfully sent operation, and try to send the next one 
-                                self.dao.remove_operation(operations[0].id).pipe(function(){
-                                    return self._int_flush();
-                                });
-                            }, function(){
-                                // in case of error we just sit there and do nothing. wtf ask niv
-                                return $.when();
-                            });
-            });
+            var order  = orders[index];
+            if(!order){
+                return;
+            }
+            //try to push an order to the server
+            (new instance.web.Model('pos.order')).get_func('create_from_ui')([order])
+                .fail(function(unused, event){
+                    //don't show error popup if it fails 
+                    event.preventDefault();
+                    console.error('Failed to send order:',order);
+                    self._flush(index+1);
+                })
+                .done(function(){
+                    //remove from db if success
+                    self.db.remove_order(order.id);
+                    self._flush(index);
+                });
         },
 
-        // this adds several properties to the categories in order to make it easier to diplay them
-        // fields added include the list of product relevant to each category, list of child categories,
-        // list of ancestors, etc.
-        build_categories : function(){
-            var categories = this.get('categories');
-            var products   = this.get('product_list');
+        scan_product: function(parsed_ean){
+            var self = this;
+            var product = this.db.get_product_by_ean13(parsed_ean.base_ean);
+            var selectedOrder = this.get('selectedOrder');
 
-            //append the content of array2 into array1
-            function append(array1, array2){
-                for(var i = 0, len = array2.length; i < len; i++){
-                    array1.push(array2[i]);
-                }
+            if(!product){
+                return false;
             }
 
-            function appendSet(set1, set2){
-                for(key in set2){
-                    set1[key] = set2[key];
-                }
+            if(parsed_ean.type === 'price'){
+                selectedOrder.addProduct(new module.Product(product), {price:parsed_ean.value});
+            }else if(parsed_ean.type === 'weight'){
+                selectedOrder.addProduct(new module.Product(product), {quantity:parsed_ean.value, merge:false});
+            }else{
+                selectedOrder.addProduct(new module.Product(product));
             }
-
-            var categories_by_id = {};
-            for(var i = 0; i < categories.length; i++){
-                categories_by_id[categories[i].id] = categories[i];
-            }
-            this.categories_by_id = categories_by_id;
-
-            var root_category = {
-                name      : 'Root',
-                id        : 0,
-                parent    : null,
-                childrens : [],
-            };
-
-            // add parent and childrens field to categories, find root_categories
-            for(var i = 0; i < categories.length; i++){
-                var cat = categories[i];
-                
-                cat.parent = categories_by_id[cat.parent_id[0]];
-                if(!cat.parent){
-                    root_category.childrens.push(cat);
-                    cat.parent = root_category;
-                }
-                
-                cat.childrens = [];
-                for(var j = 0; j < cat.child_id.length; j++){
-                    cat.childrens.push(categories_by_id[ cat.child_id[j] ]);
-                }
-            }
-
-            categories.push(root_category);
-
-            // set some default fields for next steps
-            for(var i = 0; i < categories.length; i++){
-                var cat = categories[i];
-
-                cat.product_list = [];  //list of all products in the category
-                cat.product_set = {};   // [product.id] === true if product is in category
-                cat.weightable_product_list = [];
-                cat.weightable_product_set = {};
-                cat.weightable = false; //true if directly contains weightable products
-            }
-
-            this.root_category = root_category;
-            
-            //we add the products to the categories. 
-            for(var i = 0, len = products.length; i < len; i++){
-                var product = products[i];
-                var cat = categories_by_id[product.pos_categ_id[0]];
-                if(cat){
-                    cat.product_list.push(product);
-                    cat.product_set[product.id] = true;
-                    if(product.to_weight){
-                        cat.weightable_product_list.push(product);
-                        cat.weightable_product_set[product.id] = true;
-                        cat.weightable = true;
-                    }
-                }
-            }
-
-            // we build a flat list of all categories that directly contains weightable products
-            this.weightable_categories = [];
-            for(var i = 0, len = categories.length; i < len; i++){
-                var cat = categories[i];
-                if(cat.weightable){
-                    this.weightable_categories.push(cat);
-                }
-            }
-            
-            // add ancestor field to categories, contains the list of parents of parents, from root to parent
-            function make_ancestors(cat, ancestors){
-                cat.ancestors = ancestors.slice(0);
-                ancestors.push(cat);
-
-                for(var i = 0; i < cat.childrens.length; i++){
-                    make_ancestors(cat.childrens[i], ancestors.slice(0));
-                }
-            }
-            
-            //add the products of the subcategories to the parent categories
-            function make_products(cat){
-                for(var i = 0; i < cat.childrens.length; i++){
-                    make_products(cat.childrens[i]);
-
-                    append(cat.product_list, cat.childrens[i].product_list);
-                    append(cat.weightable_product_list, cat.childrens[i].weightable_product_list);
-
-                    appendSet(cat.product_set, cat.childrens[i].product_set);
-                    appendSet(cat.weightable_product_set, cat.childrens[i].weightable_product_set);
-                }
-            }
-
-            make_ancestors(root_category,[]);
-            make_products(root_category);
+            return true;
         },
     });
 
@@ -608,15 +389,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return false;
             }else if(this.get_discount() > 0){             // we don't merge discounted orderlines
                 return false;
-            }else if(this.get_product_type() === 'unit'){ 
-                return true;
-            }else if(this.get_product_type() === 'weight'){
-                return true;
-            }else if(this.get_product_type() === 'price'){
-                return this.get_product().get('list_price') === orderline.get_product().get('list_price');
-            }else{
-                console.error('point_of_sale/pos_models.js/Orderline.can_be_merged_with() : unknown product type:',this.get('product_type'));
+            }else if(this.price !== orderline.price){
                 return false;
+            }else{ 
+                return true;
             }
         },
         merge: function(orderline){
@@ -882,6 +658,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 change: this.getChange(),
                 name : this.getName(),
                 client: client ? client.name : null ,
+                invoice_id: null,   //TODO
                 cashier: cashier ? cashier.name : null,
                 date: { 
                     year: date.getFullYear(), 
@@ -895,7 +672,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     email: company.email,
                     website: company.website,
                     company_registry: company.company_registry,
-                    contact_address: null,  //TODO
+                    contact_address: company.contact_address, 
                     vat: company.vat,
                     name: company.name,
                     phone: company.phone,

@@ -1,13 +1,70 @@
 # -*- coding: utf-8 -*-
 import logging
+import simplejson
+import os
+import openerp
 
 try:
     import openerp.addons.web.common.http as openerpweb
+    from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 except ImportError:
     import web.common.http as openerpweb
 
 class PointOfSaleController(openerpweb.Controller):
     _cp_path = '/pos'
+
+    @openerpweb.httprequest
+    def app(self, req, s_action=None, **kw):
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, None, 'js'))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, None, 'css'))
+
+        cookie = req.httprequest.cookies.get("instance0|session_id")
+        session_id = cookie.replace("%22","")
+        template = html_template.replace('<html','<html manifest="/pos/manifest?session_id=%s"'%session_id)
+        r = template % {
+            'js': js,
+            'css': css,
+            'modules': simplejson.dumps(module_boot(req)),
+            'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
+        }
+        return r
+
+    @openerpweb.httprequest
+    def manifest(self, req, **kwargs):
+        """ This generates a HTML5 cache manifest files that preloads the categories and products thumbnails 
+            and other ressources necessary for the point of sale to work offline """
+
+        ml = ["CACHE MANIFEST"]
+
+        # loading all the images in the static/src/img/* directories
+        def load_css_img(srcdir,dstdir):
+            for f in os.listdir(srcdir):
+                path = os.path.join(srcdir,f)
+                dstpath = os.path.join(dstdir,f)
+                if os.path.isdir(path) :
+                    load_css_img(path,dstpath)
+                elif f.endswith(('.png','.PNG','.jpg','.JPG','.jpeg','.JPEG','.gif','.GIF')):
+                    ml.append(dstpath)
+
+        imgdir = openerp.modules.get_module_resource('point_of_sale','static/src/img');
+        load_css_img(imgdir,'/point_of_sale/static/src/img')
+        
+        products = req.session.model('product.product')
+        for p in products.search_read([('pos_categ_id','!=',False)], ['name']):
+            product_id = p['id']
+            url = "/web/binary/image?session_id=%s&model=product.product&field=image&id=%s" % (req.session_id, product_id)
+            ml.append(url)
+        
+        categories = req.session.model('pos.category')
+        for c in categories.search_read([],['name']):
+            category_id = c['id']
+            url = "/web/binary/image?session_id=%s&model=pos.category&field=image&id=%s" % (req.session_id, category_id)
+            ml.append(url)
+
+        ml += ["NETWORK:","*"]
+        m = "\n".join(ml)
+
+        return m
 
     @openerpweb.jsonrequest
     def dispatch(self, request, iface, **kwargs):
@@ -108,4 +165,5 @@ class PointOfSaleController(openerpweb.Controller):
     def print_receipt(self, request, receipt):
         print 'print_receipt' + str(receipt)
         return
+
 

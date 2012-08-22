@@ -17,7 +17,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         delay_payment:  function(){ this.activate(); this.payment_status = 'waiting_for_payment'; },
     }))();
 
-    //window.debug_devices = debug_devices;
+    if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
+        window.debug_devices = debug_devices;
+    }
 
     // this object interfaces with the local proxy to communicate to the various hardware devices
     // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
@@ -42,21 +44,26 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             success_callback = success_callback || function(){}; 
             error_callback   =  error_callback  || function(){};    
 
-            if(debug_devices && debug_devices.active){
+            
+            if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
                 console.log('PROXY:',name,params);
-            }else{
+            }
+
+            if(!(debug_devices && debug_devices.active)){
                 this.connection.rpc('/pos/'+name, params || {}, success_callback, error_callback);
             }
         },
         
         //a product has been scanned and recognized with success
-        scan_item_success: function(){
-            this.message('scan_item_success');
+        // ean is a parsed ean object
+        scan_item_success: function(ean){
+            this.message('scan_item_success',ean);
         },
 
-        //a product has been scanned but not recognized
-        scan_item_error_unrecognized: function(){
-            this.message('scan_item_error_unrecognized');
+        // a product has been scanned but not recognized
+        // ean is a parsed ean object
+        scan_item_error_unrecognized: function(ean){
+            this.message('scan_item_error_unrecognized',ean);
         },
 
         //the client is asking for help
@@ -222,11 +229,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
             this.action_callback_stack = [];
 
-            this.price_prefix_set = attributes.price_prefix_set     ||  {'02':'', '22':'', '24':'', '26':'', '28':''};
-            this.weight_prefix_set = attributes.weight_prefix_set   ||  {'21':'','23':'','27':'','29':'','25':''};
-            this.client_prefix_set = attributes.weight_prefix_set   ||  {'42':''};
-            this.cashier_prefix_set = attributes.weight_prefix_set  ||  {'40':''};
-            this.discount_prefix_set = attributes.weight_prefix_set ||  {'44':''};
+            this.weight_prefix_set   = attributes.weight_prefix_set   ||  {'21':''};
+            this.discount_prefix_set = attributes.discount_prefix_set ||  {'22':''};
+            this.price_prefix_set    = attributes.price_prefix_set    ||  {'23':''};
+            this.cashier_prefix_set  = attributes.cashier_prefix_set  ||  {'041':''};
+            this.client_prefix_set   = attributes.client_prefix_set   ||  {'042':''};
         },
         save_callbacks: function(){
             var callbacks = {};
@@ -270,41 +277,37 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 this.action_callback[action] = undefined;
             }
         },
-
-
+        // returns the checksum of the ean, or -1 if the ean has not the correct length, ean must be a string
+        ean_checksum: function(ean){
+            var code = ean.split('');
+            if(code.length !== 13){
+                return -1;
+            }
+            var oddsum = 0, evensum = 0, total = 0;
+            code = code.reverse().splice(1);
+            for(var i = 0; i < code.length; i++){
+                if(i % 2 == 0){
+                    oddsum += Number(code[i]);
+                }else{
+                    evensum += Number(code[i]);
+                }
+            }
+            total = oddsum * 3 + evensum;
+            return Number((10 - total % 10) % 10);
+        },
         // returns true if the ean is a valid EAN codebar number by checking the control digit.
         // ean must be a string
         check_ean: function(ean){
-            var code = ean.split('');
-            for(var i = 0; i < code.length; i++){
-                code[i] = Number(code[i]);
+            return this.ean_checksum(ean) === Number(ean[ean.length-1]);
+        },
+        // returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
+        sanitize_ean:function(ean){
+            ean = ean.substr(0,13);
+
+            for(var n = 0, count = (13 - ean.length); n < count; n++){
+                ean = ean + '0';
             }
-            var st1 = code.slice();
-            var st2 = st1.slice(0,st1.length-1).reverse();
-            // some EAN13 barcodes have a length of 12, as they start by 0
-            while (st2.length < 12) {
-                st2.push(0);
-            }
-            var countSt3 = 1;
-            var st3 = 0;
-            $.each(st2, function() {
-                if (countSt3%2 === 1) {
-                    st3 +=  this;
-                }
-                countSt3 ++;
-            });
-            st3 *= 3;
-            var st4 = 0;
-            var countSt4 = 1;
-            $.each(st2, function() {
-                if (countSt4%2 === 0) {
-                    st4 += this;
-                }
-                countSt4 ++;
-            });
-            var st5 = st3 + st4;
-            var cd = (10 - (st5%10)) % 10;
-            return code[code.length-1] === cd;
+            return ean.substr(0,12) + this.ean_checksum(ean);
         },
         
         // attempts to interpret an ean (string encoding an ean)
@@ -327,41 +330,47 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 type:'unknown', // 
                 prefix:'',
                 ean:ean,
+                base_ean: ean,
                 id:'',
                 value: 0,
                 unit: 'none',
             };
-            var prefix2 = ean.substring(0,2);
+            console.log('ean',ean);
 
-            if(!this.check_ean(ean)){
+            function match_prefix(prefix_set, type){
+                for(prefix in prefix_set){
+                    if(ean.substring(0,prefix.length) === prefix){
+                        parse_result.prefix = prefix;
+                        parse_result.type = type;
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            if (!this.check_ean(ean)){
                 parse_result.type = 'error';
-            }else if (prefix2 in this.price_prefix_set){
-                parse_result.type = 'price';
-                parse_result.prefix = prefix2;
+            } else if( match_prefix(this.price_prefix_set,'price')){
                 parse_result.id = ean.substring(0,7);
+                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
                 parse_result.value = Number(ean.substring(7,12))/100.0;
                 parse_result.unit  = 'euro';
-            } else if (prefix2 in this.weight_prefix_set){
-                parse_result.type = 'weight';
-                parse_result.prefix = prefix2;
+            } else if( match_prefix(this.weight_prefix_set,'weight')){
                 parse_result.id = ean.substring(0,7);
                 parse_result.value = Number(ean.substring(7,12))/1000.0;
+                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
                 parse_result.unit = 'Kg';
-            }else if (prefix2 in this.client_prefix_set){
-                parse_result.type = 'client';
-                parse_result.prefix = prefix2;
+            } else if( match_prefix(this.client_prefix_set,'client')){
                 parse_result.id = ean.substring(0,7);
-            }else if (prefix2 in this.cashier_prefix_set){
-                parse_result.type = 'cashier';
-                parse_result.prefix = prefix2;
+                parse_result.unit = 'Kg';
+            } else if( match_prefix(this.cashier_prefix_set,'cashier')){
                 parse_result.id = ean.substring(0,7);
-            }else if (prefix2 in this.discount_prefix_set){
-                parse_result.type  = 'discount';
-                parse_result.prefix = prefix2;
+            } else if( match_prefix(this.discount_prefix_set,'discount')){
                 parse_result.id    = ean.substring(0,7);
+                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
                 parse_result.value = Number(ean.substring(7,12))/100.0;
                 parse_result.unit  = '%';
-            }else{
+            } else {
                 parse_result.type = 'unit';
                 parse_result.prefix = '';
                 parse_result.id = ean;
@@ -402,7 +411,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                         var parse_result = self.parse_ean(codeNumbers.join(''));
 
                         if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
-                            console.error('ERROR: barcode checksum error:',parse_result);
+                            console.warn('WARNING: barcode checksum error:',parse_result);
                         }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
                             if(self.action_callback['product']){
                                 self.action_callback['product'](parse_result);

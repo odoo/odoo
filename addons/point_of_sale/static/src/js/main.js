@@ -5,6 +5,8 @@ openerp.point_of_sale = function(instance) {
 
     var module = instance.point_of_sale;
 
+    openerp_pos_db(instance,module);         // import db.js
+
     openerp_pos_models(instance,module);     // import pos_models.js
 
     openerp_pos_basewidget(instance,module); // import pos_basewidget.js
