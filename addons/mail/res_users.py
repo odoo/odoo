@@ -105,7 +105,7 @@ class res_users(osv.Model):
         # alias
         mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
         # create a welcome message
-        self._create_welcome_message(cr, uid, user_id, context=context)
+        self._create_welcome_message(cr, uid, user, context=context)
         return user_id
 
     def _create_welcome_message(self, cr, uid, user, context=None):
