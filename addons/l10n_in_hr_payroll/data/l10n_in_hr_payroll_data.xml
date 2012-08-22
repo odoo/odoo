@@ -402,13 +402,24 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="sequence" eval="166"/>
          </record>
 
-        <record id="hr_payslip_rule_lwf" model="hr.salary.rule">
-            <field name="code">LWF</field>
-            <field name="name">Deduction Towards State Labour Welfare Fund</field>
+        <record id="hr_payslip_rule_lwf_employee" model="hr.salary.rule">
+            <field name="code">LWFE</field>
+            <field name="name">Employee's Deduction Towards State Labour Welfare Fund</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="3.0" name="amount_fix"/>
             <field name="sequence" eval="170"/>
+            <field name="register_id" ref="hr_labour_Welfare_fund_register"/>
+            <field name="note">The LWF is applicable to all the members of the organisation except the Management staff (Staffs having authority to sign on the cheque/official documents on behalf of the organisation). for e.x. Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 Total Rs 9.00 and deposited to the LWF office.It is half yearly contribution (June and December).</field>
+        </record>
+
+        <record id="hr_payslip_rule_lwf_employer" model="hr.salary.rule">
+            <field name="code">LWF</field>
+            <field name="name">Employer's Deduction Towards State Labour Welfare Fund </field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="amount_select">fix</field>
+            <field eval="6.0" name="amount_fix"/>
+            <field name="sequence" eval="171"/>
             <field name="register_id" ref="hr_labour_Welfare_fund_register"/>
             <field name="note">The LWF is applicable to all the members of the organisation except the Management staff (Staffs having authority to sign on the cheque/official documents on behalf of the organisation). for e.x. Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 Total Rs 9.00 and deposited to the LWF office.It is half yearly contribution (June and December).</field>
         </record>
