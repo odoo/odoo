@@ -545,6 +545,7 @@ openerp.mail = function(session) {
         },
         
         message_post: function (body) {
+            var self = this;
             if (! body) {
                 var comment_node = this.$element.find('textarea');
                 var body = comment_node.val();
