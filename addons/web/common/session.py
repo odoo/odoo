@@ -105,10 +105,8 @@ class OpenERPSession(object):
         return state
 
     def openerp_entreprise(self):
-        if not self._uid:
-            return False
-        else:
-            return self.model('publisher_warranty.contract').status()['status'] == 'full'
+        return False
+        
 
     def build_connection(self):
         conn = openerplib.Connection(self.config.connector, database=self._db, login=self._login,
