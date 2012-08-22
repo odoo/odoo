@@ -455,12 +455,12 @@ class mail_thread(osv.Model):
         # find author_id
 
         if 'From' in msg_fields:
-            author_ids = self._message_find_partners(cr, uid, msg_text, ['From'], context=context)
+            author_ids = self._message_find_partners(cr, uid, msg_txt, ['From'], context=context)
             #decode(msg_txt.get('From') or msg_txt.get_unixfrom()) )
             if author_ids:
                 msg['author_id'] = author_ids[0]
 
-        partner_ids = self._message_find_partners(cr, uid, msg_text, ['From','To','Delivered-To','CC','Cc'], context=context)
+        partner_ids = self._message_find_partners(cr, uid, msg_txt, ['From','To','Delivered-To','CC','Cc'], context=context)
         msg['partner_ids'] = partner_ids
 
         #if 'To' in msg_fields:
