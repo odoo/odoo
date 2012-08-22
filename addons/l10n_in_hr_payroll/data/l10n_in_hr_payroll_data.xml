@@ -19,6 +19,45 @@
             <field name="name">Register for Food Coupen</field>
         </record>
 
+        <record id="hr_tds_register" model="hr.contribution.register">
+            <field name="name">Register for TDS</field>
+        </record>
+
+        <record id="hr_nps_contribution_register" model="hr.contribution.register">
+            <field name="name">Register for NPS Contribution</field>
+        </record>
+
+        <record id="hr_vpf_contribution_register" model="hr.contribution.register">
+            <field name="name">Register for Voluntarily Provident Fund</field>
+        </record>
+
+        <record id="hr_company_transport_register" model="hr.contribution.register">
+            <field name="name">Register for Company Provided Transport Deduction</field>
+        </record>
+        
+        <record id="hr_food_coupen_deduction_register" model="hr.contribution.register">
+            <field name="name">Register for Food Coupons Deduction</field>
+        </record>
+        
+        <record id="hr_labour_Welfare_fund_register" model="hr.contribution.register">
+            <field name="name">Register for State Labour Welfare Fund Deduction</field>
+        </record>
+        
+        <record id="hr_group_term_insurance_register" model="hr.contribution.register">
+            <field name="name">Register for Company Provided Group Term Insurance Deduction</field>
+        </record>
+        
+        <record id="hr_leave_availed_register" model="hr.contribution.register">
+            <field name="name">Register for Leave Availed Deduction</field>
+        </record>
+        
+        <record id="hr_medical_insurance_register" model="hr.contribution.register">
+            <field name="name">Register for Company Provided Medical Insurance Deduction</field>
+        </record>
+        
+        <record id="hr_other_deduction_register" model="hr.contribution.register">
+            <field name="name">Register for Other Deduction from Employer</field>
+        </record>
         <!-- Hr Salary Rules for allowance-->
 
         <record id="hr_salary_rule_da" model="hr.salary.rule">
@@ -277,6 +316,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="condition_python">result = bool(contract.tds)</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = -(contract.tds)</field>
+            <field name="register_id" ref="hr_tds_register"/>
             <field name="sequence" eval="140"/>
             <field name="note">As per income tax rules, all payment which are taxable in nature should be done after deduction of taxes at the source itself. Hence employer compute income tax on salary payment and deduct it every month. This TDS is based on employee’s saving/investment declaration at the start of year. If investments for tax saving is not done, large amount may be deducted in last few months.</field>
         </record>
@@ -311,6 +351,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) or - (contract.wage * 0.10)</field>
             <field name="sequence" eval="155"/>
+            <field name="register_id" ref="hr_nps_contribution_register"/>
             <field name="note">Employee can claim deduction even of employer's contribution to NPS.</field>
         </record>
 
@@ -323,6 +364,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * contract.voluntary_provident_fund / 100) or - (contract.wage * contract.voluntary_provident_fund / 100)</field>
             <field name="sequence" eval="160"/>
+            <field name="register_id" ref="hr_vpf_contribution_register"/>
             <field name="note">VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government.This additional amount enjoys all the benefits of PF except that the employer is not liable to contribute any extra amount apart from 12%.An added advantage is that the interest rate is equal to the interest rate of PF and he withdrawal is tax free. Please note that the maximum contribution towards VPF is 100% of your Basic.The highest rate of interest (close to 9%) makes it a very attractive saving scheme. Because of these advantages many employees chose not to close their PF account even after getting employment else where other than India.Employees also get a major tax break on their entire contribution to the fund up to a ceiling of Rs. 70,000/-</field>
         </record>
 
@@ -333,6 +375,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="condition_select">none</field>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
+            <field name="register_id" ref="hr_company_transport_register"/>
             <field name="sequence" eval="165"/>
         </record>
 
@@ -343,6 +386,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="code">FD</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="name">Deduction Towards Food Coupons</field>
+            <field name="register_id" ref="hr_food_coupen_deduction_register"/>
             <field name="sequence" eval="166"/>
          </record>
 
@@ -353,6 +397,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
             <field name="sequence" eval="170"/>
+            <field name="register_id" ref="hr_labour_Welfare_fund_register"/>
             <field name="note">The LWF is applicable to all the members of the organisation except the Management staff (Staffs having authority to sign on the cheque/official documents on behalf of the organisation). for e.x. Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 Total Rs 9.00 and deposited to the LWF office.It is half yearly contribution (June and December).</field>
         </record>
 
@@ -362,6 +407,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
+            <field name="register_id" ref="hr_group_term_insurance_register"/>
             <field name="sequence" eval="175"/>
         </record>
 
@@ -372,6 +418,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="condition_select">none</field>
             <field name="amount_select">fix</field>
             <field eval="0.0" name="amount_fix"/>
+            <field name="register_id" ref="hr_leave_availed_register"/>
             <field name="sequence" eval="180"/>
         </record>
 
@@ -384,6 +431,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.medical_insurance)</field>
             <field eval="-50.0" name="amount_fix"/>
+            <field name="register_id" ref="hr_medical_insurance_register"/>
             <field name="sequence" eval="185"/>
         </record>
 
@@ -393,6 +441,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="-200.0" name="amount_fix"/>
+            <field name="register_id" ref="hr_other_deduction_register"/>
             <field name="sequence" eval="187"/>
         </record>
 
@@ -403,6 +452,7 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) or - (contract.wage * 0.10)</field>
             <field name="sequence" eval="190"/>
+            <field name="register_id" ref="hr_nps_contribution_register"/>
             <field name= "note">Any amount contributed by your employer to your NPS account is treated as part of your salary and is included in your income but you can claim deduction under Section 80C for this too.thus, effectively making it exempt from tax within the limit of 10% of your basic salary. This is very useful and tax efficient for you particularly if you fall in the maximum tax.</field>
         </record>
 
