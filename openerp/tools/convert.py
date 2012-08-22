@@ -591,7 +591,21 @@ form: module.record_id""" % (xml_id,)
 
         if rec.get('action'):
             a_action = rec.get('action','').encode('utf8')
-            a_type = rec.get('type','').encode('utf8') or 'act_window'
+
+            # determine the type of action
+            if '.' in a_action:
+                # action referring to another module
+                a_action_module, a_action_name = a_action.split('.')
+            else:
+                # local action: use current module
+                a_action_module = self.module
+                a_action_name = a_action
+
+            # fetch the model and the res id
+            ir_action_ref = self.pool.get('ir.model.data').get_object_reference(cr, self.uid, a_action_module, a_action_name)
+            # get the part of the model we need
+            a_type = ir_action_ref[0].split('.')[-1]
+
             icons = {
                 "act_window": 'STOCK_NEW',
                 "report.xml": 'STOCK_PASTE',
@@ -601,6 +615,7 @@ form: module.record_id""" % (xml_id,)
                 "server": 'STOCK_EXECUTE',
             }
             values['icon'] = icons.get(a_type,'STOCK_NEW')
+
             if a_type=='act_window':
                 a_id = self.id_get(cr, a_action)
                 cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%s', (int(a_id),))
@@ -627,7 +642,7 @@ form: module.record_id""" % (xml_id,)
                     values['icon'] = 'STOCK_EXECUTE'
                 if not values.get('name', False):
                     values['name'] = action_name
-            
+
             elif a_type in ['wizard', 'url', 'client', 'server'] and not values.get('name'):
                 a_id = self.id_get(cr, a_action)
                 a_table = 'ir_act_%s' % a_type
