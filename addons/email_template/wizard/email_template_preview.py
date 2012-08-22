@@ -26,7 +26,6 @@ class email_template_preview(osv.osv_memory):
     _inherit = "email.template"
     _name = "email_template.preview"
     _description = "Email Template Preview"
-    _rec_name = "subject"
 
     def _get_records(self, cr, uid, context=None):
         """
