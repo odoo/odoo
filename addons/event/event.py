@@ -19,10 +19,8 @@
 #
 ##############################################################################
 
-import time
 from osv import fields, osv
 from tools.translate import _
-import decimal_precision as dp
 from openerp import SUPERUSER_ID
 
 class event_type(osv.osv):
@@ -53,7 +51,7 @@ class event_event(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
-              return []
+            return []
         res = []
         for record in self.browse(cr, uid, ids, context=context):
             date = record.date_begin.split(" ")[0]
@@ -99,7 +97,6 @@ class event_event(osv.osv):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def check_registration_limits(self, cr, uid, ids, context=None):
-        register_pool = self.pool.get('event.registration')
         for self.event in self.browse(cr, uid, ids, context=context):
             total_confirmed = self.event.register_current
             if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
@@ -109,7 +106,7 @@ class event_event(osv.osv):
         for event in self.browse(cr, uid, ids, context=context):
             available_seats = event.register_avail
             if available_seats and no_of_registration > available_seats:
-                 raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
+                raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
             elif available_seats == 0:
                 raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
 
@@ -139,7 +136,6 @@ class event_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Dictionary of function fields value.
         """
-        register_pool = self.pool.get('event.registration')
         res = {}
         for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = {}
@@ -334,7 +330,7 @@ class event_registration(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_('State set to open'))
+        self.message_post(cr, uid, ids, body=_('State set to open'), context=context)
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -364,13 +360,13 @@ class event_registration(osv.osv):
             if today >= registration.event_id.date_begin:
                 values = {'state': 'done', 'date_closed': today}
                 self.write(cr, uid, ids, values)
-                self.message_post(cr, uid, ids, body=_('State set to Done'))
+                self.message_post(cr, uid, ids, body=_('State set to Done'), context=context)
             else:
                 raise osv.except_osv(_('Error!'),_("You must wait for the starting day of the event to do this action.") )
         return True
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
-        self.message_post(cr, uid, ids,body = _('State set to Cancel'))
+        self.message_post(cr, uid, ids, body=_('State set to Cancel'), context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, context=None):

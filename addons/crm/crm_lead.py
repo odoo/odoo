@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import binascii
 from base_status.base_stage import base_stage
 import crm
 from datetime import datetime
@@ -476,7 +475,7 @@ class crm_lead(base_stage, osv.osv):
 
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
-        return self.message_post(cr, uid, [opportunity_id], subject=subject, body=details)
+        return self.message_post(cr, uid, [opportunity_id], body=details, subject=subject, context=context)
 
     def _merge_opportunity_history(self, cr, uid, opportunity_id, opportunities, context=None):
         message = self.pool.get('mail.message')

@@ -1288,24 +1288,25 @@ class account_invoice(osv.osv):
 
     def _get_document_type(self, type):
         type_dict = {
-                'out_invoice': 'Customer invoice',
-                'in_invoice': 'Supplier invoice',
-                'out_refund': 'Customer Refund',
-                'in_refund': 'Supplier Refund',
+                # Translation markers will have no effect at runtime, only used to properly flag export
+                'out_invoice': _('Customer invoice'),
+                'in_invoice': _('Supplier invoice'),
+                'out_refund': _('Customer Refund'),
+                'in_refund': _('Supplier Refund'),
         }
         return type_dict.get(type, 'Invoice')
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>created</b>.") % (_(self._get_document_type(obj.type))), context=context)
 
     def confirm_paid_send_note(self, cr, uid, ids, context=None):
-         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (self._get_document_type(obj.type)), context=context)
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (_(self._get_document_type(obj.type))), context=context)
 
     def invoice_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (_(self._get_document_type(obj.type))), context=context)
 
 account_invoice()
 

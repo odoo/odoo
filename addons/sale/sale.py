@@ -1027,7 +1027,7 @@ class sale_order(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>created</b>.") % (obj.partner_id.name), context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -1058,7 +1058,7 @@ class sale_order(osv.osv):
                 self.message_post(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
 
     def action_cancel_draft_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body='Sale order has been set in draft.', context=context)
+        return self.message_post(cr, uid, ids, body=_('Sale order set to draft.'), context=context)
 
 
 sale_order()

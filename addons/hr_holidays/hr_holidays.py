@@ -367,14 +367,14 @@ class hr_holidays(osv.osv):
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, ids, 
-                        _("The %s request has been <b>created</b> and is waiting confirmation.")
+                        _("The %s request has been <b>created</b> and is waiting for confirmation.")
                         % ('leave' if obj.type == 'remove' else 'allocation',), context=context)
         return True
     
     def holidays_confirm_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_post(cr, uid, [obj.id], _("The %s request has been <b>confirmed</b> and is waiting for validation by the manager.")
-                    % ('leave' if obj.type == 'remove' else 'allocation',))
+                    % ('leave' if obj.type == 'remove' else 'allocation',), context=context)
     
     def holidays_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):

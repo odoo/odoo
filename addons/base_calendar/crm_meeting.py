@@ -78,9 +78,9 @@ class crm_meeting(base_state, osv.Model):
         return 'Meeting'
 
     def case_open_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Meeting has been <b>confirmed</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Meeting <b>confirmed</b>."), context=context)
 
     def case_close_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Meeting has been <b>done</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Meeting <b>completed</b>."), context=context)
 
 

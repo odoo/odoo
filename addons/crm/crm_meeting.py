@@ -53,7 +53,7 @@ class crm_meeting(osv.Model):
             if meeting.opportunity_id: # meeting can be create from phonecalls or opportunities, therefore checking for the parent
                 lead = meeting.opportunity_id
                 message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, meeting_date_tz)
-                lead.message_post(_('System Notification'), message)
+                lead.message_post(body=message)
             elif meeting.phonecall_id:
                 phonecall = meeting.phonecall_id
                 message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (phonecall.name, meeting_date_tz)

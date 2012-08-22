@@ -254,9 +254,9 @@ class mail_compose_message(osv.TransientModel):
             context = {}
 
         formatting = context.get('formatting')
+        # FIXME TODO: mass_mail_mode unused?
         mass_mail_mode = context.get('mail.compose.message.mode') == 'mass_mail'
 
-        mail_message_obj = self.pool.get('mail.message')
         for mail_wiz in self.browse(cr, uid, ids, context=context):
             attachment = {}
             for attach in mail_wiz.attachment_ids:
@@ -264,6 +264,7 @@ class mail_compose_message(osv.TransientModel):
 
             # default values, according to the wizard options
             subject = mail_wiz.subject if formatting else False
+            # FIXME TODO: partner_ids not used??
             partner_ids = [partner.id for partner in mail_wiz.dest_partner_ids]
             body = mail_wiz.body_html if mail_wiz.content_subtype == 'html' else mail_wiz.body
 
@@ -274,7 +275,7 @@ class mail_compose_message(osv.TransientModel):
                 active_model_pool = self.pool.get(active_model)
                 subject = self.render_template(cr, uid, subject, active_model, active_id)
                 body = self.render_template(cr, uid, mail_wiz.body_html, active_model, active_id)
-            active_model_pool.message_post(cr, uid, active_id, body, subject, 'comment', 
+            active_model_pool.message_post(cr, uid, [active_id], body=body, subject=subject, msg_type='comment', 
                 attachments=attachment, context=context)
 
         return {'type': 'ir.actions.act_window_close'}

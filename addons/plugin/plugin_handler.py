@@ -101,15 +101,15 @@ class plugin_handler(osv.osv_memory):
             notify = "Email already pushed"
         elif res_id == 0:
             if model == 'res.partner':
-                notify = 'User the button Partner to create a new partner'
+                notify = 'User the Partner button to create a new partner'
             else:
                 res_id = model_obj.message_new(cr, uid, msg)
-                notify = "Mail succefully pushed, a new %s has been created " % model
+                notify = "Mail succesfully pushed, a new %s has been created " % model
         else:
             if model == 'res.partner':
                 model_obj = self.pool.get('mail.thread')
             model_obj.message_post(cr, uid, [res_id], body=msg)
-            notify = "Mail succefully pushed"
+            notify = "Mail succesfully pushed"
             
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url, notify)

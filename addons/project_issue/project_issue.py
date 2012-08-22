@@ -507,21 +507,21 @@ class project_issue(base_stage, osv.osv):
         return 'Project issue'
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
-        message = _("Project issue has been <b>converted</b> into task.")
+        message = _("Project issue <b>converted</b> to task.")
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
-        message = _("Project issue has been <b>created</b>.")
+        message = _("Project issue <b>created</b>.")
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.project_id:
-                message = _("has been <b>escalated</b> to <em>'%s'</em>.") % (obj.project_id.name)
-                obj.message_post(body=message, context=context)
+                message = _("<b>escalated</b> to <em>'%s'</em>.") % (obj.project_id.name)
+                obj.message_post(body=message)
             else:
-                message = _("has been <b>escalated</b>.")
-                obj.message_post(body=message, context=context)
+                message = _("<b>escalated</b>.")
+                obj.message_post(body=message)
         return True
 
 project_issue()

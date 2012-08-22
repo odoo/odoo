@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import base64
 import dateutil
 import email
 import logging
@@ -27,7 +26,6 @@ from email.utils import parsedate
 from email.message import Message
 from osv import osv, fields
 from mail_message import decode
-import re
 import time
 import tools
 from tools.translate import _
@@ -313,7 +311,7 @@ class mail_thread(osv.Model):
                 model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
             else:
                 thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
-            self.message_post(cr, uid, thread_id, context=context, **msg)
+            self.message_post(cr, uid, [thread_id], msg_txt['body'], context=context, **msg)
         return True
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
@@ -421,7 +419,7 @@ class mail_thread(osv.Model):
         if save_original:
             msg_original = message.as_string() if isinstance(message, Message) \
                                                   else message
-            attachments.append(('email.eml', msg_original))
+            attachments.append(('original_email.eml', msg_original))
 
         if not message_id:
             # Very unusual situation, be we should be fault-tolerant here
@@ -451,11 +449,11 @@ class mail_thread(osv.Model):
         msg['partner_ids'] = partner_ids
 
         if 'Date' in msg_fields:
-           date_hdr = decode(msg_txt.get('Date'))
-           # convert from email timezone to server timezone
-           date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
-           date_server_datetime_str = date_server_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-           msg['date'] = date_server_datetime_str
+            date_hdr = decode(msg_txt.get('Date'))
+            # convert from email timezone to server timezone
+            date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
+            date_server_datetime_str = date_server_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            msg['date'] = date_server_datetime_str
 
         #if 'Content-Transfer-Encoding' in msg_fields:
         #    msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
@@ -507,38 +505,53 @@ class mail_thread(osv.Model):
                         module instead of by the res.log mechanism. Please \
                         use the mail.thread OpenChatter API instead of the \
                         now deprecated res.log.")
-        self.message_post(cr, uid, id, message, context=context)
+        self.message_post(cr, uid, [id], message, context=context)
 
-    def message_post(self, cr, uid, res_id, body, subject=False,
-            mtype='notification', parent_id=False, attachments=None, context=None, **kwargs):
+    def message_post(self, cr, uid, thread_id, body, subject=False,
+            msg_type='notification', parent_id=False, attachments=None, context=None, **kwargs):
+        """Post a new message in an existing message thread, returning the new mail.message ID.
+           Extra keyword arguments will be used as default column values for the new
+           mail.message record.
+
+           :param int thread_id: thread ID to post into, or list with one ID
+           :param str body: body of the message, usually raw HTML
+           :param str subject: optional subject
+           :param str msg_type: message type, out of the possible values for mail_message.type,
+               currently one of ``email, 'comment', 'notification'``.
+           :param int parent_id: optional ID of parent message in this thread
+           :param tuple(str,str) attachments: list of attachment tuples in the form ``(name,content)``
+           :return: ID of newly created mail.message 
+        """
         context = context or {}
         attachments = attachments or {}
-        if type(res_id) in (list, tuple):
-            res_id = res_id and res_id[0] or False
+        assert (not thread_id) or isinstance(thread_id, (int,long)) or \
+            (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id" 
+        if isinstance(thread_id, (list, tuple)):
+            thread_id = thread_id and thread_id[0]
 
         to_attach = []
-        for fname, fcontent in attachments:
-            if isinstance(fcontent, unicode):
-                fcontent = fcontent.encode('utf-8')
+        for name, content in attachments:
+            if isinstance(content, unicode):
+                content = content.encode('utf-8')
             data_attach = {
-                'name': fname,
-                'datas': fcontent,
-                'datas_fname': fname,
-                'description': _('email attachment'),
+                'name': name,
+                'datas': content,
+                'datas_fname': name,
+                'description': name,
             }
             to_attach.append((0,0, data_attach))
 
-        value = kwargs
-        value.update( {
-            'model': res_id and self._name or False,
-            'res_id': res_id,
+        values = kwargs
+        values.update( {
+            'model': thread_id and self._name or False,
+            'thread_id': thread_id or False,
             'body': body,
             'subject': subject,
-            'type': mtype,
+            'type': msg_type,
             'parent_id': parent_id,
             'attachment_ids': to_attach
         })
-        return self.pool.get('mail.message').create(cr, uid, value, context=context)
+        return self.pool.get('mail.message').create(cr, uid, values, context=context)
 
 
     #------------------------------------------------------

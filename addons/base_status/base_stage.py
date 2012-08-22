@@ -428,5 +428,5 @@ class base_stage(object):
                 msg = '%s has been <b>escalated</b> to <b>%s</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context), new_section.name)
             else:
                 msg = '%s has been <b>escalated</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], 'System Notification', msg, context=context)
+            self.message_post(cr, uid, [id], body=msg, context=context)
         return True
