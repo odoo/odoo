@@ -105,7 +105,7 @@ class res_company(osv.osv):
 
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
-        'customize_footer': fields.boolean('Customize Footer', help="Determines if it is true the onchanges on rml_footer text field do not trigger and become editable."),
+        'customize_footer': fields.boolean('Customize Footer', help="If it is true then general information footer will not update automatically."),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
