@@ -66,10 +66,12 @@ openerp_mail_followers = function(session, mail) {
                 return;
             }
             if (this.getParent().fields.message_is_follower === undefined) {
-                // TDE: raise a warning
+                // TDE: TMP, need to change all form views
+                this.message_is_follower = false;
             }
-            this.message_is_follower = this.getParent().fields.message_is_follower.get_value();
-            console.log(this.message_is_follower);
+            else {
+                this.message_is_follower = this.getParent().fields.message_is_follower.get_value();
+            }
             return this.fetch_followers(value_);
         },
 

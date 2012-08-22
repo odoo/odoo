@@ -69,38 +69,23 @@ class mail_thread(osv.Model):
     _description = 'Email Thread'
     # TODO: may be we should make it _inherit ir.needaction
 
-    def _get_is_follower(self, cr, uid, ids, name, args, context=None):
-        subobj = self.pool.get('mail.followers')
-        subids = subobj.search(cr, uid, [
-            ('res_model','=',self._name),
-            ('res_id', 'in', ids),
-            ('partner_id.user_ids','in',[uid])], context=context)
-        result = dict.fromkeys(ids, False)
-        for sub in subobj.browse(cr, uid, subids, context=context):
-            result[sub.res_id] = True
-        return result
-
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for id in ids:
-            res[id] = {
-                'message_unread': False,
-                'message_summary': ''
-            }
-        nobj = self.pool.get('mail.notification')
-        nids = nobj.search(cr, uid, [
-            ('partner_id.user_ids','in',[uid]),
-            ('message_id.res_id','in', ids),
-            ('message_id.model','=', self._name),
-            ('read','=',False)
+        res = dict( (id, dict(message_unread=False, message_summary='')) for id in ids)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+
+        notif_obj = self.pool.get('mail.notification')
+        notif_ids = notif_obj.search(cr, uid, [
+            ('partner_id.user_ids', 'in', [uid]),
+            ('message_id.res_id', 'in', ids),
+            ('message_id.model', '=', self._name),
+            ('read', '=', False)
         ], context=context)
-        for notif in nobj.browse(cr, uid, nids, context=context):
+        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
             res[notif.message_id.res_id]['message_unread'] = True
 
         for thread in self.browse(cr, uid, ids, context=context):
-            message_ids = thread.message_ids
-            follower_ids = thread.message_follower_ids
-            res[id]['message_summary'] = "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(message_ids), len(follower_ids)),
+            res[thread.id]['message_summary'] = "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(thread.message_ids), len(thread.message_follower_ids))
+            res[thread.id]['message_is_follower'] = user.partner_id.id in [follower.id for follower in thread.message_follower_ids]
         return res
 
     # FP Note: todo
@@ -108,10 +93,10 @@ class mail_thread(osv.Model):
         return []
 
     _columns = {
-        'message_is_follower': fields.function(_get_is_follower,
-            type='boolean', string='Is a Follower'),
+        'message_is_follower': fields.function(_get_message_data,
+            type='boolean', string='Is a Follower', multi='_get_message_data'),
         'message_follower_ids': fields.many2many('res.partner', 'mail_followers', 'res_id', 'partner_id',
-            # FP Note: implement this domain=lambda self: [('res_model','=',self._name)],
+            domain=lambda self: [('res_model','=',self._name)],
             string='Followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model','=',self._name)],
@@ -129,26 +114,26 @@ class mail_thread(osv.Model):
     }
 
     #------------------------------------------------------
-    # Automatic subscription when creating/reading
+    # Automatic subscription when creating
     #------------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        """ Override of create to subscribe the current user
-        """
+        """ Override of create to subscribe the current user. """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
         self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         return thread_id
 
     def unlink(self, cr, uid, ids, context=None):
-        """Override unlink, to automatically delete messages
-           that are linked with res_model and res_id, not through
-           a foreign key with a 'cascade' ondelete attribute.
-           Notifications will be deleted with messages
-        """
+        """ Override unlink to delete messages and followers. This cannot be
+            cascaded, because link is done through (res_model, res_id). """
         msg_obj = self.pool.get('mail.message')
+        fol_obj = self.pool.get('mail.followers')
         # delete messages and notifications
-        msg_to_del_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        msg_obj.unlink(cr, uid, msg_to_del_ids, context=context)
+        msg_ids = msg_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)], context=context)
+        msg_obj.unlink(cr, uid, msg_ids, context=context)
+        # delete followers
+        fol_ids = fol_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
+        fol_obj.unlink(cr, uid, fol_ids, context=context)
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
 
     #------------------------------------------------------
@@ -557,54 +542,66 @@ class mail_thread(osv.Model):
 
 
     #------------------------------------------------------
-    # Subscription mechanism
+    # Followers API
     #------------------------------------------------------
 
     def message_subscribe_users(self, cr, uid, ids, user_ids=None, context=None):
-        if not user_ids: user_ids = [uid]
-        partners = {}
-        for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context):
-            partners[user.partner_id.id] = True
-        return self.message_subscribe(cr, uid, ids, partners.keys(), context=context)
+        """ Wrapper on message_subscribe, using users. If user_ids is not
+            provided, subscribe uid instead. """
+        # isinstance: because using message_subscribe_users called in a view set the context as user_ids
+        if not user_ids or isinstance(user_ids, dict): user_ids = [uid]
+        partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
+        return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_subscribe(self, cr, uid, ids, partner_ids, context=None):
-        """
-            :param partner_ids: a list of user_ids; if not set, subscribe
-                             uid instead
+        """ Add partners to the records followers. This implementation cannot
+            directly use [(4, partner_id)] because of the res_model column of
+            mail.followers. We therefore check access rights and access rules
+            before directly creating a follower record. This way we simulate
+            a write in message_follower_ids, enabling a correct check of access
+            rights.
+
+            :param partner_ids: a list of partner_ids to subscribe
             :param return: new value of followers, for Chatter
         """
-        obj = self.pool.get('mail.followers')
-        objids = obj.search(cr, uid, [
-            ('res_id', 'in', ids),
-            ('res_model', '=', self._name),
-            ('partner_id', 'in', partner_ids),
+        self.check_access_rights(cr, uid, 'write', raise_exception=True)
+        self.check_access_rule(cr, uid, ids, 'write', context=context)
+
+        fol_obj = self.pool.get('mail.followers')
+        fol_ids = fol_obj.search(cr, uid, [
+            ('res_id', 'in', ids), ('res_model', '=', self._name), ('partner_id', 'in', partner_ids)
             ], context=context)
         followers = {}
-        for follow in obj.browse(cr, uid, objids, context=context):
-            followers.setdefault(follow.partner_id.id, {})[follow.res_id] = True
-        create_ids = []
+        for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
+            followers.setdefault(fol.partner_id.id, []).append(fol.res_id)
+
         for res_id in ids:
             for partner_id in partner_ids:
-                if followers.get(partner_id, {}).get(res_id, False):
-                    continue
-                create_ids.append(obj.create(cr, uid, {
-                    'res_model': self._name,
-                    'res_id': res_id, 'partner_id': partner_id
-                }, context=context))
-        return create_ids
+                if not res_id in followers.get(partner_id, []):
+                    fol_obj.create(cr, uid, {
+                        'res_id': res_id, 'partner_id': partner_id, 'res_model': self._name
+                        }, context=context)
+        # TDE: temp, must check followers widget
+        return []
 
-    def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
-        """ Unsubscribe the user (or user_ids) from the current document.
+    def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
+        """ Wrapper on message_subscribe, using users. If user_ids is not
+            provided, unsubscribe uid instead. """
+        # isinstance: because using message_subscribe_users called in a view set the context as user_ids
+        if not user_ids or isinstance(user_ids, dict): user_ids = [uid]
+        partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
+        return self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
 
-            :param user_ids: a list of user_ids; if not set, subscribe
-                             uid instead
+    def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
+        """ Remove partners from the records followers.
+
+            :param partner_ids: a list of partner_ids to unsubscribe
             :param return: new value of followers, for Chatter
         """
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-        self.write(cr, uid, ids, [(3, partner_id)], context=context)
-
-        # FP Note: do we need this ?
-        return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
+        self.write(cr, uid, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
+        # return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
+        # TDE: temp, must check followers widget
+        return []
 
     #------------------------------------------------------
     # Notification API
