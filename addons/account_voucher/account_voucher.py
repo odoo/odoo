@@ -1553,16 +1553,7 @@ class account_bank_statement_line(osv.osv):
             else:
                 res[line.id] = 0.0
         return res
-    
-    def _is_reconciled(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            if line.voucher_id and  line.voucher_id.state == 'posted':
-                res[line.id] = True
-            else:
-                res[line.id] = False
-        return res
-        
+
     def _check_amount(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.voucher_id:
@@ -1576,8 +1567,11 @@ class account_bank_statement_line(osv.osv):
     ]
 
     _columns = {
-        'is_reconciled': fields.function(_is_reconciled,
-            string='Statement is reconciled?', type='boolean'),
+        'voucher_state': fields.related('voucher_id', 'state', type="selection", selection= [('draft','Draft'),
+             ('cancel','Cancelled'),
+             ('proforma','Pro-forma'),
+             ('posted','Posted')
+            ], string='Voucher State'),
         'amount_reconciled': fields.function(_amount_reconciled,
             string='Amount reconciled', type='float'),
         'voucher_id': fields.many2one('account.voucher', 'Payment'),
