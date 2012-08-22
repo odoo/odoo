@@ -186,23 +186,6 @@ class project(osv.osv):
         """Overriden in project_issue to offer more options"""
         return [('project.task', "Tasks")]
 
-    def _get_followers(self, cr, uid, ids, name, arg, context=None):
-        '''
-        Functional field that computes the users that are 'following' a thread.
-        '''
-        res = {}
-        for project in self.browse(cr, uid, ids, context=context):
-            l = set()
-            for message in project.message_ids:
-                l.add(message.user_id and message.user_id.id or False)
-            res[project.id] = list(filter(None, l))
-        return res
-
-    def _search_followers(self, cr, uid, obj, name, args, context=None):
-        project_obj = self.pool.get('project.project')
-        project_ids = project_obj.search(cr, uid, [('message_ids.user_id.id', 'in', args[0][2])], context=context)
-        return [('id', 'in', project_ids)]
-
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
 
@@ -246,8 +229,6 @@ class project(osv.osv):
                                         help="The kind of document created when an email is received on this project's email alias"),
         'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
-        'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
-                        type='many2many', relation='res.users', string='Followers'),
      }
 
     def dummy(self, cr, uid, ids, context):
