@@ -199,9 +199,9 @@ class mail_message(osv.Model):
                 'nodestroy': True
                 })
         return action_data
-    
+
     _columns = {
-        'type': fields.selection([
+        'message_type': fields.selection([
                         ('email', 'email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
@@ -235,16 +235,16 @@ class mail_message(osv.Model):
             help="Parent message, used for displaying as threads with hierarchy"),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
     }
-        
+
     _defaults = {
-        'type': 'email',
+        'message_type': 'email',
         'state': 'received',
     }
-    
+
     #------------------------------------------------------
     # Email api
     #------------------------------------------------------
-    
+
     def init(self, cr):
         cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
         if not cr.fetchone():
@@ -356,7 +356,7 @@ class mail_message(osv.Model):
                 'user_id': uid,
                 'model': model,
                 'res_id': res_id,
-                'type': type,
+                'message_type': type,
                 'body_text': body if content_subtype != 'html' else False,
                 'body_html': body if content_subtype == 'html' else False,
                 'email_from': email_from,
@@ -414,7 +414,7 @@ class mail_message(osv.Model):
         if context is None:
             context = {}
         if not ids:
-            filters = ['&', ('state', '=', 'outgoing'), ('type', '=', 'email')]
+            filters = ['&', ('state', '=', 'outgoing'), ('message_type', '=', 'email')]
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)

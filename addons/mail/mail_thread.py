@@ -440,7 +440,7 @@ class mail_thread(osv.Model):
                 'body_html': body_html or '',
                 'parent_id': parent_id,
                 'date': email_date or fields.datetime.now(),
-                'type': type,
+                'message_type': type,
                 'content_subtype': content_subtype,
                 'state': state,
                 'message_id': message_id,
@@ -491,7 +491,7 @@ class mail_thread(osv.Model):
                             body_text = msg_dict.get('body_text'),
                             body_html= msg_dict.get('body_html'),
                             parent_id = msg_dict.get('parent_id', False),
-                            type = msg_dict.get('type', 'email'),
+                            message_type = msg_dict.get('message_type', 'email'),
                             content_subtype = msg_dict.get('content_subtype'),
                             state = msg_dict.get('state'),
                             partner_ids = msg_dict.get('partner_ids'),
@@ -1107,7 +1107,7 @@ class mail_thread(osv.Model):
         if body_text:
             body_text += '\n\n----------\nThis email was send automatically by OpenERP, because you have subscribed to a document.'
         values.update({
-            'type': 'email',
+            'message_type': 'email',
             'state': 'outgoing',
             'email_from': email_from,
             'email_to': email_to,

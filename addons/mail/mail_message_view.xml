@@ -30,7 +30,7 @@
                                 <field name="subject"/>
                                 <field name="user_id"/>
                                 <field name="date"/>
-                                <field name="type"/>
+                                <field name="message_type"/>
                                 <field name="content_subtype"/>
                             </group>
                             <group>
@@ -75,19 +75,19 @@
             <field name="arch" type="xml">
                 <search string="Messages Search">
                     <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
-                    <field name="type"/>
+                    <field name="message_type"/>
                     <filter icon="terp-personal+" string="My Feeds"
                             name="my_feeds" help="My Feeds"
                             domain="[('user_id','=',uid)]"/>
                     <filter icon="terp-personal+" string="Comments"
                             name="comments" help="Comments"
-                            domain="[('type', '=', 'comment')]"/>
+                            domain="[('message_type', '=', 'comment')]"/>
                     <filter icon="terp-personal+" string="Notifications"
                             name="notifications" help="Notifications"
-                            domain="[('type', '=', 'notification')]"/>
+                            domain="[('message_type', '=', 'notification')]"/>
                     <filter icon="terp-personal+" string="Emails"
                             name="emails" help="Emails"
-                            domain="[('type', '=', 'email')]"/>
+                            domain="[('message_type', '=', 'email')]"/>
                     <filter icon="terp-go-today" string="Today"
                             name="today" help="Today"
                             domain="[   ('date', '&lt;=', datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59')),
@@ -144,7 +144,7 @@
                                 <group>
                                     <group>
                                         <field name="auto_delete"/>
-                                        <field name="type"/>
+                                        <field name="message_type"/>
                                         <field name="content_subtype"/>
                                         <field name="state" colspan="2"/>
                                         <field name="mail_server_id"/>
@@ -205,9 +205,9 @@
                     <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
                     <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
                     <separator/>
-                    <filter icon="terp-camera_test" name="type_email" string="Email" domain="[('type','=','email')]"/>
-                    <filter icon="terp-camera_test" name="type_comment" string="Comment" domain="[('type','=','comment')]"/>
-                    <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('type','=','notification')]"/>
+                    <filter icon="terp-camera_test" name="type_email" string="Email" domain="[('message_type','=','email')]"/>
+                    <filter icon="terp-camera_test" name="type_comment" string="Comment" domain="[('message_type','=','comment')]"/>
+                    <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('message_type','=','notification')]"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="user_id" string="User"/>
                         <field name="partner_id" string="Partner Name"/>
