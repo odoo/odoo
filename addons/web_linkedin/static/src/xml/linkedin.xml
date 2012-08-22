@@ -10,7 +10,10 @@
         <div>
             <script type="in/Login">
             </script>
-            <div style='display: table;width:100%'/>
+            <h2 style="margin-top: -10px;">People</h2>
+            <div class="oe_linkedin_pop_p" style='display: table;width:100%'/>
+            <h2>Companies</h2>
+            <div class="oe_linkedin_pop_c" style='display: table;width:100%'/>
         </div>
     </t>
     <t t-name="Linkedin.EntityWidget">
@@ -21,6 +24,7 @@
                 </span>
             </span>
             <h3/>
+            <div class="oe_linkedin_entity_headline" />
         </div>
     </t>
     <t t-name="LinkedIn.DisabledWarning">
@@ -41,8 +45,7 @@
                 <li>Log into LinkedIn.</li>
                 <li>Add a new application and fill the form:
                     <ul>
-                        <li>JavaScript API Domain is Your domain name (e.g. https://yourcompany.my.openerp.com)</li>
-                        <li>You can give multiple domain (e.g. yourcompany.my.openerp.com)</li>
+                        <li>JavaScript API Domain: <t t-esc="widget.api_domain"/></li>
                         <li>The programming tool is Javascript</li>
                     </ul>
                 </li>

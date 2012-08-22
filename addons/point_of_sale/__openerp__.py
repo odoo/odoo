@@ -79,18 +79,17 @@ Main features:
     ],
     'installable': True,
     'application': True,
-    # Web client
     'js': [
-        'static/lib/backbone/backbone-0.9.2.js', 
         'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
-        'static/src/js/pos_models.js',
-        'static/src/js/pos_basewidget.js',
-        'static/src/js/pos_keyboard_widget.js',
-        'static/src/js/pos_scrollbar_widget.js',
-        'static/src/js/pos_widgets.js',
-        'static/src/js/pos_devices.js',
-        'static/src/js/pos_screens.js',
-        'static/src/js/pos_main.js'
+        'static/src/js/db.js',
+        'static/src/js/models.js',
+        'static/src/js/widget_base.js',
+        'static/src/js/widget_keyboard.js',
+        'static/src/js/widget_scrollbar.js',
+        'static/src/js/widgets.js',
+        'static/src/js/devices.js',
+        'static/src/js/screens.js',
+        'static/src/js/main.js',
     ],
     'css': [
         'static/src/css/pos.css',
@@ -99,4 +98,5 @@ Main features:
     'qweb': ['static/src/xml/pos.xml'],
     'auto_install': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
