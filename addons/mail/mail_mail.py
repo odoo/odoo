@@ -9,6 +9,8 @@ import datetime
 from osv import osv
 from osv import fields
 
+_logger = logging.getLogger(__name__)
+
 class mail_mail(osv.Model):
     """
     Model holding RFC2822 email messages to send. This model also provides
