@@ -192,7 +192,7 @@ class module(osv.osv):
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
         'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
         'summary': fields.char('Summary', size=64, readonly=True, translate=True),
-        'description': fields.function(_get_desc, string='Description', type='html', method=True, readonly=True),
+        'description': fields.function(_get_desc, string='Description', type='html', method=True, readonly=True, store=True),
         'author': fields.char("Author", size=128, readonly=True),
         'maintainer': fields.char('Maintainer', size=128, readonly=True),
         'contributors': fields.text('Contributors', readonly=True),
