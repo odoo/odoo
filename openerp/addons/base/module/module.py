@@ -18,12 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from collections import defaultdict
 import imp
 import logging
+import os
 import re
+import shutil
+import tempfile
 import urllib
+import zipfile
 import zipimport
 import base64
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO   # NOQA
+
+import requests
 
 from openerp import modules, pooler, release, tools, addons
 from openerp.tools.parse_version import parse_version
@@ -40,6 +52,21 @@ ACTION_DICT = {
     'type': 'ir.actions.act_window',
     'nodestroy':True,
 }
+
+def backup(path, raise_exception=True):
+    path = os.path.normpath(path)
+    if not os.path.exists(path):
+        if not raise_exception:
+            return None
+        raise OSError('path does not exists')
+    cnt = 1
+    while True:
+        bck = '%s~%d' % (path, cnt)
+        if not os.path.exists(bck):
+            shutil.move(path, bck)
+            return bck
+        cnt += 1
+
 
 class module_category(osv.osv):
     _name = "ir.module.category"
@@ -583,6 +610,47 @@ class module(osv.osv):
             zimp = zipimport.zipimporter(fname)
             zimp.load_module(mod.name)
         return res
+
+    def install_from_urls(self, cr, uid, urls, context=None):
+        tmp = tempfile.mkdtemp()
+        try:
+            for module_name in urls:
+                try:
+                    r = requests.get(urls[module_name])
+                    r.raise_for_status()
+                except requests.HTTPError, e:
+                    _logger.exception('ggr')
+                    raise osv.except_osv('grrr', e)
+                else:
+                    zipfile.ZipFile(StringIO(r.content)).extractall(tmp)
+                    assert os.path.isdir(os.path.join(tmp, module_name))
+
+            for module_name in urls:
+                module_path = modules.get_module_path(module_name, downloaded=True, display_warning=False)
+                bck = backup(module_path, False)
+                shutil.move(os.path.join(tmp, module_name), module_path)
+                if bck:
+                    shutil.rmtree(bck)
+
+            self.update_list(cr, uid, context=context)
+
+            # FIXME restart server if ugrade...
+
+            ids = self.search(cr, uid, [('name', 'in', urls.keys())], context=context)
+
+            def install_or_upgrade(cr, uid, ids, context=None):
+                bystate = defaultdict(list)
+                names = []
+                for m in self.read(cr, uid, ids, ['state', 'name'], context=context):
+                    bystate[m['state']].append(m['id'])
+                    names.append(m['name'])
+
+                self.button_install(cr, uid, bystate['uninstalled'], context=context)
+                self.button_upgrade(cr, uid, bystate['installed'], context=context)
+
+            return self._button_immediate_function(cr, uid, ids, install_or_upgrade, context=context)
+        finally:
+            shutil.rmtree(tmp)
 
     def _update_dependencies(self, cr, uid, mod_browse, depends=None):
         if depends is None:

@@ -2,6 +2,12 @@
 <openerp>
     <data>
 
+        <record model="ir.actions.client" id="modules_act_cl">
+            <field name="name">Modules</field> 
+            <field name="tag">apps</field>
+        </record>
+
+        <menuitem id="module_mi" parent="base.menu_management" sequence="1" action="modules_act_cl" type="client"/>
         <!-- Modules Categories -->
 
         <record id="view_module_category_form" model="ir.ui.view">
@@ -187,8 +193,8 @@
               <p>You should try others search criteria.</p>
             </field>
         </record>
-        <menuitem id="menu_module_tree" parent="base.menu_management" name="Modules"
-            sequence="1" action="open_module_tree"/>
+        <menuitem id="menu_module_tree" parent="base.menu_management" name="Local Modules"
+            sequence="2" action="open_module_tree" groups="group_no_one" />
 
     </data>
 </openerp>
