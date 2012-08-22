@@ -22,7 +22,7 @@
 {
     'name': 'Social Network',
     'version': '1.0',
-    'category':'Social Network',
+    'category': 'Social Network',
     'sequence': 2,
     'summary': 'Discussions, Mailing Lists, News',
     'description': """
@@ -75,9 +75,7 @@ The main features of the module are:
         'mail_alias_view.xml',
         'res_users_view.xml',
     ],
-    'demo': [
-        'data/mail_demo.xml',
-    ],
+    'demo': ['data/mail_demo.xml'],
     'installable': True,
     'auto_install': False,
     'application': True,

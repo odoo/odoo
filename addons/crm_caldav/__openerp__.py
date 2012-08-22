@@ -35,10 +35,10 @@ Caldav features in Meeting.
     'website': 'http://www.openerp.com',
     'depends': ['caldav', 'crm' ],
     'data': [
-                'crm_caldav_data.xml',
-                'crm_caldav_setup.xml',
-                'crm_caldav_view.xml'
-                ],
+        'crm_caldav_data.xml',
+        'crm_caldav_setup.xml',
+        'crm_caldav_view.xml'
+    ],
     'demo': [],
     'installable': True,
     'auto_install': False,

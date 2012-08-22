@@ -81,16 +81,16 @@ Main features:
     'application': True,
     # Web client
     'js': [
-            'static/lib/backbone/backbone-0.9.2.js', 
-            'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
-            'static/src/js/pos_models.js',
-            'static/src/js/pos_basewidget.js',
-            'static/src/js/pos_keyboard_widget.js',
-            'static/src/js/pos_scrollbar_widget.js',
-            'static/src/js/pos_widgets.js',
-            'static/src/js/pos_devices.js',
-            'static/src/js/pos_screens.js',
-            'static/src/js/pos_main.js'
+        'static/lib/backbone/backbone-0.9.2.js', 
+        'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
+        'static/src/js/pos_models.js',
+        'static/src/js/pos_basewidget.js',
+        'static/src/js/pos_keyboard_widget.js',
+        'static/src/js/pos_scrollbar_widget.js',
+        'static/src/js/pos_widgets.js',
+        'static/src/js/pos_devices.js',
+        'static/src/js/pos_screens.js',
+        'static/src/js/pos_main.js'
     ],
     'css': [
         'static/src/css/pos.css',

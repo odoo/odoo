@@ -38,9 +38,7 @@ You can also use the geolocalization without using the GPS coordinates.
     """,
     'author': 'OpenERP SA',
     'depends': ['crm', 'account'],
-    'demo': [
-        'res_partner_demo.xml',
-    ],
+    'demo': ['res_partner_demo.xml'],
     'data': [
         'security/ir.model.access.csv',
         'res_partner_view.xml',
@@ -49,9 +47,7 @@ You can also use the geolocalization without using the GPS coordinates.
         'report/crm_lead_report_view.xml',
         'report/crm_partner_report_view.xml',
     ],
-    'test': [
-        'test/partner_assign.yml'
-    ],
+    'test': ['test/partner_assign.yml'],
     'installable': True,
     'auto_install': False,
     'certificate': '00503409558942442061',

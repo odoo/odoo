@@ -40,8 +40,7 @@ associated to every resource. It also manages the leaves of every resource.
         'security/ir.model.access.csv',
         'resource_view.xml',
     ],
-    'demo': ['resource_demo.xml'
-    ],
+    'demo': ['resource_demo.xml'],
     'test': [
         'test/resource.yml',
         'test/duplicate_resource.yml',

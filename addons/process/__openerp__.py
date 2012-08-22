@@ -37,8 +37,8 @@ This module shows the basic processes involved in the selected modules and in th
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'data': [
-       'security/ir.model.access.csv',
-       'process_view.xml'
+        'security/ir.model.access.csv',
+        'process_view.xml'
     ],
     'demo': [],
     'installable': True,

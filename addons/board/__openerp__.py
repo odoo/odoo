@@ -39,16 +39,9 @@ The user can also publish notes.
         'board_view.xml',
         'board_mydashboard_view.xml'
     ],
-    'js': [
-        'static/src/js/dashboard.js',
-    ],
-    'css': [
-        'static/src/css/dashboard.css',
-    ],
-    'qweb': [
-        'static/src/xml/*.xml',
-    ],
-
+    'js': ['static/src/js/dashboard.js'],
+    'css': ['static/src/css/dashboard.css'],
+    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,
     'certificate': '0076912305725',

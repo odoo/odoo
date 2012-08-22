@@ -34,15 +34,9 @@ Add a Shortcut icon besides the views title in order to add/remove a shortcut.
     'website': 'http://openerp.com',
     'depends': ['base'],
     'data': [],
-    'js' : [
-        'static/src/js/web_shortcuts.js',
-    ],
-    'css' : [
-        'static/src/css/web_shortcuts.css',
-    ],
-    'qweb' : [
-        'static/src/xml/*.xml',
-    ],
+    'js' : ['static/src/js/web_shortcuts.js'],
+    'css' : ['static/src/css/web_shortcuts.css'],
+    'qweb' : ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,
 }

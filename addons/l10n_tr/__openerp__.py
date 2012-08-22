@@ -45,7 +45,7 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
         'account_chart_template.xml',
         'account_tax_template.xml',
         'l10n_tr_wizard.xml',
-        ],
+    ],
     'demo': [],
     'installable': True,
     'images': ['images/chart_l10n_tr_1.jpg','images/chart_l10n_tr_2.jpg','images/chart_l10n_tr_3.jpg'],

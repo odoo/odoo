@@ -31,9 +31,7 @@ Plan contable argentino e impuestos de acuerdo a disposiciones vigentes
     'author': ['Cubic ERP'],
     'website': 'http://cubicERP.com',
     'category': 'Localization/Account Charts',
-    'depends': [
-        'account_chart',
-    ],
+    'depends': ['account_chart'],
     'data':[
         'account_tax_code.xml',
         'l10n_ar_chart.xml',

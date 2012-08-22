@@ -21,13 +21,13 @@
 
 {
     'name' : 'Portal',
-    'version' : '1.0',
-    'depends' : [
+    'version': '1.0',
+    'depends': [
         'base',
         'share',
         'auth_anonymous'
     ],
-    'author' : 'OpenERP SA',
+    'author': 'OpenERP SA',
     'category': 'Portal',
     'description': """
 Customize access to your OpenERP database to external users by creating portals.
@@ -50,9 +50,7 @@ very handy when used in combination with the module 'share'.
         'wizard/portal_wizard_view.xml',
         'wizard/share_wizard_view.xml',
     ],
-    'demo': [
-        'portal_demo.xml',
-    ],
+    'demo': ['portal_demo.xml'],
     'installable': True,
 }
 

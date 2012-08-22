@@ -31,12 +31,9 @@ This module is for modifying project view to show some data related to the hr_ex
     'author': 'OpenERP S.A.',
     'website': 'http://www.openerp.com/',
     'depends': ['analytic_contract_hr_expense','project'],
-    'data': [
-                    'analytic_contract_expense_project_view.xml',
-                    ],
+    'data': ['analytic_contract_expense_project_view.xml'],
     'demo': [],
-    'css' : [
-             ],
+    'css' : [],
     'installable': True,
     'auto_install': True,
 }

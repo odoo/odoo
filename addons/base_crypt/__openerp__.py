@@ -19,12 +19,12 @@
 #
 ##############################################################################
 {
-    'name' : 'DB Password Encryption',
-    'version' : '1.1',
-    'author' : ['OpenERP SA', 'FS3'],
-    'maintainer' : 'OpenERP SA',
-    'website' : 'http://www.openerp.com',
-    'category' : 'Tools',
+    'name': 'DB Password Encryption',
+    'version': '1.1',
+    'author': ['OpenERP SA', 'FS3'],
+    'maintainer': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'category': 'Tools',
     'description': """
 Replaces cleartext passwords in the database with a secure hash.
 ================================================================
@@ -54,11 +54,11 @@ Interaction with LDAP authentication:
 This module is currently not compatible with the ``user_ldap`` module and
 will disable LDAP authentication completely if installed at the same time.
 """,
-    'depends' : ['base'],
-    'data' : [],
+    'depends': ['base'],
+    'data': [],
     'auto_install': False,
     'installable': True,
-    'certificate' : '00721290471310299725',
+    'certificate': '00721290471310299725',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

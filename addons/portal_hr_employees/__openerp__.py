@@ -36,11 +36,8 @@ This module adds a list of employees to your portal's contact page if hr and por
         'security/ir.model.access.csv',
     ],
     'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
-    'css': [
-        'static/src/css/portal_hr_employees.css',
-    ],
-
+    'auto_install': True,
+    'category': 'Hidden',
+    'css': ['static/src/css/portal_hr_employees.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

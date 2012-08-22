@@ -38,9 +38,7 @@ You can add the following additional dates to a sale order:
     'website': 'http://www.openerp.com',
     'images': ['images/sale_order_dates.jpeg'],
     'depends': ['sale'],
-    'data': [
-        'sale_order_dates_view.xml',
-    ],
+    'data': ['sale_order_dates_view.xml'],
     'demo': [],
     'test': [],
     'installable': True,

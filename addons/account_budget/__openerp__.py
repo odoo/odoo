@@ -64,9 +64,9 @@ Three reports are available:
     ],
     'demo': ['account_budget_demo.xml'],
     'test':[
-            'test/account_budget.yml',
-            'test/account_budget_report.yml',
-            ],
+        'test/account_budget.yml',
+        'test/account_budget_report.yml',
+    ],
     'installable': True,
     'auto_install': False,
     'certificate': '0043819694157',

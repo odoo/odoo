@@ -31,12 +31,9 @@ This module is for modifying account analytic view to show some data related to 
     'author': 'OpenERP S.A.',
     'website': 'http://www.openerp.com/',
     'depends': ['hr_expense','account_analytic_analysis'],
-    'data': [
-                    'analytic_contract_hr_expense_view.xml',
-                    ],
+    'data': ['analytic_contract_hr_expense_view.xml'],
     'demo': [],
-    'css' : [
-             ],
+    'css' : [],
     'installable': True,
     'auto_install': True,
 }

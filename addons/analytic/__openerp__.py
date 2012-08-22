@@ -34,13 +34,13 @@ In OpenERP, analytic accounts are linked to general accounts but are treated
 totally independently. So, you can enter various different analytic operations
 that have no counterpart in the general financial accounts.
     """,
-    'data': ['security/analytic_security.xml',
-                   'security/ir.model.access.csv',
-                   'analytic_sequence.xml',
-                   'analytic_view.xml'
+    'data': [
+        'security/analytic_security.xml',
+        'security/ir.model.access.csv',
+        'analytic_sequence.xml',
+        'analytic_view.xml'
     ],
-    'demo': [
-    ],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate' : '00462253285027988541',

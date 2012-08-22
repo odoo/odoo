@@ -37,7 +37,8 @@ VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów zakł
     'depends' : ['account', 'base_iban', 'base_vat', 'account_chart'],
     'demo' : [],
     'data' : ['account_tax_code.xml','account_chart.xml',
-                    'account_tax.xml','l10n_chart_pl_wizard.xml'],
+              'account_tax.xml','l10n_chart_pl_wizard.xml'
+    ],
     'auto_install': False,
     'installable': True,
     'certificate' : '00885794372803776829',

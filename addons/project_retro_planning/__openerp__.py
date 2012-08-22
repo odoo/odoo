@@ -34,9 +34,7 @@ the tasks will change accordingly.
     'depends': ['base', 'project'],
     'data': [],
     'demo': [],
-    'test' : [
-              'test/deadline_change.yml'
-              ],
+    'test': ['test/deadline_change.yml'],
     'installable': True,
     'auto_install': False,
     'certificate': '0057235475485',

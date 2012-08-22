@@ -64,10 +64,10 @@ confirmation email to communicate the login/password of moodle to your subscribe
     'author': 'OpenERP SA',
     'depends': ['event'],
     'data': [
-            'wizard_moodle.xml',
-            'event_view.xml',
-            'security/ir.model.access.csv'
-            ],
+        'wizard_moodle.xml',
+        'event_view.xml',
+        'security/ir.model.access.csv'
+    ],
     'demo': [],
     'test': [],
     'installable': True,

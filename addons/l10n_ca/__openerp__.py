@@ -19,19 +19,19 @@
 #
 ##############################################################################
 {
-    'name' : 'Canada - Accounting',
-    'version' : '1.0',
-    'author' : 'Savoir-faire Linux',
-    'website' : 'http://www.savoirfairelinux.com',
-    'category' : 'Localization/Account Charts',
+    'name': 'Canada - Accounting',
+    'version': '1.0',
+    'author': 'Savoir-faire Linux',
+    'website': 'http://www.savoirfairelinux.com',
+    'category': 'Localization/Account Charts',
     'description': """
 This is the module to manage the English and French - Canadian accounting chart in OpenERP.
 ===========================================================================================
 
 Canadian accounting charts and localizations.
     """,
-    'depends' : ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
-    'data' : [
+    'depends': ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
+    'data': [
         'account_chart_en.xml',
         'account_tax_code_en.xml',
         'account_chart_template_en.xml',
@@ -44,9 +44,9 @@ Canadian accounting charts and localizations.
         'fiscal_templates_fr.xml',
         'l10n_ca_wizard.xml',
     ],
-    'demo' : [],
-    'installable' : True,
-    'certificate' : '00941680933773696173',
+    'demo': [],
+    'installable': True,
+    'certificate': '00941680933773696173',
     'images': ['images/config_chart_l10n_ca.jpeg','images/l10n_ca_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

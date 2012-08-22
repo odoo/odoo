@@ -11,9 +11,7 @@ Common base for tools modules.
 
 Creates menu link for Tools from where tools like survey, lunch, idea are accessible if installed.
     """,
-    'data': [
-        'tools_view.xml'
-    ],
+    'data': ['tools_view.xml'],
     'installable': True,
     'certificate' : '00571588675379342237'
 }

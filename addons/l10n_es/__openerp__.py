@@ -22,11 +22,11 @@
 ##############################################################################
 
 {
-    'name' : 'Spanish - Accounting (PGCE 2008)',
-    'version' : '3.0',
-    'author' : 'Spanish Localization Team',
-    'website' : 'https://launchpad.net/openerp-spain',
-    'category' : 'Localization/Account Charts',
+    'name': 'Spanish - Accounting (PGCE 2008)',
+    'version': '3.0',
+    'author': 'Spanish Localization Team',
+    'website': 'https://launchpad.net/openerp-spain',
+    'category': 'Localization/Account Charts',
     'description': """
 Spanish Charts of Accounts (PGCE 2008).
 =======================================
@@ -40,9 +40,9 @@ Spanish Charts of Accounts (PGCE 2008).
 **Note:** You should install the l10n_ES_account_balance_report module for yearly
       account reporting (balance, profit & losses).
 """,
-    'license' : 'GPL-3',
-    'depends' : ['account', 'base_vat', 'base_iban'],
-    'data' : [
+    'license': 'GPL-3',
+    'depends': ['account', 'base_vat', 'base_iban'],
+    'data': [
         'account_chart.xml',
         'taxes_data.xml',
         'fiscal_templates.xml',
@@ -51,10 +51,10 @@ Spanish Charts of Accounts (PGCE 2008).
         'fiscal_templates_pymes.xml',
         'l10n_es_wizard.xml'
     ],
-    'demo' : [],
+    'demo': [],
     'auto_install': False,
     'installable': True,
-    'certificate' : '00408828172062583229',
+    'certificate': '00408828172062583229',
     'images': ['images/config_chart_l10n_es.jpeg','images/l10n_es_chart.jpeg'],
 }
 

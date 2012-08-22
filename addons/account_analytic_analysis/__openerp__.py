@@ -35,11 +35,11 @@ Adds menu to show relevant information to each manager.You can also view the rep
     'images': ['images/bill_tasks_works.jpeg','images/overpassed_accounts.jpeg'],
     'depends': ['hr_timesheet_invoice', 'sale'], #although sale is technically not required to install this module, all menuitems are located under 'Sales' application
     'data': [
-                    'security/ir.model.access.csv',
-                    'account_analytic_analysis_view.xml',
-                    'account_analytic_analysis_menu.xml',
-                    'account_analytic_analysis_cron.xml',
-                    ],
+        'security/ir.model.access.csv',
+        'account_analytic_analysis_view.xml',
+        'account_analytic_analysis_menu.xml',
+        'account_analytic_analysis_cron.xml',
+    ],
     'demo': [],
     'installable': True,
     'auto_install': False,

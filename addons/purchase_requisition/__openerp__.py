@@ -18,12 +18,12 @@
 #
 ##############################################################################
 {
-    'name' : 'Purchase Requisitions',
-    'version' : '0.1',
-    'author' : 'OpenERP SA',
-    'category' : 'Purchase Management',
-    'images' : ['images/purchase_requisitions.jpeg'],
-    'website' : 'http://www.openerp.com',
+    'name': 'Purchase Requisitions',
+    'version': '0.1',
+    'author': 'OpenERP SA',
+    'category': 'Purchase Management',
+    'images': ['images/purchase_requisitions.jpeg'],
+    'website': 'http://www.openerp.com',
     'description': """
 This module allows you to manage your Purchase Requisition.
 ===========================================================
@@ -33,22 +33,22 @@ related requisition. This new object will regroup and will allow you to easily
 keep track and order all your purchase orders.
 """,
     'depends' : ['purchase','mrp'],
-    'demo' : ['purchase_requisition_demo.xml'],
-    'data' : ['security/purchase_tender.xml',
-                    'wizard/purchase_requisition_partner_view.xml',
-                    'purchase_requisition_data.xml',
-                    'purchase_requisition_view.xml',
-                    'purchase_requisition_report.xml',
-                    'security/ir.model.access.csv','purchase_requisition_sequence.xml'
+    'demo': ['purchase_requisition_demo.xml'],
+    'data': ['security/purchase_tender.xml',
+              'wizard/purchase_requisition_partner_view.xml',
+              'purchase_requisition_data.xml',
+              'purchase_requisition_view.xml',
+              'purchase_requisition_report.xml',
+              'security/ir.model.access.csv','purchase_requisition_sequence.xml'
     ],
     'auto_install': False,
-    'test':[
-            'test/purchase_requisition_demo.yml',
-            'test/purchase_requisition.yml',
-            'test/cancel_purchase_requisition.yml',
-            ],
+    'test': [
+        'test/purchase_requisition_demo.yml',
+        'test/purchase_requisition.yml',
+        'test/cancel_purchase_requisition.yml',
+    ],
     'installable': True,
-    'certificate' : '001023264099823179629',
+    'certificate': '001023264099823179629',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

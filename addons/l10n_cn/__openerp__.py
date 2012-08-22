@@ -18,21 +18,21 @@
 #
 ##############################################################################
 {
-    'name' : '中国会计科目表 - Accounting',
-    'version' : '1.0',
+    'name': '中国会计科目表 - Accounting',
+    'version': '1.0',
     'category': 'Localization/Account Charts',
-    'author' : 'openerp-china.org',
+    'author': 'openerp-china.org',
     'maintainer':'openerp-china.org',
     'website':'http://openerp-china.org',
-    'url':'http://code.google.com/p/openerp-china/source/browse/#svn/trunk/l10n_cn',
+    'url': 'http://code.google.com/p/openerp-china/source/browse/#svn/trunk/l10n_cn',
     'description': """
 添加中文省份数据
 科目类型\会计科目表模板\增值税\辅助核算类别\管理会计凭证簿\财务会计凭证簿
 ============================================================
     """,
-    'depends' : ['base','account'],
-    'demo' : [],
-    'data' : [
+    'depends': ['base','account'],
+    'demo': [],
+    'data': [
         'account_chart.xml',
         'l10n_chart_cn_wizard.xml',
         'base_data.xml',

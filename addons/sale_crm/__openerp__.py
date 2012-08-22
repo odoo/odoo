@@ -38,12 +38,13 @@ modules.
     'website': 'http://www.openerp.com',
     'images': ['images/crm_statistics_dashboard.jpeg', 'images/opportunity_to_quote.jpeg'],
     'depends': ['sale', 'crm'],
-    'data': ['wizard/crm_make_sale_view.xml',
-                   'sale_crm_view.xml',
-                   'process/sale_crm_process.xml',
-                   'security/sale_crm_security.xml',
-                   'security/ir.model.access.csv'
-                   ],
+    'data': [
+        'wizard/crm_make_sale_view.xml',
+        'sale_crm_view.xml',
+        'process/sale_crm_process.xml',
+        'security/sale_crm_security.xml',
+        'security/ir.model.access.csv'
+    ],
     'demo': [],
     'test': ['test/sale_crm.yml'],
     'installable': True,

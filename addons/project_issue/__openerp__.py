@@ -55,18 +55,16 @@ and decide on their status as they evolve.
      ],
     'demo': ['project_issue_demo.xml'],
     'test': [
-      'test/subscribe_issue.yml',
-      'test/issue_process.yml',
-      'test/cancel_issue.yml',
-      'test/issue_demo.yml'
+        'test/subscribe_issue.yml',
+        'test/issue_process.yml',
+        'test/cancel_issue.yml',
+        'test/issue_demo.yml'
     ],
     'installable': True,
     'auto_install': False,
     'application': True,
-    'certificate' : '001236490750848623845',
-    'js': [
-        'static/src/js/project_issue.js',
-    ],
+    'certificate': '001236490750848623845',
+    'js': ['static/src/js/project_issue.js'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

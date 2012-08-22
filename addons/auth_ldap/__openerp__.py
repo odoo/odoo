@@ -98,8 +98,6 @@ Interaction with base_crypt:
 The base_crypt module is not compatible with this module, and will disable LDAP
 authentication if installed at the same time.
     """,
-
-
     'website' : 'http://www.openerp.com',
     'category' : 'Authentication',
     'data' : [

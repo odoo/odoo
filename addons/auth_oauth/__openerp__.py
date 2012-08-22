@@ -32,21 +32,12 @@ Allow users to login through Google OAuth2.
     'maintainer': 'OpenERP s.a.',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'web'],
-    'data': [
-        'auth_oauth_data.xml'
+    'data': ['auth_oauth_data.xml',
+            'auth_oauth_view.xml'
     ],
-    'update_xml': [
-        'auth_oauth_view.xml'
-    ],
-    'js': [
-        'static/src/js/auth_oauth.js',
-    ],
-    'css': [
-        'static/lib/zocial/css/zocial.css',
-    ],
-    'qweb': [
-        'static/src/xml/auth_oauth.xml',
-    ],
+    'js': ['static/src/js/auth_oauth.js'],
+    'css': ['static/lib/zocial/css/zocial.css'],
+    'qweb': ['static/src/xml/auth_oauth.xml'],
     'installable': True,
     'auto_install': False,
 }

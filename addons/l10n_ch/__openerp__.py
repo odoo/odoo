@@ -20,8 +20,8 @@
 ##############################################################################
 
 {
-    'name' : 'Switzerland - Accounting',
-    'description' :  """
+    'name': 'Switzerland - Accounting',
+    'description':  """
 Swiss localization :
 ====================
     - DTA generation for a lot of payment types
@@ -68,41 +68,41 @@ TODO :
     'author': 'Camptocamp',
     'category': 'Localization/Account Charts',
     'website': 'http://www.camptocamp.com',
-
-    'depends' : [ 'account_cancel',
-               'base_iban',
-               'account_payment',
-               'account_voucher',
-               'report_webkit',
-               'l10n_multilang'],
-
+    'depends': ['account_cancel',
+                 'base_iban',
+                 'account_payment',
+                 'account_voucher',
+                 'report_webkit',
+                 'l10n_multilang'
+    ],
     'data': ['dta_data.xml',
-              'journal_data.xml',
-              #FR sterchi chart data
-              'sterchi_chart/account.xml',
-              'sterchi_chart/vat.xml',
-              'sterchi_chart/vat2011.xml',
-              'sterchi_chart/fiscal_position.xml',
-              'wizard.xml',
-              'wizard/bvr_import_view.xml',
-              'wizard/create_dta_view.xml',
-              'company_view.xml',
-              'account_invoice.xml',
-              'bank_view.xml',
-              'security/ir.model.access.csv',
-              'report/report_webkit_html_view.xml'],
-
+             'journal_data.xml',
+             #FR sterchi chart data
+             'sterchi_chart/account.xml',
+             'sterchi_chart/vat.xml',
+             'sterchi_chart/vat2011.xml',
+             'sterchi_chart/fiscal_position.xml',
+             'wizard.xml',
+             'wizard/bvr_import_view.xml',
+             'wizard/create_dta_view.xml',
+             'company_view.xml',
+             'account_invoice.xml',
+             'bank_view.xml',
+             'security/ir.model.access.csv',
+             'report/report_webkit_html_view.xml'
+    ],
     'demo': ['demo/demo.xml',
-              'demo/dta_demo.xml'],
+             'demo/dta_demo.xml'
+    ],
     'test': ['test/l10n_ch_report.yml',
-          'test/l10n_ch_dta.yml',
+             'test/l10n_ch_dta.yml',
           #TODO: uncomment the 2 following tests once they are fixed
           #'test/l10n_ch_v11.yml',
           #'test/l10n_ch_v11_part.yml'
-         ],
-
+    ],
     'auto_install': False,
     'installable': True,
     'certificate': '001103836064567088989',
-    'images': ['images/config_chart_l10n_ch.jpeg','images/l10n_ch_chart.jpeg']}
+    'images': ['images/config_chart_l10n_ch.jpeg','images/l10n_ch_chart.jpeg']
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

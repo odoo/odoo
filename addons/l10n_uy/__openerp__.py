@@ -22,11 +22,11 @@
 ##############################################################################
 
 {
-    'name' : 'Uruguay - Chart of Accounts',
-    'version' : '0.1',
-    'author' : 'Uruguay l10n Team & Guillem Barba',
-    'category' : 'Localization/Account Charts',
-    'website' : 'https://launchpad.net/openerp-uruguay',
+    'name': 'Uruguay - Chart of Accounts',
+    'version': '0.1',
+    'author': 'Uruguay l10n Team & Guillem Barba',
+    'category': 'Localization/Account Charts',
+    'website': 'https://launchpad.net/openerp-uruguay',
     'description': """
 General Chart of Accounts.
 ==========================
@@ -34,21 +34,19 @@ General Chart of Accounts.
 Provide Templates for Chart of Accounts, Taxes for Uruguay.
 
 """,
-    'license'   : 'AGPL-3',
-    'depends'   : [
-                    'account',
-                  ],
+    'license': 'AGPL-3',
+    'depends': ['account'],
     'data': [
-                    'account_types.xml',
-                    'taxes_code_template.xml',
-                    'account_chart_template.xml',
-                    'taxes_template.xml',
-                    'l10n_uy_wizard.xml',
-                  ],
+        'account_types.xml',
+        'taxes_code_template.xml',
+        'account_chart_template.xml',
+        'taxes_template.xml',
+        'l10n_uy_wizard.xml',
+    ],
     'demo': [],
     'auto_install': False,
     'installable': True,
-    'certificate' : '0078287892698',
+    'certificate': '0078287892698',
     'images': ['images/config_chart_l10n_uy.jpeg','images/l10n_uy_chart.jpeg'],
 }
 

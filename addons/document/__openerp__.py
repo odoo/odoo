@@ -56,9 +56,7 @@ ATTENTION:
         'board_document_view.xml',
     ],
     'demo': [ 'document_demo.xml','board_document_demo.xml'],
-    'test': [
-        'test/document_test2.yml',
-    ],
+    'test': ['test/document_test2.yml'],
     'installable': True,
     'auto_install': False,
     'certificate': '0070515416461',

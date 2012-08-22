@@ -21,14 +21,14 @@
 
 
 {
-    'name' : 'Marketing Campaigns',
-    'version' : '1.1',
-    'depends' : ['marketing',
+    'name': 'Marketing Campaigns',
+    'version': '1.1',
+    'depends': ['marketing',
                  'document',
                  'email_template',
                  'decimal_precision'
-                ],
-    'author' : 'OpenERP SA',
+    ],
+    'author': 'OpenERP SA',
     'category': 'Marketing',
     'description': """
 This module provides leads automation through marketing campaigns (campaigns can in fact be defined on any resource, not just CRM Leads).
@@ -64,15 +64,11 @@ input segments, workflow.
         'security/marketing_campaign_security.xml',
         'security/ir.model.access.csv'
     ],
-    'demo': [
-        'marketing_campaign_demo.xml',
-    ],
-    'test': [
-        'test/marketing_campaign.yml',
-     ],
+    'demo': ['marketing_campaign_demo.xml'],
+    'test': ['test/marketing_campaign.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00421723279617928365',
+    'certificate': '00421723279617928365',
     'images': ['images/campaign.png', 'images/campaigns.jpeg','images/email_account.jpeg','images/email_templates.jpeg','images/segments.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

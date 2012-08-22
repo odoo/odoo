@@ -121,20 +121,20 @@
 
 
 {
-    'name' : 'Deutschland - Accounting',
-    'version' : '1.0',
-    'author' : 'openbig.org',
-    'website' : 'http://www.openbig.org',
-    'category' : 'Localization/Account Charts',
+    'name': 'Deutschland - Accounting',
+    'version': '1.0',
+    'author': 'openbig.org',
+    'website': 'http://www.openbig.org',
+    'category': 'Localization/Account Charts',
     'description': """
 Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
 ==============================================================================
 
 German accounting chart and localization.
     """,
-    'depends' : ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
-    'demo' : [ ],
-    'data' : [
+    'depends': ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
+    'demo': [ ],
+    'data': [
         'account_tax_skr03.xml',
         'account_types_skr03.xml',
         'account_chart_skr03.xml',

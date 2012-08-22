@@ -121,10 +121,10 @@ De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
                  'base_vat',
                  'base_iban',
                  'account_chart'
-                 ],
+    ],
     'data' : ['account_chart_netherlands.xml',
-                    'l10n_nl_wizard.xml'
-            ],
+              'l10n_nl_wizard.xml'
+    ],
     'demo' : [],
     'installable': True,
     'certificate': '00976041422960053277',

@@ -61,9 +61,7 @@ For more specific needs, you may also assign custom-defined actions
         'security/ir.model.access.csv',
         'fetchmail_installer_view.xml'
     ],
-    'demo': [
-
-    ],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate' : '00692978332890137453',

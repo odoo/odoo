@@ -41,9 +41,7 @@ invoices from picking, OpenERP is able to add and compute the shipping line.
         'delivery_data.xml'
     ],
     'demo': ['delivery_demo.xml'],
-    'test': [
-        'test/delivery_cost.yml',
-    ],
+    'test': ['test/delivery_cost.yml'],
     'installable': True,
     'auto_install': False,
     'certificate': '0033981912253',

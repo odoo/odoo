@@ -75,7 +75,7 @@ Note that:
     'demo': ['hr_holidays_demo.xml',],
     'test': ['test/test_hr_holiday.yml',
              'test/hr_holidays_report.yml',
-             ],
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,

@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name' : 'Warehouse Management',
-    'version' : '1.1',
-    'author' : 'OpenERP SA',
+    'name': 'Warehouse Management',
+    'version': '1.1',
+    'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Storage',
     'description' : """
 OpenERP Inventory Management module can manage multi-warehouses, multi and structured stock locations.
@@ -46,16 +46,16 @@ Dashboard for warehouse that includes:
     * Graph : Products to receive in delay (date <= today)
     * Graph : Products to send in delay (date <= today)
     """,
-    'website' : 'http://www.openerp.com',
-    'images' : ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg','images/warehouse_dashboard.jpeg'],
-    'depends' : ['product', 'account'],
-    'category' : 'Warehouse Management',
+    'website': 'http://www.openerp.com',
+    'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg','images/warehouse_dashboard.jpeg'],
+    'depends': ['product', 'account'],
+    'category': 'Warehouse Management',
     'sequence': 16,
-    'demo' : [
+    'demo': [
         'stock_demo.xml',
 #        'stock_demo.yml',
     ],
-    'data' : [
+    'data': [
         'security/stock_security.xml',
         'security/ir.model.access.csv',
         'stock_data.xml',

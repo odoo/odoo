@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    'name' : 'Assets Management',
-    'version' : '1.0',
-    'depends' : ['account'],
-    'author' : 'OpenERP S.A.',
+    'name': 'Assets Management',
+    'version': '1.0',
+    'depends': ['account'],
+    'author': 'OpenERP S.A.',
     'description': """
 Financial and accounting asset management.
 ==========================================
@@ -33,17 +33,16 @@ track of depreciation's occurred on those assets. And it allows to create Move's
 of the depreciation lines.
 
     """,
-    'website' : 'http://www.openerp.com',
-    'category' : 'Accounting & Finance',
+    'website': 'http://www.openerp.com',
+    'category': 'Accounting & Finance',
     'sequence': 32,
-    'demo' : [ 'account_asset_demo.xml'
-    ],
+    'demo': [ 'account_asset_demo.xml'],
     'test': [
         'test/account_asset_demo.yml',
         'test/account_asset.yml',
         'test/account_asset_wizard.yml',
     ],
-    'data' : [
+    'data': [
         'security/account_asset_security.xml',
         'security/ir.model.access.csv',
         'wizard/account_asset_change_duration_view.xml',

@@ -37,10 +37,8 @@ This module adds issue menu and features to your portal if project_issue and por
         'portal_project_issue_view.xml',
     ],
     'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
-    'css': [
-        'static/src/css/portal_project_issue.css',
-    ],
+    'auto_install': True,
+    'category': 'Hidden',
+    'css': ['static/src/css/portal_project_issue.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

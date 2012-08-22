@@ -31,7 +31,7 @@ Add "Contract Data" in project view.
 ====================================
     """,
     'data': ['analytic_contract_project_view.xml'],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'auto_install': True,
 }

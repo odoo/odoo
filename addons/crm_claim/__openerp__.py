@@ -42,12 +42,10 @@ automatically new claims based on incoming emails.
         'res_config_view.xml',
         'crm_claim_data.xml',
     ],
-    'demo': [
-        'crm_claim_demo.xml',
-    ],
+    'demo': ['crm_claim_demo.xml'],
     'test': ['test/process/claim.yml',
              'test/ui/claim_demo.yml'
-             ],
+    ],
     'installable': True,
     'auto_install': False,
     'certificate' : '00612027414703404749',

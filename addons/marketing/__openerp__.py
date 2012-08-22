@@ -21,10 +21,10 @@
 
 
 {
-    'name' : 'Marketing',
-    'version' : '1.1',
-    'depends' : ['base', 'base_setup'],
-    'author' : 'OpenERP SA',
+    'name': 'Marketing',
+    'version': '1.1',
+    'depends': ['base', 'base_setup'],
+    'author': 'OpenERP SA',
     'category': 'Hidden/Dependency',
     'description': """
 Menu for Marketing.
@@ -42,7 +42,7 @@ Contains the installer for marketing-related modules.
     'demo': ['marketing_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00598574977629228189',
+    'certificate': '00598574977629228189',
     'images': ['images/config_marketing.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

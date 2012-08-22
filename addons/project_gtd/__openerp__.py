@@ -56,9 +56,7 @@ performing those tasks.
         'wizard/project_gtd_fill_view.xml',
     ],
     'demo': ['project_gtd_demo.xml'],
-    'test':[
-         'test/task_timebox.yml'
-    ],
+    'test':['test/task_timebox.yml'],
     'installable': True,
     'application': True,
     'auto_install': False,

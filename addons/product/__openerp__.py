@@ -21,12 +21,12 @@
 
 
 {
-    'name' : 'Products & Pricelists',
-    'version' : '1.1',
-    'author' : 'OpenERP SA',
+    'name': 'Products & Pricelists',
+    'version': '1.1',
+    'author': 'OpenERP SA',
     'category': 'Sales Management',
-    'depends' : ['base', 'process', 'decimal_precision', 'mail'],
-    'demo' : ['product_demo.xml', 'product_image_demo.xml'],
+    'depends': ['base', 'process', 'decimal_precision', 'mail'],
+    'demo': ['product_demo.xml', 'product_image_demo.xml'],
     'description': """
 This is the base module for managing products and pricelists in OpenERP.
 ========================================================================

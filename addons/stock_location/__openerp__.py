@@ -102,9 +102,9 @@ You can use the demo data as follow:
         'stock_location_demo_cpu3.yml',
     ],
     'installable': True,
-    'test':[
-            'test/stock_location_pull_flow.yml',
-            'test/stock_location_push_flow.yml',
+    'test': [
+        'test/stock_location_pull_flow.yml',
+        'test/stock_location_push_flow.yml',
     ],
     'auto_install': False,
     'certificate': '0046505115101',

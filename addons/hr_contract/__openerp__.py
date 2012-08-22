@@ -43,11 +43,9 @@ You can assign several contracts per employee.
         'security/ir.model.access.csv',
         'hr_contract_view.xml',
         'hr_contract_data.xml'
-        ],
+    ],
     'demo': [],
-    'test': [
-             'test/test_hr_contract.yml'
-             ],
+    'test': ['test/test_hr_contract.yml'],
     'installable': True,
     'auto_install': False,
     'certificate': '0046298028637',

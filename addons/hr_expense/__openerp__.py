@@ -59,13 +59,11 @@ re-invoice your customer's expenses if your work by project.
         'board_hr_expense_view.xml',
         'hr_expense_installer_view.xml',
     ],
-    'demo': [
-        'hr_expense_demo.xml',
-        ],
+    'demo': ['hr_expense_demo.xml'],
     'test': [
-             'test/expense_demo.yml',
-             'test/expense_process.yml',
-             ],
+        'test/expense_demo.yml',
+        'test/expense_process.yml',
+    ],
     'installable': True,
     'auto_install': False,
     'certificate': '0062479841789',

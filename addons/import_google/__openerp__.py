@@ -31,15 +31,14 @@ The module adds google contact in partner address and add google calendar events
     'website': 'http://www.openerp.com',
     'depends': ['base', 'import_base', 'google_base_account', 'base_calendar'],
     'data': ['security/ir.model.access.csv',
-                'sync_google_calendar_view.xml',
-                'wizard/import_google_data_view.xml',
-                'wizard/google_import_message_view.xml'
-
-               ],
+             'sync_google_calendar_view.xml',
+             'wizard/import_google_data_view.xml',
+             'wizard/google_import_message_view.xml'
+    ],
     'demo': [],
     'test': [
-             #'test/test_sync_google_contact_import_partner.yml',
-             #'test/test_sync_google_calendar.yml',
+        #'test/test_sync_google_contact_import_partner.yml',
+        #'test/test_sync_google_calendar.yml',
     ],
     'installable': True,
     'auto_install': False,

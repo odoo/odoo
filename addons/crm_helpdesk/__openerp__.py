@@ -21,8 +21,8 @@
 
 
 {
-    'category': 'Customer Relationship Management', 
     'name': 'Helpdesk',
+    'category': 'Customer Relationship Management', 
     'version': '1.0',
     'description': """
 Helpdesk Management.
@@ -43,9 +43,7 @@ and categorize your interventions with a channel and a priority level.
         'report/crm_helpdesk_report_view.xml',
         'crm_helpdesk_data.xml',
     ],
-    'demo': [
-        'crm_helpdesk_demo.xml',
-    ],
+    'demo': ['crm_helpdesk_demo.xml'],
     'test': ['test/process/help-desk.yml'],
     'installable': True,
     'auto_install': False,

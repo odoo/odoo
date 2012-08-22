@@ -30,12 +30,8 @@ Todo list for CRM leads and opportunities.
     """,
     'author': 'OpenERP SA',
     'depends': ['crm','project_gtd'],
-    'data': [
-        'crm_todo_view.xml',
-    ],
-    'demo': [
-        'crm_todo_demo.xml',
-    ],
+    'data': ['crm_todo_view.xml'],
+    'demo': ['crm_todo_demo.xml'],
     'installable': True,
     'auto_install': False,
 }

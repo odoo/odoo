@@ -59,14 +59,12 @@ Generic Payroll system.
         'res_config_view.xml',
     ],
     'test': [
-         'test/payslip.yml',
-#         'test/payment_advice.yml',
-#         'test/payroll_register.yml',
-        # 'test/hr_payroll_report.yml',
+        'test/payslip.yml',
+#        'test/payment_advice.yml',
+#        'test/payroll_register.yml',
+       # 'test/hr_payroll_report.yml',
     ],
-    'demo': [
-        'hr_payroll_demo.xml'
-    ],
+    'demo': ['hr_payroll_demo.xml'],
     'installable': True,
     'auto_install': False,
     'certificate' : '001046261404562128861',

@@ -37,7 +37,7 @@ This module adds sale menu and features to your portal if sale and portal are in
         'security/ir.model.access.csv',
     ],
     'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
+    'auto_install': True,
+    'category': 'Hidden',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

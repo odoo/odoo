@@ -40,9 +40,7 @@ anonymization process to recover your previous data.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'demo': [
-        'anonymization_demo.xml',
-    ],
+    'demo': ['anonymization_demo.xml'],
     'data': [
         'ir.model.fields.anonymization.csv',
         'security/ir.model.access.csv',

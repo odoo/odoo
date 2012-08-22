@@ -45,9 +45,9 @@ TODO :
     """,
 
     'active': False,
-    'data':[
-     'l10n_fr_hr_payroll_view.xml',
-     'l10n_fr_hr_payroll_data.xml',
+    'data': [
+        'l10n_fr_hr_payroll_view.xml',
+        'l10n_fr_hr_payroll_data.xml',
     ],
     'installable': True
 }

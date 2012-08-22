@@ -26,11 +26,11 @@
 #
 ##############################################################################
 {
-    'name' : 'France - Accounting',
-    'version' : '1.1',
-    'author' : 'OpenERP SA',
+    'name': 'France - Accounting',
+    'version': '1.1',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'category' : 'Localization/Account Charts',
+    'category': 'Localization/Account Charts',
     'description': """
 This is the module to manage the accounting chart for France in OpenERP.
 ========================================================================
@@ -53,8 +53,8 @@ configuration of their taxes and fiscal positions manually.
 
 **Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.
 """,
-    'depends' : ['base_iban', 'account', 'account_chart', 'base_vat', 'l10n_fr_rib'],
-    'data' : [
+    'depends': ['base_iban', 'account', 'account_chart', 'base_vat', 'l10n_fr_rib'],
+    'data': [
         'fr_report.xml',
         'plan_comptable_general.xml',
         'l10n_fr_view.xml',
@@ -65,11 +65,10 @@ configuration of their taxes and fiscal positions manually.
         'security/ir.model.access.csv',
         'wizard/fr_report_bilan_view.xml',
         'wizard/fr_report_compute_resultant_view.xml',
-
     ],
     'test': ['test/l10n_fr_report.yml'],
-    'demo' : [],
-    'certificate' : '00435321693876313629',
+    'demo': [],
+    'certificate': '00435321693876313629',
     'auto_install': False,
     'installable': True,
     'images': ['images/config_chart_l10n_fr.jpeg','images/l10n_fr_chart.jpeg'],

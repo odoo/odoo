@@ -20,23 +20,24 @@
 #
 ##############################################################################
 {
-    'name' : 'Mexico - Accounting',
-    'version' : '1.0',
-    'author' : 'RelTek Mexico',
-    'category' : 'Localization/Account Charts',
+    'name': 'Mexico - Accounting',
+    'version': '1.0',
+    'author': 'RelTek Mexico',
+    'category': 'Localization/Account Charts',
     'description': """
 This is the module to manage the accounting chart for Mexico in OpenERP.
 ========================================================================
 
 Mexican accounting chart and localization.
     """,
-    'depends' : ['account', 'base_vat', 'account_chart'],
-    'demo' : [],
-    'data' : ['account_tax_code.xml','account_chart.xml',
-                    'account_tax.xml','l10n_chart_mx_wizard.xml'],
+    'depends': ['account', 'base_vat', 'account_chart'],
+    'demo': [],
+    'data': ['account_tax_code.xml','account_chart.xml',
+              'account_tax.xml','l10n_chart_mx_wizard.xml'
+    ],
     'auto_install': False,
     'installable': True,
-    'certificate' : '00858539161332598061',
+    'certificate': '00858539161332598061',
     'images': ['images/config_chart_l10n_mx.jpeg','images/l10n_mx_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

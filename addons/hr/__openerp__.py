@@ -57,13 +57,11 @@ You can manage:
         'hr_data.xml',
         'res_config_view.xml',
     ],
-    'demo': [
-        'hr_demo.xml',
-    ],
+    'demo': ['hr_demo.xml'],
     'test': [
-             'test/open2recruit2close_job.yml',
-             'test/hr_demo.yml',
-             ],
+        'test/open2recruit2close_job.yml',
+        'test/hr_demo.yml',
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,

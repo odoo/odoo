@@ -38,12 +38,8 @@ Web pages
         'security/document_page_security.xml',
         'security/ir.model.access.csv',
     ],
-    'demo': [
-        'document_page_demo.xml'
-    ],
-    'test': [
-        'test/document_page_test00.yml'
-    ],
+    'demo': ['document_page_demo.xml'],
+    'test': ['test/document_page_test00.yml'],
     'installable': True,
     'auto_install': False,
     'certificate': '0086363630317',
@@ -52,8 +48,6 @@ Web pages
         'static/src/lib/wiky/wiky.js', 
         'static/src/js/document_page.js'
     ],
-    'css' : [
-        'static/src/css/document_page.css'
-    ],
+    'css' : ['static/src/css/document_page.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

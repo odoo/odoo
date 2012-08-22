@@ -55,7 +55,8 @@ The following topics should be covered by this module:
              'test/test_mrp_repair_b4inv.yml',
              'test/test_mrp_repair_afterinv.yml',
              'test/test_mrp_repair_cancel.yml',
-             'test/mrp_repair_report.yml'],
+             'test/mrp_repair_report.yml'
+    ],
     'installable': True,
     'auto_install': False,
     'certificate': '0060814381277',

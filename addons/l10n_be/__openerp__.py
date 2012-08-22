@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{   'name': 'Belgium - Accounting',
+{   
+    'name': 'Belgium - Accounting',
     'version': '1.1',
     'category': 'Localization/Account Charts',
     'description': """

@@ -42,11 +42,8 @@ Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
         'idea_view.xml',
         'idea_workflow.xml',
     ],
-    'demo': [
-        'idea_data.xml'
-    ],
-    'test':[
-    ],
+    'demo': ['idea_data.xml'],
+    'test':[],
     'installable': True,
     'images': [],
 }

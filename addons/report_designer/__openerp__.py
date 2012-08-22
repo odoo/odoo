@@ -34,9 +34,7 @@ Makes the Reporting Hidden Configuration available from where you can install
 modules like base_report_designer and base_report_creator.
     """,
     'website': 'http://www.openerp.com',
-    'data': [
-        'security/ir.model.access.csv',
-    ],
+    'data': ['security/ir.model.access.csv'],
     'demo': [],
     'installable': True,
     'auto_install': False,
