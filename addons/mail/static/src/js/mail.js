@@ -887,19 +887,26 @@ openerp.mail = function(session) {
 
        init: function() {
             this._super.apply(this, arguments);
-            this.params = this.get_definition_options();
+            this.params = this.options;
             this.params.thread_level = this.params.thread_level || 0;
             this.thread = null;
             this.ds = new session.web.DataSet(this, this.view.model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
-        
+
         start: function() {
             // NB: all the widget should be modified to check the actual_mode property on view, not use
             // any other method to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
             mail.ChatterUtils.bind_events(this);
+            this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
+            if (! this.params.see_subscribers_options) {
+                this.$element.find('button.oe_mail_button_followers').hide(); }
+            this.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); });
+            this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
+                .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
+                .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
         },
         
         _check_visibility: function() {

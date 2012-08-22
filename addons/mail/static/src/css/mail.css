@@ -70,7 +70,7 @@
     width: 486px;
 }
 
-.openerp div.oe_mail_msg_content li {
+.openerp div.oe_mail_msg_content > li {
     float: left;
     margin-right: 3px;
 }
@@ -376,6 +376,11 @@ span.oe_mail_vote_string{
 .openerp .oe_mail_msg_footer,
 .openerp .oe_mail_msg_subtitle {
     color: #888;
+}
+
+.openerp .oe_mail_msg_footer li {
+  float: left;
+  margin-right: 3px;
 }
 
 .openerp .oe_mail_msg_body {
