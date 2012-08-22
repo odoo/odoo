@@ -230,6 +230,7 @@ class hr_applicant(base_stage, osv.Model):
         'color': fields.integer('Color Index'),
         'emp_id': fields.many2one('hr.employee', 'employee'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
+        'section_id': fields.integer('Section Id'),
     }
 
     _defaults = {
