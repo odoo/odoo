@@ -100,15 +100,15 @@ class res_users(osv.Model):
 
         # create user that follows its related partner
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        self.pool.get('res.partner').message_subscribe_users(cr, uid, [user_id], [user_id], context=context)
+        user = self.browse(cr, uid, user_id, context=context)
+        self.pool.get('res.partner').message_subscribe(cr, uid, [user.partner_id.id], [user.partner_id.id], context=context)
         # alias
         mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
         # create a welcome message
         self._create_welcome_message(cr, uid, user_id, context=context)
         return user_id
 
-    def _create_welcome_message(self, cr, uid, user_id, context=None):
-        user = self.browse(cr, uid, user_id, context=context)
+    def _create_welcome_message(self, cr, uid, user, context=None):
         company_name = user.company_id.name if user.company_id else _('the company')
         body = '''%s has joined %s.''' % (user.name, company_name)
         # TODO change 1 into user.id but catch errors
