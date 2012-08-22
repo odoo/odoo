@@ -1499,8 +1499,6 @@ class account_bank_statement_line(osv.osv):
         statement_id = ids[0]
         statement = self.browse(cr, uid, statement_id, context=context)
         voucher = statement.voucher_id or False
-        if voucher and voucher.state == 'posted':
-            return voucher.cancel_voucher(context=context)
         mod_obj = self.pool.get('ir.model.data')
         if voucher and voucher.type == 'customer':
             res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
@@ -1529,7 +1527,16 @@ class account_bank_statement_line(osv.osv):
             else:
                 res[line.id] = 0.0
         return res
-
+    
+    def _is_reconciled(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.voucher_id and  line.voucher_id.state == 'posted':
+                res[line.id] = True
+            else:
+                res[line.id] = False
+        return res
+        
     def _check_amount(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.voucher_id:
@@ -1543,6 +1550,8 @@ class account_bank_statement_line(osv.osv):
     ]
 
     _columns = {
+        'is_reconciled': fields.function(_is_reconciled,
+            string='Statement is reconciled?', type='boolean'),
         'amount_reconciled': fields.function(_amount_reconciled,
             string='Amount reconciled', type='float'),
         'voucher_id': fields.many2one('account.voucher', 'Payment'),
