@@ -1361,10 +1361,16 @@ class account_invoice_line(osv.osv):
         'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
     }
+
+    def _default_account_id(self, cr, uid, ids, context=None):
+        prop = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
+        return prop and prop.id or False
+
     _defaults = {
         'quantity': 1,
         'discount': 0.0,
         'price_unit': _price_unit_default,
+        'account_id': _default_account_id,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -1473,10 +1479,11 @@ class account_invoice_line(osv.osv):
             prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
             prod_uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
             if prod.uom_id.category_id.id != prod_uom.category_id.id:
-                 warning = {
+                warning = {
                     'title': _('Warning!'),
                     'message': _('The selected unit of measure is not compatible with the unit of measure of the product.')
-            }
+                }
+                res['value'].update({'uos_id': prod.uom_id.id})
             return {'value': res['value'], 'warning': warning}
         return res
 
