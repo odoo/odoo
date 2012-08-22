@@ -638,8 +638,6 @@ class mail_thread(osv.Model):
     # Thread_state
     #------------------------------------------------------
 
-    # FP Note: this should be a invert function on message_unread field
-    # not sure because if not readonly, it may often write to this field?
     def message_mark_as_unread(self, cr, uid, ids, context=None):
         """ Set as read. """
         notobj = self.pool.get('mail.notification')

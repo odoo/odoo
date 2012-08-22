@@ -28,12 +28,6 @@ from osv import fields
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 
-# FP Note: refactor in tools ?
-def mail_tools_to_email(text):
-    """Return a list of the email addresses found in ``text``"""
-    if not text: return []
-    return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
-
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
 

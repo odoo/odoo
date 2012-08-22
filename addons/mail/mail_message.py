@@ -19,22 +19,16 @@
 #
 ##############################################################################
 
-# FP Note: can we remove some dependencies ? Use lint
-
-import base64
 import dateutil.parser
 import email
 import logging
 import re
 import time
-import datetime
 from email.header import decode_header
 from email.message import Message
 
 from osv import osv
 from osv import fields
-import pytz
-from tools import DEFAULT_SERVER_DATETIME_FORMAT
 import tools
 
 _logger = logging.getLogger(__name__)

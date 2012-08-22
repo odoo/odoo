@@ -137,7 +137,7 @@ class res_users_mail_group(osv.Model):
     _name = 'res.users'
     _inherit = ['res.users']
 
-    # FP Note: to improve
+    # FP Note: to improve, post processing may be better ?
     def write(self, cr, uid, ids, vals, context=None):
         write_res = super(res_users_mail_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('groups_id'):
@@ -158,7 +158,7 @@ class res_groups_mail_group(osv.Model):
     _name = 'res.groups'
     _inherit = 'res.groups'
 
-    # FP Note: to improve
+    # FP Note: to improve, post processeing, after the super may be better
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('users'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}

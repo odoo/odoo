@@ -105,8 +105,6 @@ class mail_group(osv.Model):
         'alias_domain': False, # always hide alias during creation
     }
 
-    # FP Note: code to be improved. Check we have a code for res.users
-    # when we give them a new group.
     def _subscribe_users(self, cr, uid, ids, context=None):
         for mail_group in self.browse(cr, uid, ids, context=context):
             partner_ids = []
