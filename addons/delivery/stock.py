@@ -210,23 +210,20 @@ class stock_picking_in(osv.osv):
     def _cal_weight(self, cr, uid, ids, name, args, context=None):
         return self.pool.get('stock.picking')._cal_weight(cr, uid, ids, name, args, context=context)
 
-
     def _get_picking_line(self, cr, uid, ids, context=None):
         return self.pool.get('stock.picking')._get_picking_line(cr, uid, ids, context=context)
 
     _columns = {
-        
         'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
-                  store={
-                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
-                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
-                 }),
+                store={
+                'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
+                'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
+                }),
         'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
-                  store={
-                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
-                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
-                 }),
-        
+                store={
+                'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
+                'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
+                }),
         }
 stock_picking_in()
 
