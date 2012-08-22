@@ -68,7 +68,7 @@ class account_move_reconciliation(osv.osv):
             if not last_reconciliation_date:
                 res_ids.append(id)
             else:
-                move_ids = obj_move_line.search(cr, uid, [('partner_id','=', id),('create_date','>', last_reconciliation_date)])
+                move_ids = obj_move_line.search(cr, uid, [('partner_id','=', id),('date','>', last_reconciliation_date)])
                 if move_ids:
                     res_ids.append(id)
         return res_ids
@@ -76,7 +76,7 @@ class account_move_reconciliation(osv.osv):
     def skip_partner(self, cr, uid, ids, context):
         res_partner = self.pool.get('res.partner')
         for partner in self.browse(cr, uid, ids, context=context):
-            res_partner.write(cr, uid, [partner.id] ,{'last_reconciliation_date':time.strftime("%Y-%m-%d %H:%M:%S")})
+            res_partner.write(cr, uid, [partner.id] ,{'last_reconciliation_date':time.strftime("%Y-%m-%d")})
             
             
     _columns = {

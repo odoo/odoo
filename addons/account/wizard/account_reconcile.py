@@ -92,12 +92,13 @@ class account_move_line_reconcile(osv.osv_memory):
             partner_id = tmp_ml_id.partner_id and tmp_ml_id.partner_id.id or False
             debit_ml_ids = account_move_line_obj.search(cr, uid, [('partner_id', '=', partner_id), ('account_id.reconcile', '=', True), ('reconcile_id', '=', False), ('debit', '>', 0)], context=context)
             credit_ml_ids = account_move_line_obj.search(cr, uid, [('partner_id', '=', partner_id), ('account_id.reconcile', '=', True), ('reconcile_id', '=', False), ('credit', '>', 0)], context=context)
+            print 'REREWREW',credit_ml_ids, debit_ml_ids, context
             for ml_id in context['active_ids']:
                 if ml_id in debit_ml_ids:
                     debit_ml_ids.remove(ml_id)
                 if ml_id in credit_ml_ids:
                     credit_ml_ids.remove(ml_id)
-            if not debit_ml_ids and credit_ml_ids:
+            if not debit_ml_ids and not credit_ml_ids:
                 context.update({'stop_reconcile': True})
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
                                         period_id, journal_id, context=context)
