@@ -123,7 +123,10 @@ openerp.web_linkedin = function(instance) {
                         children_def.resolve(result);
                     });
                 defs.push(children_def.pipe(function(result) {
-                    var defs = _.map(result.people.values || [], function(el) {
+                    result = _.reject(result.people.values || [], function(el) {
+                        return ! el.formattedName;
+                    });
+                    var defs = _.map(result, function(el) {
                         el.__type = "people";
                         return self.create_on_change(el);
                     });
@@ -147,14 +150,14 @@ openerp.web_linkedin = function(instance) {
                 }
                 to_change.mobile = false;
                 to_change.phone = false;
-                _.each(entity.phoneNumbers.values || [], function(el) {
+                _.each((entity.phoneNumbers || {}).values || [], function(el) {
                     if (el.phoneType === "mobile") {
                         to_change.mobile = el.phoneNumber;
                     } else {
                         to_change.phone = el.phoneNumber;
                     }
                 });
-                var positions = entity.positions.values || [];
+                var positions = (entity.positions || {}).values || [];
                 to_change.function = positions.length > 0 ? positions[0].title : false;
                 /* TODO
                 to_change.linkedinUrl = entity.publicProfileUrl;
