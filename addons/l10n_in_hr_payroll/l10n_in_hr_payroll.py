@@ -45,15 +45,8 @@ class hr_contract(osv.osv):
         'driver_salay': fields.boolean('Driver Salary', help="Check this box if you provide allowance for driver"),
         'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance"),
         'voluntary_provident_fund': fields.float('Voluntary Provident Fund', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage(%)"),
-        'city_type': fields.selection([
-            ('metro', 'Metro'),
-            ('non-metro', 'Non Metro'),
-            ], 'Type of City'),
         'house_rent_allowance_metro_nonmetro': fields.float('House Rent Allowance for Metro and Non Metro City', digits_compute=dp.get_precision('Payroll'), help="HRA computed as percentage(%)"),
         'supplementary_allowance': fields.float('Supplementary Allowance', digits_compute=dp.get_precision('Payroll')),
-    }
-    _defaults = {
-        'city_type': 'non-metro',
     }
 
 hr_contract()

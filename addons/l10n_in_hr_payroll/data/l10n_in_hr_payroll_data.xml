@@ -34,27 +34,27 @@
         <record id="hr_company_transport_register" model="hr.contribution.register">
             <field name="name">Register for Company Provided Transport Deduction</field>
         </record>
-        
+
         <record id="hr_food_coupen_deduction_register" model="hr.contribution.register">
             <field name="name">Register for Food Coupons Deduction</field>
         </record>
-        
+
         <record id="hr_labour_Welfare_fund_register" model="hr.contribution.register">
             <field name="name">Register for State Labour Welfare Fund Deduction</field>
         </record>
-        
+
         <record id="hr_group_term_insurance_register" model="hr.contribution.register">
             <field name="name">Register for Company Provided Group Term Insurance Deduction</field>
         </record>
-        
+
         <record id="hr_leave_availed_register" model="hr.contribution.register">
             <field name="name">Register for Leave Availed Deduction</field>
         </record>
-        
+
         <record id="hr_medical_insurance_register" model="hr.contribution.register">
             <field name="name">Register for Company Provided Medical Insurance Deduction</field>
         </record>
-        
+
         <record id="hr_other_deduction_register" model="hr.contribution.register">
             <field name="name">Register for Other Deduction from Employer</field>
         </record>
@@ -73,7 +73,7 @@
         <record id="hr_salary_rule_houserentallowancemetro_nonmetro" model="hr.salary.rule">
             <field name="code">HRAMN</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * contract.house_rent_allowance_metro_nonmetro / 100) or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100) if (contract.city_type=='metro') else payslip.company_id.dearness_allowance and ((contract.wage + DA) * contract.house_rent_allowance_metro_nonmetro / 100) or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100) if (contract.city_type=='non-metro') else 0.00</field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * contract.house_rent_allowance_metro_nonmetro / 100) or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100)</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance for metro and nonmetro city</field>
             <field name="register_id" ref="hr_houserent_allowance_register"/>
