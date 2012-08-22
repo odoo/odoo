@@ -300,4 +300,9 @@ class mail_notification(osv.Model):
                         ondelete='cascade', required=True, select=1),
     }
 
+    def set_message_read(self, cr, uid, msg_id, context=None):
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        notif_ids = self.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', '=', msg_id)], context=context)
+        return self.write(cr, uid, notif_ids, {'read': True})
+
 

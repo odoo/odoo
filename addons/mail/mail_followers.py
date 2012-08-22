@@ -47,18 +47,20 @@ class mail_followers(osv.Model):
 
 
 class mail_notification(osv.Model):
+    """ Class holding notifications pushed to partners. Followers and partners
+        added in 'contacts to notify' receive notifications. Hiding notifications
+        in the wall consists in setting them as 'read'. """
     _name = 'mail.notification'
     _rec_name = 'partner_id'
     _log_access = False
     _description = 'Notifications'
+
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
         'read': fields.boolean('Read'),
-        # this will be added in mail_message.py
-        #'message_id': fields.many2one('mail.message', string='Message',
-        #                ondelete='cascade', required=True, select=1),
     }
+
     _defaults = {
         'read': False,
     }

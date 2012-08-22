@@ -17,6 +17,7 @@ openerp.mail = function(session) {
      */
 
     session.web.FormView = session.web.FormView.extend({
+        // #FIXME TODO: CHECK WITH NEW BRANCH
         do_action: function(action, on_close) {
             if (action.res_model == 'mail.compose.message' && this.fields && this.fields.message_ids && this.fields.message_ids.view.get("actual_mode") != 'create') {
                 var record_thread = this.fields.message_ids;
@@ -101,12 +102,13 @@ openerp.mail = function(session) {
         
         /**
          * @param {Object} parent parent
-         * @param {Object} [options]
-         * @param {String} [options.res_model] res_model of document [REQUIRED]
-         * @param {Number} [options.res_id] res_id of record [REQUIRED]
-         * @param {String} [options.composition_mode] mail.compose.message.mode
+         * @param {Object} [options] 
+         * @param {Object} [options.context] context
+         * @param {String} [context.res_model] res_model of document [REQUIRED]
+         * @param {Number} [context.res_id] res_id of record [REQUIRED]
+         * @param {String} [context.composition_mode] mail.compose.message.mode
          *      (see composition wizard)
-         * @param {Number} [options.msg_id] id of a message in case we are in
+         * @param {Number} [context.msg_id] id of a message in case we are in
          *      reply mode
          */
         init: function (parent, options) {
@@ -114,12 +116,11 @@ openerp.mail = function(session) {
             this._super(parent);
             // options
             this.options = options || {};
-            this.options.composition_mode = options.composition_mode || 'comment';
+            this.options.context = options.context || {};
             this.options.form_xml_id = options.form_xml_id || 'email_compose_message_wizard_form_chatter';
             this.options.form_view_id = options.form_view_id || false;
-            this.options.context = options.context || {};
             // debug
-            console.groupCollapsed('New ComposeMessage: model', this.options.res_model, ', id', this.options.res_id);
+            console.groupCollapsed('New ComposeMessage: model', this.options.context.default_res_model, ', id', this.options.context.default_res_id);
             console.log('context:', this.options.context);
             console.groupEnd();
         },
@@ -133,7 +134,6 @@ openerp.mail = function(session) {
             // create a context for the dataset and default_get of the wizard
             var context = this._update_context({});
             console.log(context);
-            // debugger
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             // find the id of the view to display in the chatter form
             var data_ds = new session.web.DataSetSearch(this, 'ir.model.data');
@@ -142,15 +142,15 @@ openerp.mail = function(session) {
 
         /** Update the context of the compose wizard */
         _update_context: function (dest_context) {
+            // TDE TOCHECK: after posting, back to reply mode !
             _.extend(dest_context, this.options.context, {
-                'default_model': this.options.res_model,
-                'mail.compose.message.mode': this.options.composition_mode
+                'mail.compose.message.mode': this.options.context.composition_mode,
             });
-            if (this.options.composition_mode == 'comment') {
-                _.extend(dest_context, {'default_res_id': this.options.res_id});
+            if (this.options.context.composition_mode == 'comment') {
+                // _.extend(dest_context, {'default_res_id': this.options.res_id});
             }
-            else if (this.options.composition_mode == 'reply') {
-                _.extend(dest_context, {'active_id': this.options.msg_id});
+            else if (this.options.context.composition_mode == 'reply') {
+                _.extend(dest_context, {'active_id': this.options.context.msg_id});
             }
             return dest_context
         },
@@ -182,13 +182,12 @@ openerp.mail = function(session) {
          * values are therefore given as for an on_change. */
         refresh: function (options_update_values) {
             var self = this;
-            // debugger
-            this.options = _.extend(this.options, options_update_values);
+            this.options.context = _.extend(this.options.context, options_update_values || {});
             if (! this.form_view) return;
             this.ds_compose.context = this._update_context(this.ds_compose.context);
             return this.ds_compose.call('default_get', [
                 ['subject', 'body_text', 'body', 'attachment_ids', 'partner_ids', 'composition_mode',
-                    'res_model', 'res_id', 'parent_id', 'content_subtype'],
+                    'model', 'res_id', 'parent_id', 'content_subtype'],
                 this.ds_compose.get_context(),
             ]).then( function (result) { self.form_view.on_processed_onchange({'value': result}, []); });
         },
@@ -205,17 +204,6 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            // this.$element.find('button.oe_form_button').click(function (event) {
-            //     event.preventDefault();
-            //     event.stopPropagation();
-            // });
-            // event: click on 'Formatting' icon-link that toggles the advanced
-            // formatting options for writing a message (subject, body_html)
-            // this.$element.on('click', 'button.oe_mail_compose_message_formatting', function (event) {
-            //     event.preventDefault();
-            //     event.stopPropagation();
-            //     self.toggle_formatting_mode(event);
-            // });
             // event: click on 'Attachment' icon-link that opens the dialog to
             // add an attachment.
             this.$element.on('click', 'button.oe_mail_compose_message_attachment', function (event) {
@@ -279,6 +267,7 @@ openerp.mail = function(session) {
             this.options.ids = options.ids || null;
             // datasets and internal vars
             this.ds_post = new session.web.DataSetSearch(this, this.options.context.res_model);
+            this.ds_notif = new session.web.DataSetSearch(this, 'mail.notification');
             this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
             // display customization vars
             this.display = {};
@@ -339,17 +328,17 @@ openerp.mail = function(session) {
             });
             // event: click on 'Reply' in msg
             this.$element.on('click', 'a.oe_mail_msg_reply', function (event) {
-                var act_dom = $(this).parents('li.oe_mail_thread_msg').eq(0).find('div.oe_mail_thread_action:first');
-                act_dom.toggle();
                 event.preventDefault();
                 event.stopPropagation();
+                var act_dom = $(this).parents('li.oe_mail_thread_msg').eq(0).find('div.oe_mail_thread_action:first');
+                act_dom.toggle();
             });
             // event: click on 'attachment(s)' in msg
             this.$element.on('click', 'a.oe_mail_msg_view_attachments', function (event) {
-                var act_dom = $(this).parent().parent().parent().find('.oe_mail_msg_attachments');
-                act_dom.toggle();
                 event.preventDefault();
                 event.stopPropagation();
+                var act_dom = $(this).parent().parent().parent().find('.oe_mail_msg_attachments');
+                act_dom.toggle();
             });
             // event: click on 'Delete' in msg side menu
             this.$element.on('click', 'a.oe_mail_msg_delete', function (event) {
@@ -358,31 +347,24 @@ openerp.mail = function(session) {
                 if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
-                var call_defer = self.ds_msg.unlink([parseInt(msg_id)]);
                 $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
-                return call_defer;
+                return self.ds_msg.unlink([parseInt(msg_id)]);
             });
             // event: click on 'Hide' in msg side menu
             this.$element.on('click', 'a.oe_mail_msg_hide', function (event) {
                 event.preventDefault();
                 event.stopPropagation();
-                if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
-                var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
                 $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
-                return call_defer;
+                return self.ds_notif.call('set_message_read', [parseInt(msg_id)]);
             });
             // event: click on "Reply by email" in msg side menu (email style)
             this.$element.on('click', 'a.oe_mail_msg_reply_by_email', function (event) {
-                console.log('cacaprout');
                 event.preventDefault();
                 event.stopPropagation();
                 var msg_id = event.srcElement.dataset.msg_id;
-                var formatting = (event.srcElement.dataset.formatting == 'html');
                 if (! msg_id) return false;
-                // self.instantiate_composition_form('reply', formatting, msg_id);
-                console.log('cacaprout2');
                 self.compose_message_widget.refresh({'composition_mode': 'reply', 'msg_id': parseInt(msg_id)});
             });
         },
@@ -396,7 +378,7 @@ openerp.mail = function(session) {
             this.message_clean();
             this.message_fetch();
             if (this.compose_message_widget) {
-                this.compose_message_widget.reinit(); }
+                this.compose_message_widget.refresh(); }
             return this._super(action, on_close);
         },
 
@@ -406,8 +388,10 @@ openerp.mail = function(session) {
                 this.compose_message_widget.destroy();
             }
             this.compose_message_widget = new mail.ComposeMessage(this, {
-                'res_model': this.options.context.res_model, 'res_id': this.options.context.res_id,
-                'composition_mode': mode || 'comment', 'msg_id': msg_id, 'context': context || false } );
+                'context': {
+                    'default_model': this.options.context.res_model, 'default_res_id': this.options.context.res_id,
+                    'composition_mode': mode || 'comment', 'msg_id': msg_id }
+                });
             var composition_node = this.$element.find('div.oe_mail_thread_action');
             composition_node.empty();
             var compose_done = this.compose_message_widget.appendTo(composition_node);
@@ -692,7 +676,7 @@ openerp.mail = function(session) {
         do_action: function(action, on_close) {
             console.log('wall do_action');
             if (this.compose_message_widget) {
-                this.compose_message_widget.reinit(); }
+                this.compose_message_widget.refresh(); }
             this.message_clean();
             this.message_fetch();
             return this._super(action, on_close);
