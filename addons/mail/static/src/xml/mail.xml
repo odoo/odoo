@@ -102,15 +102,15 @@
                 <!-- dropdown menu with message options and actions -->
                 <span class="oe_dropdown_toggle oe_dropdown_arrow">
                     <ul class="oe_dropdown_menu">
-                        <t t-if="display['show_delete']">
-                                <li t-if="record.is_author"><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
+                        <t t-if="record.is_author">
+                            <li t-if="display['show_delete']"><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
                         </t>
-                        <li t-if="display['show_hide']"><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Hide</a></li>
+                        <li t-if="display['show_hide']"><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove notification</a></li>
 <!--                    Uncomment when adding subtype hiding
                         <li t-if="display['show_hide']">
                             <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
                         </li> -->
-                        <li><a href="#" t-attf-data-msg_id="{record.id}" t-attf-data-type="{record.type}" t-attf-data-formatting="{record.content_subtype}" class="oe_mail_msg_reply_by_email">Reply by email</a></li>
+                        <li><a href="#" t-attf-data-msg_id="{record.id}" class="oe_mail_msg_reply_by_email">Quote and reply</a></li>
                         <li t-if="record.type == 'email'"><a t-attf-href="#model=mail.message&amp;id=#{record.id}" class="oe_mail_msg_details">Details</a></li>
                     </ul>
                 </span>

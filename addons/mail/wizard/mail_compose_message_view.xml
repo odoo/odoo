@@ -38,8 +38,13 @@
             <field name="arch" type="xml">
                 <form string="Compose Email" version="7.0" >
                     <group>
+                        <field name="composition_mode" colspan="2" nolabel="1" invisible="1"/>
+                        <field name="model" colspan="2" nolabel="1" invisible="1"/>
+                        <field name="res_id" colspan="2" nolabel="1" invisible="1"/>
+                        <field name="parent_id" colspan="2" nolabel="1" invisible="1"/>
                         <!-- truly invisible fields for control and options -->
                         <field name="content_subtype" colspan="2" nolabel="1" invisible="1"/>
+                        <!-- visible wizard -->
                         <field name="subject" colspan="2" nolabel="1" placeholder="Subject..."
                                 class="oe_mail_compose_message_subject"
                                 attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
@@ -49,9 +54,9 @@
                         <field name="body" colspan="2" nolabel="1" placeholder="What are you working on ?"
                                 class="oe_mail_compose_message_body_html"
                                 attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
-                        <field name="dest_partner_ids" colspan="2" nolabel="1" widget="many2many_tags" placeholder="Add contacts to notify..."
+                        <field name="partner_ids" colspan="2" nolabel="1" widget="many2many_tags" placeholder="Add contacts to notify..."
                                 context="{'force_create':True}"
-                                on_change="onchange_dest_partner_ids(dest_partner_ids)"
+                                on_change="onchange_partner_ids(partner_ids)"
                                 class="oe_mail_compose_message_partner_ids"/>
                         <field name="attachment_ids" colspan="2" nolabel="1" widget="many2many_tags"
                                 placeholder="Add attachments..." invisible="1"
@@ -69,7 +74,7 @@
                                 help="Add an attachment"/>
                             <button icon="/mail/static/src/img/formatting.png"
                                 class="oe_mail_compose_message_formatting" string=""
-                                type="object" name="toggle_formatting"
+                                type="object" name="toggle_content_subtype"
                                 help="Toggle advanced formatting mode"/>
                         </div>
                     </group>

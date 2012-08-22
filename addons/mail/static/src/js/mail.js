@@ -104,87 +104,60 @@ openerp.mail = function(session) {
          * @param {Object} [options]
          * @param {String} [options.res_model] res_model of document [REQUIRED]
          * @param {Number} [options.res_id] res_id of record [REQUIRED]
-         * @param {Number} [options.formatting] true/false, tells whether
-         *      we are in advance formatting mode
-         * @param {String} [options.model] mail.compose.message.mode (see
-         *      composition wizard)
+         * @param {String} [options.composition_mode] mail.compose.message.mode
+         *      (see composition wizard)
          * @param {Number} [options.msg_id] id of a message in case we are in
          *      reply mode
          */
-        init: function(parent, options) {
+        init: function (parent, options) {
             var self = this;
             this._super(parent);
             // options
             this.options = options || {};
-            this.options.context = options.context || {};
-            this.options.formatting = options.formatting || false;
-            this.options.mode = options.mode || 'comment';
+            this.options.composition_mode = options.composition_mode || 'comment';
             this.options.form_xml_id = options.form_xml_id || 'email_compose_message_wizard_form_chatter';
-            this.options.form_view_id = false;
-            if (this.options.mode == 'reply') {
-                this.options.active_id = this.options.msg_id;
-            } else {
-                this.options.active_id = this.options.res_id;
-            }
-            this.formatting = false;
+            this.options.form_view_id = options.form_view_id || false;
+            this.options.context = options.context || {};
             // debug
             console.groupCollapsed('New ComposeMessage: model', this.options.res_model, ', id', this.options.res_id);
             console.log('context:', this.options.context);
             console.groupEnd();
         },
 
-        /**
-         * Reinitialize the widget field values to the default values. The
-         * purpose is to avoid to destroy and re-build a form view. Default
-         * values are therefore given as for an onchange. */
-        reinit: function() {
-            var self = this;
-            if (! this.form_view) return;
-            var call_defer = this.ds_compose.call('default_get', [['subject', 'body_text', 'body', 'attachment_ids', 'dest_partner_ids'], this.ds_compose.get_context()]).then(
-                function (result) {
-                    self.form_view.on_processed_onchange({'value': result}, []);
-                });
-            return call_defer;
-        },
-
-        /**
-         * Override-hack of do_action: clean the form */
-        do_action: function(action, on_close) {
-            // this.init_comments();
-            return this._super(action, on_close);
-        },
-
-        /**
-         * Widget start function
-         * - builds and initializes the form view */
-        start: function() {
-            var self = this;
+        start: function () {
             this._super.apply(this, arguments);
             // customize display: add avatar, clean previous content
             var user_avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.session.uid);
             this.$element.find('img.oe_mail_icon').attr('src', user_avatar);
             this.$element.find('div.oe_mail_msg_content').empty();
-            // create a context for the default_get of the compose form
-            var widget_context = {
-                'active_model': this.options.res_model,
-                'active_id': this.options.active_id,
-                'mail.compose.message.mode': this.options.mode,
-            };
-            var context = _.extend({}, this.options.context, widget_context);
+            // create a context for the dataset and default_get of the wizard
+            var context = this._update_context({});
+            console.log(context);
+            // debugger
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             // find the id of the view to display in the chatter form
             var data_ds = new session.web.DataSetSearch(this, 'ir.model.data');
-            var deferred_form_id = data_ds.call('get_object_reference', ['mail', this.options.form_xml_id]).then( function (result) {
-                if (result) {
-                    self.options.form_view_id = result[1];
-                }
-            }).pipe(this.proxy('create_form_view'));
-            return deferred_form_id;
+            return data_ds.call('get_object_reference', ['mail', this.options.form_xml_id]).pipe(this.proxy('create_form_view'));
         },
 
-        /**
-         * Create a FormView, then append it to the to widget DOM. */
-        create_form_view: function () {
+        /** Update the context of the compose wizard */
+        _update_context: function (dest_context) {
+            _.extend(dest_context, this.options.context, {
+                'default_model': this.options.res_model,
+                'mail.compose.message.mode': this.options.composition_mode
+            });
+            if (this.options.composition_mode == 'comment') {
+                _.extend(dest_context, {'default_res_id': this.options.res_id});
+            }
+            else if (this.options.composition_mode == 'reply') {
+                _.extend(dest_context, {'active_id': this.options.msg_id});
+            }
+            return dest_context
+        },
+
+        /** Create a FormView, then append it to the to widget DOM. */
+        create_form_view: function (form_view_id) {
+            this.options.form_view_id = form_view_id[1] || false;
             var self = this;
             // destroy previous form_view if any
             if (this.form_view) { this.form_view.destroy(); }
@@ -200,12 +173,31 @@ openerp.mail = function(session) {
             return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
                 self.bind_events();
                 self.form_view.do_show();
-                if (self.options.formatting) { self.toggle_formatting_mode(); }
             });
         },
 
-        destroy: function() {
-            this._super.apply(this, arguments);
+        /**
+         * Reinitialize the widget field values to the default values. The
+         * purpose is to avoid to destroy and re-build a form view. Default
+         * values are therefore given as for an on_change. */
+        refresh: function (options_update_values) {
+            var self = this;
+            // debugger
+            this.options = _.extend(this.options, options_update_values);
+            if (! this.form_view) return;
+            this.ds_compose.context = this._update_context(this.ds_compose.context);
+            return this.ds_compose.call('default_get', [
+                ['subject', 'body_text', 'body', 'attachment_ids', 'partner_ids', 'composition_mode',
+                    'res_model', 'res_id', 'parent_id', 'content_subtype'],
+                this.ds_compose.get_context(),
+            ]).then( function (result) { self.form_view.on_processed_onchange({'value': result}, []); });
+        },
+
+        /**
+         * Override-hack of do_action: clean the form */
+        do_action: function(action, on_close) {
+            console.log('compose_message do_action', action, on_close);
+            return this._super(action, on_close);
         },
 
         /**
@@ -213,37 +205,22 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            this.$element.find('button.oe_form_button').click(function (event) {
-                event.preventDefault();
-            });
+            // this.$element.find('button.oe_form_button').click(function (event) {
+            //     event.preventDefault();
+            //     event.stopPropagation();
+            // });
             // event: click on 'Formatting' icon-link that toggles the advanced
             // formatting options for writing a message (subject, body_html)
-            this.$element.on('click', 'button.oe_mail_compose_message_formatting', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                self.toggle_formatting_mode(event);
-            });
+            // this.$element.on('click', 'button.oe_mail_compose_message_formatting', function (event) {
+            //     event.preventDefault();
+            //     event.stopPropagation();
+            //     self.toggle_formatting_mode(event);
+            // });
             // event: click on 'Attachment' icon-link that opens the dialog to
             // add an attachment.
             this.$element.on('click', 'button.oe_mail_compose_message_attachment', function (event) {
                 event.stopImmediatePropagation();
             });
-        },
-
-        /**
-         * Toggle the formatting mode. */
-        toggle_formatting_mode: function(event) {
-            this.formatting = ! this.formatting;
-            // update context of datasetsearch
-            this.ds_compose.context.formatting = this.formatting;
-        },
-
-        /**
-         * Update the values of the composition form; with possible different
-         * values for body and body_html. */
-        set_body_value: function(body, body_html) {
-            this.form_view.fields.body.set_value(body);
-            this.form_view.fields.body_html.set_value(body_html);
         },
     }),
 
@@ -398,12 +375,15 @@ openerp.mail = function(session) {
             });
             // event: click on "Reply by email" in msg side menu (email style)
             this.$element.on('click', 'a.oe_mail_msg_reply_by_email', function (event) {
+                console.log('cacaprout');
                 event.preventDefault();
                 event.stopPropagation();
                 var msg_id = event.srcElement.dataset.msg_id;
                 var formatting = (event.srcElement.dataset.formatting == 'html');
                 if (! msg_id) return false;
-                self.instantiate_composition_form('reply', formatting, msg_id);
+                // self.instantiate_composition_form('reply', formatting, msg_id);
+                console.log('cacaprout2');
+                self.compose_message_widget.refresh({'composition_mode': 'reply', 'msg_id': parseInt(msg_id)});
             });
         },
 
@@ -420,15 +400,14 @@ openerp.mail = function(session) {
             return this._super(action, on_close);
         },
 
-        /** Instantiate the composition form, with paramteres coming from thread parameters */
+        /** Instantiate the composition form, with parameters coming from thread parameters */
         instantiate_composition_form: function(mode, formatting, msg_id, context) {
             if (this.compose_message_widget) {
                 this.compose_message_widget.destroy();
             }
             this.compose_message_widget = new mail.ComposeMessage(this, {
-                'extended_mode': false, 'uid': this.options.uid, 'res_model': this.options.context.res_model,
-                'res_id': this.options.context.res_id, 'mode': mode || 'comment', 'msg_id': msg_id,
-                'formatting': formatting || false, 'context': context || false } );
+                'res_model': this.options.context.res_model, 'res_id': this.options.context.res_id,
+                'composition_mode': mode || 'comment', 'msg_id': msg_id, 'context': context || false } );
             var composition_node = this.$element.find('div.oe_mail_thread_action');
             composition_node.empty();
             var compose_done = this.compose_message_widget.appendTo(composition_node);
