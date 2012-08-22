@@ -24,6 +24,8 @@ import base64
 import re
 import threading
 
+from tools.safe_eval import safe_eval as eval
+
 import tools
 import openerp.modules
 from osv import fields, osv
@@ -268,7 +270,7 @@ class ir_ui_menu(osv.osv):
                 obj = self.pool.get(menu.action.res_model)
                 if obj._needaction:
                     res[menu.id]['needaction_enabled'] = obj._needaction
-                    res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, menu.action.domain, context=context)
+                    res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, menu.action.domain and eval(menu.action.domain), context=context)
         return res
 
     _columns = {
