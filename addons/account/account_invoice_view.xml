@@ -343,7 +343,7 @@
                             <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}">
                                 <tree string="Invoice Lines" editable="bottom">
                                     <field name="invoice_line_tax_id" invisible="1"/>
-                                    <field name="product_id" />
+                                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]"
