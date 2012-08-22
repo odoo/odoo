@@ -453,14 +453,14 @@ class users(osv.osv):
             cr.execute("""SELECT id from res_users
                           WHERE login=%s AND password=%s
                                 AND active FOR UPDATE NOWAIT""",
-                       (tools.ustr(login), tools.ustr(password)))
+                       (tools.ustr(login), tools.ustr(password)), log_exceptions=False)
             cr.execute('UPDATE res_users SET date=now() WHERE login=%s AND password=%s AND active RETURNING id',
                     (tools.ustr(login), tools.ustr(password)))
         except Exception:
             # Failing to acquire the lock on the res_users row probably means
-            # another request is holding it. No big deal, we don't want to
-            # prevent/delay login in that case. It will also have been logged
-            # as a SQL error, if anyone cares.
+            # another request is holding it - no big deal, we skip the update
+            # for this time, and let the user login anyway.
+            cr.rollback()
             cr.execute("""SELECT id from res_users
                           WHERE login=%s AND password=%s
                                 AND active""",
