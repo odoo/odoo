@@ -5,46 +5,88 @@
         <record id="view_stock_config_settings" model="ir.ui.view">
             <field name="name">stock settings</field>
             <field name="model">stock.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Warehouse" version="7.0">
+                <form string="Configure Warehouse" version="7.0" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <sheet>
-                        <group string="Traceability">
-                            <field name="group_stock_production_lot"/>
-                            <field name="group_stock_tracking_lot"/>
-                            <field name="module_product_expiry"
-                                attrs="{'invisible': [('group_stock_production_lot','=',False)]}"/>
-                        </group>
-                        <group string="Logistics">
-                            <group>
-                                <field name="group_stock_multiple_locations"/>
-                                <field name="module_stock_invoice_directly"/>
-                            </group>
-                            <group>
-                                <field name="module_stock_location"/>
-                                <field name="decimal_precision"/>
-                            </group>
-                        </group>
-                        <group string="Products">
-                            <group>
-                                <field name="group_stock_packaging"/>
-                                <field name="group_uom"/>
-                                <field name="group_uos"/>
-                            </group>
-                            <group>
-                                <field name="group_stock_inventory_valuation"/>
-                                <field name="group_product_variant"/>
-                            </group>
-                        </group>
-                        <group string="Partners">
-                            <field name="module_claim_from_delivery"/>
-                        </group>
-                    </sheet>
+                    <separator string="Traceability"/>
+                    <group>
+                        <label for="id" string="Traceability"/>
+                        <div>
+                            <div>
+                                <field name="group_stock_production_lot" class="oe_inline"/>
+                                <label for="group_stock_production_lot"/>
+                            </div>
+                            <div attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
+                                <field name="module_product_expiry" class="oe_inline"/>
+                                <label for="module_product_expiry"/>
+                            </div>
+                            <div>
+                                <field name="group_stock_tracking_lot" class="oe_inline"/>
+                                <label for="group_stock_tracking_lot"/>
+                            </div>
+                        </div>    
+                    </group>
+                    <separator string="Accounting"/>
+                    <group>
+                        <label for="id" string="Accounting"/>
+                        <div>
+                            <div>
+                                <field name="group_stock_inventory_valuation" class="oe_inline"/>
+                                <label for="group_stock_inventory_valuation"/>
+                            </div>
+                            <div>
+                                <field name="module_stock_invoice_directly" class="oe_inline"/>
+                                <label for="module_stock_invoice_directly"/>
+                            </div>
+                         </div>
+                    </group>
+                    <separator string="Location &amp; Warehouse"/>
+                    <group>
+                        <label for="id" string="Logistic"/>
+                        <div>
+                            <div>
+                                <field name="group_stock_multiple_locations" class="oe_inline"/>
+                                <label for="group_stock_multiple_locations"/>  
+                            </div>
+                            <div>
+                                <field name="module_stock_location" class="oe_inline"/>
+                                <label for="module_stock_location"/>
+                            </div>
+                            <div>
+                                <field name="module_claim_from_delivery" class="oe_inline"/>
+                                <label for="module_claim_from_delivery"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Products"/>
+                        <div>
+                            <div>
+                                <field name="group_stock_packaging" class="oe_inline"/>
+                                <label for="group_stock_packaging"/>
+                            </div>
+                             <div>
+                                <label for="decimal_precision"/>
+                                <field name="decimal_precision" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <field name="group_uom" class="oe_inline"/>
+                                <label for="group_uom"/>
+                            </div>
+                            <div>
+                                <field name="group_uos" class="oe_inline"/>
+                                <label for="group_uos" />
+                            </div>
+                            <div>
+                                <field name="group_product_variant" class="oe_inline"/>
+                                <label for="group_product_variant"/>
+                            </div>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>

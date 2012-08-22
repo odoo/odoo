@@ -4,24 +4,23 @@
         <record model="ir.ui.view" id="company_form_view">
             <field name="name">res.company.form.inherit.bvr</field>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <field name="rml_footer2" position="after">
-                <newline/>
-                    <group string="BVR data" colspan="4">
-                        <field name="bvr_delta_horz"/>
-                        <field name="bvr_delta_vert"/>
-                        <field name="bvr_scan_line_vert"/>
-                        <field name="bvr_scan_line_horz"/>
-                        <field name="bvr_scan_line_font_size"/>
-                        <field name="bvr_scan_line_letter_spacing"/>
-                        <field name="bvr_background"/>
-                        <field name="bvr_only"/>
-                        <field name="invoice_only"/>
-                    </group>
-                <newline/>
-                </field>
+                <xpath expr="//notebook" position="inside">
+                    <page string="BVR Data">
+                        <group colspan="4">
+                            <field name="bvr_delta_horz"/>
+                            <field name="bvr_delta_vert"/>
+                            <field name="bvr_scan_line_vert"/>
+                            <field name="bvr_scan_line_horz"/>
+                            <field name="bvr_scan_line_font_size"/>
+                            <field name="bvr_scan_line_letter_spacing"/>
+                            <field name="bvr_background"/>
+                            <field name="bvr_only"/>
+                            <field name="invoice_only"/>
+                        </group>
+                    </page>
+                </xpath>
             </field>
         </record>
     </data>

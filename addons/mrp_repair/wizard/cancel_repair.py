@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -31,42 +31,42 @@ class repair_cancel(osv.osv_memory):
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected 
-        @param context: A standard dictionary 
-        @return:  
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
+        @return:
         """
         if context is None:
             context = {}
         record_id = context and context.get('active_id', False) or False
-        assert record_id, _('Active ID is not Found')
+        assert record_id, _('Active ID not Found')
         repair_order_obj = self.pool.get('mrp.repair')
         repair_line_obj = self.pool.get('mrp.repair.line')
         repair_order = repair_order_obj.browse(cr, uid, record_id, context=context)
-        
+
         if repair_order.invoiced or repair_order.invoice_method == 'none':
-            repair_order_obj.action_cancel(cr, uid, [record_id], context=context)            
+            repair_order_obj.action_cancel(cr, uid, [record_id], context=context)
         else:
             raise osv.except_osv(_('Warning!'),_('Repair order is not invoiced.'))
-        
+
         return {'type': 'ir.actions.act_window_close'}
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ Changes the view dynamically
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param context: A standard dictionary 
+        @param context: A standard dictionary
         @return: New arch of view.
         """
         if context is None:
             context = {}
         res = super(repair_cancel, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        record_id = context and context.get('active_id', False) or False        
+        record_id = context and context.get('active_id', False) or False
         active_model = context.get('active_model')
-        
+
         if not record_id or (active_model and active_model != 'mrp.repair'):
             return res
-        
+
         repair_order = self.pool.get('mrp.repair').browse(cr, uid, record_id, context=context)
         if not repair_order.invoiced:
             res['arch'] = """
@@ -77,7 +77,7 @@ class repair_cancel(osv.osv_memory):
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </header>
                     <label string="Do you want to continue?"/>
-                </form>                             
+                </form>
             """
         return res
 

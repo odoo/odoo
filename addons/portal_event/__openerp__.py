@@ -26,12 +26,13 @@
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-This module adds event menu and features to your portal if event and portal are 
+This module adds event menu and features to your portal if event and portal are
 installed.
     """,
     'author': 'OpenERP SA',
     'depends': ['event','portal'],
     'data': [
+        'event_view.xml',
         'security/portal_security.xml',
         'portal_event_view.xml',
         'security/ir.model.access.csv',

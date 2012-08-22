@@ -26,31 +26,36 @@
     "author": "OpenERP SA",
     "category": "Human Resources",
     "sequence": 28,
+    "summary": "Holidays, Allocation and Leave Requests",
     "website": "http://www.openerp.com",
     "description": """
-This module allows you to manage leaves and leaves' requests.
+This module allows you to manage leaves and leave's requests.
 =============================================================
 
-Implements a dashboard for human resource management that includes.
+Implements a dashboard for human resource management that includes:
+-------------------------------------------------------------------
     * Leaves
 
 Note that:
-    - A synchronisation with an internal agenda (use of the CRM module) is possible: in order to automatically create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your colour preferences in
-                Human Resources/Configuration/Holidays/Leave Type
-    - An employee can make an ask for more off-days by making a new Allocation It will increase his total of that leave type available (if the request is accepted).
+    - A synchronisation with an internal agenda (use of the CRM module) is
+      possible: in order to automatically create a case when an holiday request
+      is accepted, you have to link the holidays status to a case section. You
+      can setup this info and your colour preferences in
+                Human Resources/Configuration/Leave Type
+    - An employee can make an ask for more off-days by making a new Allocation. It will increase his total of that leave type available (if the request is accepted).
     - There are two ways to print the employee's holidays:
         * The first will allow to choose employees by department and is used by clicking the menu item located in
-                Human Resources/Reporting/Holidays/Leaves by Department
+                Reporting/Human Resources/Leaves/Leaves by Department
         * The second will allow you to choose the holidays report for specific employees. Go on the list
                 Human Resources/Human Resources/Employees
                 then select the ones you want to choose, click on the print icon and select the option
-                'Employee's Holidays'
-    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR'. You can define these features in the security tab from the user data in
-                Administration / Users / Users
+                'Leaves Summary'
+    - The wizard allows you to choose if you want to print either the Approved & Confirmed holidays or both. These states must be set up by a user from the group 'HR'. You can define these features in the security tab from the user data in
+                Settings/Users/Users
                 for example, you maybe will do it for the user 'admin'.
 """,
     'images': ['images/hr_allocation_requests.jpeg', 'images/hr_leave_requests.jpeg', 'images/leaves_analysis.jpeg'],
-    'depends': ['hr', 'crm', 'process', 'resource'],
+    'depends': ['hr', 'base_calendar', 'process', 'resource'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',

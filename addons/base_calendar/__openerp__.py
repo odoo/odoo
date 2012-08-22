@@ -22,7 +22,7 @@
 {
     "name": "Calendar Layer",
     "version": "1.0",
-    "depends": ["base", "mail"],
+    "depends": ["base", "base_status", "mail", "base_action_rule"],
     'description': """
 This is a full-featured calendar system.
 ========================================
@@ -39,14 +39,16 @@ If you need to manage your meetings, you should install the CRM module.
     'category': 'Hidden/Dependency',
     'website': 'http://www.openerp.com',
     "init_xml": [
-        'base_calendar_data.xml'
+        'base_calendar_data.xml',
+        'crm_meeting_data.xml',
     ],
-    "demo_xml": [],
+    "demo_xml": ['crm_meeting_demo.xml'],
     "update_xml": [
         'security/calendar_security.xml',
         'security/ir.model.access.csv',
         'wizard/base_calendar_invite_attendee_view.xml',
-        'base_calendar_view.xml'
+        'base_calendar_view.xml',
+        'crm_meeting_view.xml',
     ],
     "test" : ['test/base_calendar_test.yml'],
     "installable": True,

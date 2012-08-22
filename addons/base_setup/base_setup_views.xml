@@ -1,47 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
-  <data>
+    <data>
 
-    <!-- Show menus that are hidden in module base -->
-    <record id="base.menu_res_company_global" model="ir.ui.menu">
-        <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
-    </record>
-    <record id="base.menu_users" model="ir.ui.menu">
-        <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
-    </record>
-    <record id="base.menu_publisher_warranty" model="ir.ui.menu">
-        <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
-    </record>
+        <!-- Show menus that are hidden in module base -->
+        <record id="base.menu_res_company_global" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
+        </record>
+        <record id="base.menu_publisher_warranty" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/>
+        </record>
 
-      <!--   Specify Your Terminology Config Wiz-->
-     <record id="base_setup_terminology_form" model="ir.ui.view">
-          <field name="name">Specify Your Terminology</field>
-          <field name="model">base.setup.terminology</field>
-          <field name="type">form</field>
-          <field name="inherit_id" ref="base.res_config_view_base"/>
-         <field name="arch" type="xml">
-            <data>
-              <form position="attributes" version="7.0">
-                <attribute name="string">Specify Your Terminology</attribute>
-              </form>
-             <group string="res_config_contents" position="replace">
-                 <label string="You can use this wizard to change the terminologies for customers in the whole application."/>
-                    <separator string="Specify Your Terminology"/>
-                    <group colspan="4">
-                        <field colspan="4" name="partner"/>
-                  </group>
-              </group>
-            </data>
-          </field>
-      </record>
-      <record id="action_partner_terminology_config_form" model="ir.actions.act_window">
-          <field name="name">Use another word to say "Customer"</field>
-          <field name="type">ir.actions.act_window</field>
-          <field name="res_model">base.setup.terminology</field>
-          <field name="view_type">form</field>
-          <field name="view_id" ref="base_setup_terminology_form"/>
-          <field name="view_mode">form</field>
-          <field name="target">new</field>
-      </record>
+        <!-- Specify your terminology config wiz -->
+        <record id="base_setup_terminology_form" model="ir.ui.view">
+            <field name="name">Specify Your Terminology</field>
+            <field name="model">base.setup.terminology</field>
+            <field name="inherit_id" ref="base.res_config_view_base"/>
+            <field name="arch" type="xml">
+                <data>
+                    <form position="attributes" version="7.0">
+                        <attribute name="string">Specify Your Terminology</attribute>
+                    </form>
+                    <group string="res_config_contents" position="replace">
+                        <label string="You can use this wizard to change the terminologies for customers in the whole application."/>
+                        <separator string="Specify Your Terminology"/>
+                        <group colspan="4">
+                            <field colspan="4" name="partner"/>
+                        </group>
+                    </group>
+                </data>
+            </field>
+        </record>
+        <record id="action_partner_terminology_config_form" model="ir.actions.act_window">
+            <field name="name">Use another word to say "Customer"</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.setup.terminology</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="base_setup_terminology_form"/>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
-  </data>
+    </data>
 </openerp>

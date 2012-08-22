@@ -61,7 +61,7 @@ class mrp_product_produce(osv.osv_memory):
 
     def do_produce(self, cr, uid, ids, context=None):
         production_id = context.get('active_id', False)
-        assert production_id, "Production Id should be specified in context as a Active ID"
+        assert production_id, "Production Id should be specified in context as a Active ID."
         data = self.browse(cr, uid, ids[0], context=context)
         self.pool.get('mrp.production').action_produce(cr, uid, production_id,
                             data.product_qty, data.mode, context=context)
