@@ -93,8 +93,10 @@
             <field name="code">SA</field>
             <field name="name">Grade/Special/Management/Supplementary Allowance</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.supplementary_allowance)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.supplementary_allowance</field>
             <field name="sequence" eval="20"/>
             <field name="note">This allowance is normally given as an additional benefit to employees and is fully taxable.</field>
         </record>
@@ -163,19 +165,6 @@ One would need to compute income tax on the arrears if it would have been receiv
 Now difference of income tax between payment year and actual year would be allowed for deduction.</field>
         </record>
 
-        <record id="hr_salary_rule_gratuity" model="hr.salary.rule">
-            <field name="code">GRA</field>
-            <field name="name">Gratuity</field>
-            <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="condition_select">none</field>
-            <field name="amount_select">code</field>
-             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 15 * employee.number_of_year / worked_days.WORK100.number_of_days) or (contract.wage * 15 * employee.number_of_year / worked_days.WORK100.number_of_days)</field>
-            <field name="sequence" eval="57"/>
-            <field name="note">Covered under the Payment of Gratuity Act, 1971:
-(Last drawn monthly basic salary + dearness allowance)/26 x 15 days x
-number of years of service (date of joining – date of retirement/leaving job)</field>
-        </record>
-
         <record id="hr_salary_rule_lta" model="hr.salary.rule">
             <field name="code">LTA</field>
             <field name="name">Leave Travel Allowance</field>
@@ -202,15 +191,26 @@ number of years of service (date of joining – date of retirement/leaving job)<
     4.Rs. 3 Lakh</field>
         </record>
 
-        <record id="hr_salary_rule_bonus" model="hr.salary.rule">
+        <record id="hr_salary_rule_performance" model="hr.salary.rule">
             <field name="code">PI</field>
-            <field name="name">Performance Incentive/Bonus</field>
+            <field name="name">Performance Incentive</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="0.0" name="amount_fix"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.PERF.amount</field>
             <field name="sequence" eval="31"/>
             <field name="note">This would be fully taxable based on incentive.</field>
         </record>
+
+        <record id="hr_salary_rule_bonus" model="hr.salary.rule">
+            <field name="code">BONUS</field>
+            <field name="name">Bonus</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.BNS.amount</field>
+            <field name="sequence" eval="41"/>
+            <field name="note">This would be fully taxable based on Bonus.</field>
+        </record>
+
 
         <record id="hr_salary_rule_medical" model="hr.salary.rule">
             <field name="code">MEDA</field>
@@ -467,5 +467,18 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="note">Both the employees and employer contribute to the fund at the rate of 12% of the basic wages, dearness allowance and retaining allowance, if any, payable to employees per month.</field>
         </record>
 
+        <!-- Rule Inputs -->
+
+        <record id="hr_rule_input_performance" model="hr.rule.input">
+            <field name="code">PERF</field>
+            <field name="name">Performance of Employee</field>
+            <field name="input_id" ref="hr_salary_rule_performance"/>
+        </record>
+
+        <record id="hr_rule_input_bonus" model="hr.rule.input">
+            <field name="code">BNS</field>
+            <field name="name">Bonus</field>
+            <field name="input_id" ref="hr_salary_rule_bonus"/>
+        </record>
     </data>
 </openerp>

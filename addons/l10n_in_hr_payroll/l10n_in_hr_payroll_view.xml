@@ -15,6 +15,7 @@
                         <field name="driver_salay"/>
                         <field name="city_type"/>
                         <field name="house_rent_allowance_metro_nonmetro"/>
+                        <field name="supplementary_allowance"/>
                  </group>
                  <group col="2" colspan="2" name="left_column">
                     <separator colspan="2" string="Deduction"/>
@@ -22,21 +23,6 @@
                         <field name="voluntary_provident_fund"/>
                         <field name="medical_insurance"/>
                  </group>
-                 </xpath>
-            </data>
-            </field>
-        </record>
-
-        <record id="hr_employee_form_in_inherit" model="ir.ui.view">
-            <field name="name">hr.employee.form.inherit</field>
-            <field name="model">hr.employee</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-            <data>
-                 <xpath expr="//field[@name='active']" position="before">
-                    <field name="join_date"/>
-                    <field name="number_of_year"/>
                  </xpath>
             </data>
             </field>
