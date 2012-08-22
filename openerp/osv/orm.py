@@ -2346,7 +2346,7 @@ class BaseModel(object):
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
-        self.pool.get('ir.translation').check_read(cr, uid)
+        self.pool.get('ir.translation').check_access_rights(cr, uid, 'read')
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         #FIXME: collect all calls to _get_source into one SQL call.
@@ -2370,7 +2370,7 @@ class BaseModel(object):
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.translation').check_write(cr, uid)
+        self.pool.get('ir.translation').check_access_rights(cr, uid, 'write')
         #FIXME: try to only call the translation in one SQL
         for lang in langs:
             for field in vals:
@@ -2518,7 +2518,7 @@ class BaseModel(object):
 
         """
         context = context or {}
-        self.check_read(cr, uid)
+        self.check_access_rights(cr, uid, 'read')
         if not fields:
             fields = self._columns.keys()
 
@@ -3399,8 +3399,7 @@ class BaseModel(object):
         if context is None:
             context = {}
 
-        write_access = self.check_write(cr, user, False) or \
-            self.check_create(cr, user, False)
+        write_access = self.check_access_rights(cr, user, 'write') or self.check_access_rights(cr, user, 'create')
 
         res = {}
 
@@ -3464,7 +3463,7 @@ class BaseModel(object):
 
         if not context:
             context = {}
-        self.check_read(cr, user)
+        self.check_access_rights(cr, user, 'read')
         if not fields:
             fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
         if isinstance(ids, (int, long)):
@@ -3738,18 +3737,6 @@ class BaseModel(object):
            according to the access rights."""
         return self.pool.get('ir.model.access').check(cr, uid, self._name, operation, raise_exception)
 
-    def check_create(self, cr, uid, raise_exception=True):
-        return self.check_access_rights(cr, uid, 'create', raise_exception)
-
-    def check_read(self, cr, uid, raise_exception=True):
-        return self.check_access_rights(cr, uid, 'read', raise_exception)
-
-    def check_unlink(self, cr, uid, raise_exception=True):
-        return self.check_access_rights(cr, uid, 'unlink', raise_exception)
-
-    def check_write(self, cr, uid, raise_exception=True):
-        return self.check_access_rights(cr, uid, 'write', raise_exception)
-
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """Verifies that the operation given by ``operation`` is allowed for the user
            according to ir.rules.
@@ -3813,7 +3800,7 @@ class BaseModel(object):
 
         self._check_concurrency(cr, ids, context)
 
-        self.check_unlink(cr, uid)
+        self.check_access_rights(cr, uid, 'unlink')
 
         ir_property = self.pool.get('ir.property')
         
@@ -3949,7 +3936,7 @@ class BaseModel(object):
             ids = [ids]
 
         self._check_concurrency(cr, ids, context)
-        self.check_write(cr, user)
+        self.check_access_rights(cr, user, 'write')
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
@@ -4169,7 +4156,7 @@ class BaseModel(object):
         if self.is_transient():
             self._transient_vacuum(cr, user)
 
-        self.check_create(cr, user)
+        self.check_access_rights(cr, user, 'create')
 
         if self._log_access:
             for f in LOG_ACCESS_COLUMNS:
@@ -4661,7 +4648,7 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
-        self.check_read(cr, access_rights_uid or user)
+        self.check_access_rights(cr, access_rights_uid or user, 'read')
 
         # For transient models, restrict acces to the current user, except for the super-user
         if self.is_transient() and self._log_access and user != SUPERUSER_ID:
