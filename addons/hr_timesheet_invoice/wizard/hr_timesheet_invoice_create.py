@@ -115,7 +115,10 @@ class account_analytic_line(osv.osv):
                 else:
                     price = 0.0
 
-                taxes = product.taxes_id
+                if product.taxes_id:
+                    taxes = product.taxes_id
+                else:
+                    taxes = product.categ_id.taxes_id
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
                 if not account_id:

@@ -1108,7 +1108,10 @@ class pos_order_line(osv.osv):
         account_tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            taxes = line.product_id.taxes_id
+            if line.product_id.taxes_id:
+                taxes = line.product_id.taxes_id
+            else:
+                taxes = line.product_id.categ_id.taxes_id
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = account_tax_obj.compute_all(cr, uid, line.product_id.taxes_id, price, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
 
