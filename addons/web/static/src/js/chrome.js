@@ -411,7 +411,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
                     'login_successful': function() {
-                        instance.webclient.show_application();
+                        self.do_action("reload");
                     },
                 },
             };
@@ -712,6 +712,11 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.data = data;
         this.renderElement();
         this.limit_entries();
+        // Hide toplevel item if there is only one
+        var $toplevel = this.$("li")
+        if($toplevel.length == 1) {
+            $toplevel.hide();
+        }
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$element.on('click', 'a[data-menu]', this.on_menu_click);
         // Hide second level submenus
@@ -730,6 +735,7 @@ instance.web.Menu =  instance.web.Widget.extend({
             var $more = $(QWeb.render('Menu.more')),
                 $index = this.$element.find('li').eq(maximum_visible_links - 1);
             $index.after($more);
+            //$('.oe_topbar').append($more);
             $more.find('.oe_menu_more').append($index.next().nextAll());
         }
     },

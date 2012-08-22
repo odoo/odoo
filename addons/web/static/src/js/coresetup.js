@@ -528,6 +528,14 @@ if ($.blockUI) {
     $.blockUI.defaults.css["background-color"] = '';
 }
 
+var messages_by_seconds = [
+    [0, "Loading..."],
+    [30, "Still Loading..."],
+    [60, "Still Loading...<br />Please be patient."],
+    [120, "Hey, guess what?<br />It's still loading."],
+    [300, "You may not believe it,<br/>but the application is actually loading..."],
+];
+
 instance.web.Throbber = instance.web.Widget.extend({
     template: "Throbber",
     start: function() {
@@ -548,6 +556,23 @@ instance.web.Throbber = instance.web.Widget.extend({
           left: 'auto' // Left position relative to parent in px
         };
         this.spin = new Spinner(opts).spin(this.$element[0]);
+        this.start_time = new Date().getTime();
+        this.act_message();
+    },
+    act_message: function() {
+        var self = this;
+        setTimeout(function() {
+            if (self.isDestroyed())
+                return;
+            var seconds = (new Date().getTime() - self.start_time) / 1000;
+            var mes;
+            _.each(messages_by_seconds, function(el) {
+                if (seconds >= el[0])
+                    mes = el[1];
+            });
+            self.$(".oe_throbber_message").html(mes);
+            self.act_message();
+        }, 1000);
     },
     destroy: function() {
         if (this.spin)
