@@ -184,7 +184,7 @@ class account_account_type(osv.osv):
                         ('income', _('Profit & Loss (Income account)')),
                         ('expense', _('Profit & Loss (Expense account)')),
                         ('asset', _('Balance Sheet (Asset account)')),
-                        ('liability', _('Balance Sheet (Liability account)'))], help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
+                        ('liability', _('Balance Sheet (Liability account)'))], store=True, help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
     }
     _defaults = {
