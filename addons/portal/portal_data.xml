@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="1">
 
         <record id="portal" model="res.portal">
             <field name="name">Portal</field>
@@ -10,7 +10,7 @@
 
         <!-- Mail group for the company's news -->
         <record id="company_news_feed" model="mail.group">
-            <field name="name">Company's news feed</field>
+            <field name="name">Company's news</field>
         </record>
 
         <record id="action_news" model="ir.actions.act_window">
@@ -31,25 +31,6 @@
             <field name="res_id" ref="company_jobs"/>
             <field name="view_mode">form</field>
         </record>
-
-        <!-- Top menu item -->
-        <menuitem name="Portal"
-            id="portal_menu"
-            groups="base.group_no_one,portal.group_portal_member,auth_anonymous.group_anonymous"
-            sequence="20"/>
-
-            <menuitem name="Our company" id="portal_company" parent="portal_menu" sequence="10"/>
-                <menuitem name="News" id="portal_company_news" parent="portal_company" sequence="10" action="action_news"/>
-                <menuitem name="Jobs" id="portal_jobs" parent="portal_company" sequence="20" action="action_jobs"/>
-
-            <!--
-                Create menu items that we'll leave empty for now - they'll be
-                filled up by other portal modules.
-            -->
-            <menuitem name="Orders" id="portal_orders" parent="portal_menu" sequence="20"/>
-            <menuitem name="Invoices and Payments" id="portal_invoices_payements" parent="portal_menu" sequence="30"/>
-            <menuitem name="Projects" id="portal_projects" parent="portal_menu" sequence="40"/>
-            <menuitem name="After Sale Services" id="portal_after_sales" parent="portal_menu" sequence="50"/>
 
     </data>
 </openerp>
