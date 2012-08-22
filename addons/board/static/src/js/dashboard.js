@@ -27,7 +27,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         // Events
         this.$element.find('.oe_dashboard_link_reset').click(this.on_reset);
         this.$element.find('.oe_dashboard_link_change_layout').click(this.on_change_layout);
-        this.$element.find('h2.oe_header span:first').click(function(ev){
+        this.$element.find('h2.oe_header span.oe_header_txt').click(function(ev){
             if(ev.target === ev.currentTarget)
                 self.on_header_string($(ev.target).parent());
         });

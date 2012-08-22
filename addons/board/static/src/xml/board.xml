@@ -23,7 +23,7 @@
 <t t-name="DashBoard.action">
     <div t-att-data-id="action.attrs.name" class="oe_action">
         <h2 t-attf-class="oe_header #{action.attrs.string ? '' : 'oe_header_empty'}">
-            <span><t t-esc="action.attrs.string"/></span>
+            <span class=".oe_header_txt"> <t t-esc="action.attrs.string"/> </span>
             <input class = "oe_header_text" type="text"/>
             <t t-if="!action.attrs.string">&amp;nbsp;</t>
             <button t-if="action.attrs.creatable and action.attrs.creatable !== 'false'" class="oe_button oe_button_create">Create</button>
