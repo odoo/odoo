@@ -90,7 +90,7 @@
                                     </group>
                                     <group string="Prices">
                                         <field name="list_price"/>
-                                        <field name="cost_method" groups="base.group_user"/>
+                                        <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                         <field name="price_margin" groups="product.group_product_variant"/>
                                         <field name="price_extra" groups="product.group_product_variant"/>
