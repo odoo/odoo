@@ -49,6 +49,7 @@ class hr_contract(osv.osv):
             ('metro', 'Metro'),
             ('non-metro', 'Non Metro'),
             ], 'Type of City'),
+        'house_rent_allowance_metro_nonmetro': fields.float('House Rent Allowance for Metro and Non Metro City', digits_compute=dp.get_precision('Payroll'), help="HRA computed as percentage(%)"),
     }
     _defaults = {
         'city_type': 'non-metro',

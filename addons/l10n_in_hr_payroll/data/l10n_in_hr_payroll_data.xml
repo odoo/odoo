@@ -34,7 +34,7 @@
         <record id="hr_salary_rule_houserentallowancemetro_nonmetro" model="hr.salary.rule">
             <field name="code">HRAMN</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result=payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.50) or (contract.wage * 0.50) if (contract.city_type=='metro') else payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.40) or (contract.wage * 0.40) if (contract.city_type=='non-metro') else 0.00</field>
+            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * contract.house_rent_allowance_metro_nonmetro / 100) or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100) if (contract.city_type=='metro') else payslip.company_id.dearness_allowance and ((contract.wage + DA) * contract.house_rent_allowance_metro_nonmetro / 100) or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100) if (contract.city_type=='non-metro') else 0.00</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance for metro and nonmetro city</field>
             <field name="register_id" ref="hr_houserent_allowance_register"/>
@@ -141,8 +141,9 @@ number of years of service (date of joining – date of retirement/leaving job)<
             <field name="code">LTA</field>
             <field name="name">Leave Travel Allowance</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field name="amount_fix">1666</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">contract.wage</field>
+            <field name="amount_percentage" eval="8.33"/>
             <field name="sequence" eval="29"/>
             <field name="note">As per Income tax rules of India, if transport bills for LTA are not provided,the amount will be taxed. E.g. If an employee has LTA allowance as Rs 50,000 in his CTC(cost to company),and he provides proofs of Rs 40,000 (boarding pass,air tickets, taxi vouchers) then income tax will be deducted for rest of the Rs 10,000. Does not matter whats the amount of LTA in an employee’s package, income tax laws only permits domestic air tickets only for LTA claim.</field>
         </record>
