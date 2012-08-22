@@ -25,6 +25,7 @@
     'depends' : [
         'base',
         'share',
+        'auth_anonymous',
         'auth_signup',
     ],
     'author' : 'OpenERP SA',
@@ -45,8 +46,8 @@ very handy when used in combination with the module 'share'.
     'data': [
         'security/portal_security.xml',
         'security/ir.model.access.csv',
-        'portal_view.xml',
         'portal_data.xml',
+        'portal_view.xml',
         'wizard/portal_wizard_view.xml',
         'wizard/share_wizard_view.xml',
     ],
