@@ -68,17 +68,14 @@ def initialize(cr):
         category_id = create_categories(cr, categories)
 
         if info['installable']:
-            if info['auto_install'] and not info['depends']:
-                state = 'to install'
-            else:
-                state = 'uninstalled'
+            state = 'uninstalled'
         else:
             state = 'uninstallable'
 
         cr.execute('INSERT INTO ir_module_module \
                 (author, website, name, shortdesc, description, \
-                    category_id, auto_install, state, certificate, web, license, application, icon, sequence) \
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+                    category_id, auto_install, state, certificate, web, license, application, icon, sequence, summary) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
             info['website'], i, info['name'],
             info['description'], category_id,
@@ -86,7 +83,7 @@ def initialize(cr):
             info['web'],
             info['license'],
             info['application'], info['icon'],
-            info['sequence']))
+            info['sequence'], info['summary']))
         id = cr.fetchone()[0]
         cr.execute('INSERT INTO ir_model_data \
             (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
@@ -95,7 +92,19 @@ def initialize(cr):
         for d in dependencies:
             cr.execute('INSERT INTO ir_module_module_dependency \
                     (module_id,name) VALUES (%s, %s)', (id, d))
-        cr.commit()
+
+    # Install recursively all auto-installing modules
+    while True:
+        cr.execute("""SELECT m.name FROM ir_module_module m WHERE m.auto_install AND state != 'to install'
+                      AND NOT EXISTS (
+                          SELECT 1 FROM ir_module_module_dependency d JOIN ir_module_module mdep ON (d.name = mdep.name)
+                                   WHERE d.module_id = m.id AND mdep.state != 'to install'
+                      )""")
+        to_auto_install = [x[0] for x in cr.fetchall()]
+        if not to_auto_install: break
+        cr.execute("""UPDATE ir_module_module SET state='to install' WHERE name in %s""", (tuple(to_auto_install),))
+
+    cr.commit()
 
 def create_categories(cr, categories):
     """ Create the ir_module_category entries for some categories.

@@ -545,6 +545,7 @@ FIELDS_TO_PGTYPES = {
     fields.boolean: 'bool',
     fields.integer: 'int4',
     fields.text: 'text',
+    fields.html: 'text',
     fields.date: 'date',
     fields.datetime: 'timestamp',
     fields.binary: 'bytea',
@@ -657,7 +658,7 @@ class BaseModel(object):
     _columns = {}
     _constraints = []
     _defaults = {}
-    _rec_name = 'name'
+    _rec_name = None
     _parent_name = 'parent_id'
     _parent_store = False
     _parent_order = False
@@ -758,7 +759,7 @@ class BaseModel(object):
                 'model_id': model_id,
                 'model': self._name,
                 'name': k,
-                'field_description': f.string.replace("'", " "),
+                'field_description': f.string,
                 'ttype': f._type,
                 'relation': f._obj or '',
                 'view_load': (f.view_load and 1) or 0,
@@ -767,7 +768,7 @@ class BaseModel(object):
                 'required': (f.required and 1) or 0,
                 'selectable': (f.selectable and 1) or 0,
                 'translate': (f.translate and 1) or 0,
-                'relation_field': (f._type=='one2many' and isinstance(f, fields.one2many)) and f._fields_id or '',
+                'relation_field': f._fields_id if isinstance(f, fields.one2many) else '',
                 'serialization_field_id': None,
             }
             if getattr(f, 'serialization_field', None):
@@ -1053,6 +1054,13 @@ class BaseModel(object):
             self._transient_max_hours = config.get('osv_memory_age_limit')
             assert self._log_access, "TransientModels must have log_access turned on, "\
                                      "in order to implement their access rights policy"
+
+        # Validate rec_name
+        if self._rec_name is not None:
+            assert self._rec_name in self._columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
+        else:
+            self._rec_name = 'name'
+
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -1567,6 +1575,12 @@ class BaseModel(object):
             res.extend(self.pool.get(parent).fields_get_keys(cr, user, context))
         return res
 
+    def _rec_name_fallback(self, cr, uid, context=None):
+        rec_name = self._rec_name
+        if rec_name not in self._columns:
+            rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
+        return rec_name
+
     #
     # Overload this method if you need a window title which depends on the context
     #
@@ -1859,8 +1873,7 @@ class BaseModel(object):
         return view
 
     def _get_default_search_view(self, cr, user, context=None):
-        """ Generates a single-field tree view, using _rec_name if
-        it's one of the columns or the first column it finds otherwise
+        """ Generates a single-field search view, based on _rec_name.
 
         :param cr: database cursor
         :param int user: user id
@@ -1868,17 +1881,12 @@ class BaseModel(object):
         :returns: a tree view as an lxml document
         :rtype: etree._Element
         """
-        _rec_name = self._rec_name
-        if _rec_name not in self._columns:
-            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
-
         view = etree.Element('search', string=self._description)
-        etree.SubElement(view, 'field', name=_rec_name)
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
         return view
 
     def _get_default_tree_view(self, cr, user, context=None):
-        """ Generates a single-field tree view, using _rec_name if
-        it's one of the columns or the first column it finds otherwise
+        """ Generates a single-field tree view, based on _rec_name.
 
         :param cr: database cursor
         :param int user: user id
@@ -1886,12 +1894,8 @@ class BaseModel(object):
         :returns: a tree view as an lxml document
         :rtype: etree._Element
         """
-        _rec_name = self._rec_name
-        if _rec_name not in self._columns:
-            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
-
         view = etree.Element('tree', string=self._description)
-        etree.SubElement(view, 'field', name=_rec_name)
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
         return view
 
     def _get_default_calendar_view(self, cr, user, context=None):
@@ -1918,7 +1922,7 @@ class BaseModel(object):
             return False
 
         view = etree.Element('calendar', string=self._description)
-        etree.SubElement(view, 'field', name=self._rec_name)
+        etree.SubElement(view, 'field', self._rec_name_fallback(cr, user, context))
 
         if (self._date_name not in self._columns):
             date_found = False
@@ -2276,8 +2280,13 @@ class BaseModel(object):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
-            [self._rec_name], context, load='_classic_write')]
+
+        if self._rec_name in self._all_columns:
+            rec_name_column = self._all_columns[self._rec_name].column
+            return [(r['id'], rec_name_column.as_display_name(cr, user, self, r[self._rec_name], context=context))
+                        for r in self.read(cr, user, ids, [self._rec_name],
+                                       load='_classic_write', context=context)]
+        return [(id, "%s,%s" % (self._name, id)) for id in ids]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         """Search for records that have a display name matching the given ``name`` pattern if compared
@@ -2434,9 +2443,9 @@ class BaseModel(object):
                                                   context=context)
 
         result_template = dict.fromkeys(aggregated_fields, False)
-        result_template.update({groupby + '_count':0})
+        result_template[groupby + '_count'] = 0
         if groupby_list and len(groupby_list) > 1:
-            result_template.update(__context={'group_by': groupby_list[1:]})
+            result_template['__context'] = {'group_by': groupby_list[1:]}
 
         # Merge the left_side (current results as dicts) with the right_side (all
         # possible values as m2o pairs). Both lists are supposed to be using the
@@ -2455,10 +2464,8 @@ class BaseModel(object):
             grouped_value = right_side[0]
             if not grouped_value in known_values:
                 line = dict(result_template)
-                line.update({
-                    groupby: right_side,
-                    '__domain': [(groupby,'=',grouped_value)] + domain,
-                })
+                line[groupby] = right_side
+                line['__domain'] = [(groupby,'=',grouped_value)] + domain
                 result.append(line)
                 known_values[grouped_value] = line
         while read_group_result or all_groups:
@@ -3590,6 +3597,14 @@ class BaseModel(object):
                             record[f] = res2[record['id']]
                         else:
                             record[f] = []
+
+        # Warn about deprecated fields now that fields_pre and fields_post are computed
+        # Explicitly use list() because we may receive tuples
+        for f in list(fields_pre) + list(fields_post):
+            field_column = self._all_columns.get(f) and self._all_columns.get(f).column
+            if field_column and field_column.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, f, field_column.deprecated)
+
         readonly = None
         for vals in res:
             for field in vals.copy():
@@ -3967,6 +3982,9 @@ class BaseModel(object):
         direct = []
         totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
         for field in vals:
+            field_column = self._all_columns.get(field) and self._all_columns.get(field).column
+            if field_column and field_column.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, field, field_column.deprecated)
             if field in self._columns:
                 if self._columns[field]._classic_write and not (hasattr(self._columns[field], '_fnct_inv')):
                     if (not totranslate) or not self._columns[field].translate:
@@ -4152,6 +4170,12 @@ class BaseModel(object):
 
         self.check_create(cr, user)
 
+        if self._log_access:
+            for f in LOG_ACCESS_COLUMNS:
+                if vals.pop(f, None) is not None:
+                    _logger.warning(
+                        'Field `%s` is not allowed when creating the model `%s`.',
+                        f, self._name)
         vals = self._add_missing_default_values(cr, user, vals, context)
 
         tocreate = {}
@@ -4183,7 +4207,7 @@ class BaseModel(object):
             cr.execute("SELECT nextval('"+self._sequence+"')")
         except:
             raise except_orm(_('UserError'),
-                        _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
+                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
 
         id_new = cr.fetchone()[0]
         for table in tocreate:

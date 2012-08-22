@@ -4,7 +4,6 @@
         <record id="view_menu" model="ir.ui.view">
             <field name="name">ir.ui.menu.tree</field>
             <field name="model">ir.ui.menu</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Menu" toolbar="1">
                     <field icon="icon" name="name"/>
@@ -1061,6 +1060,12 @@
             <field name="company_id" eval="None"/>
             <field name="customer" eval="False"/>
             <field name="is_company" eval="True"/>
+            <field name="street"></field>
+            <field name="city"></field>
+            <field name="zip"></field>
+            <field name="phone"></field>
+            <field name="email">info@yourcompany.com</field>
+            <field name="website">www.yourcompany.com</field>
         </record>
 
         <!-- Currencies -->
@@ -1082,22 +1087,27 @@
         <record id="main_company" model="res.company">
             <field name="name">Your Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_footer1">Web: www.companyname.com - Tel: +1-212-555-12345</field>
-            <field name="rml_footer2">IBAN: XX12 3456 7890 1234 5678 - SWIFT: SWIFTCODE - VAT: Company vat number</field>
+            <field name="rml_header1">Your Company Slogan</field>
+            <field name="rml_footer1">Web: http://www.yourcompany.com - Tel: +33 1 49 51 23 94</field>
+            <field name="rml_footer2">Bank Accounts... to be configured in menu Settings > Accounting/Invoicing.</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
-        <record model="res.users" id="base.user_root">
-            <field name="signature">Administrator</field>
+        <record model="res.partner" id="base.partner_root">
+            <field name="name">Administrator</field>
             <field name="company_id" ref="main_company"/>
-            <field name="menu_id" ref="action_menu_admin"/>
+            <field name="customer" eval="False"/>
+        </record>
+
+        <record model="res.users" id="base.user_root">
+            <field name="partner_id" ref="base.partner_root"/>
+            <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
+            <field name="menu_id" ref="action_menu_admin"/>
+            <field name="signature">Administrator</field>
         </record>
 
         <record id="main_partner" model="res.partner">
-            <field name="company_id" ref="main_company"/>
-        </record>
-        <record id="EUR" model="res.currency">
             <field name="company_id" ref="main_company"/>
         </record>
 
@@ -1624,7 +1634,7 @@
         </record>
 
         <record id="res_bank_1" model="res.bank">
-            <field name="name">Reserve</field>
+            <field name="name">International Bank</field>
         </record>
 
         <record id="CRC" model="res.currency">

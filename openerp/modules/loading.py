@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -84,7 +84,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             _load_data(cr, module_name, idref, mode, 'test')
             return True
         except Exception:
-            _logger.error(
+            _logger.exception(
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
@@ -119,7 +119,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 elif ext == '.sql':
                     process_sql_file(cr, fp)
                 elif ext == '.yml':
-                    tools.convert_yaml_import(cr, module_name, fp, idref, mode, noupdate, report)
+                    tools.convert_yaml_import(cr, module_name, fp, kind, idref, mode, noupdate, report)
                 else:
                     tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
             finally:
