@@ -56,7 +56,10 @@ class mail_message(osv.Model):
         for message in self.browse(cr, uid, ids, context=context):
             if not message.model or not message.res_id:
                 continue
-            result[message.id] = self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1]
+            doc = self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1]
+            if len(doc)>18:
+                doc=doc[:18]+'...'
+            result[message.id] = doc
         return result
 
     def name_get(self, cr, uid, ids, context=None):
