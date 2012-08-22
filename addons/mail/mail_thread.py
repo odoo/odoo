@@ -311,7 +311,7 @@ class mail_thread(osv.Model):
                 model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
             else:
                 thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
-            self.message_post(cr, uid, [thread_id], msg_txt['body'], context=context, **msg)
+            self.message_post(cr, uid, [thread_id], context=context, **msg)
         return True
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
