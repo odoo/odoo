@@ -87,8 +87,18 @@ class mail_thread(osv.Model):
         return res
 
     # FP Note: todo
-    def _search_unread(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
-        return []
+    def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        res = {}
+        notif_obj = self.pool.get('mail.notification')
+        notif_ids = notif_obj.search(cr, uid, [
+            ('partner_id', '=', partner_id),
+            ('message_id.model', '=', self._name),
+            ('read', '=', False)
+        ], context=context)
+        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
+            res[notif.message_id.res_id] = True
+        return [('id','in',res.keys())]
 
     _columns = {
         'message_is_follower': fields.function(_get_message_data,
