@@ -1192,10 +1192,10 @@ class mail_thread(osv.Model):
         """ Set as read. """
         return self.write(cr, uid, ids, {'message_state': True}, context=context)
 
-    def message_subscribe_udpate_subtypes(self, cr, uid, ids, user_id, subtype_ids):
+    def message_subscribe_udpate_subtypes(self, cr, uid, ids, user_id, subtype_ids,context=None):
         subscription_obj = self.pool.get('mail.followers')
-        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)])
-        return subscription_obj.write(cr, uid, subscription_ids, {'subtype_ids': [6, 0 , subtype_ids]}, context = context) #overright or add new one
+        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids),('user_id','=',user_id)])
+        return subscription_obj.write(cr, uid, subscription_ids, {'subtype_ids': [(6, 0 , subtype_ids)]}, context = context) #overright or add new one
         
     def message_subscription_remove_subtype(self, cr, uid, ids, user_id, subtype_id):
         subscription_obj = self.pool.get('mail.followers')

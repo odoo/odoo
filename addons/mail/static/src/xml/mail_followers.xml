@@ -16,6 +16,7 @@
                 <h4><t t-raw="widget.params.title"/></h4>
             </t>
             <ul class="oe_mail_followers_display"></ul>
+            <ul class="oe_mail_recthread_subtype"></ul>
         </div>
     </div>
 
@@ -26,6 +27,10 @@
     <li t-name="mail.followers.partner">
         <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
         <a t-attf-href="#model=res.users&amp;id=#{record.id}"><t t-raw="record.name"/></a>
+    </li>
+    <li t-name="mail.subtype.ids">
+      <a t-attf-href="#model=mail.message.subtype&amp;id=#{record.id}"><t t-raw="record.name"/></a>
+      <input type="checkbox" t-att-id="record.id" t-att-name="record.name" class="oe_msg_subtype_check"/>
     </li>
 
 </template>

@@ -31,6 +31,7 @@ openerp_mail_followers = function(session, mail) {
             this.params.display_control = this.node.attrs.display_control || false;
             this.params.display_actions = this.node.attrs.display_actions || false;
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
+            this.sub_model = new session.web.DataSetSearch(this,'mail.message.subtype')
             this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
         },
 
@@ -42,8 +43,21 @@ openerp_mail_followers = function(session, mail) {
             this._check_visibility();
             this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
             if (! this.params.display_control) {
-                this.$element.find('button.oe_mail_button_followers').hide(); }
-            this.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
+                this.$element.find('button.oe_mail_button_followers').hide();
+                 }
+            this.$element.find('ul.oe_mail_recthread_subtype').click(function () {
+                var sublist = new Array();
+                _($(this).find('.oe_msg_subtype_check')).each(function (record){
+                   if($(record).is(':checked')) {
+                      sublist.push(parseInt($(record).attr('id')))
+                   }
+                });
+                self.ds_model.call('message_subscribe_udpate_subtypes',[[self.view.datarecord.id],self.session.uid,sublist])
+                })
+            this.$element.find('button.oe_mail_button_follow').click(function () {
+                self.add_subtype();
+                self.do_follow();
+                })
                 .mouseover(function () { $(this).html('Follow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Not following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
             this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
@@ -103,9 +117,24 @@ openerp_mail_followers = function(session, mail) {
                 this.$element.find('button.oe_mail_button_follow').show();
                 this.$element.find('button.oe_mail_button_unfollow').hide(); }
         },
-
+        
+        subtype_value: function(value_) {
+            return this.sub_model.call('read',  [value_ || this.get_value(),['name', 'default']]).then(this.proxy('read_subtype'));
+        },
+        
+        read_subtype: function(records) {
+            this.reinit()
+            var subtype_list = this.$element.find('ul.oe_mail_recthread_subtype').empty();
+            _(records).each(function (record) {
+                $(session.web.qweb.render('mail.subtype.ids', {'record': record})).appendTo(subtype_list);
+             });
+             },
+            
         do_follow: function () {
             return this.ds_model.call('message_subscribe', [[this.view.datarecord.id]]).pipe(this.proxy('set_value'));
+        },
+        add_subtype: function () {
+          return this.sub_model.call('search', [[['model_ids.model','=',this.view.model]]]).pipe(this.proxy('subtype_value'));
         },
 
         do_unfollow: function () {
