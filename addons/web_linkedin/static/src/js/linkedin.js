@@ -102,11 +102,11 @@ openerp.web_linkedin = function(instance) {
             if (entity.__type === "company") {
                 to_change.is_company = true;
                 to_change.name = entity.name;
-                to_change.photo = false;
+                to_change.image = false;
                 if (entity.logoUrl) {
                     defs.push(self.rpc('/web_linkedin/binary/url2binary',
                                        {'url': entity.logoUrl}).pipe(function(data){
-                        to_change.photo = data;
+                        to_change.image = data;
                     }));
                 }
                 to_change.website = entity.websiteUrl;
@@ -138,11 +138,11 @@ openerp.web_linkedin = function(instance) {
             } else { // people
                 to_change.is_company = false;
                 to_change.name = entity.formattedName;
-                to_change.photo = false;
+                to_change.image = false;
                 if (entity.pictureUrl) {
                     defs.push(self.rpc('/web_linkedin/binary/url2binary',
                                        {'url': entity.pictureUrl}).pipe(function(data){
-                        to_change.photo = data;
+                        to_change.image = data;
                     }));
                 }
                 to_change.mobile = false;
@@ -154,7 +154,8 @@ openerp.web_linkedin = function(instance) {
                         to_change.phone = el.phoneNumber;
                     }
                 });
-                to_change.function = entity.headline;
+                var positions = entity.positions.values || [];
+                to_change.function = positions ? positions[0].title : false;
                 /* TODO
                 to_change.linkedinUrl = entity.publicProfileUrl;
                 */
@@ -169,7 +170,7 @@ openerp.web_linkedin = function(instance) {
     
     var commonPeopleFields = ["id", "picture-url", "public-profile-url",
                             "formatted-name", "location", "phone-numbers", "im-accounts",
-                            "main-address", "headline"];
+                            "main-address", "headline", "positions"];
     
     instance.web_linkedin.LinkedinPopup = instance.web.Dialog.extend({
         template: "Linkedin.popup",
@@ -261,6 +262,7 @@ openerp.web_linkedin = function(instance) {
             } else { // people
                 this.$("h3").text(this.data.formattedName);
                 self.$("img").attr("src", this.data.pictureUrl);
+                self.$(".oe_linkedin_entity_headline").text(this.data.headline);
             }
         },
     });
