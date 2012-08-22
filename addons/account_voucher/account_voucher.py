@@ -1499,11 +1499,37 @@ class account_bank_statement_line(osv.osv):
         statement_id = ids[0]
         statement = self.browse(cr, uid, statement_id, context=context)
         voucher = statement.voucher_id or False
+        voucher_id = voucher and voucher.id or False
+        if not voucher:
+            voucher_obj = self.pool.get('account.voucher')
+            sign = 1
+            type = 'general'
+            ttype = statement.amount < 0 and 'payment' or 'receipt'
+            if statement.journal_id.type in ('sale', 'sale_refund'):
+                type = 'customer'
+                ttype = 'receipt'
+            elif statement.journal_id.type in ('purchase', 'purhcase_refund'):
+                type = 'supplier'
+                ttype = 'payment'
+                sign = -1
+
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=statement.partner_id.id, journal_id=statement.journal_id.id, amount=sign*statement.amount, currency_id= False, ttype=ttype, date=statement.date, context=context)
+            voucher_res = { 'type': ttype,
+                            'name': statement.name,
+                            'partner_id': statement.partner_id.id,
+                            'journal_id': statement.journal_id.id,
+                            'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
+                            'company_id': statement.company_id.id,
+                            'date': statement.date,
+                            'amount': sign*statement.amount,
+                            }
+            voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
+            self.write(cr, uid, statement_id, {'voucher_id':voucher_id}, context=context)
         mod_obj = self.pool.get('ir.model.data')
         if voucher and voucher.type == 'customer':
             res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
         else:
-            res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')    
+            res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
         view_id = res and res[1] or False
         return {
            'name': _('Payment Entry'),
@@ -1513,7 +1539,7 @@ class account_bank_statement_line(osv.osv):
            'target':'new',
            'view_id':view_id,  
            'context': context,
-           'res_id':voucher and voucher.id or False,
+           'res_id':voucher_id,
            'type': 'ir.actions.act_window'
         }
        
