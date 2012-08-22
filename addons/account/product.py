@@ -24,6 +24,12 @@ from osv import fields, osv
 class product_category(osv.osv):
     _inherit = "product.category"
     _columns = {
+        'taxes_id': fields.many2many('account.tax', 'product_taxes_categ_rel',
+            'prod_id', 'tax_id', 'Customer Taxes',
+            domain=[('parent_id','=',False),('type_tax_use','in',['sale','all'])]),
+        'supplier_taxes_id': fields.many2many('account.tax',
+            'product_supplier_taxes_categ_rel', 'prod_id', 'tax_id',
+            'Supplier Taxes', domain=[('parent_id', '=', False),('type_tax_use','in',['purchase','all'])]),
         'property_account_income_categ': fields.property(
             'account.account',
             type='many2one',

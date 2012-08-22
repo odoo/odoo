@@ -52,6 +52,8 @@
                     <xpath expr="/form/sheet//group[@name='account_property']" position="inside">
                         <field name="property_account_income_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_account_expense_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        <field name="taxes_id" widget="many2many_tags"/>
+                        <field name="supplier_taxes_id"  widget="many2many_tags"/>
                     </xpath>
                 </data>
             </field>
