@@ -43,7 +43,6 @@ class actions(osv.osv):
     _table = 'ir_actions'
     _order = 'name'
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64),
         'type': fields.char('Action Type', required=True, size=32,readonly=True),
         'usage': fields.char('Action Usage', size=32),
     }
@@ -872,10 +871,13 @@ class act_client(osv.osv):
             self.write(cr, uid, id, {'params_store': field_value}, context=context)
 
     _columns = {
+        'name': fields.char('Action Name', required=True, size=64, translate=True),
         'tag': fields.char('Client action tag', size=64, required=True,
                            help="An arbitrary string, interpreted by the client"
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
+        'res_model': fields.char('Destination Model', size=64, 
+            help="Optional model, mostly used for needactions."),
         'params': fields.function(_get_params, fnct_inv=_set_params,
                                   type='binary', 
                                   string="Supplementary arguments",
