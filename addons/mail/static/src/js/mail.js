@@ -639,7 +639,7 @@ openerp.mail = function(session) {
         set_value: function() {
             this._super.apply(this, arguments);
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
-                this.$el.find('oe_mail_thread').hide();
+                this.$element.find('oe_mail_thread').hide();
                 return;
             }
             // update context
