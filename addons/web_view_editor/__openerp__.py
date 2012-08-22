@@ -3,7 +3,9 @@
     "category": "Hidden",
     "description":
         """
-        OpenERP Web to edit views.
+OpenERP Web to edit views.
+==========================
+
         """,
     "version": "2.0",
     "depends":['web'],
