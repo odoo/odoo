@@ -56,6 +56,7 @@
         'module/wizard/base_module_configuration_view.xml',
         'module/wizard/base_export_language_view.xml',
         'module/wizard/base_update_translations_view.xml',
+        'module/wizard/base_module_immediate_install.xml',
         'res/res_company_view.xml',
         'res/res_request_view.xml',
         'res/res_lang_view.xml',
@@ -79,6 +80,7 @@
     'demo_xml': [
         'base_demo.xml',
         'res/res_partner_demo.xml',
+        'res/res_partner_demo.yml',
         'res/res_widget_demo.xml',
     ],
     'test': [
@@ -96,6 +98,6 @@
     'installable': True,
     'auto_install': True,
     'certificate': '0076807797149',
-    "css": [ 'static/src/css/modules.css' ],
+    'css': ['static/src/css/modules.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

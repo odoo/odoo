@@ -55,6 +55,7 @@ try:
     from html2text import html2text
 except ImportError:
     html2text = None
+import contextlib
 
 import openerp.loglevels as loglevels
 import openerp.pooler as pooler
@@ -279,7 +280,11 @@ email_re = re.compile(r"""
     """, re.VERBOSE)
 res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-reference_re = re.compile("<.*-open(?:object|erp)-(\\d+).*@(.*)>", re.UNICODE)
+
+# Updated in 7.0 to match the model name as well
+# Typical form of references is <timestamp-openerp-record_id-model_name@domain>
+# group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
+reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?.*@(.*)>", re.UNICODE)
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     """ From an HTML text, convert the HTML to plain text.
@@ -1135,5 +1140,21 @@ class UnquoteEvalContext(defaultdict):
 
     def __missing__(self, key):
         return unquote(key)
+
+
+class MuteFilter(logging.Filter):
+    def filter(self, record):
+        return 0
+
+@contextlib.contextmanager
+def mute_logger(*loggers):
+    mute = MuteFilter()
+    for logger in loggers:
+        logging.getLogger(logger).addFilter(mute)
+
+    yield
+
+    for logger in loggers:
+        logging.getLogger(logger).removeFilter(mute)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
