@@ -45,7 +45,7 @@ class account_invoice_report(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
+        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Without Tax', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'currency_rate': fields.float('Currency Rate', readonly=True),

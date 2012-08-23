@@ -5,20 +5,20 @@
         <record id="base_module_record_objects_view" model="ir.ui.view">
             <field name="name">base_module_record_objects</field>
             <field name="model">base.module.record</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Objects Recording">
-                    <field name="check_date"/>
-                    <newline/>
-                    <field name="filter_cond"/>
-                    <separator string="Choose objects to record" colspan="4"/>
-                    <field name="objects" colspan="4" nolabel="1"/>
-                    <group><field name="info_yaml"/></group>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <button icon="gtk-cancel" string="Cancel" special="cancel"/>
-                        <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
+                <form string="Objects Recording" version="7.0">
+                    <group>
+                        <field name="check_date"/>
+                        <field name="filter_cond"/>
                     </group>
+                    <separator string="Choose objects to record"/>
+                    <field name="objects"/>
+                    <group><field name="info_yaml"/></group>
+                    <footer>
+                        <button name="record_objects" string="Record" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -56,21 +56,15 @@
         <record id="module_create_form_view" model="ir.ui.view">
             <field name="name">module.create.form</field>
             <field name="model">base.module.record.objects</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording">
-                    <separator string="Module successfully created!" colspan="4"/>
-                    <field name="module_filename"/>
-                    <newline/>
-                    <field name="module_file"/>
-                    <separator string="Information" colspan="4"/>
-                    <label string="If you think your module could interest other people, we'd like you to publish it on http://www.openerp.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module." colspan="4" align="0.0"/>
-                    <label string="Thanks in advance for your contribution." colspan="4" align="0.0"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <label string=""/>
-                        <button icon="gtk-close" string="Close" special="cancel"/>
+                    <group string="Module successfully created!">
+                        <field name="module_filename"/>
+                        <field name="module_file"/>
                     </group>
+                    <separator string="Information"/>
+                    <label string="If you think your module could interest other people, we'd like you to publish it on http://www.openerp.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module." align="0.0"/>
+                    <label string="Thanks in advance for your contribution." align="0.0"/>
                 </form>
             </field>
          </record>         
@@ -87,24 +81,24 @@
         <record id="info_start_form_view" model="ir.ui.view">
             <field name="name">info.start.form.view</field>
             <field name="model">base.module.record.objects</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Module Recording">
-                    <separator string="Module Information" colspan="4"/>
-                    <field name="name"/>
-                    <field name="directory_name"/>
-                    <field name="version"/>
-                    <field name="author"/>
-                    <field name="website" colspan="4"/>
-                    <field name="category" colspan="4"/>
-                    <field name="data_kind"/>
-                    <newline/>
-                    <field name="description" colspan="4"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <button icon="gtk-cancel" string="Cancel" special="cancel"/>
-                        <button string="Continue" name="inter_call" type="object" icon="gtk-ok"/>
+                <form string="Module Recording" version="7.0">
+                    <group string="Module Information">
+                        <field name="name"/>
+                        <field name="directory_name"/>
+                        <field name="version"/>
+                        <field name="author"/>
+                        <field name="website" colspan="4"/>
+                        <field name="category" colspan="4"/>
+                        <field name="data_kind"/>
                     </group>
+                    <separator string="Description"/>
+                    <field name="description"/>
+                    <footer>
+                        <button string="Continue" name="inter_call" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
          </record>
@@ -112,15 +106,9 @@
         <record id="module_recording_message_view" model="ir.ui.view">
             <field name="name">module_recording_message</field>
             <field name="model">base.module.record.objects</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording">
                     <label string="Thanks For using Module Recorder" colspan="4" align="0.0"/>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="2">
-                        <label string=""/>
-                        <button icon="gtk-ok" string="OK" special="cancel"/>
-                    </group>
                 </form>
             </field>
         </record>         
@@ -128,17 +116,11 @@
         <record id="yml_save_form_view" model="ir.ui.view">
             <field name="name">yml.save.form</field>
             <field name="model">base.module.record.objects</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording">
                     <separator string="YAML file successfully created !" colspan="4"/>
                     <newline/>
                     <field name="yaml_file" filename="module_filename"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="2">
-                        <label string=""/>
-                        <button icon="gtk-close" string="Close" special="cancel"/>
-                    </group>				    
                 </form>  
             </field>
         </record>   

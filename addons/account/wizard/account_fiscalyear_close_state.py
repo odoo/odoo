@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class account_fiscalyear_close_state(osv.osv_memory):
     """
@@ -29,7 +30,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
     _description = "Fiscalyear Close state"
     _columns = {
        'fy_id': fields.many2one('account.fiscalyear', \
-                                 'Fiscal Year to close', required=True, help="Select a fiscal year to close"),
+                                 'Fiscal Year to Close', required=True, help="Select a fiscal year to close"),
     }
 
     def data_save(self, cr, uid, ids, context=None):
@@ -53,10 +54,6 @@ class account_fiscalyear_close_state(osv.osv_memory):
             cr.execute('UPDATE account_fiscalyear ' \
                     'SET state = %s WHERE id = %s', ('done', fy_id))
 
-            # Log message for Fiscalyear
-            fy_pool = self.pool.get('account.fiscalyear')
-            fy_code = fy_pool.browse(cr, uid, fy_id, context=context).code
-            fy_pool.log(cr, uid, fy_id, "Fiscal year '%s' is closed, no more modification allowed." % (fy_code))
             return {'type': 'ir.actions.act_window_close'}
 
 account_fiscalyear_close_state()

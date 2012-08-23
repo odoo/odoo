@@ -22,27 +22,21 @@
     'name': 'Web Shortcuts',
     'version': '1.0',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
-Enable shortcuts feature in the web client
-==========================================
+Enable shortcuts feature in the web client.
+===========================================
 
 Add a Shortcut icon in the systray in order to access the user's shortcuts (if any).
+
 Add a Shortcut icon besides the views title in order to add/remove a shortcut.
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base'],
-    'update_xml': [],
-    'js' : [
-        'static/src/js/web_shortcuts.js',
-    ],
-    'css' : [
-        'static/src/css/web_shortcuts.css',
-    ],
-    'qweb' : [
-        "static/src/xml/*.xml",
-    ],
+    'data': [],
+    'js' : ['static/src/js/web_shortcuts.js'],
+    'css' : ['static/src/css/web_shortcuts.css'],
+    'qweb' : ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,
 }

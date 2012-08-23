@@ -8,17 +8,17 @@
     location_id: stock.stock_location_stock
     logic: max
     name: OP/00008
-    product_id: product.product_product_cpu2
+    product_id: product.product_product_32
     product_max_qty: 15.0
     product_min_qty: 5.0
-    product_uom: product.product_uom_kgm
+    product_uom: product.product_uom_unit
     qty_multiple: 1
     warehouse_id: stock.warehouse0
 -
   Check product quantity and update it, if needed for apply a minimum stock rule.
 -
   !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product.product_product_cpu2'))
+    product = self.browse(cr, uid, ref('product.product_product_32'))
     if product.virtual_available < 5.0:
         change_qty = self.pool.get('stock.change.product.qty')
         id = change_qty.create(cr, uid, {'location_id' : ref('stock.stock_location_stock'), 'new_quantity': 4, 'product_id': product.id})
@@ -34,7 +34,7 @@
   I check that procurement order is based on minimum stock rule.
 -
   !python {model: procurement.order}: |
-    proc_ids = self.search(cr, uid, [('product_id','=', ref('product.product_product_cpu2'))])
+    proc_ids = self.search(cr, uid, [('product_id','=', ref('product.product_product_32'))])
     assert proc_ids, 'No Procurement created.'
     proc_order = self.browse(cr, uid, proc_ids)[0]
     assert proc_order.product_qty == 11.0,"Procurement product quantity is not corresponded."
@@ -42,7 +42,7 @@
   I check product quantity.
 -
   !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product.product_product_cpu2'))
+    product = self.browse(cr, uid, ref('product.product_product_32'))
     assert product.virtual_available == 15.0,"After run the scheduler product's virtual stock is not updated."
 -
   For test the Procurement Request wizard, Again I have to update product quantity.
@@ -50,9 +50,9 @@
   !python {model: product.product}: |
     mk_procure = self.pool.get('make.procurement')
     procur_order = self.pool.get('procurement.order')
-    product = self.browse(cr, uid, ref('product.product_product_cpu2'))
+    product = self.browse(cr, uid, ref('product.product_product_32'))
 
-    context.update({'active_model': 'product.product','active_id':ref('product.product_product_cpu2')})
+    context.update({'active_model': 'product.product','active_id':ref('product.product_product_32')})
     values = {'warehouse_id': ref('base.main_company'), 'uom_id': ref('product.product_uom_unit'), 'qty': 5}
     id = mk_procure.create(cr, uid, values, context)
     procurement = mk_procure.make_procurement(cr, uid, [id], context)
@@ -62,7 +62,7 @@
     for procurement in procur_order.browse(cr, uid, [proc_id]):
         if procurement.state == 'confirmed':
             assert procurement.state == 'confirmed',"Procurement state should be 'Confirmed'."
-            assert procurement.product_id.id == ref('product.product_product_cpu2'),"Product is not correspond."
+            assert procurement.product_id.id == ref('product.product_product_32'),"Product is not correspond."
             assert procurement.product_qty == 5,"Product Quantity is not correspond."
             assert procurement.product_uom.id == ref('product.product_uom_unit'),"Product's UOM is not correspond."
     context.update({'proc': proc_id})

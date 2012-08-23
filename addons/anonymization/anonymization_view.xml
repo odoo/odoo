@@ -1,25 +1,26 @@
 <?xml version="1.0" ?>
 <openerp>
-<data>
+<data noupdate="1">
 
     <!-- FIELD LIST -->
 
     <record model="ir.ui.view" id="view_ir_model_fields_anonymization_form">
         <field name="name">ir.model.fields.anonymization.form</field>
         <field name="model">ir.model.fields.anonymization</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Anonymized Field">
-                <group colspan="4" col="8">
-                    <field name="model_id" select="1" on_change="onchange_model_id(model_id)" />
-                    <field name="model_name" select="1" on_change="onchange_model_name(model_name)" />
+            <form string="Anonymized Field" version="7.0">
+                <sheet>
+                <group col="4">
+                    <field name="model_id" on_change="onchange_model_id(model_id)" />
+                    <field name="model_name" on_change="onchange_model_name(model_name)" />
                     <field name="field_id"
-                           select="1"
+                          
                            on_change="onchange_field_id(field_id, model_name)"
                            domain="[('model_id','=',model_id), ('ttype', 'not in', ['function', 'binary', 'many2many', 'many2one', 'one2many', 'reference'])]" />
-                    <field name="field_name" select="1" on_change="onchange_field_name(field_name, model_name)" />
+                    <field name="field_name" on_change="onchange_field_name(field_name, model_name)" />
+                    <field name="state" />
                 </group>
-                <field name="state" />
+                </sheet>
             </form>
         </field>
     </record>
@@ -27,7 +28,6 @@
     <record model="ir.ui.view" id="view_ir_model_fields_anonymization_tree">
         <field name="name">ir.model.fields.anonymization.tree</field>
         <field name="model">ir.model.fields.anonymization</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Anonymized Fields">
                 <field name="model_id" />
@@ -53,30 +53,25 @@
     <record model="ir.ui.view" id="view_ir_model_fields_anonymize_wizard_form">
         <field name="name">ir.model.fields.anonymize.wizard.form</field>
         <field name="model">ir.model.fields.anonymize.wizard</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Database Anonymization">
-                <label string="Summary" />
-                <newline />
-                <group colspan="4" col="4">
-                    <field name="summary" nolabel="1" readonly="0" width="400" />
-                </group>
-                <newline />
-                <group name="placeholder1">
+            <form string="Database Anonymization" version="7.0">
+                <header>
+                    <button name="anonymize_database"
+                            string="Anonymize Database"
+                            type="object"
+                            states="clear" />
+                    <button name="reverse_anonymize_database"
+                            string="Reverse the Database Anonymization"
+                            type="object"
+                            states="anonymized" />
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <field name="summary" readonly="0"/>
+                <group name="placeholder1" col="4">
                     <field name="file_export" />
                     <field name="file_import" />
                     <field name="msg" />
                 </group>
-                <button name="anonymize_database"
-                        string="Anonymize Database"
-                        type="object"
-                        states="clear" />
-                <button name="reverse_anonymize_database"
-                        string="Reverse the Database Anonymization"
-                        type="object"
-                        states="anonymized" />
-                        <newline />
-                <field name="state" />
             </form>
         </field>
     </record>
@@ -103,28 +98,27 @@
     <record model="ir.ui.view" id="view_ir_model_fields_anonymization_history_form">
         <field name="name">ir.model.fields.anonymization.history.form</field>
         <field name="model">ir.model.fields.anonymization.history</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Anonymization History">
-                <group colspan="4" col="16">
-                    <field name="date" select="1" colspan="1" />
-                    <field name="state" select="1" colspan="1" />
-                    <field name="filepath" colspan="7" />
-                    <field name="direction" colspan="3" />
+            <form string="Anonymization History" version="7.0">
+                <sheet>
+                <group col="4">
+                    <field name="date"/>
+                    <field name="state"/>
+                    <field name="filepath"/>
+                    <field name="direction"/>
                 </group>
-                <group colspan="4" col="2">
-                    <label string="Message" />
-                    <field name="msg" nolabel="1" colspan="4" readonly="0" height="150" />
+                <group string="Message" col="1">
+                    <field name="msg" nolabel="1" readonly="0"/>
                 </group>
-                <group colspan="4" col="2">
-                    <label string="Fields" />
-                    <field name="field_ids" nolabel="1" colspan="4" height="300">
+                <group string="Fields" col="1">
+                    <field name="field_ids" nolabel="1">
                         <tree>
                             <field name="model_id" />
                             <field name="field_id" />
                         </tree>
                     </field>
                 </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -132,7 +126,6 @@
     <record model="ir.ui.view" id="view_ir_model_fields_anonymization_history_tree">
         <field name="name">ir.model.fields.anonymization.history.tree</field>
         <field name="model">ir.model.fields.anonymization.history</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Anonymization History">
                 <field name="date" />

@@ -76,7 +76,7 @@ class sugar_import(import_framework):
         #login
         PortType,sessionid = sugar.login(self.context.get('username',''), self.context.get('password',''), self.context.get('url',''))
         if sessionid == '-1':
-            raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password or bad SugarSoap Api url !'))
+            raise osv.except_osv(_('Error!'), _('Authentication error!\nBad username or password or bad SugarSoap Api url!'))
         self.context['port'] = PortType
         self.context['session_id'] = sessionid
         
@@ -149,7 +149,7 @@ class sugar_import(import_framework):
             res_model = 'res.partner'
         elif sugar_document_contact:
             res_id = self.get_mapped_id(self.TABLE_CONTACT, sugar_document_contact[0])
-            res_model = 'res.partner.address'
+            res_model = 'res.partner'
         elif sugar_document_opportunity:
             res_id = self.get_mapped_id(self.TABLE_OPPORTUNITY, sugar_document_opportunity[0])
             res_model = 'crm.lead'
@@ -587,7 +587,7 @@ class sugar_import(import_framework):
             
         partner_contact_id = False 
         partner_contact_email = False       
-        partner_address_obj = self.obj.pool.get('res.partner.address')
+        partner_address_obj = self.obj.pool.get('res.partner')
         partner_xml_id = self.name_exist(self.TABLE_ACCOUNT, val['account_name'], 'res.partner')
         
         for contact in sugar_opportunities_contact:
@@ -598,7 +598,7 @@ class sugar_import(import_framework):
                 if not partner_name: #link with partner id 
                     fields = ['partner_id/id']
                     data = [partner_xml_id]
-                    self.import_object(fields, data, 'res.partner.address', self.TABLE_CONTACT, contact, self.DO_NOT_FIND_DOMAIN)
+                    self.import_object(fields, data, 'res.partner', self.TABLE_CONTACT, contact, self.DO_NOT_FIND_DOMAIN)
                 if not partner_name or partner_name == val.get('account_name'):
                     partner_contact_id = self.xml_id_exist(self.TABLE_CONTACT, contact)
                     partner_contact_email = address.email
@@ -724,12 +724,12 @@ class sugar_import(import_framework):
         
     def get_contact_mapping(self):
         return { 
-            'model' : 'res.partner.address',
-            'dependencies' : [self.TABLE_ACCOUNT],
+            'model' : 'res.partner',
+            #'dependencies' : [self.TABLE_ACCOUNT],
             'hook' : self.import_contact,
             'map' :  {
                 'name': concat('first_name', 'last_name'),
-                'partner_id/id': ref(self.TABLE_ACCOUNT,'account_id'),
+                'parent_id/id': ref(self.TABLE_ACCOUNT,'account_id'),
                 'phone': 'phone_work',
                 'mobile': 'phone_mobile',
                 'fax': 'phone_fax',
@@ -782,7 +782,7 @@ class sugar_import(import_framework):
             
         val['type'] = type
         val['id_new'] = val['id'] + '_address_' + type
-        return self.import_object_mapping(map_partner_address, val, 'res.partner.address', self.TABLE_CONTACT, val['id_new'], self.DO_NOT_FIND_DOMAIN) 
+        return self.import_object_mapping(map_partner_address, val, 'res.partner', self.TABLE_CONTACT, val['id_new'], self.DO_NOT_FIND_DOMAIN) 
         
     def get_partner_address(self, val):
         address_id=[]
@@ -846,7 +846,7 @@ class sugar_import(import_framework):
             val['country_id/id'] =  country_id
             val['state_id/id'] =  state_id
             
-        return self.import_object_mapping(map_user_address, val, 'res.partner.address', self.TABLE_CONTACT, val['id'], self.DO_NOT_FIND_DOMAIN)
+        return self.import_object_mapping(map_user_address, val, 'res.partner', self.TABLE_CONTACT, val['id'], self.DO_NOT_FIND_DOMAIN)
 
     def get_employee_mapping(self):
         return {
@@ -877,7 +877,7 @@ class sugar_import(import_framework):
         else:
             val['password'] = 'sugarcrm' #default password for all user #TODO needed in documentation
             
-        val['context_lang'] = self.context.get('lang','en_US')
+        val['lang'] = self.context.get('lang','en_US')
         return val
     
     def get_users_department(self, val):
@@ -895,11 +895,10 @@ class sugar_import(import_framework):
             'map' : { 
                 'name': concat('first_name', 'last_name'),
                 'login': value('user_name', fallback='last_name'),
-                'context_lang' : 'context_lang',
+                'lang' : 'context_lang',
                 'password' : 'password',
                 '.id' : '.id',
-                'context_department_id/id': self.get_users_department,
-                'user_email' : 'email1',
+                'email' : 'email1',
             }
         }
 
@@ -930,8 +929,8 @@ class sugar_import(import_framework):
     """   
     def get_email_subject(self, result, error=False):
         if error:
-            return "Sugarcrm data import failed at %s due to an unexpected error" % self.date_ended
-        return "your sugarcrm data were successfully imported at %s" % self.date_ended 
+            return "Sugarcrm data import failed at %s due to an unexpected error." % self.date_ended
+        return "your sugarcrm data were successfully imported at %s." % self.date_ended 
     
     def get_body_header(self, result):
         return "Sugarcrm import : report of last import" 
@@ -950,7 +949,7 @@ class import_sugarcrm(osv.osv):
         'user' : fields.boolean('User', help="Check this box to import sugarCRM Users into OpenERP users, warning if a user with the same login exist in OpenERP, user information will be erase by sugarCRM user information", readonly=True),
         'opportunity': fields.boolean('Leads & Opp', help="Check this box to import sugarCRM Leads and Opportunities into OpenERP Leads and Opportunities"),
         'contact': fields.boolean('Contacts', help="Check this box to import sugarCRM Contacts into OpenERP addresses"),
-        'account': fields.boolean('Accounts', help="Check this box to import sugarCRM Accounts into OpenERP partners"),
+        'account': fields.boolean('Partner/Account', help="Check this box to import sugarCRM Accounts into OpenERP partners"),
         'employee': fields.boolean('Employee', help="Check this box to import sugarCRM Employees into OpenERP employees"),
         'meeting': fields.boolean('Meetings', help="Check this box to import sugarCRM Meetings and Tasks into OpenERP meetings"),
         'call': fields.boolean('Calls', help="Check this box to import sugarCRM Calls into OpenERP calls"),
@@ -965,7 +964,7 @@ class import_sugarcrm(osv.osv):
     }
     
     def _get_email_id(self, cr, uid, context=None):
-        return self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context).email
     
     def _module_installed(self, cr, uid, model, context=None):
         module_id = self.pool.get('ir.module.module').search(cr, uid, [('name', '=', model), ('state', "=", "installed")], context=context)
@@ -1095,14 +1094,14 @@ class import_sugarcrm(osv.osv):
     def import_from_scheduler_all(self, cr, uid, ids, context=None):
         keys, module_list = self.get_key(cr, uid, ids, context)
         if not keys:
-            raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
+            raise osv.except_osv(_('Warning!'), _('Select Module to Import.'))
         key_list = module_list.keys()
         for module in key_list :
             module = module_list[module]
             state = self.get_all(cr,uid,module,context=context)
             if state == False:
                 keys =  ', '.join(key_list)
-                raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module") %(keys,module,module))
+                raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module.") %(keys,module,module))
         cron_obj = self.pool.get('ir.cron')
         url = self.parse_valid_url(context)
         args = (keys,context.get('email_user'), context.get('instance_name'), url, context.get('username'), context.get('password') )
@@ -1121,14 +1120,14 @@ class import_sugarcrm(osv.osv):
 #        """Import all sugarcrm data into openerp module"""
         keys, module_list = self.get_key(cr, uid, ids, context)
         if not keys:
-            raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
+            raise osv.except_osv(_('Warning!'), _('Select Module to Import.'))
         key_list = module_list.keys()
         for module in key_list :
             module = module_list[module]
             state = self._module_installed(cr,uid,module,context=context)
             if state == False:
                 keys =  ', '.join(key_list)
-                raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module") %(keys,module,module))
+                raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module.") %(keys,module,module))
         url = self.parse_valid_url(context)
         context.update({'url': url})
         imp = sugar_import(self, cr, uid, context.get('instance_name'), "import_sugarcrm", context.get('email_user'), context)

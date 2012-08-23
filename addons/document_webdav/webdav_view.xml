@@ -5,16 +5,15 @@
     <record model="ir.ui.view" id="view_dir_props_form">
         <field name="name">document.webdav.dir.property.form</field>
         <field name="model">document.webdav.dir.property</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Properties">
-		<field name="namespace"/>
-		<field name="name"/>
-		<newline />
-		<field name="dir_id" />
-		<field name="do_subst" />
-		<newline />
-		<field name="value" colspan="4" />
+                <group col="4">
+                    <field name="namespace"/>
+                    <field name="name"/>
+                    <field name="dir_id" />
+                    <field name="do_subst" />
+                </group>
+                <field name="value" colspan="4" />
             </form>
         </field>
     </record>
@@ -22,12 +21,11 @@
     <record model="ir.ui.view" id="view_dir_props_tree">
         <field name="name">document.webdav.dir.property.tree</field>
         <field name="model">document.webdav.dir.property</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Properties" toolbar="1">
-		<field name="dir_id" />
-		<field name="namespace"/>
-		<field name="name"/>
+                <field name="dir_id" />
+                <field name="namespace"/>
+                <field name="name"/>
             </tree>
         </field>
     </record>
@@ -35,12 +33,9 @@
     <record id="view_dir_props_filter" model="ir.ui.view">
             <field name="name">Search View: Directory DAV properties</field>
             <field name="model">document.webdav.dir.property</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document properties">
-                    <field name="name" />
-                    <field name="namespace" />
-                    <newline/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('namespace','ilike',self)]" string="Document property"/>
                     <group expand="0" string="Group By..." groups="base.group_no_one">
                         <filter string="Dir" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'dir_id'}"/>
                         <filter string="Namespace" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'namespace'}"/>
@@ -75,45 +70,45 @@
         <field name="name">document.directory.webdav.inherit</field>
         <field name="model">document.directory</field>
         <field name="inherit_id" ref="document.view_document_directory_form" />
-        <field name="type">form</field>
         <field name="arch" type="xml">
-	    <page string="Dynamic context" position="after">
-		<page string="WebDAV properties">
-		    <label string="These properties will be added to WebDAV requests" colspan="4" />
+        <xpath expr="/form/notebook/page[@string='Dynamic context']" position="after" version="7.0">
+        <page string="WebDAV properties">
+            <label string="These properties will be added to WebDAV requests" colspan="4" />
 
-		    <field name="dav_prop_ids" nolabel="1" colspan="4">
-			<tree string="Properties">
-			    <field name="namespace"/>
-			    <field name="name"/>
-			</tree>
-			<form string="Properties">
-			    <field name="namespace"/>
-			    <field name="name"/>
-			    <newline />
-			    <field name="do_subst" />
-			    <newline />
-			    <field name="value" colspan="4" />
-			</form>
-		    </field>
-		</page>
-	    </page>
-	</field>
+            <field name="dav_prop_ids" nolabel="1" colspan="4">
+                <tree string="Properties">
+                    <field name="namespace"/>
+                    <field name="name"/>
+                </tree>
+                <form string="Properties" version="7.0">
+                    <group col="4">
+                        <field name="namespace"/>
+                        <field name="name"/>
+                        <newline />
+                        <field name="do_subst" />
+                    </group>
+                    <field name="value"/>
+                </form>
+            </field>
+        </page>
+        </xpath>
+    </field>
     </record>
 
     <!-- File properties -->
     <record model="ir.ui.view" id="view_file_props_form">
         <field name="name">document.webdav.file.property.form</field>
         <field name="model">document.webdav.file.property</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Properties">
-		<field name="namespace"/>
-		<field name="name"/>
-		<newline />
-		<field name="file_id" />
-		<field name="do_subst" />
-		<newline />
-		<field name="value" colspan="4" />
+                <group col="4">
+                    <field name="namespace"/>
+                    <field name="name"/>
+                    <newline />
+                    <field name="file_id" />
+                    <field name="do_subst" />
+                </group>
+                <field name="value"/>
             </form>
         </field>
     </record>
@@ -121,12 +116,11 @@
     <record model="ir.ui.view" id="view_file_props_tree">
         <field name="name">document.webdav.file.property.tree</field>
         <field name="model">document.webdav.file.property</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Properties" toolbar="1">
-		<field name="file_id" />
-		<field name="namespace"/>
-		<field name="name"/>
+        <field name="file_id" />
+        <field name="namespace"/>
+        <field name="name"/>
             </tree>
         </field>
     </record>
@@ -134,12 +128,9 @@
     <record id="view_file_props_filter" model="ir.ui.view">
             <field name="name">Search View: File DAV properties</field>
             <field name="model">document.webdav.file.property</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document properties">
-                    <field name="name" />
-                    <field name="namespace" />
-                    <newline/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('namespace','ilike',self)]" string="Document Property"/>
                     <group expand="0" string="Group By..." groups="base.group_no_one">
                         <filter string="Document" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'file_id'}"/>
                         <filter string="Namespace" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'namespace'}"/>
