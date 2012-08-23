@@ -931,6 +931,9 @@ class ir_model_data(osv.osv):
 
         ir_model_relation = self.pool.get('ir.model.relation')
         relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove)])
+        ir_module_module = self.pool.get('ir.module.module')
+        modules_to_remove_ids = ir_module_module.search(cr, uid, [('name', 'in', modules_to_remove)])
+        relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove_ids)])
         ir_model_relation._module_data_uninstall(cr, uid, relation_ids, context)
 
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
