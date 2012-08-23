@@ -50,16 +50,19 @@ class crm_lead2partner(osv.osv_memory):
     def _select_partner(self, cr, uid, context=None):
         if context is None:
             context = {}
-        lead = self.pool.get('crm.lead')
-        partner = self.pool.get('res.partner')
-        lead_ids = list(context and context.get('active_ids', []) or [])
-        if not len(lead_ids):
+        if not context.get('active_model') == 'crm.lead' or not context.get('active_id'):
             return False
-        this = lead.browse(cr, uid, lead_ids[0], context=context)
-        if not partner_id and this.partner_name:
+        partner = self.pool.get('res.partner')
+        lead = self.pool.get('crm.lead')
+        this = lead.browse(cr, uid, context.get('active_id'), context=context)
+        if this.email_from:
+            partner_ids = partner.search(cr, uid, [('email', '=', this.email_from)], context=context)
+            if partner_ids:
+                partner_id = partner_ids[0]
+        if not this.partner_id and this.partner_name:
             partner_ids = partner.search(cr, uid, [('name', '=', this.partner_name)], context=context)
-            if partner_ids and len(partner_ids):
-               partner_id = partner_ids[0]
+            if partner_ids:
+                partner_id = partner_ids[0]
         return partner_id
 
     def default_get(self, cr, uid, fields, context=None):

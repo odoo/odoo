@@ -635,7 +635,7 @@ class crm_lead(base_stage, osv.osv):
         partner_id =  False
         if lead.partner_name and lead.contact_name:
             partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
-            self._lead_create_contact(cr, uid, lead, lead.contact_name, False, partner_id, context=context)
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, partner_id, context=context)
         elif lead.partner_name and not lead.contact_name:
             partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
         elif not lead.partner_name and lead.contact_name:
