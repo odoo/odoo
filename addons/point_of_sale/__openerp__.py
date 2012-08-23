@@ -24,8 +24,8 @@
     'name': 'Point of Sale',
     'version': '1.0.1',
     'category': 'Point Of Sale',
-    "sequence": 6,
-    "summary": "Touchscreen Interface for Shops",
+    'sequence': 6,
+    'summary': 'Touchscreen Interface for Shops',
     'description': """
 This module provides a quick and easy sale process.
 ===================================================
@@ -42,9 +42,7 @@ Main features:
     'author': 'OpenERP SA',
     'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
     'depends': ['sale'],
-    'init_xml': [],
-
-    'update_xml': [
+    'data': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'wizard/pos_details.xml',
@@ -69,7 +67,7 @@ Main features:
         'account_statement_report.xml',
         'res_users_view.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'point_of_sale_demo.xml',
         'account_statement_demo.xml',
         'test/00_register_open.yml'
@@ -81,18 +79,17 @@ Main features:
     ],
     'installable': True,
     'application': True,
-    # Web client
     'js': [
-            'static/lib/backbone/backbone-0.9.2.js', 
-            'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
-            'static/src/js/pos_models.js',
-            'static/src/js/pos_basewidget.js',
-            'static/src/js/pos_keyboard_widget.js',
-            'static/src/js/pos_scrollbar_widget.js',
-            'static/src/js/pos_widgets.js',
-            'static/src/js/pos_devices.js',
-            'static/src/js/pos_screens.js',
-            'static/src/js/pos_main.js'
+        'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
+        'static/src/js/db.js',
+        'static/src/js/models.js',
+        'static/src/js/widget_base.js',
+        'static/src/js/widget_keyboard.js',
+        'static/src/js/widget_scrollbar.js',
+        'static/src/js/widgets.js',
+        'static/src/js/devices.js',
+        'static/src/js/screens.js',
+        'static/src/js/main.js',
     ],
     'css': [
         'static/src/css/pos.css',
@@ -101,4 +98,5 @@ Main features:
     'qweb': ['static/src/xml/pos.xml'],
     'auto_install': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
