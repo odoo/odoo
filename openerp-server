@@ -105,7 +105,7 @@ def run_test_file(dbname, test_file):
         db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
         cr = db.cursor()
         _logger.info('loading test file %s', test_file)
-        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), {}, 'test', True)
+        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
         cr.rollback()
         cr.close()
     except Exception:
