@@ -434,7 +434,6 @@ class audittrail_objects_proxy(object_proxy):
             on specific fields only.
         :return: True
         """
-        resource_pool = pool.get(model.model)
         # loop on all the given ids
         for res_id in res_ids:
             # compare old and new values and get audittrail log lines accordingly
@@ -442,8 +441,7 @@ class audittrail_objects_proxy(object_proxy):
 
             # if at least one modification has been found
             for model_id, resource_id in lines:
-                res_name = resource_pool.browse(cr, uid, resource_id)
-                name = 'name' in res_name._columns.keys() and res_name.name or ''
+                name = pool.get(model.model).name_get(cr, uid, [resource_id])[0][1]
                 vals = {
                     'method': method,
                     'object_id': model_id,
