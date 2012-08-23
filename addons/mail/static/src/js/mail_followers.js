@@ -141,7 +141,7 @@ openerp_mail_followers = function(session, mail) {
                })
             });
             _(records).each(function (record) {
-                $(session.web.qweb.render('mail.subtype.ids', {'record': record})).appendTo(subtype_list);
+                $(session.web.qweb.render('mail.record_thread.subtype', {'record': record})).appendTo(subtype_list);
             });
         },
             
