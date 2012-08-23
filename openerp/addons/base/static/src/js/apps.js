@@ -19,8 +19,8 @@ openerp.base = function(instance) {
         
         _get_options: function() {
             //var DEFAULT_SERVER = 'http://apps.openerp.com/loempia';           // PROD
-            //var DEFAULT_SERVER = 'http://apps.openerp.com:9069/loempia7';     // TEST
-            var DEFAULT_SERVER = 'http://localhost:8080/trunk_loempia7';        // DEV
+            var DEFAULT_SERVER = 'http://apps.openerp.com:9069/loempia7';     // TEST
+            //var DEFAULT_SERVER = 'http://localhost:8080/trunk_loempia7';        // DEV
             var ICP = new instance.web.Model('ir.config_parameter');
             return ICP.call('get_param', ['loempia.server', DEFAULT_SERVER]).pipe(function(u) {
                 var link = $(_.str.sprintf('<a href="%s"></a>', u))[0];
