@@ -657,7 +657,7 @@
                     <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
                 </th>
             </t>
-            <th t-if="options.deletable" width="13px"/>
+            <th t-if="options.deletable and _is_action_enabled('delete')" width="13px"/>
         </tr>
     </thead>
     <tfoot>
@@ -666,7 +666,7 @@
             <td t-foreach="aggregate_columns" t-as="column" class="oe_list_footer oe_number"
                 t-att-data-field="column.id" t-att-title="column.label">
             </td>
-            <td t-if="options.deletable"/>
+            <td t-if="options.deletable and _is_action_enabled('delete')"/>
         </tr>
     </tfoot>
 </table>
@@ -713,7 +713,7 @@
             t-att-data-field="column.id"
             ><t t-raw="render_cell(record, column)"/></td>
     </t>
-    <td t-if="options.deletable" class='oe_list_record_delete' width="13px">
+    <td t-if="options.deletable and view._is_action_enabled('delete')" class='oe_list_record_delete' width="13px">
         <button type="button" name="delete" class="oe_i">d</button>
     </td>
 </tr>
