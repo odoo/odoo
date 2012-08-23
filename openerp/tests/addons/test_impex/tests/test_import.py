@@ -3,6 +3,7 @@ import openerp.modules.registry
 import openerp
 
 from openerp.tests import common
+from openerp.tools.misc import mute_logger
 
 def ok(n):
     """ Successful import of ``n`` records
@@ -221,6 +222,7 @@ class test_integer_field(ImporterCase):
             -1, -42, -(2**31 - 1), -(2**31), -12345678
         ], values(self.read()))
 
+    @mute_logger('openerp.sql_db')
     def test_out_of_range(self):
         self.assertEqual(
             self.import_(['value'], [[str(2**31)]]),
