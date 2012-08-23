@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-#import point_of_sale
+import locadis
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

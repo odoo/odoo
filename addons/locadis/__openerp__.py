@@ -30,14 +30,10 @@
 FIXME: product description
     """,
     'author': 'OpenERP SA',
-    'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
+    'images': [],
     'depends': ['point_of_sale'],
-    'init_xml': [],
-    'update_xml': [
-    ],
-    'demo_xml': [
-    ],
-    'test': [
+    'data':[
+        'locadis_views.xml',
     ],
     'installable': True,
     'application': True,
