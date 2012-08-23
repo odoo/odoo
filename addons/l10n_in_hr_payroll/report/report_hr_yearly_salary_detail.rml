@@ -239,7 +239,7 @@
     <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_Details" rightIndent="0.0" leftIndent="-3.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Footer" fontName="Helvetica"/>
     <paraStyle name="Horizontal Line" fontName="Helvetica" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
     <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -247,7 +247,6 @@
     <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -262,8 +261,7 @@
     <blockTable colWidths="785.0" style="Table12">
       <tr>
         <td>
-          <para style="terp_header_Centre">Employees Salary Details </para>
-          <para style="terp_default_Centre_9">From [[ formatLang(data['form']['date_from'], date=True) ]] To [[ formatLang(data['form']['date_to'], date=True) ]]</para>
+          <para style="terp_default_Centre_9">From <u>[[ formatLang(data['form']['date_from'], date=True) ]]</u> To <u>[[ formatLang(data['form']['date_to'], date=True) ]]</u></para>
         </td>
       </tr>
     </blockTable>
@@ -392,7 +390,7 @@
         <font color="white"> </font>
       </para>
       <section>
-        <blockTable colWidths="785.0" style="Table7">
+        <blockTable colWidths="803.0" style="Table7">
           <tr>
             <td>
               <para style="terp_tblheader_Details">Allowances with Basic: </para>
@@ -404,66 +402,79 @@
           <blockTable colWidths="195.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,56.0" style="Table6">
             <tr>
               <td>
-                <para style="terp_default_9">[[ e1[0] ]]</para>
+                <para style="terp_default_9"><b>[[ e1[0] in ["Basic","Gross"] and e1[0] ]]</b> </para>
+                <para style="terp_default_9">[[ e1[0] not in ["Basic","Gross"] and e1[0] ]]</para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[1]!='' and formatLang(e1[1])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[1]!='' and formatLang(e1[1])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[1]!='' and formatLang(e1[1])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[2]!='' and formatLang(e1[2])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[2]!='' and formatLang(e1[2])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[2]!='' and formatLang(e1[2])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[3]!='' and formatLang(e1[3])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[3]!='' and formatLang(e1[3])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[3]!='' and formatLang(e1[3])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[4]!='' and formatLang(e1[4])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[4]!='' and formatLang(e1[4])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[4]!='' and formatLang(e1[4])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[5]!='' and formatLang(e1[5])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[5]!='' and formatLang(e1[5])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[5]!='' and formatLang(e1[5])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[6]!='' and formatLang(e1[6])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[6]!='' and formatLang(e1[6])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[6]!='' and formatLang(e1[6])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[7]!='' and formatLang(e1[7])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[7]!='' and formatLang(e1[7])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[7]!='' and formatLang(e1[7])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[8]!='' and formatLang(e1[8])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[8]!='' and formatLang(e1[8])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[8]!='' and formatLang(e1[8])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[9]!='' and formatLang(e1[9])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[9]!='' and formatLang(e1[9])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[9]!='' and formatLang(e1[9])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[10]!='' and formatLang(e1[10])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[10]!='' and formatLang(e1[10])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[10]!='' and formatLang(e1[10])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[11]!='' and formatLang(e1[11])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[11]!='' and formatLang(e1[11])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[11]!='' and formatLang(e1[11])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e1[12]!='' and formatLang(e1[12])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e1[0] in ["Basic","Gross"] and e1[12]!='' and formatLang(e1[12])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e1[0] not in ["Basic","Gross"] and e1[12]!='' and formatLang(e1[12])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
@@ -472,7 +483,7 @@
             </tr>
           </blockTable>
         </section>
-        <blockTable colWidths="785.0" style="Table10">
+        <blockTable colWidths="803.0" style="Table10">
           <tr>
             <td>
               <para style="terp_tblheader_Details">Deductions: </para>
@@ -484,66 +495,79 @@
           <blockTable colWidths="195.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,56.0" style="Table8">
             <tr>
               <td>
-                <para style="terp_default_9">[[ e2[0] ]]</para>
+                <para style="terp_default_9"><b>[[ e2[0] in ["Net"] and e2[0] ]]</b> </para>
+                <para style="terp_default_9">[[ e2[0] not in ["Net"] and e2[0] ]]</para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[1]!='' and formatLang(e2[1])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[1]!='' and formatLang(e2[1])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[1]!='' and formatLang(e2[1])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[2]!='' and formatLang(e2[2])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[2]!='' and formatLang(e2[2])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[2]!='' and formatLang(e2[2])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[3]!='' and formatLang(e2[3])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[3]!='' and formatLang(e2[3])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[3]!='' and formatLang(e2[3])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[4]!='' and formatLang(e2[4])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[4]!='' and formatLang(e2[4])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[4]!='' and formatLang(e2[4])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[5]!='' and formatLang(e2[5])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[5]!='' and formatLang(e2[5])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[5]!='' and formatLang(e2[5])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[6]!='' and formatLang(e2[6])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[6]!='' and formatLang(e2[6])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[6]!='' and formatLang(e2[6])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[7]!='' and formatLang(e2[7])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[7]!='' and formatLang(e2[7])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[7]!='' and formatLang(e2[7])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[8]!='' and formatLang(e2[8])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[8]!='' and formatLang(e2[8])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[8]!='' and formatLang(e2[8])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[9]!='' and formatLang(e2[9])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[9]!='' and formatLang(e2[9])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[9]!='' and formatLang(e2[9])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[10]!='' and formatLang(e2[10])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[10]!='' and formatLang(e2[10])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[10]!='' and formatLang(e2[10])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[11]!='' and formatLang(e2[11])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[11]!='' and formatLang(e2[11])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[11]!='' and formatLang(e2[11])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">
-                  <font face="Helvetica" size="7.0">[[ (e2[12]!='' and formatLang(e2[12])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica-Bold" size="7.0">[[ (e2[0] in ["Net"] and e2[12]!='' and formatLang(e2[12])) or removeParentNode('font') ]]</font>
+                  <font face="Helvetica" size="7.0">[[ (e2[0] not in ["Net"] and e2[12]!='' and formatLang(e2[12])) or removeParentNode('font') ]]</font>
                 </para>
               </td>
               <td>
