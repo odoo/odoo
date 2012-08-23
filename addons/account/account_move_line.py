@@ -1184,17 +1184,12 @@ class account_move_line(osv.osv):
         jour_period_obj = self.pool.get('account.journal.period')
         cr.execute('SELECT state FROM account_journal_period WHERE journal_id = %s AND period_id = %s', (journal_id, period_id))
         result = cr.fetchall()
+        journal = journal_obj.browse(cr, uid, journal_id, context=context)
+        period = period_obj.browse(cr, uid, period_id, context=context)
         for (state,) in result:
             if state == 'done':
-
-                journal = journal_obj.read(cr, uid, journal_id, ['name'])
-                period = period_obj.read(cr, uid, period_id, ['name'])
-                raise osv.except_osv(_('Error !'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period['name'],journal['name'])))
-                raise osv.except_osv(_('Error!'), _('You cannot add/modify entries in a closed journal.'))
-
+                raise osv.except_osv(_('Error !'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))                
         if not result:
-            journal = journal_obj.browse(cr, uid, journal_id, context=context)
-            period = period_obj.browse(cr, uid, period_id, context=context)
             jour_period_obj.create(cr, uid, {
                 'name': (journal.code or journal.name)+':'+(period.name or ''),
                 'journal_id': journal.id,
