@@ -6,19 +6,18 @@
         <record id="view_pos_sale_user" model="ir.ui.view">
             <field name="name">Sale By User</field>
             <field name="model">pos.sale.user</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sale By User" version="7.0">
-                    <header>
-                        <button name="print_report" type="object" string="Print Report" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" special="cancel" class="oe_link"/>
-                    </header>
                     <group col="4">
                         <field name="date_start"/>
                         <field name="date_end"/>
                         <field name="user_id"/>
                     </group>
+                    <footer>
+                        <button name="print_report" type="object" string="Print Report" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
                 </form>
             </field>
         </record>

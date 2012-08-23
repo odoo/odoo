@@ -35,19 +35,19 @@ openerp.share = function(session) {
     }
 
     function has_share(yes, no) {
-        if (!session.connection.share_flag) {
-            session.connection.share_flag = $.Deferred(function() {
+        if (!session.session.share_flag) {
+            session.session.share_flag = $.Deferred(function() {
                 var func = new session.web.Model("share.wizard").get_func("has_share");
-                func(session.connection.uid).pipe(function(res) {
+                func(session.session.uid).pipe(function(res) {
                     if(res) {
-                        session.connection.share_flag.resolve();
+                        session.session.share_flag.resolve();
                     } else {
-                        session.connection.share_flag.reject();
+                        session.session.share_flag.reject();
                     }
                 });
             });
         }
-        session.connection.share_flag.done(yes).fail(no);
+        session.session.share_flag.done(yes).fail(no);
     }
 
     /* Extend the Sidebar to add Share and Embed links in the 'More' menu */

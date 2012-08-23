@@ -4,14 +4,8 @@
         <record model="ir.ui.view" id="email_compose_message_wizard_form">
             <field name="name">mail.compose.message.form</field>
             <field name="model">mail.compose.message</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Compose Email" version="7.0">
-                    <header>
-                        <button name="send_mail" string="Send" type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
@@ -33,6 +27,54 @@
                             <field name="attachment_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
+                    <footer>
+                        <button name="send_mail" string="Send" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="email_compose_message_wizard_form_chatter">
+            <field name="name">mail.compose.message.form</field>
+            <field name="model">mail.compose.message</field>
+            <field name="priority">18</field>
+            <field name="arch" type="xml">
+                <form string="Compose Email" version="7.0" >
+                    <group>
+                        <field name="subject" colspan="2" nolabel="1" placeholder="Subject..."
+                                class="oe_mail_compose_message_subject oe_mail_compose_message_invisible"/>
+                        <field name="body_text" colspan="2" nolabel="1" placeholder="What are you working on ?"
+                                class="oe_mail_compose_message_body_text"/>
+                        <field name="body_html" colspan="2" nolabel="1" placeholder="What are you working on HTML ?"
+                                class="oe_mail_compose_message_body_html oe_mail_compose_message_invisible"/>
+                        <field name="dest_partner_ids" colspan="2" nolabel="1" widget="many2many_tags"
+                                placeholder="Add contacts to notify..."
+                                class="oe_mail_compose_message_partner_ids oe_mail_compose_message_invisible"/>
+                        <div>
+                            <button name="send_mail" string="Post" type="object"
+                                class="oe_mail_compose_message_button_send"/>
+                            or <a href="#" class="oe_mail_compose_message_email">Send an Email</a>
+                        </div>
+                        <div class='oe_mail_compose_message_icons'>
+<!--                             <button icon="../../../../../mail/static/src/img/checklist"
+                                type="object" name="checklist" string=""
+                                help="Add a checklist"/> -->
+                            <a href="#" class="oe_mail_compose_message_checklist">
+                                <img src='/mail/static/src/img/checklist.png/' alt='Checklist'
+                                    title='Add a checklist'/>
+                            </a>
+                            <a href="#" class="oe_mail_compose_message_attachment">
+                                <img src='/mail/static/src/img/attachment.png/' alt='Attachment'
+                                    title='Add an attachment'/>
+                            </a>
+                            <a href="#" class="oe_mail_compose_message_formatting">
+                                <img src='/mail/static/src/img/formatting.png/' alt='Formatting'
+                                    title='Switch to advanced formatting mode'/>
+                            </a>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>

@@ -5,14 +5,8 @@
         <record id="base_module_record_data_view" model="ir.ui.view">
             <field name="name">base_module_record_data</field>
             <field name="model">base.module.data</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Data Recording" version="7.0">
-                    <header>
-                        <button name="record_objects" string="Record" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group>
                         <field name="check_date"/>
                         <field name="filter_cond"/>
@@ -20,6 +14,11 @@
                     <separator string="Choose objects to record"/>
                     <field name="objects"/>
                     <group><field name="info_yaml"/></group>
+                    <footer>
+                        <button name="record_objects" string="Record" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -53,7 +52,6 @@
         <record id="module_create_xml_view" model="ir.ui.view">
             <field name="name">module.create.xml.form</field>
             <field name="model">base.module.record.data</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Data Recording">
                     <separator string="Result, paste this to your module's xml" colspan="4" />

@@ -20,30 +20,29 @@
 ##############################################################################
 
 {
-    "name" : "Analytic Accounting",
-    "version": "1.1",
-    "author" : "OpenERP SA",
-    "website" : "http://www.openerp.com",
-    "category": 'Hidden/Dependency',
-    "depends" : ["base", "decimal_precision", "mail"],
-    "description": """
+    'name' : 'Analytic Accounting',
+    'version': '1.1',
+    'author' : 'OpenERP SA',
+    'website' : 'http://www.openerp.com',
+    'category': 'Hidden/Dependency',
+    'depends' : ['base', 'decimal_precision', 'mail'],
+    'description': """
 Module for defining analytic accounting object.
 ===============================================
 
 In OpenERP, analytic accounts are linked to general accounts but are treated
-totally independently. So you can enter various different analytic operations
+totally independently. So, you can enter various different analytic operations
 that have no counterpart in the general financial accounts.
     """,
-    "init_xml" : [],
-    "update_xml": ['security/analytic_security.xml',
-                   "security/ir.model.access.csv",
-                   "analytic_sequence.xml",
-                   "analytic_view.xml"
+    'data': [
+        'security/analytic_security.xml',
+        'security/ir.model.access.csv',
+        'analytic_sequence.xml',
+        'analytic_view.xml'
     ],
-    'demo_xml': [
-    ],
+    'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : "00462253285027988541",
+    'certificate' : '00462253285027988541',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

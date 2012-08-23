@@ -6,7 +6,6 @@
         <field eval="1" name="priority"/>
         <field name="name">sale.report.tree</field>
         <field name="model">sale.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Sales Analysis">
                 <field name="date" invisible="1"/>
@@ -34,7 +33,6 @@
     <record id="view_order_product_graph" model="ir.ui.view">
          <field name="name">sale.report.graph</field>
          <field name="model">sale.report</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Sales Analysis" type="bar">
                  <field name="product_id"/>
@@ -47,56 +45,37 @@
     <record id="view_order_product_search" model="ir.ui.view">
         <field name="name">sale.report.search</field>
         <field name="model">sale.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Sales Analysis">
-                <group>
-                    <field name="date"/>
-                    <field name="date_confirm"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-document-new"
-                        string="Quotations"
-                        domain="[('state','=','draft')]"/>
-                    <filter icon="terp-check"
-                        string="Sales"
-                        domain="[('state','not in',('draft','done','cancel'))]"/>
-                    <filter icon="terp-accessories-archiver"
-                        string="Picked"
-                        domain="[('shipped','=',True)]"/>
-                    <filter icon="terp-personal"
-                        string="My Sales"
-                        help="My Sales"
-                        domain="[('user_id','=',uid)]"/>
-                    <separator orientation="vertical"/>
-                    <field name="partner_id"/>
-                    <field name="product_id"/>
-                    <field name="user_id"/>
-                </group>
-                <newline/>
+                <field name="date"/>
+                <field name="date_confirm"/>
+                <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
+                <filter icon="terp-check" string="Sales" domain="[('state','not in',('draft','done','cancel'))]"/>
+                <separator/>
+                <filter icon="terp-accessories-archiver" string="Picked" domain="[('shipped','=',True)]"/>
+                <separator/>
+                <filter icon="terp-personal" string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="user_id"/>
                 <group expand="0" string="Extended Filters...">
-                    <field name="shop_id" widget="selection"/>
-                    <field name="categ_id" widget="selection"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="shop_id"/>
+                    <field name="categ_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </group>
-                <newline/>
                 <group expand="1" string="Group By...">
                     <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                     <filter string="Partner" icon="terp-partner"  name="Customer" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
                     <filter string="Reference Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
                     <filter string="Category of Product" icon="terp-stock_symbol-selection" name="Category" context="{'group_by':'categ_id'}"/>
-                    <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
                     <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
-                    <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Shop" icon="terp-go-home" context="{'group_by':'shop_id'}"/>
                     <filter string="Company" icon="terp-go-home" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
-                    <separator orientation="vertical"/>
-                   <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Ordered date of the sales order"/>
-                   <filter string="Month" name="order_month" icon="terp-go-month" context="{'group_by':'month'}" help="Ordered month of the sales order"/>
-                   <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Ordered Year of the sales order"/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Ordered date of the sales order"/>
+                    <filter string="Month" name="order_month" icon="terp-go-month" context="{'group_by':'month'}" help="Ordered month of the sales order"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Ordered Year of the sales order"/>
                 </group>
             </search>
         </field>

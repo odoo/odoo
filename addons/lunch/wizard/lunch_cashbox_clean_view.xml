@@ -7,17 +7,16 @@
           <record id="view_lunch_cashbox_clean" model="ir.ui.view">
             <field name="name">lunch.cashbox.clean.form</field>
             <field name="model">lunch.cashbox.clean</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Reset cashbox" version="7.0">
-                    <header>
-                        <button name="set_to_zero" string="Set to Zero" type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <label string="Are you sure you want to reset this cashbox ?"/>
                     </group>
+                    <footer>
+                        <button name="set_to_zero" string="Set to Zero" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                </form>
             </field>
           </record>

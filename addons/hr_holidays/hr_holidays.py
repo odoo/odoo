@@ -76,7 +76,7 @@ class hr_holidays_status(osv.osv):
         'name': fields.char('Leave Type', size=64, required=True, translate=True),
         'categ_id': fields.many2one('crm.meeting.type', 'Meeting Type',
             help='Once a leave is validated, OpenERP will create a corresponding meeting of this type in the calendar.'),
-        'color_name': fields.selection([('red', 'Red'),('blue','Blue'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
+        'color_name': fields.selection([('red', 'Red'),('blue','Blue'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Department.'),
         'limit': fields.boolean('Allow to Override Limit', help='If you select this checkbox, the system allows the employees to take more leaves than the available ones for this type.'),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
         'max_leaves': fields.function(_user_left_days, string='Maximum Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
@@ -147,7 +147,7 @@ class hr_holidays(osv.osv):
         'holiday_type': 'employee'
     }
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "You have to select an employee or a category"),
+        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "You have to select an employee or a category."),
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be before the end date !"),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
     ]
@@ -202,7 +202,7 @@ class hr_holidays(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state<>'draft':
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft status !'))
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft state !'))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
@@ -267,14 +267,14 @@ class hr_holidays(osv.osv):
                 meeting_obj = self.pool.get('crm.meeting')
                 meeting_vals = {
                     'name': record.name,
-                    'categ_id': record.holiday_status_id.categ_id.id,
+                    'categ_ids': record.holiday_status_id.categ_id and [(6,0,[record.holiday_status_id.categ_id.id])] or [],
                     'duration': record.number_of_days_temp * 8,
                     'description': record.notes,
                     'user_id': record.user_id.id,
                     'date': record.date_from,
                     'end_date': record.date_to,
                     'date_deadline': record.date_to,
-                    'state': 'done',            # to block that meeting date in the calendar
+                    'state': 'open',            # to block that meeting date in the calendar
                 }
                 meeting_id = meeting_obj.create(cr, uid, meeting_vals)
                 self._create_resource_leave(cr, uid, [record], context=context)
@@ -366,20 +366,16 @@ class hr_holidays(osv.osv):
                     result[obj.id] = hr_manager_group['users']
         return result
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        """ Override to add employee and its manager. """
-        user_ids = super(hr_holidays, self).message_get_subscribers(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id and not obj.user_id.id in user_ids:
-                user_ids.append(obj.user_id.id)
-            if obj.employee_id.parent_id and not obj.employee_id.parent_id.user_id.id in user_ids:
-                user_ids.append(obj.employee_id.parent_id.user_id.id)
-        return user_ids
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' and 'manager' to the monitored fields """
+        res = super(hr_holidays, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        # TODO: add manager
+        return res + ['user_id']
         
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("The %s request has been <b>created</b> and is waiting confirmation")
+                        _("The %s request has been <b>created</b> and is waiting confirmation.")
                         % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
         return True
     
@@ -418,7 +414,7 @@ class resource_calendar_leaves(osv.osv):
     _inherit = "resource.calendar.leaves"
     _description = "Leave Detail"
     _columns = {
-        'holiday_id': fields.many2one("hr.holidays", "Holiday"),
+        'holiday_id': fields.many2one("hr.holidays", "Leave Request"),
     }
 
 resource_calendar_leaves()
@@ -443,7 +439,7 @@ class hr_employee(osv.osv):
         # Find for holidays status
         status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
         if len(status_ids) != 1 :
-            raise osv.except_osv(_('Warning !'),_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
+            raise osv.except_osv(_('Warning!'),_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
         status_id = status_ids and status_ids[0] or False
         if not status_id:
             return False
