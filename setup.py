@@ -96,6 +96,7 @@ setuptools.setup(
         # our tree.) http://download.gna.org/pychart/
         # TODO  'pychart',
           'babel',
+          'docutils',
           'feedparser',
           'gdata',
           'lxml',

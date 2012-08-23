@@ -18,18 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+import base64
+from docutils.core import publish_string
 import imp
 import logging
 import re
 import urllib
 import zipimport
-import base64
 
 from openerp import modules, pooler, release, tools, addons
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
 from openerp.osv import fields, osv, orm
-from docutils.core import publish_string
 
 _logger = logging.getLogger(__name__)
 
