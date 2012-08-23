@@ -35,12 +35,12 @@ To this end, a new check box named 'Visible Discount' is added to the pricelist 
     If the check box is unchecked, we will have on Sale Order and Invoice lines:
     Unit price=225, Discount=0,00, Net price=225.
     """,
-    "depends": ["sale","purchase"],
-    "demo_xml": [],
-    "update_xml": ['product_visible_discount_view.xml'],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "001144718884654279901",
+    'depends': ["sale","purchase"],
+    'demo': [],
+    'data': ['product_visible_discount_view.xml'],
+    'auto_install': False,
+    'installable': True,
+    'certificate' : "001144718884654279901",
     'images': ['images/pricelists_visible_discount.jpeg'],
 }
 
