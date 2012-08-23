@@ -71,17 +71,20 @@ class test_mail(common.TransactionCase):
         self.mail_alias = self.registry('mail.alias')
         self.mail_thread = self.registry('mail.thread')
         self.mail_group = self.registry('mail.group')
+        self.mail_notification = self.registry('mail.notification')
+        self.mail_followers = self.registry('mail.followers')
         self.res_users = self.registry('res.users')
+        self.res_partner = self.registry('res.partner')
 
         # groups@.. will cause the creation of new mail groups
         self.mail_group_model_id = self.ir_model.search(self.cr, self.uid, [('model','=', 'mail.group')])[0]
         self.mail_alias.create(self.cr, self.uid, {'alias_name': 'groups',
                                                    'alias_model_id': self.mail_group_model_id})
         
-        # tech@... will append new messages to the 'tech' group 
-        self.group_tech_id = self.mail_group.create(self.cr, self.uid, {'name': 'tech'})
+        # create a 'pigs' group that will be used through the various tests
+        self.group_pigs_id = self.mail_group.create(self.cr, self.uid, {'name': 'pigs'})
 
-    def test_message_process(self):
+    def test_00_message_process(self):
         cr, uid = self.cr, self.uid
         # Incoming mail creates a new mail_group "frogs"
         self.assertEqual(self.mail_group.search(cr, uid, [('name','=','frogs')]), [])
@@ -111,3 +114,116 @@ class test_mail(common.TransactionCase):
         self.assertRaises(Exception,
                           self.mail_thread.message_process,
                           cr, uid, None, mail_spam)
+
+    def test_01_many2many_reference_field(self):
+        """ Tests designed for the many2many_reference field (follower_ids).
+            We will test to perform write using the many2many commands 0, 3, 4,
+            5 and 6. """
+        cr, uid = self.cr, self.uid
+        user_admin = self.res_users.browse(cr, uid, uid)
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+
+        # Create partner Bert Poilu partner
+        partner_bert_id = self.res_partner.create(cr, uid, {'name': 'Bert Poilu'})
+
+        # Create 'disturbing' values in mail.followers: same res_id, other res_model; same res_model, other res_id
+        group_dummy_id = self.mail_group.create(cr, uid,
+            {'name': 'Dummy group'})
+        self.mail_followers.create(cr, uid,
+            {'res_model': 'mail.thread', 'res_id': self.group_pigs_id, 'partner_id': partner_bert_id})
+        self.mail_followers.create(cr, uid,
+            {'res_model': 'mail.group', 'res_id': group_dummy_id, 'partner_id': partner_bert_id})
+
+        # Pigs just created: should be only Admin as follower
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertTrue(len(follower_ids) == 1,
+            'Newly created group should have only 1 follower')
+        self.assertTrue(user_admin.partner_id.id in follower_ids,
+            'Admin should be the only Pigs group follower')
+
+        # Subscribe Bert through a '4' command
+        group_pigs.write({'message_follower_ids': [(4, partner_bert_id)]})
+        group_pigs.refresh()
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertTrue(len(follower_ids) == 2,
+            'Pigs group should have 2 followers after linking Bert')
+        self.assertTrue(all(id in follower_ids for id in [partner_bert_id, user_admin.partner_id.id]),
+            'Bert and Admin should be the 2 Pigs group followers')
+
+        # Unsubscribe Bert through a '3' command
+        group_pigs.write({'message_follower_ids': [(3, partner_bert_id)]})
+        group_pigs.refresh()
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertTrue(len(follower_ids) == 1,
+            'Pigs group should have 1 follower after unlinking Bert')
+        self.assertTrue(all(id in follower_ids for id in [user_admin.partner_id.id]),
+            'Admin should be the only Pigs group follower')
+
+        # Set followers through a '6' command
+        group_pigs.write({'message_follower_ids': [(6, 0, [partner_bert_id])]})
+        group_pigs.refresh()
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertTrue(len(follower_ids) == 1,
+            'Pigs group should have 1 follower after replacing followers')
+        self.assertTrue(follower_ids == [partner_bert_id],
+            'Bert should be the only Pigs group follower')
+
+        # Add a follower created on the fly through a '0' command
+        group_pigs.write({'message_follower_ids': [(0, 0, {'name': 'Patrick Fiori'})]})
+        partner_patrick_id = self.res_partner.search(cr, uid, [('name', '=', 'Patrick Fiori')])[0]
+        group_pigs.refresh()
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertTrue(len(follower_ids) == 2,
+            'Pigs group should have 2 followers after linking to new partner')
+        self.assertTrue(all(id in follower_ids for id in [partner_bert_id, partner_patrick_id]),
+            'Bert and Patrick should be Pigs group followers')
+
+        # Finally, unlink through a '5' command
+        group_pigs.write({'message_follower_ids': [(5, 0)]})
+        group_pigs.refresh()
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertTrue(len(follower_ids) == 0,
+            'Pigs group should not have followers anymore')
+
+        # Test dummy data has not been altered
+        fol_obj_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.thread'), ('res_id', '=', self.group_pigs_id)])
+        follower_ids = [follower.partner_id.id for follower in self.mail_followers.browse(cr, uid, fol_obj_ids)]
+        self.assertTrue(len(follower_ids) == 1,
+            'mail.thread dummy data should have 1 follower')
+        self.assertTrue(follower_ids[0] == partner_bert_id,
+            'Bert should be the follower of dummy mail.thread data')
+        fol_obj_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', group_dummy_id)])
+        follower_ids = [follower.partner_id.id for follower in self.mail_followers.browse(cr, uid, fol_obj_ids)]
+        self.assertTrue(len(follower_ids) == 2,
+            'mail.group dummy data should have 2 followers')
+        self.assertTrue(all(id in follower_ids for id in [partner_bert_id, user_admin.partner_id.id]),
+            'Bert and Admin should be the followers of dummy mail.group data')
+
+    def test_02_message_followers(self):
+        """ Tests designed for the subscriber API. """
+        cr, uid = self.cr, self.uid
+        user_admin = self.res_users.browse(cr, uid, uid)
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+
+        # Create user Raoul
+        user_raoul_id = self.res_users.create(cr, uid, {'name': 'Raoul Grosbedon', 'login': 'raoul'})
+        user_raoul = self.res_users.browse(cr, uid, user_raoul_id)
+
+        # Subscribe Raoul twice (niak niak) through message_subscribe_users
+        group_pigs.message_subscribe_users([user_raoul_id, user_raoul_id])
+        group_pigs.refresh()
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertTrue(len(follower_ids) == 2,
+            'Pigs group should have 2 followers after having subscribed Raoul. Subscribing twice '\
+            'the same user should create only one follower.')
+        self.assertTrue(all(id in follower_ids for id in [user_raoul.partner_id.id, user_admin.partner_id.id]),
+            'Admin and Raoul should be the 2 Pigs group followers')
+
+        # Unsubscribe Raoul twice through message_unsubscribe_users
+        group_pigs.message_unsubscribe_users([user_raoul_id, user_raoul_id])
+        group_pigs.refresh()
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertTrue(len(follower_ids) == 1,
+            'Pigs group should have 1 follower after unsubscribing Raoul')
+        self.assertTrue(all(id in follower_ids for id in [user_admin.partner_id.id]),
+            'Admin the only Pigs group followers')
