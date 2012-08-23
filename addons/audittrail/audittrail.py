@@ -43,7 +43,7 @@ class audittrail_rule(osv.osv):
         "log_create": fields.boolean("Log Creates",help="Select this if you want to keep track of creation on any record of the object of this rule"),
         "log_action": fields.boolean("Log Action",help="Select this if you want to keep track of actions on the object of this rule"),
         "log_workflow": fields.boolean("Log Workflow",help="Select this if you want to keep track of workflow on any record of the object of this rule"),
-        "state": fields.selection((("draft", "Draft"), ("subscribed", "Subscribed")), "State", required=True),
+        "state": fields.selection((("draft", "Draft"), ("subscribed", "Subscribed")), "Status", required=True),
         "action_id": fields.many2one('ir.actions.act_window', "Action ID"),
     }
     _defaults = {

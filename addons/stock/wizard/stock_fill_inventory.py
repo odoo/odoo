@@ -113,7 +113,7 @@ class stock_fill_inventory(osv.osv_memory):
                 res[location] = datas
 
         if not flag:
-            raise osv.except_osv(_('Warning !'), _('No product in this location.'))
+            raise osv.except_osv(_('Warning!'), _('No product in this location.'))
 
         for stock_move in res.values():
             for stock_move_details in stock_move.values():

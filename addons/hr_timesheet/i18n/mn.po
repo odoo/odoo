@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2010-12-20 01:09+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:58+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:31+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:48+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:43
@@ -105,7 +105,7 @@ msgstr "Баасан"
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "UoM"
-msgstr ""
+msgstr "Х.Н"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -150,7 +150,7 @@ msgstr "Ажилтны нэр"
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Төсөл / Шинжилгээний Данс"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
@@ -193,12 +193,12 @@ msgstr "Анхааруулга"
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Харилцагч"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
-msgid "Sign In/Out By Project"
+msgid "Sign In/Out by Project"
 msgstr "Нэвтэрсэн, гарсан үйлдлийг төслөөр харах"
 
 #. module: hr_timesheet
@@ -218,7 +218,7 @@ msgstr "Ням"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Шинжилгээний данс"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -261,7 +261,7 @@ msgstr "Ангиллууд"
 #. module: hr_timesheet
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-msgstr ""
+msgstr "Батласан/хийгдсэн бичлэгийг цагийн хуудаст өөрчлөх боломжгүй !"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -312,7 +312,7 @@ msgstr "Ажлын тухай тайлбар"
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Invoice Analysis"
-msgstr ""
+msgstr "Нэхэмжлэлийн Шинжилгээ"
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
@@ -328,7 +328,7 @@ msgstr "Нэвтрэх, гарах үйлдлийг төслөөр харах"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr ""
+msgstr "Шинжилгээний Бүтэцээ Тодорхойлно уу"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -362,11 +362,14 @@ msgid ""
 "analyse costs and revenues. In OpenERP, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
+"Өртөг, орлогыг шинжлэх өөрийн шаардлагаас хамааруулан өөрийн шинжилгээний "
+"бүтцийг тодорхойлох хэрэгтэй. OpenERP-д шинжилгээний данс нь захиалагчийн "
+"гэрээг хөтлөж, хянахад мөн хэрэглэгддэг."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr ""
+msgstr "Шинжилгээний мөр"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:40
@@ -468,8 +471,8 @@ msgstr "Ерөнхий мэдээлэл"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_my
-msgid "My Timesheet"
-msgstr "Өөрийн цаг бүртгэл"
+msgid "My Current Timesheet"
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:40
@@ -513,6 +516,8 @@ msgid ""
 "Through this menu you can register and follow your workings hours by project "
 "every day."
 msgstr ""
+"Энэ менюны тусламжтай өөрийн ажлын цагийг төслөөр өдөр тутам бүртгэж, дагаж "
+"явах боломжтой."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -666,11 +671,17 @@ msgstr "Ажлыг өөрчлөх"
 #~ msgid "Human Resources (Timesheet encoding)"
 #~ msgstr "Хүний нөөц (Цаг бүртгэлийг хөтлөх)"
 
+#~ msgid "Sign In/Out By Project"
+#~ msgstr "Нэвтэрсэн, гарсан үйлдлийг төслөөр харах"
+
 #~ msgid "Error: UOS must be in a different category than the UOM"
 #~ msgstr "Алдаа: Борлуулалтын нэгж нь хэмжих нэгжээс өөр ангилалд байх ёстой"
 
 #~ msgid "To be invoiced"
 #~ msgstr "Нэхэмжлэл үүсгэх"
+
+#~ msgid "My Timesheet"
+#~ msgstr "Өөрийн цаг бүртгэл"
 
 #~ msgid "Anlytic account"
 #~ msgstr "Аналитик данс"

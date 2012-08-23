@@ -11,7 +11,6 @@
     <record id="view_stock_tree" model="ir.ui.view">
         <field name="name">report.stock.move.tree</field>
         <field name="model">report.stock.move</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Moves Analysis">
                 <field name="date" invisible="1"/>
@@ -41,7 +40,6 @@
     <record id="view_stock_graph" model="ir.ui.view">
          <field name="name">report.stock.move.graph</field>
          <field name="model">report.stock.move</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
                  <field name="product_id"/>
@@ -49,85 +47,39 @@
              </graph>
          </field>
     </record>
-    <record id="view_stock_graph_board" model="ir.ui.view">
-         <field name="name">report.stock.move.graph</field>
-         <field name="model">report.stock.move</field>
-         <field name="type">graph</field>
-         <field name="arch" type="xml">
-             <graph string="Moves Analysis" type="bar">
-                 <field name="day"/>
-                 <field name="product_qty" operator="+"/>
-             </graph>
-         </field>
-    </record>
+
     <record id="view_stock_search" model="ir.ui.view">
         <field name="name">report.stock.move.search</field>
         <field name="model">report.stock.move</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Moves Analysis">
-                <group>
-                <filter icon="terp-go-year" string="Year"
-                    name="year"
-                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
-                    help="Current year"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-go-month" string="Month"
-                    name="month"
-                    domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                    help="Current month"/>
-                <filter icon="terp-go-month"
-                    string="Month-1"
-                    name="month-1"
-                    domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                     help="Last month"/>
-                <separator orientation="vertical"/>
-                <filter string="Done"
-                    name="done"
-                    icon="terp-dialog-close"
-                    domain="[('state','=','done')]"
-                    help = "Completed Stock-Moves"/>
-                <filter string="Todo"
-                    icon="terp-gtk-go-back-rtl"
-                    domain="[('state','in',('assigned','waiting','confirmed'))]"
-                    help = "Future Stock-Moves"/>
-                <separator orientation="vertical"/>
+                <filter string="Done" name="done" icon="terp-dialog-close" domain="[('state','=','done')]" help = "Completed Stock-Moves"/>
+                <filter string="Todo" icon="terp-gtk-go-back-rtl" domain="[('state','in',('assigned','waiting','confirmed'))]" help = "Future Stock-Moves"/>
+                <separator/>
                 <filter icon="terp-go-home" name="in" string="Incoming" domain="[('type','=','in')]"/>
                 <filter icon="terp-go-home" name="internal" string="Internal" domain="[('type','=','internal')]"/>
                 <filter icon="terp-go-home" name="out" string="Outgoing" domain="[('type','=','out')]"/>
-                <separator orientation="vertical"/>
                 <field name="product_id" default_focus="1"/>
                 <field name="partner_id" context="{'contact_display':'partner'}"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Extended Filters..."  groups="base.group_extended">
+                <group expand="0" string="Extended Filters...">
                     <field name="location_id" />
                     <field name="location_dest_id" />
                     <field name="categ_id"/>
                     <field name="stock_journal"/>
-                    <separator orientation="vertical"/>
-                    <field name="company_id" groups="base.group_multi_company" widget = "selection"/>
-                    <newline/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date"/>
                 </group>
-                <newline/>
                 <group expand="1" string="Group By...">
                     <filter name="group_partner" string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter name="group_categ_id" string="Product Category" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id'}"/>
                     <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter name="group_picking" string="Packing" icon="terp-accessories-archiver" context="{'group_by':'picking_id'}"/>
-                    <separator orientation="vertical"/>
+                    <filter name="group_picking" string="Shipment" icon="terp-accessories-archiver" context="{'group_by':'picking_id'}"/>
                     <filter string="Source Location" name="src_location" icon="terp-gtk-jump-to-rtl" context="{'group_by':'location_id'}"/>
                     <filter string="Dest. Location" name="dest_location" icon="terp-gtk-jump-to-ltr"  context="{'group_by':'location_dest_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Type" name="group_type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}" help="Shipping type specify, goods coming in or going out"/>
-                    <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <filter string="Stock journal" name="group_stock_journal" icon="terp-folder-orange" context="{'group_by':'stock_journal'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Company" name="group_state" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Day Planned"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'date'}" help="Month Planned"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"  help="Year Planned"/>
@@ -151,7 +103,6 @@
     <record id="view_stock_inventory_tree" model="ir.ui.view">
         <field name="name">report.stock.inventory.tree</field>
         <field name="model">report.stock.inventory</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Inventory Analysis">
                 <field name="date" invisible="1"/>
@@ -174,7 +125,6 @@
     <record id="view_stock_inventory_graph" model="ir.ui.view">
          <field name="name">report.stock.inventory.graph</field>
          <field name="model">report.stock.inventory</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Inventory Analysis" type="bar">
                  <field name="product_id"/>
@@ -186,45 +136,18 @@
     <record id="view_stock_inventory_search" model="ir.ui.view">
         <field name="name">report.stock.inventory.search</field>
         <field name="model">report.stock.inventory</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Inventory Analysis">
-                <group>
-                    <filter icon="terp-go-year" string="Year"
-                        name="year"
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
-                        help="Current year"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-go-month" string="Month"
-                        name="month"
-                        domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Current month"/>
-                    <filter icon="terp-go-month"
-                        string="Month-1"
-                        name="month-1"
-                        domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Last month"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Real"
-                        name="real"
-                        icon="terp-check"
-                        domain="[('state','=','done')]"
-                        help="Analysis of current inventory (only moves that have already been processed)"/>
-
-                    <filter string="Future"
-                        icon="terp-stock"
-                        domain="[('state','in',('assigned','done','waiting','confirmed'))]"
-                        help = "Analysis including future moves (similar to virtual stock)"/>
-
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="product_id" default_focus="1"/>
-                    <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Extended Filters..."  groups="base.group_extended">
+                <filter string="Real" name="real" icon="terp-check" domain="[('state','=','done')]"
+                    help="Analysis of current inventory (only moves that have already been processed)"/>
+                <filter string="Future" icon="terp-stock" domain="[('state','in',('assigned','done','waiting','confirmed'))]"
+                    help = "Analysis including future moves (similar to virtual stock)"/>
+                <separator/>
+                <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
+                <field name="product_id" default_focus="1"/>
+                <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <group expand="0" string="Extended Filters...">
                     <field name="partner_id" context="{'contact_display':'partner'}"/>
                     <field name="product_categ_id" />
                     <field name="prodlot_id"/>
@@ -233,19 +156,15 @@
                     <field name="date"/>
                     <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('location_type','=','scrap')]"/>
                 </group>
-                <newline/>
                 <group expand="1" string="Group By..." >
                     <filter string="Partner" name="group_partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter name="group_product_categ_id" string="Product Category" icon="terp-stock_symbol-selection" context="{'group_by':'product_categ_id'}"/>
                     <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                     <filter name="group_lot" string="Lot" icon="terp-accessories-archiver" context="{'group_by':'prodlot_id'}"/>
-                    <separator orientation="vertical"/>
+                    <filter name="group_lot" string="Lot" icon="terp-accessories-archiver" context="{'group_by':'prodlot_id'}"/>
                     <filter name="group_company" string="Company" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
                     <filter name="group_location" string="Location" icon="terp-go-home" context="{'group_by':'location_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Date" icon="terp-go-month" context="{'group_by':'date'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>

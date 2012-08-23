@@ -4,7 +4,6 @@
         <record id="view_procurement_task_form" model="ir.ui.view">
             <field name="name">procurement.procurement.form.view.inherit</field>
             <field name="model">procurement.order</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="arch" type="xml">
                 <field name="close_move" position="after">
@@ -12,11 +11,9 @@
                 </field>
             </field>
         </record>
-        
-  	<record id="view_product_task_form" model="ir.ui.view">
+        <record id="view_product_task_form" model="ir.ui.view">
             <field name="name">product.form.view.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="active" position="after">
@@ -24,18 +21,16 @@
                 </field>
             </field>
         </record>
-        
-    <record id="view_project_mrp_inherit_form2" model="ir.ui.view">
+        <record id="view_project_mrp_inherit_form2" model="ir.ui.view">
             <field name="name">project.mrp.form.view.inherit</field>
             <field name="model">project.task</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
-            <xpath expr="/form/notebook/page[@string='Extra Info']/separator[@string='Notes']" position="before">
-                <field name="sale_line_id"/>
-            </xpath>    
+                <field name="state" position="after">
+                    <field name="sale_line_id" string="Order Line"/>
+                </field>
             </field>
-        </record>  
+        </record>
     </data>
 </openerp>
-        
+

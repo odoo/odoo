@@ -1,7 +1,20 @@
 <?xml version="1.0"?>
 <openerp>
 <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Recruitment Process has been installed</value>
+            <value>Manage job positions and the recruitment process in your company.  This module is integrated with the module Survey to help you to define interviews for different jobs.
 
+You can automatically create application records from an email gateway, that you can configure in the Human Resources Settings.</value>
+        </function>
+
+    <!-- Meeting Types (for interview meetings) -->
+    <record model="crm.meeting.type" id="categ_meet_interview">
+        <field name="name">Interview</field>
+    </record>
 
         <!--    HR Recruitment Source        -->
 
@@ -37,30 +50,36 @@
         <field name="name">Doctoral Degree</field>
         <field name="sequence">4</field>
     </record>
-
     <record model="hr.recruitment.stage" id="stage_job1">
         <field name="name">Initial Qualification</field>
+        <field name="state">draft</field>
         <field name="sequence">1</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job2">
         <field name="name">First Interview</field>
+        <field name="state">open</field>
         <field name="sequence">2</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job3">
         <field name="name">Second Interview</field>
+        <field name="state">open</field>
         <field name="sequence">3</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job4">
         <field name="name">Contract Proposed</field>
+        <field name="state">pending</field>
         <field name="sequence">4</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job5">
         <field name="name">Contract Signed</field>
+        <field name="state">done</field>
         <field name="sequence">5</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job6">
         <field name="name">Refused</field>
+        <field name="state">cancel</field>
         <field name="sequence">6</field>
+        <field name="fold" eval="True"/>
     </record>
     <record id="survey_job_0" model="survey">
         <field name="title">Job Survey</field>
@@ -434,5 +453,12 @@
         <field name="question_id" ref="survey_question_job_1"/>
         <field eval="13" name="sequence"/>
     </record>
+   
+    <record id="mail_alias_jobs" model="mail.alias">
+        <field name="alias_name">jobs</field>
+        <field name="alias_model_id" ref="model_hr_applicant"/>
+        <field name="alias_user_id" ref="base.user_root"/>
+    </record>
+    
 </data>
 </openerp>

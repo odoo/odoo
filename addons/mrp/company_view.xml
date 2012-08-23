@@ -5,13 +5,12 @@
         <record id="mrp_company" model="ir.ui.view">
             <field name="name">res.company.mrp.config</field>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="priority">22</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
-                    <field name="manufacturing_lead"/>
-                </page>
+                <xpath expr="//group[@name='logistics_grp']" position="inside">
+                   <field name="manufacturing_lead"/>
+                </xpath>
             </field>
         </record>
 

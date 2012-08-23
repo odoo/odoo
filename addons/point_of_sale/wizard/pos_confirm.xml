@@ -5,25 +5,19 @@
         <record id="view_pos_confirm" model="ir.ui.view">
             <field name="name">Post Sale Journal Entries</field>
             <field name="model">pos.confirm</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Post All Orders">
-                <separator string="Generate Journal Entries" colspan="4"/>
-                <label string="Generate all sale journal entries for non invoiced orders linked to a closed cash register or statement." colspan="4" align="0.0"/>
-                <newline/>
-                <separator colspan="4"/>
-                <group colspan="4" col="4">
-                    <group colspan="2" col="2">
-                    <button icon='gtk-cancel' special="cancel"
-                        string="Cancel" />
-                    <button name="action_confirm" string="Generate Entries"
-                        colspan="1" type="object" icon="gtk-ok"/>
-                    </group>
-                </group>
+                <form string="Post All Orders" version="7.0">
+                    <separator string="Generate Journal Entries"/>
+                    <label string="Generate all sale journal entries for non invoiced orders linked to a closed cash register or statement."/>
+                    <footer>
+                        <button name="action_confirm" string="Generate Entries" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
-
+        <!--
         <record id="action_pos_confirm" model="ir.actions.act_window">
             <field name="name">Post Sale Entries</field>
             <field name="type">ir.actions.act_window</field>
@@ -32,6 +26,7 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+        -->
 
     </data>
 </openerp>

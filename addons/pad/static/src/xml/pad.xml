@@ -2,12 +2,17 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-    <t t-extend="FormView.sidebar.attachments">
-        <t t-jquery="div.oe-binary-file-set" t-operation="append">
-                <button class="button pad" type="button">
-                    <img src="/web/static/src/img/throbber.gif" width="16" height="16" style="display: none"/>
-                    <span>Add Pad</span>
-                </button>
-        </t>
+
+<t t-name="FieldPad">
+    <t t-if="!widget.get('effective_readonly')">
+        <div class="oe_form_field_text oe_etherpad_normal">
+            <div class="oe_etherpad_head">
+                    <span class="oe_normal">Fullscreen</span>
+                    <span class="oe_fullscreen">Return to Record</span>
+            </div>
+            <div class="oe_etherpad_default" ></div>
+        </div>
     </t>
+</t>
+
 </templates>

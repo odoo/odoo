@@ -4,34 +4,33 @@
         <record id="view_crm_opportunity_geo_assign_form" model="ir.ui.view">
             <field name="name">crm.lead.geo_assign.inherit</field>
             <field name="model">crm.lead</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//notebook/page[@string='Lead']" position="after">
-                        <page string="Assignation" groups="base.group_extended">
-                        <group name="partner_assign_group" col="5" colspan="4">
-                            <separator string="Partner Assignation" colspan="5"/>
-                            <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
-                            <field name="date_assign"/>
-                            <group colspan="1" col="1">
-                                <button string="Forward"
-                                    attrs="{'invisible':[('partner_assigned_id','=',False)]}"
-                                    name="%(crm_lead_forward_to_partner_act)d"
-                                    icon="terp-mail-forward" type="action"
-                                    context="{'default_name': 'partner', 'default_partner_id': partner_assigned_id}"
-                                />
-                            </group>
-                            <group name="geo_assign_group" col="5" colspan="4">
-                                <separator string="Geo Assignation" colspan="5"/>
-                                <field name="partner_latitude"/>
-                                <field name="partner_longitude"/>
-                                <group colspan="1" col="1">
+                        <page string="Assignation">
+                            <group name="partner_assign_group">
+                                <group string="Partner Assignation">
+                                    <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
+                                    <label for="date_assign"/>
+                                    <div>
+                                        <field name="date_assign"/>
+                                        <button string="Forward"
+                                            attrs="{'invisible':[('partner_assigned_id','=',False)]}"
+                                            name="%(crm_lead_forward_to_partner_act)d"
+                                            icon="terp-mail-forward" type="action"
+                                            context="{'default_name': 'partner', 'default_partner_id': partner_assigned_id}"
+                                        />
+                                    </div>
+                                </group>
+                                <group string="Geo Assignation">
+                                    <field name="partner_latitude"/>
+                                    <field name="partner_longitude"/>
+                                    <span/>
                                     <button string="Geo Assign" name="action_assign_partner" type="object" colspan="1"
                                         icon="gtk-apply"/>
                                 </group>
                             </group>
-                        </group>
                         </page>
                     </xpath>
                 </data>
@@ -43,7 +42,6 @@
         <record id="view_crm_opportunity_geo_assign_tree" model="ir.ui.view">
             <field name="name">crm.lead.geo_assign.tree.inherit</field>
             <field name="model">crm.lead</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
@@ -54,15 +52,13 @@
         <record model="ir.ui.view" id="crm_opportunity_partner_filter">
             <field name="name">crm.opportunity.partner.filter.assigned</field>
             <field name="model">crm.lead</field>
-             <field name="type">search</field>
             <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="arch" type="xml">
                 <filter string="Team" position="after">
-                    <filter string="Referred Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                    <filter string="Assigned Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
 
                 <field name="user_id" position="after">
-                    <separator orientation="vertical"/>
                     <field name="partner_assigned_id"/>
                 </field>
             </field>

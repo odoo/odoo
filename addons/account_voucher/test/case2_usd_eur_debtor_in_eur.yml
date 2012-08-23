@@ -29,21 +29,21 @@
 -
   I create currency USD in OpenERP for February of 1.250000 Rate
 -
-  !record {model: res.currency.rate, id: febr_usd}:
+  !record {model: res.currency.rate, id: feb_usd}:
     currency_id: base.USD
     name: !eval "'%s-02-01' %(datetime.now().year)"
     rate: 1.250000
 -
   I create currency USD in OpenERP for March of 1.111111 Rate
 -
-  !record {model: res.currency.rate, id: marc_usd}:
+  !record {model: res.currency.rate, id: mar_usd}:
     currency_id: base.USD
     name: !eval "'%s-03-01' %(datetime.now().year)"
     rate: 1.111111
 -
   I create currency USD in OpenERP for April of 1.052632 Rate
 -
-  !record {model: res.currency.rate, id: apri_usd}:
+  !record {model: res.currency.rate, id: apr_usd}:
     currency_id: base.USD
     name: !eval "'%s-04-01' %(datetime.now().year)"
     rate: 1.052632
@@ -85,13 +85,13 @@
     period_id: account.period_1
     invoice_line:
       - account_id: account.a_sale
-        name: '[PC1] Basic PC'
+        name: '[PCSC234] PC Assemble SC234'
         price_unit: 200.0
         quantity: 1.0
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     reference_type: none
 -
   I Validate invoice by clicking on Validate button
@@ -118,13 +118,13 @@
     period_id: account.period_2
     invoice_line:
       - account_id: account.a_sale
-        name: '[PC1] Basic PC'
+        name: '[PCSC234] PC Assemble SC234'
         price_unit: 100.0
         quantity: 1.0
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     reference_type: none
 -
   I Validate invoice by clicking on Validate button
@@ -153,7 +153,7 @@
     amount: 200.0
     company_id: base.main_company
     journal_id: bank_journal_EUR
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     period_id: account.period_3
     date: !eval time.strftime("%Y-03-01")
     payment_option: 'with_writeoff'
@@ -182,14 +182,14 @@
 -
   !python {model: account.voucher}: |
     import netsvc
-    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
 -
   I check that the move of my voucher is valid
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
@@ -221,7 +221,7 @@
     amount: 80
     company_id: base.main_company
     journal_id: bank_journal_USD
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     period_id: account.period_3
     date: !eval time.strftime("%Y-04-01")
     payment_option: 'with_writeoff'
@@ -249,7 +249,7 @@
   I check that writeoff amount computed is 2.22
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     assert (round(voucher_id.writeoff_amount, 2) == 2.22), "Writeoff amount is not 2.22$"
 -
@@ -257,14 +257,14 @@
 -
   !python {model: account.voucher}: |
     import netsvc
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
 -
   I check that my voucher state is posted
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     assert voucher_id.state == 'posted', "Voucher state is not posted"
 -
@@ -277,7 +277,7 @@
   I check that my writeoff is correct. 2.11 in credit and 2.22 in amount_currency
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])

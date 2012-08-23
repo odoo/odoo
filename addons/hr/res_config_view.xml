@@ -1,74 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_hr_menu" model="ir.actions.client">
+            <field name="name">Open HR Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_hr_root')}"/>
+        </record>
+        <record id="todo_open_hr_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_hr_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
     <data>
-
-        <record id="open_payroll1_modules" model="ir.actions.act_window">
+        <record id="open_payroll_modules" model="ir.actions.act_window">
             <field name="name">Payroll</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('state','=','uninstalled'), ('name','ilike','payroll'), ('name','!=','hr_payroll_account')]</field>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_localization'), 'search_default_name': 'payroll'}"/>
+            <field name="search_view_id" ref="base.view_module_filter"/>
         </record>
 
         <record id="view_human_resources_configuration" model="ir.ui.view">
             <field name="name">hr settings</field>
             <field name="model">hr.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string ="HR Application">
-                    <separator string="Human Resources" colspan="4"/>
-                    <label string="Departments :"/>
-                    <label colspan="1"/>
-                    <group colspan="2">
-                        <button name="%(view_department_form_installer)d" string="Create Your Departments"
-                            type="action" icon="terp-personal+"/>
+                <form string="Configure Human Resources" version="7.0" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <separator string="Human Resources Management"/>
+                    <group>
+                        <label for="id" string="Additional Features"/>
+                        <div>
+                            <div>
+                                <field name="module_hr_holidays" class="oe_inline"/>
+                                <label for="module_hr_holidays"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_expense" class="oe_inline"/>
+                                <label for="module_hr_expense"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_evaluation" class="oe_inline"/>
+                                <label for="module_hr_evaluation"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_contract" class="oe_inline"/>
+                                <label for="module_hr_contract"/>
+                            </div>
+                            <div name="hr_payroll">
+                                <field name="module_hr_payroll" class="oe_inline"/>
+                                <label for="module_hr_payroll"/>
+                                <button name="%(open_payroll_modules)d" type="action"
+                                    string="Install your country's payroll" icon="gtk-go-forward"
+                                    attrs="{'invisible': [('module_hr_payroll','=',False)]}" class="oe_link"/>
+                            </div>
+                        </div>
                     </group>
-                    <newline/>
-                    <label string="Employees :" />
-                    <label colspan="1"/>
-                    <group colspan="2">
-                        <button name="%(open_view_employee_list_my)d" string="Create Your Employees"
-                            type="action" icon="terp-personal"/>
+                    <group name="timesheet_grp">
+                        <label for="id" string="Time Tracking"/>
+                        <div>
+                            <div>
+                                <field name="module_hr_timesheet" on_change="onchange_hr_timesheet(module_hr_timesheet)" class="oe_inline"/>
+                                <label for="module_hr_timesheet"/>
+                            </div>
+                            <div name="hr_timesheet">
+                                <field name="module_hr_timesheet_sheet" class="oe_inline"/>
+                                <label for="module_hr_timesheet_sheet"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_attendance" on_change="onchange_hr_attendance(module_hr_attendance)" class="oe_inline"/>
+                                <label for="module_hr_attendance"/>
+                            </div>
+                        </div>
                     </group>
-                    <newline/>
-                    <field name="module_hr_timesheet_sheet"/>
-                    <newline/>
-                    <field name="module_hr_holidays"/>
-                    <newline/>
-                    <label string="Salary Rules :"/>
-                    <label colspan="1"/>
-                    <group colspan="2">
-                        <button string="Configure Your Salary Rules" icon="gtk-go-forward"
-                            name="%(open_payroll1_modules)d" type="action" />
+                    <group name="recruitment_grp">
+                        <label for="id" string="Recruitment"/>
+                        <div name="recruitment">
+                            <div>
+                                <field name="module_hr_recruitment" class="oe_inline"/>
+                                <label for="module_hr_recruitment"/>
+                            </div>
+                        </div>
                     </group>
-
-                    <separator string="Additional Features" colspan="4"/>
-                    <field name="module_hr_expense"/>
-                    <newline/>
-                    <field name="module_hr_recruitment"/>
-                    <newline/>
-                    <field name="module_hr_evaluation"/>
-                    <newline/>
-                    <field name="module_hr_contract"/>
-
-                    <group name="config_timesheets" colspan="4"/>
-                    <group name="config_payroll" colspan="4"/>
-                    <group name="config_recruitment" colspan="4"/>
-
-                    <label colspan="2"/>
-                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
-                    <button string="Apply" icon="gtk-apply" type="object" name="execute"/>
                 </form>
             </field>
         </record>
 
         <record id="action_human_resources_configuration" model="ir.actions.act_window">
-            <field name="name">Configure Human Resources Application</field>
+            <field name="name">Configure Human Resources</field>
             <field name="res_model">hr.config.settings</field>
             <field name="view_id" ref="view_human_resources_configuration"/>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_human_resources_configuration" name="Human Resources" parent="base.menu_config" sequence="8" action="action_human_resources_configuration"/>
+        <menuitem id="menu_human_resources_configuration" name="Human Resources" parent="base.menu_config"
+            sequence="15" action="action_human_resources_configuration"/>
 
     </data>
 </openerp>
