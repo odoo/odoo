@@ -370,7 +370,6 @@ class survey_question_wiz(osv.osv_memory):
  
                     xml_footer = etree.SubElement(xml_form, 'footer', {'col': '8', 'colspan': '1', 'width':"100%"})
 
-
                     if pre_button:
                         etree.SubElement(xml_footer, 'label', {'string': ""})
                         etree.SubElement(xml_footer, 'button', {'name':"action_previous",'string':"Previous",'type':"object"})
@@ -434,12 +433,12 @@ class survey_question_wiz(osv.osv_memory):
                             mail_message.schedule_with_attach(cr, uid, user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, attachments=attachments, context=context)
 
                     xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
-                    xml_header = etree.SubElement(xml_form, 'header', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
+                    xml_footer = etree.SubElement(xml_form, 'footer', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
 
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
                     etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
                     etree.SubElement(xml_form, 'newline')
-                    etree.SubElement(xml_header, 'button', {'special':"cancel",'string':"OK",'colspan':"2",'class':'oe_highlight'})
+                    etree.SubElement(xml_footer, 'button', {'special':"cancel",'string':"OK",'colspan':"2",'class':'oe_highlight'})
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
                     result['fields'] = {}
