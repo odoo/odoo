@@ -61,6 +61,17 @@
         <div class="oe_mail_recthread_main">
             <!-- contains the document thread -->
         </div>
+        <div class="oe_mail_recthread_aside">
+            <div class="oe_mail_recthread_actions">
+                <button type="button" class="oe_mail_button_follow">Follow</button>
+                <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
+                <button type="button" class="oe_mail_button_followers">Show followers</button>
+            </div>
+            <div class="oe_mail_recthread_followers">
+                <h4>Followers</h4>
+                <ul class="oe_mail_followers_display"></ul>
+            </div>
+        </div>
     </div>
 
     <!--
@@ -104,7 +115,7 @@
     <!-- default layout -->
     <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg">
         <div t-attf-class="oe_mail_msg_#{record.type}">
-            <img class="oe_mail_icon oe_left" t-att-src="record.mini_url"/>
+            <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="record.mini_url"/>
             <div class="oe_mail_msg_content">
                 <!-- dropdown menu with message options and actions -->
                 <span class="oe_dropdown_toggle oe_dropdown_arrow">

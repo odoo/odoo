@@ -21,28 +21,25 @@
 
 
 {
-    "name" : "Marketing Campaign - Demo",
-    "version" : "1.0",
-    "depends" : ["marketing_campaign",
-                 "crm",
-                ],
-    "author" : "OpenERP SA",
-    "category": 'Marketing',
-    "description": """
+    'name': 'Marketing Campaign - Demo',
+    'version': '1.0',
+    'depends': ['marketing_campaign',
+                 'crm',
+    ],
+    'author': 'OpenERP SA',
+    'category': 'Marketing',
+    'description': """
 Demo data for the module marketing_campaign.
 ============================================
 
 Creates demo data like leads, campaigns and segments for the module marketing_campaign.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [
-        'marketing_campaign_demo.xml',
-    ],
+    'data': [],
+    'demo': ['marketing_campaign_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate' : '001005497972871352957',
+    'certificate': '001005497972871352957',
     'images': ['images/campaigns.jpeg','images/email_templates.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
