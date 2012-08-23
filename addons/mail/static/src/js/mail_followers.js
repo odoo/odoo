@@ -141,6 +141,9 @@ openerp_mail_followers = function(session, mail) {
                })
             });
             _(records).each(function (record) {
+                record.name = record.name.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                    return letter.toUpperCase();
+                    });
                 $(session.web.qweb.render('mail.record_thread.subtype', {'record': record})).appendTo(subtype_list);
             });
         },
