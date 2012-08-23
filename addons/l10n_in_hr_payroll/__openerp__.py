@@ -28,7 +28,7 @@
     'version': '1.0',
     'description': """
 Indian Payroll Salary Rules.
-=======================
+============================
 
     -Configuration of hr_payroll for India localization
     -All main contributions rules for India payslip.
