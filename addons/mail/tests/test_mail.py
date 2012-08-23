@@ -117,7 +117,7 @@ class test_mail(common.TransactionCase):
 
     def test_01_many2many_reference_field(self):
         """ Tests designed for the many2many_reference field (follower_ids).
-            We will test to perform write using the many2many commands 0, 3, 4,
+            We will test to perform writes using the many2many commands 0, 3, 4,
             5 and 6. """
         cr, uid = self.cr, self.uid
         user_admin = self.res_users.browse(cr, uid, uid)

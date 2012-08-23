@@ -22,19 +22,9 @@
 from osv import osv, fields
 
 class res_partner_mail(osv.Model):
-    """ Inherits partner and adds CRM information in the partner form """
+    """ Update partner to add a field about notification preferences """
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread']
-
-    def message_search_get_domain(self, cr, uid, ids, context=None):
-        """ Override of message_search_get_domain for partner discussion page.
-            The purpose is to add messages directly sent to the partner. It also
-            adds messages pushed to the related user, if any, using @login.
-        """
-        if self._name != 'res.partner':
-            return super(res_partner_mail, self).message_search_get_domain(cr, uid, ids, context=context)
-        # add message linked to the partner
-        return [('partner_ids', 'in', ids)]
 
     _columns = {
         'notification_email_pref': fields.selection([
@@ -45,8 +35,10 @@ class res_partner_mail(osv.Model):
             help="Choose in which case you want to receive an email when you "\
                   "receive new feeds."),
     }
+
     _defaults = {
         'notification_email_pref': lambda *args: 'comment'
     }
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
