@@ -637,35 +637,15 @@ class mail_thread(osv.Model):
         return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_subscribe(self, cr, uid, ids, partner_ids, context=None):
-        """ Add partners to the records followers. This implementation cannot
-            directly use [(4, partner_id)] because of the res_model column of
-            mail.followers. We therefore check access rights and access rules
-            before directly creating a follower record. This way we simulate
-            a write in message_follower_ids, enabling a correct check of access
-            rights.
+        """ Add partners to the records followers.
 
             :param partner_ids: a list of partner_ids to subscribe
             :param return: new value of followers, for Chatter
         """
-        self.check_access_rights(cr, uid, 'write', raise_exception=True)
-        self.check_access_rule(cr, uid, ids, 'write', context=context)
-
-        fol_obj = self.pool.get('mail.followers')
-        fol_ids = fol_obj.search(cr, uid, [
-            ('res_id', 'in', ids), ('res_model', '=', self._name), ('partner_id', 'in', partner_ids)
-            ], context=context)
-        followers = {}
-        for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
-            followers.setdefault(fol.partner_id.id, []).append(fol.res_id)
-
-        for res_id in ids:
-            for partner_id in partner_ids:
-                if not res_id in followers.get(partner_id, []):
-                    fol_obj.create(cr, uid, {
-                        'res_id': res_id, 'partner_id': partner_id, 'res_model': self._name
-                        }, context=context)
+        self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         # TDE: temp, must check followers widget
         return []
+        # return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
@@ -682,9 +662,9 @@ class mail_thread(osv.Model):
             :param return: new value of followers, for Chatter
         """
         self.write(cr, uid, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
-        # return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
         # TDE: temp, must check followers widget
         return []
+        # return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
     #------------------------------------------------------
     # Notification API
