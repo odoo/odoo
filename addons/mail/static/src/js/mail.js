@@ -251,6 +251,7 @@ openerp.mail = function(session) {
          * @param {Number} [options.records=null] records to show instead of fetching messages
          */
         init: function(parent, options) {
+            console.log(parent);
             this._super(parent);
             // options
             this.options = options || {};
@@ -374,7 +375,7 @@ openerp.mail = function(session) {
          * Normally it should be called only when clicking on 'Post/Send'
          * in the composition form. */
         do_action: function(action, on_close) {
-            console.log('thread do_action');
+            console.log('thread do_action', action, on_close, this);
             this.message_clean();
             this.message_fetch();
             if (this.compose_message_widget) {
@@ -600,6 +601,7 @@ openerp.mail = function(session) {
         },
 
         set_value: function() {
+            var self = this;
             this._super.apply(this, arguments);
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$element.find('oe_mail_thread').hide();
@@ -611,7 +613,8 @@ openerp.mail = function(session) {
             // create and render Thread widget
             this.$element.find('div.oe_mail_recthread_main').empty();
             for (var i in this.thread_list) { this.thread_list[i].destroy(); }
-            var thread = new mail.Thread(this, {
+            console.log(this);
+            var thread = new mail.Thread(self, {
                 'context': this.options.context, 'uid': this.session.uid,
                 'thread_level': this.options.thread_level, 'show_header_compose': true,
                 'show_delete': true, 'composer': true });
@@ -678,7 +681,7 @@ openerp.mail = function(session) {
             if (this.compose_message_widget) {
                 this.compose_message_widget.refresh(); }
             this.message_clean();
-            this.message_fetch();
+            this.display_thread();
             return this._super(action, on_close);
         },
 
@@ -729,7 +732,7 @@ openerp.mail = function(session) {
         display_thread: function () {
             var render_res = session.web.qweb.render('mail.wall_thread_container', {});
             $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(this.$element.find('ul.oe_mail_wall_threads'));
-            var thread = new mail.Thread(self, {
+            var thread = new mail.Thread(this, {
                 'domain': this.options.domain, 'context': this.options.context, 'uid': this.session.uid,
                 'thread_level': this.options.thread_level, 'composer': true,
                 // display options
