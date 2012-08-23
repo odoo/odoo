@@ -531,7 +531,7 @@ class crm_lead(base_stage, osv.osv):
         oldest = self._merge_find_oldest(cr, uid, ids, context=context)
         if ctx_opportunities :
             first_opportunity = ctx_opportunities[0]
-            tail_opportunities = opportunities_list
+            tail_opportunities = opportunities_list + ctx_opportunities[1:]
         else:
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
@@ -591,8 +591,6 @@ class crm_lead(base_stage, osv.osv):
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.state in ('done', 'cancel'):
                 continue
-            if user_ids or section_id:
-                self.allocate_salesman(cr, uid, [lead.id], user_ids, section_id, context=context)
 
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
@@ -604,6 +602,10 @@ class crm_lead(base_stage, osv.osv):
                 mail_message.write(cr, uid, msg_ids, {
                         'partner_id': lead.partner_id.id
                     }, context=context)
+
+        if user_ids or section_id:
+            self.allocate_salesman(cr, uid, ids, user_ids, section_id, context=context)
+
         return True
 
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
@@ -663,10 +665,12 @@ class crm_lead(base_stage, osv.osv):
         if context is None:
             context = {}
         partner_ids = {}
+        force_partner_id = partner_id
         for lead in self.browse(cr, uid, ids, context=context):
             if action == 'create':
                 if not partner_id:
                     partner_id = self._create_lead_partner(cr, uid, lead, context)
+                partner_id = force_partner_id or self._create_lead_partner(cr, uid, lead, context=context)
             self._lead_set_partner(cr, uid, lead, partner_id, context=context)
             partner_ids[lead.id] = partner_id
         return partner_ids
@@ -825,7 +829,7 @@ class crm_lead(base_stage, osv.osv):
         if update_vals is None: update_vals = {}
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-            vals['priority'] = msg.get('priority')
+            update_vals['priority'] = msg.get('priority')
         maps = {
             'cost':'planned_cost',
             'revenue': 'planned_revenue',
@@ -836,7 +840,7 @@ class crm_lead(base_stage, osv.osv):
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
-                vals[key] = res.group(2).lower()
+                update_vals[key] = res.group(2).lower()
 
         return super(crm_lead, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
