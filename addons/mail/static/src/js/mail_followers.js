@@ -33,7 +33,7 @@ openerp_mail_followers = function(session, mail) {
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
             this.sub_model = new session.web.DataSetSearch(this,'mail.message.subtype')
             this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
-            this.follow_model = new session.web.DataSetSearch(this,'mail.followers')
+            this.follower_model = new session.web.DataSetSearch(this,'mail.followers')
         },
 
         start: function() {
@@ -42,7 +42,7 @@ openerp_mail_followers = function(session, mail) {
             // any other method to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
-            self.search_subtype();
+            this.fetch_subtype();
             this.$element.find('ul.oe_mail_recthread_subtype').hide()
             this.$element.find('ul.oe_mail_recthread_subtype').click(function () {
                 var subtypelist = new Array();
@@ -71,7 +71,7 @@ openerp_mail_followers = function(session, mail) {
 
         _check_visibility: function() {
             this.$element.toggle(this.view.get("actual_mode") !== "create");
-            if(this.view.get("actual_mode") == "create"){this.search_subtype();}
+            if(this.view.get("actual_mode") == "create"){this.fetch_subtype();}
         },
 
         destroy: function () {
@@ -125,33 +125,37 @@ openerp_mail_followers = function(session, mail) {
                 this.$element.find('ul.oe_mail_recthread_subtype').hide() }
         },
         
-        subtype_value: function(value_) {
-            return this.sub_model.call('read',  [value_ || this.get_value(),['name', 'default']]).then(this.proxy('read_subtype'));
-        },
-        
-        read_subtype: function(records) {
+        // Display the subtypes of each records.
+        display_subtype: function(records) {
             var self = this
             var subtype_list = this.$element.find('ul.oe_mail_recthread_subtype').empty();
-            var follow_ids = this.follow_model.call('search',[[['res_model','=',this.ds_model.model],['res_id','=',this.view.datarecord.id],['user_id','=',this.session.uid]]])
-            follow_ids.then(function (record){
-               var follow_read = self.follow_model.call('read',  [record,['subtype_ids']]);
-               follow_read.then(function (follow_record){
-                   if(follow_record.length != 0){
-                   _(follow_record[0].subtype_ids).each(function (subtype_id){
-                       self.$element.find('.oe_msg_subtype_check[id=' + subtype_id + ']')[0].checked=true
-                   });}
+            var follower_ids = this.follower_model.call('search',[[['res_model','=',this.ds_model.model],['res_id','=',this.view.datarecord.id],['user_id','=',this.session.uid]]])
+            follower_ids.then(function (record){
+               var follower_read = self.follower_model.call('read',  [record,['subtype_ids']]);
+               follower_read.then(function (follower_record){
+                   if(follower_record.length != 0){
+                       _(follower_record[0].subtype_ids).each(function (subtype_id){
+                           self.$element.find('.oe_msg_subtype_check[id=' + subtype_id + ']')[0].checked=true
+                       });
+                   }
                })
             });
             _(records).each(function (record) {
                 $(session.web.qweb.render('mail.subtype.ids', {'record': record})).appendTo(subtype_list);
             });
-            },
+        },
             
         do_follow: function () {
             return this.ds_model.call('message_subscribe', [[this.view.datarecord.id]]).pipe(this.proxy('set_value'));
         },
-        search_subtype: function () {
-          return this.sub_model.call('search', [[['model_ids.model','=',this.view.model]]]).pipe(this.proxy('subtype_value'));
+        
+        //fetch subtype from subtype model
+        fetch_subtype: function () {
+          var self = this
+          var subtype_object = this.sub_model.call('search', [[['model_ids.model','=',this.view.model]]]);
+          subtype_object.then(function (subtype_ids){
+              self.sub_model.call('read',  [subtype_ids || self.get_value(),['name', 'default']]).then(self.proxy('display_subtype'));
+          });
         },
 
         do_unfollow: function () {
