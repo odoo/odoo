@@ -31,7 +31,9 @@ openerp_mail_followers = function(session, mail) {
             this.params.display_control = this.node.attrs.display_control || false;
             this.params.display_actions = this.node.attrs.display_actions || false;
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
+            this.sub_model = new session.web.DataSetSearch(this,'mail.message.subtype')
             this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
+            this.follower_model = new session.web.DataSetSearch(this,'mail.followers')
         },
 
         start: function() {
@@ -40,10 +42,24 @@ openerp_mail_followers = function(session, mail) {
             // any other method to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
+            this.fetch_subtype();
+            this.$element.find('ul.oe_mail_recthread_subtype').click(function () {
+                var subtypelist = new Array();
+                _($(this).find('.oe_msg_subtype_check')).each(function (record){
+                   if($(record).is(':checked')) {
+                       subtypelist.push(parseInt($(record).attr('id')))}
+                 });
+                 self.ds_model.call('message_subscribe_udpate_subtypes',[[self.view.datarecord.id],self.session.uid,subtypelist])
+            })
             this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
             if (! this.params.display_control) {
-                this.$element.find('button.oe_mail_button_followers').hide(); }
-            this.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
+                this.$element.find('button.oe_mail_button_followers').hide();
+                this.$element.find('ul.oe_mail_recthread_subtype').hide()
+                 }
+            this.$element.find('button.oe_mail_button_follow').click(function () {
+                self.do_follow();
+                self.fetch_subtype();
+                })
                 .mouseover(function () { $(this).html('Follow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Not following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
             this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
@@ -54,6 +70,7 @@ openerp_mail_followers = function(session, mail) {
 
         _check_visibility: function() {
             this.$element.toggle(this.view.get("actual_mode") !== "create");
+            if(this.view.get("actual_mode") == "create"){this.fetch_subtype();}
         },
 
         destroy: function () {
@@ -67,6 +84,7 @@ openerp_mail_followers = function(session, mail) {
             this.$element.find('button.oe_mail_button_followers').html('Hide followers')
             this.$element.find('button.oe_mail_button_follow').hide();
             this.$element.find('button.oe_mail_button_unfollow').hide();
+            this.$element.find('ul.oe_mail_recthread_subtype').hide()
         },
 
         set_value: function(value_) {
@@ -98,14 +116,48 @@ openerp_mail_followers = function(session, mail) {
             });
             if (this.is_subscriber) {
                 this.$element.find('button.oe_mail_button_follow').hide();
-                this.$element.find('button.oe_mail_button_unfollow').show(); }
+                this.$element.find('button.oe_mail_button_unfollow').show(); 
+                this.$element.find('ul.oe_mail_recthread_subtype').show(); }
             else {
                 this.$element.find('button.oe_mail_button_follow').show();
-                this.$element.find('button.oe_mail_button_unfollow').hide(); }
+                this.$element.find('button.oe_mail_button_unfollow').hide();
+                this.$element.find('ul.oe_mail_recthread_subtype').hide() }
         },
-
+        
+        // Display the subtypes of each records.
+        display_subtype: function(records) {
+            var self = this
+            var subtype_list = this.$element.find('ul.oe_mail_recthread_subtype').empty();
+            var follower_ids = this.follower_model.call('search',[[['res_model','=',this.ds_model.model],['res_id','=',this.view.datarecord.id],['user_id','=',this.session.uid]]])
+            follower_ids.then(function (record){
+               var follower_read = self.follower_model.call('read',  [record,['subtype_ids']]);
+               follower_read.then(function (follower_record){
+                   if(follower_record.length != 0){
+                       _(follower_record[0].subtype_ids).each(function (subtype_id){
+                           self.$element.find('.oe_msg_subtype_check[id=' + subtype_id + ']')[0].checked=true
+                       });
+                   }
+               })
+            });
+            _(records).each(function (record) {
+                record.name = record.name.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                    return letter.toUpperCase();
+                    });
+                $(session.web.qweb.render('mail.record_thread.subtype', {'record': record})).appendTo(subtype_list);
+            });
+        },
+            
         do_follow: function () {
             return this.ds_model.call('message_subscribe', [[this.view.datarecord.id]]).pipe(this.proxy('set_value'));
+        },
+        
+        //fetch subtype from subtype model
+        fetch_subtype: function () {
+          var self = this
+          var subtype_object = this.sub_model.call('search', [[['model_ids.model','=',this.view.model]]]);
+          subtype_object.then(function (subtype_ids){
+              self.sub_model.call('read',  [subtype_ids || self.get_value(),['name', 'default']]).then(self.proxy('display_subtype'));
+          });
         },
 
         do_unfollow: function () {
