@@ -45,61 +45,11 @@ class hr_contract(osv.osv):
         'driver_salay': fields.boolean('Driver Salary', help="Check this box if you provide allowance for driver"),
         'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance"),
         'voluntary_provident_fund': fields.float('Voluntary Provident Fund', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage(%)"),
-        'city_type': fields.selection([
-            ('metro', 'Metro'),
-            ('non-metro', 'Non Metro'),
-            ], 'Type of City'),
-    }
-    _defaults = {
-        'city_type': 'non-metro',
+        'house_rent_allowance_metro_nonmetro': fields.float('House Rent Allowance for Metro and Non Metro City', digits_compute=dp.get_precision('Payroll'), help="HRA computed as percentage(%)"),
+        'supplementary_allowance': fields.float('Supplementary Allowance', digits_compute=dp.get_precision('Payroll')),
     }
 
 hr_contract()
-
-class hr_employee(osv.osv):
-    '''
-    Employee's Join date allows to compute total working
-    experience of Employee and it is used to calculate Gratuity rule.
-    '''
-
-    _inherit = 'hr.employee'
-    _description = 'Employee'
-
-    def _compute_year(self, cr, uid, ids, fields, args, context=None):
-        """
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of employee’s IDs
-        @return: No. of years of experience.
-        @param context: A standard dictionary for contextual values
-        """
-        res = {}
-        c_date = time.strftime(DATETIME_FORMAT)
-        current_date = datetime.strptime(c_date, DATETIME_FORMAT)
-        for employee in self.browse(cr, uid, ids, context=context):
-            if employee.join_date:
-                date_start = datetime.strptime(employee.join_date, DATETIME_FORMAT)
-                diffyears = current_date.year - date_start.year
-                difference = current_date - date_start.replace(current_date.year)
-                days_in_year = isleap(current_date.year) and 366 or 365
-                difference_in_years = diffyears + (difference.days + difference.seconds / 86400.0) / days_in_year
-                total_years = relativedelta(current_date, date_start).years
-                total_months = relativedelta(current_date, date_start).months
-                if total_months < 10:
-                    year_month = float(total_months) / 10 + total_years
-                else:
-                    year_month = float(total_months) / 100 + total_years
-                res[employee.id] = year_month
-            else:
-                res[employee.id] = 0.0
-        return res
-
-    _columns = {
-        'join_date': fields.date('Join Date', help="Joining date of employee"),
-        'number_of_year': fields.function(_compute_year, string='No. of Years of Service', type="float", store=True, help="Total years of work experience"),
-        }
-
-hr_employee()
 
 class payroll_advice(osv.osv):
     '''
