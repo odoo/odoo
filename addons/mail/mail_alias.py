@@ -19,11 +19,16 @@
 #
 ##############################################################################
 
+import logging
 import re
 import unicodedata
 
 from openerp.osv import fields, osv
 from openerp.tools import ustr
+from openerp.modules.registry import RegistryManager
+from openerp import SUPERUSER_ID
+
+_logger = logging.getLogger(__name__)
 
 # Inspired by http://stackoverflow.com/questions/517923
 def remove_accents(input_str):
@@ -128,6 +133,56 @@ class mail_alias(osv.Model):
                 break
             sequence = (sequence + 1) if sequence else 2
         return new_name
+
+    def migrate_to_alias(self, cr, child_model_name, child_table_name, child_model_auto_init_fct,
+        alias_id_column, alias_column, alias_prefix = '', alias_force_thread_id = '', alias_defaults = {}, context=None):
+        """ Installation hook to create aliases for all users and avoid constraint errors.
+
+            :param child_model_name: model name of the child class (i.e. res.users)
+            :param child_table_name: table name of the child class (i.e. res_users)
+            :param child_model_auto_init_fct: pointer to the _auto_init function
+                (i.e. super(res_users,self)._auto_init(cr, context=context))
+            :param alias_id_column: alias_id column (i.e. self._columns['alias_id'])
+            :param alias_column: column used for the unique name (i.e. 'login')
+            :param alias_prefix: prefix for the unique name (i.e. 'jobs' + ...)
+            :param alias_force_thread_id': name of the column for force_thread_id;
+                if empty string, not taken into account
+            :param alias_defaults: dict, keys = mail.alias columns, values = child
+                model column name used for default values (i.e. {'job_id': 'id'})
+        """
+
+        # disable the unique alias_id not null constraint, to avoid spurious warning during 
+        # super.auto_init. We'll reinstall it afterwards.
+        alias_id_column.required = False
+
+        # call _auto_init
+        child_model_auto_init_fct(cr, context=context)
+
+        registry = RegistryManager.get(cr.dbname)
+        mail_alias = registry.get('mail.alias')
+        child_class_model = registry.get(child_model_name)
+        no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
+        # Use read() not browse(), to avoid prefetching uninitialized inherited fields
+        for obj_data in child_class_model.read(cr, SUPERUSER_ID, no_alias_ids, [alias_column]):
+            alias_vals = {'alias_name': '%s%s' % (alias_prefix, obj_data[alias_column]) }
+            if alias_force_thread_id:
+                alias_vals['alias_force_thread_id'] = obj_data[alias_force_thread_id]
+            alias_vals['alias_defaults'] = dict( (k, obj_data[v]) for k, v in alias_defaults.iteritems())
+            alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, alias_vals, model_name=child_model_name)
+            child_class_model.write(cr, SUPERUSER_ID, obj_data['id'], {'alias_id': alias_id})
+            _logger.info('Mail alias created for %s %s (uid %s)', child_model_name, obj_data[alias_column], obj_data['id'])
+
+        # Finally attempt to reinstate the missing constraint
+        try:
+            cr.execute('ALTER TABLE %s ALTER COLUMN alias_id SET NOT NULL' % (child_table_name))
+        except Exception:
+            _logger.warning("Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
+                            "If you want to have it, you should update the records and execute manually:\n"\
+                            "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL",
+                            child_table_name, 'alias_id', child_table_name, 'alias_id')
+
+        # set back the unique alias_id constraint
+        alias_id_column.required = True
 
     def create_unique_alias(self, cr, uid, vals, model_name=None, context=None):
         """Creates an email.alias record according to the values provided in ``vals``,
