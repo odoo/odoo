@@ -23,7 +23,7 @@
 {
     'name': 'Create Tasks on SO',
     'version': '1.0',
-    "category": "Project Management",
+    'category': 'Project Management',
     'description': """
 Automatically creates project tasks from procurement lines.
 ===========================================================
@@ -50,9 +50,8 @@ task is completed.
     'website': 'http://www.openerp.com',
     'images': ['images/product.jpeg', 'images/task_from_SO.jpeg'],
     'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
-    'init_xml': [],
-    'update_xml': ['project_mrp_workflow.xml', 'process/project_mrp_process.xml', 'project_mrp_view.xml'],
-    'demo_xml': ['project_mrp_demo.xml'],
+    'data': ['project_mrp_workflow.xml', 'process/project_mrp_process.xml', 'project_mrp_view.xml'],
+    'demo': ['project_mrp_demo.xml'],
     'test': ['test/project_task_procurement.yml'],
     'installable': True,
     'auto_install': False,

@@ -438,5 +438,40 @@
         <function model="project.project" name="schedule_tasks"
             eval="[ref('project_project_3'), ref('project_project_4'), ref('project_project_5')], {'install_mode': True}"/>
 
+        <record id="message_task_1" model="mail.message">
+            <field name="model">project.task</field>
+            <field name="res_id" ref="project_task_22"/>
+            <field name="content_subtype">plain</field>
+            <field name="body_text">Hello Quentin,
+There is a change in customer requirement.
+Can you check the document from customer again.
+Thanks,</field>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="message_task_2" model="mail.message">
+            <field name="model">project.task</field>
+            <field name="res_id" ref="project_task_22"/>
+            <field name="parent_id" ref="message_task_1"/>
+            <field name="content_subtype">plain</field>
+            <field name="body_text">Ok, I have checked the mail,
+I will update the document and let you know.</field>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_qdp"/>
+        </record>
+
+
+        <record id="message_task_3" model="mail.message">
+            <field name="model">project.task</field>
+            <field name="res_id" ref="project_task_22"/>
+            <field name="parent_id" ref="message_task_2"/>
+            <field name="content_subtype">plain</field>
+            <field name="body_text">Fine!
+Send it ASAP, its urgent.</field>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
     </data>
 </openerp>

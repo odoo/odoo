@@ -22,6 +22,7 @@
 import pdb
 import openerp
 import addons
+import openerp.addons.product.product
 
 import time
 from datetime import datetime
@@ -59,16 +60,9 @@ class pos_config(osv.osv):
              help="Accounting journal used to post sales entries."),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode',
              help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
-        'iface_websql' : fields.boolean('WebSQL (Faster but Chrome Only)',
-            help="If have more than 200 products, it's highly suggested to use WebSQL "\
-                "to store the data in the browser, instead of localStore mechanism. "\
-                "It's more efficient but works on the Chrome browser only."
-            ),
-        'iface_led' : fields.boolean('Help Notification'),
         'iface_cashdrawer' : fields.boolean('Cashdrawer Interface'),
         'iface_payment_terminal' : fields.boolean('Payment Terminal Interface'),
         'iface_electronic_scale' : fields.boolean('Electronic Scale Interface'),
-        'iface_barscan' : fields.boolean('BarScan Interface'), 
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
 
@@ -77,7 +71,7 @@ class pos_config(osv.osv):
             help="This sequence is automatically created by OpenERP but you can change it "\
                 "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
-        'group_by' : fields.boolean('Group By', help="Check this if you want to group the Journal Items by Product while closing a Session"),
+        'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -93,7 +87,7 @@ class pos_config(osv.osv):
                 result.append((record.id, record.name+' ('+_('not used')+')'))
                 continue
             session = record.session_ids[0]
-            result.append((record.id, record.name + ' ('+session.user_id.name+', '+states[session.state]+')'))
+            result.append((record.id, record.name + ' ('+session.user_id.name+')')) #, '+states[session.state]+')'))
         return result
 
 
@@ -142,8 +136,6 @@ class pos_config(osv.osv):
             if obj.sequence_id:
                 obj.sequence_id.unlink()
         return super(pos_config, self).unlink(cr, uid, ids, context=context)
-
-pos_config()
 
 class pos_session(osv.osv):
     _name = 'pos.session'
@@ -458,8 +450,6 @@ class pos_session(osv.osv):
             'tag' : 'pos.ui',
             'context' : context,
         }
-
-pos_session()
 
 class pos_order(osv.osv):
     _name = "pos.order"
@@ -1079,8 +1069,6 @@ class pos_order(osv.osv):
         self.create_account_move(cr, uid, ids, context=context)
         return True
 
-pos_order()
-
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
     _columns= {
@@ -1184,8 +1172,6 @@ class pos_order_line(osv.osv):
         })
         return super(pos_order_line, self).copy_data(cr, uid, id, default, context=context)
 
-pos_order_line()
-
 class pos_category(osv.osv):
     _name = 'pos.category'
     _description = "Point of Sale Category"
@@ -1235,6 +1221,11 @@ class pos_category(osv.osv):
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
         'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
+        
+        # NOTE:  there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
+        # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
+        # In this case, the default image is set by the js code. 
+
         'image': fields.binary("Image",
             help="This field holds the image used for the category. "\
                  "The image is base64 encoded, and PIL-supported. "\
@@ -1257,20 +1248,39 @@ class pos_category(osv.osv):
                  "Use this field anywhere a small image is required."),
     }
 
-    def _get_default_image(self, cr, uid, context=None):
-        image_path = openerp.modules.get_module_resource('point_of_sale', 'images', 'default_category_photo.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
-
-    _defaults = {
-        'image': _get_default_image,
-    }
-
-pos_category()
-
 import io, StringIO
+
+class ean_wizard(osv.osv_memory):
+    _name = 'pos.ean_wizard'
+    _columns = {
+        'ean13_pattern': fields.char('Ean13 Pattern', size=32, required=True, translate=True),
+    }
+    def sanitize_ean13(self, cr, uid, ids, context):
+        for r in self.browse(cr,uid,ids):
+            ean13 = openerp.addons.product.product.sanitize_ean13(r.ean13_pattern)
+            m = context.get('active_model')
+            m_id =  context.get('active_id')
+            self.pool.get(m).write(cr,uid,[m_id],{'ean13':ean13})
+        return { 'type' : 'ir.actions.act_window_close' }
 
 class product_product(osv.osv):
     _inherit = 'product.product'
+
+
+    #def _get_small_image(self, cr, uid, ids, prop, unknow_none, context=None):
+    #    result = {}
+    #    for obj in self.browse(cr, uid, ids, context=context):
+    #        if not obj.product_image:
+    #            result[obj.id] = False
+    #            continue
+
+    #        image_stream = io.BytesIO(obj.product_image.decode('base64'))
+    #        img = Image.open(image_stream)
+    #        img.thumbnail((120, 100), Image.ANTIALIAS)
+    #        img_stream = StringIO.StringIO()
+    #        img.save(img_stream, "JPEG")
+    #        result[obj.id] = img_stream.getvalue().encode('base64')
+    #    return result
 
     _columns = {
         'income_pdt': fields.boolean('Point of Sale Cash In', help="This is a product you can use to put cash into a statement for the point of sale backend."),
@@ -1283,7 +1293,16 @@ class product_product(osv.osv):
         'to_weight' : False,
     }
 
-product_product()
-
+    def edit_ean(self, cr, uid, ids, context):
+        return {
+            'name': "Edit Ean",
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'pos.ean_wizard',
+            'target' : 'new',
+            'view_id': False,
+            'context':context,
+        }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

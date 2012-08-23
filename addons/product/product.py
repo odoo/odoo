@@ -28,18 +28,10 @@ import re
 import tools
 from tools.translate import _
 
-def is_pair(x):
-    return not x%2
-
-def check_ean(eancode):
-    if not eancode:
-        return True
+def ean_checksum(eancode):
+    """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
     if len(eancode) <> 13:
-        return False
-    try:
-        int(eancode)
-    except:
-        return False
+        return -1
     oddsum=0
     evensum=0
     total=0
@@ -48,17 +40,38 @@ def check_ean(eancode):
     finalean=reversevalue[1:]
 
     for i in range(len(finalean)):
-        if is_pair(i):
+        if i % 2 == 0:
             oddsum += int(finalean[i])
         else:
             evensum += int(finalean[i])
     total=(oddsum * 3) + evensum
 
     check = int(10 - math.ceil(total % 10.0)) %10
+    return check
 
-    if check != int(eancode[-1]):
+def check_ean(eancode):
+    """returns True if eancode is a valid ean13 string, or null"""
+    if not eancode:
+        return True
+    if len(eancode) <> 13:
         return False
-    return True
+    try:
+        int(eancode)
+    except:
+        return False
+    return ean_checksum(eancode) == int(eancode[-1])
+
+def sanitize_ean13(ean13):
+    """Creates and returns a valid ean13 from an invalid one"""
+    if not ean13:
+        return "0000000000000"
+    ean13 = re.sub("[A-Za-z]","0",ean13);
+    ean13 = re.sub("[^0-9]","",ean13);
+    ean13 = ean13[:13]
+    if len(ean13) < 13:
+        ean13 = ean13 + '0' * (13-len(ean13))
+    return ean13[:-1] + str(ean_checksum(ean13))
+
 #----------------------------------------------------------
 # UOM
 #----------------------------------------------------------
@@ -195,8 +208,10 @@ product_ul()
 class product_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
+        if isinstance(ids, (list, tuple)) and not len(ids):
             return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
@@ -593,6 +608,7 @@ class product_product(osv.osv):
         for product in self.read(cr, uid, ids, ['ean13'], context=context):
             res = check_ean(product['ean13'])
         return res
+
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 

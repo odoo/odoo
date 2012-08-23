@@ -4,13 +4,17 @@ from osv import osv, fields
 from tools.translate import _
 import netsvc
 
+from openerp.addons.point_of_sale.point_of_sale import pos_session
+
 class pos_session_opening(osv.osv_memory):
     _name = 'pos.session.opening'
 
     _columns = {
         'pos_config_id' : fields.many2one('pos.config', 'Point of Sale', required=True),
         'pos_session_id' : fields.many2one('pos.session', 'PoS Session'),
-        'pos_state' : fields.char('Session State'),
+        'pos_state' : fields.selection(pos_session.POS_SESSION_STATE,
+                                       'Session State', readonly=True),
+        'show_config' : fields.boolean('Show Config', readonly=True),
     }
 
     def open_ui(self, cr, uid, ids, context=None):
@@ -19,7 +23,7 @@ class pos_session_opening(osv.osv_memory):
         context['active_id'] = data.pos_session_id.id
         return {
             'type' : 'ir.actions.client',
-            'name' : 'Start Point Of Sale',
+            'name' : _('Start Point Of Sale'),
             'tag' : 'pos.ui',
             'context' : context
         }
@@ -87,7 +91,11 @@ class pos_session_opening(osv.osv_memory):
         if not result:
             r = self.pool.get('pos.config').search(cr, uid, [], context=context)
             result = r and r[0] or False
+
+        count = self.pool.get('pos.config').search_count(cr, uid, [('state', '=', 'active')], context=context)
+        show_config = bool(count > 1)
         return {
-            'pos_config_id' : result
+            'pos_config_id' : result,
+            'show_config' : show_config,
         }
 pos_session_opening()
