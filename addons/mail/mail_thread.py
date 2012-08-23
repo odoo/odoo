@@ -38,6 +38,67 @@ _logger = logging.getLogger(__name__)
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode,message.get_all(header, [])))
 
+class many2many_reference(fields.many2many):
+    """ many2many_reference is an override of fields.many2many. It manages
+        many2many-like table where one id is given by two fields, res_model
+        and res_id.
+    """
+    
+    def _get_query_and_where_params(self, cr, model, ids, values, where_params):
+        """ Add in where:
+            - ``mail_followers``.res_model = 'crm.lead'
+        """
+        # reference column name: given by attribute or res_model
+        ref_col_name = self.ref_col_name if self.ref_col_name else 'res_model'
+        values.update({'ref_col_name': ref_col_name, 'ref_col_value': model._name})
+
+        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
+                    FROM %(rel)s, %(from_c)s \
+                    WHERE %(rel)s.%(id1)s IN %%s \
+                    AND %(rel)s.%(id2)s = %(tbl)s.id \
+                    AND %(rel)s.%(ref_col_name)s = \'%(ref_col_value)s\' \
+                    %(where_c)s  \
+                    %(order_by)s \
+                    %(limit)s \
+                    OFFSET %(offset)d' \
+                % values
+        return query, where_params
+
+    def set(self, cr, model, id, name, values, user=None, context=None):
+        """ Override to add the res_model field in queries. """
+        if not values: return
+        rel, id1, id2 = self._sql_names(model)
+        obj = model.pool.get(self._obj)
+        # reference column name: given by attribute or res_model
+        ref_col_name = self.ref_col_name if self.ref_col_name else 'res_model'
+        for act in values:
+            if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
+                continue
+            if act[0] == 0:
+                idnew = obj.create(cr, user, act[2], context=context)
+                cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+ref_col_name+') VALUES (%s,%s,%s)', (id, idnew, model._name))
+            elif act[0] == 3:
+                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND '+ref_col_name+'=%s', (id, act[1], model._name))
+            elif act[0] == 4:
+                # following queries are in the same transaction - so should be relatively safe
+                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND '+ref_col_name+'=%s', (id, act[1], model._name))
+                if not cr.fetchone():
+                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+ref_col_name+') VALUES (%s,%s,%s)', (id, act[1], model._name))
+            elif act[0] == 5:
+                cr.execute('delete from '+rel+' where '+id1+' = %s AND '+ref_col_name+'=%s', (id, model._name))
+            elif act[0] == 6:
+                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
+                if d1:
+                    d1 = ' and ' + ' and '.join(d1)
+                else:
+                    d1 = ''
+                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+ref_col_name+'=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, model._name, id]+d2)
+                for act_nbr in act[2]:
+                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+ref_col_name+') VALUES (%s,%s,%s)', (id, act_nbr, model._name))
+            # cases 1, 2: performs write and unlink -> default implementation is ok
+            else:
+                return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
+
 class mail_thread(osv.Model):
     '''Mixin model, meant to be inherited by any model that needs to
        act as a discussion topic on which messages can be attached.
@@ -102,9 +163,9 @@ class mail_thread(osv.Model):
     _columns = {
         'message_is_follower': fields.function(_get_message_data,
             type='boolean', string='Is a Follower', multi='_get_message_data'),
-        # missing domain on model
-        'message_follower_ids': fields.many2many('res.partner', 'mail_followers', 'res_id', 'partner_id',
-            string='Followers'),
+        'message_follower_ids': many2many_reference('res.partner',
+            'mail_followers', 'res_id', 'partner_id',
+            ref_col_name='res_model', string='Followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model','=',self._name)],
             string='Related Messages', 
