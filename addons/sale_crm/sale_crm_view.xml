@@ -5,13 +5,13 @@
         <record model="ir.ui.view" id="crm_case_form_view_oppor">
             <field name="name">CRM - Opportunities - Quote Inherit</field>
             <field name="model">crm.lead</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <data>
-                    <field name="state" position="before">
-                        <button string="Convert to Quote" name="%(action_crm_make_sale)d" type="action"/>
-                    </field>
+                    <xpath expr="/form/header/button[@name='case_mark_lost']" position="after">
+                        <button states="done" string="Convert to Quote" name="%(action_crm_make_sale)d" type="action" class="oe_highlight"/>
+                        <button states="draft,open,pending" string="Convert to Quote" name="%(action_crm_make_sale)d" type="action"/>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -19,12 +19,11 @@
         <record model="ir.ui.view" id="sale_view_inherit123">
             <field name="name">sale.order.inherit</field>
             <field name="model">sale.order</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
                     <field name="section_id" widget="selection"/>
-                    <field name="categ_id" widget="selection"/>
+                    <field name="categ_ids" widget="many2many_tags"/>
                 </field>
             </field>
         </record>
@@ -32,16 +31,18 @@
         <record id="view_sales_order_filter_inherit" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
             <field name="model">sale.order</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
-                <field name="user_id" position="after">
-                    <field name="section_id" widget="selection" string="Sales Team">
-                        <filter icon="terp-personal+"
-                                domain="[('section_id.user_id','=',uid)]"
-                                help="My Sales Team(s)"/>
-                    </field>
-                </field>
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <separator/>
+                    <filter string="My Sales Team(s)"
+                        icon="terp-personal+"
+                        domain="[('section_id.user_id','=',uid)]"
+                        help="My Sales Team(s)"/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="section_id" string="Sales Team"/>
+                </xpath>
             </field>
         </record>
 

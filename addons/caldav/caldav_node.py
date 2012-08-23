@@ -23,6 +23,7 @@ from document_webdav import nodes
 from document.nodes import _str2time, nodefd_static
 import logging
 from orm_utils import get_last_modified
+_logger = logging.getLogger(__name__)
 
 try:
     from tools.dict_tools import  dict_merge2
@@ -223,7 +224,6 @@ class node_calendar(nodes.node_class):
         res = []
         if not filters:
             return res
-        _log = logging.getLogger('caldav.query')
         if filters.localName == 'calendar-query':
             res = []
             for filter_child in filters.childNodes:
@@ -252,20 +252,20 @@ class node_calendar(nodes.node_class):
                                                 elif cfe.getAttribute('end'):
                                                     _log.warning("Ignore end.. ")
                                             else:
-                                                _log.debug("Unknown comp-filter: %s", cfe.localName)
+                                                _log.debug("Unknown comp-filter: %s.", cfe.localName)
                                     else:
-                                        _log.debug("Unknown comp-filter: %s", vevent_filter.localName)
+                                        _log.debug("Unknown comp-filter: %s.", vevent_filter.localName)
                         else:
-                            _log.debug("Unknown filter element: %s", vcalendar_filter.localName)
+                            _log.debug("Unknown filter element: %s.", vcalendar_filter.localName)
                 else:
-                    _log.debug("Unknown calendar-query element: %s", filter_child.localName)
+                    _log.debug("Unknown calendar-query element: %s.", filter_child.localName)
             return res
         elif filters.localName == 'calendar-multiget':
             # this is not the place to process, as it wouldn't support multi-level
             # hrefs. So, the code is moved to document_webdav/dav_fs.py
             pass
         else:
-            _log.debug("Unknown element in REPORT: %s", filters.localName)
+            _log.debug("Unknown element in REPORT: %s.", filters.localName)
         return res
 
     def children(self, cr, domain=None):
@@ -341,7 +341,7 @@ class node_calendar(nodes.node_class):
                     if line.name == ourcal.type:
                         line_id = line.id
                         break
-                assert line_id, "Calendar #%d must have at least one %s line" % \
+                assert line_id, "Calendar #%d must have at least one %s line." % \
                                     (ourcal.id, ourcal.type)
                 if path.endswith('.ics'):
                     path = path[:-4]

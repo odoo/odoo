@@ -65,7 +65,7 @@ class Prop2xml(object):
 
     def createText2Node(self, data):
         if not isinstance(data, StringTypes):
-            raise TypeError, "node contents must be a string"
+            raise TypeError, "Node contents must be a string."
         t = Text2()
         t.data = data
         t.ownerDocument = self.doc

@@ -20,25 +20,24 @@
 ##############################################################################
 
 {
-    "name": "Decimal Precision Configuration",
-    "description": """
-Configure the price accuracy you need for different kinds of usage: accounting, sales, purchases, etc.
-======================================================================================================
+    'name': 'Decimal Precision Configuration',
+    'description': """
+Configure the price accuracy you need for different kinds of usage: accounting, sales, purchases.
+=================================================================================================
 
 The decimal precision is configured per company.
 """,
-    "author": "OpenERP SA",
-    "version": "0.1",
-    "depends": ["base"],
-    "category" : "Hidden/Dependency",
-    "init_xml": [],
-    "update_xml": [
+    'author': 'OpenERP SA',
+    'version': '0.1',
+    'depends': ['base'],
+    'category' : 'Hidden/Dependency',
+    'data': [
         'decimal_precision_view.xml',
         'security/ir.model.access.csv',
     ],
-    "demo_xml": [],
-    "installable": True,
-    "certificate" : "001307317809612974621",
+    'demo': [],
+    'installable': True,
+    'certificate' : '001307317809612974621',
     'images': ['images/1_decimal_accuracy_form.jpeg','images/1_decimal_accuracy_list.jpeg'],
 }
 

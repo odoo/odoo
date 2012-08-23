@@ -8,9 +8,21 @@
             <field name="res_model">hr.applicant</field>
             <field name="view_mode">kanban,tree,form,graph,calendar</field>
             <field name="view_id" eval="False"/>
-            <field name="context">{'search_default_filter_inprogress':1,'search_default_filter_new':1}</field>            
             <field name="search_view_id" ref="view_crm_case_jobs_filter"/>
-            <field name="help">From this menu you can track applicants in the recruitment process and manage all operations: meetings, interviews, phone calls, etc. If you setup the email gateway, applicants and their attached CV are created automatically when an email is sent to jobs@yourcompany.com. If you install the document management modules, all documents (CV and motivation letters) are indexed automatically, so that you can easily search through their content.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new job applicant.
+              </p><p>
+                OpenERP helps you track applicants in the recruitment
+                process and follow up all operations: meetings, interviews, etc.
+              </p><p>
+                If you setup the email gateway, applicants and their attached
+                CV are created automatically when an email is sent to
+                jobs@yourcompany.com. If you install the document management
+                modules, all resumes are indexed automatically, so that you can
+                easily search through their content.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_hr_sec_kanban_view_act_job">
@@ -53,8 +65,8 @@
             name="Applications"
             parent="base.menu_crm_case_job_req_main"
             id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job" sequence="1"/>
-	
-	    <menuitem parent="base.menu_crm_case_job_req_main" id="menu_hr_job" action="hr.action_hr_job" sequence="2"/>
+    
+        <menuitem parent="hr.menu_hr_configuration" id="hr.menu_hr_job" action="hr.action_hr_job" sequence="2"/>
 
 
     </data>

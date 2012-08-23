@@ -4,29 +4,24 @@
         <record id="account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="priority">30</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
-                <field name="partner_id" position="replace">
-                    <field name="partner_id" on_change="on_change_partner_id(partner_id, context)"/>
-                </field>
-                <group name="contract" position="after">
-                    <group colspan="2" col="2" name="invoice_data">
-                        <separator colspan="2" string="Invoicing Data"/>
+                <xpath expr='//separator[@name="description"]' position='before'>
+                    <group string="Invoice on Timesheets Options" name="invoice_on_timesheets" col="4">
+                        <field name="pricelist_id" />
                         <field name="to_invoice" widget="selection"/>
-                        <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]" attrs="{'required':[('to_invoice','!=',False)]}"/>
-                        <field name="amount_max"/>
                     </group>
-                    <group colspan="2" col="2" name="invoice_stats">
-                        <separator colspan="4" string="Invoicing Statistics"/>
-                        <field name="amount_invoiced"/>
-                    </group>
-                </group>
+                 </xpath>
+                <xpath expr="//field[@name='use_timesheets']" position="replace">
+                    <field name="use_timesheets" on_change="on_change_use_timesheets(use_timesheets, context)"/>
+                </xpath>
                 <xpath expr="/form/sheet" position='before'>
                     <header>
-                        <button name="set_pending" string="Pending" type="object" states="open"/>
-                        <button name="set_close" string="Close" type="object" states="open,pending"/>
-                        <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close,draft"/>
+                        <button name="set_pending" string="Pending" type="object" states="open" />
+                        <button name="set_close" string="Close" type="object" states="open,pending" />
+                        <button name="set_open" string="Re-open project" type="object" states="pending,close" />
+                        <button name="set_open" string="Re-open project" type="object" states="cancelled,draft"/>
                         <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
                         <field name="state" readonly="1" widget="statusbar"
                             statusbar_visible="open,pending,close" statusbar_colors='{"pending":"red", "template":"blue"}'/>
@@ -38,12 +33,13 @@
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
-                <xpath expr='//separator[@string="Invoicing"]' position='after'>
-                    <field name="to_invoice"/>
-                    <field name="invoice_id"/>
+                <xpath expr="//group[@string='Accounting']" position='after'>
+                    <group string="Invoicing">
+                        <field name="to_invoice"/>
+                        <field name="invoice_id"/>
+                    </group>
                 </xpath>
             </field>
         </record>
@@ -51,11 +47,10 @@
         <record id="hr_timesheet_line_form2" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form2</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)" select="1"/>
+                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" context="{'default_use_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -63,7 +58,6 @@
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <field name="amount" position="after">
@@ -75,12 +69,10 @@
         <record id="hr_timesheet_line_tree2" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree2</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
-
                 <field name="account_id" position="replace">
-                    <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
+                    <field domain="[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" context="{'default_use_timesheets': 1}"/>
                 </field>
             </field>
         </record>
@@ -89,21 +81,19 @@
         <record id="view_account_analytic_line_search_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.search.to_invoice</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
-                <field name="date" position="before">
+                <xpath expr="//filter[@name='others']" position="after">
+                    <separator/>
                     <filter name="to_invoice" string="To Invoice" context="{'to_invoice': 1}" domain="[('invoice_id','=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/>
                     <filter name="invoiced" string="Invoiced" domain="[('invoice_id','!=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/> 
-                    <separator orientation="vertical"/>
-                </field>
+                </xpath>
             </field>
         </record>
 
         <record id="view_account_analytic_line_tree_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.to_invoice</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="after">
@@ -114,10 +104,9 @@
           <record id="view_account_analytic_line_form_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.form.to_invoice</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
-                <field name="product_uom_id" position="after">
+                <field name="amount" position="before">
                     <field name="to_invoice"/>
                     <field name="invoice_id"/>
                 </field>
@@ -126,14 +115,22 @@
 
         <!-- Menus -->
         <record id="action_hr_analytic_timesheet_open_tree" model="ir.actions.act_window">
-            <field name="name">Bill Tasks Works</field>
+            <field name="name">Invoice Tasks Work</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
             <field name="context">{'search_default_to_invoice': 1}</field>
             <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>            
-            <field name="help">This list shows you every task you can invoice to the customer. Select the lines and click the Action button to generate the invoices automatically.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add some tasks work to be invoiced.
+              </p><p>
+                This list shows every task you can invoice to the customer.
+                Select the lines and invoice from the '<i>more...</i>' contextual
+                menu to generate invoices automatically.
+              </p>
+            </field>
         </record>
         <menuitem
             action="action_hr_analytic_timesheet_open_tree"
@@ -144,31 +141,28 @@
         <record id="view_hr_timesheet_invoice_factor_search" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.search</field>
             <field name="model">hr_timesheet_invoice.factor</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Type of invoicing">
-                    <group>
-                        <field name="name"/>
-                    </group>
+                    <field name="name" string="Type of invoicing"/>
                 </search>
             </field>
         </record>
         <record id="view_hr_timesheet_invoice_factor_form" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.form</field>
             <field name="model">hr_timesheet_invoice.factor</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Type of invoicing">
-                    <field colspan="1" name="name"/>
-                    <field colspan="1" name="customer_name"/>
-                    <field colspan="2" name="factor"/>
+                <form string="Type of invoicing" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="customer_name"/>
+                        <field name="factor"/>
+                    </group>
                 </form>
             </field>
         </record>
         <record id="view_hr_timesheet_invoice_factor_tree" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.tree</field>
             <field name="model">hr_timesheet_invoice.factor</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Types of invoicing">
                     <field name="name"/>
@@ -184,7 +178,17 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_timesheet_invoice_factor_tree"/>
             <field name="search_view_id" ref="view_hr_timesheet_invoice_factor_search"/>
-            <field name="help">OpenERP allows you to create default invoicing types. You might have to regularly assign discounts because of a specific contract or agreement with a customer. From this menu, you can create additional types of invoicing to speed up your invoicing.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new type of invoicing.
+              </p><p>
+                OpenERP allows you to create default invoicing types. You might
+                have to regularly assign discounts because of a specific
+                contract or agreement with a customer. From this menu, you can
+                create additional types of invoicing to speed up your
+                invoicing.
+              </p>
+            </field>
         </record>
         <menuitem
             action="action_hr_timesheet_invoice_factor_form"

@@ -3,31 +3,31 @@
 # Portions of this file are under the following copyright and license:
 #
 #
-#   Copyright (c) 2003-2004 Danny Brewer 
-#   d29583@groovegarden.com 
-# 
-#   This library is free software; you can redistribute it and/or 
-#   modify it under the terms of the GNU Lesser General Public 
-#   License as published by the Free Software Foundation; either 
-#   version 2.1 of the License, or (at your option) any later version. 
-# 
-#   This library is distributed in the hope that it will be useful, 
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of 
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
-#   Lesser General Public License for more details. 
-# 
-#   You should have received a copy of the GNU Lesser General Public 
-#   License along with this library; if not, write to the Free Software 
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA 
-# 
-#   See:  http://www.gnu.org/licenses/lgpl.html 
+#   Copyright (c) 2003-2004 Danny Brewer
+#   d29583@groovegarden.com
 #
-# 
+#   This library is free software; you can redistribute it and/or
+#   modify it under the terms of the GNU Lesser General Public
+#   License as published by the Free Software Foundation; either
+#   version 2.1 of the License, or (at your option) any later version.
+#
+#   This library is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#   Lesser General Public License for more details.
+#
+#   You should have received a copy of the GNU Lesser General Public
+#   License along with this library; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+#   See:  http://www.gnu.org/licenses/lgpl.html
+#
+#
 # and other portions are under the following copyright and license:
 #
 #
 #    OpenERP, Open Source Management Solution>..
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>). 
+#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -86,7 +86,7 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         self.win.addButton('btnOK',-2 ,-5, 60,15,'Connect' ,actionListenerProc = self.btnOk_clicked )
         self.win.addButton('btnPrevious',15 -80 ,-5,50,15,'Previous',actionListenerProc = self.btnPrevious_clicked)
         self.win.addButton('btnCancel',-2 - 110 - 5 ,-5, 35,15,'Cancel' ,actionListenerProc = self.btnCancel_clicked )
- 
+
         sValue=""
         if docinfo.getUserFieldValue(0)<>"":
             global url
@@ -100,8 +100,8 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
 #                sValue="Could not connect to the server!"
 #                self.lstDatabase.addItem("Could not connect to the server!",0)
             elif res == 0:
-                sValue="No Database found !!!"
-                self.lstDatabase.addItem("No Database found !!!",0)
+                sValue="No database found !"
+                self.lstDatabase.addItem("No database found !",0)
             else:
                 self.win.addComboListBox("lstDatabase", -2,28,123,15, True)
                 self.lstDatabase = self.win.getControl( "lstDatabase" )
@@ -129,12 +129,12 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         self.sock=RPCSession(url)
         UID = self.sock.login(sDatabase,sLogin,sPassword)
         if not UID or UID==-1 :
-            ErrorDialog("Connection Refuse...","Please enter valid Login/Password")
+            ErrorDialog("Connection denied.", "Please enter valid login/password.")
           #  self.win.endExecute()
         ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
         if not len(ids_module):
-            ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
-            self.logobj.log_write('Module Not Found',LOG_WARNING, ':base_report_designer not install in  database %s' % (sDatabase))
+            ErrorDialog("Please install base_report_designer module.", "", "Module Uninstalled Error!")
+            self.logobj.log_write('Module not found.',LOG_WARNING, ': base_report_designer not installed in database %s.' % (sDatabase))
             #self.win.endExecute()
         else:
             desktop=getDesktop()
@@ -153,11 +153,11 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
             #docinfo.setUserFieldValue(2,self.win.getListBoxSelectedItem("lstDatabase"))
             #docinfo.setUserFieldValue(3,"")
 
-            ErrorDialog(" You can start creating your report in \n  \t the current document.","After Creating  sending to the server.","Message")
-            self.logobj.log_write('successful login',LOG_INFO, ':successful login from %s  using database %s' % (sLogin, sDatabase))
+            ErrorDialog("You can start creating your report in the current document.", "After creating, sending to the server.", "Message !")
+            self.logobj.log_write('successful login',LOG_INFO, ': successful login from %s using database %s' % (sLogin, sDatabase))
             self.win.endExecute()
 
-      
+
     def btnCancel_clicked( self, oActionEvent ):
         self.win.endExecute()
 
@@ -165,7 +165,7 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         self.win.endExecute()
         Change(None)
         self.win.endExecute()
-        
+
 
 if __name__<>"package" and __name__=="__main__":
     ServerParameter(None)

@@ -4,22 +4,19 @@
         <record id="view_change_product_quantity" model="ir.ui.view">
             <field name="name">Change Product Quantity</field>
             <field name="model">stock.change.product.qty</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Change Product Quantity">
-                    <separator string="Select Quantity" colspan="4"/>
-                    <newline/>
-                    <field name="new_quantity" />
-                    <newline/>
-                    <field name="product_id" invisible="1"/>
-                    <field name="location_id" />
-                    <field name="prodlot_id" />
-                    <separator string="" colspan="4" />
-                    <label string="" colspan="2"/>
-                    <group col="2" colspan="2">
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                        <button name="change_product_qty" string="_Apply" type="object" icon="gtk-apply"/>
+                <form string="Change Product Quantity" version="7.0">
+                    <group string="Select Quantity">
+                        <field name="new_quantity" />
+                        <field name="product_id" invisible="1"/>
+                        <field name="location_id" groups="stock.group_locations"/>
+                        <field name="prodlot_id" groups="stock.group_tracking_lot"/>
                     </group>
+                    <footer>
+                        <button name="change_product_qty" string="_Apply" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

@@ -5,31 +5,24 @@
         <record model="ir.ui.view" id="email_template_form">
             <field name="name">email.template.form</field>
             <field name="model">email.template</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Templates">
-                    <field name="name" required="1"/>
-                    <field name="model_id" required="1" on_change="onchange_model_id(model_id)"/>
-                    <field name="model" invisible="1"/>
-                    <notebook colspan="4">
+                <form string="Templates" version="7.0">
+                  <sheet>
+                    <group col="4">
+                        <field name="name" required="1"/>
+                        <field name="model_id" required="1" on_change="onchange_model_id(model_id)"/>
+                        <field name="model" invisible="1"/>
+                    </group>
+                    <notebook>
                         <page string="Email Details">
-                            <group col="2" colspan="2">
-                                <separator string="Addresses" colspan="2"/>
+                            <group>
                                 <field name="email_from" required="1"/>
                                 <field name="email_to" required="1"/>
                                 <field name="email_cc"/>
                                 <field name="email_bcc"/>
                                 <field name="reply_to"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator string="Options" colspan="2"/>
-                                <field name="lang"/>
-                                <field name="user_signature"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Email Content"/>
                                 <field name="subject" required="1"/>
-                                <notebook  colspan="2">
+                                <notebook  colspan="4">
                                     <page string="Body (Text)">
                                         <field name="body_text" colspan="4" width="250" height="250" nolabel="1"/>
                                     </page>
@@ -38,27 +31,25 @@
                                         <label string="Note: This is Raw HTML." colspan="4"/>
                                     </page>
                                 </notebook>
-                            </group>
-                            <group col="4" colspan="2">
-                                <notebook colspan="4">
-                                    <page string="Dynamic Values Builder">
+                                <field name="user_signature"/>
+                            <notebook colspan="4">
+                                <page string="Dynamic Values Builder">
+                                    <group>
                                         <field name="model_object_field"
                                             domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                            on_change="onchange_sub_model_object_value_field(model_object_field)"
-                                            colspan="4"/>
-                                        <field name="sub_object" readonly="1" colspan="4"/>
+                                            on_change="onchange_sub_model_object_value_field(model_object_field)"/>
+                                        <field name="sub_object" readonly="1"/>
                                         <field name="sub_model_object_field"
                                             domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                            colspan="4"
                                             attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"
                                             on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
-                                        <field name="null_value" colspan="4"
-                                            on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)" />
-                                        <field name="copyvalue" colspan="4"/>
-                                    </page>
-                                </notebook>
-                                <button name="%(wizard_email_template_preview)d" string="Preview Template"
-                                    type="action" colspan="4" target="new" icon="gtk-zoom-fit" context="{'template_id':active_id}"/>
+                                        <field name="null_value" on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)"/>
+                                        <field name="copyvalue"/>
+                                    </group>
+                                </page>
+                            </notebook>
+                            <button name="%(wizard_email_template_preview)d" string="Preview Template"
+                                type="action" colspan="4" target="new" icon="gtk-zoom-fit" context="{'template_id':active_id}"/>
                             </group>
                         </page>
                         <page string="Advanced">
@@ -82,15 +73,18 @@
                                     <field name="track_campaign_item"/>
                                     <field name="message_id"/>
                                     <field name="auto_delete"/>
+                                    <field name="lang"/>
                                 </group>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Attachments" colspan="2"/>
                                 <notebook colspan="2">
                                     <page string="Attach Report">
-                                        <field name="report_template" colspan="4"
-                                            domain="[('model','=',model)]"/>
-                                        <field name="report_name" colspan="4" />
+                                        <group>
+                                            <field name="report_template" colspan="4"
+                                                domain="[('model','=',model)]"/>
+                                            <field name="report_name" colspan="4" />
+                                        </group>
                                     </page>
                                     <page string="Attach existing files">
                                         <field name="attachment_ids" colspan="4" nolabel="1" height="350"/>
@@ -99,6 +93,7 @@
                             </group>
                         </page>
                     </notebook>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -106,7 +101,6 @@
         <record model="ir.ui.view" id="email_template_tree">
             <field name="name">email.template.tree</field>
             <field name="model">email.template</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Templates">
                     <field name="model_id"/>
@@ -123,22 +117,13 @@
         <record id="view_email_template_search" model="ir.ui.view">
            <field name="name">email.template.search</field>
            <field name="model">email.template</field>
-           <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Templates">
-                    <group>
-                        <field name="name"/>
-                        <field name="model_id"/>
-                        <field name="email_to"/>
-                        <separator orientation="vertical"/>
-                        <field name="lang"/>
-                        <field name="subject"/>
-                        <field name="report_name"/>
-                    </group>
-                    <newline/>
+                    <field name="name" filter_domain="['|', '|', '|',('name','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
+                    <field name="lang"/>
+                    <field name="model_id"/>
                     <group expand="0" string="Group by...">
                         <filter string="SMTP Server" domain="[]" context="{'group_by':'mail_server_id'}" icon="terp-folder-orange"/>
-                        <separator orientation="vertical"/>
                         <filter string="Model" domain="[]" context="{'group_by':'model_id'}" icon="terp-accessories-archiver"/>
                     </group>
                </search>
