@@ -123,7 +123,10 @@ openerp.web_linkedin = function(instance) {
                         children_def.resolve(result);
                     });
                 defs.push(children_def.pipe(function(result) {
-                    var defs = _.map(result.people.values || [], function(el) {
+                    result = _.reject(result.people.values || [], function(el) {
+                        return ! el.formattedName;
+                    });
+                    var defs = _.map(result, function(el) {
                         el.__type = "people";
                         return self.create_on_change(el);
                     });
@@ -147,15 +150,15 @@ openerp.web_linkedin = function(instance) {
                 }
                 to_change.mobile = false;
                 to_change.phone = false;
-                _.each(entity.phoneNumbers.values || [], function(el) {
+                _.each((entity.phoneNumbers || {}).values || [], function(el) {
                     if (el.phoneType === "mobile") {
                         to_change.mobile = el.phoneNumber;
                     } else {
                         to_change.phone = el.phoneNumber;
                     }
                 });
-                var positions = entity.positions.values || [];
-                to_change.function = positions ? positions[0].title : false;
+                var positions = (entity.positions || {}).values || [];
+                to_change.function = positions.length > 0 ? positions[0].title : false;
                 /* TODO
                 to_change.linkedinUrl = entity.publicProfileUrl;
                 */
@@ -177,7 +180,7 @@ openerp.web_linkedin = function(instance) {
         init: function(parent, text) {
             this._super(parent, {title:_t("LinkedIn search")});
             this.text = text;
-            this.limit = 15;
+            this.limit = 5;
         },
         start: function() {
             this._super();
@@ -197,38 +200,41 @@ openerp.web_linkedin = function(instance) {
                     encodeURI(this.text), this.limit)).result(function (result) {
                 cdef.resolve(result);
             });
+            var def = cdef.pipe(function(companies) {
+                var lst = companies.companies.values || [];
+                lst = _.first(lst, self.limit);
+                lst = _.map(lst, function(el) {
+                    el.__type = "company";
+                    return el;
+                });
+                console.debug("Linkedin companies found:", lst.length, lst);
+                return self.display_result(lst, self.$(".oe_linkedin_pop_c"));
+            });
             IN.API.PeopleSearch().fields(commonPeopleFields).
                 params({"keywords": this.text, "count": this.limit}).result(function(result) {
                 pdef.resolve(result);
             });
-            return $.when(cdef, pdef).then(function(companies, people) {
-                var lst = companies.companies.values || [];
+            var def2 = pdef.pipe(function(people) {
                 var plst = people.people.values || [];
-                lst = _.initial(lst, _.min([self.limit / 2, plst.length]));
-                _.map(lst, function(el) {
-                    el.__type = "company";
-                    return el;
-                });
-                plst = _.first(plst, self.limit - lst.length)
-                _.map(plst, function(el) {
+                plst = _.first(plst, self.limit);
+                plst = _.map(plst, function(el) {
                     el.__type = "people";
                     return el;
                 });
-                lst = plst.concat(lst);
-                console.log("Linkedin search found:", lst.length, lst);
-                self.result = lst;
-                self.display_result();
+                console.debug("Linkedin people found:", plst.length, plst);
+                return self.display_result(plst, self.$(".oe_linkedin_pop_p"));
             });
+            return $.when(def, def2);
         },
-        display_result: function() {
+        display_result: function(result, $elem) {
             var self = this;
             var i = 0;
             var $row;
-            _.each(self.result, function(el) {
+            _.each(result, function(el) {
                 var pc = new instance.web_linkedin.EntityWidget(self, el);
                 if (i % 5 === 0) {
                     $row = $("<div style='display: table-row;width:100%'/>");
-                    $row.appendTo(self.$(">div"));
+                    $row.appendTo($elem);
                 }
                 pc.appendTo($row);
                 pc.$element.css("display", "table-cell");
@@ -239,8 +245,8 @@ openerp.web_linkedin = function(instance) {
                 });
                 i++;
             });
-            if (self.result.length === 0) {
-                self.$(">div").text(_t("No results found"));
+            if (result.length === 0) {
+                $elem.text(_t("No results found"));
             }
         },
     });
