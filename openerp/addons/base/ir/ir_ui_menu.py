@@ -269,8 +269,13 @@ class ir_ui_menu(osv.osv):
             if menu.action and menu.action.type in ('ir.actions.act_window','ir.actions.client') and menu.action.res_model:
                 obj = self.pool.get(menu.action.res_model)
                 if obj._needaction:
+                    dom = []
+                    if menu.action.type=='ir.actions.act_window':
+                        dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
+                    else:
+                        dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
                     res[menu.id]['needaction_enabled'] = obj._needaction
-                    res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, menu.action.domain and eval(menu.action.domain), context=context)
+                    res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, dom, context=context)
         return res
 
     _columns = {

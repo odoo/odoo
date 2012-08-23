@@ -879,6 +879,8 @@ class act_client(osv.osv):
                                 "is no central tag repository across clients."),
         'res_model': fields.char('Destination Model', size=64, 
             help="Optional model, mostly used for needactions."),
+        'context': fields.char('Context Value', size=250, required=True,
+            help="Context dictionary as Python expression, empty by default (Default: {})"),
         'params': fields.function(_get_params, fnct_inv=_set_params,
                                   type='binary', 
                                   string="Supplementary arguments",
@@ -888,6 +890,7 @@ class act_client(osv.osv):
     }
     _defaults = {
         'type': 'ir.actions.client',
+        'context': '{}',
 
     }
 act_client()
