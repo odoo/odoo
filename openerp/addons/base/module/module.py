@@ -18,12 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+import base64
+from docutils.core import publish_string
 import imp
 import logging
 import re
 import urllib
 import zipimport
-import base64
 
 from openerp import modules, pooler, release, tools, addons
 from openerp.tools.parse_version import parse_version
@@ -93,6 +95,15 @@ class module(osv.osv):
             _logger.debug('Error when trying to fetch informations for '
                           'module %s', name, exc_info=True)
         return info
+
+    def _get_desc(self, cr, uid, ids, field_name=None, arg=None, context=None):
+        res = dict.fromkeys(ids, '')
+        for module in self.browse(cr, uid, ids, context=context):
+            desc = self.get_module_info(module.name).get('description', '')
+            overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
+            output = publish_string(source=desc, writer_name='html', settings_overrides=overrides)
+            res[module.id] = output
+        return res
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
@@ -182,7 +193,7 @@ class module(osv.osv):
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
         'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
         'summary': fields.char('Summary', size=64, readonly=True, translate=True),
-        'description': fields.text("Description", readonly=True, translate=True),
+        'description': fields.function(_get_desc, string='Description', type='html', method=True, readonly=True, store=True),
         'author': fields.char("Author", size=128, readonly=True),
         'maintainer': fields.char('Maintainer', size=128, readonly=True),
         'contributors': fields.text('Contributors', readonly=True),

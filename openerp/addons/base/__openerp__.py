@@ -25,20 +25,21 @@
     'name': 'Base',
     'version': '1.3',
     'category': 'Hidden',
-    'description': """The kernel of OpenERP, needed for all installation.""",
+    'description': """
+The kernel of OpenERP, needed for all installation.
+===================================================
+""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [],
-    'init_xml': [
+    'data': [
         'base_data.xml',
         'security/base_security.xml',
         'base_menu.xml',
         'res/res_security.xml',
         'res/res_config.xml',
-        'data/res.country.state.csv'
-    ],
-    'update_xml': [
+        'data/res.country.state.csv',
         'ir/wizard/wizard_menu_view.xml',
         'ir/ir.xml',
         'ir/ir_filters.xml',
@@ -75,7 +76,7 @@
         'res/res_widget_view.xml',
         'res/res_widget_data.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'base_demo.xml',
         'res/res_partner_demo.xml',
         'res/res_partner_demo.yml',
