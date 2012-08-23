@@ -42,21 +42,20 @@ openerp_mail_followers = function(session, mail) {
             // any other method to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
-            self.add_subtype();
+            self.search_subtype();
             this.$element.find('ul.oe_mail_recthread_subtype').hide()
+            this.$element.find('ul.oe_mail_recthread_subtype').click(function () {
+                var subtypelist = new Array();
+                _($(this).find('.oe_msg_subtype_check')).each(function (record){
+                   if($(record).is(':checked')) {
+                       subtypelist.push(parseInt($(record).attr('id')))}
+                 });
+                 self.ds_model.call('message_subscribe_udpate_subtypes',[[self.view.datarecord.id],self.session.uid,subtypelist])
+            })
             this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
             if (! this.params.display_control) {
                 this.$element.find('button.oe_mail_button_followers').hide();
                  }
-            this.$element.find('ul.oe_mail_recthread_subtype').click(function () {
-                var sublist = new Array();
-                _($(this).find('.oe_msg_subtype_check')).each(function (record){
-                   if($(record).is(':checked')) {
-                      sublist.push(parseInt($(record).attr('id')))
-                   }
-                });
-                self.ds_model.call('message_subscribe_udpate_subtypes',[[self.view.datarecord.id],self.session.uid,sublist])
-                })
             this.$element.find('button.oe_mail_button_follow').click(function () {
                 self.do_follow();
                 self.$element.find('ul.oe_mail_recthread_subtype').show()
@@ -72,6 +71,7 @@ openerp_mail_followers = function(session, mail) {
 
         _check_visibility: function() {
             this.$element.toggle(this.view.get("actual_mode") !== "create");
+            if(this.view.get("actual_mode") == "create"){this.search_subtype();}
         },
 
         destroy: function () {
@@ -132,25 +132,25 @@ openerp_mail_followers = function(session, mail) {
         read_subtype: function(records) {
             var self = this
             var subtype_list = this.$element.find('ul.oe_mail_recthread_subtype').empty();
-             var follow_ids = this.follow_model.call('search',[[['res_model','=',this.ds_model.model],['res_id','=',this.view.datarecord.id],['user_id','=',this.session.uid]]])
-             follow_ids.then(function (record){
-                var msg_subtype = self.follow_model.call('read',  [record,['subtype_ids']]);
-                if(msg_subtype){
-                    msg_subtype.then(function (subtype){
-                        _(subtype[0].subtype_ids).each(function (subtype_id){
-                            self.$element.find('.oe_msg_subtype_check[id=' + subtype_id + ']')[0].checked=true
-                        });
-                    })}
-             });
-             _(records).each(function (record) {
+            var follow_ids = this.follow_model.call('search',[[['res_model','=',this.ds_model.model],['res_id','=',this.view.datarecord.id],['user_id','=',this.session.uid]]])
+            follow_ids.then(function (record){
+               var follow_read = self.follow_model.call('read',  [record,['subtype_ids']]);
+               follow_read.then(function (follow_record){
+                   if(follow_record.length != 0){
+                   _(follow_record[0].subtype_ids).each(function (subtype_id){
+                       self.$element.find('.oe_msg_subtype_check[id=' + subtype_id + ']')[0].checked=true
+                   });}
+               })
+            });
+            _(records).each(function (record) {
                 $(session.web.qweb.render('mail.subtype.ids', {'record': record})).appendTo(subtype_list);
-             });
-             },
+            });
+            },
             
         do_follow: function () {
             return this.ds_model.call('message_subscribe', [[this.view.datarecord.id]]).pipe(this.proxy('set_value'));
         },
-        add_subtype: function () {
+        search_subtype: function () {
           return this.sub_model.call('search', [[['model_ids.model','=',this.view.model]]]).pipe(this.proxy('subtype_value'));
         },
 
