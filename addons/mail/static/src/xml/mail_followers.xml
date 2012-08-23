@@ -3,7 +3,7 @@
 
     <!--
         followers main template
-        Template used to display the followers and the actions in a record.
+        Template used to display the followers, the actions and the subtypes in a record.
         -->
     <div t-name="mail.followers" class="oe_mail_recthread_aside">
         <div class="oe_mail_recthread_actions">
@@ -27,7 +27,12 @@
     <li t-name="mail.followers.partner">
         <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
         <a t-attf-href="#model=res.users&amp;id=#{record.id}"><t t-raw="record.name"/></a>
-    </li>
+    </li>\
+    
+    <!--
+        record_thread.subtype template
+        Template used to display subtype of record
+    -->
     <li t-name="mail.record_thread.subtype">
         <table width="50%">
             <tr>
