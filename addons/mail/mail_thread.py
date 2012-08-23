@@ -143,7 +143,8 @@ class mail_thread(osv.Model):
             res[notif.message_id.res_id]['message_unread'] = True
 
         for thread in self.browse(cr, uid, ids, context=context):
-            res[thread.id]['message_summary'] = "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(thread.message_comment_ids), len(thread.message_follower_ids))
+            cls = res[thread.id]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
+            res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_comment_ids), len(thread.message_follower_ids))
             res[thread.id]['message_is_follower'] = user.partner_id.id in [follower.id for follower in thread.message_follower_ids]
         return res
 
