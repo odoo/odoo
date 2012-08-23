@@ -55,7 +55,6 @@ try:
     from html2text import html2text
 except ImportError:
     html2text = None
-import contextlib
 
 import openerp.loglevels as loglevels
 import openerp.pooler as pooler
@@ -1142,19 +1141,36 @@ class UnquoteEvalContext(defaultdict):
         return unquote(key)
 
 
-class MuteFilter(logging.Filter):
+class mute_logger(object):
+    """Temporary suppress the logging.
+    Can be used as context manager or decorator.
+
+        @mute_logger('openerp.plic.ploc')
+        def do_stuff():
+            blahblah()
+
+        with mute_logger('openerp.foo.bar'):
+            do_suff()
+
+    """
+    def __init__(self, *loggers):
+        self.loggers = loggers
+
     def filter(self, record):
         return 0
 
-@contextlib.contextmanager
-def mute_logger(*loggers):
-    mute = MuteFilter()
-    for logger in loggers:
-        logging.getLogger(logger).addFilter(mute)
+    def __enter__(self):
+        for logger in self.loggers:
+            logging.getLogger(logger).addFilter(self)
 
-    yield
+    def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):
+        for logger in self.loggers:
+            logging.getLogger(logger).removeFilter(self)
 
-    for logger in loggers:
-        logging.getLogger(logger).removeFilter(mute)
-
+    def __call__(self, func):
+        @wraps(func)
+        def deco(*args, **kwargs):
+            with self:
+                return func(*args, **kwargs)
+        return deco
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
