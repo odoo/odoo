@@ -54,11 +54,17 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var span = h2.find('span:first').hide();
         var input = h2.find('.oe_header_text').css('visibility','visible');
         var attr = h2.closest(".oe_action").data('action_attrs');
+        var ir_act_window = new instance.web.Model("ir.actions.act_window");
         var change_string = function(new_name){
                 attr['string'] = new_name;
-                span.text(new_name).show();
-                input.css('visibility','hidden');
-                self.do_save_dashboard();
+                ir_act_window.call("write",[[parseInt(attr['name'])],{'name':new_name}])
+                .done(function(res){
+                    if(!res)return;
+                    span.text(new_name).show();
+                    input.css('visibility','hidden');
+                    self.do_save_dashboard();
+                })
+                
         }
         input.unbind()
         .val(span.text())
