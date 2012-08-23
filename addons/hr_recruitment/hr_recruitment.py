@@ -165,13 +165,11 @@ class hr_applicant(base_stage, osv.Model):
                         date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
                         date_open = datetime.strptime(issue.date_open, "%Y-%m-%d %H:%M:%S")
                         ans = date_open - date_create
-                        date_until = issue.date_open
 
                 elif field in ['day_close']:
                     if issue.date_closed:
                         date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
                         date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
-                        date_until = issue.date_closed
                         ans = date_close - date_create
                 if ans:
                     duration = float(ans.days)

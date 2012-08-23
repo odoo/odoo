@@ -19,16 +19,10 @@
 #
 ##############################################################################
 
-import dateutil.parser
-import email
 import logging
-import re
-import time
 from email.header import decode_header
-from email.message import Message
 
-from osv import osv
-from osv import fields
+from osv import osv, fields
 import tools
 
 _logger = logging.getLogger(__name__)
@@ -84,31 +78,22 @@ class mail_message(osv.Model):
                         ('notification', 'System notification'),
                         ], 'Type',
             help="Message type: email for email message, notification for system "\
-                  "message, comment for other messages such as user replies"),
-
+                 "message, comment for other messages such as user replies"),
         'author_id': fields.many2one('res.partner', 'Author', required=True),
-        'partner_ids': fields.many2many('res.partner',
-            'mail_notification', 'message_id', 'partner_id',
-            'Recipients'),
-
-        'attachment_ids': fields.one2many('ir.attachment', 'res_id',
-            'Attachments', domain=[('res_model','=','mail.message')]),
-
-        'parent_id': fields.many2one('mail.message', 'Parent Message',
-            select=True, ondelete='set null',
-            help="Initial thread message."),
+        'partner_ids': fields.many2many('res.partner', 'mail_notification', 'message_id', 'partner_id', 'Recipients'),
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel',
+            'message_id', 'attachment_id', 'Attachments'),
+        'parent_id': fields.many2one('mail.message', 'Parent Message', select=True, ondelete='set null', help="Initial thread message."),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
-
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.function(get_record_name, type='string',
             string='Message Record Name',
             help="Name get of the related document."),
-
         'notification_ids': fields.one2many('mail.notification', 'message_id', 'Notifications'),
-        'subject': fields.char('Subject', size=128),
+        'subject': fields.char('Subject'),
         'date': fields.datetime('Date'),
-        'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
+        'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
         'body': fields.html('Content'),
     }
 
@@ -117,7 +102,6 @@ class mail_message(osv.Model):
             partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
             return [('notification_ids.partner_id','=',partner_id),('notification_ids.read','=',False)]
         return []
-
 
     def _get_default_author(self, cr, uid, context={}):
         return self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
@@ -233,7 +217,6 @@ class mail_message(osv.Model):
             ('partner_id', '=', partner_id),
             ('message_id', 'in', ids),
         ], context=context)
-        notifications = {}
         for notification in not_obj.browse(cr, uid, not_ids, context=context):
             if notification.message_id.id in ids:
                 pass

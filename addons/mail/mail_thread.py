@@ -19,19 +19,23 @@
 #
 ##############################################################################
 
+import base64
 import dateutil
 import email
 import logging
+import pytz
+import re
+import time
+import xmlrpclib
 from email.utils import parsedate
 from email.message import Message
-from osv import osv, fields
-from mail_message import decode
-import time
+
 import tools
+from mail_message import decode
+from osv import osv, fields
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
-import pytz
-import xmlrpclib
+
 
 _logger = logging.getLogger(__name__)
 
@@ -372,9 +376,8 @@ class mail_thread(osv.Model):
         routes = self.message_route(cr, uid, msg_txt, model,
                                     thread_id, custom_values,
                                     context=context)
-        msg = self.parse_message(cr, uid, msg_txt, save_original=save_original, context=context)
-        if strip_attachments and 'attachments' in msg:
-            del msg['attachments']
+        msg = self.message_parse(cr, uid, msg_txt, save_original=save_original, context=context)
+        if strip_attachments: msg.pop('attachments', None)
         for model, thread_id, custom_values, user_id in routes:
             if self._name != model:
                 context.update({'thread_model': model})
@@ -445,7 +448,50 @@ class mail_thread(osv.Model):
             self.write(cr, uid, ids, update_vals, context=context)
         return True
 
-    def parse_message(self, cr, uid, message, save_original=False, context=None):
+
+    def _message_extract_payload(self, message, save_original=False):
+        """Extract body as HTML and attachments from the mail message"""
+        attachments = []
+        body = u''
+        if save_original:
+            attachments.append(('original_email.eml', message.as_string()))
+        if not message.is_multipart() or 'text/' in message.get('content-type', ''):
+            encoding = message.get_content_charset()
+            body = message.get_payload(decode=True)
+            body = tools.ustr(body, encoding, errors='replace')
+        else:
+            alternative = (message.get_content_type() == 'multipart/alternative')
+            for part in message.walk():
+                if part.get_content_maintype() == 'multipart':
+                    continue # skip container
+                filename = part.get_filename() # None if normal part
+                encoding = part.get_content_charset() # None if attachment
+                # 1) Explicit Attachments -> attachments
+                if filename or part.get('content-disposition','').strip().startswith('attachment'):
+                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+                    continue
+                # 2) text/plain -> <pre/>
+                if part.get_content_type() == 'text/plain' and (not alternative or not body):
+                    insertion_point = body.find('</html>')
+                    # plain text is wrapped in <pre/> to preserve formatting
+                    text = u'<pre>%s</pre>' % tools.ustr(part.get_payload(decode=True),
+                                                         encoding, errors='replace')
+                    body = body[:insertion_point] + text + body[:insertion_point]
+                # 3) text/html -> raw
+                elif part.get_content_type() == 'text/html':
+                    html = tools.ustr(part.get_payload(decode=True), encoding, errors='replace')
+                    if alternative:
+                        body = html
+                    else:
+                        html = re.sub('(?i)</?html>', '', html)
+                        insertion_point = body.find('</html>')
+                        body = body[:insertion_point] + text + body[:insertion_point]
+                # 4) Anything else -> attachment
+                else:
+                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+        return body, attachments
+
+    def message_parse(self, cr, uid, message, save_original=False, context=None):
         """Parses a string or email.message.Message representing an
            RFC-2822 email, and returns a generic dict holding the
            message details.
@@ -453,8 +499,8 @@ class mail_thread(osv.Model):
            :param message: the message to parse
            :type message: email.message.Message | string | unicode
            :param bool save_original: whether the returned dict
-               should include an ``original`` entry with the base64
-               encoded source of the message.
+               should include an ``original`` attachment containing
+               the source of the message
            :rtype: dict
            :return: A dict with the following structure, where each
                     field may not be present if missing in original
@@ -462,113 +508,58 @@ class mail_thread(osv.Model):
 
                     { 'message-id': msg_id,
                       'subject': subject,
-                      'from': from,          --> author_id
-                      'to': to,              --> partner_ids
-                      'cc': cc,              --> partner_ids
-                      'headers' : { 'X-Mailer': mailer,  --> to remove
-                                    #.. all X- headers...
-                                  },
-                      'content_subtype': msg_mime_subtype,  --> to remove
-                      'body': plaintext_body           --> keep body
+                      'from': from,
+                      'to': to,
+                      'cc': cc,
+                      'body': unified_body, 
                       'body_html': html_body,               --> to remove
                       'attachments': [('file1', 'bytes'),
-                                       ('file2', 'bytes') }
-                       # ...
-                       'original': source_of_email,         --> attachment document
+                                      ('file2', 'bytes')}
                     }
         """
-        msg_txt = message
-        attachments = []
-        if isinstance(message, str):
-            msg_txt = email.message_from_string(message)
+        msg_dict = {}
+        if not isinstance(message, Message):
+            if isinstance(message, unicode):
+                # Warning: message_from_string doesn't always work correctly on unicode,
+                # we must use utf-8 strings here :-(
+                message = message.encode('utf-8')
+            message = email.message_from_string(message)
 
-        # Warning: message_from_string doesn't always work correctly on unicode,
-        # we must use utf-8 strings here :-(
-        if isinstance(message, unicode):
-            message = message.encode('utf-8')
-            msg_txt = email.message_from_string(message)
-
-        message_id = msg_txt.get('message-id', False)
-        msg = {}
-
-        if save_original:
-            msg_original = message.as_string() if isinstance(message, Message) \
-                                                  else message
-            attachments.append(('original_email.eml', msg_original))
-
+        message_id = message['message-id']
         if not message_id:
             # Very unusual situation, be we should be fault-tolerant here
-            message_id = time.time()
-            msg_txt['message-id'] = message_id
-            _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
+            message_id = "<%s@localhost>" % time.time()
+            _logger.debug('Parsing Message without message-id, generating a random one: %s', message_id)
+        msg_dict['message_id'] = message_id
 
-        msg_fields = msg_txt.keys()
+        if 'Subject' in message:
+            msg_dict['subject'] = decode(message.get('Subject'))
 
-        msg['message_id'] = message_id
+        # Envelope fields not stored in  mail.message but made available for message_new() 
+        msg_dict['from'] = decode(message.get('from'))
+        msg_dict['to'] = decode(message.get('to'))
+        msg_dict['cc'] = decode(message.get('cc'))
 
-        if 'Subject' in msg_fields:
-            msg['subject'] = decode(msg_txt.get('Subject'))
-
-        #if 'Content-Type' in msg_fields:
-        #    msg['content-type'] = msg_txt.get('Content-Type')
-
-        # find author_id
-
-        if 'From' in msg_fields:
-            author_ids = self._message_find_partners(cr, uid, msg_txt, ['From'], context=context)
-            #decode(msg_txt.get('From') or msg_txt.get_unixfrom()) )
+        if 'From' in message:
+            author_ids = self._message_find_partners(cr, uid, message, ['From'], context=context)
             if author_ids:
-                msg['author_id'] = author_ids[0]
+                msg_dict['author_id'] = author_ids[0]
+        partner_ids = self._message_find_partners(cr, uid, message, ['From','To','Cc'], context=context)
+        msg_dict['partner_ids'] = partner_ids
 
-        partner_ids = self._message_find_partners(cr, uid, msg_txt, ['From','To','Delivered-To','CC','Cc'], context=context)
-        msg['partner_ids'] = partner_ids
-
-        if 'Date' in msg_fields:
-            date_hdr = decode(msg_txt.get('Date'))
+        if 'Date' in message:
+            date_hdr = decode(message.get('Date'))
             # convert from email timezone to server timezone
             date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
             date_server_datetime_str = date_server_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            msg['date'] = date_server_datetime_str
-
-        #if 'Content-Transfer-Encoding' in msg_fields:
-        #    msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
-
-        #if 'References' in msg_fields:
-        #    msg['references'] = msg_txt.get('References')
+            msg_dict['date'] = date_server_datetime_str
 
         # FP Note: todo - find parent_id
-        if 'In-Reply-To' in msg_fields:
+        if 'In-Reply-To' in message:
             pass
-
-        if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', ''):
-            encoding = msg_txt.get_content_charset()
-            body = msg_txt.get_payload(decode=True)
-            if 'text/html' in msg.get('content-type', ''):
-                msg['body'] =  body
-
-        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
-            body = ""
-            for part in msg_txt.walk():
-                if part.get_content_maintype() == 'multipart':
-                    continue
-
-                encoding = part.get_content_charset()
-                filename = part.get_filename()
-                if part.get_content_maintype()=='text':
-                    content = part.get_payload(decode=True)
-                    if filename:
-                        attachments.append(( filename, msg_original))
-                    content = tools.ustr(content, encoding)
-                    msg['body'] = content
-                elif part.get_content_maintype() in ('application', 'image'):
-                    if filename:
-                        attachments.append(( filename, part.get_payload(decode=True)))
-                    else:
-                        res = part.get_payload(decode=True)
-                        msg['body'] += tools.ustr(res, encoding)
-
-        msg['attachments'] = attachments
-        return msg
+        
+        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message)
+        return msg_dict
 
     #------------------------------------------------------
     # Note specific
@@ -610,9 +601,11 @@ class mail_thread(osv.Model):
                 content = content.encode('utf-8')
             data_attach = {
                 'name': name,
-                'datas': content,
+                'datas': base64.b64encode(str(content)),
                 'datas_fname': name,
                 'description': name,
+                'res_model': context.get('thread_model') or self._name,
+                'res_id': thread_id,
             }
             to_attach.append((0,0, data_attach))
 
@@ -626,6 +619,7 @@ class mail_thread(osv.Model):
             'parent_id': parent_id,
             'attachment_ids': to_attach
         })
+        for x in ('from','to','cc'): values.pop(x, None) # Avoid warnings 
         return self.pool.get('mail.message').create(cr, uid, values, context=context)
 
 
