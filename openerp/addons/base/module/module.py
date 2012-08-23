@@ -193,7 +193,8 @@ class module(osv.osv):
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
         'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
         'summary': fields.char('Summary', size=64, readonly=True, translate=True),
-        'description': fields.function(_get_desc, string='Description', type='html', method=True, readonly=True, store=True),
+        'description': fields.text("Description", readonly=True, translate=True),
+        'description_html': fields.function(_get_desc, string='Description HTML', type='html', method=True, readonly=True),
         'author': fields.char("Author", size=128, readonly=True),
         'maintainer': fields.char('Maintainer', size=128, readonly=True),
         'contributors': fields.text('Contributors', readonly=True),
@@ -233,7 +234,7 @@ class module(osv.osv):
                 ('AGPL-3', 'Affero GPL-3'),
                 ('Other OSI approved licence', 'Other OSI Approved Licence'),
                 ('Other proprietary', 'Other Proprietary')
-            ], string='License', readonly=True),
+        ], string='License', readonly=True),
         'menus_by_module': fields.function(_get_views, string='Menus', type='text', multi="meta", store=True),
         'reports_by_module': fields.function(_get_views, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, string='Views', type='text', multi="meta", store=True),
