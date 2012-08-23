@@ -426,25 +426,6 @@
             <field name="filter" eval="True"/>
         </record>
 
-        <record id="view_payterm_form" model="ir.ui.view">
-            <field name="name">res.payterm</field>
-            <field name="model">res.payterm</field>
-            <field name="arch" type="xml">
-                <form string="Payment Term" version="7.0">
-                    <group>
-                        <field name="name"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="action_payterm_form" model="ir.actions.act_window">
-            <field name="name">Payment term</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.payterm</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_payterm_form"/>
-        </record>
-
         <!-- Categories -->
         <record id="view_partner_category_form" model="ir.ui.view">
             <field name="name">Partner Categories</field>
