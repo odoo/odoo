@@ -137,6 +137,8 @@ class res_company(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
+    def _set_rml_footer(self, cr, uid, ids, footer=False, context=None):
+        return self.write(cr, uid, ids, {'rml_footer': footer}, context)
     def on_change_header(self, cr, uid, ids, customize_footer, phone, email, fax, website, vat, reg=False, context=None):
         val = []
         if customize_footer:
@@ -147,7 +149,9 @@ class res_company(osv.osv):
         if website: val.append(_('Website: ')+website)
         if vat: val.append(_('TIN: ')+vat)
         if reg: val.append(_('Reg: ')+reg)
-        return {'value': {'rml_footer':' | '.join(val)}}
+        footer = ' | '.join(val)
+        self._set_rml_footer(cr, uid, ids, footer, context=context)
+        return {'value': {'rml_footer': footer}}
 
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
