@@ -2856,7 +2856,6 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     self.display_value["" + item.id] = item.name;
                     self.set({value: item.id});
                 } else if (item.action) {
-                    self.floating = true;
                     item.action();
                     // Cancel widget blurring, to avoid form blur event
                     self.trigger('focused');
