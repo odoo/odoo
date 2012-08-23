@@ -29,6 +29,7 @@ class ir_translation(osv.Model):
         'gengo_comment': fields.text("Comments"),
         'gengo_translation': fields.boolean("Translation", help='This term has to be translated by Gengo automatically'),
         'gengo_control': fields.boolean('Active'),
+        'job_id':fields.char('Gengo Job Id',size=32),
     }
 
     _defaults = {

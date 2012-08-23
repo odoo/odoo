@@ -28,12 +28,12 @@ Automated Translations through Gengo API
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
+    'init_xml': ['gengo_sync_schedular_data.xml'],
     'update_xml': [
         'ir_translation.xml',
         'res_company_view.xml',
         'res_lang_view.xml',
-        'wizard/gengo_response_scheduler.xml',
+
         'wizard/alert_message_gengo.xml',
            ],
     'demo_xml': [],

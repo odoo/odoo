@@ -24,7 +24,7 @@ from tools.translate import _
 from mygengo import MyGengo
 import re
 
-REQUEST_LIMIT = 10
+LIMIT = 20
 
 LANG_MAPPING = {
     'ar': 'Arabic',
@@ -73,13 +73,6 @@ class gengo_response(object):
     """
     """
     def __init__(self, jobs):
-        response = jobs['response']
-        job = []
-        if isinstance(response, list):
-            job = [gengo_job(value) for value in response]
-        else:
-            job = [gengo_job(value) for value in response.values()]
-        jobs.update({'response': job})
         self._data = jobs
 
     def __getitem__(self, name):
@@ -123,37 +116,33 @@ class JobsMeta(orm.AbstractModel):
                 public_key=gengo_parameter_pool.company_id.gengo_public_key.encode('ascii'),
                 private_key=gengo_parameter_pool.company_id.gengo_private_key.encode('ascii'),
                 sandbox=True,
-            )
+            )   
             return gengo
         except Exception, e:
             raise osv.except_osv(_('Warning !'), _(e))
 
-    def pack_jobs_request(self, cr, uid, translation_term_id, context):
+    def pack_jobs_request(self, cr, uid, term_ids, trg_lang, context):
         jobs = {}
         auto_approve = 0
         gengo_parameter_pool = self.pool.get('res.users').browse(cr, uid, uid, context)
         translation_pool = self.pool.get('ir.translation')
-
-        if gengo_parameter_pool.company_id.gengo_auto_approve == True:
+        if gengo_parameter_pool.company_id.gengo_auto_approve:
             auto_approve = 1
+        g_lang = LANG_CODE_MAPPING.get(trg_lang)
+        if g_lang:
+            for terms in translation_pool.browse(cr, uid, term_ids, context):
+                #NOTE: Discard none string and only special char string 
+                if re.search(r"[a-z A-Z]", terms.src) and terms.src:
+                    job = {'type': 'text',
+                            'slug': 'single::English to' + LANG_MAPPING.get(g_lang),
+                            'tier': gengo_parameter_pool.company_id.gengo_tier,
+                            'body_src': terms.src,
+                            'lc_src': 'en',
+                            'lc_tgt': g_lang,
+                            'auto_approve': auto_approve,
+                            'comment': gengo_parameter_pool.company_id.gengo_comment,
+                            }
+                    jobs.update({terms.id: job})
+        return {'jobs': jobs}
 
-        for key, value in LANG_CODE_MAPPING.items():
-            if key == context['language_code']:
-                for terms in translation_pool.read(cr, uid, translation_term_id, context=None):
-                    translation_pool.write(cr, uid, translation_term_id, {'state': 'inprogress'})
-                    if re.search(r"[a-z A-Z]", terms['src']):
-                        job = {'type': 'text',
-                                'slug': 'single::English to' + LANG_MAPPING.get(value),
-                                'tier': gengo_parameter_pool.company_id.gengo_tier,
-                                'body_src': terms['src'],
-                                'lc_src': 'en',
-                                'lc_tgt': value,
-                                'auto_approve': auto_approve,
-                                'comment': gengo_parameter_pool.company_id.gengo_comment,
-                                }
-                        jobs.update({terms['id']: job})
-                return {'jobs': jobs}
-
-    def unpack_jobs_response(self, jobs):
-        return gengo_response(jobs)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
