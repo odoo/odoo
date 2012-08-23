@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -33,19 +34,16 @@ The user can also publish notes.
     """,
     'author': 'OpenERP SA',
     'depends': ['base'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
-        'wizard/board_menu_create_view.xml', 
         'board_view.xml',
-        'board_data_admin.xml',
-        'board_data_home.xml',
         'board_mydashboard_view.xml'
     ],
-    'demo_xml': [
-        'board_demo.xml'
-    ],
+    'js': ['static/src/js/dashboard.js'],
+    'css': ['static/src/css/dashboard.css'],
+    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'certificate': '0076912305725',
     'images': ['images/1_dashboard_definition.jpeg','images/2_publish_note.jpeg','images/3_admin_dashboard.jpeg',],
 }

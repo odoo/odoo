@@ -5,7 +5,6 @@
     <record model="ir.ui.view" id="view_asset_asset_report_tree">
         <field name="name">asset.asset.report.tree</field>
         <field name="model">asset.asset.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Assets">
                 <field name="name" invisible="1"/>
@@ -28,7 +27,6 @@
     <record model="ir.ui.view" id="action_account_asset_report_graph">
         <field name="name">asset.asset.report.graph</field>
         <field name="model">asset.asset.report</field>
-        <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Assets Analysis" type="bar">
                 <field name="asset_id"/>
@@ -40,56 +38,51 @@
     <record id="view_asset_asset_report_search" model="ir.ui.view">
         <field name="name">asset.asset.report.search</field>
         <field name="model">asset.asset.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Assets Analysis">
-                <group col="10" colspan="12">
-                    <field name="purchase_date"/>
-                    <field name="depreciation_date"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Assets in draft state"/>
-                    <filter string="Running" icon="terp-check" domain="[('state','=','open')]" help="Assets in running state"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Posted" name="posted" icon="terp-camera_test" domain="[('move_check','=',True)]" help="Posted depreciation lines"
-                        context="{'unposted_value_visible': 0}"/>
-                    <separator orientation="vertical"/>
-                    <field name="asset_id"/>
-                    <field name="asset_category_id"/>
-                </group>
-                <newline/>
+                <field name="purchase_date"/>
+                <field name="depreciation_date"/>
+                <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Assets in draft state"/>
+                <filter string="Running" icon="terp-check" domain="[('state','=','open')]" help="Assets in running state"/>
+                <separator/>
+                <filter string="Posted" name="posted" icon="terp-camera_test" domain="[('move_check','=',True)]" help="Posted depreciation lines" context="{'unposted_value_visible': 0}"/>
+                <field name="asset_id"/>
+                <field name="asset_category_id"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="partner_id"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </group>
-                <newline/>
                 <group expand="1" string="Group By...">
                     <filter string="Asset" name="asset" context="{'group_by':'asset_id'}"/>
                     <filter string="Asset Category" name="asset_category" icon="terp-stock_symbol-selection" context="{'group_by':'asset_category_id'}"/>
-                    <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <separator orientation="vertical" />
                     <filter string="Purchase Date" icon="terp-go-month"
-	                        domain="[]" context="{'group_by':'purchase_date'}" help="Date of asset purchase"/>
-                    <separator orientation="vertical" />
+                            domain="[]" context="{'group_by':'purchase_date'}" help="Date of asset purchase"/>
                     <filter string="Depreciation Date" icon="terp-go-today"
-	                        domain="[]" context="{'group_by':'depreciation_date'}" help="Date of depreciation"/>
+                            domain="[]" context="{'group_by':'depreciation_date'}" help="Date of depreciation"/>
                 </group>
-            </search>	
+            </search>    
         </field>
     </record>
-	
-    <record model="ir.actions.act_window" id="action_asset_asset_report">	
+    
+    <record model="ir.actions.act_window" id="action_asset_asset_report">    
         <field name="name">Assets Analysis</field>
         <field name="res_model">asset.asset.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_asset_asset_report_search"/>
         <field name="context">{'search_default_year':1,'search_default_this_month':1,'search_default_asset_category':1, 'search_default_posted':1, 'group_by':[], 'group_by_no_leaf':1}</field>
-        <field name="help">From this report, you can have an overview on all depreciation. The tool search can also be used to personalise your Assets reports and so, match this analysis to your needs;</field>
+        <field name="help" type="html">
+          <p>
+            From this report, you can have an overview on all depreciation. The
+            tool search can also be used to personalise your Assets reports and
+            so, match this analysis to your needs;
+          </p>
+        </field>
     </record>
     
     <menuitem action="action_asset_asset_report"
-	          id="menu_action_asset_asset_report"
-	          parent="account.menu_finance_statistic_report_statement"/>
+              id="menu_action_asset_asset_report"
+              parent="account.menu_finance_reporting"/>
 </data>
 </openerp>

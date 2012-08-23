@@ -104,7 +104,7 @@ class change_standard_price(osv.osv_memory):
         if context is None:
             context = {}
         rec_id = context and context.get('active_id', False)
-        assert rec_id, _('Active ID is not set in Context')
+        assert rec_id, _('Active ID is not set in Context.')
         prod_obj = self.pool.get('product.product')
         res = self.browse(cr, uid, ids, context=context)
         datas = {

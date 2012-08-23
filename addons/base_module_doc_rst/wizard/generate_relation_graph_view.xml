@@ -5,12 +5,14 @@
         <record id="view_relationship_graph" model="ir.ui.view">
             <field name="name">create.relation.graph.form</field>
             <field name="model">create.relation.graph</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Generate Relationship Graph">
+                <form string="Generate Relationship Graph" version="7.0">
                     <separator string="Relationship Graphs" colspan="6"/>
-                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    <button name="get_graph" string="Create Graphs" type="object" icon="gtk-ok"/>
+                    <footer>
+                        <button name="get_graph" string="Create Graphs" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

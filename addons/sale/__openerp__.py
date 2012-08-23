@@ -23,51 +23,48 @@
     'name': 'Sales Management',
     'version': '1.0',
     'category': 'Sales Management',
-    "sequence": 14,
+    'sequence': 14,
+    'summary': 'Quotations, Sale Orders, Invoicing',
     'description': """
 The base module to manage quotations and sales orders.
 ======================================================
 
 Workflow with validation steps:
 -------------------------------
-    * Quotation -> Sales order -> Invoice
+    * **Quotation** -> **Sales order** -> **Invoice**
 
-Invoicing methods:
-------------------
-    * Invoice on order (before or after shipping)
-    * Invoice on delivery
-    * Invoice on timesheets
-    * Advance invoice
+Create Invoice:
+---------------
+    * Invoice on Demand
+    * Invoice on Delivery Order
+    * Invoice Before Delivery
 
 Partners preferences:
 ---------------------
-    * shipping
-    * invoicing
-    * incoterm
+    * Incoterm
+    * Shipping
+    * Invoicing
 
-Products stocks and prices
---------------------------
+Products stocks and prices:
+---------------------------
 
-Delivery methods:
------------------
-    * all at once
-    * multi-parcel
-    * delivery costs
+Delivery method:
+----------------
+    * The Poste
+    * Free Delivery Charges
+    * Normal Delivery Charges
+    * Based on the Delivery Order(if not Add to sale order) 
 
 Dashboard for Sales Manager that includes:
 ------------------------------------------
-    * Quotations
-    * Sales by Month
-    * Graph of Sales by Salesman in last 90 days
-    * Graph of Sales per Customer in last 90 days
-    * Graph of Sales by Product's Category in last 90 days
+    * My Quotations
+    * Monthly Turnover (Graph)
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/deliveries_to_invoice.jpeg','images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
     'depends': ['stock', 'procurement', 'board', 'account_voucher'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',
         'wizard/sale_make_invoice.xml',
@@ -87,7 +84,7 @@ Dashboard for Sales Manager that includes:
         'edi/sale_order_action_data.xml',
         'res_config_view.xml',
     ],
-    'demo_xml': ['sale_demo.xml'],
+    'demo': ['sale_demo.xml'],
     'test': [
         'test/sale_order_demo.yml',
         'test/picking_order_policy.yml',

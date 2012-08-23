@@ -4,21 +4,40 @@
         <record id="view_sale_advance_payment_inv" model="ir.ui.view">
             <field name="name">Advance Invoice</field>
             <field name="model">sale.advance.payment.inv</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Advance Invoice" version="7.0">
-                    <header>
-                        <button name="create_invoices" string="Create Invoice" type="object" icon="gtk-go-forward" context="{'open_invoices': False}"/>
-                        <button name="create_invoices" string="Create and view Invoice" type="object" icon="terp-camera_test" context="{'open_invoices': True}" />
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    </header>
-                    <group col="4">
-                        <field name="advance_payment_method" on_change="onchange_advance_payment_method(advance_payment_method,product_id)"/>
-                        <newline />
+                    <group>
+                        <field name="advance_payment_method"
+                            on_change="onchange_method(advance_payment_method, product_id)"/>
                         <field name="qtty" invisible="1"/>
-                        <field name="product_id" on_change="onchange_advance_payment_method(advance_payment_method,product_id)" context="{'search_default_services':1}" attrs="{'invisible': [('advance_payment_method','=','percentage')]}" colspan="2"/>
-                        <field name="amount" colspan="2"/>
+                        <field name="product_id"
+                            on_change="onchange_method(advance_payment_method, product_id)"
+                            context="{'search_default_services': 1}"
+                            attrs="{'invisible': [('advance_payment_method','!=','fixed')]}"/>
+                        <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
+                        <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
+                            <field name="amount"
+                                attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}"/>
+                            <label string="%%"
+                                attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}"/>
+                        </div>
                     </group>
+                    <div>
+                        <b><label string="After clicking 'Show Lines to Invoice' button, select lines to invoice and make invoice from the 'More' button." attrs="{'invisible': [('advance_payment_method', '!=', 'lines')]}"/></b>
+                    </div>
+                    <footer>
+                        <button name="create_invoices" string="Create Invoice" type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('advance_payment_method', '=', 'lines')]}"/>
+                        <button name="create_invoices" string="Create and view Invoice" type="object"
+                            context="{'open_invoices': True}" class="oe_highlight"
+                            attrs="{'invisible': [('advance_payment_method', '=', 'lines')]}"/>
+                        <button name="create_invoices" string="Show Lines to Invoice" type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('advance_payment_method', '!=', 'lines')]}"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

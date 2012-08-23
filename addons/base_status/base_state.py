@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields
+from osv import fields, osv
 from tools.translate import _
 
 class base_state(object):
@@ -29,6 +29,7 @@ class base_state(object):
         - ``date_closed`` (datetime field)
         - ``user_id`` (many2one to res.users)
         - ``partner_id`` (many2one to res.partner)
+        - ``email_from`` (char field)
         - ``state`` (selection field)
     """
 
@@ -54,7 +55,7 @@ class base_state(object):
         if not context or not context.get('portal'):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.user_email
+        return user.email
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
@@ -90,6 +91,24 @@ class base_state(object):
             addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
             data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
+
+    def case_escalate(self, cr, uid, ids, context=None):
+        """ Escalates case to parent level """
+        cases = self.browse(cr, uid, ids, context=context)
+        cases[0].state # fill browse record cache, for _action having old and new values
+        data = {'active': True}
+        for case in cases:
+            parent_id = case.section_id.parent_id
+            if parent_id:
+                data['section_id'] = parent_id.id
+                if parent_id.change_responsible and parent_id.user_id:
+                    data['user_id'] = parent_id.user_id.id
+            else:
+                raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
+            self.write(cr, uid, [case.id], data, context=context)
+            case.case_escalate_send_note(parent_id, context=context)
+        self._action(cr, uid, cases, 'escalate', context=context)
+        return True
 
     def case_open(self, cr, uid, ids, context=None):
         """ Opens case """
@@ -167,6 +186,15 @@ class base_state(object):
         for id in ids:
             msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_append_note(cr, uid, [id], body=msg, context=context)
+        return True
+
+    def case_escalate_send_note(self, cr, uid, ids, new_section=None, context=None):
+        for id in ids:
+            if new_section:
+                msg = '%s has been <b>escalated</b> to <b>%s</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context), new_section.name)
+            else:
+                msg = '%s has been <b>escalated</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
         return True
 
     def case_close_send_note(self, cr, uid, ids, context=None):

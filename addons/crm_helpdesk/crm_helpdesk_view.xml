@@ -26,25 +26,26 @@
         <record model="ir.ui.view" id="crm_case_form_view_helpdesk">
             <field name="name">CRM - Helpdesk Support Form</field>
             <field name="model">crm.helpdesk</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Helpdesk Support" version="7.0">
                 <header>
-                    <button name="case_open" string="Open" type="object"
+                    <button name="case_open" string="Open" type="object" class="oe_highlight"
                             states="draft,pending"/>
-                    <button name="case_close" string="Close" type="object"
-                            states="open,draft,pending"/>
+                    <button name="case_close" string="Close" type="object" states="draft,pending"/>
+                    <button name="case_close" string="Close" type="object" states="open" class="oe_highlight"/>
                     <button name="case_pending" string="Pending" type="object"
-                            states="draft,open"/>
-                    <button name="case_reset" string="Reset to Draft" type="object"
+                            states="draft"/>
+                    <button name="case_pending" string="Pending" type="object" 
+                            states="open"/>
+                    <button name="case_reset" string="Reset to Draft" type="object" 
                             states="cancel,done"/>
-                    <button name="case_escalate" string="Escalate" type="object"
+                    <button name="case_escalate" string="Escalate" type="object" 
                             states="open,draft,pending"/>
                     <button name="case_cancel" string="Cancel" type="object"
                             states="draft,open,pending"/>
                     <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
-                <sheet string="Helpdesk Support" layout="auto">
+                <sheet string="Helpdesk Support">
                     <group col="4" class="oe_header">
                         <field name="name" string="Query"/>
                         <field name="section_id" widget="selection"/>
@@ -67,7 +68,7 @@
                                 </group>
                                 <group string="Categorization">
                                     <field name="priority"/>
-                                    <field name="categ_id" context="{'object_id':'crm.helpdesk'}"/>
+                                    <field name="categ_id" domain="[('object_id.model', '=', 'crm.helpdesk')]"/>
                                     <field name="channel_id"/>
                                 </group>
                             </group>
@@ -97,9 +98,10 @@
                         </page>
                     </notebook>
                 </sheet>
-                <footer>
-                    <field name="message_ids" widget="ThreadView"/>
-                </footer>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -109,7 +111,6 @@
         <record model="ir.ui.view" id="crm_case_tree_view_helpdesk">
             <field name="name">CRM - Helpdesk Support Tree</field>
             <field name="model">crm.helpdesk</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Helpdesk Support Tree"
                     colors="black:state=='open';blue:state=='pending';gray:state in ('cancel','done')">
@@ -130,7 +131,6 @@
         <record model="ir.ui.view" id="crm_case_helpdesk_calendar_view">
             <field name="name">CRM - Helpdesk Support Calendar</field>
             <field name="model">crm.helpdesk</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Helpdesk Supports" date_start="date" color="user_id" date_delay="duration">
@@ -146,58 +146,27 @@
         <record id="view_crm_case_helpdesk_filter" model="ir.ui.view">
             <field name="name">CRM - Helpdesk Search</field>
             <field name="model">crm.helpdesk</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Helpdesk">
                     <field name="name" string="Query"/>
-                    <separator orientation="vertical"/>
                     <field name="date"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-check" string="New"
-                        name="current"
-                        domain="[('state','=','draft')]"
-                        help="New Helpdesk Request" />
-                    <filter icon="terp-camera_test"
-                        string="Open"
-                        domain="[('state','=','open')]"
-                        help="Open Helpdesk Request"
-                    />
-                    <filter icon="terp-gtk-media-pause"
-                        string="Pending"
-                        domain="[('state','=','pending')]"
-                        help="All pending Helpdesk Request"
-                    />
-                    <filter string="Assigned to Me or My Sales Team(s)"
-                            icon="terp-personal+"
-                            domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                    <filter icon="terp-check" string="New" name="current" domain="[('state','=','draft')]" help="New Helpdesk Request" />
+                    <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Helpdesk Request" />
+                    <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="All pending Helpdesk Request" />
+                    <separator/>
+                    <filter string="Assigned to Me or My Sales Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="Helpdesk requests that are assigned to me or to one of the sale teams I manage" />
-                    <separator orientation="vertical"/>
                     <field name="partner_id" />
-                    <field name="user_id" widget="selection"/>
-                    <field name="section_id" widget="selection" string="Sales Team"/>
-                    <newline/>
+                    <field name="user_id"/>
+                    <field name="section_id" string="Sales Team"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Partner" icon="terp-partner"
-                            domain="[]" help="Partner"
-                            context="{'group_by':'partner_id'}" />
-                        <filter string="Responsible" icon="terp-personal"
-                            domain="[]" help="Responsible User"
-                            context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+"
-                            domain="[]" help="Sales Team"
-                            context="{'group_by':'section_id'}" />
-                        <separator orientation="vertical"/>
-                        <filter string="Priority" icon="terp-rating-rated"
-                            domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"
-                            context="{'group_by':'state'}" />
-                        <separator orientation="vertical"/>
-                        <filter string="Date" icon="terp-go-month"
-                            domain="[]" help="Request Date"
-                            context="{'group_by':'date'}" />
-                        <filter string="Deadline" icon="terp-go-month"
-                            domain="[]"
-                            context="{'group_by':'date_deadline'}" />
+                        <filter string="Partner" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" icon="terp-personal+" domain="[]" help="Sales Team" context="{'group_by':'section_id'}" />
+                        <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
+                        <filter string="Date" icon="terp-go-month" domain="[]" help="Request Date" context="{'group_by':'date'}" />
+                        <filter string="Deadline" icon="terp-go-month" domain="[]" context="{'group_by':'date_deadline'}" />
                     </group>
                 </search>
             </field>

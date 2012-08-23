@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <openerp>
 <data>
     <menuitem name="Document Management" id="menu_document_management_configuration" parent="knowledge.menu_document_configuration" sequence="1"/>
@@ -5,7 +6,6 @@
     <record model="ir.ui.view" id="view_document_storage_form">
         <field name="name">document.storage</field>
         <field name="model">document.storage</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Storage Media">
                 <group col="4">
@@ -25,7 +25,6 @@
     <record model="ir.ui.view" id="view_document_storage_tree">
         <field name="name">document.storage</field>
         <field name="model">document.storage</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Storage Media" toolbar="1">
                 <field name="name"/>
@@ -37,11 +36,9 @@
     <record id="view_document_storage_filter" model="ir.ui.view">
             <field name="name">Search View: Document Storage</field>
             <field name="model">document.storage</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document Storage">
                     <field name="name" string="Document Storage"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
@@ -67,7 +64,6 @@
     <record model="ir.ui.view" id="view_document_directory_form">
         <field name="name">document.directory</field>
         <field name="model">document.directory</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Directories" col="4" version="7.0">
                 <group col="4">
@@ -93,7 +89,7 @@
                     </group>
                     <group col="4">
                         <field name="ressource_parent_type_id"/>
-                        <field name="ressource_id" select="2" readonly="1"/>
+                        <field name="ressource_id" readonly="1"/>
                     </group>
                     <group col="2" attrs="{'invisible': [('type','!=','ressource'),('ressource_parent_type_id','=',False)]}">
                         <field name="resource_find_all"/>
@@ -150,7 +146,6 @@
     <record model="ir.ui.view" id="view_document_directory_tree">
         <field name="name">document.directory</field>
         <field name="model">document.directory</field>
-        <field name="type">tree</field>
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
             <tree string="Directories" toolbar="1">
@@ -168,24 +163,18 @@
     <record id="view_document_directory_filter" model="ir.ui.view">
             <field name="name">Search View: Document Directory</field>
             <field name="model">document.directory</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document Directory">
                     <field name="name" string="Document Directory"/>
-                    <separator orientation="vertical"/>
                     <filter string="Static" domain="[('type','=','directory')]"/>
                     <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
-                    <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="storage_id" />
                     <field name="user_id" />
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Storage" domain="[]" icon="terp-accessories-archiver" context="{'group_by':'storage_id'}"/>
-                        <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" domain="[]" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                </search>
@@ -237,67 +226,37 @@
         <field name="name">ir.attachment</field>
         <field name="model">ir.attachment</field>
         <field name="priority" eval="1"/>
-        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
         <field name="arch" type="xml">
-            <form string="Documents" version="7.0">
-                <sheet>
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="parent_id"/>
-                        <field name="user_id"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <notebook colspan="4">
-                    <page string="Attachment">
-                        <group>
-                            <group string="Data">
-                                <field name="type"/>
-                                <newline />
-                                <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
-                                <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
-                                <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
-                            </group>
-                            <group>
-                                <field name="res_id" invisible="True"/>
-                                <field name="res_model" readonly="True" invisible="True" attrs="{'invisible': [('res_id','=',0)]}"/>
-                                <field name="res_name" readonly="1" attrs="{'invisible': [('res_id','=',0)]}"/>
-                                <separator string="Related to" colspan="2"/>
-                                <field name="partner_id"/>
-                            </group>
-                            <group groups="base.group_no_one" string="Created">
-                                <field name="create_uid" readonly="1"/>
-                                <field name="create_date" readonly="1"/>
-                            </group>
-                            <group groups="base.group_no_one" string="Modified">
-                                <field name="write_uid" readonly="1"/>
-                                <field name="write_date" readonly="1"/>
-                            </group>
-                        </group>
-                    </page>
-                    <page string="Indexed Content - experimental" groups="base.group_no_one">
-                        <field name="index_content"/>
-                    </page>
-                    <page string="Notes">
-                        <field name="description"/>
-                    </page>
-                    </notebook>
-                </sheet>
-            </form>
+            <field name="url" position="after">
+                <field name="user_id"/>
+            </field>
+            <field name="company_id" position="before">
+                <field name="parent_id"/>
+                <field name="partner_id"/>
+            </field>
+            <xpath expr="//div[@name='creation_div']" position='after'>
+                <label for="write_uid" string="Modification"/>
+                <div>
+                    <field name="write_uid" readonly="1" class="oe_inline"/> on 
+                    <field name="write_date" readonly="1" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='description_group']" position='after'>
+                <group string="Indexed Content" colspan="4">
+                    <field name="index_content" nolabel="1"/>
+                </group>
+            </xpath>
         </field>
     </record>
 
     <record id="view_attach_filter_inherit0" model="ir.ui.view">
             <field name="name">IR Attachment0</field>
             <field name="model">ir.attachment</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_documents_filter']" position="replace">
-                    <filter name="my_documents_filter" 
-                            string="My Document(s)"
-                            icon="terp-personal"
-                            domain="[('user_id','=',uid)]"
-                            help="Filter on my documents"/>
+                    <filter name="my_documents_filter" string="My Document(s)" icon="terp-personal" domain="[('user_id','=',uid)]" help="Filter on my documents"/>
                 </xpath>
                 <xpath expr="//field[@name='create_uid']" position="replace">
                     <field name="user_id"/>
@@ -312,7 +271,6 @@
 
             <field name="name">IR Attachment2</field>
             <field name="model">ir.attachment</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
                 <filter string="Owner" position="replace">
@@ -327,10 +285,9 @@
     <record model="ir.ui.view" id="view_document_file_tree">
         <field name="name">ir.attachment</field>
         <field name="model">ir.attachment</field>
-        <field name="type">tree</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree colors="blue:type in ('url',)">
+            <tree colors="blue:type in ('url',)" string="Attachments">
                 <field name="name"/>
                 <field name="parent_id" />
                 <field name="user_id"/>
@@ -349,7 +306,14 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
-        <field name="help">The Documents repository gives you access to all attachments, such as mails, project documents, invoices etc.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new document. 
+          </p><p>
+            The Documents repository gives you access to all attachments, such
+            as mails, project documents, invoices etc.
+          </p>
+        </field>
     </record>
     <menuitem name="Documents" id="menu_document_doc" parent="knowledge.menu_document" sequence="0"/>
     <menuitem
@@ -387,12 +351,11 @@
     <record model="ir.ui.view" id="view_process_node_form_inherit1">
         <field name="name">process.node.form</field>
         <field name="model">process.node</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="process.view_process_node_form"/>
+        <field name="inherit_id" ref="process.view_process_node_form"/>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <field name="subflow_id" position="after">
-                <field name="directory_id" domain="[('ressource_type_id','=',model_id),('ressource_parent_type_id','=',False)]"/>
+                <field name="directory_id" string="Document Directory" domain="[('ressource_type_id','=',model_id),('ressource_parent_type_id','=',False)]"/>
                 <newline/>
             </field>
         </field>
@@ -401,8 +364,7 @@
     <record model="ir.ui.view" id="view_process_form_inherit1">
         <field name="name">process.process.form</field>
         <field name="model">process.process</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="process.view_process_form"/>
+        <field name="inherit_id" ref="process.view_process_form"/>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <field name="subflow_id" position="after">
@@ -421,7 +383,7 @@
     <act_window
         domain="[('parent_id', '=', active_id)]"
         context="{'default_parent_id': active_id}"
-    	id="zoom_directory" name="Related Documents"
+        id="zoom_directory" name="Related Documents"
         res_model="ir.attachment"
         src_model="document.directory"/>
 </data>
