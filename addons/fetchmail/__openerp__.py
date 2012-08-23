@@ -21,12 +21,12 @@
 ##############################################################################
 
 {
-    "name" : "Email Gateway",
-    "version" : "1.0",
-    "depends" : ["base", 'mail'],
-    "author" : "OpenERP SA",
-    "category": 'Tools',
-    "description": """
+    'name' : 'Email Gateway',
+    'version' : '1.0',
+    'depends' : ['base', 'mail'],
+    'author' : 'OpenERP SA',
+    'category': 'Tools',
+    'description': """
 Retrieve incoming email on POP/IMAP servers.
 ============================================
 
@@ -35,9 +35,8 @@ these accounts will be automatically downloaded into your OpenERP system. All
 POP3/IMAP-compatible servers are supported, included those that require an
 encrypted SSL/TLS connection.
 
-This can be used to easily create email-based workflows for many email-enabled
-OpenERP documents, such as:
-
+This can be used to easily create email-based workflows for many email-enabled OpenERP documents, such as:
+----------------------------------------------------------------------------------------------------------
     * CRM Leads/Opportunities
     * CRM Claims
     * Project Issues
@@ -56,16 +55,13 @@ For more specific needs, you may also assign custom-defined actions
 (technically: Server Actions) to be triggered for each incoming mail.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-        "fetchmail_view.xml",
-        "fetchmail_data.xml",
+    'data': [
+        'fetchmail_view.xml',
+        'fetchmail_data.xml',
         'security/ir.model.access.csv',
         'fetchmail_installer_view.xml'
     ],
-    'demo_xml': [
-
-    ],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate' : '00692978332890137453',

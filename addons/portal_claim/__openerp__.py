@@ -24,10 +24,10 @@
     'name': 'Portal Claim',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
-This module adds claim menu and features to your portal if claim and portal are
-installed.
+This module adds claim menu and features to your portal if claim and portal are installed.
+==========================================================================================
     """,
     'author': 'OpenERP SA',
     'depends': ['crm_claim','portal'],
@@ -37,7 +37,7 @@ installed.
         'security/portal_security.xml',
     ],
     'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
+    'auto_install': True,
+    'category': 'Hidden',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
