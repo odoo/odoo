@@ -593,7 +593,7 @@ form: module.record_id""" % (xml_id,)
             a_action = rec.get('action','').encode('utf8')
 
             # determine the type of action
-            a_type, a_id = self.model_id_get(a_action)
+            a_type, a_id = self.model_id_get(cr, a_action)
             a_type = a_type.split('.')[-1] # keep only type part
 
             icons = {
