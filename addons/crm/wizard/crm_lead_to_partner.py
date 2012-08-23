@@ -44,7 +44,7 @@ class crm_lead2partner(osv.osv_memory):
         rec_ids = context and context.get('active_ids', [])
         for this in model.browse(cr, uid, rec_ids, context=context):
             if this.partner_id:
-                raise osv.except_osv(_('Warning !'),
+                raise osv.except_osv(_('Warning!'),
                         _('A partner is already defined.'))
 
     def _select_partner(self, cr, uid, context=None):

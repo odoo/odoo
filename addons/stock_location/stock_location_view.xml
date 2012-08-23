@@ -5,7 +5,6 @@
        <record id="stock_location_path_tree" model="ir.ui.view">
             <field name="name">stock.location.path.tree</field>
             <field name="model">stock.location.path</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Location Paths">
                     <field name="location_from_id"/>
@@ -18,17 +17,18 @@
        <record id="stock_location_path_form" model="ir.ui.view">
             <field name="name">stock.location.path.form</field>
             <field name="model">stock.location.path</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Location Paths">
-                    <field name="name"/>
-                    <newline/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="location_from_id"/>
-                    <field name="location_dest_id"/>
-                    <field name="auto"/>
-                    <field name="delay"/>
+                <form string="Location Paths" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <newline/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="location_from_id"/>
+                        <field name="location_dest_id"/>
+                        <field name="auto"/>
+                        <field name="delay"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -36,7 +36,6 @@
        <record id="product_normal_form_inherit_location" model="ir.ui.view">
             <field name="name">product.product.form</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
@@ -50,15 +49,17 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </tree>
                             <form string="Pulled Paths">
-                                <separator string="Conditions" colspan="4"/>
-                                <field name="name" colspan="4" placeholder="Fulfill needs on location X from location Y "/>
-                                <field name="location_id"/>
-                                <separator string="Action Type" colspan="4"/>
-                                <field name="type_proc"/>
-                                <separator string="Parameters" colspan="4"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                                <newline/>
-                                <group col="4" colspan="4" attrs="{'invisible':[('type_proc','!=','move')]}">
+                                <group>
+                                    <group string="Conditions">
+                                        <field name="name" placeholder="Fulfill needs on location X from location Y "/>
+                                        <field name="location_id"/>
+                                    </group>
+                                    <group string="Action Type">
+                                        <field name="type_proc"/>
+                                        <field name="company_id"/>
+                                    </group>
+                                </group>
+                                <group attrs="{'invisible':[('type_proc','!=','move')]}">
                                     <field name="location_src_id" attrs="{'required': [('type_proc', '=', 'move')]}"/>
                                     <field name="picking_type"/>
                                     <field name="partner_address_id"/>
@@ -69,7 +70,7 @@
                                 </group>
                             </form>
                         </field>
-                        <field name="path_ids" colspan="4" nolabel="1">
+                        <field name="path_ids">
                         <field name="name"/>
                             <tree string="Pushed flows">
                                 <field name="location_from_id"/>
@@ -80,14 +81,12 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </tree>
                             <form string="Pushed flows">
-                                <group colspan="4" col="6">
-                                    <field name="name" placeholder="When receiving at location X, move to location Y"/>
-                                    <field name="location_from_id"/>
-                                    <field name="location_dest_id"/>
-                                    <field name="auto"/>
-                                    <field name="delay"/>
-                                    <field name="journal_id"/>
-                                </group>
+                                <field name="name" placeholder="When receiving at location X, move to location Y"/>
+                                <field name="location_from_id"/>
+                                <field name="location_dest_id"/>
+                                <field name="auto"/>
+                                <field name="delay"/>
+                                <field name="journal_id"/>
                                 <field name="picking_type"/>
                                 <field name="invoice_state"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -99,5 +98,3 @@
        </record>
     </data>
 </openerp>
-
-   

@@ -4,7 +4,6 @@
     <record id="view_campaign_analysis_tree" model="ir.ui.view">
         <field name="name">campaign.analysis.tree</field>
         <field name="model">campaign.analysis</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Marketing Reports">
                 <field name="year" invisible="1"/>
@@ -28,51 +27,24 @@
     <record id="view_campaign_analysis_search" model="ir.ui.view">
         <field name="name">campaign.analysis.search</field>
         <field name="model">campaign.analysis</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Campaign Analysis">
-                   <group>
-                    <filter icon="terp-go-year" name="year"
-                            string="Year"
-                            domain="[('year','=',time.strftime('%%Y'))]"/>
-                    <separator orientation="vertical"/>
-
-                    <filter icon="terp-go-month"
-                            string="Month" name="This Month"
-                            domain="[('month','=',time.strftime('%%m'))]"/>
-                    <filter icon="terp-go-month" string="    Month-1    "
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"/>
-
-                    <filter icon="terp-go-today"
-                            string="Today"
-                            domain="[('date','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl"
-                            string="To Do"
-                            domain="[('state','=','todo')]"/>
-                    <filter icon="terp-dialog-close"
-                            string="Done"
-                            domain="[('state','=','done')]"/>
-                    <filter icon="terp-emblem-important"
-                            string="Exceptions"
-                            domain="[('state','=','exception')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="campaign_id"/>
-                    <field name="activity_id"/>
-                    <field name="segment_id"/>
-                    <field name="partner_id"/>
-                    <field name="country_id"/>
-                </group>
-                <newline/>
+                <field name="date"/>
+                <filter icon="terp-gtk-go-back-rtl" string="To Do" domain="[('state','=','todo')]"/>
+                <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
+                <filter icon="terp-emblem-important" string="Exceptions" domain="[('state','=','exception')]"/>
+                <field name="campaign_id"/>
+                <field name="activity_id"/>
+                <field name="segment_id"/>
+                <field name="partner_id"/>
+                <field name="country_id"/>
                 <group expand="0" string="Group By...">
                     <filter string="Campaign" name="Campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
-                    <filter string="Segment" name ="Segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}" />
-                    <filter string="Activity" name ="activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}" />
+                    <filter string="Segment" name="Segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}"/>
+                    <filter string="Activity" name="activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}"/>
                     <filter string="Resource" icon="terp-accessories-archiver" context="{'group_by':'res_id'}"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>

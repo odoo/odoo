@@ -65,21 +65,26 @@ class synchronize_google(osv.osv_memory):
     _name = 'synchronize.google.import'
 
     def _get_group(self, cr, uid, context=None):
-        user_obj = self.pool.get('res.users').browse(cr, uid, uid)
-        google=self.pool.get('google.login')
-        if not user_obj.gmail_user or not user_obj.gmail_password:
-            raise osv.except_osv(_('Warning !'), _("No Google Username or password Defined for user.\nPlease define in user view"))
-        gd_client = google.google_login(user_obj.gmail_user,user_obj.gmail_password,type='group')
-        if not gd_client:
-            return [('failed', 'Connection to google fail')]
 
+        # all the selection field which have method are called at load time. why ?
+        
         res = []
-        query = gdata.contacts.service.GroupsQuery(feed='/m8/feeds/groups/default/full')
-        if gd_client:
-            groups = gd_client.GetFeed(query.ToUri())
-            for grp in groups.entry:
-                res.append((grp.id.text, grp.title.text))
-        res.append(('all','All Groups'))
+        if context:
+            user_obj = self.pool.get('res.users').browse(cr, uid, uid,context=context)
+            google=self.pool.get('google.login')
+            if not user_obj.gmail_user or not user_obj.gmail_password:
+                raise osv.except_osv(_('Warning!'), _("No Google Username or password is defined for user.\nPlease define on user's form."))
+            gd_client = google.google_login(user_obj.gmail_user,user_obj.gmail_password,type='group')
+            if not gd_client:
+                return [('failed', 'Connection to google fail')]
+    
+            res = []
+            query = gdata.contacts.service.GroupsQuery(feed='/m8/feeds/groups/default/full')
+            if gd_client:
+                groups = gd_client.GetFeed(query.ToUri())
+                for grp in groups.entry:
+                    res.append((grp.id.text, grp.title.text))
+            res.append(('all','All Groups'))
         return res
 
     def _get_calendars(self, cr, uid, context=None):
@@ -97,7 +102,6 @@ class synchronize_google(osv.osv_memory):
         return res
 
     _columns = {
-        'create_partner': fields.selection([('create_all','Create partner for each contact'),('create_address','Import only address')],'Options'),
         'customer': fields.boolean('Customer', help="Check this box to set newly created partner as Customer."),
         'supplier': fields.boolean('Supplier', help="Check this box to set newly created partner as Supplier."),
         'group_name': fields.selection(_get_group, "Group Name",help="Choose which group to import, By default it takes all."),
@@ -105,7 +109,6 @@ class synchronize_google(osv.osv_memory):
      }
 
     _defaults = {
-        'create_partner': 'create_all',
         'group_name': 'all',
     }
 
@@ -124,19 +127,16 @@ class synchronize_google(osv.osv_memory):
         gmail_pwd = user_obj.gmail_password
         google = self.pool.get('google.login')
         if not gmail_user or not gmail_pwd:
-            raise osv.except_osv(_('Error'), _("Invalid login detail !\n Specify Username/Password."))
+            raise osv.except_osv(_('Error!'), _("Invalid login detail !\nPlease specify correct username and password."))
         
         if context.get('contact'):
-            msg = "  You're Contact are import in background, a email will be send when the process is finished to %s"%(user_obj.gmail_user)
+            msg = "  Your contacts are being imported in background, an email to %s will be sent when the process is over." % (user_obj.gmail_user)
             gd_client = google.google_login(gmail_user, gmail_pwd, type='contact')
             if not gd_client:
-                raise osv.except_osv(_('Error'), _("Please specify correct user and password !"))        
+                raise osv.except_osv(_('Error!'), _("Please specify correct username and password!"))        
             if obj.group_name not in ['all']:
                 context.update({ 'group_name': obj.group_name})
-            if obj.create_partner=='create_all':
-                tables.append('Contact')    
-            else:    
-                tables.append('Address')
+            tables.append('Contact')
             context.update({'user': gmail_user,
                             'password': gmail_pwd,
                             'instance': 'contact',
@@ -145,7 +145,7 @@ class synchronize_google(osv.osv_memory):
                             'supplier':sup})
               
         elif context.get('calendar'):
-            msg = "  You're Meeting are import in background, a email will be send when the process is finished to %s"%(user_obj.gmail_user)
+            msg = "  Your meetings are being imported in background, an email to %s will be sent when the process is over."%(user_obj.gmail_user)
          
             tables.append('Events')
             current_rec = self.browse(cr, uid, ids, context=context)

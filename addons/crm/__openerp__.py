@@ -24,13 +24,15 @@
     'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
-    "sequence": 2,
+    'sequence': 2,
+    'summary': 'Leads, Opportunities, Agenda',
     'description': """
 The generic OpenERP Customer Relationship Management.
 =====================================================
 
 This system enables a group of people to intelligently and efficiently manage
-leads, opportunities, meeting, phonecall etc.
+leads, opportunities, meeting, phonecall.
+
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
@@ -41,16 +43,19 @@ specific methods and lots of other actions based on your own enterprise rules.
 The greatest thing about this system is that users don't need to do anything
 special. They can just send email to the request tracker. OpenERP will take
 care of thanking them for their message, automatically routing it to the
-appropriate staff, and make sure all future correspondence gets to the right
+appropriate staff and make sure all future correspondence gets to the right
 place.
 
 The CRM module has a email gateway for the synchronisation interface
 between mails and OpenERP.
 
 Creates a dashboard for CRM that includes:
-    * Opportunities by Categories (graph)
-    * Opportunities by Stage (graph)
+------------------------------------------
+    * List of New Leads
+    * List of My Opportunities
+    * List of My Next Meetings
     * Planned Revenue by Stage and User (graph)
+    * Opportunities by Stage (graph)
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -65,13 +70,11 @@ Creates a dashboard for CRM that includes:
         'board',
         'fetchmail'
     ],
-    'init_xml': [
+    'data': [
         'crm_data.xml',
         'crm_lead_data.xml',
-        'crm_meeting_data.xml',
         'crm_phonecall_data.xml',
-    ],
-    'update_xml': [
+
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
@@ -85,7 +88,6 @@ Creates a dashboard for CRM that includes:
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
-        'wizard/crm_add_note_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
@@ -112,23 +114,22 @@ Creates a dashboard for CRM that includes:
         'res_config_view.xml',
 
     ],
-    'demo_xml': [
+    'demo': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
-        'crm_meeting_demo.xml',
         'crm_phonecall_demo.xml',
     ],
     'test': [
-            'test/process/communication_with_customer.yml',
-            'test/process/lead2opportunity2win.yml',
-            'test/process/merge_opportunity.yml',
-            'test/process/cancel_lead.yml',
-            'test/process/action_rule.yml',
-            'test/process/segmentation.yml',
-            'test/ui/crm_demo.yml',
-            'test/ui/duplicate_lead.yml',
-            'test/ui/delete_lead.yml'
-             ],
+        'test/process/communication_with_customer.yml',
+        'test/process/lead2opportunity2win.yml',
+        'test/process/merge_opportunity.yml',
+        'test/process/cancel_lead.yml',
+        'test/process/action_rule.yml',
+        'test/process/segmentation.yml',
+        'test/ui/crm_demo.yml',
+        'test/ui/duplicate_lead.yml',
+        'test/ui/delete_lead.yml'
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,

@@ -1,0 +1,310 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-06-16 21:20+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-07 04:51+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
+
+#. module: subscription
+#: field:subscription.subscription,doc_source:0
+#: field:subscription.subscription.history,document_id:0
+msgid "Source Document"
+msgstr "元となるドキュメント"
+
+#. module: subscription
+#: field:subscription.document,model:0
+msgid "Object"
+msgstr "オブジェクト"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "This Week"
+msgstr "今週"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Search Subscription"
+msgstr "サブスクリプションの検索"
+
+#. module: subscription
+#: field:subscription.subscription,date_init:0
+msgid "First Date"
+msgstr "初回日"
+
+#. module: subscription
+#: field:subscription.document.fields,field:0
+msgid "Field"
+msgstr "項目"
+
+#. module: subscription
+#: view:subscription.subscription:0
+#: field:subscription.subscription,state:0
+msgid "State"
+msgstr "状態"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_subscription_history
+msgid "Subscription history"
+msgstr "サブスクリプションの履歴"
+
+#. module: subscription
+#: selection:subscription.subscription,state:0
+msgid "Draft"
+msgstr "ドラフト"
+
+#. module: subscription
+#: selection:subscription.document.fields,value:0
+msgid "Current Date"
+msgstr "現在の日付"
+
+#. module: subscription
+#: selection:subscription.subscription,interval_type:0
+msgid "Weeks"
+msgstr "週"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Today"
+msgstr "本日"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:136
+#, python-format
+msgid "Error !"
+msgstr "エラー"
+
+#. module: subscription
+#: model:ir.actions.act_window,name:subscription.action_subscription_form
+#: model:ir.ui.menu,name:subscription.menu_action_subscription_form
+#: view:subscription.subscription:0
+msgid "Subscriptions"
+msgstr "サブスクリプション"
+
+#. module: subscription
+#: field:subscription.subscription,interval_number:0
+msgid "Interval Qty"
+msgstr "間隔の量"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Stop"
+msgstr "停止"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Set to Draft"
+msgstr "ドラフトに設定"
+
+#. module: subscription
+#: view:subscription.subscription:0
+#: selection:subscription.subscription,state:0
+msgid "Running"
+msgstr "期間中"
+
+#. module: subscription
+#: view:subscription.subscription.history:0
+msgid "Subscription History"
+msgstr "サブスクリプション履歴"
+
+#. module: subscription
+#: view:subscription.subscription:0
+#: field:subscription.subscription,user_id:0
+msgid "User"
+msgstr "ユーザ"
+
+#. module: subscription
+#: field:subscription.subscription,interval_type:0
+msgid "Interval Unit"
+msgstr "間隔の単位"
+
+#. module: subscription
+#: field:subscription.subscription.history,date:0
+msgid "Date"
+msgstr "日付"
+
+#. module: subscription
+#: field:subscription.subscription,exec_init:0
+msgid "Number of documents"
+msgstr "ドキュメントの数"
+
+#. module: subscription
+#: help:subscription.document,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription document without removing it."
+msgstr "アクティブ項目をFalseにセットすると、サブスクリプションドキュメントは削除することなく非表示にできます。"
+
+#. module: subscription
+#: field:subscription.document,name:0
+#: field:subscription.subscription,name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:136
+#, python-format
+msgid "You cannot delete an active subscription !"
+msgstr "アクティブなサブスクリプションを削除できません。"
+
+#. module: subscription
+#: field:subscription.document,field_ids:0
+msgid "Fields"
+msgstr "項目"
+
+#. module: subscription
+#: view:subscription.subscription:0
+#: field:subscription.subscription,note:0
+#: field:subscription.subscription,notes:0
+msgid "Notes"
+msgstr "注記"
+
+#. module: subscription
+#: selection:subscription.subscription,interval_type:0
+msgid "Months"
+msgstr "月"
+
+#. module: subscription
+#: selection:subscription.subscription,interval_type:0
+msgid "Days"
+msgstr "日"
+
+#. module: subscription
+#: field:subscription.document,active:0
+#: field:subscription.subscription,active:0
+msgid "Active"
+msgstr "アクティブ"
+
+#. module: subscription
+#: field:subscription.subscription,cron_id:0
+msgid "Cron Job"
+msgstr "Cronジョブ"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_subscription
+#: field:subscription.subscription.history,subscription_id:0
+msgid "Subscription"
+msgstr "サブスクリプション"
+
+#. module: subscription
+#: view:subscription.subscription:0
+#: field:subscription.subscription,partner_id:0
+msgid "Partner"
+msgstr "パートナ"
+
+#. module: subscription
+#: help:subscription.subscription,cron_id:0
+msgid "Scheduler which runs on subscription"
+msgstr "サブスクリプション上で実行中のスケジューラ"
+
+#. module: subscription
+#: model:ir.ui.menu,name:subscription.config_recuuring_event
+#: model:ir.ui.menu,name:subscription.next_id_45
+msgid "Recurring Events"
+msgstr "定期的イベント"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Subsription Data"
+msgstr "サブスクリプションデータ"
+
+#. module: subscription
+#: help:subscription.subscription,note:0
+msgid "Description or Summary of Subscription"
+msgstr "サブスクリプションの詳細または要約"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_document
+#: view:subscription.document:0
+#: field:subscription.document.fields,document_id:0
+msgid "Subscription Document"
+msgstr "サブスクリプションドキュメント"
+
+#. module: subscription
+#: help:subscription.subscription,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription without removing it."
+msgstr "アクティブ項目をFalseにセットすると、サブスクリプションを削除することなく非表示にできます。"
+
+#. module: subscription
+#: help:subscription.document.fields,value:0
+msgid "Default value is considered for field when new document is generated."
+msgstr "新規ドキュメントが生成された時にデフォルトの値が項目にセットされます。"
+
+#. module: subscription
+#: selection:subscription.document.fields,value:0
+msgid "False"
+msgstr ""
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Group By..."
+msgstr "グループ化…"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Process"
+msgstr "処理"
+
+#. module: subscription
+#: help:subscription.subscription,doc_source:0
+msgid ""
+"User can choose the source document on which he wants to create documents"
+msgstr "ユーザは作成したいドキュメントの元となるドキュメントを選択できます。"
+
+#. module: subscription
+#: model:ir.actions.act_window,name:subscription.action_document_form
+#: model:ir.ui.menu,name:subscription.menu_action_document_form
+msgid "Document Types"
+msgstr "ドキュメントタイプ"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:109
+#, python-format
+msgid "Wrong Source Document !"
+msgstr "元となるドキュメントが誤っています。"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_document_fields
+#: view:subscription.document.fields:0
+msgid "Subscription Document Fields"
+msgstr "サブスクリプションドキュメント項目"
+
+#. module: subscription
+#: view:subscription.subscription:0
+#: selection:subscription.subscription,state:0
+msgid "Done"
+msgstr "完了"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:109
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist !"
+msgstr ""
+"他の元となるドキュメントを提供して下さい。\n"
+"これは存在しません。"
+
+#. module: subscription
+#: field:subscription.document.fields,value:0
+msgid "Default Value"
+msgstr "デフォルト値"
+
+#. module: subscription
+#: view:subscription.subscription:0
+#: field:subscription.subscription,doc_lines:0
+msgid "Documents created"
+msgstr "ドキュメントは作成されました。"
