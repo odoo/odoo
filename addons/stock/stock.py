@@ -915,12 +915,12 @@ class stock_picking(osv.osv):
         @return: Taxes Ids for the move line
         """
         if type in ('in_invoice', 'in_refund'):
-            if product_id.supplier_taxes_id:
+            if move_line.product_id.supplier_taxes_id:
                 taxes = move_line.product_id.supplier_taxes_id
             else:
                 taxes = move_line.product_id.categ_id.supplier_taxes_id
         else:
-             if product_id.taxes_id:
+             if move_line.product_id.taxes_id:
                 taxes = move_line.product_id.taxes_id
              else:
                 taxes = move_line.product_id.categ_id.taxes_id

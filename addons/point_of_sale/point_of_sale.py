@@ -967,10 +967,7 @@ class pos_order(osv.osv):
 
             for line in order.lines:
                 tax_amount = 0
-                if line.product_id.taxes_id:
-                    taxes = [t for t in line.product_id.taxes_id]
-                else:
-                    taxes = [t for t in line.product_id.categ_id.taxes_id]
+                taxes = [t for t in line.product_id.taxes_id]
                 computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)['taxes']
 
                 for tax in computed_taxes:
@@ -1147,8 +1144,10 @@ class pos_order_line(osv.osv):
         cur_obj = self.pool.get('res.currency')
 
         prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
-
-        taxes = prod.taxes_id
+        if prod.taxes_id:
+            taxes = prod.taxes_id
+        else:
+            taxes = prod.categ_id.taxes_id
         price = price_unit * (1 - (discount or 0.0) / 100.0)
         taxes = account_tax_obj.compute_all(cr, uid, prod.taxes_id, price, qty, product=prod, partner=False)
 
