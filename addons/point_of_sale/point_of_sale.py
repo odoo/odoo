@@ -967,7 +967,10 @@ class pos_order(osv.osv):
 
             for line in order.lines:
                 tax_amount = 0
-                taxes = [t for t in line.product_id.taxes_id]
+                if line.product_id.taxes_id:
+                    taxes = [t for t in line.product_id.taxes_id]
+                else:
+                    taxes = [t for t in line.product_id.categ_id.taxes_id]
                 computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)['taxes']
 
                 for tax in computed_taxes:

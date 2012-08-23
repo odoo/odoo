@@ -634,7 +634,10 @@ class ProductChangeMixin(object):
             product_obj = self.pool.get('product.product').browse(cr, uid, product)
             if partner_id:
                 partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
-                result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, product_obj.taxes_id)
+                if product_obj.taxes_id:
+                    result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, product_obj.taxes_id)
+                else:
+                    result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, product_obj.categ_id.taxes_id)
 
             result['name'] = product_obj.partner_ref
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id or False
