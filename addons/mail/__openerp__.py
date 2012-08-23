@@ -22,13 +22,12 @@
 {
     'name': 'Social Network',
     'version': '1.0',
-    'category':'Social Network',
-    "sequence": 2,
-    "summary": "Discussions, Feeds, Alerts",
+    'category': 'Social Network',
+    'sequence': 2,
+    'summary': 'Discussions, Mailing Lists, News',
     'description': """
-A bussiness oriented Social Networking with a fully-integrated email 
-and message management.
-=====================================================================
+A business oriented Social Networking with a fully-integrated email and message management.
+===========================================================================================
 
 The Social Networking module provides an unified social network
 abstraction layer allowing applications to display a complete 
@@ -40,6 +39,7 @@ allows to follow documents, and to be constantly updated about recent
 news.
         
 The main features of the module are:
+------------------------------------
     * a clean and renewed communication history for any OpenERP
       document that can act as a discussion topic,
     * a discussion mean on documents,
@@ -59,23 +59,26 @@ The main features of the module are:
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'base_tools'],
+    'depends': ['base', 'base_tools', 'base_setup'],
     'data': [
         'wizard/mail_compose_message_view.xml',
+        'res_config_view.xml',
         'mail_message_view.xml',
-        'mail_subscription_view.xml',
+        'mail_followers_view.xml',
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_partner_view.xml',
-        'res_users_view.xml',
         'data/mail_data.xml',
         'data/mail_group_data.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
+        'mail_alias_view.xml',
+        'res_users_view.xml',
     ],
+    'demo': ['data/mail_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'application':True,
+    'application': True,
     'certificate': '001056784984222247309',
     'images': [
         'images/customer_history.jpeg',
@@ -97,12 +100,11 @@ The main features of the module are:
     'js': [
         'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
+        'static/src/js/mail_followers.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',
+        'static/src/xml/mail_followers.xml',
     ],
-    'demo': [
-        'data/mail_demo.xml',
-    ],   
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -28,7 +28,7 @@ class sale_advance_payment_inv(osv.osv_memory):
 
     _columns = {
         'advance_payment_method':fields.selection(
-            [('all', 'All'), ('percentage','Percentage'), ('fixed','Fixed Price'),
+            [('all', 'Invoice all the Sale Order'), ('percentage','Percentage'), ('fixed','Fixed Price'),
                 ('lines', 'Some Order Lines')],
             'Type', required=True,
             help="""Use All to create the final invoice.
@@ -39,7 +39,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         'product_id': fields.many2one('product.product', 'Advance Product',
             help="""Select a product of type service which is called 'Advance Product'.
                 You may have to create it and set it as a default value on this field."""),
-        'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Sale Price'),
+        'amount': fields.float('Advance Amount', digits_compute= dp.get_precision('Account'),
             help="The amount to be invoiced in advance."),
     }
 
@@ -99,7 +99,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
             if sale.order_policy == 'postpaid':
                 raise osv.except_osv(
-                    _('Error'),
+                    _('Error!'),
                     _("You cannot make an advance on a sales order \
                          that is defined as 'Automatic Invoice after delivery'."))
 
@@ -114,12 +114,12 @@ class sale_advance_payment_inv(osv.osv_memory):
                 prop_id = prop and prop.id or False
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, sale.fiscal_position.id or False, prop_id)
                 if not account_id:
-                    raise osv.except_osv(_('Configuration Error !'),
+                    raise osv.except_osv(_('Configuration Error!'),
                             _('There is no income account defined as global property.'))
                 res['account_id'] = account_id
             if not res.get('account_id'):
-                raise osv.except_osv(_('Configuration Error !'),
-                        _('There is no income account defined for this product: "%s" (id:%d)') % \
+                raise osv.except_osv(_('Configuration Error!'),
+                        _('There is no income account defined for this product: "%s" (id:%d).') % \
                             (wizard.product_id.name, wizard.product_id.id,))
 
             # determine invoice amount

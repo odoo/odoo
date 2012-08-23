@@ -6,18 +6,71 @@
         <record id="wizard_contact_form_view" model="ir.ui.view">
             <field name="name">Wizard form view</field>
             <field name="model">portal_crm.crm_contact_us</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Contact Us wizard view">
-                    <group col="2">
-                        <field name="contact_name" string="Name"/>
-                        <field name="name" string="Company"/>
-                        <field name="email_from"/>
-                        <field name="phone"/>
-                        <field name="description" string="Your question"/>
-                        <label string=""/>
-                        <button string="Submit" name="submit" type="object"/>
-                    </group>
+                <form string="Contact wizard view" version="7.0">
+                    <div class="oe_portal_crm_contact">
+                        <h1>Contact us</h1>
+                        <table>
+                          <tr>
+                            <td width="70%%">
+                                <div class="oe_portal_crm_contact_form">
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="partner_name"/>
+                                        <field name="email_from"/>
+                                        <field name="phone"/>
+                                        <field name="description"/>
+                                        <button string="Submit" name="submit" type="object"/>
+                                    </group>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="oe_portal_crm_office">
+                                    <field name="company_ids" widget="many2many_kanban">
+                                        <kanban>
+                                            <field name="name"/>
+                                            <field name="email"/>
+                                            <field name="phone"/>
+                                            <field name="street"/>
+                                            <field name="street2"/>
+                                            <field name="zip"/>
+                                            <field name="city"/>
+                                            <field name="country_id" options='{"no_open": true}'/>
+                                            <field name="state_id" options='{"no_open": true}'/>
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <h4><field name="name"/></h4>
+                                                    <ul class="oe_portal_crm_address">
+                                                        <li t-if="record.street"><field name="street"/></li>
+                                                        <li t-if="record.street2"><field name="street2"/></li>
+                                                        <li t-if="record.zip"><field name="zip"/></li>
+                                                        <li t-if="record.city"><field name="city"/></li>
+                                                        <li t-if="record.country_id"><field name="country_id"/></li>
+                                                    </ul>
+                                                    <ul class="oe_portal_crm_contact_info">
+                                                        <li t-if="record.phone"><field name="phone"/></li>
+                                                        <li t-if="record.email.raw_value">
+                                                            <a title="Mail" t-att-href="'mailto:'+record.email.value">
+                                                            <field name="email"/>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </t>
+                                            </templates>
+                                        </kanban>
+                                    </field>
+                                </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2">
+                                <div class="oe_portal_crm_team">
+
+                                </div>
+                            </td>
+                          </tr>
+                        </table>
+                    </div>
                 </form>
             </field>
         </record>
@@ -26,14 +79,13 @@
         <record id="wizard_contact_form_view_thanks" model="ir.ui.view">
             <field name="name">Wizard thanks message</field>
             <field name="model">portal_crm.crm_contact_us</field>
-            <field name="type">form</field>
             <!-- give it a low priority to ensure this won't be the default view -->
             <field name="priority">99</field>
             <field name="arch" type="xml">
                 <form string="Thank you">
-                    <!-- 
-                        make sure there is at least one field in the view, 
-                        otherwise the orm will try to select all the model's 
+                    <!--
+                        make sure there is at least one field in the view,
+                        otherwise the orm will try to select all the model's
                         records and this will result in a permission denied error
                     -->
                     <field name="name" invisible="1"/>
@@ -44,9 +96,10 @@
 
         <!-- wizard action -->
         <record id="action_wizard_contact_us" model="ir.actions.act_window">
-            <field name="name">Contact Us</field>
+            <field name="name">Contact</field>
             <field name="res_model">portal_crm.crm_contact_us</field>
             <field name="view_mode">form</field>
+            <field name="target">inline</field>
         </record>
 
         <!-- attach it to the portal menu -->

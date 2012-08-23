@@ -8,7 +8,6 @@
     <record model="ir.ui.view" id="view_account_asset_category_form">
         <field name="name">account.asset.category.form</field>
         <field name="model">account.asset.category</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset category" version="7.0">
                 <group>
@@ -47,7 +46,6 @@
     <record model="ir.ui.view" id="view_account_asset_category_tree">
         <field name="name">account.asset.category.tree</field>
         <field name="model">account.asset.category</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Asset category">
                 <field name="name"/>
@@ -61,11 +59,9 @@
     <record model="ir.ui.view" id="view_account_asset_category_search">
         <field name="name">account.asset.category.search</field>
         <field name="model">account.asset.category</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Asset Category">
                 <field name="name" string="Asset Category"/>
-                <separator orientation="vertical"/>
                 <field name="journal_id"/>
             </search>
         </field>
@@ -78,7 +74,6 @@
     <record model="ir.ui.view" id="view_account_asset_asset_form">
         <field name="name">account.asset.asset.form</field>
         <field name="model">account.asset.asset</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset" version="7.0">
                 <header>
@@ -188,7 +183,6 @@
     <record model="ir.ui.view" id="view_account_asset_asset_tree">
         <field name="name">account.asset.asset.tree</field>
         <field name="model">account.asset.asset</field>
-        <field name="type">tree</field>
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
             <tree string="Assets" colors="blue:(state == 'draft');grey:(state == 'close')">
@@ -208,7 +202,6 @@
     <record model="ir.ui.view" id="view_account_asset_asset_hierarchy_tree">
         <field name="name">account.asset.asset.hierarchy</field>
         <field name="model">account.asset.asset</field>
-        <field name="type">tree</field>
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
             <tree string="Assets">
@@ -228,20 +221,14 @@
     <record id="view_account_asset_search" model="ir.ui.view">
         <field name="name">account.asset.asset.search</field>
         <field name="model">account.asset.asset</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Account Asset">
-                <group col="10" colspan="12">
-                    <field name="name" string="Asset"/>
-                    <separator orientation="vertical"/>
-                    <field name="purchase_date"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-check" string="Current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
-                    <filter icon="terp-dialog-close" string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
-                    <separator orientation="vertical"/>
-                    <field name="category_id"/>
-                    <field name="partner_id"/>
-                </group>
+                <field name="name" string="Asset"/>
+                <field name="purchase_date"/>
+                <filter icon="terp-check" string="Current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
+                <filter icon="terp-dialog-close" string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
+                <field name="category_id"/>
+                <field name="partner_id"/>
             </search>
         </field>
     </record>
@@ -253,7 +240,6 @@
     <record model="ir.ui.view" id="view_account_asset_history_form">
         <field name="name">account.asset.history.form</field>
         <field name="model">account.asset.history</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset History" version="7.0">
                 <group>
@@ -278,7 +264,6 @@
     <record model="ir.ui.view" id="view_account_asset_history_tree">
         <field name="name">account.asset.history.tree</field>
         <field name="model">account.asset.history</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Asset history">
                 <field name="date"/>
@@ -303,7 +288,6 @@
     <record id="view_account_move_line_form_inherit" model="ir.ui.view">
         <field name="name">Journal Items (form)</field>
         <field name="model">account.move.line</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="account.view_move_line_form"/>
         <field name="arch" type="xml">
             <field name="statement_id" position="after">
@@ -315,7 +299,6 @@
     <record id="view_account_move_line_filter_inherit" model="ir.ui.view">
         <field name="name">Journal Items (Search)</field>
         <field name="model">account.move.line</field>
-        <field name="type">search</field>
         <field name="inherit_id" ref="account.view_account_move_line_filter"/>
         <field name="arch" type="xml">
             <field name="account_id" position="after">

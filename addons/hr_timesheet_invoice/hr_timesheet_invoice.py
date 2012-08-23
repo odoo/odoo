@@ -126,6 +126,25 @@ class account_analytic_line(osv.osv):
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', help="It allows to set the discount while making invoice"),
     }
 
+    def _default_journal(self, cr, uid, context=None):
+        proxy = self.pool.get('hr.employee')
+        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+        employee = proxy.browse(cr, uid, record_ids[0], context=context)
+        return employee.journal_id and employee.journal_id.id or False
+
+    def _default_general_account(self, cr, uid, context=None):
+        proxy = self.pool.get('hr.employee')
+        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+        employee = proxy.browse(cr, uid, record_ids[0], context=context)
+        if employee.product_id and employee.product_id.property_account_income:
+            return employee.product_id.property_account_income.id
+        return False
+
+    _defaults = {
+        'journal_id' : _default_journal,
+        'general_account_id' : _default_general_account,
+    }
+
     def write(self, cr, uid, ids, vals, context=None):
         self._check_inv(cr, uid, ids, vals)
         return super(account_analytic_line,self).write(cr, uid, ids, vals,
@@ -138,7 +157,7 @@ class account_analytic_line(osv.osv):
         if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
-                    raise osv.except_osv(_('Error !'),
+                    raise osv.except_osv(_('Error!'),
                         _('You cannot modify an invoiced analytic line!'))
         return True
 

@@ -24,8 +24,8 @@
     'name': 'Purchase Management',
     'version': '1.1',
     'category': 'Purchase Management',
-    "sequence": 19,
-    "summary": "Requests for Quotation, Invoicing Control",
+    'sequence': 19,
+    'summary': 'RfQ, Purchase Orders, Delivery & Invoicing Control',
     'description': """
 Purchase Management module is for generating a purchase order for purchase of goods from a supplier.
 ====================================================================================================

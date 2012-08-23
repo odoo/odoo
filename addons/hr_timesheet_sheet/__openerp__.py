@@ -21,11 +21,11 @@
 
 
 {
-    'name': 'Timesheets Validation',
+    'name': 'Timesheets',
     'version': '1.0',
     'category': 'Human Resources',
-    "sequence": 16,
-    "summary": "Attendances, Activities, Timing",
+    'sequence': 16,
+    'summary': 'Timesheets, Attendances, Activities',
     'description': """
 This module helps you to easily encode and validate timesheet and attendances within the same view.
 ===================================================================================================
@@ -33,17 +33,19 @@ This module helps you to easily encode and validate timesheet and attendances wi
     * It will maintain attendances and track (sign in/sign out) events.
     * Track the timesheet lines.
 
-Other tabs contains statistics views to help you analyse your
-time or the time of your team:
+Other tabs contains statistics views to help you analyse your time or the time of your team:
+--------------------------------------------------------------------------------------------
     * Time spent by day (with attendances)
     * Time spent by project
 
 This module also implements a complete timesheet validation process:
+--------------------------------------------------------------------
     * Draft sheet
     * Confirmation at the end of the period by the employee
     * Validation by the project manager
 
 The validation can be configured in the company:
+------------------------------------------------
     * Period size (day, week, month, year)
     * Maximal difference between timesheet and attendances
     """,
@@ -51,8 +53,7 @@ The validation can be configured in the company:
     'website': 'http://www.openerp.com',
     'images': ['images/hr_my_timesheet.jpeg','images/hr_timesheet_analysis.jpeg','images/hr_timesheet_sheet_analysis.jpeg','images/hr_timesheets.jpeg'],
     'depends': ['hr_timesheet', 'hr_timesheet_invoice', 'process'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_sheet_security.xml',
         'hr_timesheet_sheet_view.xml',
@@ -65,9 +66,7 @@ The validation can be configured in the company:
         'hr_timesheet_sheet_data.xml',
         'res_config_view.xml',
     ],
-    'demo_xml': ['hr_timesheet_sheet_demo.xml',
-
-                 ],
+    'demo': ['hr_timesheet_sheet_demo.xml'],
     'test':['test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'auto_install': False,

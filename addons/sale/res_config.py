@@ -27,22 +27,22 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'group_invoice_so_lines': fields.boolean('Based on Sale Orders',
+        'group_invoice_so_lines': fields.boolean('generate invoices based on the sale order',
             implied_group='sale.group_invoice_so_lines',
             help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
-        'group_invoice_deli_orders': fields.boolean('Based on Delivery Orders',
+        'group_invoice_deli_orders': fields.boolean('generate invoices after and based on delivery orders',
             implied_group='sale.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
-        'task_work': fields.boolean('Based on Task Activities',
+        'task_work': fields.boolean("prepare invoices based on task's activities",
             help="""Lets you transfer the entries under tasks defined for Project Management to
                 the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
                 and to automatically creates project tasks from procurement lines.
                 This installs the modules project_timesheet and project_mrp."""),
-        'timesheet': fields.boolean('Based on Timesheet',
+        'timesheet': fields.boolean('prepare invoices based on timesheets',
             help = """For modifying account analytic view to show important data to project manager of services companies.
                 You can also view the report of account analytic summary user-wise as well as month wise.
                 This installs the module account_analytic_analysis."""),
-        'module_account_analytic_analysis': fields.boolean('Manage Customer Contracts',
+        'module_account_analytic_analysis': fields.boolean('use contracts management',
             help = """Allows to define your customer contracts conditions: invoicing
             method (fixed price, on timesheet, advance invoice), the exact pricing
             (650€/day for a developer), the duration (one year support contract).
@@ -50,47 +50,47 @@ class sale_configuration(osv.osv_memory):
             It installs the account_analytic_analysis module."""),
         'default_order_policy': fields.selection(
             [('manual', 'Invoice Based on Sales Orders'), ('picking', 'Invoice Based on Deliveries')],
-            'Default Method', default_model='sale.order',
+            'The default invoicing method is', default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
-        'module_delivery': fields.boolean('Allow Charging Shipping Costs',
+        'module_delivery': fields.boolean('allow adding shipping costs',
             help ="""Allows you to add delivery methods in sale orders and delivery orders.
                 You can define your own carrier and delivery grids for prices.
                 This installs the module delivery."""),
-        'time_unit': fields.many2one('product.uom', 'Working Time Unit'),
-        'default_picking_policy' : fields.boolean("Configurable Shipping Policy",
-            help = "You will be able to configure, per sale order, if you deliver all  products at once or if you deliver each product when it is available.  This may have an impact on the shipping price."),
-        'group_sale_pricelist':fields.boolean("Pricelist per Customer",
+        'time_unit': fields.many2one('product.uom', 'The default working time unit for services is'),
+        'default_picking_policy' : fields.boolean("deliver all at once when all products are available.",
+            help = "Sales order by default will be configured to deliver all products at once instead of delivering each product when it is available. This may have an impact on the shipping price."),
+        'group_sale_pricelist':fields.boolean("use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("Allow Different Units of Measure",
+        'group_uom':fields.boolean("allow using different units of measures",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_sale_delivery_address': fields.boolean("Allow Different Addresses for Delivery and Invoice",
+        'group_sale_delivery_address': fields.boolean("allow a different address for delivery and invoicing ",
             implied_group='sale.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a sale order."),
-        'group_mrp_properties': fields.boolean('Properties on Lines',
+        'group_mrp_properties': fields.boolean('product properties on order lines',
             implied_group='sale.group_mrp_properties',
             help="Allows you to tag sale order lines with properties."),
-        'group_discount_per_so_line': fields.boolean("Discount per Line",
+        'group_discount_per_so_line': fields.boolean("allow setting a discount on the sale order lines",
             implied_group='sale.group_discount_per_so_line',
             help="Allows you to apply some discount per sale order line."),
-        'group_multiple_shops': fields.boolean("Manage Multiple Shops",
+        'group_multiple_shops': fields.boolean("manage multiple shops",
             implied_group='stock.group_locations',
             help="This allows to configure and use multiple shops."),
-        'module_warning': fields.boolean("Alerts by Products or Customers",
+        'module_warning': fields.boolean("allow configuring alerts by customer or products",
             help="""Allow to configure warnings on products and trigger them when a user wants to sale a given product or a given customer.
             Example: Product: this product is deprecated, do not purchase more than 5.
             Supplier: don't forget to ask for an express delivery."""),
-        'module_sale_margin': fields.boolean("Display Margins on Sale Orders",
+        'module_sale_margin': fields.boolean("display margins on sales orders",
             help="""This adds the 'Margin' on sales order.
                 This gives the profitability by calculating the difference between the Unit Price and Cost Price.
                 This installs the module sale_margin."""),
-        'module_sale_journal': fields.boolean("Allow Batch Invoicing through Journals",
+        'module_sale_journal': fields.boolean("allow batch invoicing of delivery orders through journals",
             help="""Allows you to categorize your sales and deliveries (picking lists) between different journals,
                 and perform batch operations on journals.
                 This installs the module sale_journal."""),
-        'module_analytic_user_function': fields.boolean("Assign User Roles per Contract",
+        'module_analytic_user_function': fields.boolean("one employee can have different roles per contract",
             help="""Allows you to define what is the default function of a specific user on a given account.
                 This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
                 But the possibility to change these values is still available.
@@ -98,17 +98,7 @@ class sale_configuration(osv.osv_memory):
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
         'module_project': fields.boolean("Project"),
-        'decimal_precision': fields.integer('Decimal Precision on Price',help="As an example, a decimal precision of 2 will allow prices  like: 9.99 EUR, whereas a decimal precision of 4 will allow prices like:  0.0231 EUR per unit."),
     }
-    def _check_decimal(self, cr, uid, ids, context=None):
-        for decimal in self.browse(cr, uid, ids, context=context):
-            if decimal.decimal_precision > 20:
-                return False
-        return True
-
-    _constraints = [
-        (_check_decimal, 'Digits must be between 0 to 20 ', ['decimal_precision']),
-    ]
 
     def default_get(self, cr, uid, fields, context=None):
         ir_model_data = self.pool.get('ir.model.data')
@@ -119,7 +109,7 @@ class sale_configuration(osv.osv_memory):
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
             res['time_unit'] = product.uom_id.id
         return res
 
@@ -139,14 +129,6 @@ class sale_configuration(osv.osv_memory):
         'time_unit': _get_default_time_unit,
     }
 
-    def get_default_dp(self, cr, uid, fields, context=None):
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_sale')
-        return {'decimal_precision': dp.digits}
-
-    def set_default_dp(self, cr, uid, ids, context=None):
-        config = self.browse(cr, uid, ids[0], context)
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_sale')
-        dp.write({'digits': config.decimal_precision})
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
@@ -157,7 +139,7 @@ class sale_configuration(osv.osv_memory):
         ir_values.set_default(cr, uid, 'sale.order', 'picking_policy', default_picking_policy)
 
         if wizard.time_unit:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
             product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
         if wizard.module_project and wizard.time_unit:
@@ -190,9 +172,9 @@ class sale_configuration(osv.osv_memory):
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
-        'module_sale_analytic_plans': fields.boolean('Several Analytic Accounts on Sales',
+        'module_sale_analytic_plans': fields.boolean('several analytic accounts on sales',
             help="""This allows install module sale_analytic_plans."""),
-        'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales',
+        'group_analytic_account_for_sales': fields.boolean('analytic accounting for sales',
             implied_group='sale.group_analytic_accounting',
             help="Allows you to specify an analytic account on sale orders."),
     }

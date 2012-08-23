@@ -1,14 +1,13 @@
 <?xml version="1.0" ?>
 <openerp>
     <data noupdate="1">
-        <!-- notify all employees of module installation -->
+
+        <!-- Notify all employees of module installation -->
         <function model="mail.group" name="message_append_note">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
             <value>Module Timesheets Validation has been installed</value>
-            <value>From the top menu "Human Resources", encode and validate
-                timesheets and attendances.
-            </value>
+            <value>From the top menu "Human Resources", encode and validate timesheets and attendances.</value>
         </function>
 
         <record id="ir_actions_server_timsheet_sheet" model="ir.actions.server">
@@ -22,13 +21,7 @@
             <field eval="&quot;&quot;&quot;My Timesheet&quot;&quot;&quot;" name="name"/>
         </record>
 
-        <record id="menu_act_hr_timesheet_sheet_form_my_current" model="ir.ui.menu">
-            <field name="name">My Current Timesheet</field>
-            <field eval="1" name="sequence"/>
-            <field name="parent_id" ref="hr_attendance.menu_hr_time_tracking"/>
-            <field name="icon">STOCK_JUSTIFY_FILL</field>
-            <field name="action" ref="ir_actions_server_timsheet_sheet"/>
-        </record>
+        <menuitem name="My Current Timesheet" id="menu_act_hr_timesheet_sheet_form_my_current" parent="hr_attendance.menu_hr_time_tracking" action="ir_actions_server_timsheet_sheet" sequence="1"/>
 
     </data>
 </openerp>

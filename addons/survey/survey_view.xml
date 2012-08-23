@@ -3,13 +3,11 @@
     <data>
 
         <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
-        <menuitem name="Define Surveys" id="menu_define_survey"
-             groups="base.group_tool_manager"
-             parent="menu_surveys" />
-        <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
+        
         <menuitem name="Reporting" parent="base.menu_tools"
             id="base.menu_lunch_reporting" sequence="6"/>
         <menuitem name="Reporting" id="menu_reporting" parent="menu_surveys" sequence="60"/>
+        <menuitem id="base.next_id_10" name="Survey" parent="base.menu_reporting" sequence="1" />
 
         <!--
             Survey
@@ -18,7 +16,6 @@
         <record model="ir.ui.view" id="survey_form">
             <field name="name">survey_form</field>
             <field name="model">survey</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                 <header>
@@ -248,7 +245,6 @@
         <record model ="ir.ui.view" id= "survey_tree">
             <field name="name">survey_tree</field>
             <field name="model">survey</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="gray:state == 'close'" string="Survey">
                     <field name="title"/>
@@ -274,23 +270,17 @@
         <record id="survey_search" model="ir.ui.view">
             <field name="name">survey_search</field>
             <field name="model">survey</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Survey">
-                   <group>
-                        <field name="title" string="Survey"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="All New Survey"/>
-                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="All Open Survey"/>
-                        <filter string="My Survey(s)" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
-                        <separator orientation="vertical"/>
-                        <field name="type" widget="selection"/>
-                        <field name="responsible_id"/>
-                   </group>
-                   <newline/>
+                    <field name="title" string="Survey"/>
+                    <field name="type"/>
+                    <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="All New Survey"/>
+                    <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="All Open Survey"/>
+                    <separator/>
+                    <filter string="My Survey(s)" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
+                    <field name="responsible_id"/>
                    <group expand="0" string="Group By...">
                        <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'responsible_id'}"/>
-                        <separator orientation="vertical"/>
                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'type'}"/>
                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
                    </group>
@@ -301,7 +291,6 @@
         <record model="ir.ui.view" id="view_survey_kanban">
             <field name="name">event.survey.kanban</field>
             <field name="model">survey</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="title"/>
@@ -319,7 +308,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"><field name="title"/></t></h3>
+                                    <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
                                     <div class="oe_survey_responsible">
                                        <t t-if="record.responsible_id.raw_value">By: <field name="responsible_id"/></t>
                                    </div><br/>
@@ -350,13 +339,24 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="view_survey_kanban"></field>
             <field name="search_view_id" ref="survey_search"/>
-            <field name="help">You can create survey for different purposes: recruitment interviews, employee's periodical evaluations, marketing campaigns, etc. A survey is made of pages containing questions of several types: text, multiple choices, etc. You can edit survey manually or click on the 'Edit Survey' for a WYSIWYG interface.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new survey. 
+              </p><p>
+                You can create survey for different purposes: recruitment
+                interviews, employee's periodical evaluations, marketing
+                campaigns, etc.
+              </p><p>
+                A survey is made of pages containing questions
+                of several types: text, multiple choices, etc.
+              </p>
+            </field>
         </record>
 
 
         <menuitem name="Surveys" id="menu_survey_form"
-            action="action_survey_form1" parent="menu_define_survey"
-            groups="base.group_tool_manager"/>
+            action="action_survey_form1" parent="menu_surveys"
+            groups="base.group_tool_manager" sequence="1"/>
 
         <!--
             Survey Pages
@@ -365,7 +365,6 @@
         <record model="ir.ui.view" id="survey_page_form">
             <field name="name">survey_page_form</field>
             <field name="model">survey.page</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Page" version="7.0">
                     <sheet>
@@ -535,7 +534,6 @@
         <record model="ir.ui.view" id="survey_page_tree">
             <field name="name">survey_page_tree</field>
             <field name="model">survey.page</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Page">
                     <field name="sequence" string="Seq"/>
@@ -549,13 +547,10 @@
         <record id="view_survey_page_filter" model="ir.ui.view">
             <field name="name">survey.page.list.select</field>
             <field name="model">survey.page</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Survey Page">
                     <field name="title" string="Page"/>
-                    <separator orientation="vertical"/>
                     <field name="survey_id"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'survey_id'}"/>
                     </group>
@@ -572,13 +567,12 @@
         </record>
 
         <menuitem name="Survey Pages" id="menu_survey_page_form1"
-            action="action_survey_page_form" parent='menu_define_survey'
-            groups="base.group_tool_manager"/>
+            action="action_survey_page_form" parent="menu_surveys"
+            groups="base.group_no_one"/>
 
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
             <field name="model">survey.page</field>
-            <field name="type">form</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Survey Pages">
@@ -601,7 +595,6 @@
         <record model="ir.ui.view" id="survey_question_form">
             <field name="name">survey_question_form</field>
             <field name="model">survey.question</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Question">
                     <field name="question" colspan="4"/>
@@ -740,7 +733,6 @@
         <record model="ir.ui.view" id="survey_question_tree">
             <field name="name">survey_question_tree</field>
             <field name="model">survey.question</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Question">
                     <field name="sequence" string="Seq"/>
@@ -755,15 +747,12 @@
         <record id="survey_question_search" model="ir.ui.view">
             <field name="name">survey_question_search</field>
             <field name="model">survey.question</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Question">
                     <field name="question" string="Question"/>
-                    <separator orientation="vertical"/>
-                    <field name="page_id"/>
-                    <field name="survey" widget="selection"/>
+                    <field name="survey"/>
                     <field name="type"/>
-                    <newline/>
+                    <field name="page_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Page" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'page_id'}"/>
                     </group>
@@ -784,7 +773,6 @@
             <field name="name">survey_question_wizard_test</field>
             <field name="model">survey.question</field>
             <field name="priority">20</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Question">
                     <field name="question" colspan="4"/>
@@ -930,7 +918,6 @@
         <record model ="ir.ui.view" id="survey_answer_form">
             <field name="name">survey_answer_form</field>
             <field name="model">survey.answer</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Answer">
                     <field name="answer" colspan="4"/>
@@ -951,7 +938,6 @@
         <record model="ir.ui.view" id= "survey_answer_tree">
             <field name="name">survey_answer_tree</field>
             <field name="model">survey.answer</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Survey Answer">
                     <field name="sequence" string="Seq"/>
@@ -968,7 +954,6 @@
         <record model ="ir.ui.view" id= "survey_response_line_form">
             <field name="name">survey_response_line_form</field>
             <field name="model">survey.response.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Answer">
                     <field name="question_id"/>
@@ -1009,7 +994,6 @@
         <record model="ir.ui.view" id="survey_response_line_tree">
             <field name="name">survey_response_line_tree</field>
             <field name="model">survey.response.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Answer Line">
                     <field name="page_id"/>
@@ -1027,7 +1011,6 @@
         <record model="ir.ui.view" id="survey_response_form">
             <field name="name">survey_response_form</field>
             <field name="model">survey.response</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Answer">
                     <field name="survey_id"/>
@@ -1043,7 +1026,6 @@
         <record model="ir.ui.view" id="survey_response_tree">
             <field name="name">survey_response_tree</field>
             <field name="model">survey.response</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Answer">
                     <field name="survey_id"/>
@@ -1062,7 +1044,6 @@
         <record model="ir.ui.view" id="survey_response_answer_form">
             <field name="name">survey_response_answer_form</field>
             <field name="model">survey.response.answer</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Answer">
                     <group colspan="4">
@@ -1082,7 +1063,6 @@
         <record model="ir.ui.view" id="survey_response_answer_tree">
             <field name="name">survey_response_answer_tree</field>
             <field name="model">survey.response.answer</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="top" string="Survey Answer">
                     <field name="answer_id"/>
@@ -1101,7 +1081,6 @@
         <record model="ir.ui.view" id="survey_question_column_heading_form">
             <field name="name">survey_question_column_heading_form</field>
             <field name="model">survey.question.column.heading</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Column Heading">
                     <field name="title"/>
@@ -1122,7 +1101,6 @@
         <record model="ir.ui.view" id="survey_question_column_heading_tree">
             <field name="name">survey_question_column_heading_tree</field>
             <field name="model">survey.question.column.heading</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Column Heading">
                     <field name="title"/>
@@ -1137,9 +1115,8 @@
         <record model="ir.ui.view" id="survey_request_form">
             <field name="name">survey_request_form</field>
             <field name="model">survey.request</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Request" version="7.0">
                 <header>
                     <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object"/>
                     <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object" class="oe_highlight"/>
@@ -1162,7 +1139,6 @@
         <record model="ir.ui.view" id="survey_request_tree">
             <field name="name">survey_request_tree</field>
             <field name="model">survey.request</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Evaluation Plan Phase" colors="red:date_deadline&lt;current_date">
                     <field name="date_deadline"/>
@@ -1177,25 +1153,19 @@
        <record id="survey_request_search" model="ir.ui.view">
             <field name="name">survey_request_search</field>
             <field name="model">survey.request</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Survey">
-                   <group>
-                        <field name="email" string="Survey"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-media-pause" string="Waiting Answer" domain="[('state','=','waiting_answer')]"/>
-                        <filter icon="terp-emblem-important" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
-                        <filter string="My Survey(s)" icon="terp-personal" domain="[('user_id','=',uid)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="survey_id" widget="selection"/>
-                        <field name="user_id"/>
-                    </group>
-                    <newline/>
+                    <field name="email" string="Survey"/>
+                    <filter icon="terp-gtk-media-pause" string="Waiting Answer" domain="[('state','=','waiting_answer')]"/>
+                    <separator/>
+                    <filter icon="terp-emblem-important" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
+                    <separator/>
+                    <filter string="My Survey(s)" icon="terp-personal" domain="[('user_id','=',uid)]"/>
+                    <field name="survey_id" widget="selection"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'survey_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
                     </group>
                </search>
@@ -1213,8 +1183,8 @@
         </record>
 
         <menuitem name="Survey Requests" id="menu_survey_type_form1"
-            action="action_survey_request_tree" parent='menu_answer_surveys'
-            groups="base.group_tool_manager"/>
+            action="action_survey_request_tree" parent="menu_surveys"
+            groups="base.group_tool_manager" sequence="3"/>
 
         <!--
             Survey Type
@@ -1223,7 +1193,6 @@
         <record model="ir.ui.view" id="survey_type_form">
             <field name="name">survey_type_form</field>
             <field name="model">survey.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Type">
                     <field name="name"/>
@@ -1235,7 +1204,6 @@
         <record model="ir.ui.view" id="survey_type_tree">
             <field name="name">survey_type_tree</field>
             <field name="model">survey.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Type">
                     <field name="name"/>
@@ -1280,8 +1248,12 @@
             res_model="survey.answer"
             src_model="survey.question"/>
 
-        <menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
-            action="action_view_survey_name" parent="menu_answer_surveys"            groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user" icon="STOCK_INDEX"/>
+        <act_window
+            context="{'search_default_survey_id': active_id, 'default_survey_id': active_id}"
+            id="act_survey_request"
+            name="Survey Requests"
+            res_model="survey.request"
+            src_model="survey"/>
 
     </data>
 </openerp>

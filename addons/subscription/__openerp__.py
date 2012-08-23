@@ -31,15 +31,15 @@ Create recurring documents.
 This module allows to create new documents and add subscriptions on that document.
 
 e.g. To have an invoice generated automatically periodically:
+-------------------------------------------------------------
     * Define a document type based on Invoice object
     * Define a subscription whose source document is the document defined as
       above. Specify the interval information and partner to be invoice.
     """,
     'author': 'OpenERP SA',
     'depends': ['base_tools'],
-    'init_xml': [],
-    'update_xml': ['security/subcription_security.xml', 'security/ir.model.access.csv', 'subscription_view.xml'],
-    'demo_xml': ['subscription_demo.xml',],
+    'data': ['security/subcription_security.xml', 'security/ir.model.access.csv', 'subscription_view.xml'],
+    'demo': ['subscription_demo.xml',],
     'installable': True,
     'auto_install': False,
     'certificate': '0029454782573',

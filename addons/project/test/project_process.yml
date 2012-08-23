@@ -4,7 +4,7 @@
   I create duplicate template.
 -
   !python {model: project.project}: |
-     new_template = self.duplicate_template(cr, uid, [ref("project_integrate_openerp")])
+     new_template = self.duplicate_template(cr, uid, [ref("project_project_1")])
      assert new_template, "duplicate template is not created"
      template = self.browse(cr, uid, new_template['res_id'], context=context)
      assert template.state == 'open', "Duplicate template must be in open state."
@@ -12,59 +12,59 @@
   I convert template into real Project.
 -
   !python {model: project.project}: |
-     self.reset_project(cr, uid, [ref("project_integrate_openerp")])
+     self.reset_project(cr, uid, [ref("project_project_1")])
 -
   I check project details after convert from template.
 -
-  !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be active}:
+  !assert {model: project.project, id: project_project_1, severity: error, string: Project should be active}:
     - state == "open"
 -
   I put project in pending.
 -
   !python {model: project.project}: |
-    self.set_pending(cr, uid, [ref("project_integrate_openerp")])
+    self.set_pending(cr, uid, [ref("project_project_1")])
 -
   I check state after put in pending.
 -
-  !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be in pending state}:
+  !assert {model: project.project, id: project_project_1, severity: error, string: Project should be in pending state}:
     - state == "pending"
 -
   I re-open the project.
 -
   !python {model: project.project}: |
-      self.set_open(cr, uid, [ref("project_integrate_openerp")])
+      self.set_open(cr, uid, [ref("project_project_1")])
 -
   I check state after reopen.
 -
-  !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be open.}:
+  !assert {model: project.project, id: project_project_1, severity: error, string: Project should be open.}:
     - state == "open"
 -
   I close the project.
 -
   !python {model: project.project}: |
-    self.set_done(cr, uid, [ref("project_integrate_openerp")])
+    self.set_done(cr, uid, [ref("project_project_1")])
 -
   I check state after closed.
 -
-  !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be close.}:
+  !assert {model: project.project, id: project_project_1, severity: error, string: Project should be close.}:
     - state == "close"
 -
   I set project into template.
 -
   !python {model: project.project}: |
-    self.set_template(cr, uid, [ref("project_integrate_openerp")])
+    self.set_template(cr, uid, [ref("project_project_1")])
 -
   I schedule tasks of project.
 -
   !python {model: project.project}: |
-    self.schedule_tasks(cr, uid, [ref("project_integrate_openerp")], context=context)
+    self.schedule_tasks(cr, uid, [ref("project_project_1")], context=context)
 -
   I copy the tasks of project.
 -
   !python {model: project.project}: |
-    self.copy(cr, uid, ref("project_integrate_openerp"))
+    self.copy(cr, uid, ref("project_project_1"))
 -
   I cancel Project.
 -
   !python {model: project.project}: |
-    self.set_cancel(cr, uid, [ref("project_project_9")])
+    self.set_cancel(cr, uid, [ref("project_project_2")])

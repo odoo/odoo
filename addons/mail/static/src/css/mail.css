@@ -70,7 +70,7 @@
     width: 486px;
 }
 
-.openerp div.oe_mail_msg_content li {
+.openerp div.oe_mail_msg_content > li {
     float: left;
     margin-right: 3px;
 }
@@ -89,8 +89,12 @@
 /* RecordThread
 /* ------------------------------------------------------------ */
 
-.openerp div.oe_mail_recthread {
+.openerp .oe_form div.oe_chatter {
     overflow: auto;
+}
+
+.openerp div.oe_mail_recthread {
+    /*overflow: auto;*/
 }
 
 .openerp div.oe_mail_recthread_main {
@@ -345,6 +349,11 @@
     color: #888;
 }
 
+.openerp .oe_mail_msg_footer li {
+  float: left;
+  margin-right: 3px;
+}
+
 .openerp .oe_mail_msg_body {
     margin-bottom: .5em;
     text-align: justify;
@@ -359,9 +368,9 @@
 }
 
 /* Read more/less link */
-.openerp .oe_mail_msg_content .expand,
-.openerp .oe_mail_msg_content .reduce {
-    font-weight: bold;
+.openerp .oe_mail_msg_content .oe_mail_reduce {
+    position: absolute;
+    right: 0;
 }
 
 /* Dropdown menu */

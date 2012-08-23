@@ -40,7 +40,7 @@ class invoice(osv.osv):
             'domain': '[]',
             'context': {
                 'default_partner_id': inv.partner_id.id,
-                'default_amount': inv.residual,
+                'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
                 'default_name':inv.name,
                 'close_after_process': True,
                 'invoice_type':inv.type,

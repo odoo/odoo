@@ -75,7 +75,7 @@ class stock_report_prodlots(osv.osv):
             )""")
 
     def unlink(self, cr, uid, ids, context={}):
-        raise osv.except_osv(_('Error !'), _('You cannot delete any record!'))
+        raise osv.except_osv(_('Error!'), _('You cannot delete any record!'))
 
 
 stock_report_prodlots()
@@ -132,7 +132,7 @@ class stock_report_tracklots(osv.osv):
             )""")
         
     def unlink(self, cr, uid, ids, context={}):
-        raise osv.except_osv(_('Error !'), _('You cannot delete any record!'))
+        raise osv.except_osv(_('Error!'), _('You cannot delete any record!'))
 
 stock_report_tracklots()
 

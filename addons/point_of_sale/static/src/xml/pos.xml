@@ -15,7 +15,7 @@
                         <button class="neworder-button">+</button>
                         <ol id="orders"></ol>
                     </div>
-                    <span class="placeholder-SynchNotificationWidget"></span>
+                    <!-- here goes header buttons -->
                 </div>
             </div>
             <div id="content">
@@ -41,6 +41,12 @@
             <t   t-if="widget.get_nbr_pending() > 0" t-esc="widget.get_nbr_pending()"/>
             <div t-if="widget.get_nbr_pending() > 0" class="oe_status_red"></div>
             <div t-if="widget.get_nbr_pending() === 0" class="oe_status_green"></div>
+        </div>
+    </t>
+
+    <t t-name="HeaderButtonWidget">
+        <div class="header-button">
+            <t t-esc="widget.label" />
         </div>
     </t>
 
@@ -83,11 +89,17 @@
     <t t-name="CategoryButton">
         <li class='category-button'>
             <div class="category-img">
-                <img t-att-src="'data:image/gif;base64,'+ category.category_image_small" />
+                <img src="" />
             </div>
             <div class="category-name">
                 <t t-esc="category.name"/>
             </div>
+        </li>
+    </t>
+
+    <t t-name="CategorySimpleButton">
+        <li class='category-simple-button'>
+            <t t-esc="category.name"/>
         </li>
     </t>
 
@@ -220,7 +232,7 @@
                                 <t t-if="widget.currency.position == 'after'" t-esc="widget.currency.symbol"/>
                             </span>
                         </div>
-                        <div class="infoline">
+                        <div class="infoline" >
                             <span class='left-block'>
                                 Change:
                             </span>
@@ -251,6 +263,9 @@
             <header><h2>Welcome</h2></header>
             <img src="/point_of_sale/static/src/img/scan.png" />
             <p> Please scan an item or your member card </p>
+        </div>
+        <div class="goodbye-message">
+            <p>Thank you for shopping with us.</p>
         </div>
     </t>
 
@@ -342,8 +357,7 @@
         <li class='product'>
             <a href="#">
                 <div class="product-img">
-                    
-                    <img t-att-src="'data:image/gif;base64,'+ widget.model.get('product_image_small')" />
+                    <img src='' /> <!-- the product thumbnail -->
                     <t t-if="!widget.model.get('to_weight')">
                         <span class="price-tag">
                             <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>
@@ -494,7 +508,7 @@
                 <tr><td>Tax:</td><td class="pos-right-align">
                     <t t-esc="widget.format_currency(widget.currentOrder.getTax().toFixed(2))"/>
                     </td></tr>
-                <tr><td>Total:</td><td class="pos-right-align">
+                <tr class="emph"><td>Total:</td><td class="pos-right-align">
                     <t t-esc="widget.format_currency(widget.currentOrder.getTotal().toFixed(2))"/>
                     </td></tr>
             </table>
@@ -520,30 +534,7 @@
 
     <t t-name="ActionBarWidget">
         <div class="pos-actionbar">
-            <div class="pos-actionbar-left-pane">
-                <div class="button help-button">
-                    <div class='icon'>
-                        <img src="/point_of_sale/static/src/img/icons/png48/help.png" />
-                        <div class='iconlabel'>Help</div>
-                    </div>
-                </div>
-                <div class="button close-button">
-                    <div class='icon'>
-                        <img src="/point_of_sale/static/src/img/icons/png48/shut-down.png" />
-                        <div class='iconlabel'>Close</div>
-                    </div>
-                </div>
-                <div class="button logout-button">
-                    <div class='icon'>
-                        <img src="/point_of_sale/static/src/img/icons/png48/system-log-out.png" />
-                        <div class='iconlabel'>Client Mode</div>
-                    </div>
-                </div>
-            </div>
             <ul class="pos-actionbar-button-list">
-                <!-- <li class="button">BUTTOOON</li>
-                <li class="button">JEEENKIINS</li>
-                <li class="button rightalign">ARGH</li> -->
             </ul>
         </div>
     </t>

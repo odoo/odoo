@@ -4,7 +4,6 @@
         <record id="view_account_chart" model="ir.ui.view">
             <field name="name">account.chart.form</field>
             <field name="model">account.chart</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account charts" version="7.0">
                     <group>
@@ -36,7 +35,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_chart"/>
             <field name="target">new</field>
-            <field name="help">Display your company chart of accounts per fiscal year and filter by period. Have a complete tree view of all journal items per account code by clicking on an account.</field>
         </record>
 
         <menuitem icon="STOCK_INDENT" action="action_account_chart"
