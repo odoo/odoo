@@ -24,8 +24,8 @@
     'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
-    "sequence": 2,
-    "summary": "Leads, Opportunities, Agenda",
+    'sequence': 2,
+    'summary': 'Leads, Opportunities, Agenda',
     'description': """
 The generic OpenERP Customer Relationship Management.
 =====================================================
@@ -70,12 +70,11 @@ Creates a dashboard for CRM that includes:
         'board',
         'fetchmail'
     ],
-    'init_xml': [
+    'data': [
         'crm_data.xml',
         'crm_lead_data.xml',
         'crm_phonecall_data.xml',
-    ],
-    'update_xml': [
+
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
@@ -115,22 +114,22 @@ Creates a dashboard for CRM that includes:
         'res_config_view.xml',
 
     ],
-    'demo_xml': [
+    'demo': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'crm_phonecall_demo.xml',
     ],
     'test': [
-            'test/process/communication_with_customer.yml',
-            'test/process/lead2opportunity2win.yml',
-            'test/process/merge_opportunity.yml',
-            'test/process/cancel_lead.yml',
-            'test/process/action_rule.yml',
-            'test/process/segmentation.yml',
-            'test/ui/crm_demo.yml',
-            'test/ui/duplicate_lead.yml',
-            'test/ui/delete_lead.yml'
-             ],
+        'test/process/communication_with_customer.yml',
+        'test/process/lead2opportunity2win.yml',
+        'test/process/merge_opportunity.yml',
+        'test/process/cancel_lead.yml',
+        'test/process/action_rule.yml',
+        'test/process/segmentation.yml',
+        'test/ui/crm_demo.yml',
+        'test/ui/duplicate_lead.yml',
+        'test/ui/delete_lead.yml'
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,

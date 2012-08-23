@@ -58,7 +58,7 @@
 #   Opschonen van de code en verwijderen van niet gebruikte componenten.
 # Versie 5.0.0.4
 #   Aanpassen a_expense van 3000 -> 7000
-#   record id="btw_code_5b" op negatieve waarde gezet
+#   record id='btw_code_5b' op negatieve waarde gezet
 # Versie 5.0.0.5
 #   BTW rekeningen hebben typeaanduiding gekregen t.b.v. purchase of sale
 # Versie 5.0.0.6
@@ -86,10 +86,10 @@
 #   Changed naming of 7020 and 7030 to Kostprijs omzet xxxx
 
 {
-    "name" : "Netherlands - Accounting",
-    "version" : "1.5",
-    "category": "Localization/Account Charts",
-    "description": """
+    'name' : 'Netherlands - Accounting',
+    'version' : '1.5',
+    'category': 'Localization/Account Charts',
+    'description': """
 This is the module to manage the accounting chart for Netherlands in OpenERP.
 =============================================================================
 
@@ -101,7 +101,7 @@ De BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te genereren
 denk b.v. aan intracommunautaire verwervingen waarbij u 19% BTW moet opvoeren,
 maar tegelijkertijd ook 19% als voorheffing weer mag aftrekken.
 
-Na installatie van deze module word de configuratie wizard voor "Accounting" aangeroepen.
+Na installatie van deze module word de configuratie wizard voor 'Accounting' aangeroepen.
     * U krijgt een lijst met grootboektemplates aangeboden waarin zich ook het
       Nederlandse grootboekschema bevind.
 
@@ -112,24 +112,21 @@ Na installatie van deze module word de configuratie wizard voor "Accounting" aan
 
 Let op!! -> De template van het Nederlandse rekeningschema is opgebouwd uit 4
 cijfers. Dit is het minimale aantal welk u moet invullen, u mag het aantal verhogen.
-De extra cijfers worden dan achter het rekeningnummer aangevult met "nullen".
+De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
 
     """,
-    "author"  : "Veritos - Jan Verlaan",
-    "website" : "http://www.veritos.nl",
-    "depends" : ["account",
-                 "base_vat",
-                 "base_iban",
-                 "account_chart"
-                 ],
-    "init_xml" : [],
-    "update_xml" : ["account_chart_netherlands.xml",
-                    "l10n_nl_wizard.xml"
-                   ],
-    "demo_xml" : [
-                 ],
-
-    "installable": True,
+    'author'  : 'Veritos - Jan Verlaan',
+    'website' : 'http://www.veritos.nl',
+    'depends' : ['account',
+                 'base_vat',
+                 'base_iban',
+                 'account_chart'
+    ],
+    'data' : ['account_chart_netherlands.xml',
+              'l10n_nl_wizard.xml'
+    ],
+    'demo' : [],
+    'installable': True,
     'certificate': '00976041422960053277',
     'images': ['images/config_chart_l10n_nl.jpeg','images/l10n_nl_chart.jpeg'],
 }

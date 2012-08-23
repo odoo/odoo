@@ -32,12 +32,9 @@ the tasks will change accordingly.
     """,
     'author': 'OpenERP SA',
     'depends': ['base', 'project'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [],
-    'test' : [
-              'test/deadline_change.yml'
-              ],
+    'data': [],
+    'demo': [],
+    'test': ['test/deadline_change.yml'],
     'installable': True,
     'auto_install': False,
     'certificate': '0057235475485',
