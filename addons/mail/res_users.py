@@ -129,10 +129,9 @@ class res_users(osv.Model):
         return res
 
 class res_users_mail_group(osv.Model):
-    """ Update of res.groups class
-        - if adding/removing users from a group, check mail.groups linked to
-          this user group, and subscribe / unsubscribe them from the discussion
-          group. This is done by overriding the write method.
+    """ Update of res.users class
+        - if adding groups to an user, check mail.groups linked to this user
+          group, and the user. This is done by overriding the write method.
     """
     _name = 'res.users'
     _inherit = ['res.users']
@@ -151,15 +150,15 @@ class res_users_mail_group(osv.Model):
 
 class res_groups_mail_group(osv.Model):
     """ Update of res.groups class
-        - if adding/removing users from a group, check mail.groups linked to
-          this user group, and subscribe / unsubscribe them from the discussion
-          group. This is done by overriding the write method.
+        - if adding users from a group, check mail.groups linked to this user
+          group and subscribe them. This is done by overriding the write method.
     """
     _name = 'res.groups'
     _inherit = 'res.groups'
 
     # FP Note: to improve, post processeing, after the super may be better
     def write(self, cr, uid, ids, vals, context=None):
+        write_res = super(res_groups_mail_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('users'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
             user_ids = [command[1] for command in vals['users'] if command[0] == 4]
@@ -167,5 +166,4 @@ class res_groups_mail_group(osv.Model):
             mail_group_obj = self.pool.get('mail.group')
             mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', ids)], context=context)
             mail_group_obj.message_subscribe_users(cr, uid, mail_group_ids, user_ids, context=context)
-        return super(res_groups_mail_group, self).write(cr, uid, ids, vals, context=context)
-
+        return write_res
