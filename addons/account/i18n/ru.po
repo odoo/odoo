@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-05-10 17:32+0000\n"
-"Last-Translator: Michael Otcheskih <otma@mail.ru>\n"
+"PO-Revision-Date: 2012-08-17 11:07+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-21 05:21+0000\n"
-"X-Generator: Launchpad (build 15435)\n"
+"X-Launchpad-Export-Date: 2012-08-18 04:58+0000\n"
+"X-Generator: Launchpad (build 15810)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -180,11 +180,6 @@ msgstr "Счет источник"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Все проводки аналитического учета"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Счета созданные за прошедшие 15 дней"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -692,18 +687,6 @@ msgstr "Период журнала"
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
 "Для проведения сверки, организация в проводках не должна различаться."
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Счета к получению"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1686,11 +1669,6 @@ msgstr "Раздельные нумерации журнала"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Ответственный"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Продажи по типу счета"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2787,13 +2765,6 @@ msgstr "Финансовые настройки новой организаци�
 #: view:account.installer:0
 msgid "Configure Your Chart of Accounts"
 msgstr ""
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Продажи по бух. счетам"
 
 #. module: account
 #: view:account.use.model:0
@@ -6387,11 +6358,6 @@ msgid "Supplier Refund"
 msgstr "Возврат средств от поставщика"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "Инфо-панель"
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Проводки"
@@ -6960,11 +6926,6 @@ msgstr ""
 "%(date)s: текущая дата \n"
 "\n"
 "пример: Моя модель на %(date)s"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Счета доходов"
 
 #. module: account
 #: help:report.invoice.created,origin:0
@@ -9911,7 +9872,7 @@ msgstr "Не определен счет доходов для ТМЦ: \"%s\" (i
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Нельзя создать элемент журнала по закрытому счету ."
 
 #. module: account
 #: field:account.account,unrealized_gain_loss:0
@@ -11501,6 +11462,10 @@ msgstr ""
 #~ msgid "General Credit"
 #~ msgstr "Общий кредит"
 
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Счета к получению"
+
 #~ msgid "Date payment"
 #~ msgstr "Дата оплаты"
 
@@ -11616,6 +11581,9 @@ msgstr ""
 #~ msgid "Display accounts"
 #~ msgstr "Показать счета"
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Счета созданные за прошедшие 15 дней"
+
 #~ msgid "account.installer.modules"
 #~ msgstr "account.installer.modules"
 
@@ -11631,6 +11599,9 @@ msgstr ""
 #~ msgid "Go to next partner"
 #~ msgstr "Переход к следующему партнеру"
 
+#~ msgid "Sales by Account Type"
+#~ msgstr "Продажи по типу счета"
+
 #~ msgid "Error! You cannot define overlapping fiscal years"
 #~ msgstr "Ошибка! Вы не можете определить перекрывающиеся отчетные года"
 
@@ -11643,6 +11614,9 @@ msgstr ""
 
 #~ msgid "Error ! You can not create recursive categories."
 #~ msgstr "Ошибка! Нельзя создать рекурсивные категории."
+
+#~ msgid "Sales by Account"
+#~ msgstr "Продажи по бух. счетам"
 
 #, python-format
 #~ msgid ""
@@ -11710,6 +11684,9 @@ msgstr ""
 
 #~ msgid "  valuation: percent"
 #~ msgstr "  оценка: процент"
+
+#~ msgid "Income Accounts"
+#~ msgstr "Счета доходов"
 
 #~ msgid "9"
 #~ msgstr "9"
@@ -11954,6 +11931,9 @@ msgstr ""
 
 #~ msgid "Sort By"
 #~ msgstr "Сортировать по"
+
+#~ msgid "Dashboard"
+#~ msgstr "Инфо-панель"
 
 #~ msgid "Configuration Progress"
 #~ msgstr "Выполнение настройки"

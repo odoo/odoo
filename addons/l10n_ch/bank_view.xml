@@ -5,7 +5,6 @@
         <record model="ir.ui.view" id="view_res_bank_form">
             <field name="name">res.bank.form</field>
             <field name="model">res.bank</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_res_bank_form"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
@@ -21,12 +20,11 @@
         <record model="ir.ui.view" id="l10nch_view_res_bank_tree">
             <field name="name">res.bank.tree</field>
             <field name="model">res.bank</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="base.view_res_bank_tree"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
-                    <field name="code" select="1"/>
-                    <field name="clearing" select="1"/>
+                    <field name="code"/>
+                    <field name="clearing"/>
                 </field>
             </field>
         </record>
@@ -37,7 +35,6 @@
         <record model="ir.ui.view" id="l10nch_view_res_partner_bank_add_groups">
             <field name="name">res.partner_bank.form.hide.f2</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <field name="state" position="after">
@@ -67,7 +64,6 @@
         <record model="ir.ui.view" id="l10nch_view_res_partner_bank_from_invoice">
             <field name="name">res.partner_bank.form.hide.frominvoice</field>
             <field name="model">res.partner.bank</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
             <field name="arch" type="xml">
                 <field name="state" position="after">
@@ -108,7 +104,6 @@
             <field name="name">res.partner.form.bank_details.list</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="account.view_partner_property_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                  <xpath expr="//field[@name='bank_ids']/tree/field[@name='acc_number']" position="before">
                     <field name="state" />
@@ -123,7 +118,6 @@
             <field name="name">res.partner.bank.tree.from_invoice</field>
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_tree"/>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <field name="acc_number" position="before">
                     <field name="state" />

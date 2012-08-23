@@ -7,7 +7,6 @@
         <record id="view_crm_case_user_graph" model="ir.ui.view">
             <field name="name">report.account.receivable.graph</field>
             <field name="model">report.account.receivable</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Accounts by Type" type="bar">
                     <field name="name"/>
@@ -18,7 +17,6 @@
         <record id="view_crm_case_user_tree" model="ir.ui.view">
             <field name="name">report.account.receivable.tree</field>
             <field name="model">report.account.receivable</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Accounts by Type">
                     <field name="name"/>
@@ -32,7 +30,6 @@
         <record id="view_crm_case_user_form" model="ir.ui.view">
             <field name="name">report.account.receivable.form</field>
             <field name="model">report.account.receivable</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Accounts by Type" version="7.0">
                     <group>
@@ -55,7 +52,6 @@
         <record id="view_aged_recv_graph" model="ir.ui.view">
             <field name="name">report.aged.receivable.graph</field>
             <field name="model">report.aged.receivable</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Aged Receivable" type="bar">
                     <field name="name"/>
@@ -67,7 +63,6 @@
         <record id="view_aged_recv_tree" model="ir.ui.view">
             <field name="name">report.aged.receivable.tree</field>
             <field name="model">report.aged.receivable</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Aged Receivable">
                     <field name="name"/>
@@ -88,7 +83,6 @@
         <record id="board_view_created_invoice" model="ir.ui.view">
             <field name="name">report.invoice.created.tree</field>
             <field name="model">report.invoice.created</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state in('paid','cancel') " string="Invoices">
                        <field name="create_date"/>
@@ -119,7 +113,6 @@
         <record id="view_report_account_sales_tree" model="ir.ui.view">
             <field name="name">report.account.sales.tree</field>
             <field name="model">report.account.sales</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales by Account">
                     <field name="name"/>
@@ -136,7 +129,6 @@
         <record id="view_report_account_sales_graph" model="ir.ui.view">
              <field name="name">report.account.sales.graph</field>
              <field name="model">report.account.sales</field>
-             <field name="type">graph</field>
              <field name="arch" type="xml">
                  <graph string="Sales by Account" type="pie">
                      <field name="account_id"/>
@@ -148,13 +140,9 @@
         <record id="view_report_account_sales_search" model="ir.ui.view">
             <field name="name">report.account.sales.search</field>
             <field name="model">report.account.sales</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sales by Account">
-                    <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="This year's Sales by type"/>
-                    <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="This months' Sales by type"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
+                    <field name="name" string="Year"/>
                     <field name="month"/>
                </search>
             </field>
@@ -171,7 +159,6 @@
         <record id="view_report_account_type_sales_tree" model="ir.ui.view">
             <field name="name">report.account_type.sales.tree</field>
             <field name="model">report.account_type.sales</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales by Account Type">
                     <field name="name"/>
@@ -189,7 +176,6 @@
         <record id="view_report_account_type_sales_form" model="ir.ui.view">
             <field name="name">report.account_type.sales.form</field>
             <field name="model">report.account_type.sales</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <tree string="Sales by Account Type">
                     <field name="name"/>
@@ -202,7 +188,6 @@
         <record id="view_report_account_type_sales_graph" model="ir.ui.view">
              <field name="name">report.account_type.sales.graph</field>
              <field name="model">report.account_type.sales</field>
-             <field name="type">graph</field>
              <field name="arch" type="xml">
                  <graph string="Sales by Account" type="pie">
                      <field name="user_type"/>
@@ -214,13 +199,9 @@
         <record id="view_report_account_type_sales_search" model="ir.ui.view">
             <field name="name">report.account_type.sales.search</field>
             <field name="model">report.account_type.sales</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sales by Account">
-                    <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="All Months Sales by type"/>
-                    <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="This Months Sales by type"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
+                    <field name="name" string="Year"/>
                     <field name="month"/>
                </search>
             </field>

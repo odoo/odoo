@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-21 05:24+0000\n"
-"X-Generator: Launchpad (build 15435)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:09+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -176,11 +176,6 @@ msgstr "源科目"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "所有輔助核算"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "過去15天開的發票"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -664,18 +659,6 @@ msgstr "賬簿的會計期間"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr "要核銷這些憑證，這些憑證所屬公司必須一致"
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "應收款科目"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1638,11 +1621,6 @@ msgstr "分散的賬簿序列"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "負責人"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "銷售科目類型"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2697,13 +2675,6 @@ msgstr "新公司財務設置"
 #: view:account.installer:0
 msgid "Configure Your Chart of Accounts"
 msgstr "科目表設置"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "銷售科目"
 
 #. module: account
 #: view:account.use.model:0
@@ -6238,11 +6209,6 @@ msgid "Supplier Refund"
 msgstr "供應商紅字發票"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "儀表盤"
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "明細"
@@ -6793,11 +6759,6 @@ msgstr ""
 "%(date)s：本日\n"
 "\n"
 "例如：日期為 %(date)s 的定期發生憑證"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "損益科目"
 
 #. module: account
 #: help:report.invoice.created,origin:0
@@ -10609,11 +10570,24 @@ msgstr "基於當前幣別的應收或應付款的餘額"
 #~ msgid "Display accounts"
 #~ msgstr "顯示帳號"
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "過去15天開的發票"
+
 #~ msgid "Open For Unreconciliation"
 #~ msgstr "打開反核銷"
 
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "應收款科目"
+
 #~ msgid "Go to next partner"
 #~ msgstr "下一個業務夥伴"
+
+#~ msgid "Sales by Account Type"
+#~ msgstr "銷售科目類型"
+
+#~ msgid "Sales by Account"
+#~ msgstr "銷售科目"
 
 #~ msgid "Tax codes"
 #~ msgstr "稅編碼"
@@ -10638,6 +10612,12 @@ msgstr "基於當前幣別的應收或應付款的餘額"
 
 #~ msgid "Create an Account based on this template"
 #~ msgstr "基於此模板建立科目"
+
+#~ msgid "Dashboard"
+#~ msgstr "儀表盤"
+
+#~ msgid "Income Accounts"
+#~ msgstr "損益科目"
 
 #~ msgid "Install your Chart of Accounts"
 #~ msgstr "導入會計科目表"

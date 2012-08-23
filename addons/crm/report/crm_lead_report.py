@@ -85,8 +85,6 @@ class crm_lead_report(osv.osv):
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Category',\
-                         domain="['|',('section_id','=',False),('section_id','=',section_id)]" , readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
@@ -134,7 +132,6 @@ class crm_lead_report(osv.osv):
                     c.section_id,
                     c.channel_id,
                     c.type_id,
-                    c.categ_id,
                     c.partner_id,
                     c.country_id,
                     c.planned_revenue,

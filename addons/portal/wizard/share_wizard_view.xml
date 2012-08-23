@@ -5,10 +5,9 @@
         <record id="share_step1_form_portal" model="ir.ui.view">
             <field name="name">share.step1.form.portal</field>
             <field name="model">share.wizard</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="share.share_step1_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/field[@name='user_type']" position="attributes">
+                <xpath expr="//field[@name='user_type']" position="attributes">
                     <attribute name='invisible'>0</attribute>
                     <attribute name='colspan'>4</attribute>
                 </xpath>
@@ -34,17 +33,16 @@
         <record id="share_step2_form_portal" model="ir.ui.view">
             <field name="name">share.step2.form.portal</field>
             <field name="model">share.wizard</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="share.share_step2_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='result_line_ids']//field[@name='login']" position="after">
                     <field name="share_url" groups="portal.group_portal_manager"/>
                 </xpath>
-                <xpath expr="//field[@name='result_line_ids']//field[@name='login']" position="after">
-                    <field name="share_url" colspan="4" groups="portal.group_portal_manager"/>
-                </xpath>
                 <xpath expr="//field[@name='result_line_ids']" position="after">
-                    <field colspan="4" name="share_root_url" groups="portal.group_portal_manager"/>
+                    <newline/>
+                    <group string="Details">
+                        <field name="share_root_url" groups="portal.group_portal_manager"/>
+                    </group>
                 </xpath>
             </field>
         </record>

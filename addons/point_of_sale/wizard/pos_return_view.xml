@@ -4,11 +4,13 @@
         <record id="pos_return_form" model="ir.ui.view">
             <field name="name">pos.return</field>
             <field name="model">pos.return</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Return lines" version="7.0">
-                    <button icon='gtk-ok' name= "create_returns" string="Return Products" type="object"/>
-                    <button icon='gtk-cancel' special="cancel" string="Cancel" />
+                    <footer>
+                        <button name= "create_returns" string="Return Products" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                  </form>
             </field>
         </record>
@@ -24,7 +26,6 @@
         <record id="pos_return_tree_in" model="ir.ui.view">
             <field name="name">pos.return.memory</field>
             <field name="model">pos.return.memory</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Return Product">
                     <field name="product_id" />
@@ -37,7 +38,6 @@
         <record id="pos_return_form_in" model="ir.ui.view">
             <field name="name">pos.return.memory</field>
             <field name="model">pos.return.memory</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form version="7.0">
                     <group col="4">

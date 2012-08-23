@@ -33,7 +33,7 @@ def _create_yaml(self, cr, uid, data, context=None):
     try:
         res_xml = mod.generate_yaml(cr, uid)
     except Exception, e:
-        raise osv.except_osv(_('Error'),_(str(e)))
+        raise osv.except_osv(_('Error!'),_(str(e)))
     return {
     'yaml_file': base64.encodestring(res_xml),
 }
@@ -60,9 +60,8 @@ def _create_module(self, cr, uid, ids, context=None):
         "category" : "%(category)s",
         "description": \"\"\"%(description)s\"\"\",
         "depends" : [%(depends)s],
-        "init_xml" : [ ],
-        "demo_xml" : [ %(demo_name)s],
-        "update_xml" : [%(update_name)s],
+        "demo" : [ %(demo_name)s],
+        "data" : [%(update_name)s],
         "installable": True
 } """ % data
     filewrite = {

@@ -4,14 +4,14 @@
         <record model="ir.ui.view" id="res_users_search_sharing">
             <field name="name">res.users.search.share</field>
             <field name="model">res.users</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="base.view_users_search"/>
             <field name="arch" type="xml">
-                <xpath expr="/search/field[@name='company_ids']" position="after">
-                    <field name="share">
-                        <filter name="no_share" string="Regular users only (no share user)" icon="terp-partner"
-                            domain="[('share','=',False)]"/>
-                    </field>
+                <xpath expr="//field[@name='company_ids']" position="after">
+                    <filter name="no_share" string="Regular users only (no share user)" icon="terp-partner"
+                        domain="[('share','=',False)]"/>
+                </xpath>
+                <xpath expr="//field[@name='company_ids']" position="after">
+                    <field name="share"/>
                 </xpath>
             </field>
         </record>
@@ -25,15 +25,12 @@
         <record model="ir.ui.view" id="res_groups_search_sharing">
             <field name="name">res.groups.search.share</field>
             <field name="model">res.groups</field>
-            <field name="type">search</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Groups">
-                    <field name="name"/>
-                    <field name="share">
-                        <filter name="no_share" string="Regular groups only (no share groups" icon="terp-partner"
-                            domain="[('share','=',False)]"/>
-                    </field>
+                    <field name="name" string="Group"/>
+                    <field name="share"/>
+                    <filter name="no_share" string="Regular groups only (no share groups)" icon="terp-partner" domain="[('share','=',False)]"/>
                 </search>
             </field>
         </record>
@@ -46,7 +43,6 @@
         <record id="view_groups_form_share" model="ir.ui.view">
             <field name="name">res.groups.form</field>
             <field name="model">res.groups</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_groups_form"/>
             <field name="arch" type="xml">
                 <field name="users" position="attributes">

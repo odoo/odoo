@@ -7,7 +7,6 @@
     <record id="view_statement_line_global_form" model="ir.ui.view">
       <field name="name">statement.line.global.form</field>
       <field name="model">account.bank.statement.line.global</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Batch Payment Info" version="7.0">
             <group col="4">
@@ -41,7 +40,6 @@
       <field name="name">view.bank.statement.form.add.fields</field>
       <field name="model">account.bank.statement</field>
       <field name="inherit_id" ref="account.view_bank_statement_form"/>
-      <field name="type">form</field>
       <field name="arch" type="xml">
         <data>
           <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='date']" position="after">
@@ -67,7 +65,6 @@
     <record id="view_bank_statement_line_list" model="ir.ui.view">
       <field name="name">bank.statement.line.list</field>
       <field name="model">account.bank.statement.line</field>
-      <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree editable="bottom" string="Statement Lines">
           <field name="sequence" readonly="1" invisible="1"/>
@@ -92,7 +89,6 @@
     <record id="view_bank_statement_line_form" model="ir.ui.view">
       <field name="name">bank.statement.line.form</field>
       <field name="model">account.bank.statement.line</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Statement Line" version="7.0">
           <group col="4">
@@ -118,41 +114,34 @@
     </record>
 
     <record id="view_bank_statement_line_filter" model="ir.ui.view">
-      <field name="name">bank.statement.line.filter</field>
-      <field name="model">account.bank.statement.line</field>
-      <field name="type">search</field>
-      <field name="arch" type="xml">
-        <search string="Search Bank Transactions">
-          <group col='6' colspan='4'>
-            <filter name="debit" string="Debit" domain="[('amount','&gt;',0)]" icon="terp-folder-green" help="Debit Transactions."/>
-            <filter name="credit" string="Credit" domain="[('amount','&lt;',0)]" icon="terp-folder-orange" help="Credit Transactions."/>
-            <separator orientation="vertical"/>
-            <filter name="draft" string="Draft" domain="[('state','=','draft')]" icon="terp-document-new" help="Draft Statement Lines."/>
-            <filter name="confirm" string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test" help="Confirmed Statement Lines."/>
-            <separator orientation="vertical"/>
-            <field name="journal_id"/>
-            <field name="statement_id"/>
-            <field name="val_date"/>
-            <field name="amount"/>
-            <field name="globalisation_id" string="Glob. Id"/>
-            <field name="globalisation_amount" string="Glob. Amount"/>
-            <field name="name"/>
-          </group>
-          <newline/>
-          <group string="Extended Filters..." expand="0">
-            <field name="account_id"/>
-            <field name="partner_id"/>
-            <field name="ref"/>
-            <field name="note"/>
-          </group>
-          <newline/>
-          <group string="Group By..." expand="1">
-            <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-green"/>
-            <filter string="Statement" context="{'group_by':'statement_id'}" icon="terp-folder-orange"/>
-            <filter string="Fin.Account" context="{'group_by':'account_id'}" icon="terp-folder-yellow"/>
-          </group>
-        </search>
-      </field>
+        <field name="name">bank.statement.line.filter</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Bank Transactions">
+                <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Bank Transaction"/>
+                <field name="val_date"/>
+                <filter name="debit" string="Debit" domain="[('amount','&gt;',0)]" icon="terp-folder-green" help="Debit Transactions."/>
+                <filter name="credit" string="Credit" domain="[('amount','&lt;',0)]" icon="terp-folder-orange" help="Credit Transactions."/>
+                <separator/>
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]" icon="terp-document-new" help="Draft Statement Lines."/>
+                <filter name="confirm" string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test" help="Confirmed Statement Lines."/>
+                <field name="journal_id"/>
+                <field name="statement_id"/>
+                <field name="globalisation_id" string="Glob. Id"/>
+                <group string="Extended Filters..." expand="0">
+                    <field name="account_id"/>
+                    <field name="partner_id"/>
+                    <field name="amount"/>
+                    <field name="globalisation_amount" string="Glob. Amount"/>
+                    <field name="note"/>
+                </group>
+                <group string="Group By..." expand="1">
+                    <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-green"/>
+                    <filter string="Statement" context="{'group_by':'statement_id'}" icon="terp-folder-orange"/>
+                    <filter string="Fin.Account" context="{'group_by':'account_id'}" icon="terp-folder-yellow"/>
+                </group>
+            </search>
+        </field>
     </record>
 
     <record id="action_bank_statement_line" model="ir.actions.act_window">

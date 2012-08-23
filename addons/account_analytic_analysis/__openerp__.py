@@ -28,22 +28,19 @@
 This module is for modifying account analytic view to show important data to project manager of services companies.
 ===================================================================================================================
 
-Adds menu to show relevant information to each manager.
-You can also view the report of account analytic summary
-user-wise as well as month wise.
+Adds menu to show relevant information to each manager.You can also view the report of account analytic summary user-wise as well as month-wise.
 """,
-    "author": "Camptocamp",
-    "website": "http://www.camptocamp.com/",
-    "images": ["images/bill_tasks_works.jpeg","images/overpassed_accounts.jpeg"],
-    "depends": ["hr_timesheet_invoice", "sale"], #although sale is technically not required to install this module, all menuitems are located under 'Sales' application
-    "init_xml": [],
-    "update_xml": [
-                    "security/ir.model.access.csv",
-                    "account_analytic_analysis_view.xml",
-                    "account_analytic_analysis_menu.xml",
-                    "account_analytic_analysis_cron.xml",
-                    ],
-    'demo_xml': [],
+    'author': 'Camptocamp',
+    'website': 'http://www.camptocamp.com/',
+    'images': ['images/bill_tasks_works.jpeg','images/overpassed_accounts.jpeg'],
+    'depends': ['hr_timesheet_invoice', 'sale'], #although sale is technically not required to install this module, all menuitems are located under 'Sales' application
+    'data': [
+        'security/ir.model.access.csv',
+        'account_analytic_analysis_view.xml',
+        'account_analytic_analysis_menu.xml',
+        'account_analytic_analysis_cron.xml',
+    ],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate': '0042927202589',

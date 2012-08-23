@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-21 05:22+0000\n"
-"X-Generator: Launchpad (build 15435)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:07+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -185,11 +185,6 @@ msgstr "Origen cuenta"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Todos los asientos analíticos"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Facturas creadas en los últimos 15 días"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -711,18 +706,6 @@ msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
 "Para conciliar los asientos, la compañía debería ser la misma para todos los "
 "asientos"
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Cuentas a cobrar"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1725,11 +1708,6 @@ msgstr "Secuencias de diarios separadas"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Responsable"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Ventas por tipo de cuenta"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2853,13 +2831,6 @@ msgstr "Configuración financiera para nueva compañía"
 #: view:account.installer:0
 msgid "Configure Your Chart of Accounts"
 msgstr "Configure su plan de cuentas"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Ventas por cuenta"
 
 #. module: account
 #: view:account.use.model:0
@@ -5841,7 +5812,7 @@ msgstr "Cuenta n°"
 #: code:addons/account/account_invoice.py:88
 #, python-format
 msgid "Free Reference"
-msgstr "Referencia libre"
+msgstr "Referencia libre / Nº Fact. Proveedor"
 
 #. module: account
 #: field:account.payment.term.line,value:0
@@ -6550,11 +6521,6 @@ msgid "Supplier Refund"
 msgstr "Factura rectificativa de proveedor"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "Tablero"
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Apuntes"
@@ -7143,11 +7109,6 @@ msgstr ""
 "Ejemplo: Mi modelo del %(date)s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Cuentas de ingresos"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr "Referencia del documento que ha generado este informe de factura."
@@ -7657,7 +7618,7 @@ msgstr "Raiz/vista"
 #: code:addons/account/account.py:3121
 #, python-format
 msgid "OPEJ"
-msgstr ""
+msgstr "OPEJ"
 
 #. module: account
 #: report:account.invoice:0
@@ -12087,6 +12048,10 @@ msgstr ""
 #~ msgid "Account cost and revenue by journal (This Month)"
 #~ msgstr "Costo y retorno de la cuenta por diario (este mes)"
 
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Cuentas a cobrar"
+
 #~ msgid "Open for unreconciliation"
 #~ msgstr "Abrir para romper conciliación"
 
@@ -12632,11 +12597,17 @@ msgstr ""
 #~ msgid "Generate entries before:"
 #~ msgstr "Generar asientos hasta:"
 
+#~ msgid "Income Accounts"
+#~ msgstr "Cuentas de ingresos"
+
 #~ msgid "Total :"
 #~ msgstr "Total :"
 
 #~ msgid "Year :"
 #~ msgstr "Ejercicio :"
+
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Facturas creadas en los últimos 15 días"
 
 #~ msgid "Accounts by type"
 #~ msgstr "Cuentas por tipo"
@@ -12844,6 +12815,9 @@ msgstr ""
 #~ msgid "Go to next partner"
 #~ msgstr "Ir a la siguiente empresa"
 
+#~ msgid "Sales by Account Type"
+#~ msgstr "Ventas por tipo de cuenta"
+
 #~ msgid "Reserve And Profit/Loss Account"
 #~ msgstr "Cuenta de reservas y pérdidas/ganancias"
 
@@ -12864,6 +12838,9 @@ msgstr ""
 #, python-format
 #~ msgid " Journal"
 #~ msgstr " Diario"
+
+#~ msgid "Sales by Account"
+#~ msgstr "Ventas por cuenta"
 
 #~ msgid ""
 #~ "It adds initial balance row on report which display previous sum amount of "
@@ -12992,6 +12969,9 @@ msgstr ""
 
 #~ msgid "Account Profit And Loss Report"
 #~ msgstr "Contabilidad. Informe de pérdida y ganancias"
+
+#~ msgid "Dashboard"
+#~ msgstr "Tablero"
 
 #, python-format
 #~ msgid "Can not find account chart for this company, Please Create account."
