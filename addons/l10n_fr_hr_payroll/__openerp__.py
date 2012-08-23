@@ -33,6 +33,7 @@ French Payroll Rules.
     - New payslip report
 
 TODO :
+------
     - Integration with holidays module for deduction and allowance
     - Integration with hr_payroll_account for the automatic account_move_line
       creation from the payslip
@@ -44,9 +45,9 @@ TODO :
     """,
 
     'active': False,
-    'update_xml':[
-     'l10n_fr_hr_payroll_view.xml',
-     'l10n_fr_hr_payroll_data.xml',
+    'data': [
+        'l10n_fr_hr_payroll_view.xml',
+        'l10n_fr_hr_payroll_data.xml',
     ],
     'installable': True
 }
