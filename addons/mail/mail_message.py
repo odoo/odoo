@@ -264,8 +264,7 @@ class mail_message(osv.Model):
             modobj = self.pool.get(values.get('model'))
             follower_notify = []
             for follower in modobj.browse(cr, uid, values.get('res_id'), context=context).message_follower_ids:
-                if follower.id <> uid:
-                    follower_notify.append(follower.id)
+                follower_notify.append(follower.id)
             self.pool.get('mail.notification').notify(cr, uid, follower_notify, newid, context=context)
         return newid
 

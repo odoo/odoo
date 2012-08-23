@@ -83,6 +83,8 @@ class mail_notification(osv.Model):
             'subject': msg.subject
         }
         for partner in partner_obj.browse(cr, uid, partner_ids, context=context):
+            if partner.user_id.id == uid:
+                continue
             notification_obj.create(cr, uid, {
                 'partner_id': partner.id,
                 'message_id': msg_id

@@ -143,7 +143,7 @@ class mail_thread(osv.Model):
             res[notif.message_id.res_id]['message_unread'] = True
 
         for thread in self.browse(cr, uid, ids, context=context):
-            res[thread.id]['message_summary'] = "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(thread.message_ids), len(thread.message_follower_ids))
+            res[thread.id]['message_summary'] = "<span><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (len(thread.message_comment_ids), len(thread.message_follower_ids))
             res[thread.id]['message_is_follower'] = user.partner_id.id in [follower.id for follower in thread.message_follower_ids]
         return res
 
@@ -166,6 +166,10 @@ class mail_thread(osv.Model):
         'message_follower_ids': many2many_reference('res.partner',
             'mail_followers', 'res_id', 'partner_id',
             ref_col_name='res_model', string='Followers'),
+        'message_comment_ids': fields.one2many('mail.message', 'res_id',
+            domain=lambda self: [('model','=',self._name),('type','in',('comment','email'))],
+            string='Related Messages', 
+            help="All messages related to the current document."),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model','=',self._name)],
             string='Related Messages', 
