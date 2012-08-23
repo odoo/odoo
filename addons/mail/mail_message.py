@@ -257,16 +257,27 @@ class mail_message(osv.Model):
     def create(self, cr, uid, values, context=None):
         newid = super(mail_message, self).create(cr, uid, values, context)
         self.check(cr, uid, [newid], mode='create', context=context)
-
-        # notify all followers
-        if values.get('model') and values.get('res_id'):
-            notification_obj = self.pool.get('mail.notification')
-            modobj = self.pool.get(values.get('model'))
-            follower_notify = []
-            for follower in modobj.browse(cr, uid, values.get('res_id'), context=context).message_follower_ids:
-                follower_notify.append(follower.id)
-            self.pool.get('mail.notification').notify(cr, uid, follower_notify, newid, context=context)
+        self.notify(cr, uid, newid, context=context)
         return newid
+
+    def notify(self, cr, uid, newid, context=None):
+        """ Add the related record followers to the destination partner_ids.
+            Call mail_notification.notify to manage the email sending
+        """
+        message = self.browse(cr, uid, newid, context=context)
+        partners_to_notify = []
+        # add all partner_ids of the message
+        if message.partner_ids:
+            for partner in message.partner_ids:
+                if partner.id not in partners_to_notify:
+                    partners_to_notify.append(partner.id)
+        # add all followers and set them as partner_ids
+        if message.model and message.res_id:
+            modobj = self.pool.get(message.model)
+            for follower in modobj.browse(cr, uid, message.res_id, context=context).message_follower_ids:
+                partners_to_notify.append(follower.id)
+                self.write(cr, uid, [newid], {'partner_ids': [(4, follower.id)]}, context=context)
+        self.pool.get('mail.notification').notify(cr, uid, partners_to_notify, newid, context=context)
 
     def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
         self.check(cr, uid, ids, 'read', context=context)

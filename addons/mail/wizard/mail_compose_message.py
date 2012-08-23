@@ -117,6 +117,11 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': [],
     }
 
+    def notify(self, cr, uid, newid, context=None):
+        """ Override specific notify method of mail.message, because we do
+            not want that feature in the wizard. """
+        return
+
     def get_record_data(self, cr, uid, model, res_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
             wizard when sending an email related to the document record
@@ -225,7 +230,7 @@ class mail_compose_message(osv.TransientModel):
 
             # default values, according to the wizard options
             subject = wizard.subject if wizard.content_subtype == 'html' else False
-            partner_ids = [partner.id for partner in wizard.partner_ids]
+            partner_ids = [(4, partner.id) for partner in wizard.partner_ids]
             body = wizard.body if wizard.content_subtype == 'html' else wizard.body_text
 
             active_model_pool = self.pool.get(wizard.model if wizard.model else 'mail.thread')

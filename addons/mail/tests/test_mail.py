@@ -71,6 +71,8 @@ class test_mail(common.TransactionCase):
         self.mail_alias = self.registry('mail.alias')
         self.mail_thread = self.registry('mail.thread')
         self.mail_group = self.registry('mail.group')
+        self.mail_mail = self.registry('mail.mail')
+        self.mail_message = self.registry('mail.message')
         self.mail_notification = self.registry('mail.notification')
         self.mail_followers = self.registry('mail.followers')
         self.res_users = self.registry('res.users')
@@ -123,7 +125,7 @@ class test_mail(common.TransactionCase):
         user_admin = self.res_users.browse(cr, uid, uid)
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
 
-        # Create partner Bert Poilu partner
+        # Create partner Bert Poilu
         partner_bert_id = self.res_partner.create(cr, uid, {'name': 'Bert Poilu'})
 
         # Create 'disturbing' values in mail.followers: same res_id, other res_model; same res_model, other res_id
@@ -227,3 +229,47 @@ class test_mail(common.TransactionCase):
             'Pigs group should have 1 follower after unsubscribing Raoul')
         self.assertTrue(all(id in follower_ids for id in [user_admin.partner_id.id]),
             'Admin the only Pigs group followers')
+
+    def test_10_mail_composer(self):
+        """ Tests designed for the mail.compose.message wizard. """
+        cr, uid = self.cr, self.uid
+        mail_compose = self.registry('mail.compose.message')
+        user_admin = self.res_users.browse(cr, uid, uid)
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        # print 'pigs message_ids: %s' % group_pigs.message_ids
+        # print 'pigs follower_ids: %s' % group_pigs.message_follower_ids
+
+        # Create partner Bert Poilu
+        partner_bert_id = self.res_partner.create(cr, uid, {'name': 'Bert Poilu', 'email': 'bert@poil.poil'})
+        partner_raoul_id = self.res_partner.create(cr, uid, {'name': 'Raoul Grosbedon'})
+
+        # Create a new comment on group_pigs
+        compose_id = mail_compose.create(cr, uid,
+            {'subject': 'Pigs', 'body_text': 'Pigs rules', 'partner_ids': [(4, partner_bert_id), (4, partner_raoul_id)]},
+            {'mail.compose.message': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id})
+        # print 'wizard id: %s' % compose_id
+        compose = mail_compose.browse(cr, uid, compose_id)
+        # print 'wizard partner_ids: %s' % compose.partner_ids
+        self.assertTrue(compose.model == 'mail.group' and compose.res_id == self.group_pigs_id)
+
+        # Send the comment
+        mail_compose.send_mail(cr, uid, [compose_id])
+
+        group_pigs.refresh()
+        # print 'pigs message_ids: %s' % group_pigs.message_ids[0]
+        new_message = group_pigs.message_ids[0]
+        new_partner_ids = [partner.id for partner in new_message.partner_ids]
+
+        # print 'pigs new_message subject: %s' %  new_message.subject
+        # print 'pigs new_message body: %s' %  new_message.body
+        # print 'pigs new_message partner_ids: %s' %  new_message.partner_ids
+
+        notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', new_message.id)])
+        # print notif_ids
+
+        # Message partners = notified people = writer + partner_ids
+        self.assertTrue(len(new_partner_ids) == 3, 'There should be 3 partners linked to the newly posted comment.')
+        self.assertTrue(len(notif_ids) == 3, 'There should be only 3 entries in mail_notification')
+        self.assertTrue(all(id in [user_admin.partner_id.id, partner_bert_id, partner_raoul_id] for id in new_partner_ids),
+            'Admin, Bert and Roaul should be the 3 partners of the newly created message')
+        

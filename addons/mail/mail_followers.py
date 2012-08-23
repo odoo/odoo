@@ -68,30 +68,27 @@ class mail_notification(osv.Model):
     # a message we can not read.
     # def create(self, ...)
 
-
-    # Create notification in the wall of each user
-    # Send by email the notification depending on the user preferences
     def notify(self, cr, uid, partner_ids, msg_id, context=None):
+        """ Send by email the notification depending on the user preferences """
         context = context or {}
         partner_obj = self.pool.get('res.partner')
-        msg_obj = self.pool.get('mail.message')
         notification_obj = self.pool.get('mail.notification')
+        msg_obj = self.pool.get('mail.message')
         msg = msg_obj.browse(cr, uid, msg_id, context=context)
 
         towrite = {
             'email_to': [],
             'subject': msg.subject
         }
+
         for partner in partner_obj.browse(cr, uid, partner_ids, context=context):
+            # Do not send an email to the writer
             if partner.user_id.id == uid:
                 continue
-            notification_obj.create(cr, uid, {
-                'partner_id': partner.id,
-                'message_id': msg_id
-            }, context=context)
+            # Partner does not want to receive any emails
             if partner.notification_email_pref=='none' or not partner.email:
                 continue
-
+            # Partners want to receive only emails and comments
             if partner.notification_email_pref=='comment' and msg.type in ('email','comment'):
                 continue
 
@@ -101,10 +98,11 @@ class mail_notification(osv.Model):
 
         if towrite.get('state', False) and not context.get('noemail', False):
             if towrite.get('subject', False):
-                towrite['subject'] = msg.name_get(cr, uid, [msg.id], context=context)[0][1]
+                towrite['subject'] = msg.name_get()[0][1]
             towrite['message_id'] = msg.id
             towrite['email_to'] = ', '.join(towrite['email_to'])
             mail_message_obj = self.pool.get('mail.mail')
             newid = mail_message_obj.create(cr, uid, towrite, context=context)
             mail_message_obj.send(cr, uid, [newid], context=context)
+
         return True
