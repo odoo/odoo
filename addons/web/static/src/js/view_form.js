@@ -960,15 +960,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     return false;
                 }
                 var displayed = value;
-                switch (field.field.type) {
-                case 'selection':
+                if (field instanceof instance.web.form.FieldSelection) {
                     displayed = _(field.values).find(function (option) {
                             return option[0] === value;
                         })[1];
-                    break;
-                case 'many2one':
+                } else if (field instanceof instance.web.form.FieldMany2One) {
                     displayed = field.get_displayed();
-                    break;
                 }
 
                 return {
@@ -4738,14 +4735,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             // statusbar_visible attribute of the field. For example:
             // statusbar_visible="draft,open".
             var selection = this.field.selection;
-            console.log(selection);
             for(var i=0; i< selection.length; i++) {
                 var key = selection[i][0];
                 if(key == this.selected_value || !this.options.visible || this.options.visible.indexOf(key) != -1) {
                     this.selection.push(selection[i]);
                 }
             }
-            console.log(this.selection);
             this.render_elements();
         }
     },
