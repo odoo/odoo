@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
+    <data noupdate="1">
 
     <!--
         Users Groups
@@ -44,10 +44,6 @@
     <record model="ir.ui.menu" id="base.menu_administration">
         <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
     </record>
-
-    </data>
-
-    <data noupdate="1">
 
         <record model="ir.rule" id="res_widget_user_rule">
             <field name="name">res.widget.user rule</field>
