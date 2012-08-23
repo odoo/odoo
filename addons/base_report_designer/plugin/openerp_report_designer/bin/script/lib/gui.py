@@ -668,14 +668,14 @@ class DBModalDialog:
             UnoControlButtonModel
             UnoControlCheckBoxModel
         """
-        self.setControlModelProperty( cCtrlName, "State", nState )
+        self.setControlModelProperty( cCtrlName, "Status", nState )
 
     def getState( self, cCtrlName ):
         """Supported controls...
             UnoControlButtonModel
             UnoControlCheckBoxModel
         """
-        return self.getControlModelProperty( cCtrlName, "State" )
+        return self.getControlModelProperty( cCtrlName, "Status" )
 
     def setLabel( self, cCtrlName, cLabel ):
         """Supported controls...

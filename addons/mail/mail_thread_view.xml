@@ -2,28 +2,17 @@
 <openerp>
     <data>
 
-        <!-- toplevel menu -->
-        <record id="mail_feeds_main" model="ir.ui.menu">
-            <field name="name">Feeds</field>
-            <field name="sequence">0</field>
-            <field name="web_icon" eval="static/src/img/feeds.png"/>
-            <field name="web_icon_hover" eval="static/src/img/feeds-hover.png"/>
-            <field name="action" ref="action_mail_all_feeds"/>
-        </record>
+        <!-- Top menu item -->
+        <menuitem name="Feeds"
+          id="mail_feeds_main"
+          groups="base.group_user"
+          sequence="10"/>
 
-        <!-- left-side menu: Feeds !-->
-        <menuitem id="mail_feeds" name="Feeds" parent="mail_feeds_main"/>
-        <record id="mail_wallfeeds" model="ir.ui.menu">
-          <field name="name">All Feeds</field>
-          <field name="sequence" eval="10"/>
-          <field name="action" ref="action_mail_all_feeds"/>
-          <field name="parent_id" ref="mail_feeds"/>
-        </record>
-        <record id="mail_myfeeds" model="ir.ui.menu">
-          <field name="name">My Feeds</field>
-          <field name="sequence" eval="11"/>
-          <field name="action" ref="action_mail_my_feeds"/>
-          <field name="parent_id" ref="mail_feeds"/>
-        </record>
+        <!-- Left-side menu: Feeds -->
+        <menuitem id="mail_feeds" name="Feeds" parent="mail_feeds_main" groups="base.group_user" sequence="10"/>
+
+        <menuitem id="mail_wallfeeds" name="News Feed" parent="mail_feeds" action="action_mail_all_feeds" sequence="10"/>
+        <menuitem id="mail_myfeeds" name="My Feeds" parent="mail_feeds" action="action_mail_my_feeds" sequence="11"/>
+
     </data>
 </openerp>

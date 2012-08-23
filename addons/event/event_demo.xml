@@ -38,16 +38,16 @@
 
     <record id="event_1" model="event.event">
         <field name="name">Opera of Verdi</field>
-        <field eval="time.strftime('%Y-%m-05 18:00:00')" name="date_begin"/>
-        <field eval="time.strftime('%Y-%m-05 21:00:00')" name="date_end"/>
+        <field eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 18:00:00')" name="date_begin"/>
+        <field eval="(DateTime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 21:00:00')" name="date_end"/>
         <field name="type" ref="event_type_1"/>
         <field name="register_min">50</field>
         <field name="register_max">350</field>
     </record>
     <record id="event_2" model="event.event">
         <field name="name">Conference on ERP Business</field>
-        <field eval="time.strftime('%Y-%m-05 14:00:00')" name="date_begin"/>
-        <field eval="time.strftime('%Y-%m-05 16:30:00')" name="date_end"/>
+        <field eval="(DateTime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 14:00:00')" name="date_begin"/>
+        <field eval="(DateTime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
         <field name="type" ref="event_type_2"/>
         <field name="register_max">200</field>
     </record>
@@ -60,7 +60,7 @@
         <field name="email">s.l@agrolait.be</field>
         <field name="phone">003281588558</field>
         <field name="event_id" ref="event_1"/>
-        <field name="partner_id" ref="base.res_partner_agrolait"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
         <field name="nb_register">5</field>
     </record>
 
@@ -68,29 +68,17 @@
         <field name="name">ASUStek</field>
         <field name="email">info@asustek.com</field>
         <field name="phone">+ 1 64 61 04 01</field>
-        <field name="partner_id" ref="base.res_partner_asus"/>
+        <field name="partner_id" ref="base.res_partner_1"/>
         <field name="event_id" ref="event_1"/>
         <field name="nb_register">10</field>
     </record>
-
-
-    <record id="reg_0_1" model="event.registration">
-        <field name="name">Syleam</field>
-        <field name="email">contact@syleam.fr</field>
-        <field name="phone">+33 (0) 2 33 31 22 10</field>
-        <field name="partner_id" ref="base.res_partner_sednacom"/>
-        <field name="event_id" ref="event_0"/>
-        <field name="nb_register">6</field>
-    </record>
-
-
 
     <record id="reg_0_2" model="event.registration">
         <field name="name">Camptocamp</field>
         <field name="email">openerp@camptocamp.com</field>
         <field name="phone">+41 21 619 10 04 </field>
         <field name="event_id" ref="event_2"/>
-        <field name="partner_id" ref="base.res_partner_c2c"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
         <field name="nb_register">5</field>
     </record>
 

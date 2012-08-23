@@ -28,26 +28,28 @@
     'category' : 'Localization',
     'description': """
     
-Belgian localisation for in- and outgoing invoices (prereq to account_coda):
+Belgian localization for in- and outgoing invoices (prereq to account_coda):
+============================================================================
     - Rename 'reference' field labels to 'Communication'
     - Add support for Belgian Structured Communication
 
 A Structured Communication can be generated automatically on outgoing invoices according to the following algorithms:
+---------------------------------------------------------------------------------------------------------------------
     1) Random : +++RRR/RRRR/RRRDD+++
-        R..R = Random Digits, DD = Check Digits
+        **R..R =** Random Digits, **DD =** Check Digits
     2) Date : +++DOY/YEAR/SSSDD+++
-        DOY = Day of the Year, SSS = Sequence Number, DD = Check Digits)
+        **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check Digits
     3) Customer Reference +++RRR/RRRR/SSSDDD+++
-        R..R = Customer Reference without non-numeric characters, SSS = Sequence Number, DD = Check Digits)  
+        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits  
         
-The preferred type of Structured Communication and associated Algorithm can be specified on the Partner records. 
-A 'random' Structured Communication will generated if no algorithm is specified on the Partner record. 
+The preferred type of Structured Communication and associated Algorithm can be
+specified on the Partner records. A 'random' Structured Communication will
+generated if no algorithm is specified on the Partner record. 
 
     """,
     'depends': ['account'],
-    'demo_xml': [],
-    'init_xml': [],
-    'update_xml' : [
+    'demo': [],
+    'data' : [
         'partner_view.xml',
         'account_invoice_view.xml',        
     ],

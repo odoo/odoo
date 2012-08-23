@@ -24,6 +24,7 @@ from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv, orm
 from edi import EDIMixin
+from edi.models import edi
 from tools import DEFAULT_SERVER_DATE_FORMAT
 from tools.translate import _
 
@@ -34,7 +35,6 @@ PURCHASE_ORDER_LINE_EDI_STRUCT = {
     'product_uom': True,
     'price_unit': True,
     'product_qty': True,
-    'notes': True,
 
     # fields used for web preview only - discarded on import
     'price_subtotal': True,
@@ -56,10 +56,21 @@ PURCHASE_ORDER_EDI_STRUCT = {
     'amount_total': True,
     'amount_untaxed': True,
     'amount_tax': True,
+    'state':True,
 }
 
 class purchase_order(osv.osv, EDIMixin):
     _inherit = 'purchase.order'
+
+    def wkf_send_rfq(self, cr, uid, ids, context=None):
+        """"Override this method to add a link to mail"""
+        if context is None:
+            context = {}
+        purchase_objs = self.browse(cr, uid, ids, context=context) 
+        edi_token = self.pool.get('edi.document').export_edi(cr, uid, purchase_objs, context = context)[0]
+        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        ctx = dict(context, edi_web_url_view=edi.EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
+        return super(purchase_order, self).wkf_send_rfq(cr, uid, ids, context=ctx)
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a purchase order"""

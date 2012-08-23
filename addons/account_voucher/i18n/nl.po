@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-13 15:05+0000\n"
-"Last-Translator: Erwin <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 18:01+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:45+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:53+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -23,7 +23,7 @@ msgstr "vorige maand"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
-msgid "Unreconciliation transactions"
+msgid "Unreconciliation Transactions"
 msgstr "Niet-afgeletterde transacties"
 
 #. module: account_voucher
@@ -45,7 +45,7 @@ msgstr "Totaalbedrag"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Customer Journal Entries"
-msgstr "Open klant journaal boekingen"
+msgstr "Open klant journaalposten"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1063
@@ -91,7 +91,7 @@ msgstr "Importeer invoerregels"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_unreconcile
 msgid "Account voucher unreconcile"
-msgstr ""
+msgstr "Bonnen rekening onafletteren"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -150,7 +150,7 @@ msgstr "Bon analyses"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Validate"
-msgstr "Bevestig"
+msgstr "Valideren"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0 field:sale.receipt.report,day:0
@@ -210,8 +210,8 @@ msgid ""
 msgstr ""
 "Hiermee kunt u verkoopbetalingen, welke u van uw klanten ontvangt, "
 "registreren. Om een betaling vast te leggen, dient u de klant, de "
-"betaalwijze (is de journaalpost) and het bedrag in te voeren. OpenERP zal "
-"een voorstel doen om deze betaling af te letteren tegen een open factuur of "
+"betaalwijze (is het dagboek) and het bedrag in te voeren. OpenERP zal een "
+"voorstel doen om deze betaling af te letteren tegen een open factuur of "
 "verkoopbon."
 
 #. module: account_voucher
@@ -257,7 +257,7 @@ msgstr "Betaaldatum"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Bankafschrift regel"
+msgstr "Bankafschriftregel"
 
 #. module: account_voucher
 #: view:account.voucher:0 view:account.voucher.unreconcile:0
@@ -277,7 +277,7 @@ msgstr "Belasting"
 #. module: account_voucher
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr "De gekozen journaal en periode moeten behoren tot hetzelfde bedrijf."
+msgstr "Het gekozen dagboek en periode moeten behoren tot hetzelfde bedrijf."
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
@@ -314,7 +314,7 @@ msgstr "Betaald bedrag"
 #. module: account_voucher
 #: view:account.bank.statement:0
 msgid "Import Invoices"
-msgstr "Import facturen"
+msgstr "Importeer facturen"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
@@ -423,7 +423,7 @@ msgstr "Memo"
 #: view:account.invoice:0 code:addons/account_voucher/invoice.py:32
 #, python-format
 msgid "Pay Invoice"
-msgstr "Betaal factuur"
+msgstr "Betaling factuur"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -471,7 +471,7 @@ msgstr "Gem. overschrijding"
 #. module: account_voucher
 #: field:res.company,income_currency_exchange_account_id:0
 msgid "Income Currency Rate"
-msgstr "Inkomende valutakoers"
+msgstr "Valutakoersverschillen opbrengsten"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1063
@@ -518,8 +518,8 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
 msgstr ""
-"Het bedrag op de bon moet hetzelfde bedrag zijn zoals vermeld op de "
-"afschriftregel."
+"Het bedrag op de bon moet hetzelfde bedrag zijn dat vermeld staat op de "
+"afschriftregel"
 
 #. module: account_voucher
 #: view:account.voucher:0 field:account.voucher,audit:0
@@ -612,7 +612,7 @@ msgstr "De bon is geheel betaald"
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
-msgstr "Afletteren beetalingsbalans"
+msgstr "Afletteren betalingsbalans"
 
 #. module: account_voucher
 #: view:account.voucher:0 selection:account.voucher,state:0
@@ -627,8 +627,9 @@ msgid ""
 "Unable to create accounting entry for currency rate difference. You have to "
 "configure the field 'Income Currency Rate' on the company! "
 msgstr ""
-"Onmogelijk om financiële boekingen te maken voor het koersverschil. Het veld "
-"\"inkomende valutakoers\" moet worden geconfigureerd bij het bedrijf! "
+"Het is niet mogelijk om financiële boekingen te maken voor het "
+"koersverschil. Het veld \"Valutakoersverschillen opbrengsten\" moet worden "
+"geconfigureerd bij het bedrijf! "
 
 #. module: account_voucher
 #: view:account.voucher:0 view:sale.receipt.report:0
@@ -719,7 +720,7 @@ msgstr "Verrekend bedrag"
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
 msgid "Write-Off Analytic Account"
-msgstr "Afschrijving anlytische rekening"
+msgstr "Kostenplaats betaalverschil"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
@@ -745,7 +746,7 @@ msgstr "januari"
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
 msgid "Journal Vouchers"
-msgstr "Journaliseer bonnen"
+msgstr "Verkoopbon journaalposten"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -778,7 +779,7 @@ msgstr "Definieer een reeks voor de boeking!"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr "Open leveranciers journaalregels"
+msgstr "Open leveranciers journaalposten"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -798,12 +799,12 @@ msgstr "Post"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
-msgstr "Facturen en openstaande tracsacties"
+msgstr "Facturen en openstaande transacties"
 
 #. module: account_voucher
 #: field:res.company,expense_currency_exchange_account_id:0
 msgid "Expense Currency Rate"
-msgstr "Kosten valutakoers"
+msgstr "Valutakoersverschillen kosten"
 
 #. module: account_voucher
 #: sql_constraint:account.invoice:0
@@ -906,7 +907,7 @@ msgstr "Pro-forma"
 #. module: account_voucher
 #: view:account.voucher:0 field:account.voucher,move_ids:0
 msgid "Journal Items"
-msgstr "Dagboekregels"
+msgstr "Journaalpostregels"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -914,7 +915,7 @@ msgstr "Dagboekregels"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payment"
-msgstr "Klant betaling"
+msgstr "Klantbetaling"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -1048,7 +1049,7 @@ msgstr "Betaling"
 #: view:account.voucher:0 selection:account.voucher,state:0
 #: view:sale.receipt.report:0 selection:sale.receipt.report,state:0
 msgid "Posted"
-msgstr "Verstuurd"
+msgstr "Geboekt"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1078,7 +1079,7 @@ msgstr "april"
 #. module: account_voucher
 #: help:account.voucher,tax_id:0
 msgid "Only for tax excluded from price"
-msgstr "Alleen voor prijzen exclusief BTW"
+msgstr "Alleen voor prijzen exclusief belastingen"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:931
@@ -1088,7 +1089,7 @@ msgid ""
 "configure the field 'Expense Currency Rate' on the company! "
 msgstr ""
 "Het is niet mogelijk om een financiële boeking te maken van het "
-"valutakoersverschil. Het veld 'kosten valutakoers' moet worden "
+"valutakoersverschil. Het veld \"Valutakoersverschillen kosten\" moet worden "
 "geconfigureerd bij het bedrijf! "
 
 #. module: account_voucher
@@ -1100,7 +1101,7 @@ msgstr "Standaard soort"
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
 msgid "Entries by Statement from Invoices"
-msgstr ""
+msgstr "Boekingen veroorzaakt door facturen"
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
@@ -1120,7 +1121,7 @@ msgstr "Bon status"
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr "Effectieve datum voor financiële boekingen"
+msgstr "Boek datum voor financiële boekingen"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -1379,6 +1380,9 @@ msgstr "Totaal"
 #~ "    * Verantwoordingsstukken ontvangst\n"
 #~ "    * Cheques registreren\n"
 #~ "    "
+
+#~ msgid "Unreconciliation transactions"
+#~ msgstr "Niet-afgeletterde transacties"
 
 #~ msgid "Voucher Print"
 #~ msgstr "Verantwoordingsstuk uitdraai"

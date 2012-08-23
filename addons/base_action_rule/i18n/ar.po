@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-01-05 21:23+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-05-10 18:12+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:04+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:58+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_user:0
@@ -96,7 +96,7 @@ msgid ""
 "These people will receive a copy of the future communication between partner "
 "and users by email"
 msgstr ""
-"سيتقبل هؤلاء الناس نسخة من الاتصالات المستقبلية بين الشريك والمستخدمين "
+"سيستقبل هؤلاء الناس نسخة من الاتصالات المستقبلية بين الشريك والمستخدمين "
 "بواسطة البريد الالكتروني"
 
 #. module: base_action_rule
@@ -144,7 +144,7 @@ msgstr "تذكيرات البريد الالكتروني"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
-msgid "Special Keywords to Be Used in The Body"
+msgid "Special Keywords to be Used in the Body"
 msgstr "كلمات خاصة لاستخدامها في الهيئة"
 
 #. module: base_action_rule
@@ -160,11 +160,15 @@ msgid ""
 "specific sales team, or an opportunity which still has status pending after "
 "14 days might trigger an automatic reminder email."
 msgstr ""
+"استخدم الاجراءات الآليةلتقوم بالاجراء تلقائيًا للشاشات المتنووعة. مثال: تم "
+"انشاء الاعلان بواسطة مستخدم محدد ربما خصص تلقائيًا لفريق مبيعات مخصص, او "
+"بالفرصة التي تبقى لها حالة معلقة بعد 14 يومًايمكن ان تشن بريد الكتروني "
+"للتذكير تلقائيًا."
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
-msgstr "هوية البريد الالكتروني للشخاص اللذين سيُرسل اليهم البريد"
+msgstr "هوية البريد الالكتروني للاشخاص اللذين سيُرسل اليهم البريد"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -257,6 +261,10 @@ msgid ""
 "string 'urgent'\n"
 "Note: This is case sensitive search."
 msgstr ""
+"التعبير العادي لتوفيق الاسم من المصدر\n"
+"مثال: سيبحث ‘طاري.*‘ على التسجيلات شاملة على بداية الاسم مع السللسلة "
+"‘طاريء‘\n"
+"لاحظ: انها تكون بحث مكثف للحالة."
 
 #. module: base_action_rule
 #: field:base.action.rule,act_method:0
@@ -323,8 +331,8 @@ msgstr "نشط"
 #. module: base_action_rule
 #: code:addons/base_action_rule/base_action_rule.py:329
 #, python-format
-msgid "No E-Mail ID Found for your Company address!"
-msgstr "لا يوجد هوية للبريد الالكتروني لعنوان شركتك!"
+msgid "No Email ID Found for your Company address!"
+msgstr ""
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_user:0
@@ -373,7 +381,7 @@ msgstr "%(الهدف_الوصف) - وصف الهدف"
 #. module: base_action_rule
 #: constraint:base.action.rule:0
 msgid "Error: The mail is not well formated"
-msgstr "خطأ: الرسالة لم يتم إعدادها جيداً"
+msgstr "خطأ: لم يتم إعداد الرسالة جيداً"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -515,5 +523,12 @@ msgstr "الشروط على الحالات"
 msgid "Trigger Date"
 msgstr "تاريخ تريجر"
 
+#~ msgid "Special Keywords to Be Used in The Body"
+#~ msgstr "كلمات خاصة لاستخدامها في الهيئة"
+
 #~ msgid "This module allows to implement action rules for any object."
 #~ msgstr "يسمح لك هذا النموذج بتطبيق قواعد الاجراء لاي هدف."
+
+#, python-format
+#~ msgid "No E-Mail ID Found for your Company address!"
+#~ msgstr "لا يوجد هوية للبريد الالكتروني لعنوان شركتك!"

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2011-01-21 09:58+0000\n"
-"Last-Translator: Alexey Y. Fedotov <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:38+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:42+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:52+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -56,7 +56,7 @@ msgstr "Объеденить по..."
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
 msgid "Create Your Departments"
-msgstr ""
+msgstr "Укажите ваши отделы"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -108,7 +108,7 @@ msgstr "Планируется набрать"
 #. module: hr
 #: model:ir.actions.todo.category,name:hr.category_hr_management_config
 msgid "HR Management"
-msgstr ""
+msgstr "Управление кадрами"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -147,6 +147,10 @@ msgid ""
 "operations on all the employees of the same category, i.e. allocating "
 "holidays."
 msgstr ""
+"Создать сотрудника и добавить ссылку на пользователя OpenERP, если вы "
+"желаете предоставить ему доступ. Категории могут быть указаны для "
+"сотрудников для применения массовых операций на всех сотрудниках данной "
+"категории."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -162,7 +166,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Цветовая палитра"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_employeeuser0
@@ -190,13 +194,14 @@ msgstr "Женский"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendance"
-msgstr ""
+msgstr "Посещаемость"
 
 #. module: hr
 #: view:hr.employee:0
@@ -242,8 +247,8 @@ msgstr "Прочая информация"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "Рабочий электронный адрес"
+msgid "Work Email"
+msgstr "Рабочая эл. почта"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -283,8 +288,8 @@ msgstr "Категории"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "Планируется сотрудников"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -349,7 +354,7 @@ msgstr "hr.department"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_create_hr_employee_installer
 msgid "Create your Employees"
-msgstr ""
+msgstr "Создайте ваших сотрудников."
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -414,12 +419,6 @@ msgid "Working Address"
 msgstr "Рабочий адрес"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "Инфо-панель менеджера отдела кадров"
-
-#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "Подчиненные подразделения"
@@ -432,7 +431,7 @@ msgstr "Статус"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories structure"
+msgid "Categories Structure"
 msgstr "Структура категорий"
 
 #. module: hr
@@ -443,7 +442,7 @@ msgstr "неизвестен"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees with that job."
-msgstr ""
+msgstr "Количество сотрудников с данной работой."
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -462,7 +461,7 @@ msgstr "Ошибка! Структура подчинения не может б
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
-msgid "Subordonate Hierarchy"
+msgid "Subordinate Hierarchy"
 msgstr ""
 
 #. module: hr
@@ -472,6 +471,9 @@ msgid ""
 "employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Структура отделов используется для управления документами, относящимся к "
+"сотрудникам по отделам: проверки расходов и расписания, управления "
+"посещаемостью, набор новых сотрудников и т. д."
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
@@ -495,7 +497,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Инфо-панель"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -545,7 +547,7 @@ msgstr "Личные данные"
 #. module: hr
 #: field:hr.employee,city:0
 msgid "City"
-msgstr ""
+msgstr "Город"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -555,7 +557,7 @@ msgstr "№ паспорта"
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Work Mobile"
-msgstr ""
+msgstr "Рабочий сотовый телефон"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -600,7 +602,7 @@ msgstr "Национальность"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Leaves"
-msgstr ""
+msgstr "Отпуска"
 
 #. module: hr
 #: view:board.board:0
@@ -658,7 +660,7 @@ msgstr "Создание пользователя OpenERP"
 #. module: hr
 #: field:hr.employee,login:0
 msgid "Login"
-msgstr ""
+msgstr "Имя пользователя системы"
 
 #. module: hr
 #: view:hr.employee:0
@@ -674,7 +676,7 @@ msgstr "Штатное расписание"
 #. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other Id"
-msgstr ""
+msgstr "Other Id"
 
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,coach_id:0
@@ -684,7 +686,7 @@ msgstr "Тренер"
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per company!"
-msgstr ""
+msgstr "Название должности в компании должно быть уникальным!"
 
 #. module: hr
 #: view:hr.job:0
@@ -709,7 +711,12 @@ msgstr "Подчиненные"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
 msgstr ""
 
 #~ msgid "Working Time Categories"
@@ -717,9 +724,6 @@ msgstr ""
 
 #~ msgid "Sunday"
 #~ msgstr "Воскресенье"
-
-#~ msgid "Work Email"
-#~ msgstr "Рабочая эл. почта"
 
 #~ msgid "Group name"
 #~ msgstr "Название группы"
@@ -756,6 +760,9 @@ msgstr ""
 
 #~ msgid "Monday"
 #~ msgstr "Понедельник"
+
+#~ msgid "Categories structure"
+#~ msgstr "Структура категорий"
 
 #~ msgid "Day of week"
 #~ msgstr "День недели"
@@ -902,12 +909,18 @@ msgstr ""
 #~ msgid "Number of employee with that job."
 #~ msgstr "Количество сотрудников на этой должности"
 
+#~ msgid "Work E-mail"
+#~ msgstr "Рабочий электронный адрес"
+
 #~ msgid ""
 #~ "You can enhance the base HR Application by installing few HR-related "
 #~ "functionalities."
 #~ msgstr ""
 #~ "Вы можете улучшить базовое приложение \"Кадры\" подключив некоторый "
 #~ "дополнительный функционал."
+
+#~ msgid "Expected Employees"
+#~ msgstr "Планируется сотрудников"
 
 #~ msgid "It is linked with manager of Department"
 #~ msgstr "Связано с руководителем подразделения"
@@ -979,6 +992,9 @@ msgstr ""
 #~ msgid "Periodic Evaluations"
 #~ msgstr "Периодические собеседования"
 
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "Инфо-панель менеджера отдела кадров"
+
 #~ msgid "No of Employee"
 #~ msgstr "Число сотрудников"
 
@@ -988,3 +1004,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Позволяет создавать и управлять периодическими собеседованиями и "
 #~ "анализировать производительность сотрудников."
+
+#~ msgid "Subordonate Hierarchy"
+#~ msgstr "Дерево субординации"
+
+#~ msgid "Required number of employees in total for that job."
+#~ msgstr "Общее необходимое число сотрудников для данной работы."
+
+#~ msgid "Number of Employees"
+#~ msgstr "Количество сотрудников"
