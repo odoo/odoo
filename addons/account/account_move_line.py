@@ -701,6 +701,8 @@ class account_move_line(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
+        if context and context.get('account_type', False):
+            args.append(('account_id.type', '=', context.get('account_type', False)))
         if context and context.get('next_partner_only', False):
             if not context.get('partner_id', False):
                 partner = self.get_next_partner_only(cr, uid, offset, context)
