@@ -22,13 +22,12 @@
 {
     'name': 'Social Network',
     'version': '1.0',
-    'category':'Social Network',
-    "sequence": 2,
-    "summary": "Discussions, Mailing Lists, News",
+    'category': 'Social Network',
+    'sequence': 2,
+    'summary': 'Discussions, Mailing Lists, News',
     'description': """
-A business oriented Social Networking with a fully-integrated email 
-and message management.
-=====================================================================
+A business oriented Social Networking with a fully-integrated email and message management.
+===========================================================================================
 
 The Social Networking module provides an unified social network
 abstraction layer allowing applications to display a complete 
@@ -40,6 +39,7 @@ allows to follow documents, and to be constantly updated about recent
 news.
         
 The main features of the module are:
+------------------------------------
     * a clean and renewed communication history for any OpenERP
       document that can act as a discussion topic,
     * a discussion mean on documents,
@@ -75,9 +75,7 @@ The main features of the module are:
         'mail_alias_view.xml',
         'res_users_view.xml',
     ],
-    'demo': [
-        'data/mail_demo.xml',
-    ],
+    'demo': ['data/mail_demo.xml'],
     'installable': True,
     'auto_install': False,
     'application': True,
