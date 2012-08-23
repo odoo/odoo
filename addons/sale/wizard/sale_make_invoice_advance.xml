@@ -23,6 +23,7 @@
                         </div>
                     </group>
                     <footer>
+                        <label string="After clicking 'Show Lines to Invoice' button, select lines to invoice and make invoice from the 'More' button." attrs="{'visible': [('advance_payment_method', '=', 'lines')]}"/>
                         <button name="create_invoices" string="Create Invoice" type="object"
                             class="oe_highlight"
                             attrs="{'invisible': [('advance_payment_method', '=', 'lines')]}"/>
