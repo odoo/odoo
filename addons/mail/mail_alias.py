@@ -135,7 +135,7 @@ class mail_alias(osv.Model):
         return new_name
 
     def migrate_to_alias(self, cr, child_model_name, child_table_name, child_model_auto_init_fct,
-        alias_id_column, alias_column, alias_prefix = '', alias_force_thread_id = '', alias_defaults = {}, context=None):
+        alias_id_column, alias_key, alias_prefix = '', alias_force_key = '', alias_defaults = {}, context=None):
         """ Installation hook to create aliases for all users and avoid constraint errors.
 
             :param child_model_name: model name of the child class (i.e. res.users)
@@ -143,9 +143,9 @@ class mail_alias(osv.Model):
             :param child_model_auto_init_fct: pointer to the _auto_init function
                 (i.e. super(res_users,self)._auto_init(cr, context=context))
             :param alias_id_column: alias_id column (i.e. self._columns['alias_id'])
-            :param alias_column: column used for the unique name (i.e. 'login')
+            :param alias_key: name of the column used for the unique name (i.e. 'login')
             :param alias_prefix: prefix for the unique name (i.e. 'jobs' + ...)
-            :param alias_force_thread_id': name of the column for force_thread_id;
+            :param alias_force_key': name of the column for force_thread_id;
                 if empty string, not taken into account
             :param alias_defaults: dict, keys = mail.alias columns, values = child
                 model column name used for default values (i.e. {'job_id': 'id'})
@@ -163,14 +163,14 @@ class mail_alias(osv.Model):
         child_class_model = registry.get(child_model_name)
         no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
         # Use read() not browse(), to avoid prefetching uninitialized inherited fields
-        for obj_data in child_class_model.read(cr, SUPERUSER_ID, no_alias_ids, [alias_column]):
-            alias_vals = {'alias_name': '%s%s' % (alias_prefix, obj_data[alias_column]) }
-            if alias_force_thread_id:
-                alias_vals['alias_force_thread_id'] = obj_data[alias_force_thread_id]
+        for obj_data in child_class_model.read(cr, SUPERUSER_ID, no_alias_ids, [alias_key]):
+            alias_vals = {'alias_name': '%s%s' % (alias_prefix, obj_data[alias_key]) }
+            if alias_force_key:
+                alias_vals['alias_force_thread_id'] = obj_data[alias_force_key]
             alias_vals['alias_defaults'] = dict( (k, obj_data[v]) for k, v in alias_defaults.iteritems())
             alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, alias_vals, model_name=child_model_name)
             child_class_model.write(cr, SUPERUSER_ID, obj_data['id'], {'alias_id': alias_id})
-            _logger.info('Mail alias created for %s %s (uid %s)', child_model_name, obj_data[alias_column], obj_data['id'])
+            _logger.info('Mail alias created for %s %s (uid %s)', child_model_name, obj_data[alias_key], obj_data['id'])
 
         # Finally attempt to reinstate the missing constraint
         try:
