@@ -201,7 +201,7 @@ class res_partner_bank(osv.osv):
                         result = self._prepare_name_get(cr, uid, t, val, context=context)
                     except:
                         result += ' [Formatting Error]'
-                        raise osv.except_osv(_("Error"), _("You cannot avoid default format_layout to result in True"))
+                        raise osv.except_osv(_("Formating Error"), _("Invalid Bank name"))
             res.append((val.id, result))
         return res
 
