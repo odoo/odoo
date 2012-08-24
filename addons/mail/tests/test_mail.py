@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.tests import common
+import tools
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -77,6 +78,9 @@ class test_mail(common.TransactionCase):
         self.mail_followers = self.registry('mail.followers')
         self.res_users = self.registry('res.users')
         self.res_partner = self.registry('res.partner')
+
+        # Install mock SMTP gateway
+        self.registry('ir.mail_server').send_email = lambda *a,**kwargs: True
 
         # groups@.. will cause the creation of new mail groups
         self.mail_group_model_id = self.ir_model.search(self.cr, self.uid, [('model','=', 'mail.group')])[0]
@@ -235,41 +239,71 @@ class test_mail(common.TransactionCase):
         cr, uid = self.cr, self.uid
         mail_compose = self.registry('mail.compose.message')
         user_admin = self.res_users.browse(cr, uid, uid)
+        self.res_users.write(cr, uid, [uid], {'signature': 'Admin'})
+        user_admin.refresh()
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-        # print 'pigs message_ids: %s' % group_pigs.message_ids
-        # print 'pigs follower_ids: %s' % group_pigs.message_follower_ids
 
-        # Create partner Bert Poilu
-        partner_bert_id = self.res_partner.create(cr, uid, {'name': 'Bert Poilu', 'email': 'bert@poil.poil'})
-        partner_raoul_id = self.res_partner.create(cr, uid, {'name': 'Raoul Grosbedon'})
+        # Mail data
+        _subject = 'Pigs'
+        _mail_subject = '%s posted a comment on %s' % (user_admin.name, group_pigs.name)
+        _body_text = 'Pigs rules'
+        _body_html = '<b>Pigs</b> rules'
+
+        # Create partners
+        # 0 - Create an email address for Admin, to check email sending
+        self.res_users.write(cr, uid, [uid], {'email': 'a@a'})
+        # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
+        partner_bert_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
+        # 2 - Raoul Grosbedon, without email, to test email verification; should receive emails for every message
+        partner_raoul_id = self.res_partner.create(cr, uid, {'name': 'Raoul Grosbedon', 'notification_email_pref': 'all'})
+        # 3 - Roger Poilvache, with email, should never receive emails
+        partner_roger_id = self.res_partner.create(cr, uid, {'name': 'Roger Poilvache', 'email': 'r@r', 'notification_email_pref': 'none'})
 
         # Create a new comment on group_pigs
         compose_id = mail_compose.create(cr, uid,
-            {'subject': 'Pigs', 'body_text': 'Pigs rules', 'partner_ids': [(4, partner_bert_id), (4, partner_raoul_id)]},
+            {'subject': _subject, 'body_text': _body_text, 'partner_ids': [(4, partner_bert_id), (4, partner_raoul_id), (4, partner_roger_id)]},
             {'mail.compose.message': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id})
-        # print 'wizard id: %s' % compose_id
         compose = mail_compose.browse(cr, uid, compose_id)
-        # print 'wizard partner_ids: %s' % compose.partner_ids
-        self.assertTrue(compose.model == 'mail.group' and compose.res_id == self.group_pigs_id)
+        self.assertTrue(compose.model == 'mail.group' and compose.res_id == self.group_pigs_id,
+            'Wizard message has model %s and res_id %s; should be mail.group and %s' % (compose.model, compose.res_id, self.group_pigs_id))
 
-        # Send the comment
+        # Post the comment, get created message
         mail_compose.send_mail(cr, uid, [compose_id])
-
         group_pigs.refresh()
-        # print 'pigs message_ids: %s' % group_pigs.message_ids[0]
-        new_message = group_pigs.message_ids[0]
-        new_partner_ids = [partner.id for partner in new_message.partner_ids]
+        first_com = group_pigs.message_ids[0]
 
-        # print 'pigs new_message subject: %s' %  new_message.subject
-        # print 'pigs new_message body: %s' %  new_message.body
-        # print 'pigs new_message partner_ids: %s' %  new_message.partner_ids
-
-        notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', new_message.id)])
-        # print notif_ids
+        # Check message content
+        self.assertTrue(first_com.subject == False and first_com.body == _body_text,
+            'Posted comment subject is %s and body is %s; should be False and %s' % (first_com.subject, first_com.body, _body_text))
 
         # Message partners = notified people = writer + partner_ids
-        self.assertTrue(len(new_partner_ids) == 3, 'There should be 3 partners linked to the newly posted comment.')
-        self.assertTrue(len(notif_ids) == 3, 'There should be only 3 entries in mail_notification')
-        self.assertTrue(all(id in [user_admin.partner_id.id, partner_bert_id, partner_raoul_id] for id in new_partner_ids),
-            'Admin, Bert and Roaul should be the 3 partners of the newly created message')
+        first_com_pids = [partner.id for partner in first_com.partner_ids]
+        notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', first_com.id)])
+        self.assertTrue(len(first_com_pids) == 4, 'There are %s partners linked to the newly posted comment; should be 4' % (len(first_com_pids)))
+        self.assertTrue(len(notif_ids) == 4, 'There are %s 3 entries in mail_notification: should be 4' % (len(notif_ids)))
+        self.assertTrue(all(id in [user_admin.partner_id.id, partner_bert_id, partner_raoul_id, partner_roger_id] for id in first_com_pids),
+            'Admin, Bert Raoul and Roger should be the 4 partners of the newly created message')
+
+        # Fetch latest created email, that should be the email send to partners
+        mail_ids = self.mail_mail.search(cr, uid, [], limit=1)
+        mail = self.mail_mail.browse(cr, uid, mail_ids[0])
+        mail_emails = tools.email_split(mail.email_to)
+
+        # Check email subject, body, and email_to
+        expected_emails = ['a@a', 'b@b']
+        self.assertTrue(mail.subject == _mail_subject and _body_text in mail.body,
+            'Send email subject is \'%s\' and should be %s; body is %s and should contain %s' % (mail.subject, _mail_subject, mail.body, _body_text))
+        self.assertTrue(all(email in mail_emails for email in expected_emails) and len(mail_emails) == 2,
+            'Send email emails are %s; should be %s' % (mail_emails, expected_emails))
+
+        # Create a reply to the last comment, with default partners
+        compose_id = mail_compose.create(cr, uid,
+            {}, {'mail.compose.message.mode': 'reply', 'default_model': 'mail.thread', 'default_res_id': self.group_pigs_id,
+                'active_id': first_com.id})
+        compose = mail_compose.browse(cr, uid, compose_id)
+        self.assertTrue(compose.model == 'mail.group' and compose.res_id == self.group_pigs_id,
+            'Wizard message has model: %s and res_id:%s; should be mail.group and %s' % (compose.model, compose.res_id, self.group_pigs_id))
+        self.assertTrue(compose.parent_id.id == first_com.id and len(compose.partner_ids) == 5,
+            'Wizard parent_id is %d; should be %d; or wrong partner_ids (TO BE CONTINUED)' % (compose.parent_id.id, first_com.id))
+
         
