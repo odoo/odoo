@@ -34,6 +34,50 @@ openerpweb = common.http
 # OpenERP Web helpers
 #----------------------------------------------------------
 
+def rjsmin(script):
+    """ Minify js with a clever regex.
+    Taken from http://opensource.perlig.de/rjsmin
+    Apache License, Version 2.0 """
+    def subber(match):
+        """ Substitution callback """
+        groups = match.groups()
+        return (
+            groups[0] or
+            groups[1] or
+            groups[2] or
+            groups[3] or
+            (groups[4] and '\n') or
+            (groups[5] and ' ') or
+            (groups[6] and ' ') or
+            (groups[7] and ' ') or
+            ''
+        )
+
+    result = re.sub(
+        r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?'
+        r'\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|'
+        r'\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|(?:(?<=[(,=:\[!&|?{};\r\n]'
+        r')(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/'
+        r'))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*'
+        r'(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*'
+        r'))|(?:(?<=[\000-#%-,./:-@\[-^`{-~-]return)(?:[\000-\011\013\014\01'
+        r'6-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*((?:/(?![\r\n/*])[^/'
+        r'\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]'
+        r'*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*))|(?<=[^\000-!#%&(*,./'
+        r':-@\[\\^`{|~])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/'
+        r'*][^*]*\*+)*/))*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\01'
+        r'4\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#'
+        r'%-\047)*,./:-@\\-^`|-~])|(?<=[^\000-#%-,./:-@\[-^`{-~-])((?:[\000-'
+        r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=[^'
+        r'\000-#%-,./:-@\[-^`{-~-])|(?<=\+)((?:[\000-\011\013\014\016-\040]|'
+        r'(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-\011\0'
+        r'13\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=-)|(?:[\0'
+        r'00-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:'
+        r'(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*'
+        r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
+    ).strip()
+    return result
+
 def sass2scss(src):
     # Validated by diff -u of sass2scss against:
     # sass-convert -F sass -T scss openerp.sass openerp.scss
@@ -255,6 +299,11 @@ def concat_files(file_list, reader=None, intersperse=""):
 
     files_concat = intersperse.join(files_content)
     return files_concat, checksum.hexdigest()
+
+def concat_js(file_list):
+    content, checksum = concat_files(file_list, intersperse=';')
+    content = rjsmin(content)
+    return content, checksum 
 
 def manifest_glob(req, addons, key):
     if addons is None:
@@ -591,7 +640,7 @@ class WebClient(openerpweb.Controller):
         if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
             return werkzeug.wrappers.Response(status=304)
 
-        content, checksum = concat_files(files, intersperse=';')
+        content, checksum = concat_js(files)
 
         return make_conditional(
             req, req.make_response(content, [('Content-Type', 'application/javascript')]),
