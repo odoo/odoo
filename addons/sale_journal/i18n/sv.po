@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:34+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:15+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Orderreferensen måste vara unik per bolag!"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -29,7 +29,7 @@ msgstr "Notering"
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr ""
+msgstr "Faktureringstyp"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
@@ -37,11 +37,13 @@ msgid ""
 "This invoicing type will be used, by default, for invoicing the current "
 "partner."
 msgstr ""
+"Denna fakturatyp kommer användas som standard för fakturering av aktuellt "
+"företag."
 
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Fel ! Du kan inte ansluta medlemmar rekursivt"
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -54,6 +56,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Om aktuellt fält är falskt, kan du gömma fakturatyp utan att ta bort den."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -75,7 +78,7 @@ msgstr "Fakturatyper"
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
-msgstr ""
+msgstr "Ogrupperad"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -89,11 +92,14 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Fakturatyper används för företag, kundordrar och leveransordrar. Du kan "
+"skapa specifika fakturajournaler för att gruppera din fakturering till dina "
+"kunders vardagliga behov: daglig, varje onsdag, månatlig etc."
 
 #. module: sale_journal
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Referensen måste vara unik per bolag!"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -111,22 +117,22 @@ msgstr "Aktiva"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Företag"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Kundorder"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Plocklista"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Fakturering"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

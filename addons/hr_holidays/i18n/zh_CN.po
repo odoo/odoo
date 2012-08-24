@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-17 05:00+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:52+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -392,9 +392,9 @@ msgstr "您必须选择一个员工或分类"
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
 msgid ""
-"If its True then its Allocation/Request have to be validated by second "
-"validator"
-msgstr "如果为真，分配 / 申请要二次审核才能生效。"
+"When selected, the Allocation/Leave Requests for this type require a second "
+"validation to be approved."
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -530,11 +530,6 @@ msgstr "开始日期必须在结束日期前！"
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "生效"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
-msgid "Leaves To Validate"
-msgstr "准假等待生效"
 
 #. module: hr_holidays
 #: constraint:hr.employee:0
@@ -758,9 +753,9 @@ msgstr "病假"
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
 msgid ""
-"If you tick this checkbox, the system will allow, for this section, the "
-"employees to take more leaves than the available ones."
-msgstr "如果您勾选，系统将允许员工获得比可得到更多的准假。"
+"If you select this checkbox, the system allows the employees to take more "
+"leaves than the available ones for this type."
+msgstr ""
 
 #. module: hr_holidays
 #: help:hr.holidays.status,leaves_taken:0
@@ -930,6 +925,19 @@ msgstr "待审批"
 #~ "      - "
 #~ "向导可以让您选择打印确认并生效的假期或者看确认或只看生效的，但必须是人力资源组的用户，您可以在“管理/用户”的安全标签里更改用户的数据。\n"
 #~ "             例如你可能把用户定义为admin\n"
+
+#~ msgid ""
+#~ "If its True then its Allocation/Request have to be validated by second "
+#~ "validator"
+#~ msgstr "如果为真，分配 / 申请要二次审核才能生效。"
+
+#~ msgid "Leaves To Validate"
+#~ msgstr "准假等待生效"
+
+#~ msgid ""
+#~ "If you tick this checkbox, the system will allow, for this section, the "
+#~ "employees to take more leaves than the available ones."
+#~ msgstr "如果您勾选，系统将允许员工获得比可得到更多的准假。"
 
 #~ msgid "This area is automaticly filled by the user who validate the leave"
 #~ msgstr "这里自动填充谁生效这准假"

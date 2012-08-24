@@ -125,7 +125,7 @@ class Change( unohelper.Base, XJobExecutor ):
             import traceback,sys 
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ServerParameter', LOG_ERROR, info)     
-            ErrorDialog("Connection to server fail. please check your Server Parameter", "", "Error")
+            ErrorDialog("Connection to server is fail. Please check your Server Parameter.", "", "Error!")
             self.win.endExecute()
                  
     def btnCancel_clicked(self,oActionEvent):

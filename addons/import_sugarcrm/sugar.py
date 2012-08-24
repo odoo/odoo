@@ -33,7 +33,7 @@ import import_sugarcrm
 import logging
 
 import sys
-
+_logger = logging.getLogger(__name__)
 
 debug = False
 
@@ -57,7 +57,7 @@ def login(username, password, url):
     try:
         response = portType.login(request)
     except:
-        raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password bad SugarSoap Api url !'))
+        raise osv.except_osv(_('Error!'), _('Authentication error!\nBad username or password or bad SugarSoap Api url!'))
     if -1 == response._return._id:
         raise LoginError(response._return._error._description)
     
@@ -119,7 +119,7 @@ def get_contact_by_email(portType, username, password, email_address=None):
                 email_list.append(list.Email_address)
         return email_list
     except Exception,e:
-        logging.getLogger('sugarcrm_soap').error('Exception: %s\n' % (tools.ustr(e)))
+        _logger.error('Exception: %s\n' % (tools.ustr(e)))
         return False
 
 def get_document_revision_search(portType, sessionid, module_id=None):

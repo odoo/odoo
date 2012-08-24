@@ -21,13 +21,13 @@
 
 
 {
-    "name": "Share Calendar using CalDAV",
-    "version": "1.1",
-    "depends": [
-                    "base",
-                    "document_webdav",
-                ],
-     'description': """
+    'name': 'Share Calendar Using CalDAV',
+    'version': '1.1',
+    'depends': [
+        'base',
+        'document_webdav',
+    ],
+    'description': """
 This module contains basic functionality for Caldav system.
 ===========================================================
 
@@ -37,34 +37,39 @@ This module contains basic functionality for Caldav system.
   - Provides iCal Import/Export functionality
 
 To access Calendars using CalDAV clients, point them to:
+--------------------------------------------------------
     http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c
 
 To access OpenERP Calendar using WebCal to remote site use the URL like:
+------------------------------------------------------------------------
     http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics
 
     Where,
-        HOSTNAME: Host on which OpenERP server(With webdav) is running
-        PORT : Port on which OpenERP server is running (By Default : 8069)
-        DATABASE_NAME: Name of database on which OpenERP Calendar is created
-        CALENDAR_NAME: Name of calendar to access
+        **HOSTNAME:** Host on which OpenERP server(With webdav) is running
+        
+        **PORT :** Port on which OpenERP server is running (By Default : 8069)
+        
+        **DATABASE_NAME:** Name of database on which OpenERP Calendar is created
+        
+        **CALENDAR_NAME:** Name of calendar to access
 """, 
     'category': 'Hidden/Dependency', 
-    "author": "OpenERP SA",
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    "init_xml": ["caldav_data.xml"],
-    "demo_xml": [],
-    "update_xml": [
-                    'security/ir.model.access.csv',
-                    'wizard/calendar_event_export_view.xml',
-                    'wizard/calendar_event_import_view.xml',
-                    'wizard/calendar_event_subscribe_view.xml',
-                    'wizard/caldav_browse_view.xml',
-                    'caldav_view.xml',
-                    'caldav_setup.xml'
-                    ],
-    "installable": True,
-    "auto_install": False,
-    "certificate": "00924841426645403741",
+    'demo': [],
+    'data': [
+        'security/ir.model.access.csv',
+        'wizard/calendar_event_export_view.xml',
+        'wizard/calendar_event_import_view.xml',
+        'wizard/calendar_event_subscribe_view.xml',
+        'wizard/caldav_browse_view.xml',
+        'caldav_view.xml',
+        'caldav_setup.xml',
+        'caldav_data.xml'
+    ],
+    'installable': True,
+    'auto_install': False,
+    'certificate': '00924841426645403741',
     'images': ['images/calendar_collections.jpeg','images/calendars.jpeg','images/export_ics_file.jpeg'],
 }
 

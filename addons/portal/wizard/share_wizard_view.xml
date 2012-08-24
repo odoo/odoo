@@ -5,14 +5,13 @@
         <record id="share_step1_form_portal" model="ir.ui.view">
             <field name="name">share.step1.form.portal</field>
             <field name="model">share.wizard</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="share.share_step1_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/field[@name='user_type']" position="attributes">
+                <xpath expr="//field[@name='user_type']" position="attributes">
                     <attribute name='invisible'>0</attribute>
                     <attribute name='colspan'>4</attribute>
                 </xpath>
-                <xpath expr="/form/group[@name='emails_group']" position="after">
+                <xpath expr="//group[@name='emails_group']" position="after">
                     <group name="user_group" colspan="4" attrs="{'invisible':[('user_type','!=','existing')]}">
                         <field colspan="4" nolabel="1" name="user_ids" mode="tree">
                             <tree string="Existing users">
@@ -34,17 +33,16 @@
         <record id="share_step2_form_portal" model="ir.ui.view">
             <field name="name">share.step2.form.portal</field>
             <field name="model">share.wizard</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="share.share_step2_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/group/field[@name='result_line_ids']/tree/field[@name='login']" position="after">
+                <xpath expr="//field[@name='result_line_ids']//field[@name='login']" position="after">
                     <field name="share_url" groups="portal.group_portal_manager"/>
                 </xpath>
-                <xpath expr="/form/group/field[@name='result_line_ids']/form/field[@name='login']" position="after">
-                    <field name="share_url" colspan="4" groups="portal.group_portal_manager"/>
-                </xpath>
-                <xpath expr="/form/group/field[@name='result_line_ids']" position="after">
-                    <field colspan="4" name="share_root_url" groups="portal.group_portal_manager"/>
+                <xpath expr="//field[@name='result_line_ids']" position="after">
+                    <newline/>
+                    <group string="Details">
+                        <field name="share_root_url" groups="portal.group_portal_manager"/>
+                    </group>
                 </xpath>
             </field>
         </record>

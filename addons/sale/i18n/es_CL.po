@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:57+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:47+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -51,7 +51,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sales order."
-msgstr "Dirección de envío para la actual orden de venta"
+msgstr "Dirección de envío para la orden de venta actual"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
@@ -88,8 +88,8 @@ msgstr "¡Aviso!"
 
 #. module: sale
 #: report:sale.order:0
-msgid "VAT"
-msgstr "IVA"
+msgid "Tax"
+msgstr ""
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
@@ -109,6 +109,10 @@ msgid ""
 "sales orders partially, by lines of sales order. You do not need this list "
 "if you invoice from the delivery orders or if you invoice sales totally."
 msgstr ""
+"Esta es una lista de todas las líneas de pedidos de venta a facturar. Puede "
+"facturar pedidos de venta parcialmente, por líneas de pedido. No necesita "
+"esta lista si factura desde despachos de salida o si factura pedidos de "
+"venta completos."
 
 #. module: sale
 #: code:addons/sale/sale.py:295
@@ -223,7 +227,7 @@ msgstr "Cantidades ordenadas"
 #. module: sale
 #: view:sale.report:0
 msgid "Sales by Salesman"
-msgstr "Ventas por Ejecutivo"
+msgstr "Ventas por Vendedor"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -262,12 +266,12 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "Presupuestos y pedidos"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
-msgstr "Ventas. Realizar factura"
+msgstr "Realizar facturas de Venta"
 
 #. module: sale
 #: code:addons/sale/sale.py:330
@@ -459,7 +463,7 @@ msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
 msgstr ""
-"El comercial confirma el presupuesto. El estado del pedido de venta se "
+"El vendedor confirma el presupuesto. El estado del pedido de venta se "
 "convierte 'En proceso' o 'Manual en proceso'."
 
 #. module: sale
@@ -543,7 +547,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Despachar cada producto cuando se encuentre disponible"
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
@@ -583,7 +587,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,sale_orders:0
 msgid "Based on Sales Orders"
-msgstr ""
+msgstr "Basado en pedidos de venta"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -620,7 +624,7 @@ msgid ""
 "Incoterm which stands for 'International Commercial terms' implies its a "
 "series of sales terms which are used in the commercial transaction."
 msgstr ""
-"Incoterm que significa 'Términos de Comercio Internacional \"implica una "
+"Incoterm, que significa 'Términos de Comercio Internacional', implica una "
 "serie de condiciones de venta que se utilizan en la transacción comercial."
 
 #. module: sale
@@ -646,7 +650,7 @@ msgstr "# de líneas"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_open_invoice
 msgid "Sales Open Invoice"
-msgstr "Ventas. Abrir factura"
+msgstr "Abrir facturas de Ventas"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -778,6 +782,8 @@ msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Tiene que seleccionar una lista de precios o un cliente en el formulario del "
+"pedido."
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,categ_id:0
@@ -847,7 +853,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #. module: sale
 #: view:sale.report:0
@@ -889,7 +895,7 @@ msgstr "Historial"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on order after delivery"
-msgstr ""
+msgstr "Facturar desde orden, después de despachar"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -936,7 +942,7 @@ msgstr "Referencias"
 #. module: sale
 #: view:sale.order.line:0
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "Mis lineas de pedidos de venta"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
@@ -1021,7 +1027,7 @@ msgstr "Basado en las cantidades enviadas o ordenadas."
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Despachar todos los productos juntos"
 
 #. module: sale
 #: field:sale.order,picking_ids:0
@@ -1078,7 +1084,7 @@ msgstr "Crear guía de despacho"
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
-msgstr ""
+msgstr "Fecha de pedido de la orden de venta"
 
 #. module: sale
 #: view:sale.report:0
@@ -1240,7 +1246,7 @@ msgstr "Impuestos"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order ready to be invoiced"
-msgstr ""
+msgstr "Pedidos preparados para ser facturados"
 
 #. module: sale
 #: help:sale.order,create_date:0
@@ -1260,7 +1266,7 @@ msgstr "Crear facturas"
 #. module: sale
 #: view:sale.report:0
 msgid "Sales order created in current month"
-msgstr ""
+msgstr "Pedidos de venta creados en el mes actual"
 
 #. module: sale
 #: report:sale.order:0
@@ -1410,7 +1416,7 @@ msgstr "Pagado"
 #: model:ir.actions.act_window,name:sale.action_order_report_all
 #: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
 msgid "Sales Analysis"
-msgstr "Análisis ventas"
+msgstr "Análisis de ventas"
 
 #. module: sale
 #: code:addons/sale/sale.py:1151
@@ -1445,7 +1451,7 @@ msgid ""
 "is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
 msgstr ""
-"El comercial crea una factura manualmente si la política de facturación del "
+"El vendedor crea una factura manualmente si la política de facturación del "
 "pedido de venta es \"Envío y Factura manual\". La factura se crea de forma "
 "automática si la política de facturación es 'Pago antes del envío'."
 
@@ -1578,7 +1584,7 @@ msgstr "Facturar las"
 #. module: sale
 #: report:sale.order:0
 msgid "Date Ordered"
-msgstr "Fecha ordenada"
+msgstr "Fecha Pedido"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1629,7 +1635,7 @@ msgstr ""
 "En función del control de facturación de los pedidos de venta, la factura "
 "puede estar basada en las cantidades entregadas o pedidas. Por lo tanto, un "
 "pedido de venta puede generar una factura o una guía de despacho tan pronto "
-"como sea confirmado por el comercial."
+"como sea confirmado por el vendedor."
 
 #. module: sale
 #: code:addons/sale/sale.py:1251
@@ -1680,12 +1686,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Pay before delivery"
-msgstr ""
+msgstr "Pago antes de envío"
 
 #. module: sale
 #: view:board.board:0 model:ir.actions.act_window,name:sale.open_board_sales
 msgid "Sales Dashboard"
-msgstr ""
+msgstr "Tablero de ventas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1880,7 +1886,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:0
 msgid "Sales order created in current year"
-msgstr ""
+msgstr "Pedidos de venta creados en el año actual"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1945,7 +1951,7 @@ msgstr "No facturada"
 #: view:sale.order.line:0 field:sale.order.line,salesman_id:0
 #: view:sale.report:0 field:sale.report,user_id:0
 msgid "Salesman"
-msgstr "Comercial"
+msgstr "Vendedor"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -2017,7 +2023,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:0
 msgid "Sales order created in last month"
-msgstr ""
+msgstr "Pedidos de venta creados en el último mes"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_email_templates
@@ -2034,7 +2040,7 @@ msgstr "Pedidos de ventas"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
 msgid "Sales Shop"
-msgstr "Tienda ventas"
+msgstr "Tiendas de venta"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2083,7 +2089,7 @@ msgstr "Retraso realización"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Deliver & invoice on demand"
-msgstr ""
+msgstr "Despacho y facturación parcial"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
@@ -2112,7 +2118,7 @@ msgstr "Pedido de venta confirmado a factura."
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order that haven't yet been confirmed"
-msgstr ""
+msgstr "Pedidos de venta sin confirmar"
 
 #. module: sale
 #: code:addons/sale/sale.py:322
@@ -2267,6 +2273,9 @@ msgstr "Facturar desde guías de despacho"
 
 #~ msgid "Payment Before Delivery"
 #~ msgstr "Pago antes del envío"
+
+#~ msgid "VAT"
+#~ msgstr "IVA"
 
 #~ msgid "All at Once"
 #~ msgstr "Todo a la vez"
