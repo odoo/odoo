@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -148,15 +148,6 @@
 .openerp li {
   list-style-type: none;
 }
-
-.openerp .oe_form_field_html li {
-  list-style-type: disc;
-}
-
- .openerp .oe_form_field_html h1,h2 {
-  line-height:26px;
-}
-
 .openerp input, .openerp textarea, .openerp select {
   padding: 2px 4px;
   border: 1px solid #cccccc;
@@ -2733,6 +2724,16 @@
   width: 49%;
   float: right;
   color: #333333;
+}
+.openerp .oe_semantic_html li {
+  list-style-type: disc;
+  display: list-item;
+}
+.openerp .oe_semantic_html ul {
+  padding-left: 1em;
+}
+.openerp .oe_semantic_html p {
+  color: #4c4c4c !important;
 }
 
 .kitten-mode-activated {
