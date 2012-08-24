@@ -5,7 +5,6 @@
         <record id="view_res_bank_form" model="ir.ui.view">
             <field name="name">res.bank.form</field>
             <field name="model">res.bank</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank" version="7.0">
                   <sheet>
@@ -41,7 +40,6 @@
         <record id="view_res_bank_tree" model="ir.ui.view">
             <field name="name">res.bank.tree</field>
             <field name="model">res.bank</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Banks">
                     <field name="name"/>
@@ -63,7 +61,6 @@
         <record id="view_partner_bank_type_form" model="ir.ui.view">
             <field name="name">res.partner.bank.type.form</field>
             <field name="model">res.partner.bank.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank Account Type" version="7.0">
                     <group col="4">
@@ -78,7 +75,6 @@
         <record id="view_partner_bank_type_tree" model="ir.ui.view">
             <field name="name">res.partner.bank.type.tree</field>
             <field name="model">res.partner.bank.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Bank Account Type">
                     <field name="name"/>
@@ -90,7 +86,6 @@
         <record id="view_partner_bank_form" model="ir.ui.view">
             <field name="name">res.partner.bank.form</field>
             <field name="model">res.partner.bank</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank account" version="7.0">
                     <group col="4">
@@ -110,8 +105,8 @@
                                     <field name="zip" class="oe_inline" placeholder="ZIP"/>
                                     <field name="city" class="oe_inline" placeholder="City"/>
                                 </div>
-                                <field name="state_id" placeholder="State"/>
-                                <field name="country_id" placeholder="Country"/>
+                                <field name="state_id" placeholder="State" options='{"no_open": true}'/>
+                                <field name="country_id" placeholder="Country" options='{"no_open": true}'/>
                             </div>
                         </group>
                         <group name="bank" string="Information About the Bank">
@@ -127,7 +122,6 @@
         <record id="view_partner_bank_tree" model="ir.ui.view">
             <field name="name">res.partner.bank.tree</field>
             <field name="model">res.partner.bank</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Bank Accounts">
                     <field name="sequence" invisible="1"/>
@@ -142,13 +136,10 @@
         <record id="view_partner_bank_search" model="ir.ui.view">
             <field name="name">res.partner.bank.search</field>
             <field name="model">res.partner.bank</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Bank Accounts">
                     <field name="bank_name" filter_domain="['|', ('bank_name','ilike',self), ('acc_number','ilike',self)]" string="Bank Name"/>
-                    <separator orientation="vertical"/>
                     <filter name="my_bank" icon="terp-check" string="My Banks" domain="[('company_id','&lt;&gt;',False)]" help="Bank accounts belonging to one of your companies"/>
-                    <separator orientation="vertical"/>
                     <field name="company_id" invisible="context.get('company_hide', True)"/>
                     <field name="partner_id"/>
                 </search>

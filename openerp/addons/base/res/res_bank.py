@@ -172,6 +172,17 @@ class res_partner_bank(osv.osv):
                             ('required', field.required)]
         return res
 
+    def _prepare_name_get(self, cr, uid, bank_type_obj, bank_obj, context=None):
+        """
+        Format the name of a res.partner.bank.
+        This function is designed to be inherited to add replacement fields.
+        :param browse_record bank_type_obj: res.partner.bank.type object
+        :param browse_record bank_obj: res.partner.bank object
+        :rtype: str
+        :return: formatted name of a res.partner.bank record
+        """
+        return bank_type_obj.format_layout % bank_obj._data[bank_obj.id]
+
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
@@ -187,7 +198,7 @@ class res_partner_bank(osv.osv):
                         # avoid the default format_layout to result in "False: ..."
                         if not val._data[val.id]['bank_name']:
                             val._data[val.id]['bank_name'] = _('BANK')
-                        result = t.format_layout % val._data[val.id]
+                        result = self._prepare_name_get(cr, uid, t, val, context=context)
                     except:
                         result += ' [Formatting Error]'
                         raise osv.except_osv(_("Warning"), _("You cannot avoid default format_layout to result in True"))

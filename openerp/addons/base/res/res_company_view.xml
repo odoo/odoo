@@ -17,24 +17,29 @@
         <record id="view_company_form" model="ir.ui.view">
             <field name="name">res.company.form</field>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Company" version="7.0">
                   <sheet>
                     <div class="oe_right oe_avatar">
                         <field name="logo" nolabel="1" widget="image"/>
                     </div>
-                    <div class="oe_right oe_button_box">
-                        <button name="%(preview_report)d" string="Preview Header/Footer" type="action" icon="gtk-print"/>
+                    <div class="oe_right oe_button_box" name="button_box">
+                                <button name="%(preview_report)d" string="Preview Header/Footer" type="action" icon="gtk-print" class="oe_inline oe_right"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
-                        <group col="4">
-                            <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"/>
-                            <field name="parent_id"  groups="base.group_multi_company"/>
-                        </group>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <label for="rml_header1" class="oe_edit_only"/>
+                        <div>
+                            <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
+                        </div>
                     </div>
+                    <group col="4">
+                        <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"/>
+                        <field name="parent_id"  groups="base.group_multi_company"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <group>
@@ -44,40 +49,38 @@
                                         <field name="street" placeholder="Street..."/>
                                         <field name="street2"/>
                                         <div>
-                                            <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                            <field name="city" class="oe_inline" placeholder="City"/>
+                                            <field name="city" placeholder="City" style="width: 40%%"/>
+                                            <field name="state_id" class="oe_no_button" placeholder="State" style="width: 24%%" options='{"no_open": true}'/>
+                                            <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                         </div>
-                                        <field name="state_id" placeholder="State"/>
-                                        <field name="country_id" placeholder="Country"/>
+                                        <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": true}'/>
                                     </div>
-                                    <field name="website" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
+                                    <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
                                 </group>
                                 <group>
                                     <field name="phone" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
-                                    <field name="email" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
                                     <field name="fax" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
+                                    <field name="email" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
                                     <field name="vat" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
                                     <field name="company_registry" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
                                 </group>
                             </group>
-                            <separator string="Header/Footer of Reports"/>
-                            <group>
-                                <field name="rml_header1" placeholder="Global Business Solutions"/>
-                                <field name="rml_footer1" groups="base.group_no_one"/>
+                            <group string="Bank Accounts">
+                                <field name="bank_ids" colspan="4" nolabel="1"/>
                                 <label for="rml_footer2"/>
-                                <div>
+                                <div name="bank_acc">
                                     <field name="rml_footer2"/>
-                                    <button name="%(bank_account_update)d" string="Set Bank Accounts" type="action" icon="gtk-go-forward"/>
+                                    <!--<button name="%(bank_account_update)d" string="Set Bank Accounts" type="action" icon="gtk-go-forward" class="oe_inline"/>-->
                                 </div>
                             </group>
                         </page>
                         <page string="Header/Footer" groups="base.group_no_one">
                             <group>
                                <field name="paper_format" on_change="onchange_paper_format(paper_format)"/>
-                                <field name="rml_header"/>
+                                <field name="rml_footer1"/>
                             </group>
-                        </page>
-                        <page string="Internal Header/Footer" groups="base.group_no_one">
+                            <label for="rml_header"/>
+                            <field name="rml_header"/>
                             <label for="rml_header2"/>
                             <field name="rml_header2"/>
                             <label for="rml_header3"/>
@@ -85,11 +88,10 @@
                         </page>
                         <page string="Configuration">
                             <group>
-                                <field name="currency_id"/>
+                                <group name="account_grp" string="Accounting">
+                                    <field name="currency_id"/>
+                                </group>
                             </group>
-                        </page>
-                        <page string="Bank Accounts">
-                            <field name="bank_ids"/>
                         </page>
                     </notebook>
                     </sheet>
@@ -99,7 +101,6 @@
         <record id="view_company_tree" model="ir.ui.view">
             <field name="name">res.company.tree</field>
             <field name="model">res.company</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Companies">
@@ -128,7 +129,6 @@
         <record id="view_inventory_tree" model="ir.ui.view">
             <field name="name">multi_company.default.tree</field>
             <field name="model">multi_company.default</field>
-            <field name="type">tree</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Multi Company">
@@ -145,22 +145,22 @@
         <record id="view_inventory_form" model="ir.ui.view">
             <field name="name">multi_company.default.form</field>
             <field name="model">multi_company.default</field>
-            <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Multi Company" version="7.0">
                   <sheet>
-                    <group col="6" colspan="4">
-                        <field name="name" colspan="6"/>
-                        <separator string="Matching" colspan="6"/>
-                        <field name="company_id"/>
-                        <field name="object_id"/>
-                        <field name="field_id" domain="[('model_id','=',object_id)]"/>
-                        <separator string="Condition" colspan="6"/>
-                        <field name="expression" colspan="4"/>
-                        <field name="sequence"/>
-                        <separator string="Returning" colspan="6"/>
-                        <field name="company_dest_id"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id"/>
+                            <field name="company_dest_id"/>
+                        </group>
+                        <group>
+                            <field name="object_id"/>
+                            <field name="field_id" domain="[('model_id','=',object_id)]"/>
+                            <field name="expression"/>
+                            <field name="sequence"/>
+                        </group>
                     </group>
                    </sheet> 
                 </form>
@@ -169,13 +169,12 @@
         <record id="view_inventory_search" model="ir.ui.view">
             <field name="name">multi_company.default.search</field>
             <field name="model">multi_company.default</field>
-            <field name="type">search</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Multi Company">
                     <field name="name" string="Name"/>
-                    <field name="company_id" widget="selection"/>
-                    <field name="company_dest_id" widget="selection"/>
+                    <field name="company_id"/>
+                    <field name="company_dest_id"/>
                     <field name="object_id"/>
                 </search>
             </field>

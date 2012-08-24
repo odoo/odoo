@@ -19,13 +19,19 @@
 #
 ##############################################################################
 
-import os
 import math
+import openerp
+import os
 from osv import osv, fields
+import re
 import tools
 from tools.translate import _
 import logging
 import pooler
+import pytz
+
+def _tz_get(self,cr,uid, context=None):
+    return [(x, x) for x in pytz.all_timezones]
 
 class res_payterm(osv.osv):
     _description = 'Payment term'
@@ -103,12 +109,15 @@ class res_partner_category(osv.osv):
 
 class res_partner_title(osv.osv):
     _name = 'res.partner.title'
+    _order = 'name'
     _columns = {
         'name': fields.char('Title', required=True, size=46, translate=True),
-        'shortcut': fields.char('Abbreviation', required=True, size=16, translate=True),
+        'shortcut': fields.char('Abbreviation', size=16, translate=True),
         'domain': fields.selection([('partner','Partner'),('contact','Contact')], 'Domain', required=True, size=24)
     }
-    _order = 'name'
+    _defaults = {
+        'domain': 'contact',
+    }
 
 def _lang_get(self, cr, uid, context=None):
     lang_pool = self.pool.get('res.lang')
@@ -129,17 +138,31 @@ class res_partner(osv.osv):
             res[partner.id] =self._display_address(cr, uid, partner, context=context)
         return res
 
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image)
+        return result
+    
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+
     _order = "name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title','Title'),
-        'parent_id': fields.many2one('res.partner','Company'),
+        'parent_id': fields.many2one('res.partner', 'Owned by'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
-        'lang': fields.selection(_lang_get, 'Language', help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
+        'lang': fields.selection(_lang_get, 'Language',
+            help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
+        'tz': fields.selection(_tz_get,  'Timezone', size=64,
+            help="The partner's timezone, used to output proper date and time values inside printed reports. "
+                 "It is important to set a value for this field. You should use the same timezone "
+                 "that is otherwise used to pick and render date and time values: your computer's timezone."),
         'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this partner if any.'),
-        'vat': fields.char('VAT',size=32 ,help="Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."),
+        'vat': fields.char('TIN',size=32 ,help="Tax Identification Number. Check the box if the partner is subjected to taxes. Used by the some of the legal statements."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website',size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
@@ -152,15 +175,15 @@ class res_partner(osv.osv):
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
         'function': fields.char('Job Position', size=128),
-        'type': fields.selection( [('default','Default'),('invoice','Invoice'),
+        'type': fields.selection( [('default','Default'), ('invoice','Invoice'),
                                    ('delivery','Delivery'), ('contact','Contact'),
-                                   ('other','Other')],
-                   'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
+                                   ('other', 'Other')], 'Address Type',
+            help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'State', domain="[('country_id','=',country_id)]"),
+        'state_id': fields.many2one("res.country.state", 'State'),
         'country_id': fields.many2one('res.country', 'Country'),
         'country': fields.related('country_id', type='many2one', relation='res.country', string='Country'),   # for backward compatibility
         'email': fields.char('Email', size=240),
@@ -170,7 +193,26 @@ class res_partner(osv.osv):
         'birthdate': fields.char('Birthdate', size=64),
         'is_company': fields.boolean('Company', help="Check if the contact is a company, otherwise it is a person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
-        'photo': fields.binary('Photo'),
+        'image': fields.binary("Image",
+            help="This field holds the image used as avatar for the "\
+                 "partner. The image is base64 encoded, and PIL-supported. "\
+                 "It is limited to a 1024x1024 px image."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized image", type="binary", multi="_get_image",
+            store = {
+                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized image of the partner. It is automatically "\
+                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Small-sized image", type="binary", multi="_get_image",
+            store = {
+                'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized image of the partner. It is automatically "\
+                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
@@ -183,15 +225,17 @@ class res_partner(osv.osv):
             return [context['category_id']]
         return False
 
-    def _get_photo(self, cr, uid, is_company, context=None):
+    def _get_default_image(self, cr, uid, is_company, context=None):
         if is_company:
-            path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'company_icon.png')
+            image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')
         else:
-            path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png')
-        return open(path, 'rb').read().encode('base64')
+            image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'partner_image.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'active': True,
+        'lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
+        'tz': lambda self, cr, uid, context: context.get('tz', False),
         'customer': True,
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
@@ -199,7 +243,9 @@ class res_partner(osv.osv):
         'is_company': False,
         'type': 'default',
         'use_parent_address': True,
-        'photo': lambda self, cr, uid, context: self._get_photo(cr, uid, False, context),
+        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
+        'image_small': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
+        'image_medium': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -210,8 +256,9 @@ class res_partner(osv.osv):
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
-        value = {'title': False,
-                 'photo': self._get_photo(cr, uid, is_company, context)}
+        # get value as for an onchange on the image
+        value = tools.image_get_resized_images(self._get_default_image(cr, uid, is_company, context), return_big=True)
+        value['title'] = False
         if is_company:
             value['parent_id'] = False
             domain = {'title': [('domain', '=', 'partner')]}
@@ -276,13 +323,15 @@ class res_partner(osv.osv):
             domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
             update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
             self.update_address(cr, uid, update_ids, vals, context)
-        if 'photo' not in vals  :
-            vals['photo'] = self._get_photo(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
+        if 'image' not in vals :
+            image_value = self._get_default_image(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
+            vals.update(tools.image_get_resized_images(image_value, return_big=True))
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
         addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if vals.get(key))
-        return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
+        if addr_vals:
+            return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
 
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
@@ -300,6 +349,38 @@ class res_partner(osv.osv):
                 name = name.replace('\n\n','\n')
             res.append((record.id, name))
         return res
+
+    def name_create(self, cr, uid, name, context=None):
+        """ Override of orm's name_create method for partners. The purpose is
+            to handle some basic formats to create partners using the
+            name_create.
+            Supported syntax:
+            - 'raoul@grosbedon.fr': create a partner with name raoul@grosbedon.fr
+              and sets its email to raoul@grosbedon.fr
+            - 'Raoul Grosbedon <raoul@grosbedon.fr>': create a partner with name
+              Raoul Grosbedon, and set its email to raoul@grosbedon.fr
+            - anything else: fall back on the default name_create
+            Regex :
+            - ([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8}): raoul@grosbedon.fr
+            - ([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]:
+              Raoul Grosbedon, raoul@grosbedon.fr
+        """
+        contact_regex = re.compile('([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]')
+        email_regex = re.compile('([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})')
+        contact_regex_res = contact_regex.findall(name)
+        email_regex_res = email_regex.findall(name)
+        if contact_regex_res:
+            name = contact_regex_res[0][0].rstrip(' ') # remove extra spaces on the right
+            email = contact_regex_res[0][1]
+            rec_id = self.create(cr, uid, {self._rec_name: name, 'email': email}, context);
+            return self.name_get(cr, uid, [rec_id], context)[0]
+        elif email_regex_res:
+            email = '%s' % (email_regex_res[0])
+            rec_id = self.create(cr, uid, {self._rec_name: email, 'email': email}, context);
+            return self.name_get(cr, uid, [rec_id], context)[0]
+        else:
+            rec_id = super(res_partner, self).create(cr, uid, {self._rec_name: name}, context)
+            return self.name_get(cr, uid, [rec_id], context)[0]
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:

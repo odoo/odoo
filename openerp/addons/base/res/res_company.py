@@ -108,13 +108,13 @@ class res_company(osv.osv):
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
-        'rml_header1': fields.char('Report Header / Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents."),
+        'rml_header1': fields.char('Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents (report header)."),
         'rml_footer1': fields.char('General Information Footer', size=200),
         'rml_footer2': fields.char('Bank Accounts Footer', size=250, help="Write here your bank accounts for customer payments."),
         'rml_header': fields.text('RML Header', required=True),
         'rml_header2': fields.text('RML Internal Header', required=True),
-        'rml_header3': fields.text('RML Internal Header', required=True),
-        'logo': fields.related('partner_id', 'photo', string="Logo", type="binary"),
+        'rml_header3': fields.text('RML Internal Header for Landscape Reports', required=True),
+        'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
@@ -142,18 +142,16 @@ class res_company(osv.osv):
         if phone: val.append(_('Phone: ')+phone)
         if fax: val.append(_('Fax: ')+fax)
         if website: val.append(_('Website: ')+website)
-        if vat: val.append(_('VAT: ')+vat)
+        if vat: val.append(_('TIN: ')+vat)
         if reg: val.append(_('Reg: ')+reg)
         return {'value': {'rml_footer1':' | '.join(val)}}
 
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
-
         if context is None:
             context = {}
-        user_preference = context.get('user_preference', False)
-        if user_preference:
+        if context.get('user_preference'):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
