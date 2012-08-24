@@ -5,7 +5,6 @@
     <record model="ir.ui.view" id="view_order_form_inherit">
         <field name="name">sale.order.form.inherit</field>
         <field name="model">sale.order</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <field name="project_id" position="replace"/>
@@ -15,10 +14,9 @@
     <record model="ir.ui.view" id="view_order_form_inherit2">
         <field name="name">sale.order.form.inherit2</field>
         <field name="model">sale.order</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-           <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/form/notebook/page/field[@name='delay']" position="after">
+           <xpath expr="//field[@name='order_line']/form//field[@name='tax_id']" position="after">
                <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]" groups="analytic.group_analytic_accounting"/>
            </xpath>
         </field>
@@ -27,7 +25,6 @@
     <record model="ir.ui.view" id="view_order_line_form2_inherit">
         <field name="name">sale.order.line.form2.inherit</field>
         <field name="model">sale.order.line</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="sale.view_order_line_form2"/>
         <field name="arch" type="xml">
             <field name="product_id" position="after">

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:33+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:49+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -89,7 +89,7 @@ msgstr "Preferensdatum"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Bokföring / betalningar"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -169,7 +169,7 @@ msgstr "Betalradens namn måste vara unikt!"
 #. module: account_payment
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "Ogiltig BBA-strukturerad kommunikation!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -183,6 +183,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Verifikatsdatumet är inte inom den definierade perioden! Du bör ändra datum "
+"eller ta bort denna begränsning från journalen."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -361,6 +363,8 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Valt konto på verifikatet tvingar fram en sekundär valuta. Du kan ta bort "
+"den sekundära valutan på kontot eller välja en flervalutavy för journalen."
 
 #. module: account_payment
 #: report:payment.order:0
@@ -465,7 +469,7 @@ msgstr "Journalrader"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Du kan inte skapa transaktioner på rubrikkonton."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -538,7 +542,7 @@ msgstr "Faktura Ref"
 #. module: account_payment
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Fakturanummer måste vara unikt per bolag!"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -583,7 +587,7 @@ msgstr "Avbryt"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Målbankkonto"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -594,7 +598,7 @@ msgstr "Information"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "Bolaget måste överenstämma för alla konton och perioder."
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -712,7 +716,7 @@ msgstr "Order"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Du kan inte skapa transaktioner på ett stängt konto."
 
 #. module: account_payment
 #: field:payment.order,total:0

@@ -86,6 +86,7 @@ class account_voucher(osv.osv):
             Add domain 'allow_check_writting = True' on journal_id field and remove 'widget = selection' on the same
             field because the dynamic domain is not allowed on such widget
         """
+        if not context: context = {}
         res = super(account_voucher, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         doc = etree.XML(res['arch'])
         nodes = doc.xpath("//field[@name='journal_id']")

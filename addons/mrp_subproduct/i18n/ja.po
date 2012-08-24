@@ -1,0 +1,128 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-05-31 06:38+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:24+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
+
+#. module: mrp_subproduct
+#: field:mrp.subproduct,product_id:0
+msgid "Product"
+msgstr "製品"
+
+#. module: mrp_subproduct
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Fixed"
+msgstr "固定"
+
+#. module: mrp_subproduct
+#: sql_constraint:mrp.bom:0
+msgid ""
+"All product quantities must be greater than 0.\n"
+"You should install the mrp_subproduct module if you want to manage extra "
+"products on BoMs !"
+msgstr ""
+"全製品の数量は0より大きい必要があります。\n"
+"部品表上で追加の製品を管理したい場合は、mrp_subproductモジュールをインストールする必要があります。"
+
+#. module: mrp_subproduct
+#: view:mrp.bom:0
+msgid "sub products"
+msgstr "サブ製品"
+
+#. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "製造オーダー"
+
+#. module: mrp_subproduct
+#: constraint:mrp.bom:0
+msgid "BoM line product should not be same as BoM product."
+msgstr "部品表のライン製品は部品表製品と同じではいけません。"
+
+#. module: mrp_subproduct
+#: view:mrp.bom:0
+msgid "Sub Products"
+msgstr "サブ製品"
+
+#. module: mrp_subproduct
+#: field:mrp.subproduct,subproduct_type:0
+msgid "Quantity Type"
+msgstr "数量タイプ"
+
+#. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_bom
+msgid "Bill of Material"
+msgstr "部品表"
+
+#. module: mrp_subproduct
+#: field:mrp.subproduct,product_qty:0
+msgid "Product Qty"
+msgstr "製品数量"
+
+#. module: mrp_subproduct
+#: field:mrp.subproduct,product_uom:0
+msgid "Product UOM"
+msgstr "製品単位"
+
+#. module: mrp_subproduct
+#: field:mrp.subproduct,bom_id:0
+msgid "BoM"
+msgstr "部品表"
+
+#. module: mrp_subproduct
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
+msgstr "参照は会社ごとに固有でなければいけません。"
+
+#. module: mrp_subproduct
+#: field:mrp.bom,sub_products:0
+msgid "sub_products"
+msgstr "サブ製品"
+
+#. module: mrp_subproduct
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Variable"
+msgstr "可変"
+
+#. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
+msgid "Sub Product"
+msgstr "サブ製品"
+
+#. module: mrp_subproduct
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero!"
+msgstr "オーダー数量は負または0にはできません。"
+
+#. module: mrp_subproduct
+#: help:mrp.subproduct,subproduct_type:0
+msgid ""
+"Define how the quantity of subproducts will be set on the production orders "
+"using this BoM.  'Fixed' depicts a situation where the quantity of created "
+"subproduct is always equal to the quantity set on the BoM, regardless of how "
+"many are created in the production order.  By opposition, 'Variable' means "
+"that the quantity will be computed as    '(quantity of subproduct set on the "
+"BoM / quantity of manufactured product set on the BoM * quantity of "
+"manufactured product in the production order.)'"
+msgstr ""
+"この部品表を使った生産オーダー上にセットされるサブ製品の数量をどのくらいにするかを定義して下さい。固定は、生産オーダーによってどのくらい作成されるのかに関"
+"係なく、作成されるサブ製品の数量は部品表上にセットする数量といつも一致します。反対に可変は、その数量は（部品表上のサブ製品設定の数量 / "
+"部品表情の製造製品設定の数量 * 生産オーダーの製造製品の数量）として計算されます。"
+
+#. module: mrp_subproduct
+#: constraint:mrp.bom:0
+msgid "Error ! You cannot create recursive BoM."
+msgstr "エラー。再帰的な部品表を作ることはできません。"

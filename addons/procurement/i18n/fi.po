@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:00+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:31+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -83,7 +83,7 @@ msgstr "Laske vain varaston minimirajat"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Temporary Procurement Exceptions"
-msgstr ""
+msgstr "Väliaikaiset hankinnan poikkeukset"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -153,7 +153,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Permanent Procurement Exceptions"
-msgstr ""
+msgstr "Pysyvät hankinnan poikkeukset"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -367,7 +367,7 @@ msgstr "Viitteet"
 #: view:product.product:0
 #: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rule"
-msgstr ""
+msgstr "Varaston minimirajasääntö"
 
 #. module: procurement
 #: view:res.company:0
@@ -381,6 +381,8 @@ msgid ""
 "Please check the quantity in procurement order(s), it should not be 0 or "
 "less!"
 msgstr ""
+"Ole hyvä ja tarkista määrä hankintatilauksilla, sen ei tulisi olla 0 tai "
+"vähemmän!"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -388,6 +390,8 @@ msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
 msgstr ""
+"Jos haluat syöttäää hankinnan käsin, haluat todennäköisesti käyttää hanki "
+"tilaukseen metodia."
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -484,7 +488,7 @@ msgstr "plus"
 #. module: procurement
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
-msgstr ""
+msgstr "Et voi siirtää tuotteita paikkaan tai paikasta tässä näkymässä."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -598,7 +602,7 @@ msgstr "Minimivarastosääntö"
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will be rounded up to this multiple."
-msgstr ""
+msgstr "Hankittava määrä joka pyöristetään ylöspäin tähän monikertaan."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -638,7 +642,7 @@ msgstr "Tilaa maksimiin"
 #. module: procurement
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Viitteen tulee olla uniikki yrityskohtaisesti!"
 
 #. module: procurement
 #: field:procurement.order,date_close:0
@@ -856,6 +860,8 @@ msgid ""
 "This wizard will plan the procurement for this product. This procurement may "
 "generate task, production orders or purchase orders."
 msgstr ""
+"Tämä avustaja auttaa suunnittelemaan hankinnan tälle tuotteelle. Hankinta "
+"voi luoda tehtävän, tuotantotilauksia tai ostotilauksia."
 
 #. module: procurement
 #: view:res.company:0
@@ -866,12 +872,12 @@ msgstr "MRP ja logistiikka ajastin"
 #: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state!"
-msgstr ""
+msgstr "Ei voida poistaa hankintatilausta joka on %s tilassa!"
 
 #. module: procurement
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Yrityksen nimen pitää olla uniikki!"
 
 #. module: procurement
 #: field:mrp.property,name:0
@@ -956,12 +962,12 @@ msgstr "Hankinnan yksityiskohdat"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement started late"
-msgstr ""
+msgstr "Hankinta aloitettu myöhässä"
 
 #. module: procurement
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Virhe: Väärä EAN-koodi"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:152

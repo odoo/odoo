@@ -1,46 +1,71 @@
 openerp.project = function(openerp) {
-    openerp.web_kanban.ProjectKanban = openerp.web_kanban.KanbanRecord.include({
-        bind_events: function() {
+    openerp.web_kanban.KanbanView.include({
+        project_display_members_names: function() {
+            /*
+             * Set avatar title for members.
+             * In kanban views, many2many fields only return a list of ids.
+             * We can implement return value of m2m fields like [(1,"Adminstration"),...].
+             */
             var self = this;
-            self._super();
-            if (this.view.dataset.model == 'project.project') {
-                /*set avatar title for members.
-                In many2many fields, returns only list of ids.
-                we can implement return value of m2m fields like [(1,"Adminstration"),...].
-                */
-                _.each($(this.$element).find('.project_avatar'), function(avatar) {
-                    var dataset = new openerp.web.DataSetSearch(this, 'res.users', self.session.context, [['id','=',avatar.id]]);
-                    dataset.read_slice(['name']).then(function(result) {
-                        avatar.setAttribute("title",result[0].name);
+            var members_ids = [];
+
+            // Collect members ids
+            self.$element.find('img[data-member_id]').each(function() {
+                members_ids.push($(this).data('member_id'));
+            });
+
+            // Find their matching names
+            var dataset = new openerp.web.DataSetSearch(self, 'res.users', self.session.context, [['id', 'in', _.uniq(members_ids)]]);
+            dataset.read_slice(['id', 'name']).then(function(result) {
+                _.each(result, function(v, k) {
+                    // Set the proper value in the DOM
+                    self.$element.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
+                        offset: 10
                     });
                 });
+            });
+        },
+        project_display_categ_names: function() {
+            /*
+             * Set proper names to project categories.
+             * In kanban views, many2many fields only return a list of ids.
+             * Therefore, we have to fetch the matching data by ourselves.
+             */
+            var self = this;
+            var categ_ids = [];
 
-                // set sequence like Tasks,Issues,Timesheets and Phases
-                var my_list = $("#list a");
-                my_list.sort(function (a, b) {
-                    var aValue = parseInt(a.id, 10);
-                    var bValue = parseInt(b.id, 10);
-                    return aValue == bValue ? 0 : aValue < bValue ? -1 : 1;
+            // Collect categories ids
+            self.$element.find('span[data-categ_id]').each(function() {
+                categ_ids.push($(this).data('categ_id'));
+            });
+
+            // Find their matching names
+            var dataset = new openerp.web.DataSetSearch(self, 'project.category', self.session.context, [['id', 'in', _.uniq(categ_ids)]]);
+            dataset.read_slice(['id', 'name']).then(function(result) {
+                _.each(result, function(v, k) {
+                    // Set the proper value in the DOM and display the element
+                    self.$element.find('span[data-categ_id=' + v.id + ']').text(v.name);
                 });
-                $('#list').replaceWith(my_list);
+            });
+        },
+        on_groups_started: function() {
+            var self = this;
+            self._super.apply(self, arguments);
 
-                // when vignette is clicked, it opens the first action in sequence
-                if (my_list.length !== 0) {
-                    var click_button = $(this.$element).find('.click_button');
-                    click_button.attr('data-name', my_list[0].getAttribute('data-name'));
-                    click_button.attr('data-type', "action");
-                }
+            if (self.dataset.model === 'project.project') {
+                self.project_display_members_names();
+            } else if (self.dataset.model === 'project.task') {
+                self.project_display_categ_names();
+            }
+        }
+    });
 
-                /* set background color.
-                  we can do other way to implement new widget.
-                  because we need to rpc call for that.
-                */
-                this.$element.find('.bgcolor').click(function() {
-                    var color = parseInt($(this).find('span').attr('class').split(' ')[0].substring(16), 10);
-                    var color_class = $(this).find('span').attr('class').split(' ')[0];
-                    $(this).closest('#oe_project_kanban_vignette').removeClass().addClass(color_class + ' oe_project_kanban_vignette');
-                    self.view.dataset.write(parseInt(this.id, 10), {color:color});
-                });
+    openerp.web_kanban.KanbanRecord.include({
+        on_card_clicked: function() {
+            if (this.view.dataset.model === 'project.project') {
+                this.$('.oe_kanban_project_list a').first().click();
+            } else {
+                this._super.apply(this, arguments);
             }
         }
     });

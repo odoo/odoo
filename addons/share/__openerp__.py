@@ -22,32 +22,29 @@
 
 
 {
-    "name" : "Share any Document",
-    "version" : "2.0",
-    "depends" : ["base", "mail"],
-    "author" : "OpenERP SA",
-    "category": 'Tools',
-    'complexity': "easy",
-    "description": """
+    'name' : 'Share any Document',
+    'version' : '2.0',
+    'depends' : ['base', 'mail'],
+    'author' : 'OpenERP SA',
+    'category': 'Tools',
+    'description': """
 This module adds generic sharing tools to your current OpenERP database.
 ========================================================================
 
 It specifically adds a 'share' button that is available in the Web client to
-share any kind of OpenERP data with colleagues, customers, friends, etc.
+share any kind of OpenERP data with colleagues, customers, friends.
 
 The system will work by creating new users and groups on the fly, and by
-combining the appropriate access rights and ir.rules to ensure that the
-shared users only have access to the data that has been shared with them.
+combining the appropriate access rights and ir.rules to ensure that the shared
+users only have access to the data that has been shared with them.
 
 This is extremely useful for collaborative work, knowledge sharing,
-synchronization with other companies, etc.
-
+synchronization with other companies.
     """,
     'website': 'http://www.openerp.com',
-    'demo_xml': ['share_demo.xml'],
+    'demo': ['share_demo.xml'],
     'data': [
         'security/share_security.xml',
-        'share_view.xml',
         'res_users_view.xml',
         'wizard/share_wizard_view.xml'
     ],
@@ -56,9 +53,7 @@ synchronization with other companies, etc.
     'certificate' : '001301246528927038493',
     'js': ['static/src/js/share.js'],
     'css': ['static/src/css/share.css'],
-    'qweb' : [
-        "static/src/xml/*.xml",
-    ],
+    'qweb' : ['static/src/xml/*.xml'],
     'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }
 

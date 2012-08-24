@@ -125,7 +125,7 @@
         </record>
         <record id="bank_col23" model="account.journal.column">
             <field name="view_id" ref="account_journal_bank_view"/>
-            <field name="name">State</field>
+            <field name="name">Status</field>
             <field name="field">state</field>
             <field eval="19" name="sequence"/>
         </record>
@@ -212,7 +212,7 @@
         </record>
         <record id="bank_col23_multi" model="account.journal.column">
             <field name="view_id" ref="account_journal_bank_view_multi"/>
-            <field name="name">State</field>
+            <field name="name">Status</field>
             <field name="field">state</field>
             <field eval="19" name="sequence"/>
         </record>
@@ -287,7 +287,7 @@
         </record>
         <record id="journal_col24" model="account.journal.column">
             <field name="view_id" ref="account_journal_view"/>
-            <field name="name">State</field>
+            <field name="name">Status</field>
             <field name="field">state</field>
             <field eval="19" name="sequence"/>
         </record>
@@ -368,7 +368,7 @@
         </record>
         <record id="sp_journal_col24" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
-            <field name="name">State</field>
+            <field name="name">Status</field>
             <field name="field">state</field>
             <field eval="19" name="sequence"/>
         </record>
@@ -454,7 +454,7 @@
         </record>
         <record id="sp_refund_journal_col24" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
-            <field name="name">State</field>
+            <field name="name">Status</field>
             <field name="field">state</field>
             <field eval="19" name="sequence"/>
         </record>
@@ -555,19 +555,6 @@
             <field eval="1" name="number_increment"/>
         </record>
 
-        <!-- 
-        Sequence for analytic account 
-        -->
-        <record id="seq_type_analytic_account" model="ir.sequence.type">
-            <field name="name">Analytic account</field>
-            <field name="code">account.analytic.account</field>
-        </record>
-        <record id="seq_analytic_account" model="ir.sequence">
-            <field name="name">Analytic account sequence</field>
-            <field name="code">account.analytic.account</field>
-            <field eval="3" name="padding"/>
-            <field eval="2708" name="number_next"/>
-        </record>
 
         <!--
         Invoice requests (deprecated)
