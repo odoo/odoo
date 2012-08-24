@@ -17,16 +17,11 @@
                                 on_change="on_change_email(user_id)"/>
                         </group>
                         <group col="4" colspan="4" attrs="{'invisible' : [('send_to','!=','partner')]}">
-                            <field name="partner_id" attrs="{'required' : [('send_to','=','partner')]}" on_change="on_change_partner(partner_id)" colspan="2"/>
+                            <field name="partner_ids" attrs="{'required' : [('send_to','=','partner')]}" on_change="on_change_partners(partner_ids)" colspan="2"/>
                         </group>
                     </group>
                     <separator string="" colspan="4"/>
                     <group col="6" colspan="4">
-                        <field name="email_from" colspan="4" required="1"/>
-                        <field name="email_to" colspan="4" required="1"/>
-                        <field name="email_cc" colspan="4"/>
-                        <field name="email_bcc" colspan="4"/>
-                        <field name="reply_to" colspan="4"/>
                         <field name="subject" colspan="4" widget="char" size="512"/>
                     </group>
                     <separator string="" colspan="4"/>

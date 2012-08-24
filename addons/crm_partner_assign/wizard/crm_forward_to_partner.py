@@ -32,6 +32,11 @@ class crm_lead_forward_to_partner(osv.osv_memory):
     _name = 'crm.lead.forward.to.partner'
     _inherit = "mail.compose.message"
 
+    def _get_composition_mode_selection(self, cr, uid, context=None):
+        composition_mode = super(crm_lead_forward_to_partner, self)._get_composition_mode_selection(cr, uid, context=context)
+        composition_mode.append(('forward', 'Forward'))
+        return composition_mode
+
     _columns = {
         'send_to': fields.selection([('user', 'User'), ('partner', 'Partner'), \
                          ('email', 'Email Address')], 'Send to', required=True),
@@ -44,7 +49,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
     _defaults = {
         'send_to' : 'email',
         'history': 'latest',
-        'email_from': lambda s, cr, uid, c: s.pool.get('res.users').browse(cr, uid, uid, c).email,
     }
 
     def on_change_email(self, cr, uid, ids, user, context=None):
@@ -68,19 +72,20 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             res = {'value': {'body' : body}}
         return res
     
-    def on_change_partner(self, cr, uid, ids, partner_id):
+    def on_change_partners(self, cr, uid, ids, partner_id):
         """This function fills address information based on partner/user selected
         """
-        if not partner_id:
-            return {'value' : {'email_to' : False}}
-        partner_obj = self.pool.get('res.partner')
-        data = {}
-        partner = partner_obj.browse(cr, uid, [partner_id])
-        user_id = partner and partner[0].user_id or False
-        data.update({'email_from': partner and partner[0].email or "", 
-                     'email_cc' : user_id and user_id.user or '', 
-                     'user_id': user_id and user_id.id or False})
-        return {'value' : data}
+        return {}
+        # if not partner_id:
+        #     return {'value' : {'email_to' : False}}
+        # partner_obj = self.pool.get('res.partner')
+        # data = {}
+        # partner = partner_obj.browse(cr, uid, [partner_id])
+        # user_id = partner and partner[0].user_id or False
+        # data.update({'email_from': partner and partner[0].email or "", 
+        #              'email_cc' : user_id and user_id.user or '', 
+        #              'user_id': user_id and user_id.id or False})
+        # return {'value' : data}
 
     def action_forward(self, cr, uid, ids, context=None):
         """

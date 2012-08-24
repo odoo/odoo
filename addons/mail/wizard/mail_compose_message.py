@@ -88,12 +88,13 @@ class mail_compose_message(osv.TransientModel):
                 result[field] = vals[field]
         return result
 
+    def _get_composition_mode_selection(self, cr, uid, context=None):
+        return [('comment', 'Comment a document'), ('reply', 'Reply to a message'), ('mass_mail', 'Mass mailing')]
+
     _columns = {
-        'composition_mode': fields.selection([
-            ('comment', 'Comment a document'),
-            ('reply', 'Reply to a message'),
-            ('mass_mail', 'Mass mailing')
-            ], string='Composition mode'),
+        'composition_mode': fields.selection(
+            lambda s, *a, **k: s._get_composition_mode_selection(*a, **k),
+            string='Composition mode'),
         'partner_ids': fields.many2many('res.partner',
             'mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Additional contacts'),
