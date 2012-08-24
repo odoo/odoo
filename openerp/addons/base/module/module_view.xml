@@ -38,7 +38,7 @@
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
                 <search string="Search modules">
-                    <field name="name" filter_domain="['|', '|', '|', ('description', 'ilike', self), ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
+                    <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
                         'ilike', self)]"/>
                     <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
                     <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>

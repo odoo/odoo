@@ -591,7 +591,11 @@ form: module.record_id""" % (xml_id,)
 
         if rec.get('action'):
             a_action = rec.get('action','').encode('utf8')
-            a_type = rec.get('type','').encode('utf8') or 'act_window'
+
+            # determine the type of action
+            a_type, a_id = self.model_id_get(cr, a_action)
+            a_type = a_type.split('.')[-1] # keep only type part
+
             icons = {
                 "act_window": 'STOCK_NEW',
                 "report.xml": 'STOCK_PASTE',
@@ -601,8 +605,8 @@ form: module.record_id""" % (xml_id,)
                 "server": 'STOCK_EXECUTE',
             }
             values['icon'] = icons.get(a_type,'STOCK_NEW')
+
             if a_type=='act_window':
-                a_id = self.id_get(cr, a_action)
                 cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%s', (int(a_id),))
                 rrres = cr.fetchone()
                 assert rrres, "No window action defined for this id %s !\n" \
@@ -627,9 +631,8 @@ form: module.record_id""" % (xml_id,)
                     values['icon'] = 'STOCK_EXECUTE'
                 if not values.get('name', False):
                     values['name'] = action_name
-            
+
             elif a_type in ['wizard', 'url', 'client', 'server'] and not values.get('name'):
-                a_id = self.id_get(cr, a_action)
                 a_table = 'ir_act_%s' % a_type
                 cr.execute('select name from %s where id=%%s' % a_table, (int(a_id),))
                 resw = cr.fetchone()
@@ -667,9 +670,6 @@ form: module.record_id""" % (xml_id,)
             self.idref[rec_id] = int(pid)
 
         if rec.get('action') and pid:
-            a_action = rec.get('action').encode('utf8')
-            a_type = rec.get('type','').encode('utf8') or 'act_window'
-            a_id = self.id_get(cr, a_action)
             action = "ir.actions.%s,%d" % (a_type, a_id)
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
         return ('ir.ui.menu', pid)
