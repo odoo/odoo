@@ -79,7 +79,8 @@ class mail_notification(osv.Model):
 
         towrite = {
             'email_to': [],
-            'subject': msg.subject
+            'subject': msg.subject,
+            'body': msg.body,
         }
 
         for partner in partner_obj.browse(cr, uid, partner_ids, context=context):
