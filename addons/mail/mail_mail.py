@@ -19,13 +19,9 @@
 #
 ##############################################################################
 
-import ast
+# import ast
 import base64
-import datetime
-import email
 import logging
-import re
-import time
 import tools
 
 from osv import osv
@@ -158,10 +154,10 @@ class mail_mail(osv.Model):
                 body = message.body_html if message.content_subtype == 'html' else message.body
                 body_alternative = None
                 content_subtype_alternative = None
-                if message.content_subtype == 'html' and message.body:
+                if message.content_subtype == 'html':
                     # we have a plain text alternative prepared, pass it to 
                     # build_message instead of letting it build one
-                    body_alternative = message.body
+                    body_alternative = tools.html2plaintext(message.body)
                     content_subtype_alternative = 'plain'
 
                 # handle destination_partners
