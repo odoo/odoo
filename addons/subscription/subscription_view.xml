@@ -3,53 +3,44 @@
     <data>
         <menuitem id="next_id_45" name="Recurring Events" parent="base.menu_tools" sequence="4"/>
 
-        <!--
-        =======================================================
-        Subscription Views
-        =======================================================
-        -->
+        <!-- Subscription Views -->
         <record id="view_subscription_form" model="ir.ui.view">
             <field name="name">subscription.subscription.form</field>
             <field name="model">subscription.subscription</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                <div class="oe_form_topbar">
-                    <button name="set_process" states="draft" string="Process" type="object"/>
-                    <button name="set_done" states="running" string="Stop" type="object"/>
+                <form string="Subscriptions" version="7.0">
+                <header>
+                    <button name="set_process" states="draft" string="Process" type="object" class="oe_highlight"/>
+                    <button name="set_done" states="running" string="Stop" type="object" class="oe_highlight"/>
                     <button name="set_draft" states="done" string="Set to Draft" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,running"/>
-                    </div>
-                    <div class="oe_clear"/>
-                </div>
-                <sheet string="Subscriptions" layout="auto">
-                    <group col="6" colspan="4" class="oe_form_header">
-                        <field name="name" select="1"/>
-                        <field name="partner_id" select="1"/>
-                        <field name="user_id" select="1"/>
-                        <field name="active" select="1"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,running"/>
+                </header>
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="user_id"/>
+                        <field name="active"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Subsription Data">
-                            <newline/>
-                            <field name="interval_number"/>
-                            <field name="interval_type"/>
-                            <field name="exec_init"/>
-                            <field name="date_init"/>
-                            <field colspan="4" name="doc_source" widget="reference"/>
-                            <separator string="Notes"  colspan="4"/>
-                            <field colspan="4" name="notes" nolabel="1"/>
-                            <separator colspan="4"/>
-                            <field colspan="4" name="cron_id" readonly="1"/>
+                            <group col="4">
+                                <field name="interval_number"/>
+                                <field name="interval_type"/>
+                                <field name="exec_init"/>
+                                <field name="date_init"/>
+                                <field name="doc_source" widget="reference"/>
+                                <field name="cron_id"/>
+                            </group>
+                            <separator string="Notes"/>
+                            <field name="notes"/>
                         </page>
                         <page string="Documents created">
-                            <field colspan="4" name="doc_lines" nolabel="1" widget="one2many_list"/>
+                            <field name="doc_lines" widget="one2many_list"/>
                         </page>
                         <page string="Notes">
-                            <separator string="Notes" colspan="4"/>
-                            <field name="note" colspan="4" nolabel="1"/>
-                    </page>
+                            <field name="note"/>
+                        </page>
                     </notebook>
                     </sheet>
                 </form>
@@ -59,13 +50,12 @@
         <record id="view_subscription_tree" model="ir.ui.view">
             <field name="name">subscription.subscription.tree</field>
             <field name="model">subscription.subscription</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Subscriptions">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="active"/>
-                    <field name="user_id" select="1"/>
+                    <field name="user_id"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -74,27 +64,18 @@
         <record id="view_subscription_filter" model="ir.ui.view">
             <field name="name">subscription.subscription.filter</field>
             <field name="model">subscription.subscription</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Subscription">
-                    <group>
-                        <filter icon="terp-check"
-                        string="Running"
-                        domain="[('state','=','running')]"/>
-                        <separator orientation="vertical"/>
-                        <filter string="This Week" icon="terp-go-week" domain="[('date_init','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_init','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-today" string="Today"
-                    domain="[('date_init','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('date_init','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="user_id"/>
-                        <field name="partner_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Subscription"/>
+                    <field name="date_init"/>
+                    <filter icon="terp-check"
+                            string="Running"
+                            domain="[('state','=','running')]"/>
+                    <field name="user_id"/>
+                    <field name="partner_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" name="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" name="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
@@ -108,14 +89,13 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_subscription_tree"/>
             <field name="context">{'search_default_User':1}</field>
-            <field name="search_view_id" ref="view_subscription_filter" />
+            <field name="search_view_id" ref="view_subscription_filter"/>
         </record>
         <menuitem action="action_subscription_form" id="menu_action_subscription_form" parent="subscription.next_id_45"/>
 
         <record id="subscription_subscription_history_tree" model="ir.ui.view">
             <field name="name">subscription.subscription.history.tree</field>
             <field name="model">subscription.subscription.history</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Subscription History">
                     <field name="date"/>
@@ -126,11 +106,12 @@
         <record id="subscription_subscription_history_form" model="ir.ui.view">
             <field name="name">subscription.subscription.history.form</field>
             <field name="model">subscription.subscription.history</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Subscription History">
-                    <field name="date"/>
-                    <field colspan="4" name="document_id"/>
+                <form string="Subscription History" version="7.0">
+                    <group col="4">
+                        <field name="date"/>
+                        <field name="document_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -138,16 +119,14 @@
         <record id="document_form" model="ir.ui.view">
             <field name="name">subscription.document.form</field>
             <field name="model">subscription.document</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Subscription Document">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="model" select="1"/>
-                        <field name="active" select="1"/>
+                <form string="Subscription Document" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="model"/>
+                        <field name="active"/>
                     </group>
-                    <newline/>
-                    <field colspan="4" name="field_ids" nolabel="1"/>
+                    <field name="field_ids"/>
                 </form>
             </field>
         </record>
@@ -155,7 +134,6 @@
         <record id="document_tree" model="ir.ui.view">
             <field name="name">subscription.document.tree</field>
             <field name="model">subscription.document</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Subscription Document">
                     <field name="name"/>
@@ -168,13 +146,10 @@
         <record id="view_subscription_document_filter" model="ir.ui.view">
             <field name="name">subscription.document.filter</field>
             <field name="model">subscription.document</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Subscription Document">
-                    <group>
-                        <field name="name"/>
-                        <field name="model"/>
-                    </group>
+                    <field name="name" string="Subscription Document"/>
+                    <field name="model"/>
                 </search>
             </field>
         </record>
@@ -182,12 +157,12 @@
         <record id="document_fields_form" model="ir.ui.view">
             <field name="name">subscription.document.fields.form</field>
             <field name="model">subscription.document.fields</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Subscription Document Fields">
-                    <field name="field" select="1"/>
-                    <newline/>
-                    <field name="value"/>
+                <form string="Subscription Document Fields" version="7.0">
+                    <group>
+                        <field name="field"/>
+                        <field name="value"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -195,7 +170,6 @@
         <record id="document_fields_tree" model="ir.ui.view">
             <field name="name">subscription.document.fields.tree</field>
             <field name="model">subscription.document.fields</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Subscription Document Fields">
                     <field name="field"/>
@@ -210,11 +184,12 @@
             <field name="res_model">subscription.document</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="document_tree"/>
-            <field name="search_view_id" ref="view_subscription_document_filter" />
+            <field name="search_view_id" ref="view_subscription_document_filter"/>
         </record>
         <menuitem name="Configuration" parent="base.menu_tools"
-              id="base.menu_lunch_survey_root" sequence="20" groups="base.group_tool_manager" />
+              id="base.menu_lunch_survey_root" sequence="20" groups="base.group_tool_manager"/>
         <menuitem id="config_recuuring_event" name="Recurring Events" parent="base.menu_lunch_survey_root" sequence="4"/>
         <menuitem action="action_document_form" id="menu_action_document_form" parent="config_recuuring_event"/>
+
     </data>
 </openerp>

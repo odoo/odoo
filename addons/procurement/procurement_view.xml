@@ -9,7 +9,6 @@
         <record id="procurement_tree_view" model="ir.ui.view">
             <field name="name">procurement.order.tree</field>
             <field name="model">procurement.order</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state == 'exception';black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state == 'ready'">
                     <field name="date_planned" widget="date"/>
@@ -27,7 +26,6 @@
          <record id="procurement_tree_view_board" model="ir.ui.view">
             <field name="name">procurement.order.tree.board</field>
             <field name="model">procurement.order</field>
-            <field name="type">tree</field>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state == 'exception';black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state == 'ready'">
@@ -44,60 +42,69 @@
         <record id="procurement_form_view" model="ir.ui.view">
             <field name="name">procurement.order.form</field>
             <field name="model">procurement.order</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                    <div class="oe_form_topbar">
-                        <button name="button_confirm" states="draft" string="Confirm"/>
-                        <button name="button_check" states="confirmed" string="Run Procurement"/>
-                        <button name="button_restart" states="exception" string="Retry"/>
+                <form string="Procurement" version="7.0">
+                    <header>
+                        <button name="button_confirm" states="draft" string="Confirm" class="oe_highlight"/>
+                        <button name="button_check" states="confirmed" string="Run Procurement" class="oe_highlight"/>
+                        <button name="button_restart" states="exception" string="Retry" class="oe_highlight"/>
                         <button name="button_cancel" states="draft,exception,waiting" string="Cancel"/>
-                        <div class="oe_right">
-                            <field name="state" readonly="1" widget="statusbar" nolabel="1" statusbar_visible="draft,confirmed" />
-                        </div>
-                        <div class="oe_clear"/>
-                    </div>
-                <sheet string="Procurement" layout="auto">
-                    <group col="2" colspan="2" class="oe_form_header">
-                        <separator colspan="2" string="References"/>
-                        <field name="name" string="Procurement Reason"/>
-                        <field name="origin"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed" />
+                    </header>
+                    <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                        <label string="-" attrs="{'invisible':[('origin','=',False)]}"/>
+                        <field name="origin" class="oe_inline"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="date_planned"/>
+                            <field name="procure_method"/>
+                            <field name="priority"/>
+                        </group>
+                        <group>
+                            <field name="message"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
                     </group>
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="Planification"/>
-                        <field name="date_planned"/>
-                        <field name="procure_method"/>
-                        <field name="priority"/>
-                    </group>
-                    <notebook colspan="4">
+                    <notebook>
                     <page string="Procurement Details">
-                        <separator colspan="4" string="Product &amp; Location"/>
-                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                        <field name="location_id" domain="[('usage','=','internal')]"/>
-                        <field name="product_qty"/>
-                        <field name="product_uom"/>
-
-                        <field name="product_uos_qty" groups="product.group_uos"/>
-                        <field name="product_uos"  groups="product.group_uos"/>
-
-                        <separator colspan="4" string="Status"/>
-                        <field colspan="4" name="message" readonly="1"/>
+                        <group>
+                            <group>
+                                <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                                <label for="product_qty"/>
+                                <div>
+                                    <field name="product_qty" class="oe_inline"/>
+                                    <field name="product_uom" class="oe_inline"/>
+                                </div>
+                                <label for="product_uos_qty" groups="product.group_uos"/>
+                                <div groups="product.group_uos">
+                                    <field name="product_uos_qty" class="oe_inline"/>
+                                    <field name="product_uos" class="oe_inline"/>
+                                </div>
+                            </group>
+                            <group>
+                               <field name="location_id" domain="[('usage','=','internal')]"/>
+                            </group>
+                        </group>
                     </page>
                     <page string="Extra Information">
-                        <separator colspan="4" string="Details"/>
-                        <field name="move_id"/>
-                        <field name="date_close"/>
-                        <field name="close_move"/>
+                        <group>
+                            <field name="move_id"/>
+                            <field name="date_close"/>
+                            <field name="close_move"/>
+                        </group>
                     </page>
                     <page string="Notes">
-                        <separator colspan="4" string="Note" />
-                        <field name="note" colspan="4" nolabel="1"/>
+                        <field name="note"/>
                     </page>
                     </notebook>
                     </sheet>
-                    <div class="oe_form_sheet_width">
-                        <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                     </div>
                 </form>
             </field>
@@ -105,24 +112,18 @@
         <record id="view_procurement_filter" model="ir.ui.view">
             <field name="name">procurement.order.select</field>
             <field name="model">procurement.order</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
-                    <group>
-                       <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
-                       <filter icon="terp-emblem-important" string="To Fix" name="perm_exceptions" domain="[('state','=','exception'),('message', '!=', '')]" help="Permanent Procurement Exceptions"/>
-                       <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
-                       <separator orientation="vertical"/>
-                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                           domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
-                           help="Procurement started late" />
-                       <separator orientation="vertical"/>
-                       <field name="origin"/>
-                       <field name="product_id" />
-                       <field name="date_planned"/>
-                       <field name="state" />
-                    </group>
-                    <newline/>
+                    <field name="origin" string="Procurement"/>
+                    <field name="date_planned"/>
+                    <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
+                    <separator/>
+                    <filter icon="terp-emblem-important" string="To Fix" name="perm_exceptions" domain="[('state','=','exception'),('message', '!=', '')]" help="Permanent Procurement Exceptions"/>
+                    <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
+                    <separator/>
+                    <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]" help="Procurement started late" />
+                    <field name="product_id" />
+                    <field name="state" />
                     <group expand="0" string="Group By">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Reason" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'name'}"/>
@@ -141,7 +142,20 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="context">{'search_default_current':1}</field>
-            <field name="help">A procurement order is used to record a need for a specific product at a specific location. A procurement order is usually created automatically from sales orders, a Pull Logistics rule or Minimum Stock Rules. When the procurement order is confirmed, it automatically creates the necessary operations to fullfil the need: purchase order proposition, manufacturing order, etc.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a procurement order. 
+              </p><p>
+                A procurement order is used to record a need for a specific
+                product at a specific location.  Procurement orders are usually
+                created automatically from sales orders, pull logistic rules or
+                minimum stock rules.
+              </p><p>
+                When the procurement order is confirmed, it automatically
+                creates the necessary operations to fullfil the need: purchase
+                order proposition, manufacturing order, etc.
+              </p>
+            </field>
         </record>
 
         <record id="procurement_exceptions" model="ir.actions.act_window">
@@ -168,14 +182,13 @@
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">
             <field name="name">stock.warehouse.orderpoint.tree</field>
             <field name="model">stock.warehouse.orderpoint</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Reordering Rules">
                     <field name="name"/>
-                    <field name="warehouse_id"/>
+                    <field name="warehouse_id" groups="stock.group_locations"/>
                     <field name="location_id" groups="stock.group_locations"/>
                     <field name="product_id"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                     <field name="product_min_qty"/>
                     <field name="product_max_qty"/>
                 </tree>
@@ -185,17 +198,13 @@
         <record model="ir.ui.view" id="warehouse_orderpoint_search">
             <field name="name">stock.warehouse.orderpoint.search</field>
             <field name="model">stock.warehouse.orderpoint</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Reordering Rules Search">
-                    <group>
-                        <field name="name"/>
-                        <field name="warehouse_id" widget="selection"/>
-                        <field name="location_id" groups="stock.group_locations"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="product_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Reordering Rules"/>
+                    <field name="warehouse_id"/>
+                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="product_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Warehouse" icon="terp-go-home" domain="[]"  context="{'group_by':'warehouse_id'}"/>
                         <filter string="Location" icon="terp-go-home" domain="[]" context="{'group_by':'location_id'}"/>
@@ -207,36 +216,36 @@
         <record id="view_warehouse_orderpoint_form" model="ir.ui.view">
             <field name="name">stock.warehouse.orderpoint.form</field>
             <field name="model">stock.warehouse.orderpoint</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Reordering Rules">
-                    <group col="2" colspan="2">
-                        <separator string="General Information" colspan="2" />
-                        <field name="name" />
-                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                        <field name="product_uom"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Locations" colspan="2" />
-                        <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                        <field name="location_id" groups="stock.group_locations"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Quantity Rules" colspan="2" />
-                        <field name="product_min_qty"/>
-                        <field name="product_max_qty"/>
-                        <field name="qty_multiple"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Misc" colspan="2" />
-                        <field name="procurement_id" readonly="1"/>
-                        <field name="active" />
-                    </group>
-                    <group col="4" colspan="4">
-                        <separator string="Procurement Orders to Process" colspan="4" />
-                        <field name="procurement_draft_ids" colspan="4" nolabel="1"/>
-                    </group>
+                <form string="Reordering Rules" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                            </group>
+                            <group>
+                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
+                                <field name="product_uom" groups="product.group_uom"/>
+                                <field name="location_id" groups="stock.group_locations"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Rules">
+                                <field name="product_min_qty" />
+                                <field name="product_max_qty" />
+                                <field name="qty_multiple" string="Quantity Multiple"/>
+                            </group>
+                            <group string="Misc">
+                                <field name="procurement_id" readonly="1"/>
+                                <field name="active" />
+                            </group>
+                        </group>
+                        <group string="Procurement Orders to Process">
+                            <field name="procurement_draft_ids" nolabel="1"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -277,15 +286,32 @@
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.orderpoint.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <group name="misc" position="after">
-                    <group colspan="4" attrs="{'invisible':[('type','=','service')]}" groups="stock.group_stock_manager">
-                        <separator string="Minimum Stock Rules" colspan="4"/>
-                        <field name="orderpoint_ids" nolabel="1" colspan="4" context="{'default_product_id': active_id}"/>
-                    </group>
-                </group>
+                <page string="Procurement &amp; Locations" position="inside">
+                    <separator string="Minimum Stock Rules"/>
+                        <field name="orderpoint_ids" widget="one2many_list" mode="tree" context="{'default_product_id': active_id}">
+                            <tree string="Reordering Rules">
+                                <field name="name"/>
+                                <field name="warehouse_id"/>
+                                <field name="product_min_qty"/>
+                                <field name="product_max_qty"/>
+                            </tree>
+                        </field>
+                </page>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_form_view_procurement_button">
+            <field name="name">product.product.procurement</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='image_medium']" position="after">
+                    <div class='oe_right oe_button_box'>
+                        <button string="Procurement Request" name="%(act_make_procurement)d" type="action"/>
+                    </div>
+                </xpath>
             </field>
         </record>
 

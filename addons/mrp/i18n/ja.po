@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:49+0000\n"
-"PO-Revision-Date: 2012-06-02 04:49+0000\n"
+"PO-Revision-Date: 2012-06-08 02:52+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-03 04:47+0000\n"
-"X-Generator: Launchpad (build 15342)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:44+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -112,7 +112,7 @@ msgstr "部品表の検索"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct1
 msgid "For stockable products and consumables"
-msgstr "在庫可能製品と消耗品"
+msgstr "在庫可能製品と売り切り品"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
@@ -142,7 +142,7 @@ msgstr "完成した製品"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are currently in production."
-msgstr "現在生産中の製造オーダー"
+msgstr "現在製造中の製造オーダー"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -206,7 +206,7 @@ msgstr "製品数量"
 msgid ""
 "Fill this product to track easily your production costs in the analytic "
 "accounting."
-msgstr "分析会計の中で生産コストを簡単に追跡するためのこの製品を満たして下さい。"
+msgstr "分析会計の中で製造コストを簡単に追跡するため、この製品を埋めて下さい。"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -223,7 +223,7 @@ msgstr "改訂"
 msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
-msgstr "購入または販売した全ての製品フォームを作成して下さい。製品を購入することがでできる場合、仕入先を指定して下さい。"
+msgstr "購入または販売する全ての製品フォームを作成して下さい。製品を仕入れることができる場合、仕入先を指定して下さい。"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.next_id_77
@@ -362,21 +362,21 @@ msgstr "時間数"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Confirm Production"
-msgstr "生産確認"
+msgstr "製造確認"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockproduct0
 msgid ""
 "The system creates an order (production or purchased) depending on the sold "
 "quantity and the products parameters."
-msgstr "システムは販売数量そして製品のパラメータに応じてオーダー（生産または仕入）を作成します。"
+msgstr "システムは販売数量そして製品のパラメータに応じてオーダー（製造または仕入）を作成します。"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockproduction0
 msgid ""
 "In case the Supply method of the product is Produce, the system creates a "
 "production order."
-msgstr "製品の供給方法が生産である場合は、システムは生産オーダーを作成します。"
+msgstr "製品の供給方法が製造である場合は、システムは製造オーダーを作成します。"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
@@ -388,7 +388,7 @@ msgid ""
 "and OpenERP will automatically select the BoM to use according the needs."
 msgstr ""
 "同じ製品で異なった構築方法を持つ場合、OpenERPの属性は製品製造のための正しい部品表を選択するのに使用されます。それぞれの部品表には幾つかの属性を割り"
-"当てることができます。販売員が販売オーダーを作成した時、彼はそれを幾つかの属性に関連付けることができ、そして、OpenERPは要求によって使用する部品表を"
+"当てることができます。販売員が受注オーダーを作成した時、彼はそれを幾つかの属性に関連付けることができ、そして、OpenERPは要求によって使用する部品表を"
 "自動的に選択します。"
 
 #. module: mrp
@@ -396,7 +396,7 @@ msgstr ""
 msgid ""
 "This is the Internal Picking List that brings the finished product to the "
 "production plan"
-msgstr "これは生産計画のために完成した製品を持ってくる内部の集荷リストです。"
+msgstr "これは製造計画のために完成した製品を持ってくる内部の集荷リストです。"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
@@ -432,7 +432,7 @@ msgid ""
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
-"完成した製品が必要とされる場所で生産する場合は空のままとして下さい。固定の場所で生産する場合は場所を設定して下さい。製造業務を外注する場合は、パートナの場"
+"完成した製品を必要とされる場所で製造する場合は空のままとして下さい。固定の場所で製造する場合は場所を設定して下さい。製造業務を外注する場合は、パートナの場"
 "所として下さい。"
 
 #. module: mrp
@@ -522,7 +522,7 @@ msgstr "生産する製品"
 #: view:mrp.routing:0
 #: field:mrp.routing,location_id:0
 msgid "Production Location"
-msgstr "生産場所"
+msgstr "製造場所"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -557,7 +557,7 @@ msgstr "製品部品表構成"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Search Production"
-msgstr "生産の検索"
+msgstr "製造の検索"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
@@ -569,7 +569,7 @@ msgstr "単位当りの仕入価格"
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr "作業センタの経路のリストを表示する時の順序を与えて下さい。"
+msgstr "作業センタの経路のリストを表示する時の順序を与えます。"
 
 #. module: mrp
 #: constraint:stock.move:0
@@ -586,7 +586,7 @@ msgstr "部品表の階層"
 #: field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product UOM"
-msgstr "製品の単位"
+msgstr "製品単位"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -669,7 +669,7 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
-"完成した製品を生産するための操作のリスト（作業センタのリスト）。経路は操作の間の作業センタのコストを計算し、生産計画化を基本とする作業センタの将来の負荷を"
+"完成した製品を製造するための操作のリスト（作業センタのリスト）。経路は操作の間の作業センタのコストを計算し、製造計画化を基本とする作業センタの将来の負荷を"
 "計画するために主に利用されます。"
 
 #. module: mrp
@@ -685,7 +685,7 @@ msgstr "部品表のライン製品は部品表製品と同じではいけませ
 #. module: mrp
 #: view:mrp.production:0
 msgid "In Production"
-msgstr "生産中"
+msgstr "製造中"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_property
@@ -742,7 +742,7 @@ msgstr "無効なアクションです。"
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% within the production process."
-msgstr "0.9の数は生産過程の中での10％の損失を意味します。"
+msgstr "0.9の数は製造過程の中での10％の損失を意味します。"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:734
@@ -784,7 +784,8 @@ msgid ""
 "order creates a RFQ for a subcontracting purchase order or waits until the "
 "service is done (= the delivery of the products)."
 msgstr ""
-"サービス提供のための選択された方法に応じて、調達オーダーは下請け仕入のための見積依頼を作成するか、またはサービスが完了（製品の配達）するまで待ちます。"
+"サービス提供のための選択された方法に応じて、調達オーダーは下請け発注オーダーのための見積依頼を作成するか、またはサービスが完了（製品の配達）するまで待ちま"
+"す。"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -995,13 +996,13 @@ msgstr "部品表名"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Start Production"
-msgstr "生産の開始"
+msgstr "製造の開始"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.open_board_manufacturing
 #: model:ir.ui.menu,name:mrp.menu_board_manufacturing
 msgid "Production Dashboard"
-msgstr "生産のダッシュボード"
+msgstr "製造のダッシュボード"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -1169,7 +1170,7 @@ msgstr "注記"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are ready to start production."
-msgstr "生産開始準備ができた製造オーダーです。"
+msgstr "製造開始準備ができた製造オーダーです。"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1201,7 +1202,7 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (Work Centers) "
 "will be automatically pre-completed."
 msgstr ""
-"経路は全ての作業センタが長さとサイクルがどのくらい使われるかを示します。経路が示される場合、生産オーダー（作業センタ）の第３のタブは自動的に事前完了します"
+"経路は全ての作業センタが長さとサイクルがどのくらい使われるかを示します。経路が示される場合、製造オーダー（作業センタ）の第３のタブは自動的に事前完了します"
 "。"
 
 #. module: mrp
@@ -1226,7 +1227,7 @@ msgstr "日々"
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Revisions"
-msgstr "改訂"
+msgstr "リビジョン"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_shirt_product_template
@@ -1252,7 +1253,7 @@ msgstr "製造オーダー %s は %s に予定されています。"
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Production Order N° :"
-msgstr "s生産オーダー番号："
+msgstr "製造オーダー番号："
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:647
@@ -1263,7 +1264,7 @@ msgstr "製造オーダー %s は生産する準備ができています。"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
 msgid "Production Scheduled Product"
-msgstr "生産予定済製品"
+msgstr "製造予定済製品"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:204
@@ -1308,14 +1309,14 @@ msgid ""
 "production steps or define a single multi-level bill of materials."
 msgstr ""
 "マスター部品表は完成品を作るために使用される必要な原材料のリストを作成し管理します。OpenERPは製品のニーズに応じて製造オーダーを自動的に提案するため"
-"にそれらの部品表を使用します。特定の生産手順の定義や、単一の多層部品表の定義のために部品表を作成できます。"
+"にそれらの部品表を使用します。特定の製造手順の定義や、単一の多層部品表の定義のために部品表を作成できます。"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockrfq0
 msgid ""
 "In case the Supply method of the product is Buy, the system creates a "
 "purchase order."
-msgstr "製品の供給方法が購入の場合、システムは仕入オーダーを作成します。"
+msgstr "製品の供給方法が購入の場合、システムは発注オーダーを作成します。"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
@@ -1337,12 +1338,12 @@ msgstr "構成部品仕入先"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production Work Centers"
-msgstr "生産作業センタ"
+msgstr "製造作業センタ"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Split in production lots"
-msgstr "生産ロットに分割"
+msgstr "製造ロットに分割"
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -1410,7 +1411,7 @@ msgstr "部品表の改訂"
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
-msgstr "この生産オーダー要求を生成したドキュメントへの参照"
+msgstr "この製造オーダー要求を生成したドキュメントへの参照"
 
 #. module: mrp
 #: sql_constraint:mrp.bom:0
@@ -1529,7 +1530,7 @@ msgstr "消費製品"
 #: view:mrp.product.produce:0
 #: view:mrp.production:0
 msgid "Produce"
-msgstr "生産"
+msgstr "製造"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
@@ -1554,7 +1555,7 @@ msgstr "作業センタの説明。この作業センタは何がサイクルで
 #. module: mrp
 #: view:mrp.production.lot.line:0
 msgid "Production Products"
-msgstr "生産製品"
+msgstr "製造製品"
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
@@ -1590,7 +1591,7 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
-"完成した製品を生産するための操作のリスト（作業センタのリスト）。経路は操作の間の作業センタのコストを計算し、生産計画化を基本とする作業センタの将来の負荷を"
+"完成した製品を製造するための操作のリスト（作業センタのリスト）。経路は操作の間の作業センタのコストを計算し、製造計画化を基本とする作業センタの将来の負荷を"
 "計画するために主に利用されます。"
 
 #. module: mrp
@@ -1606,7 +1607,7 @@ msgstr "属性の分類"
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr "作業オーダーリストの表示の際には並びの順序を与えて下さい。"
+msgstr "作業オーダーリストの表示の際には並びの順序を与えます。"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -1622,7 +1623,7 @@ msgstr "予定済製品"
 #. module: mrp
 #: view:mrp.production.lot.line:0
 msgid "Production Products Consommation"
-msgstr "生産製品の消費"
+msgstr "製造製品の消費"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
@@ -1644,7 +1645,7 @@ msgid ""
 "ordered quantities are produced."
 msgstr ""
 "消費のみモードでは、製品は選択した量だけを消費します。\n"
-"消費と生産モードでは、製品を選択した数量生産すると同様に消費もされます。そして合計注文量が生産された時に生産オーダーが終わります。"
+"消費と生産モードでは、製品を選択した数量製造すると同様に消費もされます。そして合計注文量が製造された時に製造オーダーが終わります。"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1718,7 +1719,7 @@ msgstr "サイクル当りの時間（時）"
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
-msgstr "生産オーダー"
+msgstr "製造オーダー"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
@@ -1833,8 +1834,8 @@ msgid ""
 "product, it will be sold and shipped as a set of components, instead of "
 "being produced."
 msgstr ""
-"サブ製品が複数の製品の中で使われている場合、それ自身の部品表を作成すると便利です。このサブ製品のために分離された生産オーダーを望まない場合、部品表タイプに"
-"設定 / 模型を選択して下さい。模型部品表が根幹の製品に使われる場合、生産される代わりに構成部品のセットとして販売され、出荷されます。"
+"サブ製品が複数の製品の中で使われている場合、それ自身の部品表を作成すると便利です。このサブ製品のために分離された製造オーダーを望まない場合、部品表タイプに"
+"設定 / 模型を選択します。模型部品表が根幹の製品に使われる場合、製造される代わりに構成部品のセットとして販売され、出荷されます。"
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -1847,12 +1848,12 @@ msgid ""
 " When the production gets started then the state is set to 'In Production'.\n"
 " When the production is over, the state is set to 'Done'."
 msgstr ""
-"生産オーダーが作成された時、状態はドラフトに設定されます。\n"
+"製造オーダーが作成された時、状態はドラフトに設定されます。\n"
 "　オーダーが確認されると、状態は商品待ちに設定されます。\n"
 "　何か例外がある場合は、状態は集荷例外に設定されます。\n"
-"在庫が使用可能になった時に、状態は生産準備完了に設定されます。\n"
-"　生産が開始されると、状態は生産中に設定されます。\n"
-"　生産が終了すると、状態は完了に設定されます。"
+"在庫が使用可能になった時に、状態は製造準備完了に設定されます。\n"
+"　製造が開始されると、状態は製造中に設定されます。\n"
+"　製造が終了すると、状態は完了に設定されます。"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -1908,7 +1909,7 @@ msgstr "丸めは製品数量に適用されます。"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stock0
 msgid "Assignment from Production or Purchase Order."
-msgstr "生産または仕入オーダーから割り当てて下さい。"
+msgstr "製造または発注オーダーから割り当てます。"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -1941,7 +1942,7 @@ msgstr "在庫価値変動"
 #: model:process.node,note:mrp.process_node_mts0
 #: model:process.node,note:mrp.process_node_servicemts0
 msgid "Assignment from stock."
-msgstr "在庫から割り当てて下さい。"
+msgstr "在庫から割当"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1973,7 +1974,7 @@ msgstr "通常"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production started late"
-msgstr "生産が遅れて開始"
+msgstr "製造は遅れて開始"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_routing0
@@ -2014,8 +2015,7 @@ msgid ""
 "master bills of materials. Use this menu to search in which BoM a specific "
 "component is used."
 msgstr ""
-"構成部品の部品表はマスター部品表を作成するために使われる構成部品とサブ製品です。特定の構成部品が使われている部品表を検索するにはこのメニューを使って下さい"
-"。"
+"構成部品の部品表はマスター部品表を作成するために使われる構成部品とサブ製品です。特定の構成部品が使われている部品表を検索するにはこのメニューを使います。"
 
 #. module: mrp
 #: model:product.uom,name:mrp.product_uom_litre
@@ -2035,7 +2035,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
 msgid "Product type is Stockable or Consumable."
-msgstr "製品タイプは在庫可能または消費可能です。"
+msgstr "製品タイプは在庫可能または売り切り品です。"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:603
@@ -2048,7 +2048,7 @@ msgstr "エラー"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr "生産開始済"
+msgstr "製造開始済"
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
@@ -2083,7 +2083,7 @@ msgstr "一般情報"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Productions"
-msgstr "生産"
+msgstr "製造"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
@@ -2104,12 +2104,12 @@ msgstr "予定日"
 #. module: mrp
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr "この製品に生産ロットを割り当てて下さい。"
+msgstr "この製品に製造ロットを割り当てる必要があります。"
 
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production"
-msgstr "生産"
+msgstr "製造"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
@@ -2135,7 +2135,7 @@ msgstr "製品価格"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_split
 msgid "Split in Production lots"
-msgstr "生産ロットに分割"
+msgstr "製造ロットに分割"
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -2184,7 +2184,7 @@ msgstr "製造"
 #. module: mrp
 #: view:board.board:0
 msgid "Next Production Orders"
-msgstr "次の生産オーダー"
+msgstr "次の製造オーダー"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
@@ -2197,7 +2197,7 @@ msgstr "属性グループ"
 msgid ""
 "Depending on the chosen method to supply the stockable products, the "
 "procurement order creates a RFQ, a production order, ... "
-msgstr "在庫可能製品の供給をするために選択された方法にしたがって、調達オーダーは見積依頼や生産オーダーなどを作成します。 "
+msgstr "在庫可能製品の供給をするために選択された方法にしたがって、調達オーダーは見積依頼や製造オーダーなどを作成します。 "
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:874
@@ -2231,7 +2231,7 @@ msgid ""
 "production order creates as much procurement orders as components listed in "
 "the BOM, through a run of the schedulers (MRP)."
 msgstr ""
-"原料を供給するために（仕入または生産される）、生産オーダーはMRPスケジューラを実行することを通して、部品表にリストされている構成部品と同様の調達オーダー"
+"原料を供給するために（仕入または製造される）、製造オーダーはMRPスケジューラを実行することを通して、部品表にリストされている構成部品と同様の調達オーダー"
 "を作成します。"
 
 #. module: mrp
@@ -2239,7 +2239,7 @@ msgstr ""
 msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
-msgstr "生産あるいは購入する製品の数量を指定して下さい。コスト構造のレポートはこの数量を元にして表示されます。"
+msgstr "製造あるいは購入する製品の数量を指定します。コスト構造のレポートはこの数量を元にして表示されます。"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -2262,7 +2262,7 @@ msgstr "リソースの休暇"
 #. module: mrp
 #: help:mrp.bom,sequence:0
 msgid "Gives the sequence order when displaying a list of bills of material."
-msgstr "部品表のリストを表示する際には並び順を与えて下さい。"
+msgstr "部品表のリストを表示する際には並び順を与えます。"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -2270,3 +2270,10 @@ msgstr "部品表のリストを表示する際には並び順を与えて下さ
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "消費製品"
+
+#~ msgid ""
+#~ "Reference of the document that created this procurement.\n"
+#~ "This is automatically completed by Open ERP."
+#~ msgstr ""
+#~ "この調達を作成したドキュメントの参照。\n"
+#~ "これはOpenERPによって自動的に完了されます。"
