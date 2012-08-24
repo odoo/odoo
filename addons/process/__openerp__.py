@@ -28,19 +28,19 @@
 This module shows the basic processes involved in the selected modules and in the sequence they occur.
 ======================================================================================================
 
-Note: This applies to the modules containing modulename_process.xml.
-e.g product/process/product_process.xml.
+**Note:** This applies to the modules containing modulename_process.xml.
+
+**e.g.** product/process/product_process.xml.
 
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
-       'security/ir.model.access.csv',
-       'process_view.xml'
+    'data': [
+        'security/ir.model.access.csv',
+        'process_view.xml'
     ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate': '0055447636669',

@@ -20,23 +20,23 @@
 #
 ##############################################################################
 {
-    "name" : "Romania - Accounting",
-    "version" : "1.1",
-    "author" : "filsys",
-    "website": "http://www.filsystem.ro",
-    "category" : "Localization/Account Charts",
-    "depends" : ["account_chart", 'base_vat'],
-    "description": """
+    'name' : 'Romania - Accounting',
+    'version' : '1.1',
+    'author' : 'filsys',
+    'website': 'http://www.filsystem.ro',
+    'category' : 'Localization/Account Charts',
+    'depends' : ['account_chart', 'base_vat'],
+    'description': """
 This is the module to manage the accounting chart, VAT structure and Registration Number for Romania in OpenERP.
 ================================================================================================================
 
 Romanian accounting chart and localization.
     """,
-    "demo_xml" : [],
-    "update_xml" : ['partner_view.xml','account_tax_code.xml','account_chart.xml','account_tax.xml','l10n_chart_ro_wizard.xml'],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "001308250150602948125",
+    'demo' : [],
+    'data' : ['partner_view.xml','account_tax_code.xml','account_chart.xml','account_tax.xml','l10n_chart_ro_wizard.xml'],
+    'auto_install': False,
+    'installable': True,
+    'certificate' : '001308250150602948125',
     'images': ['images/config_chart_l10n_ro.jpeg','images/l10n_ro_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
