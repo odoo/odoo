@@ -35,10 +35,6 @@
             <field name="name">Register for Company Provided Transport Deduction</field>
         </record>
 
-        <record id="hr_food_coupen_deduction_register" model="hr.contribution.register">
-            <field name="name">Register for Food Coupons Deduction</field>
-        </record>
-
         <record id="hr_labour_Welfare_fund_register" model="hr.contribution.register">
             <field name="name">Register for State Labour Welfare Fund Deduction</field>
         </record>
@@ -398,7 +394,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="code">FD</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="name">Deduction Towards Food Coupons</field>
-            <field name="register_id" ref="hr_food_coupen_deduction_register"/>
+            <field name="register_id" ref="hr_food_coupen_register"/>
             <field name="sequence" eval="166"/>
          </record>
 
