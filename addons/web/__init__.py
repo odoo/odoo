@@ -2,6 +2,7 @@ import logging
 
 from . import common
 from . import controllers
+from . import ir_module
 
 _logger = logging.getLogger(__name__)
 

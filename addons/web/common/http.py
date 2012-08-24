@@ -461,7 +461,7 @@ class Root(object):
                       only used in case the list of databases is requested
                       by the server, will be filtered by this pattern
     """
-    def __init__(self, options, openerp_addons_namespace=True):
+    def __init__(self, options):
         self.config = options
 
         if not hasattr(self.config, 'connector'):
@@ -473,11 +473,9 @@ class Root(object):
 
         self.httpsession_cookie = 'httpsessionid'
         self.addons = {}
+        self.statics = {}
 
-        static_dirs = self._load_addons(openerp_addons_namespace)
-        if options.serve_static:
-            app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
-            self.dispatch = DisableCacheMiddleware(app)
+        self._load_addons()
 
         if options.session_storage:
             if not os.path.exists(options.session_storage):
@@ -490,7 +488,7 @@ class Root(object):
         """
         return self.dispatch(environ, start_response)
 
-    def dispatch(self, environ, start_response):
+    def _dispatch(self, environ, start_response):
         """
         Performs the actual WSGI dispatching for the application, may be
         wrapped during the initialization of the object.
@@ -520,12 +518,13 @@ class Root(object):
 
         return response(environ, start_response)
 
-    def _load_addons(self, openerp_addons_namespace=True):
+    def _load_addons(self):
         """
         Loads all addons at the specified addons path, returns a mapping of
         static URLs to the corresponding directories
         """
-        statics = {}
+        openerp_addons_namespace = getattr(self.config, 'openerp_addons_namespace', True)
+
         for addons_path in self.config.addons_path:
             for module in os.listdir(addons_path):
                 if module not in addons_module:
@@ -541,14 +540,20 @@ class Root(object):
                             m = __import__(module)
                         addons_module[module] = m
                         addons_manifest[module] = manifest
-                        statics['/%s/static' % module] = path_static
+                        self.statics['/%s/static' % module] = path_static
+
         for k, v in controllers_class:
             if k not in controllers_object:
                 o = v()
                 controllers_object[k] = o
                 if hasattr(o, '_cp_path'):
                     controllers_path[o._cp_path] = o
-        return statics
+
+        app = self._dispatch
+        if self.config.serve_static:
+            app = werkzeug.wsgi.SharedDataMiddleware(self._dispatch, self.statics)
+
+        self.dispatch = DisableCacheMiddleware(app)
 
     def find_handler(self, *l):
         """
