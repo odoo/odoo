@@ -141,6 +141,7 @@ class account_asset_asset(osv.osv):
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
+            
             amount_to_depr = residual_amount = asset.value_residual
             if asset.prorata:
                 depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
@@ -158,21 +159,13 @@ class account_asset_asset(osv.osv):
                 i = x + 1
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
                 residual_amount -= amount
-
-                if posted_depreciation_line_ids:
-                    if x == range(len(posted_depreciation_line_ids), undone_dotation_number)[0] :
-                        depreciated_value = depreciation_lin_obj.browse(cr, uid, posted_depreciation_line_ids[0], context=context).amount
-                    else:
-                        depreciated_value = depreciated_value + amount
-                else:
-                    depreciated_value = (asset.purchase_value - asset.salvage_value) - (residual_amount + amount)
                 vals = {
                      'amount': amount,
                      'asset_id': asset.id,
                      'sequence': i,
                      'name': str(asset.id) +'/' + str(i),
                      'remaining_value': residual_amount,
-                     'depreciated_value': depreciated_value,
+                     'depreciated_value': (asset.purchase_value - asset.salvage_value) - (residual_amount + amount),
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
