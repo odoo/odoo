@@ -39,8 +39,9 @@ class ir_filters(osv.osv):
         return super(ir_filters, self).copy(cr, uid, id, default, context)
    
     def get_filters(self, cr, uid, model):
+        context = self.pool.get('res.users').context_get(cr, uid)
         act_ids = self.search(cr,uid,[('model_id','=',model),('user_id','=',uid)])
-        my_acts = self.read(cr, uid, act_ids, ['name', 'domain','context'])
+        my_acts = self.read(cr, uid, act_ids, ['name', 'domain','context'], context=context)
         return my_acts
 
     def create_or_replace(self, cr, uid, vals, context=None):
