@@ -398,12 +398,6 @@ $sheet-max-width: 860px
         //@include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
         @include box-shadow(0 0 1px rgba(0, 0, 0, 0.2))
 
-    ul.oe_flatlist, ol.oe_flatlist
-        margin: 0
-        padding: 0
-        li
-            list-style-type: none
-
     .oe_form_dirty
         .oe_highlight_on_dirty
             color: white
@@ -963,6 +957,10 @@ $sheet-max-width: 860px
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
             margin: 0px
             padding: 1px 4px
+            &:hover
+                cursor: pointer
+                border: 1px solid #C81010
+                @include box-shadow(0 0 2px #C81010)
         .oe_active
             background: $link-color
             border-top: 1px solid lightGray
@@ -2179,6 +2177,7 @@ div.ui-widget-overlay
     padding: 2px 0
     @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
     margin-top: 4px
+    border: 1px solid $tag-border
     .ui-menu-item
         width: 100%
         padding: 0
@@ -2195,9 +2194,6 @@ div.ui-widget-overlay
 
 .ui-corner-all
     @include radius(3px)
-
-.ui-widget-content
-    border: 1px solid $tag-border
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
