@@ -153,11 +153,24 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
     _description = 'Mass Lead To Opportunity Partner'
     _inherit = 'crm.lead2opportunity.partner'
 
-
     _columns = {
             'user_ids':  fields.many2many('res.users', string='Salesmen'),
             'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(crm_lead2opportunity_mass_convert, self).default_get(cr, uid, fields, context)
+        if 'partner_id' in fields:
+            # avoid forcing the partner of the first lead as default
+            res['partner_id'] = False
+        if 'action' in fields:
+            res['action'] = 'create'
+        if 'name' in fields:
+            res['name'] = 'convert'
+        if 'opportunity_ids' in fields:
+            res['opportunity_ids'] = False
+        return res
+
     def _convert_opportunity(self, cr, uid, ids, vals, context=None):
         data = self.browse(cr, uid, ids, context=context)[0]
         salesteam_id = data.section_id and data.section_id.id or False
