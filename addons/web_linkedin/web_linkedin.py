@@ -39,8 +39,7 @@ class Binary(openerpweb.Controller):
         return base64.b64encode(bfile.read())
     
 class web_linkedin_settings(osv.osv_memory):
-    _name = 'web_linkedin.settings'
-    _inherit = 'res.config.settings'
+    _inherit = 'sale.config.settings'
     _columns = {
         'api_key': fields.char(string="API Key", size=50),
         'server_domain': fields.char(size=100),
