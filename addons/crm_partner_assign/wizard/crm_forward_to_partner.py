@@ -20,11 +20,12 @@
 #
 ##############################################################################
 
-import time
 import re
+import time
+import tools
+
 from osv import osv, fields
-from tools.translate import _
-from mail.mail_message import to_email
+from tools.translate import _, 
 
 class crm_lead_forward_to_partner(osv.osv_memory):
     """Forwards lead history"""
@@ -111,13 +112,13 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             if this.send_to == 'user':
                 lead.allocate_salesman(cr, uid, [case.id], [this.user_id.id], context=context)
 
-            email_cc = to_email(case.email_cc)
+            email_cc = tools.email_split(case.email_cc)
             email_cc = email_cc and email_cc[0] or ''
             new_cc = []
             if email_cc:
                 new_cc.append(email_cc)
             for to in this.email_to.split(','):
-                email_to = to_email(to)
+                email_to = tools.email_split(to)
                 email_to = email_to and email_to[0] or ''
                 if email_to not in new_cc:
                     new_cc.append(to)
