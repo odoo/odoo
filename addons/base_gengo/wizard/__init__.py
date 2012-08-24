@@ -18,28 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Automated Translations through Gengo API',
-    'version': '0.1',
-    'category': 'Tools',
-    'description': """
-Automated Translations through Gengo API
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': ['gengo_sync_schedular_data.xml'],
-    'update_xml': [
-        'ir_translation.xml',
-        'res_company_view.xml',
-        'res_lang_view.xml',
 
-        'wizard/alert_message_gengo.xml',
-           ],
-    'demo_xml': [],
-    'test': [],
-    'installable': True,
-    'auto_install': False,
-}
-
+import gengo_update_translation
+import abstract_wrapper
+import gengo_update_message
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

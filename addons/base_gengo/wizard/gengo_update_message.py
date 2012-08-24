@@ -18,28 +18,27 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Automated Translations through Gengo API',
-    'version': '0.1',
-    'category': 'Tools',
-    'description': """
-Automated Translations through Gengo API
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': ['gengo_sync_schedular_data.xml'],
-    'update_xml': [
-        'ir_translation.xml',
-        'res_company_view.xml',
-        'res_lang_view.xml',
 
-        'wizard/alert_message_gengo.xml',
-           ],
-    'demo_xml': [],
-    'test': [],
-    'installable': True,
-    'auto_install': False,
-}
+from osv import osv
+from osv import fields
+
+
+class gengo_update_message(osv.osv):
+    """Update Message"""
+
+    _name = "gengo.update.message"
+    _description = "Update Message"
+    _columns = {
+        'name': fields.text('Message', readonly=True),
+        }
+
+    def default_get(self, cr, uid, fields, context=None):
+        if context == None:
+            context = {}
+        res = super(gengo_update_message, self).default_get(cr, uid, fields, context=context)
+        res.update({'name': context.get('message')})
+        return res
+
+gengo_update_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

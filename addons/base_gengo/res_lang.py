@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,28 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Automated Translations through Gengo API',
-    'version': '0.1',
-    'category': 'Tools',
-    'description': """
-Automated Translations through Gengo API
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': ['gengo_sync_schedular_data.xml'],
-    'update_xml': [
-        'ir_translation.xml',
-        'res_company_view.xml',
-        'res_lang_view.xml',
 
-        'wizard/alert_message_gengo.xml',
-           ],
-    'demo_xml': [],
-    'test': [],
-    'installable': True,
-    'auto_install': False,
-}
+from osv import fields, osv
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+class res_company(osv.Model):
+    _name = "res.lang"
+    _inherit = "res.lang"
+
+    _columns = {
+        'gengo_sync': fields.boolean('Active', help='Synchronize Translation Periodically')
+    }
