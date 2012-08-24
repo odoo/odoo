@@ -45,7 +45,6 @@ class ir_model_constraint(Model):
         ids_set = set(ids)
         ids.sort()
         ids.reverse()
-        to_unlink = []
         for data in self.browse(cr, uid, ids, context):
             model = data.model.model
             model_obj = self.pool.get(model)
@@ -75,5 +74,4 @@ class ir_model_constraint(Model):
                     cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
                     _logger.info('Dropped CONSTRAINT %s@%s', name, model)
 
-            to_unlink.append(data.id)
-        self.unlink(cr, uid, to_unlink, context)
+        self.unlink(cr, uid, ids, context)

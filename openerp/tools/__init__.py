@@ -33,6 +33,7 @@ from pdf_utils import *
 from yaml_import import *
 from sql import *
 from float_utils import *
+from html_sanitize import *
 
 #.apidoc title: Tools
 

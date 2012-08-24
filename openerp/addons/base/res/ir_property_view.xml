@@ -5,7 +5,6 @@
         <record id="ir_property_view_search" model="ir.ui.view">
             <field name="name">ir.property.search</field>
             <field name="model">ir.property</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Parameters">
                     <field name="name" string="Name"/>
@@ -21,7 +20,6 @@
         <record id="ir_property_view" model="ir.ui.view">
             <field name="name">ir.property.form</field>
             <field name="model">ir.property</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Parameters" version="7.0">
                   <sheet>
@@ -46,7 +44,6 @@
         <record id="ir_property_view_tree" model="ir.ui.view">
             <field name="name">ir.property.tree</field>
             <field name="model">ir.property</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Parameters">
                     <field name="name"/>

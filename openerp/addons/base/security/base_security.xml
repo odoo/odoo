@@ -1,53 +1,50 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="0">
-
-<!--
- Users Groups
-    [Note] Field 'category_id' is set later in base/module/module_data.xml
--->
-    <record model="res.groups" id="group_erp_manager">
-        <field name="name">Access Rights</field>
-    </record>
-    <record model="res.groups" id="group_system">
-        <field name="name">Configuration</field>
-        <field name="implied_ids" eval="[(4, ref('group_erp_manager'))]"/>
-        <field name="users" eval="[(4, ref('base.user_root'))]"/>
-    </record>
-
-    <record model="res.groups" id="group_user">
-        <field name="name">Employee</field>
-        <field name="users" eval="[(4, ref('base.user_root'))]"/>
-    </record>
-
-    <record model="res.groups" id="group_multi_company">
-        <field name="name">Multi Companies</field>
-    </record>
-    
-    <record model="res.groups" id="group_multi_currency">
-        <field name="name">Multi Currencies</field>
-    </record>
-
-    <record model="res.groups" id="group_no_one">
-        <field name="name">Technical Features</field>
-    </record>
-
-    <record id="group_sale_salesman" model="res.groups">
-        <field name="name">User</field>
-    </record>
-    <record id="group_sale_manager" model="res.groups">
-        <field name="name">Manager</field>
-        <field name="implied_ids" eval="[(4, ref('group_sale_salesman'))]"/>
-    </record>
-
-    <!-- Set accesses to menu -->
-    <record model="ir.ui.menu" id="base.menu_administration">
-        <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
-    </record>
-
-    </data>
-
     <data noupdate="1">
+
+        <!--
+            Users Groups
+            Note that the field 'category_id' is set later in
+            base/module/module_data.xml
+        -->
+        <record model="res.groups" id="group_erp_manager">
+            <field name="name">Access Rights</field>
+        </record>
+        <record model="res.groups" id="group_system">
+            <field name="name">Configuration</field>
+            <field name="implied_ids" eval="[(4, ref('group_erp_manager'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_user">
+            <field name="name">Employee</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_multi_company">
+            <field name="name">Multi Companies</field>
+        </record>
+
+        <record model="res.groups" id="group_multi_currency">
+            <field name="name">Multi Currencies</field>
+        </record>
+
+        <record model="res.groups" id="group_no_one">
+            <field name="name">Technical Features</field>
+        </record>
+
+        <record id="group_sale_salesman" model="res.groups">
+            <field name="name">User</field>
+        </record>
+        <record id="group_sale_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('group_sale_salesman'))]"/>
+        </record>
+
+        <!-- Set accesses to menu -->
+        <record model="ir.ui.menu" id="base.menu_administration">
+            <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
+        </record>
 
         <record model="ir.rule" id="res_widget_user_rule">
             <field name="name">res.widget.user rule</field>
@@ -58,8 +55,11 @@
         <record model="ir.rule" id="res_partner_rule">
             <field name="name">res.partner company</field>
             <field name="model_id" ref="model_res_partner"/>
-            <!-- Show partners from ancestors and descendants companies (or company-less), this is usually a better
-                 default for multicompany setups. -->
+            <!--
+                Show partners from ancestors and descendants companies
+                (or company-less), this is usually a better default for
+                multicompany setups.
+            -->
             <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
         </record>
 

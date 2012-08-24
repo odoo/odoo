@@ -1,897 +1,401 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
         <!--
         Resource: res.partner.category
         -->
 
         <record id="res_partner_category_0" model="res.partner.category">
-            <field name="name">Customer</field>
+            <field name="name">Partner</field>
         </record>
         <record id="res_partner_category_1" model="res.partner.category">
-            <field name="name">Prospect</field>
-        </record>
-        <record id="res_partner_category_2" model="res.partner.category">
-            <field name="name">OpenERP Partners</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_3" model="res.partner.category">
-            <field name="name">Starter Partner</field>
-            <field name="parent_id" ref="res_partner_category_2"/>
-        </record>
-        <record id="res_partner_category_4" model="res.partner.category">
-            <field name="name">Basic Partner</field>
-            <field name="parent_id" ref="res_partner_category_2"/>
-        </record>
-        <record id="res_partner_category_5" model="res.partner.category">
-            <field name="name">Gold Partner</field>
-            <field name="parent_id" ref="res_partner_category_2"/>
-        </record>
-        <record id="res_partner_category_7" model="res.partner.category">
-            <field name="name">Openstuff.net</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_12" model="res.partner.category">
-            <field name="name">Segmentation</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_13" model="res.partner.category">
-            <field name="name">Important customers</field>
-            <field name="parent_id" ref="res_partner_category_12"/>
-        </record>
-        <record id="res_partner_category_14" model="res.partner.category">
-            <field name="name">Bad customers</field>
-            <field name="parent_id" ref="res_partner_category_12"/>
-        </record>
-
-        <record id="res_partner_category_8" model="res.partner.category">
             <field name="name">Supplier</field>
         </record>
-        <record id="res_partner_category_9" model="res.partner.category">
-            <field name="name">Components Supplier</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
+        <record id="res_partner_category_2" model="res.partner.category">
+            <field name="name">Prospect</field>
         </record>
-        <record id="res_partner_category_10" model="res.partner.category">
-            <field name="name">Open Source Service Company</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
+        <record id="res_partner_category_3" model="res.partner.category">
+            <field name="name">Employee</field>
+        </record>
+        <record id="res_partner_category_4" model="res.partner.category">
+            <field name="name">Gold</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
+        </record>
+        <record id="res_partner_category_5" model="res.partner.category">
+            <field name="name">Silver</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
+        </record>
+        <record id="res_partner_category_6" model="res.partner.category">
+            <field name="name">Bronze</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
+        </record>
+        <record id="res_partner_category_7" model="res.partner.category">
+            <field name="name">IT Services</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
+        </record>
+        <record id="res_partner_category_8" model="res.partner.category">
+            <field name="name">Consultancy Services</field>
+        </record>
+        <record id="res_partner_category_9" model="res.partner.category">
+            <field name="name">Components Buyer</field>
         </record>
         <record id="res_partner_category_11" model="res.partner.category">
-            <field name="name">Textile Suppliers</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
+            <field name="name">Services</field>
+        </record>
+        <record id="res_partner_category_12" model="res.partner.category">
+            <field name="name">Office Supplies</field>
+        </record>
+        <record id="res_partner_category_13" model="res.partner.category">
+            <field name="name">Distributor</field>
+        </record>
+        <record id="res_partner_category_14" model="res.partner.category">
+            <field name="name">Manufacturer</field>
+        </record>
+        <record id="res_partner_category_15" model="res.partner.category">
+            <field name="name">Wholesaler</field>
+        </record>
+        <record id="res_partner_category_16" model="res.partner.category">
+            <field name="name">Retailer</field>
+        </record>
+        <record id="res_partner_category_17" model="res.partner.category">
+            <field name="name">Company Contact</field>
+        </record>
+        <record id="res_partner_category_18" model="res.partner.category">
+            <field name="name">Manufacturer</field>
         </record>
 
-
-        <!--
-        Resource: res.partner.category for training
-        -->
-        <record id="res_partner_category_consumers0" model="res.partner.category">
-            <field name="name">Consumers</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_retailers0" model="res.partner.category">
-            <field name="name">Retailers</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_miscellaneoussuppliers0" model="res.partner.category">
-            <field name="name">Miscellaneous Suppliers</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
-        </record>
-        <record id="res_partner_category_woodsuppliers0" model="res.partner.category">
-            <field name="name">Wood Suppliers</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
-        </record>
 
        <!--
         Resource: res.partner
         -->
 
-        <record id="res_partner_asus" model="res.partner">
-            <field name="name">ASUStek</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
+        <record id="res_partner_1" model="res.partner">
+            <field name="name">ASUSTeK</field>
+            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_12')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
             <field name="is_company">1</field>
-            <field name="city">Taiwan</field>
-            <field name="zip">23410</field>
-            <field model="res.country" name="country_id" search="[('name','=','Taiwan')]"/>
+            <field name="city">Taipei</field>
+            <field name="zip">106</field>
+            <field name="country_id" ref="base.tw"/>
             <field name="street">31 Hong Kong street</field>
             <field name="email">info@asustek.com</field>
-            <field name="phone">+ 1 64 61 04 01</field>
+            <field name="phone">(+886) (02) 4162 2023</field>
             <field name="website">www.asustek.com</field>
-        </record>
-        <record id="res_partner_agrolait" model="res.partner">
-            <field name="name">Agrolait</field>
-            <field eval="[(6, 0, [ref('base.res_partner_category_0')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="city">Wavre</field>
-            <field name="zip">5478</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">69 rue de Chimay</field>
-	        <field name="email">s.l@agrolait.be</field>
-	        <field name="phone">003281588558</field>
-            <field name="website">www.agrolait.com</field>
-        </record>
-        <record id="res_partner_c2c" model="res.partner">
-            <field name="name">Camptocamp</field>
-            <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_5')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field name="is_company">1</field>
-            <field name="city">Le Bourget du Lac</field>
-            <field name="zip">73377</field>
-            <field name="phone">+41 21 619 10 04 </field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="street">Savoie Technolac, BP 352</field>
-            <field name="email">openerp@camptocamp.com</field>
-            <field name="website">www.camptocamp.com</field>
-        </record>
-        <record id="res_partner_sednacom" model="res.partner">
-            <field name="website">www.syleam.fr</field>
-            <field name="name">Syleam</field>
-            <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
-            <field name="city">Alencon</field>
-            <field name="zip">61000</field>
-            <field name="email">contact@syleam.fr</field>
-            <field name="street">1 place de l'Église</field>
-            <field name="phone">+33 (0) 2 33 31 22 10</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="is_company">1</field>
-        </record>
-        <record id="res_partner_thymbra" model="res.partner">
-            <field name="name">SmartBusiness</field>
-            <field name="is_company">1</field>
-            <field name="city">Buenos Aires</field>
-            <field name="zip">1659</field>
-            <field name="email">contact@smartbusiness.ar</field>
-            <field name="street">Palermo, Capital Federal </field>
-            <field name="street2">C1414CMS Capital Federal </field>
-            <field name="phone">(5411) 4773-9666 </field>
-            <field model="res.country" name="country_id" search="[('name','=','Argentina')]"/>
-            <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
-        </record>
-        <record id="res_partner_desertic_hispafuentes" model="res.partner">
-            <field name="name">Axelor</field>
-            <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field name="is_company">1</field>
-            <field name="city">Champs sur Marne</field>
-            <field name="zip">77420</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="email">info@axelor.com</field>
-            <field name="phone">+33 1 64 61 04 01</field>
-            <field name="street">12 rue Albert Einstein</field>
-            <field name="website">www.axelor.com/</field>
-        </record>
-        <record id="res_partner_tinyatwork" model="res.partner">
-            <field name="name">Tiny AT Work</field>
-            <field name="is_company">1</field>
-            <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_10')])]" name="category_id"/>
-            <field name="city">Boston</field>
-            <field name="zip">5501</field>
-            <field name="email">info@tinyatwork.com</field>
-            <field name="phone">+33 (0) 2 33 31 22 10</field>
-            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
-            <field name="street">One Lincoln Street</field>
-            <field name="website">www.tinyatwork.com/</field>
+            <field name="image">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</field>
         </record>
         <record id="res_partner_2" model="res.partner">
-            <field name="name">Bank Wealthy and sons</field>
+            <field name="name">Agrolait</field>
+            <field eval="[(6, 0, [ref('base.res_partner_category_7'), ref('base.res_partner_category_9')])]" name="category_id"/>
             <field name="is_company">1</field>
-            <field name="city">Paris</field>
-            <field name="zip">75016</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="street">1 rue Rockfeller</field>
-            <field name="email">a.g@wealthyandsons.com</field>
-            <field name="phone">003368978776</field>
-            <field name="website">www.wealthyandsons.com/</field>
+            <field name="city">Wavre</field>
+            <field name="zip">1300</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="street">69 rue de Chimay</field>
+            <field name="email">info@agrolait.com</field>
+            <field name="phone">+32 10 588 558</field>
+            <field name="website">www.agrolait.com</field>
+            <field name="image">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</field>
         </record>
         <record id="res_partner_3" model="res.partner">
             <field name="name">China Export</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
+            <field name="supplier">1</field>
+            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_14')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="city">Shanghai</field>
-            <field name="zip">478552</field>
+            <field name="zip">200000</field>
             <field model="res.country" name="country_id" search="[('name','=','China')]"/>
+            <field name="country_id" ref="base.cn"/>
             <field name="street">52 Chop Suey street</field>
-            <field name="email">zen@chinaexport.com</field>
-            <field name="phone">+86-751-64845671</field>
+            <field name="email">info@chinaexport.com</field>
+            <field name="phone">+86 21 6484 5671</field>
             <field name="website">www.chinaexport.com/</field>
+            <field name="image">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</field>
         </record>
+        
         <record id="res_partner_4" model="res.partner">
-            <field name="name">Distrib PC</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="supplier">1</field>
+            <field name="name">Delta PC</field>
+            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_12')])]" name="category_id"/>
             <field eval="0" name="customer"/>
+            <field eval="1" name="supplier"/>
             <field name="is_company">1</field>
-            <field name="city">Namur</field>
-            <field name="zip">2541</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">42 rue de la Lesse</field>
-            <field name="email">info@distribpc.com</field>
-            <field name="phone">+ 32 081256987</field>
+            <field name="city">Fremont</field>
+            <field name="zip">CA 94538</field>
+            <field name="country_id" ref="base.us"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
+            <field name="street">3661 Station Street</field>
+            <field name="email">info@deltapc.com</field>
+            <field name="phone">+1 510 340 2385</field>
             <field name="website">www.distribpc.com/</field>
+            <field name="image">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</field>
         </record>
+
         <record id="res_partner_5" model="res.partner">
-            <field name="name">Ecole de Commerce de Liege</field>
-            <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
+            <field name="name">Epic Technologies</field>
+            <field eval="[(6, 0, [ref('res_partner_category_2')])]" name="category_id"/>
             <field name="is_company">1</field>
-            <field name="city">Liege</field>
-            <field name="zip">6985</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">2 Impasse de la Soif</field>
-            <field name="email">k.lesbrouffe@eci-liege.info</field>
-            <field name="phone">+32 421 52571</field>
-            <field name="website">www.eci-liege.info//</field>
+            <field eval="0" name="customer"/>
+            <field name="country_id" ref="base.us"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
+            <field name="zip">60610</field>
+            <field name="city">Chicago</field>
+            <field name="email">epic@tech.info</field>
+            <field name="phone">+1 312 349 2324</field>
+            <field name="website">www.epic-tech.info//</field>
+            <field name="image">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ADsJd4LMQxjMNHRaxras5Em2mpPfnzy6rLj8zhXZC65zIKlptkVXyODQ6YgN4SXDuPEANyt+bL4yGbqZb0DHh4jILuxxOwafcd+Wy4tzA3ZsBqCk0QCbI2Xywni5DdrACeXIgt3+5fu3grcuEzVNvU9bdtuniJPLYlpG/uPsqQNaNFr+2qN4vl62H2C7rrtRsrojYjD2ODHDf4rjtsD7idx94WmzJUrfptW3HG2OKwajmy7ObMSwO2A7+R7PArj2tM2pdO57BNlZw5WxPK2yTu6MTHc7jvLNyG7dzW9i+x6fvMz8eUJjeK9+SaONz+b2PgbEXE7cngg+RPvSwKGacEWb3efhrxXdfLim0Wwu9FFUnqGxlo4CfmcP/hcmKHS01wVYMHRkd15gc70ONrQ4ML+XEBxch8nc8xy23I5uXxF2rfnyUBYbd3KRWYRI4iCsGQCMl5APxmtPPbtc0d26yUMffu5RkstdjDHfdZs2WTbsnD6z4h1ZDR8X2Bt+ZO6xMTHahZCuqWu2W3GfHr5+d12Ri9LmVkQxmIL5ASwejx+1t27cuey/ePo6dMkNmjQxoefaikigYD2doIHiuXhNONoY7HUzh8Y6ahF1bbTmNJk2YWbjlu1zgeZ8Xdqz6fwNjFZCJ1a1djx7YSw057PXxxnkGiMuHE0Dn8rbbuWPsYxoB0Uza2rdbavY65nh/akaIizUiIiIix2YILMDoLEMc0Txs5kjQ5rvrBXH9T9J8fH6tYjfff8A4OPb7tl3EUb4o35uaDyUsc8sQsxxH0NljrV4K0IhrQRwxjsZG0NaPILIiLMC2QUZJJuUREXq8REREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREX//2Q==</field>
         </record>
+
         <record id="res_partner_6" model="res.partner">
             <field name="name">Elec Import</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="supplier">1</field>
+            <field eval="[(6, 0, [ref('res_partner_category_12')])]" name="category_id"/>
+            <field eval="1" name="supplier"/>
             <field eval="0" name="customer"/>
             <field name="is_company">1</field>
-            <field name="city">Brussels</field>
-            <field name="zip">2365</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">23 rue du Vieux Bruges</field>
+            <field name="city">Chicago</field>
+            <field name="zip">IL 60623</field>
+            <field name="country_id" ref="base.us"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
+            <field name="street">23 Rockwell Lane</field>
             <field name="email">info@elecimport.com</field>
-            <field name="phone">+ 32 025 897 456</field>
+            <field name="phone">+1 773 439 3000</field>
+            <field name="image">/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABtAJYDASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAcIBQYBAgQDCf/EAEUQAAECBQIEAwQIAgQPAAAAAAECAwAEBQYRBxIIEyExQVFhFCJxgRUyQlKRkqGzI7EWM2LhFxhFRlRWY2Vyc3aEsrTR/8QAGwEAAQUBAQAAAAAAAAAAAAAAAAECAwQGBQf/xAA2EQABBAECAwQHBgcAAAAAAAABAAIDEQQSITFBUQUGE2EUInGBkaGxIzIzUmLwFSRCkrLR4f/aAAwDAQACEQMRAD8AuXCEcEjtCE0hCcCOEuJMa5dN0SNElnnX5hhtLIyt51YS2gep8/SIPretE9WKmqm2dQ5+4H/sqShYbHqEJG4j47fjGRzO9IbMYcOMyubxrZoPQuO1+y1ejwiW6nnSP3yVjHpuXSlaVvtJI8CsCOJabYWUoQ+0o+QWDFdgxr3PtrfbolNp6FIyltQaH6KWoj5x1bZ16po9ofoVOqDYTkoQG1H8ErSo/LMUD2x2wXh/gs25azf+Kk9HgqtR+H/VZNa8EDxMdgQe0VtoGtc1Tqr9G3ZRp+3pnOCXELU2PUoUApI+APxicLcuaSrDDPs77Kw6nKHWlhTbg/skR0MPvS103g5cZiceF7gnoHDa/bSikwiG6mGx++S2KEAMDEI1ypJCEIEJCEIEJCEIEJCEIEJCEIELhR6dMfONYv65ZOgUaYmJ18SzbTRded+4geXqewHcxtBAIwRmK3cVk0/My8jQ5RxYXUp/l7B9sIwAn8ykxlu9GTMyKPGhdRlOm+YbVuI86Fe9XMNjS4udy3/0sXaFt1vWusOVqvTD0laEq8UyrDasKdI7gev3l9cZIHpYS36FRrcp6afRKdLyEuAPdaTjdjxUe6j6kkxxa1Dl7btun0OQSlLEkwlpO0Y3EDqrHmTk/OPa64B0V7v8o4sgiwoRHGNICe5zpHWV3W4Nh+BgleEDr1PSPE6tRCgnxB6xyhawQD4DvGeHbwMmn3J3hbL43Jb1EuWnmn1umsTzJBADifebz3KVDqk9O4IMV+rdBrWiFxszkg/MVGzp53asOKG5hXfB8AsDJBGN2CDiLItOJxhAKz5+H4xiL9txi7rPqVAnNgTNsKS2ojPLcHVCvkoAxog2HNgMcosFNa90brC9doXBK1emtOMTKZpKm0uNup7OII6KjYAcjMVz4TKyt6gfRr5cU5T5xUuAroQ2sbkg/BW4fKLGDtHa7r5c8sL8ed2p0TtN8yKBaT7j8kzMja1wc3gRaQhCNQqaQhCBCQhCBCQhCBCQhCBC6O8z7Ais3FHK1CTnaJW2UZ+j6mVHPb3tqwT80frFnI0nVe1JO5bfmpWbSstvo2rKe6FDqlY9QcRke9WM9rI85lnwnWR+kghxHsu1ewnizGf6vqtgkJtFQp8vPyriVMTLSXW1eaVDI/Qxw+l0j6yfyxBekN+vWNOf4Pr4IlGWFEU+dUDs2k9ElX3CTkK8Ox6AYnkgOJCgcpIyCD3ji5jW5MWqM2COSWix1FfCQS3u2rIAHfA6RzN8lxX8MH1BMcutbU4HQ9ziOnKKXd3gTg+kZ10U0eP6H4Yq9zz/AGE+wXarX1ZSABkqHxj51qoy1Hos7VptWGJNhbznXuEgnA9TjEejchttS3FJQhIypSjgAeZ8hEBar3bOakVYWDZ530/mBU/OjO1QSe//AAA+P2iBjp302KGYsOt5oAKMNL3UFxwn0dSKZNVN1CgudqO4HrgpbT3/ADFY+UWPAAHSNO0yteXt2hy0rKFYYYa5bO/qpXipZ9ScxsdYrNJozKHqxVJKntuK2oXMvpbCjjOAVEZMdjurC7wJcuRteK7UL/LQDfiBfvTcxwLgwHgPmvdCMFI3laU9ONSUlc9GmZl5W1tlqdbUtZ8gAckxzL3hakxUU06XuWjuzqnOUmXROtlwr7bQnOc+karW3qqlFZyEIQ5IkIQgQkIQgQkIQgQkdHyNhSRnPTEd4YhkjNbC3qlGxUZao6dU65aQtEwkoSjK2XQMql1+Y80nxH92NX0TuyqUSrK0/vA8pxkhFLeWrIWn7KAo9wfsn0KfACJzcQFjaoZT4jzivvFXS2ZWgytUlVqYmqfNNlpxJwdiz2+RAI+HrGAzOzj2JksdD+DI6q/K47iv0muHI7rosl9IaWu4j6KdlpyILQDnPjGJsWpPVux6DWZgAPT1Ol5lzH3ltpUf5x5tUqpM0PTuv1eSVsmZWQdcaVn6qtvQ/LvF84oIJpVr3pRLrFeNTuq5l6Z2i4AWztqc1n3RgjcgkdkDICvM+78ZC0usWn27RWpZlsloYU4tQwt5fio/2fIeX66Bwx0GTXastV1DfM1Ja3Zpw/WUlC1JSnPlkE/MxYFtICU7cDAwMeUcvAwP4xluMv4MRrT+Zw4k+Q5DnzVuV/o8YDeJ+S7JwEgJxjwxFc+PE4se3en+U1ftKixoit/HqSLHtzaev0or9pUegTj7Ihc1n3lpvCVpK1XnaZqUa4uXXS6o4gSPsoUHNiB137hjO/yPaI201QP8aalkf6yr/dVG+8Iel9Vq9wUjUtqoSLchTJ99lyWUFc5ZDJTkdMY/iDx8DGhaaZHFLS/+pV/uqio0UG7KQ8Spn1H4mbjZ1FnLT0+tmTqQk3nJYuzIUtcw43nmFCUqACBtVgknIGenaNq4cuINrUaYqFHuOQl6VVpGVVOcxlR5DzCSAsgKJKVJyCRk5BJHYxVG0JW4p/W/2K0phiWrT1RmUSrj+NiSeZnOQfs58I3TQS15ek3tUptu77dqTgoVRSZeSedU6rMuvPRTaRgd+8TMkeXWmkClulZ4sbuq1fqTdiWfJv0qSZcmN04Fqe5CPrOrCVAJHjjrjPcxM3DXrJL6t0CeU9TxT6zS1NpnWUElpQXu2LbJ64OxQIPUEeOQYqZwkyNGqN/1ySuJzlUd23J0Ty95RtZ9wrO4dRgAnMWo4eLe0YolVqzmltXE/NOsNpnUicW9tQFHacK7dcxJG5xNkpHAKZYQhFhMSEIQISEIQISID4v18uw59f8AtpYD80T5EJcSldtaj0tS7qp7tRk1vtIRKoH9Y6BuGeoGB6xku9zy2HHLWlx8VpocTQcdldwRbnb1sVotscQPsFkW9alo2hUa5WpOmS8q4pQPKStDSUqISjKlAEH7vxjzXUrWC7aO6q8biptq0N3+vacWhpOw/ZIGSfgpUaSxqVe9fIpGmlns0iSBAUZOWC1J9VuEBtHxIz6xgblpcuX/AGjUK/0zM4jO6UkVmefT5p3ZDbZ9M/IxyJM3MkdoOmPyH2j/AIN2HvsKw2KNosb/ACCmbTLUqyrRXR7KpFafqz28y6JsSpS0tS1k9cnoCTjpn4xZSkzIm6e1MBO3eOo8jFGdKbgoKb9pMlaNgOTKVOhL0/PPKfmW09i70AbbwOpwPwi71s800ZguBKcj3QkY6f394f3dEmL2q/H9bS5pedRafWLhvTfu3059NkZdPhD9rBra+nzWSiC+Mayrqva0aHJ2nSHanMy1QU66ht1tG1BbUM5WoDuRENa/XPccjxQqp8lcNYlpIT0gn2ZmedQ1gpayNgVjByc9OuYmK5eJag0HUSes+atmrvLk5tcst+XKXCtSQfqoHvEk9APWNwZWPBa7Zc0NI3CirRq0OIe06/RKail1SmW59KsvT7SZmVLZbK0c0kbyo5SOuPLpHxsTSDUyncQchcc5aky1SG66qZXMmYYIS0XFHdgL3dj5ZiR6XxaWjOyNReNrXAl+Ub5qGG0IcLiMgKUSDhATnJJ6esZml8SNuVDSqtX0zQqin6HmmJeZkFLRvPNWEoUlWcEdT+BhrWx7bpSXdFDl06Sanab6zrvSzLb/AKRyTc85NSJR7+A5u9xxAUleUhRGR0OAemcRsHChoZc9LuSoXTfFOcpbDsi7KS0mtaea4Xhha1AE7QEbhg9cq9OuwOcXlsIozc+LQrqluPKb2BSAgYCT9fOCevYdsde4jc784hrLtWxaBc5YnZ9VfY58lJMhIcCBgLKyThO0nb45IOM4MOa2O7tISVWRrSjWPTS6K5K0az3q7Lz9PmqYJthvmNOy7ySgrGFZQvGDhXY+YieeDXSO4dPKdWK1dbSZOpVTlstyQWlZZabKjuUpJIKlFXYHoE9+uBkNL+Ja17zvNi1ZuiVOgT03gSpnCkpdWU7gk46pJGCOmDkekYu4OK21qDelXtypW3VUClzMxLLmG3EKDi2ioDanOfeIA69s9Yc0MG9pDZViIRRrVnigvtd2Mu2bOP0SkuSbDnsszJMOr3qG5RClJJIOQO/gYubZFdbue0KTcLMtMSzdQlUTCWZhO1xAUM4UB2MSteHcEhFLMQhCHJEhCECEiBuJmqVSVpTrlFtWXuN4zKGuU5KmYS1hJ/iFtPVRz7vhjIz5GeYxFwUVuoI5rW1uZSOivBXof/sZnvTgZGZisMDQ8scHaTtqoEUD7781cwpWRvOo1Yq+ipI/aGqVyySZm8K5L2xREpzy5x5Es0lPow3hKfgrBjwqd0dtNsgCoXvPt+JHs8mD6Dur57gfCJb1s0cF7VlmoS9UcplQaw2+h5KnGlpA6EJyNqvDI7iNMpvDdONz0s5P3LJzEoh1KnmkyqgXEAglOd3TI6Rh8TtrAkh/mZzH1jY0so9CRZP9w8wulJjytd6jb8ybU06QMPVK06S6qjyNGXPoDwlJRvalptXVGfNWzBJ6d8YETa2hLbaW0J2pSAEjyAjVLFkQHHZspAQ2OW2AOx8f0wPnG2xou4eAGYsmc5tGZxI8mjgN9+N+3Yqp2nLbxGD936qhXEavbxauJPY1Cnf+LUZOkqxx3OJ/39NfsORumtGh+oF0a/m8qPJSLlJM3Ju73JxKF7Ww2F+6ev2THtkNGL8a4qF6guSckKCaq/Mhz2tPM5a2lpSdnfOVDpGu8M2duao2FCWiyU+16sdAUizKuceowR+oEfKxyHOGDUvz+kKV+9EraZaC6j0J+/lVKRp6E1u26hT5LZOpVueexsCvujzPhGs1jS+79NeGi/WbolZVlyfn6atgS8wHchD4Bzjt3EKGEAbItRrV1qRw42/nt/Sie/8AXl451jVusfTQZ/zZUQP+7mIzFm6b6mah6QSTFr0+QqNKlK3MKLHOQxMNOqaaClqU4oJU3gJ6D3gc9D4Szq7w13fUdOLJlrfekZ+tUKmGSn5fnctLu5Zcy0tWAdqlrHvbcjB6doGsJCQlRvXCU8XVskEgmeomSP8AkS8eSQtWm3vxg1S2awXfo+buKeMwltW1S0IU4vaCOoztxkdcE46xKOlmhup1a1gp1+6jyUhRGqc5Lu+ztPtureUw2hDQSG1LAHuJJJVnOcDr0y1j6JX9SeKZ/UCck5FNCXVp2aS4mbSXOW6HAg7O+feHSJGsPRJahnjDotPt3V+n0GlNqakZCiybEuhSyspQkrAG49T84/QmV6yrRP3B/KKu8V2g1637qHLXXaJkJltcm3LvsTExyltrQpRChkYKSCPHIIix9lGvKtKlG6GZRmt+yo9ublSS0l3HvBGSemfUxKwU4pCdll4QhEiakIQgQkIQgQvNMyElMuByYlWnVgY3KTk4jp9FU3/QZf8AII9kIpSdnYcji98TSTzLRf0UglkAoOPxXzl2GZdvlsNIbRnO1IwI+kIRbYxsbQ1goDkEwkk2UhCEOSJHR5pp5stvNocQe6VJyPwjvCBC6MMssI2MNNtJznCEgDPyjvCECEhCECEhCECEhCECF//Z</field>
         </record>
-        <record id="res_partner_maxtor" model="res.partner">
-            <field name="name">Maxtor</field>
-            <field eval="32000.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
+
+        <record id="res_partner_7" model="res.partner">
+            <field name="name">Bank Wealthy and sons</field>
+            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_4')])]" name="category_id"/>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
             <field name="is_company">1</field>
-            <field name="city">Hong Kong</field>
-            <field name="zip">23540</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="street">56 Beijing street</field>
-            <field name="email">info@maxtor.com</field>
-            <field name="phone">+ 11 8528 456 789</field>
+            <field name="street">81 Academy Avenue</field>
+            <field name="city">Birmingham</field>
+            <field name="zip">B46 3AG</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="phone">+44 121 690 4596</field>
+            <field name="email">email@wealthyandsons.com</field>
+            <field name="website">www.wealthyandsons.com/</field>
+            <field name="image">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</field>
         </record>
-        <record id="res_partner_seagate" model="res.partner">
-            <field name="name">Seagate</field>
-            <field eval="5000.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field name="is_company">1</field>
-            <field name="city">Cupertino</field>
-            <field name="zip">95014</field>
-            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
-            <field name="street">10200 S. De Anza Blvd</field>
-            <field name="email">info@seagate.com</field>
-            <field name="phone">+1 408 256987</field>
-        </record>
+
         <record id="res_partner_8" model="res.partner">
-            <field name="website">http://mediapole.net</field>
-            <field name="name">Mediapole SPRL</field>
-            <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
+            <field name="name">Mediapole</field>
+            <field eval="1" name="supplier"/>
+            <field eval="1" name="customer"/>
+            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_16')])]" name="category_id"/>
             <field name="is_company">1</field>
-            <field name="city">Louvain-la-Neuve</field>
-            <field name="zip">1348</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="phone">(+32).10.45.17.73</field>
-            <field name="street">Rue de l'Angelique, 1</field>
+            <field name="city">Munich</field>
+            <field name="street">Luckenwalder Strasse</field>
+            <field name="zip">80352</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="phone">+49 8932 450203 </field>
+            <field name="image">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</field>
         </record>
         <record id="res_partner_9" model="res.partner">
-            <field name="website">www.balmerinc.com</field>
-            <field name="name">BalmerInc S.A.</field>
-            <field eval="12000.00" name="credit_limit"/>
-            <field name="ref">or</field>
-            <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
+            <field name="name">Best Designers</field>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
+            <field eval="[(6, 0, [ref('base.res_partner_category_6'), ref('res_partner_category_7')])]" name="category_id"/>
             <field name="is_company">1</field>
-            <field name="city">Bruxelles</field>
-            <field name="zip">1000</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="email">info@balmerinc.be</field>
-            <field name="phone">(+32)2 211 34 83</field>
-            <field name="street">Rue des Palais 51, bte 33</field>
+            <field name="street">203, Systems Plaza</field>
+            <field name="city">Mumbai</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="email">info@bestdesigners.in</field>
+            <field name="phone">+91 22 3445 0349</field>
+            <field name="website">www.bestdesigners.com</field>
+            <field name="image">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</field>
         </record>
+
         <record id="res_partner_10" model="res.partner">
-            <field name="name">Tecsas</field>
-            <field name="ean13">3020170000003</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
+            <field name="name">The Jackson Group</field>
+            <field eval="[(6, 0, [ref('res_partner_category_4'), ref('res_partner_category_7')])]" name="category_id"/>
             <field name="is_company">1</field>
-            <field name="city">Avignon CEDEX 09</field>
-            <field name="zip">84911</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="email">contact@tecsas.fr</field>
-            <field name="phone">(+33)4.32.74.10.57</field>
-            <field name="street">85 rue du traite de Rome</field>
+            <field name="city">Miami</field>
+            <field name="zip">FL 33169</field>
+            <field name="country_id" ref="base.us"/>
+            <field model="res.country.state" name="state_id" search="[('code','=','FL')]"/>
+            <field name="email">contact@jackson.com</field>
+            <field name="phone">+1 786 525 0724</field>
+            <field name="street">3203 Lamberts Branch Road</field>
+            <field name="image">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</field>
         </record>
+  
         <record id="res_partner_11" model="res.partner">
-            <field name="name">Leclerc</field>
-            <field eval="1200.00" name="credit_limit"/>
+            <field name="name">Luminous Technologies</field>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
             <field eval="[(6, 0, [ref('res_partner_category_0')])]" name="category_id"/>
             <field name="is_company">1</field>
-            <field name="street">rue Grande</field>
-	        <field name="city">Brest</field>
-            <field name="zip">29200</field>
-	        <field name="email">marine@leclerc.fr</field>
-	        <field name="phone">+33-298.334558</field>
-        </record>
-        <record id="res_partner_14" model="res.partner">
-            <field name="name">Centrale d'achats BML</field>
-            <field name="ean13">3020178572427</field>
-            <field eval="15000.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="name">Carl François</field>
-            <field name="city">Bruxelles</field>
-            <field name="zip">1000</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">89 Chaussée de Waterloo</field>
-            <field name="email">carl.françois@bml.be</field>
-            <field name="phone">+32-258-256545</field>
-        </record>
-        <record id="res_partner_15" model="res.partner">
-            <field name="name">Magazin BML 1</field>
-            <field name="ean13">3020178570171</field>
-            <field eval="1500.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="street">89 Chaussée de Liège</field>
-            <field name="city">Namur</field>
-            <field name="zip">5000</field>
-            <field name="email">lucien.ferguson@bml.be</field>
-	        <field name="phone">+32-621-568978</field>
-        </record>
-        <record id="res_partner_accent" model="res.partner">
-            <field name="name">Université de Liège</field>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="type">default</field>
-            <field name="street">Place du 20Août</field>
-	        <field name="city">Liège</field>
-            <field name="zip">4000</field>
-	        <field name="email">martine.ohio@ulg.ac.be</field>
-	        <field name="phone">+32-45895245</field>
-            <field name="website">http://www.ulg.ac.be/</field>
+            <field name="street">Constitución, 80</field>
+            <field model="res.country" name="country_id" search="[('code','ilike','es')]"/>
+            <field name="country_id" ref="base.es"/>
+            <field name="city">Barcelona</field>
+            <field name="zip">08078</field>
+            <field name="phone">+34 934 340 230</field>
+            <field name="website">www.lumitech.com</field>
+            <field name="image">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</field>
         </record>
 
-    <!--
-        Resource: res.partner for training
-        -->
-
-        <record id="res_partner_duboissprl0" model="res.partner">
-            <field eval="'Sprl Dubois would like to sell our bookshelves but they have no storage location, so it would be exclusively on order'" name="comment"/>
-            <field name="name">Dubois sprl</field>
+        <record id="res_partner_12" model="res.partner">
+            <field name="name">Camptocamp</field>
+            <field eval="[(6, 0, [ref('res_partner_category_11'), ref('res_partner_category_4')])]" name="category_id"/>
+            <field name="supplier">1</field>
+            <field name="customer">1</field>
             <field name="is_company">1</field>
-            <field eval="'Brussels'" name="city"/>
-            <field eval="'1000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Avenue de la Liberté 56'" name="street"/>
-            <field eval="'m.dubois@dubois.be'" name="email"/>
-            <field name="website">http://www.dubois.be/</field>
-        </record>
-
-        <record id="res_partner_ericdubois0" model="res.partner">
-            <field name="name">Eric Dubois</field>
-            <field name="is_company">1</field>
-            <field name="address" eval="[]"/>
-            <field eval="'Mons'" name="city"/>
-            <field eval="'7000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Chaussée de Binche, 27'" name="street"/>
-            <field eval="'e.dubois@gmail.com'" name="email"/>
-            <field eval="'(+32).758 958 789'" name="phone"/>
-        </record>
-
-        <record id="res_partner_fabiendupont0" model="res.partner">
-            <field name="name">Fabien Dupont</field>
-            <field name="is_company">1</field>
-            <field name="address" eval="[]"/>
-            <field eval="'Namur'" name="city"/>
-            <field eval="'5000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Blvd Kennedy, 13'" name="street"/>
-        </record>
-
-        <record id="res_partner_lucievonck0" model="res.partner">
-            <field name="name">Lucie Vonck</field>
-            <field eval="'Grand-Rosière'" name="city"/>
-            <field eval="'1367'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Chaussée de Namur'" name="street"/>
-        </record>
-
-        <!--record id="res_partner_notsotinysarl0" model="res.partner">
-            <field name="name">NotSoTiny SARL</field>
-            <field name="address" eval="[]"/>
-            <field name="website">notsotiny.be</field>
-        </record-->
-
-        <record id="res_partner_theshelvehouse0" model="res.partner">
-            <field name="name">The Shelve House</field>
-            <field eval="[(6,0,[ref('res_partner_category_retailers0')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field eval="'Paris'" name="city"/>
+            <field name="city">Le Bourget du Lac</field>
+            <field name="zip">73377</field>
+            <field name="phone">+33 4 49 23 44 54</field>
             <field name="country_id" ref="base.fr"/>
+            <field name="street">93, Press Avenue</field>
+            <field name="email">info@c2c.com</field>
+            <field name="website">www.camptocamp.com</field>
+            <field name="image">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</field>
         </record>
 
-        <record id="res_partner_vickingdirect0" model="res.partner">
-            <field name="name">Vicking Direct</field>
-            <field eval="[(6,0,[ref('res_partner_category_miscellaneoussuppliers0')])]" name="category_id"/>
+        <record id="res_partner_13" model="res.partner">
+            <field name="name">Axelor</field>
+            <field eval="[(6, 0, [ref('res_partner_category_4'), ref('base.res_partner_category_11')])]" name="category_id"/>
             <field name="supplier">1</field>
-            <field name="customer">0</field>
             <field name="is_company">1</field>
-            <field eval="'Puurs'" name="city"/>
-            <field eval="'2870'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'(+32).70.12.85.00'" name="phone"/>
-            <field eval="'Schoonmansveld 28'" name="street"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="website">vicking-direct.be</field>
-        </record>
-
-        <record id="res_partner_woodywoodpecker0" model="res.partner">
-            <field name="name">Wood y Wood Pecker</field>
-            <field eval="[(6,0,[ref('res_partner_category_woodsuppliers0')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-            <field name="is_company">1</field>
-            <field eval="'Kainuu'" name="city"/>
-            <field eval="'(+358).9.589 689'" name="phone"/>
-            <field name="country_id" ref="base.fi"/>
-            <field name="website">woodywoodpecker.com</field>
-        </record>
-
-        <record id="res_partner_zerooneinc0" model="res.partner">
-            <field name="name">ZeroOne Inc</field>
-            <field eval="[(6,0,[ref('res_partner_category_consumers0')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field eval="'Brussels'" name="city"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="website">http://www.zerooneinc.com/</field>
-        </record>
-
-        <!--
-        Resource: res.partner.address
-        -->
-
-        <record id="res_partner_address_1" model="res.partner">
-            <field name="name">Michel Schumacher</field>
-            <field name="website">www.balmerinc.com</field>
-            <field name="ref">or</field>
-            <field name="city">Bruxelles</field>
-            <field name="zip">1000</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="email">info@balmerinc.be</field>
-            <field name="phone">(+32)2 211 34 83</field>
-            <field name="street">Rue des Palais 51, bte 33</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_9"/>
-        </record>
-        <record id="res_partner_address_2" model="res.partner">
-            <field name="name">Laurent Jacot</field>
-            <field name="city">Avignon CEDEX 09</field>
-            <field name="zip">84911</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="email">contact@tecsas.fr</field>
-            <field name="phone">(+33)4.32.74.10.57</field>
-            <field name="street">85 rue du traite de Rome</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_10"/>
-        </record>
-        <record id="res_partner_address_3000" model="res.partner">
-            <field name="name">Laith Jubair</field>
             <field name="city">Champs sur Marne</field>
             <field name="zip">77420</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
+            <field name="country_id" ref="base.fr"/>
             <field name="email">info@axelor.com</field>
             <field name="phone">+33 1 64 61 04 01</field>
             <field name="street">12 rue Albert Einstein</field>
             <field name="website">www.axelor.com/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_desertic_hispafuentes"/>
-        </record>
-        <record id="res_partner_address_3" model="res.partner">
-            <field name="name">Thomas Passot</field>
-            <field name="website">http://mediapole.net</field>
-            <field name="city">Louvain-la-Neuve</field>
-            <field name="zip">1348</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="phone">(+32).10.45.17.73</field>
-            <field name="street">Rue de l'Angelique, 1</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_8"/>
-        </record>
-        <record id="res_partner_address_tang" model="res.partner">
-            <field name="name">Tang</field>
-            <field name="city">Taiwan</field>
-            <field name="zip">23410</field>
-            <field model="res.country" name="country_id" search="[('name','=','Taiwan')]"/>
-            <field name="street">31 Hong Kong street</field>
-            <field name="email">info@asustek.com</field>
-            <field name="phone">+ 1 64 61 04 01</field>
-            <field name="website">www.asustek.com</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_asus"/>
-        </record>
-        <record id="res_partner_address_wong" model="res.partner">
-            <field name="name">Wong</field>
-            <field name="city">Hong Kong</field>
-            <field name="zip">23540</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="street">56 Beijing street</field>
-            <field name="email">info@maxtor.com</field>
-            <field name="phone">+ 11 8528 456 789</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_maxtor"/>
-        </record>
-        <record id="res_partner_address_6" model="res.partner">
-            <field name="name">Etienne Lacarte</field>
-            <field name="city">Brussels</field>
-            <field name="zip">2365</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">23 rue du Vieux Bruges</field>
-            <field name="email">info@elecimport.com</field>
-            <field name="phone">+ 32 025 897 456</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_6"/>
-        </record>
-        <record id="res_partner_address_7" model="res.partner">
-            <field name="name">Jean Guy Lavente</field>
-            <field name="city">Namur</field>
-            <field name="zip">2541</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">42 rue de la Lesse</field>
-            <field name="email">info@distribpc.com</field>
-            <field name="phone">+ 32 081256987</field>
-            <field name="website">www.distribpc.com/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_4"/>
-        </record>
-        <record id="res_partner_address_8" model="res.partner">
-            <field name="name">Sylvie Lelitre</field>
-            <field name="parent_id" ref="res_partner_agrolait"/>
-            <field name="city">Wavre</field>
-            <field name="zip">5478</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">69 rue de Chimay</field>
-            <field name="email">s.l@agrolait.be</field>
-            <field name="phone">003281588558</field>
-            <field name="website">www.agrolait.com</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="title" ref="base.res_partner_title_madam"/>
-        </record>
-        <record id="res_partner_address_8delivery" model="res.partner">
-            <field name="city">Wavre</field>
-            <field name="name">Paul Lelitre</field>
-            <field name="zip">5478</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">71 rue de Chimay</field>
-            <field name="type">delivery</field>
-            <field name="email">p.l@agrolait.be</field>
-            <field name="phone">003281588557</field>
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_agrolait"/>
-            <field name="title" ref="base.res_partner_title_sir"/>
-        </record>
-        <record id="res_partner_address_8invoice" model="res.partner">
-            <field name="city">Wavre</field>
-            <field name="name">Serge Lelitre</field>
-            <field name="zip">5478</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">69 rue de Chimay</field>
-            <field name="type">invoice</field>
-            <field name="email">serge.l@agrolait.be</field>
-            <field name="phone">003281588556</field>
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_agrolait"/>
-            <field name="title" ref="base.res_partner_title_sir"/>
-        </record>
-        <record id="res_partner_address_9" model="res.partner">
-            <field name="name">Arthur Grosbonnet</field>
-            <field name="parent_id" ref="res_partner_2"/>
-            <field name="city">Paris</field>
-            <field name="zip">75016</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="street">1 rue Rockfeller</field>
-	        <field name="email">a.g@wealthyandsons.com</field>
-	        <field name="phone">003368978776</field>
-            <field name="website">www.wealthyandsons.com/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="title" ref="base.res_partner_title_sir"/>
-        </record>
-        <record id="res_partner_address_11" model="res.partner">
-            <field name="name">Sebastien LANGE</field>
-            <field name="website">www.syleam.fr</field>
-            <field name="city">Alencon</field>
-            <field name="zip">61000</field>
-            <field name="email">contact@syleam.fr</field>
-            <field name="street">1 place de l'Église</field>
-            <field name="phone">+33 (0) 2 33 31 22 10</field>
-            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_sednacom"/>
-        </record>
-        <record id="res_partner_address_10" model="res.partner">
-            <field name="name">Karine Lesbrouffe</field>
-            <field name="city">Liege</field>
-            <field name="zip">6985</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">2 Impasse de la Soif</field>
-	        <field name="email">k.lesbrouffe@eci-liege.info</field>
-	        <field name="phone">+32 421 52571</field>
-            <field name="website">www.eci-liege.info//</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_5"/>
-        </record>
-        <record id="res_partner_address_zen" model="res.partner">
-            <field name="name">Zen</field>
-            <field name="city">Shanghai</field>
-            <field name="zip">478552</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="street">52 Chop Suey street</field>
-	        <field name="email">zen@chinaexport.com</field>
-	        <field name="phone">+86-751-64845671</field>
-            <field name="website">www.chinaexport.com/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_3"/>
-        </record>
-        <record id="res_partner_address_12" model="res.partner">
-            <field name="type">default</field>
-            <field name="city">Grenoble</field>
-            <field name="name">Loïc Dupont</field>
-            <field name="zip">38100</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="street">Rue Lavoisier 145</field>
-            <field name="type">default</field>
-            <field name="email">l.dupont@tecsas.fr</field>
-            <field name="phone">+33-658-256545</field>
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_10"/>
-        </record>
-        <record id="res_partner_address_13" model="res.partner">
-            <field name="name">Carl</field>
-            <field name="city">Bruxelles</field>
-            <field name="zip">1000</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">89 Chaussée de Waterloo</field>
-	        <field name="email">carl.françois@bml.be</field>
-	        <field name="phone">+32-258-256545</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_14"/>
-        </record>
-        <record id="res_partner_address_14" model="res.partner">
-            <field name="name">Lucien Ferguson</field>
-            <field name="street">89 Chaussée de Liège</field>
-	        <field name="city">Namur</field>
-            <field name="zip">5000</field>
-	        <field name="email">lucien.ferguson@bml.be</field>
-	        <field name="phone">+32-621-568978</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_15"/>
-        </record>
-        <record id="res_partner_address_15" model="res.partner">
-            <field name="type">default</field>
-            <field name="name">Marine Leclerc</field>
-            <field name="street">rue Grande</field>
-            <field name="city">Brest</field>
-            <field name="zip">29200</field>
-            <field name="email">marine@leclerc.fr</field>
-            <field name="phone">+33-298.334558</field>
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_11"/>
-        </record>
-        <record id="res_partner_address_16" model="res.partner">
-            <field name="type">invoice</field>
-            <field name="name">Claude Leclerc</field>
-            <field name="street">rue Grande</field>
-            <field name="city">Brest</field>
-            <field name="zip">29200</field>
-            <field name="email">claude@leclerc.fr</field>
-            <field name="phone">+33-298.334598</field>
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_11"/>
+            <field name="image">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</field>
         </record>
 
-        <record id="res_partner_address_accent" model="res.partner">
-            <field name="name">Martine Ohio</field>
-            <field name="street">Place du 20Août</field>
-	        <field name="city">Liège</field>
-            <field name="zip">4000</field>
-	        <field name="email">martine.ohio@ulg.ac.be</field>
-	        <field name="phone">+32-45895245</field>
-            <field name="website">http://www.ulg.ac.be/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_accent"/>
+        <record id="res_partner_14" model="res.partner">
+            <field name="name">Chamber Works</field>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
+            <field eval="15000.00" name="credit_limit"/>
+            <field eval="[(6, 0, [ref('res_partner_category_7'), ref('res_partner_category_9')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="city">Detroit</field>
+            <field name="zip">MI 48212</field>
+            <field name="country_id" ref="base.us"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','mi')]"/>
+            <field name="street">60, Rosewood Court</field>
+            <field name="email">info@chamberworks.com</field>
+            <field name="phone">+1 313 222 3456</field>
+            <field name="image">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</field>
         </record>
-        <record id="res_partner_address_Camptocamp" model="res.partner">
-            <field name="city">Lausanne</field>
-            <field name="name">Luc Maurer</field>
-            <field name="zip">1015</field>
-            <field name="phone">+41 21 619 10 04</field>
-            <field model="res.country" name="country_id" search="[('name','=','Switzerland')]"/>
-            <field name="street">PSE-A, EPFL </field>
-            <field name="type">default</field>
-            <field name="use_parent_address" eval="0"/>
-            <field name="parent_id" ref="res_partner_c2c"/>
+
+        <record id="res_partner_15" model="res.partner">
+            <field name="name">Millennium Industries</field>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
+            <field eval="1500.00" name="credit_limit"/>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="street">89 Lingfield Tower</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">London</field>
+            <field name="phone">+44 20 1294 2193</field>
+            <field name="image">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HDEKDY7SWXhz0F+zagmEcrZHvc9xc717LKpabuu1ZYyd1kBqvfL7hfuS1wLR029CpeiUuy9hS2hswHb8mc+qy/Vrh8zGRHDkoaNHur4TI14XRy2p3jwXHpysDgQPgTsd/ot3pGhbxmFZSuFhex7tuR242J3/AIkrbouqz0Kzs6za1AQQ3b6RM/MqGtf1q9MsqGZM9YhERFcLiRY2PoU8fXZXpVoq8LGhjGRtADWjyA+H+pWSiIqcz3CjO38zxHuQ5PHth1XVhhrMdz7xOYGjd55fg7y381o9UfZ8NqtpC7grOPp5fFQ04cqHczYLngtaDKNmk8+4PmOoI32263+i53WtN3Ef6ZV1S1++pEbHRHpxhobnzwB1yufM9wX19e1Hq6OhqTDY/AarvtsXyBI+0ImPkc1gHKG9efr7w32A32333OouDWcoZ7T+b4c6ogw1nD41mMbHbrCRrog57nP32O5cXkkFvmSQQrqRY+lp/wC+Vk9oL0xkQBEbRBwG5HPAA9lQp4O6yrcJstouDK6fuWMxm33rVizA/ZkThGOZmw92QGPfy297YEbbrd6h4RZCfTPD/BY3LQSR6Xux2LE1ouDpg0gkMAB2677AnoNhuVb6LP0tP9lq7XrwkGRxLuA4kR/xU7xN4M/p1xAvZzI2ajaEuENGs3dxmhshxcyXbbbYE+W/Ub+q+8Lw41kNXaD1Bm8zi559NVJqlp8XOXWGOY9jSOZvnyuAJPfcq30Wfp2bt3+81oNauxSFKRtAIGOAILT8g56Ln/h5wa1rpTM15xPomaD709smtvoOlvRsJHMyKVzPd6DoOnVxPdSfhdwzzmF4m6g19qO/jBcyXPDHTxcbmQchLf6Rwd15jyA7depJJJKtlFhltTbEclvca7d1w/dHiEEgCYmUREXQqZERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERf/2Q==</field>
         </record>
-        <record id="res_partner_address_seagate" model="res.partner">
-            <field name="name">Seagate Technology</field>
+
+        <record id="res_partner_16" model="res.partner">
+            <field name="name">Spark Systems</field>
+            <field eval="1" name="supplier"/>
+            <field eval="0" name="customer"/>
+            <field eval="[(6, 0, [ref('res_partner_category_16'), ref('res_partner_category_11')])]" name="category_id"/>
+            <field name="city">São Paulo</field>
+            <field name="zip">01060-324</field>
+            <field name="street">Rua Dom Carlos, 1073</field>
+            <field name="phone">+55 11 2402 2045</field>
+            <field name="country_id" ref="base.br"/>
+            <field name="is_company">1</field>
+            <field name="image">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</field>
+        </record>
+
+       <record id="res_partner_17" model="res.partner">
+            <field name="name">Nebula Business</field>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
+            <field name="is_company">1</field>
+            <field name="city">Rosario</field>
+            <field name="email">contact@nebula.ar</field>
+            <field name="street">34 Westwood Avenue</field>
+            <field name="street2">Capital Federal</field>
+            <field name="phone">+54 341 324 9459 </field>
+            <field name="country_id" ref="base.ar"/>
+            <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
+            <field name="image">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</field>
+        </record>
+
+        <record id="res_partner_18" model="res.partner">
+            <field name="name">Think Big Systems</field>
+            <field name="is_company">1</field>
+            <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
+            <field name="city">Boston</field>
+            <field name="zip">MA 02203</field>
+            <field name="email">info@thinkbig.com</field>
+            <field name="phone">+1 857 349 3049</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="street">One Lincoln Street</field>
+            <field name="website">www.think-big.com</field>
+            <field name="image">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</field>
+        </record>
+
+        <record id="res_partner_19" model="res.partner">
+            <field name="name">Seagate</field>
+            <field eval="[(6, 0, [ref('res_partner_category_14'), ref('res_partner_category_15')])]" name="category_id"/>
+            <field eval="0" name="customer"/>
+            <field eval="1" name="supplier"/>
+            <field name="is_company">1</field>
             <field name="city">Cupertino</field>
-            <field name="zip">95014</field>
-            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
+            <field name="zip">CA 95014</field>
+            <field name="country_id" ref="base.us"/>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
             <field name="street">10200 S. De Anza Blvd</field>
             <field name="email">info@seagate.com</field>
-            <field name="phone">+1 408 256987</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_seagate"/>
-        </record>
-        <record id="res_partner_address_thymbra" model="res.partner">
-            <field name="name">Jack Daniels</field>
-            <field name="city">Buenos Aires</field>
-            <field name="zip">1659</field>
-            <field name="email">contact@smartbusiness.ar</field>
-            <field name="street">Palermo, Capital Federal </field>
-            <field name="street2">C1414CMS Capital Federal </field>
-            <field name="phone">(5411) 4773-9666 </field>
-            <field model="res.country" name="country_id" search="[('name','=','Argentina')]"/>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_thymbra"/>
-        </record>
-        <record id="res_partner_address_tinyatwork" model="res.partner">
-            <field name="name">Tiny Work</field>
-            <field name="city">Boston</field>
-            <field name="zip">5501</field>
-            <field name="email">info@tinyatwork.com</field>
-            <field name="phone">+33 (0) 2 33 31 22 10</field>
-            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
-            <field name="street">One Lincoln Street</field>
-            <field name="website">www.tinyatwork.com/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_tinyatwork"/>
+            <field name="phone">+1 800 732 4283</field>
+            <field name="image">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</field>
         </record>
 
-        <!--
-        Resource: res.partner.address for Training
-        -->
-
-        <record id="res_partner_address_notsotinysarl0" model="res.partner">
-            <field eval="'Namur'" name="city"/>
-            <field eval="'NotSoTiny SARL'" name="name"/>
-            <field eval="'5000'" name="zip"/>
-            <!--field name="parent_id" ref="res_partner_notsotinysarl0"/-->
-            <field name="country_id" ref="base.be"/>
+<!--        To be removed as its acquired by Seagate-->
+        <record id="res_partner_20" model="res.partner">
+            <field name="name">Maxtor</field>
+            <field eval="32000.00" name="credit_limit"/>
+            <field eval="0" name="customer"/>
+            <field eval="1" name="supplier"/>
+            <field eval="0" name="active"/>
+            <field name="parent_id" ref="res_partner_19"/>
             <field name="is_company">1</field>
-            <field eval="'(+32).81.81.37.00'" name="phone"/>
-            <field eval="'Rue du Nid 1'" name="street"/>
-            <field eval="'default'" name="type"/>
         </record>
 
-
-        <!--record id="res_partner_address_henrychard0" model="res.partner">
-            <field eval="'Paris'" name="city"/>
-            <field eval="'Henry Chard'" name="name"/>
-            <field name="country_id" ref="base.fr"/>
-        </record-->
-
-
-        <!--record id="res_partner_address_geoff0" model="res.partner">
-            <field eval="'Brussels'" name="city"/>
-            <field eval="'Geoff'" name="name"/>
-            <field name="country_id" ref="base.be"/>
-        </record-->
-
-
-        <!--record id="res_partner_address_rogerpecker0" model="res.partner">
-            <field eval="'Kainuu'" name="city"/>
-            <field eval="'Roger Pecker'" name="name"/>
-            <field name="country_id" ref="base.fi"/>
-        </record-->
-
-
-        <record id="res_partner_address_0" model="res.partner">
-            <field name="name">Brus</field>
-            <field eval="'Brussels'" name="city"/>
-            <field name="country_id" ref="base.be"/>
+        <record id="res_partner_21" model="res.partner">
+            <field name="name">Global Solutions</field>
+            <field eval="0" name="supplier"/>
+            <field eval="1" name="customer"/>
+            <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="type">default</field>
+            <field name="street">Union Road</field>
+            <field name="city">Liverpool</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="zip">L25 4RL</field>
+            <field name="image">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</field>
         </record>
 
-
-        <record id="res_partner_address_henrychard1" model="res.partner">
-            <field eval="'Henry Chard'" name="name"/>
-            <field eval="'Paris'" name="city"/>
-            <field name="country_id" ref="base.fr"/>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_theshelvehouse0"/>
+        <record id="res_partner_22" model="res.partner">
+            <field name="name">Vicking Direct</field>
+            <field eval="[(6,0,[ref('res_partner_category_12')])]" name="category_id"/>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+            <field name="is_company">1</field>
+             <field name="type">default</field>
+            <field name="street">Margaret Alley</field>
+            <field name="city">Leicester</field>
+            <field name="zip">LE4 2BN</field>
+            <field name="phone">+44 20 1294 2193</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="website">www.vicking-direct.com</field>
+            <field name="image">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</field>
         </record>
-
-
-        <record id="res_partner_address_brussels0" model="res.partner">
-            <field eval="'Leen Vandenloep'" name="name"/>
-            <field eval="'Puurs'" name="city"/>
-            <field eval="'2870'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'(+32).70.12.85.00'" name="phone"/>
-            <field eval="'Schoonmansveld 28'" name="street"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="website">vicking-direct.be</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_vickingdirect0"/>
-        </record>
-
-
-        <record id="res_partner_address_rogerpecker1" model="res.partner">
-            <field eval="'Roger Pecker'" name="name"/>
-            <field eval="'Kainuu'" name="city"/>
-            <field eval="'(+358).9.589 689'" name="phone"/>
-            <field name="country_id" ref="base.fi"/>
-            <field name="website">woodywoodpecker.com</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_woodywoodpecker0"/>
-        </record>
-
-
-        <record id="res_partner_address_geoff1" model="res.partner">
-            <field eval="'Geoff'" name="name"/>
-            <field eval="'Brussels'" name="city"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="website">http://www.zerooneinc.com/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_zerooneinc0"/>
-        </record>
-
-
-        <record id="res_partner_address_marcdubois0" model="res.partner">
-            <field eval="'Marc Dubois'" name="name"/>
-            <field eval="'Brussels'" name="city"/>
-            <field eval="'1000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Avenue de la Liberté 56'" name="street"/>
-            <field eval="'m.dubois@dubois.be'" name="email"/>
-            <field name="website">http://www.dubois.be/</field>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_duboissprl0"/>
-        </record>
-
-
-        <record id="res_partner_address_fabiendupont0" model="res.partner">
-            <field eval="'Frank'" name="name"/>
-            <field eval="'Namur'" name="city"/>
-            <field eval="'5000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Blvd Kennedy, 13'" name="street"/>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_fabiendupont0"/>
-        </record>
-
-
-        <record id="res_partner_address_ericdubois0" model="res.partner">
-            <field eval="'Joy'" name="name"/>
-            <field name="address" eval="[]"/>
-            <field eval="'Mons'" name="city"/>
-            <field eval="'7000'" name="zip"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Chaussée de Binche, 27'" name="street"/>
-            <field eval="'e.dubois@gmail.com'" name="email"/>
-            <field eval="'(+32).758 958 789'" name="phone"/>
-            <field name="use_parent_address" eval="1"/>
-            <field name="parent_id" ref="res_partner_ericdubois0"/>
-        </record>
-
-
-        <record id="res_partner_address_notsotinysarl1" model="res.partner">
-            <field eval="'Antwerpen'" name="city"/>
-            <field eval="'NotSoTiny'" name="name"/>
-            <field eval="'2000'" name="zip"/>
-            <field name="parent_id" ref="res_partner_address_notsotinysarl0"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="use_parent_address" eval="0"/>
-            <field eval="'Antwerpsesteenweg 254'" name="street"/>
-            <field eval="'invoice'" name="type"/>
-        </record>
-
-
-        <!--record id="res_partner_address_4" model="res.partner">
-            <field eval="'Grand-Rosière'" name="city"/>
-            <field eval="'1367'" name="zip"/>
-            <field name="parent_id" ref="res_partner_lucievonck0"/>
-            <field name="country_id" ref="base.be"/>
-            <field eval="'Chaussée de Namur'" name="street"/>
-        </record-->
-
 
         <!--
         Resource: res.request
@@ -900,7 +404,7 @@
         <record id="res_partner_asustek_request" model="res.request">
             <field name="name">ASUSTEK-Subject</field>
             <field name="act_to" ref="user_demo"/>
-            <field name="ref_doc1" ref="res_partner_asus"/>
+            <field name="ref_doc1" ref="res_partner_1"/>
         </record>
     </data>
 </openerp>

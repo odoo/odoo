@@ -24,6 +24,7 @@ from lxml import etree
 from tools import graph
 from tools.safe_eval import safe_eval as eval
 import tools
+from tools.view_validation import valid_view
 import os
 import logging
 
@@ -47,11 +48,22 @@ view_custom()
 
 class view(osv.osv):
     _name = 'ir.ui.view'
+
+    def _type_field(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for record in self.browse(cr, uid, ids, context):
+            # Get the type from the inherited view if any.
+            if record.inherit_id:
+                result[record.id] = record.inherit_id.type
+            else:
+                result[record.id] = etree.fromstring(record.arch.encode('utf8')).tag
+        return result
+
     _columns = {
         'name': fields.char('View Name',size=64,  required=True),
         'model': fields.char('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
-        'type': fields.selection((
+        'type': fields.function(_type_field, type='selection', selection=[
             ('tree','Tree'),
             ('form','Form'),
             ('mdx','mdx'),
@@ -60,7 +72,7 @@ class view(osv.osv):
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
             ('kanban', 'Kanban'),
-            ('search','Search')), 'View Type', required=True, select=True),
+            ('search','Search')], string='View Type', required=True, select=True, store=True),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'field_parent': fields.char('Child Field',size=64),
@@ -75,6 +87,11 @@ class view(osv.osv):
 
     # Holds the RNG schema
     _relaxng_validator = None  
+
+    def create(self, cr, uid, values, context=None):
+        if 'type' in values:
+            _logger.warning("Setting the `type` field is deprecated in the `ir.ui.view` model.")
+        return super(osv.osv, self).create(cr, uid, values, context)
 
     def _relaxng(self):
         if not self._relaxng_validator:
@@ -123,6 +140,8 @@ class view(osv.osv):
                     for error in validator.error_log:
                         _logger.error(tools.ustr(error))
                     return False
+                if not valid_view(view_arch):
+                    return False
         return True
 
     _constraints = [
@@ -133,7 +152,7 @@ class view(osv.osv):
         super(view, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_model_type_inherit_id\'')
         if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, type, inherit_id)')
+            cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
 
     def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
         """Retrieves the architecture of views that inherit from the given view, from the sets of

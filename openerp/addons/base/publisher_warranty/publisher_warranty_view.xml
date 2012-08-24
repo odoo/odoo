@@ -7,7 +7,6 @@
         <record id="publisher_warranty_contract_tree_view" model="ir.ui.view">
             <field name="name">publisher_warranty.contract.tree</field>
             <field name="model">publisher_warranty.contract</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Publisher Warranty Contracts">
                     <field name="name"/>
@@ -21,7 +20,6 @@
         <record id="publisher_warranty_contract_form_view" model="ir.ui.view">
             <field name="name">publisher_warranty.contract.form</field>
             <field name="model">publisher_warranty.contract</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Publisher Warranty Contract" version="7.0">
                   <header>
@@ -55,7 +53,6 @@
         <record id="publisher_warranty_contract_search_view" model="ir.ui.view">
             <field name="name">publisher_warranty.contract.search</field>
             <field name="model">publisher_warranty.contract</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Publisher Warranty Contract">
                     <field name="name" string="Serial Key"/>
@@ -68,7 +65,6 @@
         <record id="publisher_warranty_contract_view_calendar" model="ir.ui.view">
             <field name="name">publisher_warranty.contract.calendar</field>
             <field name="model">publisher_warranty.contract</field>
-            <field name="type">calendar</field>
             <field name="arch" type="xml">
                 <calendar string="Maintenance Contract" date_start="date_start" color="state">
                     <field name="name"/>
@@ -91,7 +87,6 @@
         <record id="publisher_warranty_contract_add_wizard" model="ir.ui.view">
             <field name="name">publisher_warranty.contract.add.wizard</field>
             <field name="model">publisher_warranty.contract.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Register a Contract" version="7.0">
                     <field name="state" invisible="1"/>
