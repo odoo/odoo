@@ -19,8 +19,8 @@
 -
     I create a sale order
 -
-    !record {model: sale.order, id: order}:
-         partner_id: base.res_partner_agrolait
+    !record {model: sale.order, id: order1}:
+         partner_id: base.res_partner_2
          note: Invoice after delivery
          payment_term: account.account_payment_term
 -
@@ -30,25 +30,25 @@
          product_id: event_product
          price_unit: 190.50
          product_uom_qty: 8
-         order_id: order
+         order_id: order1
          name: sale order line
          event_id: event
 -
     I confirm the sale order
 -
-    !workflow {model: sale.order, ref: order, action: order_confirm}
+    !workflow {model: sale.order, ref: order1, action: order_confirm}
 -
     I check if the sale order is confirmed
 -
-    !assert {model: sale.order, id: order}:
+    !assert {model: sale.order, id: order1}:
          - state == 'manual'
 -
     I check if a registration is created
 -
     !python {model: event.registration}: |
-        order_id = ref('order')
+        order_id = ref('order1')
         order =  self.pool.get('sale.order').browse(cr, uid,order_id)
         registration_ids = self.search(cr,uid,[('origin','=',order.name)])
         if registration_ids == []:
-           raise osv.except_osv(_('Error!'),_("The registration is not created"))
+           raise osv.except_osv(_('Error!'),_("The registration is not created."))
 

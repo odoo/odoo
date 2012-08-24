@@ -53,8 +53,7 @@ class report_project_task_user(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'Status', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True, groups="base.group_multi_company"),
-        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'type_id': fields.many2one('project.task.type', 'Stage', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Contact', readonly=True),
     }
     _order = 'name desc, project_id'
 
@@ -82,7 +81,7 @@ class report_project_task_user(osv.osv):
                     t.name as name,
                     t.company_id,
                     t.partner_id,
-                    t.type_id,
+                    t.stage_id,
                     remaining_hours as remaining_hours,
                     total_hours as total_hours,
                     t.delay_hours as hours_delay,
@@ -114,94 +113,9 @@ class report_project_task_user(osv.osv):
                     name,
                     t.company_id,
                     t.partner_id,
-                    t.type_id
+                    t.stage_id
 
         """)
 
 report_project_task_user()
-
-#This class is generated for project deshboard purpose
-class project_vs_hours(osv.osv):
-    _name = "project.vs.hours"
-    _description = " Project vs  hours"
-    _auto = False
-    _columns = {
-        'project': fields.char('Project', size=128, required=True),
-        'remaining_hours': fields.float('Remaining Hours', readonly=True),
-        'user_id': fields.many2one('res.users', 'Assigned To', readonly=True),
-        'planned_hours': fields.float('Planned Hours', readonly=True),
-        'total_hours': fields.float('Total Hours', readonly=True),
-        'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Close'),('template', 'Template')], 'Status', required=True, readonly=True)
-    }
-    _order = 'project desc'
-
-    def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'project_vs_hours')
-        cr.execute("""
-            CREATE or REPLACE view project_vs_hours as (
-                select
-                      min(pt.id) as id,
-                      aaa.user_id as user_id,
-                      aaa.name as project,
-                      aaa.state,
-                      sum(pt.remaining_hours) as remaining_hours,
-                      sum(pt.planned_hours) as planned_hours,
-                      sum(pt.total_hours) as total_hours
-                 FROM project_project as pp,
-                       account_analytic_account as aaa,
-                       project_task as pt
-                 WHERE aaa.id=pp.analytic_account_id and pt.project_id=pp.id and pp.analytic_account_id=aaa.id
-                 GROUP BY aaa.user_id,aaa.state,aaa.name
-                 UNION All
-                 SELECT
-                      min(pt.id) as id,
-                      pur.uid as user_id,
-                      aaa.name as project,
-                      aaa.state,
-                      sum(pt.remaining_hours) as remaining_hours,
-                      sum(pt.planned_hours) as planned_hours,
-                      sum(pt.total_hours) as total_hours
-                 FROM project_project as pp,
-                      project_user_rel as pur,
-                      account_analytic_account as aaa,
-                      project_task as pt
-                 WHERE pur.project_id=pp.id and pt.project_id=pp.id and pp.analytic_account_id=aaa.id AND pur.uid != aaa.user_id
-                 GROUP BY pur.uid,aaa.state,aaa.name
-            )
-        """)
-
-project_vs_hours()
-
-class task_by_days(osv.osv):
-    _name = "task.by.days"
-    _description = "Task By Days"
-    _auto = False
-    _columns = {
-        'day': fields.char('Day', size=128, required=True),
-        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True, required=True),
-        'total_task': fields.float('Total tasks', readonly=True),
-        'project_id':fields.many2one('project.project', 'Project')
-     }
-    _order = 'day desc'
-
-    def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'task_by_days')
-        cr.execute("""
-            CREATE or REPLACE view task_by_days as (
-                SELECT
-                    min(pt.id) as id,
-                    to_char(pt.create_date, 'YYYY-MM-DD') as day,
-                    count(*) as total_task,
-                    pt.state as state,
-                    pt.project_id
-                FROM
-                    project_task as pt
-                GROUP BY
-                    to_char(pt.create_date, 'YYYY-MM-DD'),pt.state,pt.project_id
-            )
-        """)
-
-task_by_days()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+    <data noupdate="1">
 
     <!-- Definición de posiciones fiscales Régimen Nacional, Recargo de Equivalencia,
          Extracomunitario, Intracomunitario y Retención de IRPF 18%, 15%, 7%, 1%
@@ -11,7 +11,7 @@
          Añadidas posiciones fiscales Retención de IRPF 19%, 2% :
            Jordi Esteve (Zikzakmedia) - jesteve@zikzakmedia.com 2010-02-18 -->
 
-	<!-- Fiscal Position Templates -->
+    <!-- Fiscal Position Templates -->
         <record id="fp_nacional" model="account.fiscal.position.template">
             <field name="name">Régimen Nacional</field>
             <field name="chart_template_id" ref="l10nES_chart_template"/>
@@ -63,10 +63,10 @@
         </record>
 
 
-	<!-- Fiscal Position Tax Templates -->
-	<!-- ************************************************************* -->
+    <!-- Fiscal Position Tax Templates -->
+    <!-- ************************************************************* -->
 
-	<!-- Extracomunitarios fiscal.position.tax.template-->
+    <!-- Extracomunitarios fiscal.position.tax.template-->
 
         <record id="fptt_extra_16" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_extra" />
@@ -78,7 +78,7 @@
             <field name="tax_src_id" ref="iva_sop_16_inv" />
             <field name="tax_dest_id" ref="iva_X16_compras_bi" />
         </record>
-	
+    
         <record id="fptt_extra_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_extra" />
             <field name="tax_src_id" ref="iva_sop_18" />
@@ -149,7 +149,7 @@
             <field name="tax_dest_id" ref="iva_X0" />
         </record>
 
-	<!-- Intracomunitarios fiscal.position.tax.template-->
+    <!-- Intracomunitarios fiscal.position.tax.template-->
 
         <record id="fptt_intra_16" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_intra" />
@@ -161,7 +161,7 @@
             <field name="tax_src_id" ref="iva_sop_16_inv" />
             <field name="tax_dest_id" ref="iva_IC_compras_16_bi" />
         </record>
-	
+    
         <record id="fptt_intra_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_intra" />
             <field name="tax_src_id" ref="iva_sop_18" />
@@ -215,7 +215,7 @@
             <field name="tax_src_id" ref="iva_rep_7" />
             <field name="tax_dest_id" ref="iva_IO" />
         </record>
-	
+    
         <record id="fptt_intra_ventas_8" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_intra" />
             <field name="tax_src_id" ref="iva_rep_8" />
@@ -227,14 +227,14 @@
             <field name="tax_src_id" ref="iva_rep_16" />
             <field name="tax_dest_id" ref="iva_IO" />
         </record>
-	
+    
         <record id="fptt_intra_ventas_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_intra" />
             <field name="tax_src_id" ref="iva_rep_18" />
             <field name="tax_dest_id" ref="iva_IO" />
         </record>
 
-	<!-- Recargo de equivalencia fiscal.position.tax.template-->
+    <!-- Recargo de equivalencia fiscal.position.tax.template-->
 
         <record id="fptt_recargo_16" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_recargo" />
@@ -271,7 +271,7 @@
             <field name="tax_src_id" ref="iva_rep_7" />
             <field name="tax_dest_id" ref="re_1" />
         </record>
-	
+    
         <record id="fptt_recargo_8" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_recargo" />
             <field name="tax_src_id" ref="iva_rep_8" />
@@ -296,7 +296,7 @@
             <field name="tax_dest_id" ref="re_05" />
         </record>
 
-	<!-- Extracomunitarios fiscal.position.account.template-->
+    <!-- Extracomunitarios fiscal.position.account.template-->
 
         <record id="fpat_extra_acc_1" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fp_extra" />
@@ -334,7 +334,7 @@
             <field name="account_dest_id" ref="pgc_7052" />
         </record>
 
-	<!-- Intracomunitarios fiscal.position.account.template-->
+    <!-- Intracomunitarios fiscal.position.account.template-->
 
         <record id="fpat_intra_acc_1" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fp_intra" />
@@ -372,7 +372,7 @@
             <field name="account_dest_id" ref="pgc_7051" />
         </record>
 
-	<!-- Retenciones IRPF 19% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 19% fiscal.position.tax.template-->
 
         <record id="fptt_irpf19sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_irpf19" />
@@ -494,7 +494,7 @@
             <field name="tax_dest_id" ref="irpf_19" />
         </record>
 
-	<!-- Retenciones IRPF 18% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 18% fiscal.position.tax.template-->
 
         <record id="fptt_irpf18sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_irpf18" />
@@ -616,7 +616,7 @@
             <field name="tax_dest_id" ref="irpf_18" />
         </record>
 
-	<!-- Retenciones IRPF 15% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 15% fiscal.position.tax.template-->
 
         <record id="fptt_irpf15sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_irpf15" />
@@ -738,7 +738,7 @@
             <field name="tax_dest_id" ref="irpf_15" />
         </record>
 
-	<!-- Retenciones IRPF 7% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 7% fiscal.position.tax.template-->
 
         <record id="fptt_irpf7sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_irpf7" />
@@ -860,7 +860,7 @@
             <field name="tax_dest_id" ref="irpf_7" />
         </record>
 
-	<!-- Retenciones IRPF 2% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 2% fiscal.position.tax.template-->
 
         <record id="fptt_irpf2sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_irpf2" />
@@ -982,7 +982,7 @@
             <field name="tax_dest_id" ref="irpf_2" />
         </record>
 
-	<!-- Retenciones IRPF 1% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 1% fiscal.position.tax.template-->
 
         <record id="fptt_irpf1sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_irpf1" />

@@ -19,10 +19,9 @@
 #
 ##############################################################################
 
+from base_status.base_state import base_state
 from crm import crm
 from osv import fields, osv
-import time
-from crm import wizard
 import tools
 from tools.translate import _
 
@@ -32,15 +31,14 @@ CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.helpdesk')
-
-class crm_helpdesk(crm.crm_case, osv.osv):
+class crm_helpdesk(base_state, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
     _description = "Helpdesk"
     _order = "id desc"
     _inherit = ['mail.thread']
+    _mail_compose_message = True
     _columns = {
             'id': fields.integer('ID', readonly=True),
             'name': fields.char('Name', size=128, required=True),
@@ -77,70 +75,82 @@ class crm_helpdesk(crm.crm_case, osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-            'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id': crm.crm_case._get_default_user,
-        'partner_id': crm.crm_case._get_default_partner,
-        'email_from': crm.crm_case. _get_default_email,
+        'user_id': lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
+        'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
+        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'state': lambda *a: 'draft',
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'section_id': crm.crm_case. _get_section,
+        'date': lambda *a: fields.datetime.now(),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
-    def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
-        """Automatically called when new email message arrives"""
-        res_id = super(crm_helpdesk,self).message_new(cr, uid, msg_dict, custom_values=custom_values, context=context)
-        subject = msg_dict.get('subject')  or _("No Subject")
-        body = msg_dict.get('body_text')
-        msg_from = msg_dict.get('from')
-        vals = {
-            'name': subject,
-            'email_from': msg_from,
-            'email_cc': msg_dict.get('cc'),
-            'description': body,
-            'user_id': False,
-        }
-        vals.update(self.message_partner_by_email(cr, uid, msg_from))
-        self.write(cr, uid, [res_id], vals, context)
-        return res_id
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_helpdesk, self).create(cr, uid, vals, context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
 
-    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
+    # -------------------------------------------------------
+    # Mail gateway
+    # -------------------------------------------------------
+
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        if custom_values is None: custom_values = {}
+        custom_values.update({
+            'name': msg.get('subject') or _("No Subject"),
+            'description': msg.get('body_text'),
+            'email_from': msg.get('from'),
+            'email_cc': msg.get('cc'),
+            'user_id': False,
+        })
+        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
+        return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Overrides mail_thread message_update that is called by the mailgateway
+            through message_process.
+            This method updates the document according to the email.
+        """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-
-        super(crm_helpdesk,self).message_update(cr, uid, ids, msg, context=context)
+        if update_vals is None: update_vals = {}
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-            vals['priority'] = msg.get('priority')
+            update_vals['priority'] = msg.get('priority')
 
         maps = {
             'cost':'planned_cost',
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
-        vls = {}
         for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
-                vls[key] = res.group(2).lower()
-        vals.update(vls)
+                update_vals[key] = res.group(2).lower()
 
-        # Unfortunately the API is based on lists
-        # but we want to update the state based on the
-        # previous state, so we have to loop:
-        for case in self.browse(cr, uid, ids, context=context):
-            values = dict(vals)
-            if case.state in CRM_HELPDESK_STATES:
-                values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
-            res = self.write(cr, uid, [case.id], values, context=context)
-        return res
+        return super(crm_helpdesk,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+
+    # ******************************
+    # OpenChatter
+    # ******************************
+
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        """ override of default base_state method. """
+        return 'Case'
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        msg = _('Case has been <b>created</b>.')
+        self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return True
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

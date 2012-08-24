@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:01+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Followup"
-msgstr "متابعة البحث"
+msgstr "ابحث عن المتابعة"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -90,7 +90,7 @@ msgstr "موضوع الايميل"
 #: model:ir.actions.act_window,help:account_followup.action_followup_stat
 msgid ""
 "Follow up on the reminders sent over to your partners for unpaid invoices."
-msgstr "متابعة للمذكرات المرسلة لشركائك للفواتير الغير مدفوعة."
+msgstr "تابع التذكيرات المرسلة لشركائك للفواتير الغير مدفوعة."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -111,7 +111,7 @@ msgstr "موافق"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
-msgstr ""
+msgstr "المقدار"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
@@ -145,11 +145,13 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"تاريخ قيد اليومية غير معرف الفترة! يجب تغيير التاريخ أو إزالة هذا الشرط من "
+"اليومية."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
-msgstr "%(رأسيات):تحرك رأس الخط"
+msgstr "%(رأسيات):حرك رأس الخط"
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
@@ -182,7 +184,7 @@ msgstr "الشركاء"
 #: code:addons/account_followup/wizard/account_followup_print.py:142
 #, python-format
 msgid "Invoices Reminder"
-msgstr "تذكير الفواتير"
+msgstr "تذكير بالفواتير"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -327,6 +329,8 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"الحساب المحدد لقيد اليومية يجبرك علي توفير عملة ثانوية. يجب إزالة العملة "
+"الثانوية على الحساب أو تحديد طريقة عرض العملات في اليومية."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -336,12 +340,12 @@ msgstr "ارسل ايميلات"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
-msgstr "متابعة الاحصائيات بالشريك"
+msgstr "تابع الاحصائيات بالشريك"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
+msgstr "الرسالة"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -363,7 +367,7 @@ msgstr ""
 #: help:account.followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
-msgstr "يسمح لك هذا المجال  لتحديد تاريخ متوقع لتخطط متابعاتك"
+msgstr "يسمح لك هذا الحقل لتحديد تاريخ متوقع لتخطط متابعاتك"
 
 #. module: account_followup
 #: field:account.followup.print,date:0
@@ -409,7 +413,7 @@ msgstr "عناصر اليومية"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "لا يمكنك إنشاء عناصري يومية علي حساب من نوع ’عرض’."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -419,7 +423,7 @@ msgstr "ارسل تأكيد للبريد الالكتروني"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "الإجمالي:"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -536,7 +540,7 @@ msgstr ""
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "لشركة يجب أن تكون هي نفسها لحساباتها و فترتها."
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -626,7 +630,7 @@ msgstr "تم ارسال المتابعات"
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "اسم الشركة يجب أن يكون فريداً !"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -643,7 +647,7 @@ msgstr "التحرك الاول"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Li."
-msgstr ""
+msgstr "مؤشر العلامات."
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -688,7 +692,7 @@ msgstr ""
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "لا يمنك إنشاء عناصر يومية في حساب مغلق."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -713,7 +717,7 @@ msgstr "مرجع العميل:"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "إختبار الطباعة"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -780,14 +784,158 @@ msgstr "معيار المتابعة"
 #~ msgid "Follow-Up Lines"
 #~ msgstr "خطوط المتابعة"
 
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "يجب ان تكون الشركة نفس فترتها وحسابها المتعلق بها."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "لايمكنك انشاء خط تحرك في حساب العرض."
+
 #, python-format
 #~ msgid ""
 #~ "E-Mail not sent to following Partners, Email not available !\n"
 #~ "\n"
 #~ msgstr ""
-#~ "لم يتم ارسال البريد الالكتروني لهؤلاء الشركاء, البريك الالكتروني غير متاح !\n"
+#~ "لم يتم ارسال البريد الالكتروني لهؤلاء الشركاء, البريد الالكتروني غير متاح !\n"
 #~ "\n"
 
 #, python-format
 #~ msgid "Follwoup Summary"
-#~ msgstr "ملخص المتابعة"
+#~ msgstr "تابع الملخص"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Modules to automate letters for unpaid invoices, with multi-level "
+#~ "recalls.\n"
+#~ "\n"
+#~ "    You can define your multiple levels of recall through the menu:\n"
+#~ "        Accounting/Configuration/Miscellaneous/Follow-Ups\n"
+#~ "\n"
+#~ "    Once it is defined, you can automatically print recalls every day\n"
+#~ "    through simply clicking on the menu:\n"
+#~ "        Accounting/Periodical Processing/Billing/Send followups\n"
+#~ "\n"
+#~ "    It will generate a PDF with all the letters according to the the\n"
+#~ "    different levels of recall defined. You can define different policies\n"
+#~ "    for different companies. You can also send mail to the customer.\n"
+#~ "\n"
+#~ "    Note that if you want to change the followup level for a given "
+#~ "partner/account entry, you can do from in the menu:\n"
+#~ "        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-ups "
+#~ "Sent\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "    وحدات لآلية الرسائل عن الفواتير غير المسددة، مع المستويات المتعددة  "
+#~ "تذكر.\n"
+#~ "\n"
+#~ "يمكنك تحديد مستويات متعددة من خلال سحب القائمة:\n"
+#~ "المحاسبة / تكوين / متفرقات / من خلال المتابعة\n"
+#~ "\n"
+#~ "عندما يتم تحديد ذلك، يمكنك الطباعة تلقائيا للتذكيرات كل يوم\n"
+#~ "من خلال النقر على القائمة:\n"
+#~ "المحاسبة / دورية معالجة / الفواتير / أرسل المتابعات\n"
+#~ "\n"
+#~ "فإنه سيتم إنشاء PDF مع جميع الرسائل وفقا لهذا\n"
+#~ "مستويات مختلفة من تذكر المعرفة. يمكنك تحديد سياسات مختلفة\n"
+#~ "لمختلف الشركات. يمكنك أيضا إرسال البريد إلى العملاء.\n"
+#~ "\n"
+#~ "لاحظ أنه إذا كنت ترغب في تغيير مستوى المتابعة لدخول شريك / حساب معين، يمكنك "
+#~ "القيام به من في القائمة:\n"
+#~ "المرسلة المحاسبة / التقارير / الإبلاغ عام / الشريك الحسابات / متابعاته\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Despite several reminders, your account is still not settled.\n"
+#~ "\n"
+#~ "Unless full payment is made in next 8 days , then legal action for the "
+#~ "recovery of the debt, will be taken without further notice.\n"
+#~ "\n"
+#~ "I trust that this action will prove unnecessary and details of due payments "
+#~ "is printed below.\n"
+#~ "\n"
+#~ "In case of any queries concerning this matter, do not hesitate to contact "
+#~ "our accounting department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "العزيز٪ (اسم العميل) ثانية،\n"
+#~ "\n"
+#~ "على الرغم من العديد من المذكرات، لا يزال حسابك لم تحسم.\n"
+#~ "\n"
+#~ "ما لم يتم دفع كامل في 8 أيام القادمة، ثم اتخاذ إجراءات قانونية لاسترداد "
+#~ "الديون، سيتم اتخاذ دون إشعار آخر.\n"
+#~ "\n"
+#~ "إنني على ثقة بأن هذا العمل سوف تثبت لا لزوم لها وتطبع تفاصيل المدفوعات "
+#~ "المستحقة أدناه.\n"
+#~ "\n"
+#~ "في حال وجود أي استفسارات بشأن هذه المسألة، لا تترددوا في الاتصال بقسم "
+#~ "المحاسبة في (+32) .10.68.94.39.\n"
+#~ "\n"
+#~ "مع أطيب التحيات،\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "We are disappointed to see that despite sending a reminder, that your "
+#~ "account is now seriously overdue.\n"
+#~ "\n"
+#~ "It is essential that immediate payment is made, otherwise we will have to "
+#~ "consider placing a stop on your account which means that we will no longer "
+#~ "be able to supply your company with (goods/services).\n"
+#~ "Please, take appropriate measures in order to carry out this payment in the "
+#~ "next 8 days\n"
+#~ "\n"
+#~ "If there is a problem with paying invoice that we are not aware of, do not "
+#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+#~ "we can resolve the matter quickly.\n"
+#~ "\n"
+#~ "Details of due payments is printed below.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "العزيز٪ (الاسم للشريك) ،\n"
+#~ "\n"
+#~ "نشعر بخيبة أمل أن نرى أنه على الرغم من إرسال تذكير، أن حسابك الآن المتأخرة "
+#~ "على محمل الجد.\n"
+#~ "\n"
+#~ "فمن الضروري أن يتم الدفع الفوري، وإلا سيكون لدينا للنظر في وضع حد على حسابك "
+#~ "وهو ما يعني أننا لن تكون قادرة على تزويد شركتك مع (السلع / الخدمات).\n"
+#~ "من فضلك، واتخاذ التدابير المناسبة من أجل تنفيذ هذا الدفع في 8 أيام القادمة\n"
+#~ "\n"
+#~ "إذا كان هناك مشكلة مع دفع فاتورة أننا لسنا على علم، لا تترددوا في الاتصال "
+#~ "بقسم المحاسبة في (+32) .10.68.94.39. حتى نتمكن من حل هذه المسألة بسرعة.\n"
+#~ "\n"
+#~ "طبعت تفاصيل المدفوعات المستحقة أدناه.\n"
+#~ "مع أطيب التحيات،\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Exception made if there was a mistake of ours, it seems that the following "
+#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
+#~ "this payment in the next 8 days.\n"
+#~ "\n"
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "العزيز٪ (اسم الشريك) ثانية،\n"
+#~ "\n"
+#~ "استثناء جعلت إذا كان هناك خطأ من جانبنا، ويبدو أن المبلغ التالي مازال غير "
+#~ "مدفوع. من فضلك، واتخاذ التدابير المناسبة من أجل تنفيذ هذا الدفع في يوم 8 "
+#~ "المقبل.\n"
+#~ "\n"
+#~ "وأجريت الدفع خارج بعد طرد هذا البريد، يرجى النظر في واحدة بوصفها باطلة. لا "
+#~ "تترددوا في الاتصال بقسم المحاسبة في (+32) .10.68.94.39.\n"
+#~ "\n"
+#~ "مع أطيب التحيات،\n"

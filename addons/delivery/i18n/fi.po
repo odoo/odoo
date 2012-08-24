@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:04+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 04:53+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -69,7 +69,7 @@ msgstr "Taulukkorivi"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "Kumppani joka toteuttaa toimituspalvelun"
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -89,12 +89,12 @@ msgstr "Laskutettava keräily"
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "Kehittynyt hinnoittelu"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
+msgstr "Antaa järjestyksen näytettäessä luetteloa toimitusruudukosta"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -121,11 +121,14 @@ msgid ""
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
 msgstr ""
+"Kuljetushinnasto mahdollistaa toimitukskulujen laskennan painon ja muiden "
+"kriteerien mukaan. Voit määritellä monta hinnastoa yhdelle toimitustavalla, "
+"maakohtaisesti, alueittain tai postinumeron mukaan."
 
 #. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Määrä"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -147,7 +150,7 @@ msgstr "Toimitustapa"
 #: code:addons/delivery/delivery.py:213
 #, python-format
 msgid "No price available!"
-msgstr ""
+msgstr "Hintaa ei saatavilla!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -201,6 +204,8 @@ msgid ""
 "Define your delivery methods and their pricing. The delivery costs can be "
 "added on the sale order form or in the invoice, based on the delivery orders."
 msgstr ""
+"Määrittele toimitusmuodot ja niiden hinnoittelu. Toimituskulut voidaan "
+"lisätä myyntitilaukselle tai laskulle, toimitusmääräysten mukaisesti."
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -210,7 +215,7 @@ msgstr "Erä"
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Kuljetusyritys"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -222,6 +227,7 @@ msgstr "Toimitustaulukko"
 #, python-format
 msgid "No line matched this product or order in the choosed delivery grid."
 msgstr ""
+"Mikään rivi ei täsmännyt tähän tuotteeseen valitussa toimitusruudukossa."
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -259,6 +265,7 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Summa jonka ylittyessä toimitus on ilmainen, ilmaistuna yrityksen valuutassa."
 
 #. module: delivery
 #: code:addons/delivery/stock.py:89
@@ -289,17 +296,17 @@ msgstr "Kohde postinumero"
 #: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "Oletushinta"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_define_delivery_steps_wizard
 msgid "delivery.define.delivery.steps.wizard"
-msgstr ""
+msgstr "delivery.define.delivery.steps.wizard"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "Normaalihinta"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -336,17 +343,21 @@ msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
 msgstr ""
+"Valitse tämä ruutu jos haluat hallita toimitushintoja, jotka riippuvat "
+"kohteesta, painosta ja tilauksen summasta yms."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
+"Jätä tyhjäksi jos hinnoittelu riippuu kohdekohtaisesta kehittyneestä "
+"hinnoittelusta"
 
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
-msgstr ""
+msgstr "Et voi siirtää tuotteita paikkaan tai paikasta tässä näkymässä."
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:70
@@ -369,7 +380,7 @@ msgstr "Tilaus ei ole luonnostilassa!"
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
 msgid "Choose Your Default Picking Policy"
-msgstr ""
+msgstr "Valitse oletuskeräilysääntö"
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -405,7 +416,7 @@ msgstr "Kustannushinta"
 #. module: delivery
 #: field:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Picking Policy"
-msgstr ""
+msgstr "Keräilysäännöt"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -421,7 +432,7 @@ msgstr "Tämä toimitustapa on käytössä kun laskutus tapahtuu keräilystä."
 #. module: delivery
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Viitteen tulee olla uniikki yrityskohtaisesti!"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -437,12 +448,12 @@ msgstr "Määrä"
 #: view:delivery.define.delivery.steps.wizard:0
 #: model:ir.actions.act_window,name:delivery.action_define_delivery_steps
 msgid "Setup Your Picking Policy"
-msgstr ""
+msgstr "Määrittele keräilypolitiikka"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form1
 msgid "Define Delivery Methods"
-msgstr ""
+msgstr "Määrittele toimitusmetodit"
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
@@ -450,6 +461,8 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
+"Jos tilaus on arvokkaampi kuin tietty määrä, asiakas hyötyy ilmaisesta "
+"toimituksesta"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -468,12 +481,12 @@ msgstr "Peruuta"
 #: code:addons/delivery/delivery.py:130
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Ilmainen jos enemmän kuin %.2f"
 
 #. module: delivery
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Tilausviitteen tulee olla uniikki yrityskohtaisesti!"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -482,6 +495,8 @@ msgid ""
 "reinvoice the delivery costs when you are doing invoicing based on delivery "
 "orders"
 msgstr ""
+"Määrittele toimitustavat joita käyttä ja niiden hinnoittlu veloittaaksesi "
+"toimitusten mukaiset toimituskulut"
 
 #. module: delivery
 #: view:res.partner:0
@@ -491,7 +506,7 @@ msgstr "Myynti ja hankinta"
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
-msgstr ""
+msgstr "<="
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -501,7 +516,7 @@ msgstr "Tälle tuotteelle pitää määrittää valmistuserä"
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If More Than"
-msgstr ""
+msgstr "Ilmainen, jos enemmän kuin"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -573,17 +588,17 @@ msgstr "Kuljetusliikkeellä %s (tunnus: %d) ei ole taulukkoa kuljetuksille!"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
+msgstr "Hinnoittelun tiedot"
 
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Toimita kaikki tuotteet kerralla"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Kehittynyt hinnoittelu kohteen mukaan"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -597,7 +612,7 @@ msgstr "Kuljetusliike"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Apply"
-msgstr ""
+msgstr "_käytä"
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -615,7 +630,7 @@ msgstr ""
 #. module: delivery
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -636,12 +651,12 @@ msgstr "Toimituskustannukset"
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Toimita jokainen tuote kun saaatavilla"
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
 msgid "Apply"
-msgstr ""
+msgstr "Käytä"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
