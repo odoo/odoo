@@ -86,7 +86,7 @@
                                     </group>
                                     <group string="Procurement">
                                         <field name="type"/>
-                                        <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','in', ('service', 'consu'))]}"/>
+                                        <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','!=', 'product')]}"/>
                                     </group>
                                     <group string="Prices">
                                         <field name="list_price"/>
