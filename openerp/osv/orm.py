@@ -4285,9 +4285,9 @@ class BaseModel(object):
         model_name_, func_field_to_compute_, id_mapping_fnct_, trigger_fields_, priority_ = range(5)
 
         # only keep functions that should be triggered for the ``fields``
-        # being written to.
+        # being written to (or all if fields is empty)
         to_compute = [f for f in stored_functions \
-                if ((not f[trigger_fields_]) or set(fields).intersection(f[trigger_fields_]))]
+                if ((not f[trigger_fields_]) or (not fields) or set(fields).intersection(f[trigger_fields_]))]
 
         mapping = {}
         for function in to_compute:
