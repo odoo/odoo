@@ -111,7 +111,7 @@ class res_company(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'rml_header1': fields.char('Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents (report header)."),
         'rml_footer': fields.text('General Information Footer'),
-        'rml_header': fields.text('RML Header', required=True),
+        'rml_header': fields.text('RML Header and Footer', required=True),
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header for Landscape Reports', required=True),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
@@ -276,37 +276,37 @@ class res_company(osv.osv):
             return self._header_a4
 
     _header_main = """
-    <header>
-    <pageTemplate>
-        <frame id="first" x1="1.3cm" y1="2.5cm" height="%s" width="19.0cm"/>
-        <pageGraphics>
-            <!-- You Logo - Change X,Y,Width and Height -->
-            <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
-            <setFont name="DejaVu Sans" size="8"/>
-            <fill color="black"/>
-            <stroke color="black"/>
-            <lines>1.3cm %s 20cm %s</lines>
+<header>
+<pageTemplate>
+    <frame id="first" x1="1.3cm" y1="2.5cm" height="%s" width="19.0cm"/>
+    <pageGraphics>
+        <!-- You Logo - Change X,Y,Width and Height -->
+        <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
+        <setFont name="DejaVu Sans" size="8"/>
+        <fill color="black"/>
+        <stroke color="black"/>
+        <lines>1.3cm %s 20cm %s</lines>
 
-            <drawRightString x="20cm" y="%s">[[ company.rml_header1 ]]</drawRightString>
+        <drawRightString x="20cm" y="%s">[[ company.rml_header1 ]]</drawRightString>
 
 
-            <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
-            <drawString x="1.3cm" y="%s">[[ company.partner_id.street or  '' ]]</drawString>
-            <drawString x="1.3cm" y="%s">[[ company.partner_id.city or '' ]] - [[ company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
-            <drawString x="1.3cm" y="%s">Phone:</drawString>
-            <drawRightString x="7cm" y="%s">[[ company.partner_id.phone or '' ]]</drawRightString>
-            <drawString x="1.3cm" y="%s">Mail:</drawString>
-            <drawRightString x="7cm" y="%s">[[ company.partner_id.email or '' ]]</drawRightString>
-            <lines>1.3cm %s 7cm %s</lines>
+        <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
+        <drawString x="1.3cm" y="%s">[[ company.partner_id.street or  '' ]]</drawString>
+        <drawString x="1.3cm" y="%s">[[ company.partner_id.city or '' ]] - [[ company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
+        <drawString x="1.3cm" y="%s">Phone:</drawString>
+        <drawRightString x="7cm" y="%s">[[ company.partner_id.phone or '' ]]</drawRightString>
+        <drawString x="1.3cm" y="%s">Mail:</drawString>
+        <drawRightString x="7cm" y="%s">[[ company.partner_id.email or '' ]]</drawRightString>
+        <lines>1.3cm %s 7cm %s</lines>
 
-            <!--page bottom-->
+        <!--page bottom-->
 
-            <lines>1.2cm 2.15cm 19.9cm 2.15cm</lines>
+        <lines>1.2cm 2.15cm 19.9cm 2.15cm</lines>
 
-            <drawCentredString x="10.5cm" y="1.7cm">[[ company.rml_footer ]]</drawCentredString>
-            <drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
-        </pageGraphics>
-    </pageTemplate>
+        <drawCentredString x="10.5cm" y="1.7cm">[[ company.rml_footer ]]</drawCentredString>
+        <drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
+    </pageGraphics>
+</pageTemplate>
 </header>"""
 
     _header_a4 = _header_main % ('23.0cm', '27.6cm', '27.7cm', '27.7cm', '27.8cm', '27.2cm', '26.8cm', '26.4cm', '26.0cm', '26.0cm', '25.6cm', '25.6cm', '25.5cm', '25.5cm')
