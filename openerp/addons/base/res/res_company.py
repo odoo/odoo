@@ -141,20 +141,28 @@ class res_company(osv.osv):
     def _set_rml_footer(self, cr, uid, ids, footer=False, context=None):
         return self.write(cr, uid, ids, {'rml_footer': footer}, context=context)
 
-    def on_change_header(self, cr, uid, ids, customize_footer, phone, email, fax, website, vat, reg=False, context=None):
+    def on_change_header(self, cr, uid, ids, customize_footer, phone, email, fax, website, vat, company_registry=False, bank_ids=False, context=None):
         val = []
         if customize_footer:
             return {}
+
         if phone: val.append(_('Phone: ')+phone)
         if fax: val.append(_('Fax: ')+fax)
         if email: val.append(_('Email: ')+email)
         if website: val.append(_('Website: ')+website)
         if vat: val.append(_('TIN: ')+vat)
-        if reg: val.append(_('Reg: ')+reg)
+        if company_registry: val.append(_('Reg: ')+company_registry)
+        # if the bank accounts got edited and at least one if flagged as "show in the footer"
+        if bank_ids:
+            bank_ids = self.browse(cr, uid, ids[0], context=context).bank_ids
+            bank_account_numbers = [bank_account.acc_number for bank_account in bank_ids if bank_account.footer]
+
+            val.append(_('Bank Account'+('s' if len(bank_account_numbers) > 1 else '')+': ')+', '.join(bank_account_numbers))
+
         footer = ' | '.join(val)
         self._set_rml_footer(cr, uid, ids, footer, context=context)
-        return {'value': {'rml_footer': footer}}
 
+        return {'value': {'rml_footer': footer}}
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):

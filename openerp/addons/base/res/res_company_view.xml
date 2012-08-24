@@ -55,24 +55,25 @@
                                    <div>
                                        <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
                                    </div>
-                                    <field name="website" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)" widget="url" placeholder="e.g. www.openerp.com"/>
+                                    <field name="website" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry, bank_ids)" widget="url" placeholder="e.g. www.openerp.com"/>
                                 </group>
                                 <group>
-                                    <field name="phone" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)"/>
-                                    <field name="fax" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)"/>
-                                    <field name="email" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)"/>
-                                    <field name="vat" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)"/>
-                                    <field name="company_registry" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry)"/>
+                                    <field name="phone" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry, bank_ids)"/>
+                                    <field name="fax" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry, bank_ids)"/>
+                                    <field name="email" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry, bank_ids)"/>
+                                    <field name="vat" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry, bank_ids)"/>
+                                    <field name="company_registry" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry, bank_ids)"/>
                                 </group>
                             </group>
                             <group string="Bank Accounts">
-                                <field name="bank_ids" colspan="4" nolabel="1"/>
+                                <field name="bank_ids" colspan="4" nolabel="1" on_change="on_change_header(customize_footer, phone, email, fax, website, vat, company_registry, bank_ids)"/>
+                            </group>
+                            <group string="Footer Configuration">
                                 <field name="customize_footer"/>
                                 <field name="paper_format" on_change="onchange_paper_format(paper_format)"/>
                                 <label for="rml_footer"/>
                                 <div name="bank_acc">
                                     <field name="rml_footer" attrs="{'readonly': [('customize_footer','=', False)]}"/>
-                                    <!--<button name="%(bank_account_update)d" string="Set Bank Accounts" type="action" icon="gtk-go-forward" class="oe_inline"/>-->
                                 </div>
                             </group>
                         </page>
