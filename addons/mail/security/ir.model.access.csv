@@ -1,9 +1,10 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_mail_message_all,mail.message.all,model_mail_message,,1,0,0,0
-access_mail_message_group_user,mail.message.group.user,model_mail_message,base.group_user,1,1,1,1
-access_mail_thread,mail.thread,model_mail_thread,base.group_user,1,1,1,0
-access_mail_followers_all,mail.followers.all,model_mail_followers,,1,1,1,1
-access_mail_notification_all,mail.notification.all,model_mail_notification,,1,1,1,1
-access_mail_group,mail.group,model_mail_group,base.group_user,1,1,1,1
-access_mail_alias_user,mail.alias,model_mail_alias,base.group_user,1,1,1,0
-access_mail_alias_system,mail.alias,model_mail_alias,base.group_system,1,1,1,1
+id	name	model_id:id	group_id:id	perm_read	perm_write	perm_create	perm_unlink
+access_mail_message_all	mail.message.all	model_mail_message		1	0	0	0
+access_mail_message_group_user	mail.message.group.user	model_mail_message	base.group_user	1	1	1	1
+access_mail_thread	mail.thread	model_mail_thread	base.group_user	1	1	1	0
+access_mail_followers_all	mail.followers.all	model_mail_followers		1	1	1	1
+access_mail_notification_all	mail.notification.all	model_mail_notification		1	1	1	1
+access_mail_group	mail.group	model_mail_group	base.group_user	1	1	1	1
+access_mail_alias_user	mail.alias	model_mail_alias	base.group_user	1	1	1	0
+access_mail_alias_system	mail.alias	model_mail_alias	base.group_system	1	1	1	1
+access_mail_message_subtype	mail.message.subtype	mode_mail_message_subtype		1	1	1	1
