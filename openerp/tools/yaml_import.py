@@ -100,7 +100,7 @@ class RecordDictWrapper(dict):
         return dict.__getitem__(self, key)
 
 class YamlInterpreter(object):
-    def __init__(self, cr, module, id_map, mode, filename, report=None, noupdate=False):
+    def __init__(self, cr, module, id_map, mode, filename, report=None, noupdate=False, loglevel=logging.DEBUG):
         self.cr = cr
         self.module = module
         self.id_map = id_map
@@ -110,6 +110,7 @@ class YamlInterpreter(object):
             report = assertion_report.assertion_report()
         self.assertion_report = report
         self.noupdate = noupdate
+        self.loglevel = loglevel
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         self.context = {} # opererp context
@@ -118,6 +119,9 @@ class YamlInterpreter(object):
                              'time': time,
                              'datetime': datetime,
                              'timedelta': timedelta}
+
+    def _log(self, *args, **kwargs):
+        _logger.log(self.loglevel, *args, **kwargs)
 
     def _ref(self):
         return lambda xml_id: self.get_id(xml_id)
@@ -484,12 +488,10 @@ class YamlInterpreter(object):
             self.noupdate = node.noupdate
 
     def process_python(self, node):
-        def log(msg, *args):
-            _logger.log(logging.TEST, msg, *args)
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
-        code_context = {'model': model, 'cr': self.cr, 'uid': self.uid, 'log': log, 'context': self.context}
+        code_context = {'model': model, 'cr': self.cr, 'uid': self.uid, 'log': self._log, 'context': self.context}
         code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
             code_obj = compile(statements, self.filename, 'exec')
@@ -720,7 +722,7 @@ class YamlInterpreter(object):
             if len(ids):
                 self.pool.get(node.model).unlink(self.cr, self.uid, ids)
         else:
-            _logger.log(logging.TEST, "Record not deleted.")
+            self._log("Record not deleted.")
 
     def process_url(self, node):
         self.validate_xml_id(node.id)
@@ -805,7 +807,7 @@ class YamlInterpreter(object):
 
         is_preceded_by_comment = False
         for node in yaml.load(yaml_string):
-            is_preceded_by_comment = self._log(node, is_preceded_by_comment)
+            is_preceded_by_comment = self._log_node(node, is_preceded_by_comment)
             try:
                 self._process_node(node)
             except YamlImportException, e:
@@ -852,26 +854,27 @@ class YamlInterpreter(object):
         else:
             raise YamlImportException("Can not process YAML block: %s" % node)
 
-    def _log(self, node, is_preceded_by_comment):
+    def _log_node(self, node, is_preceded_by_comment):
         if is_comment(node):
             is_preceded_by_comment = True
-            _logger.log(logging.TEST, node)
+            self._log(node)
         elif not is_preceded_by_comment:
             if isinstance(node, types.DictionaryType):
                 msg = "Creating %s\n with %s"
                 args = node.items()[0]
-                _logger.log(logging.TEST, msg, *args)
+                self._log(msg, *args)
             else:
-                _logger.log(logging.TEST, node)
+                self._log(node)
         else:
             is_preceded_by_comment = False
         return is_preceded_by_comment
 
-def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False, report=None):
+def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=False, report=None):
     if idref is None:
         idref = {}
+    loglevel = logging.TEST if kind == 'test' else logging.DEBUG
     yaml_string = yamlfile.read()
-    yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate)
+    yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate, loglevel=loglevel)
     yaml_interpreter.process(yaml_string)
 
 # keeps convention of convert.py
