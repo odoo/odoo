@@ -71,19 +71,13 @@ class mail_notification(osv.Model):
     def notify(self, cr, uid, partner_ids, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
         context = context or {}
-        partner_obj = self.pool.get('res.partner')
         mail_mail_obj = self.pool.get('mail.mail')
-        notification_obj = self.pool.get('mail.notification')
         msg_obj = self.pool.get('mail.message')
         msg = msg_obj.browse(cr, uid, msg_id, context=context)
 
-        towrite = {
-            'email_to': [],
-            'subject': msg.subject,
-            'body': msg.body,
-        }
+        towrite = self.notify_get_notif_email_dict(cr, uid, msg, context=context)
 
-        for partner in partner_obj.browse(cr, uid, partner_ids, context=context):
+        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
             # Do not send an email to the writer
             if partner.user_id.id == uid:
                 continue
@@ -98,9 +92,7 @@ class mail_notification(osv.Model):
             if partner.email not in towrite['email_to']:
                 towrite['email_to'].append(partner.email)
 
-        if towrite.get('state') and not context.get('noemail'):
-            if towrite.get('subject'):
-                towrite['subject'] = msg.name_get()[0][1]
+        if towrite.get('state') and not context.get('mail_noemail'):
             towrite['message_id'] = msg.id
             towrite['email_to'] = ', '.join(towrite['email_to'])
             
@@ -108,3 +100,18 @@ class mail_notification(osv.Model):
             mail_mail_obj.send(cr, uid, [email_notif_id], context=context)
 
         return True
+
+    def notify_get_notif_email_dict(self, cr, uid, msg, context=None):
+        """ Return the content of the email send for notification.
+            :param message: browse record on source mail.message
+        """
+        subject = msg.subject or '%s posted a comment on %s' % (msg.author_id.name, msg.record_name)
+        body = msg.body
+        author_signature = msg.author_id.user_ids[0].signature
+        if author_signature:
+            body += '<div>%s</div>' % (author_signature)
+        return {
+            'email_to': [],
+            'subject': subject,
+            'body': body,
+        }
