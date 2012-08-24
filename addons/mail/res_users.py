@@ -75,7 +75,7 @@ class res_users(osv.Model):
         # Use read() not browse(), to avoid prefetching uninitialized inherited fields
         for user_data in res_users_model.read(cr, SUPERUSER_ID, users_no_alias, ['login']):
             alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, {'alias_name': user_data['login'],
-                                                                         'alias_force_id': user_data['id']},
+                                                                         'alias_force_thread_id': user_data['id']},
                                                       model_name=self._name)
             res_users_model.write(cr, SUPERUSER_ID, user_data['id'], {'alias_id': alias_id})
             _logger.info('Mail alias created for user %s (uid %s)', user_data['login'], user_data['id'])
