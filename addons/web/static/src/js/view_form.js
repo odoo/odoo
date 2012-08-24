@@ -2641,7 +2641,7 @@ instance.web.form.CompletionFieldMixin = {
             }
             // create...
             values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
-                self._search_create_popup("form", undefined, {});
+                self._search_create_popup("form", undefined, self._create_context(search_val));
             }});
 
             return values;
@@ -2653,7 +2653,7 @@ instance.web.form.CompletionFieldMixin = {
     _quick_create: function(name) {
         var self = this;
         var slow_create = function () {
-            self._search_create_popup("form", undefined, {"default_name": name});
+            self._search_create_popup("form", undefined, self._create_context(name));
         };
         if (self.options.quick_create === undefined || self.options.quick_create) {
             new instance.web.DataSet(this, this.field.relation, self.build_context())
@@ -2690,6 +2690,13 @@ instance.web.form.CompletionFieldMixin = {
      * To implement.
      */
     add_id: function(id) {},
+    _create_context: function(name) {
+        var tmp = {};
+        var field = (this.options || {}).create_name_field;
+        if (field)
+            tmp["default_" + field] = name;
+        return tmp;
+    },
 };
 
 instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
