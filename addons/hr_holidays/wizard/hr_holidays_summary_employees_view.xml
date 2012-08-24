@@ -5,9 +5,8 @@
         <record id="view_hr_holidays_summary_employee" model="ir.ui.view">
             <field name="name">hr.holidays.summary.employee.form</field>
             <field name="model">hr.holidays.summary.employee</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Leaves Summary">
+                <form string="Leaves Summary" version="7.0">
                     <group col="4" colspan="6">
                         <field name="date_from"/>
                         <newline/>
@@ -15,11 +14,11 @@
                         <newline/>
                         <field name="emp" invisible="True"/>
                     </group>
-                    <separator colspan="4"/>
-                    <group col="2" colspan="4">
-                        <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                        <button name="print_report" string="Print" colspan="1" type="object" icon="gtk-print"/>
-                    </group>
+                    <footer>
+                        <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

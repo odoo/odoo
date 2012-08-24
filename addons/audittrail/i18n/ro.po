@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:44+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:20+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: audittrail
 #: code:addons/audittrail/audittrail.py:75
@@ -31,7 +31,7 @@ msgstr "Jurnal"
 #: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
-msgstr "Subscris"
+msgstr "Abonat"
 
 #. module: audittrail
 #: sql_constraint:audittrail.rule:0
@@ -39,11 +39,13 @@ msgid ""
 "There is already a rule defined on this object\n"
 " You cannot define another: please edit the existing one."
 msgstr ""
+"Exista intotdeauna o regula definita pentru acest obiect\n"
+" Nu puteti defini alta: va rugam sa o editati pe cea existenta."
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Subscribed Rule"
-msgstr ""
+msgstr "Regula subscrisa"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_rule
@@ -55,13 +57,13 @@ msgstr "Regula pistei de audit"
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
-msgstr "Jurnale de audit"
+msgstr "Jurnale de Audit"
 
 #. module: audittrail
 #: view:audittrail.log:0
 #: view:audittrail.rule:0
 msgid "Group By..."
-msgstr "Grupare dupa..."
+msgstr "Grupeaza dupa..."
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -78,7 +80,7 @@ msgstr "_Abonare"
 #: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
-msgstr "Ciornă"
+msgstr "Ciorna"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value:0
@@ -102,22 +104,22 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log,method:0
 msgid "Method"
-msgstr "Metodă"
+msgstr "Metoda"
 
 #. module: audittrail
 #: field:audittrail.view.log,from:0
 msgid "Log From"
-msgstr "Formular jurnal"
+msgstr "Conectati-va de la"
 
 #. module: audittrail
 #: field:audittrail.log.line,log:0
 msgid "Log ID"
-msgstr "Id jurnal"
+msgstr "Id Jurnal"
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
 msgid "Resource Id"
-msgstr "Id resursă"
+msgstr "Id Resursa"
 
 #. module: audittrail
 #: help:audittrail.rule,user_id:0
@@ -143,7 +145,7 @@ msgstr "Utilizatori"
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Log Lines"
-msgstr "Rânduri jurnal"
+msgstr "Linii Jurnal"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -155,22 +157,22 @@ msgstr "Obiect"
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rule"
-msgstr "Regulă traseu de audit"
+msgstr "Regula Pista de auditare"
 
 #. module: audittrail
 #: field:audittrail.view.log,to:0
 msgid "Log To"
-msgstr "Jurnalizează în"
+msgstr "Conectati-va la"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value Text: "
-msgstr "Noua valoare text: "
+msgstr "Noua Valoare Text: "
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Search Audittrail Rule"
-msgstr "Cautare Regula pistei de audit"
+msgstr "Cauta Regula Pistei de audit"
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
@@ -232,22 +234,23 @@ msgstr "Citire Jurnal"
 #: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
-msgstr "Schimbare pista de audit -- Setarea regulii drept CIORNA"
+msgstr ""
+"Depinde de schimbarea pistei de audit -- Setarea regulii drept CIORNA"
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
 msgid "Log lines"
-msgstr "Rânduri jurnal"
+msgstr "Linii jurnal"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
 msgid "Fields"
-msgstr "Câmpuri"
+msgstr "Campuri"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rules"
-msgstr "Reguli traseu audit"
+msgstr "Reguli pista de audit"
 
 #. module: audittrail
 #: help:audittrail.rule,log_unlink:0
@@ -255,8 +258,8 @@ msgid ""
 "Select this if you want to keep track of deletion on any record of the "
 "object of this rule"
 msgstr ""
-"Selectati daca doriti sa tineti evidenta stergerii oricarei inregistrari a "
-"obiectului acestei reguli"
+"Selectati daca doriti sa tineti evidenta stergerii obiectului acestei reguli "
+"din orice inregistrare"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -267,7 +270,7 @@ msgstr "Utilizator"
 #. module: audittrail
 #: field:audittrail.rule,action_id:0
 msgid "Action ID"
-msgstr "ID acţiune"
+msgstr "ID actiune"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -279,7 +282,7 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "UnSubscribe"
-msgstr "Revocare subscriere"
+msgstr "Dezabonare"
 
 #. module: audittrail
 #: field:audittrail.rule,log_unlink:0
@@ -289,7 +292,7 @@ msgstr "Stergere Jurnal"
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
 msgid "Field Description"
-msgstr "Descriere câmp"
+msgstr "Descriere camp"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -304,37 +307,37 @@ msgstr "Scriere Jurnal"
 #. module: audittrail
 #: view:audittrail.view.log:0
 msgid "Open Logs"
-msgstr "Deschidere jurnal"
+msgstr "Deschideti Jurnalele"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value_text:0
 msgid "New value Text"
-msgstr "Valoare text nouă"
+msgstr "Valoare noua a textului"
 
 #. module: audittrail
 #: field:audittrail.rule,name:0
 msgid "Rule Name"
-msgstr "Nume regulă"
+msgstr "Numele regulii"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
-msgstr "Valoare nouă"
+msgstr "Valoarea noua"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
-msgstr "Jurnal trasee de audit"
+msgstr "Jurnale Piste de audit"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Draft  Rule"
-msgstr ""
+msgstr "Regula ciorna"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
-msgstr "Jurnalul pistei de audit"
+msgstr "Jurnalul Pistei de audit"
 
 #. module: audittrail
 #: help:audittrail.rule,log_action:0
@@ -347,17 +350,17 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value : "
-msgstr "Valoare nouă: "
+msgstr "Valoarea noua: "
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
 msgid "Old value Text"
-msgstr "Valoare text veche"
+msgstr "Valoarea veche a textului"
 
 #. module: audittrail
 #: view:audittrail.view.log:0
 msgid "Cancel"
-msgstr "Renunță"
+msgstr "Anuleaza"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_view_log

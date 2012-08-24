@@ -5,7 +5,6 @@
     <record id="view_repair_order_tree" model="ir.ui.view">
         <field name="name">mrp.repair.tree</field>
         <field name="model">mrp.repair</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Repairs order" colors="gray:state in ('done','cancel');black:state not in ('done','cancel');blue:state=='draft'">
                 <field name="name" />
@@ -13,8 +12,8 @@
                 <field name="move_id"/>
                 <field name="partner_id"/>
                 <field name="address_id"/>
-                <field name="location_id"/>
-                <field name="location_dest_id"/>
+                <field name="location_id" groups="stock.group_locations"/>
+                <field name="location_dest_id" groups="stock.group_locations"/>
                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 <field name="guarantee_limit"/>
                 <field name="state"/>
@@ -25,44 +24,43 @@
     <record id="view_repair_order_form" model="ir.ui.view">
         <field name="name">mrp.repair.form</field>
         <field name="model">mrp.repair</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form version="7.0">
+            <form string="Repair Order" version="7.0">
                <header>
-                   <button name="repair_confirm" states="draft" string="Confirm Repair"/>
-                   <button name="repair_ready" states="confirmed" string="Start Repair"/>
-                   <button name="action_repair_start" states="ready" string="Start Repair"/>
+                   <button name="repair_confirm" states="draft" string="Confirm Repair" class="oe_highlight"/>
+                   <button name="repair_ready" states="confirmed,ready" string="Start Repair" class="oe_highlight"/>
                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                   <button name="action_repair_end" states="under_repair" string="End Repair"/>
-                   <button name="action_invoice_create" states="2binvoiced" string="Make Invoice"/>
+                   <button name="action_repair_end" states="under_repair" string="End Repair" class="oe_highlight"/>
+                   <button name="action_invoice_create" states="2binvoiced" string="Make Invoice" class="oe_highlight"/>
                    <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
                    <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected"/>
-                   <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action"/>
-                   <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action"/>
+                   <button name="action_cancel" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="object" attrs="{'invisible':[('invoice_method','!=','none')]}"/>
+                   <button name="action_cancel" states="invoice_except" string="Cancel Repair" type="object" attrs="{'invisible':[('invoice_method','!=','none')]}"/>
                    <button name="cancel" states="draft" string="Cancel Repair"/>
-                   <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,ready" />
+                   <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                </header>
                <sheet string="Repairs order">
-                    <label for="product_id" class="oe_form_readonly_hidden"/>
+                    <label for="product_id" class="oe_edit_only"/>
                     <h1>
-                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
                     </h1>
-                    <label for="name" class="oe_form_readonly_hidden"/>
-                    <h2>
-                        <field name="name"/>
-                    </h2>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        Repair Order <field name="name" class="oe_inline"/>
+                    </h1>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)"/>
-                            <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}"/>
-                            <field name="prodlot_id" on_change="onchange_lot_id(prodlot_id,product_id)"/>
-                            <field name="move_id" on_change="onchange_move_id(product_id, move_id)"/>
+                            <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type','!=','service')]"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)" attrs="{'required':[('invoice_method','!=','none')]}"/>
+                            <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}" groups="sale.group_delivery_invoice_address"/>
+                            <field name="move_id" on_change="onchange_move_id(product_id, move_id)" context="{'default_product_id':product_id}"/>
+                            <field name="location_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
+                            <field name="prodlot_id" on_change="onchange_lot_id(prodlot_id,product_id)" groups="stock.group_production_lot" string="Serial Number"/>
                         </group>
                         <group>
+                            <field name="guarantee_limit"/>
                             <field name="deliver_bool"/>
-                            <field name="repaired"/>
-                            <field name="invoiced"/>
-                            <field name="guarantee_limit" />
+                            <field name="repaired" groups="base.group_no_one"/>
+                            <field name="invoiced" groups="base.group_no_one"/>
                         </group>
                     </group>
                 <notebook>
@@ -72,22 +70,23 @@
                                 <notebook>
                                     <page string="Repair Line">
                                         <group col="4">
-                                            <field name="name" colspan="4"/>
+                                            <field name="name"/>
                                             <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
-                                            <field name='prodlot_id'/>
-                                            <field name="product_uom_qty" string="Qty" />
-                                            <field name="product_uom" string="Unit of Measure"/>
+                                            <label for="product_uom_qty"/>
+                                            <div>
+                                                <field name="product_uom_qty" class="oe_inline"/>
+                                                <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                                            </div>
                                             <field name="price_unit"/>
                                             <field name="price_subtotal"/>
-                                            <field name="location_id"/>
-                                            <field name="location_dest_id"/>
                                             <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                             <field name="to_invoice"/>
                                             <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <field name="invoiced"/>
+                                            <field name='prodlot_id' groups="stock.group_production_lot" string="Serial Number"/>
+                                            <field name="location_id" groups="stock.group_locations"/>
+                                            <field name="location_dest_id" groups="stock.group_locations"/>
                                         </group>
-                                        <separator colspan="4" string="States"/>
-                                        <field name="state"/>
                                     </page>
                                     <page string="History">
                                         <group>
@@ -101,60 +100,70 @@
                                 <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                 <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
                                 <field name='name'/>
-                                <field name="prodlot_id" />
-                                <field name="location_id"/>
-                                <field name="location_dest_id"/>
-                                <field name="product_uom_qty" string="Qty"/>
-                                <field name="product_uom" string="Unit of Measure"/>
+                                <field name="prodlot_id" groups="stock.group_production_lot" string="Serial Number"/>
+                                <field name="location_id" groups="stock.group_locations"/>
+                                <field name="location_dest_id" groups="stock.group_locations"/>
+                                <field name="product_uom_qty" string="Quantity"/>
+                                <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="price_unit"/>
-                                <field name="tax_id"/>
+                                <field name="tax_id" widget="many2many_tags"/>
                                 <field name="to_invoice"/>
                                 <field name="price_subtotal"/>
                             </tree>
                         </field>
-                        <group class="oe_form_subtotal_footer">
+                        <group class="oe_subtotal_footer oe_right">
                             <field name="amount_untaxed" sum="Untaxed amount"/>
                             <field name="amount_tax"/>
-                            <field name="amount_total" sum="Total amount"/>
-                            <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
+                            <field name="amount_total" sum="Total amount" class="oe_subtotal_footer_separator"/>
                         </group>
+                        <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <div class="oe_clear"/>
                     </page>
                     <page string="Invoicing">
                         <group col="4">
                             <field name="invoice_method"/>
+                            <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
                             <field
                                 name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
                                 attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
-                            <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                         </group>
                         <!-- <field name="invoice_id"/> -->
                         <field name="fees_lines">
                             <form string="Fees" version="7.0">
-                                <notebook>
-                                    <page string="Fees Line">
-                                        <group col="4">
-                                            <field name='name'/>
-                                            <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)" colspan="4"/>
-                                            <field name="product_uom_qty" string="Qty"/>
-                                            <field name="product_uom" string="Unit of Measure" />
-                                            <field name="price_unit"/>
-                                            <field name="price_subtotal"/>
-                                            <field name="to_invoice"/>
-                                            <field name="invoiced"/>
-                                            <field widget="many2many_tags" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                        </group>
-                                     </page>
-                                     <page string="History">
+                                <label for="name" class="oe_edit_only"/>
+                                <h2>
+                                    <field name="name"/>
+                                </h2>
+                                <group string="Product Information">
+                                    <group>
+                                        <field name="to_invoice"/>
+                                        <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
+                                        <label for="product_uom_qty"/>
+                                        <div>
+                                            <field name="product_uom_qty" string="Quantity" class="oe_inline"/>
+                                            <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <field name="price_unit"/>
+                                        <field widget="many2many_tags" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                        <field name="price_subtotal"/>
+                                    </group>
+                                </group>
+                                <group string="History">
+                                    <group>
+                                        <field name="invoiced"/>
+                                    </group>
+                                    <group>
                                         <field name="invoice_line_id" />
-                                    </page>
-                                  </notebook>
+                                    </group>
+                                </group>
                             </form>
                             <tree string="Fees" editable="bottom">
                                 <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
                                 <field name='name'/>
-                                <field name="product_uom_qty" string="Qty"/>
-                                <field name="product_uom" string="Unit of Measure"/>
+                                <field name="product_uom_qty" string="Quantity"/>
+                                <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="to_invoice"/>
                                 <field name="price_subtotal"/>
@@ -162,22 +171,27 @@
                         </field>
                     </page>
                     <page string="Extra Info">
-                        <group col="4">
-                            <field name="invoice_id"/>
-                            <field name="picking_id"/>
-                            <field name="location_id"/>
-                            <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <group>
+                            <group>
+                                <field name="picking_id"/>
+                                <field name="invoice_id"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            </group>
+                            <group>
+                                <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
+                            </group>
                         </group>
                     </page>
                     <page string="Notes">
-                        <separator string="Internal Notes"/>
-                        <field name="internal_notes"/>
-                        <separator string="Quotation Notes"/>
-                        <field name="quotation_notes"/>
+                        <field name="internal_notes" placeholder="Add internal notes..."/>
+                        <field name="quotation_notes" placeholder="Add quotation notes..."/>
                     </page>
                 </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                </div>
             </form>
         </field>
     </record>
@@ -187,33 +201,25 @@
     <record id="view_repair_order_form_filter" model="ir.ui.view">
           <field name="name">mrp.repair.select</field>
           <field name="model">mrp.repair</field>
-          <field name="type">search</field>
           <field name="arch" type="xml">
               <search string="Search Reair Orders">
-                  <group>
-                       <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
-                       <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" name="current" />
-                       <filter icon="terp-emblem-important" string="Ready To Repair" domain="[('state','=','ready')]"/>
-                       <separator orientation="vertical"/>
-                       <filter icon="terp-dolar" string="invoiced" domain="[('invoiced','=',True)]"/>
-                       <separator orientation="vertical"/>
-                       <field name="name"/>
-                       <field name="product_id"/>
-                       <field name="partner_id"/>
-                       <field name="state" />
-                  </group>
-                  <newline/>
+                  <field name="name" string="Reair Orders"/>
+                  <field name="state"/>
+                  <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
+                  <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" name="current" />
+                  <filter icon="terp-emblem-important" string="Ready To Repair" domain="[('state','=','ready')]"/>
+                  <separator/>
+                  <filter icon="terp-dolar" string="Invoiced" domain="[('invoiced','=',True)]"/>
+                  <field name="product_id"/>
+                  <field name="partner_id"/>
                   <group expand="0" string="Group By...">
                       <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                      <separator orientation="vertical"/>
                       <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                       <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                      <separator orientation="vertical"/>
                       <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'guarantee_limit'}" help="Guarantee limit"/>
-                      <separator orientation="vertical" groups="base.group_multi_company"/>
                       <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                   </group>
-             </search>
+              </search>
           </field>
     </record>
 
@@ -226,7 +232,19 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
-            <field name="help">Repair orders allow you to organize your product repairs. In a repair order, you can detail the components you remove, add or replace and record the time you spent on the different operations. The repair order uses the warranty date on the Serial Number in order to know if whether the repair should be invoiced to the customer or not.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a reparation order. 
+              </p><p>
+                In a repair order, you can detail the components you remove,
+                add or replace and record the time you spent on the different
+                operations.
+              </p><p>
+                The repair order uses the warranty date on the Serial Number in
+                order to know if whether the repair should be invoiced to the
+                customer or not.
+              </p>
+            </field>
         </record>
 
         <menuitem action="action_repair_order_tree" id="menu_repair_order" parent="mrp.menu_mrp_manufacturing" groups="mrp.group_mrp_user" name="Repair Orders" sequence="50"/>

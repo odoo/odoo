@@ -5,14 +5,9 @@
         <record id="account_aged_balance_view" model="ir.ui.view">
             <field name="name">Aged Partner Balance</field>
             <field name="model">account.aged.trial.balance</field>
-            <field name="type">form</field>
             <!--<field name="inherit_id" ref="account_common_report_view" />-->
             <field name="arch" type="xml">
                 <form string="Report Options" version="7.0">
-                    <header>
-                        <button icon="gtk-print" name="check_report" string="Print" type="object" colspan="2" default_focus="1"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" colspan="2"/>
-                    </header>
                     <separator string="Aged Partner Balance"/>
                     <label string="Aged Partner Balance is a more detailed report of your receivables by intervals. When opening that report, OpenERP asks for the name of the company, the fiscal period and the size of the interval to be analyzed (in days). OpenERP then calculates a table of credit balance by period. So if you request an interval of 30 days OpenERP generates an analysis of creditors for the past month, past two months, and so on. "/>
                     <group col="4">
@@ -25,6 +20,11 @@
                         <field name="direction_selection"/>
                     </group>
                     <field name="journal_ids" required="0" invisible="1"/>
+                    <footer>
+                        <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

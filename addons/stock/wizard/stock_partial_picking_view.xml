@@ -13,20 +13,15 @@
         <record id="stock_partial_picking_form" model="ir.ui.view">
             <field name="name">stock.partial.picking.form</field>
             <field name="model">stock.partial.picking</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
-                    <header>
-                        <button name="do_partial" string="_Transfer" type="object" icon="gtk-go-forward" />
-                        <button icon='gtk-cancel' special="cancel" string="_Cancel" />
-                        <field name="hide_tracking" invisible="1"/>
-                    </header>
+                <form string="Stock partial Picking" version="7.0">
+                    <field name="hide_tracking" invisible="1"/>
                     <separator string="Transfer Products" name="product_separator"/>
                     <field name="move_ids" context="{'hide_tracking': hide_tracking}">
                         <tree editable="bottom" string="Product Moves">
                             <field name="product_id" />
                             <field name="quantity" />
-                            <field name="product_uom" />
+                            <field name="product_uom" groups="product.group_uom"/>
                             <field name="tracking" invisible="1"/>
                             <field name="prodlot_id" domain="[('product_id', '=', product_id)]" invisible="context.get('hide_tracking',False)" attrs="{'required':[('tracking','=',True)]}" groups="stock.group_production_lot"/>
                             <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
@@ -35,6 +30,11 @@
                             <field name="currency"  invisible="1"/>
                         </tree>
                     </field>
+                    <footer>
+                        <button name="do_partial" string="_Transfer" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -42,7 +42,6 @@
         <record id="stock_partial_picking_line_list" model="ir.ui.view">
             <field name="name">stock.partial.picking.line.list</field>
             <field name="model">stock.partial.picking.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Product Moves">
                     <field name="product_id" />
@@ -60,9 +59,8 @@
         <record id="stock_partial_picking_line_form" model="ir.ui.view">
             <field name="name">stock.partial.picking.line.form</field>
             <field name="model">stock.partial.picking.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Stock Picking Line" version="7.0">
                     <group col="4">
                         <field name="product_id" />
                         <field name="quantity" />

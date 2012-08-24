@@ -4,14 +4,16 @@
       <record id="view_hr_timesheet_current_open" model="ir.ui.view">
         <field name="name">hr_timesheet_current_open.form</field>
         <field name="model">hr.timesheet.current.open</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="My Current Timesheet" version="7.0">
-               <header>
-                    <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button  icon="terp-camera_test" name="open_timesheet" string="Open" type="object"/>
-               </header>
-               <separator string="It will open your current timesheet"/>
+               <group>
+                    <separator string="It will open your current timesheet"/>
+               </group>
+               <footer>
+                    <button name="open_timesheet" string="Open" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+               </footer>
            </form>
         </field>
     </record>

@@ -513,7 +513,7 @@ class mrp_operations_operation(osv.osv):
                  code_lst.append(oper.code_id.start_stop)
             if code.start_stop=='start':
                     if 'start' in code_lst:
-                        raise osv.except_osv(_('Sorry!'),_('Operation has already started !' 'Youcan either Pause/Finish/Cancel the operation'))
+                        raise osv.except_osv(_('Sorry!'),_('Operation has already started! You can either Pause/Finish/Cancel the operation.'))
                         return False
             if code.start_stop=='pause':
                     if  code_lst[len(code_lst)-1]!='resume' and code_lst[len(code_lst)-1]!='start':
@@ -533,7 +533,7 @@ class mrp_operations_operation(osv.osv):
                   return False
             if code.start_stop=='cancel':
                if  not 'start' in code_lst :
-                   raise osv.except_osv(_('Error!'),_('There is no Operation to be cancelled!'))
+                   raise osv.except_osv(_('Error!'),_('No operation to cancel.'))
                    return False
                if 'done' in code_lst:
                   raise osv.except_osv(_('Error!'),_('Operation is already finished!'))

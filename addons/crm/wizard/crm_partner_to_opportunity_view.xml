@@ -6,19 +6,19 @@
           <record id="view_crm_partner2opportunity" model="ir.ui.view">
           <field name="name">crm.crm.partner2opportunity</field>
           <field name="model">crm.partner2opportunity</field>
-          <field name="type">form</field>
           <field name="arch" type="xml">
               <form string="Create Opportunity" version="7.0">
-                  <header>
-                      <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                      <button name="make_opportunity" string="Create Opportunity" type="object" icon="gtk-ok"/>
-                  </header>
                   <group col="4">
                       <field name="name"/>
                       <field name="partner_id"/>
                       <field name="planned_revenue"/>
                       <field name="probability"/>
                   </group>
+                  <footer>
+                      <button name="make_opportunity" string="Create Opportunity" type="object" class="oe_highlight"/>
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel" />
+                  </footer>
               </form>
           </field>
        </record>
@@ -29,7 +29,7 @@
             <field name="name">Create Opportunity</field>
             <field name="res_model">crm.partner2opportunity</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form</field>
+            <field name="view_mode">form,tree,kanban,calendar</field>
             <field name="target">new</field>
      </record>
 

@@ -7,17 +7,17 @@
         <record id="view_make_invoice" model="ir.ui.view">
             <field name="name">Make Invoice</field>
             <field name="model">mrp.repair.make_invoice</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Create invoices" version="7.0">
-                <header>
-                    <button icon="gtk-stop" special="cancel" string="Cancel" />
-                    <button name="make_invoices" string="Create Invoice" type="object" icon="terp-gtk-go-back-rtl" />
-                </header>
                 <group string="Do you really want to create the invoice(s)?">
                     <field name="group"/>
                 </group>
-                </form>
+                <footer>
+                    <button name="make_invoices" string="Create Invoice" type="object"  class="oe_highlight"  />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
             </field>
         </record>
 

@@ -4,17 +4,17 @@
         <record id="vat_report_view" model="ir.ui.view">
             <field name="name">VAT Declaration Report</field>
             <field name="model">vat.declaration.report</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Print Tax Statements" version="7.0">
-                   <header>
-                        <button name="print_vat_declaration_report" string="Print Tax Statements" type="object" icon="gtk-ok"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                   </header>
                    <group col="4">
                        <field name="tax_code_id" widget="selection"/>
                        <field name="period_id" widget="selection"/>
                    </group>
+                   <footer>
+                        <button name="print_vat_declaration_report" string="Print Tax Statements" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                   </footer>
                  </form>
             </field>
         </record>

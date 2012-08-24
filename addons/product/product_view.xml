@@ -6,35 +6,28 @@
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
             <field name="model">product.product</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product">
+                   <field name="name" string="Product" filter_domain="['|',('name','ilike',self),('default_code','ilike',self)]"/>
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
-                   <separator orientation="vertical"/>
+                   <separator/>
                    <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
-                   <separator orientation="vertical"/>
-                   <field name="name"
-                        filter_domain="['|', ('name','ilike',self),('default_code','ilike',self)]"/>
-                   <field name="categ_id" widget="selection" operator="child_of"/>
-                   <newline/>
+                   <separator/>
+                   <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
+                   <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
+                   <field name="categ_id" operator="child_of"/>
                    <group expand="0" string="Context...">
-                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
-                       <separator orientation="vertical" groups="base.group_multi_company" />
-                       <field name="company_id" widget="selection" groups="base.group_multi_company" />
+                       <field name="pricelist_id" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
+                       <field name="company_id" groups="base.group_multi_company"/>
                    </group>
-                   <newline/>
                    <group  expand='0' string='Group by...'>
                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
-                       <separator orientation="vertical"/>
-                       <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
-                       <separator orientation="vertical"/>
-                       <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
-                       <separator orientation="vertical" groups="base.group_multi_company"/>
-                       <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company" />
+                       <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
+                       <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
+                       <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
-
                 </search>
             </field>
         </record>
@@ -42,7 +35,6 @@
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
             <field name="model">product.product</field>
-            <field name="type">tree</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
@@ -51,57 +43,55 @@
                     <field name="categ_id" invisible="1"/>
                     <field name="variants" groups="product.group_product_variant"/>
                     <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
-                    <field name="type"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
                     <field name="lst_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="standard_price"/>
+                    <field name="standard_price" invisible="1"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 </tree>
             </field>
         </record>
+
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Product" layout="auto" version="7.0">
+                <form string="Product" version="7.0">
                     <sheet>
-                        <field name="product_image" widget="image" class="oe_form_avatar oe_right" />
-
-                        <div class="oe_form_title">
-                            <div class="oe_form_readonly_hidden">
-                                <label for="name" string="Product Name" /> 
+                        <field name="image_medium" widget="image" class="oe_avatar oe_right"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Product Name"/>
                             </div>
                             <h1>
                                 <field name="name"/>
                             </h1>
-                            <label for="categ_id" class="oe_form_readonly_hidden" />
-                            <h2><field name="categ_id" /></h2>
+                            <label for="categ_id" class="oe_edit_only"/>
+                            <h2><field name="categ_id"/></h2>
                         </div>
                         <notebook>
                             <page string="Information">
                                 <group>
                                     <group>
                                         <field name="default_code"/>
-                                        <field name="ean13" placeholder="5901234123457" />
-                                        <field groups="product.group_product_variant" name="variants" />
+                                        <field name="ean13" placeholder="e.g. 5901234123457"/>
+                                        <field groups="product.group_product_variant" name="variants"/>
                                     </group>
-                                    <group>
+                                    <group groups="base.group_user">
                                         <field name="sale_ok"/>
                                         <field name="purchase_ok"/>
                                     </group>
                                     <group string="Procurement">
                                         <field name="type"/>
-                                        <field name="procure_method"/>
-                                        <field name="supply_method"/>
+                                        <field name="procure_method" groups="base.group_user"/>
+                                        <field name="supply_method" groups="base.group_user"/>
                                     </group>
                                     <group string="Prices">
                                         <field name="list_price"/>
-                                        <field name="cost_method"/>
+                                        <field name="cost_method" groups="base.group_user"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                         <field name="price_margin" groups="product.group_product_variant"/>
                                         <field name="price_extra" groups="product.group_product_variant"/>
@@ -128,7 +118,7 @@
 
                                 </group>
                             </page>
-                            <page string="Procurement &amp; Locations">
+                            <page string="Procurement &amp; Locations" groups="base.group_user">
                                 <group>
                                     <group name="delay" string="Delays">
                                         <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
@@ -136,7 +126,7 @@
                                         <field name="warranty"/>
                                     </group>
                                     <group name="store" string="Storage Localisation">
-                                        <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}" />
+                                        <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
                                     </group>
@@ -147,10 +137,10 @@
                                 </group>
 
                             </page>
-                            <page string="Suppliers">
+                            <page string="Suppliers" groups="base.group_user">
                                 <field name="seller_ids" context="{'uom_id': uom_id}"/>
                             </page>
-                            <page string="Descriptions">
+                            <page string="Descriptions" groups="base.group_user">
                                 <separator string="Description"/>
                                 <field name="description"/>
                                 <separator string="Sale Description"/>
@@ -184,9 +174,10 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <footer>
-                        <field name="message_ids" widget="ThreadView"/>
-                    </footer>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -195,12 +186,11 @@
         <record model="ir.ui.view" id="product_kanban_view">
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="color"/>
                     <field name="type"/>
-                    <field name="product_image"/>
+                    <field name="image_medium"/>
                     <field name="list_price"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -211,13 +201,14 @@
                                         <field name="name"/>
                                     </div>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                        <img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" width="48" style="float: left; padding: 0 4px 4px 0"/>
+                                        <img t-att-src="kanban_image('product.product', 'image_medium', record.id.value)" width="48" style="float: left; padding: 0 4px 4px 0"/>
                                         Code: <field name="code"/>
                                         <div t-if="record.type.raw_value == 'service'">No Stock</div>
                                         <t t-if="record.type.raw_value != 'service'">
                                             <div>Stock: <field name="qty_available"/> on hand, <field name="virtual_available"/> available</div>
                                             <div t-if="record.list_price.raw_value != 0">Public Price: <field name="lst_price"/></div>
-                                            <div>Cost : <field name="standard_price"/></div>
+                                            <!-- TODO would deserve to be hidden at the field level -->
+                                            <div groups="base.group_user">Cost : <field name="standard_price"/></div>
                                         </t>
                                         <div class="oe_kanban_clear"/>
                                     </div>
@@ -244,7 +235,14 @@
             <field name="view_mode">tree,form,kanban</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new product.
+              </p><p>
+                You must define a product for everything you buy or sell,
+                wether it's a physical product, a consumable or service.
+              </p>
+            </field>
         </record>
         <record id="product_normal_action_sell" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -255,7 +253,19 @@
             <field name="context">{"search_default_filter_to_sell":1}</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new product.
+              </p><p>
+                You must define a product for everything you sell, wether it's
+                a physical product, a consumable or a service you offer to
+                customers.
+              </p><p>
+                The product form contains information to simplify the sale
+                process: price, notes in the quotation, accounting data,
+                procurement methods, etc.
+              </p>
+            </field>
         </record>
 
         <record id="open_view_product_tree1" model="ir.actions.act_window.view">
@@ -291,39 +301,62 @@
             <field name="context">{"search_default_filter_to_purchase":1}</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="help">Products can be purchased and/or sold. They can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new product.
+              </p><p>
+                You must define a product for everything you purchase, wheter
+                it's a physical product, a consumable or services you buy to
+                subcontractants.
+              </p><p>
+                The product form contains detailed information to improve the
+                purchase process: prices, procurement logistics, accounting data,
+                available suppliers, etc.
+              </p>
+            </field>
         </record>
 
         <record id="product_category_search_view" model="ir.ui.view">
             <field name="name">product.category.search</field>
             <field name="model">product.category</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product Categories">
+                    <field name="name" string="Product Categories"/>
                     <field name="parent_id"/>
-                    <field name="name"/>
                 </search>
             </field>
         </record>
         <record id="product_category_form_view" model="ir.ui.view">
             <field name="name">product.category.form</field>
             <field name="model">product.category</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Categories" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="parent_id"/>
-                        <field name="sequence" invisible="1"/>
-                        <field name="type"/>
-                    </group>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="parent_id"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
+                        </group>
+                        <group name="basic">
+                            <group name="account_property" string="Account Properties"/>
+                            <group name="account_stock_property" string="Account Stock Properties"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
         <record id="product_category_list_view" model="ir.ui.view">
             <field name="name">product.category.list</field>
             <field name="model">product.category</field>
-            <field name="type">tree</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <tree string="Product Categories">
@@ -334,7 +367,6 @@
         <record id="product_category_tree_view" model="ir.ui.view">
             <field name="name">product.category.tree</field>
             <field name="model">product.category</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
                 <tree toolbar="True" string="Product Categories">
@@ -349,7 +381,13 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
-            <field name="help">Here is a list of all your products classified by category. You can click a category to get the list of all products linked to this category or to a child of this category.</field>
+            <field name="help" type="html">
+              <p>
+                Here is a list of all your products classified by category. You
+                can click a category to get the list of all products linked to
+                this category or to a child of this category.
+              </p>
+            </field>
         </record>
         <menuitem
             action="product_category_action"
@@ -391,7 +429,6 @@
         <record id="product_uom_tree_view" model="ir.ui.view">
             <field name="name">product.uom.tree</field>
             <field name="model">product.uom</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Units of Measure">
                     <field name="name"/>
@@ -404,16 +441,15 @@
         <record id="product_uom_form_view" model="ir.ui.view">
             <field name="name">product.uom.form</field>
             <field name="model">product.uom</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Units of Measure" version="7.0">
                     <group>
-                        <group string="Unit of Measure Properties">
+                        <group>
                             <field name="name"/>
                             <field name="category_id"/>
                             <field name="active"/>
                         </group>
-                        <group string="Ratio &amp; Precision">
+                        <group>
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
                             <field name="rounding"/>
                             <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
@@ -431,7 +467,14 @@
             <field name="res_model">product.uom</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_uom_tree_view"/>
-            <field name="help">Create and manage the units of measure you want to be used in your system. You can define a conversion rate between several Units of Measure within the same category.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new unit of measure.
+              </p><p>
+                You must define a conversion rate between several Units of
+                Measure within the same category.
+              </p>
+            </field>
         </record>
         <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="30" groups="product.group_uom"/>
         <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="base.menu_base_config" sequence="30" groups="product.group_uom"/>
@@ -439,7 +482,6 @@
         <record id="product_uom_categ_form_view" model="ir.ui.view">
             <field name="name">product.uom.categ.form</field>
             <field name="model">product.uom.categ</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Units of Measure categories" version="7.0">
                     <group>
@@ -454,19 +496,27 @@
             <field name="res_model">product.uom.categ</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Create and manage the units of measure categories you want to be used in your system. If several units of measure are in the same category, they can be converted to each other. For example, in the unit of measure category "Time", you will have the following UoM: Hours, Days.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new unit of measure category.
+              </p><p>
+                Units of measure belonging to the same category can be
+                converted between each others. For example, in the category
+                <i>'Time'</i>, you will have the following units of measure:
+                Hours, Days.
+              </p>
+            </field>
         </record>
         <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25" groups="base.group_no_one"/>
 
         <record id="product_ul_form_view" model="ir.ui.view">
             <field name="name">product.ul.form.view</field>
             <field name="model">product.ul</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Packaging" version="7.0">
                     <group>
-                        <field name="name" />
-                        <field name="type" />
+                        <field name="name"/>
+                        <field name="type"/>
                     </group>
                 </form>
             </field>
@@ -474,7 +524,6 @@
         <record id="product_ul_tree" model="ir.ui.view">
             <field name="name">product.ul.tree</field>
             <field name="model">product.ul</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Packaging">
                     <field name="name"/>
@@ -488,7 +537,15 @@
             <field name="res_model">product.ul</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Create and manage your packaging dimensions and types you want to be maintained in your system.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new packaging type.
+              </p><p>
+                The packaging type define the dimensions as well as the number
+                of products per package. This will ensure salesperson sell the
+                right number of products according to the package selected.
+              </p>
+            </field>
         </record>
         <menuitem
             action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
@@ -496,7 +553,6 @@
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
             <field name="model">product.packaging</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Packaging">
                     <field name="sequence" invisible="1"/>
@@ -510,7 +566,6 @@
         <record id="product_packaging_form_view" model="ir.ui.view">
             <field name="name">product.packaging.form.view</field>
             <field name="model">product.packaging</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Packaging" version="7.0">
                     <group col="4">
@@ -540,16 +595,15 @@
         <record id="product_supplierinfo_form_view" model="ir.ui.view">
             <field name="name">product.supplierinfo.form.view</field>
             <field name="model">product.supplierinfo</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Supplier Information" version="7.0">
                     <group col="4">
-                        <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" options='{"quick_create": false}'/>
+                        <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                         <field name="sequence"/>
                         <field name="product_name"/>
                         <field name="product_code"/>
                         <field name="min_qty"/>
-                        <field name="product_uom"/>
+                        <field name="product_uom" groups="product.group_uom"/>
                         <field name="delay"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
@@ -571,7 +625,6 @@
         <record id="product_supplierinfo_tree_view" model="ir.ui.view">
             <field name="name">product.supplierinfo.tree.view</field>
             <field name="model">product.supplierinfo</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Supplier Information">
                     <field name="sequence" string="Seq"/>
@@ -586,7 +639,6 @@
         <record id="product_variant_form_view" model="ir.ui.view">
             <field name="name">product.variant.form</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Variant" version="7.0">
                     <group col="4">
@@ -604,7 +656,6 @@
         <record id="product_variant_tree_view" model="ir.ui.view">
             <field name="name">product.variant.tree</field>
             <field name="model">product.product</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Product Variant">
                     <field name="product_tmpl_id"/>
@@ -620,7 +671,6 @@
         <record id="product_template_tree_view" model="ir.ui.view">
             <field name="name">product.template.product.tree</field>
             <field name="model">product.template</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Product Template">
                     <field name="name"/>
@@ -634,12 +684,11 @@
         <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.product.form</field>
             <field name="model">product.template</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Template" version="7.0">
-                    <label for="name" class="oe_form_readonly_hidden"/>
+                    <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <label for="categ_id" class="oe_form_readonly_hidden"/>
+                    <label for="categ_id" class="oe_edit_only"/>
                     <h2><field name="categ_id"/></h2>
                     <notebook>
                         <page string="Information">
@@ -703,7 +752,7 @@
                             <field name="seller_ids"/>
                         </page>
                         <page string="Descriptions">
-                            <separator string="Description"/>
+                            <separator string="Internal Description"/>
                             <field name="description"/>
                             <separator string="Sale Description"/>
                             <field name="description_sale"/>

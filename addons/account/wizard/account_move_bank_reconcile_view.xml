@@ -4,16 +4,16 @@
         <record id="view_account_move_bank_reconcile" model="ir.ui.view">
             <field name="name">account.move.bank.reconcile.form</field>
             <field name="model">account.move.bank.reconcile</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank reconciliation" version="7.0">
-                    <header>
-                        <button icon="terp-gtk-go-back-rtl" string="Open for Bank Reconciliation" name="action_open_window" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    </header>
                     <group>
                         <field name="journal_id"/>
                     </group>
+                    <footer>
+                        <button string="Open for Bank Reconciliation" name="action_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -25,7 +25,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_move_bank_reconcile"/>
             <field name="target">new</field>
-            <field name="help">Bank Reconciliation consists of verifying that your bank statement corresponds with the entries (or records) of that account in your accounting system.</field>
         </record>
 
     </data>

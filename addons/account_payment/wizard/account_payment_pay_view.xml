@@ -5,14 +5,14 @@
         <record id="account_payment_make_payment_view" model="ir.ui.view">
              <field name="name">account.payment.make.payment.form</field>
              <field name="model">account.payment.make.payment</field>
-             <field name="type">form</field>
              <field name="arch" type="xml">
                 <form string="Make Payment" version="7.0">
-                    <header>
-                        <button name="launch_wizard" string="Yes" type="object" icon="gtk-ok" default_focus="1"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    </header>
                     <separator string="Are you sure you want to make payment?"/>
+                    <footer>
+                        <button name="launch_wizard" string="Yes" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
