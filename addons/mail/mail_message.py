@@ -220,7 +220,7 @@ class mail_message(osv.Model):
         for notification in not_obj.browse(cr, uid, not_ids, context=context):
             if notification.message_id.id in ids:
                 pass
-                # FO Note: we should put this again !!!
+                # FP Note: we should put this again !!!
                 #ids.remove(notification.message_id.id)
 
         # check messages according to related documents

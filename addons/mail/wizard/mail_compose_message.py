@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import ast
 import re
 
 import tools
@@ -280,6 +279,12 @@ class mail_compose_message(osv.TransientModel):
                 return ""
             return tools.ustr(result)
         return template and EXPRESSION_PATTERN.sub(merge, template)
+
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade delete all attachments, as they are owned by the composition wizard
+        for wizard in self.read(cr, uid, ids, ['attachment_ids'], context=context):
+            self.pool.get('ir.attachment').unlink(cr, uid, wizard['attachment_ids'], context=context)
+        return super(mail_compose_message,self).unlink(cr, uid, ids, context=context)
 
     def dummy(self, cr, uid, ids, context=None):
         """ TDE: defined to have buttons that do basically nothing. It is
