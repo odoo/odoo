@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2011-12-21 10:59+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-05-10 17:31+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:06+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:59+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Value Mapping"
-msgstr "Valoare Aplicatie"
+msgstr "Valoare Mapare"
 
 #. module: caldav
 #: help:caldav.browse,url:0
@@ -57,6 +57,32 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Pre-cerinte\n"
+" ----------\n"
+"Nu exista nicio modalitate predefinita de a sinctoniza calendar cu candav.\n"
+"Prin urmare, trebuie sa instalati un program tert : Calendar (CalDav)\n"
+"pentru moment este singurul\n"
+"\n"
+"configurare\n"
+" -------------\n"
+" \n"
+"1. Deschideti Calendar Sync\n"
+"   Obtineti o interfata cu 2 taburi\n"
+"    Ramaneti pe primul\n"
+"\n"
+"2. URL Calendar CalDAV : introduceti URL-ul dat mai sus (adica: "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"\n"
+"3. Introduceti numele de utilizator si parola openerp\n"
+"\n"
+"4. Daca serverul dumneavoastra nu foloseste SSl, veti primi un mesaj de "
+"avertizare, spuneti \"Da\"\n"
+"\n"
+"5. Apoi puteti sa sincronizati manual sau sa personalizati setarile pentru a "
+"va sincroniza la fiecare x minute.\n"
+"\n"
+"    "
 
 #. module: caldav
 #: field:basic.calendar.alias,name:0
@@ -70,7 +96,7 @@ msgstr "Export Eveniment"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
-msgid "Provide path for Remote Calendar"
+msgid "Provide Path for Remote Calendar"
 msgstr "Furnizeaza pista pentru Remote Calendar"
 
 #. module: caldav
@@ -109,7 +135,7 @@ msgstr ""
 "Import/Export. Serverul webdav care ofera acces de departe la calendar va "
 "ajuta sa va sincronizati intalnirile cu clientii Calendar. Puteti accesa "
 "Calendar folosind clientii CalDAV, precum sunbird, Evaluarea Calendar, "
-"Mobilul,"
+"Mobilul."
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:789
@@ -117,7 +143,7 @@ msgstr ""
 #: code:addons/caldav/wizard/calendar_event_import.py:63
 #, python-format
 msgid "Warning !"
-msgstr "Avertisment !"
+msgstr "Avertizare !"
 
 #. module: caldav
 #: field:basic.calendar.lines,object_id:0
@@ -132,7 +158,7 @@ msgstr "De efectuat"
 #. module: caldav
 #: model:ir.model,name:caldav.model_user_preference
 msgid "User preference Form"
-msgstr "Formular preferat de utilizator"
+msgstr "Formular preferinte utilizator"
 
 #. module: caldav
 #: field:user.preference,service:0
@@ -182,6 +208,28 @@ msgid ""
 "side.\n"
 "     "
 msgstr ""
+"\n"
+"    1. Mergeti la Vizualizarea Calendar\n"
+" \n"
+"    2. Fisier -> Nou -> Calendar\n"
+" \n"
+"    3. Completati formularul\n"
+"         - tip : CalDav\n"
+"         - nume : Oricare doriti (de exemplu: Intalnire)\n"
+"         - url : "
+"http://HOST:PORT/webdav/DB_NAME/calendars/users/USER/c/Meetings (ie :\n"
+"http://localhost:8069/webdav/db_1/calendars/users/demo/c/Meetings) cel dat "
+"in partea de sus a acestei ferestre\n"
+"        - debifati \"Utilizator SSL\"\n"
+"        - Nume de utilizator : Numele dumneavoastra de utilizator (de ex: "
+"Demo)\n"
+"        - Actualizeaza : oricand doriti sa sincronizati datele cu serverul\n"
+"\n"
+"    4. Faceti click pe ok si introduceti-va parola openerp\n"
+"\n"
+"    5. Ar trebui sa apara un calendar nou cu numele dat de dumneavoastra in "
+"partea stanga.\n"
+"     "
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:879
@@ -193,7 +241,7 @@ msgstr ""
 #. module: caldav
 #: view:user.preference:0
 msgid "Caldav's host name configuration"
-msgstr ""
+msgstr "Configurare nume gazda Caldav"
 
 #. module: caldav
 #: field:caldav.browse,url:0
@@ -236,7 +284,7 @@ msgstr "Nu poate fi creata linia \"%s\" decat odata"
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Webcal Calendar"
-msgstr ""
+msgstr "Calendar Webcal"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -265,7 +313,7 @@ msgstr "_Anuleaza"
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_event
 msgid "basic.calendar.event"
-msgstr "basic.calendar.event"
+msgstr "eveniment.de_baza.calendar"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -294,7 +342,7 @@ msgstr "_Deschide"
 #. module: caldav
 #: view:user.preference:0
 msgid "Next"
-msgstr ""
+msgstr "Urmatorul"
 
 #. module: caldav
 #: field:basic.calendar,type:0
@@ -323,7 +371,7 @@ msgstr "Atribute Calendar"
 #. module: caldav
 #: model:ir.model,name:caldav.model_caldav_browse
 msgid "Caldav Browse"
-msgstr "Parcurge Caldav"
+msgstr "Rasfoire Caldav"
 
 #. module: caldav
 #: selection:user.preference,device:0
@@ -333,7 +381,7 @@ msgstr "Dispozitiv bazat pe Android"
 #. module: caldav
 #: view:user.preference:0
 msgid "Configure your openerp hostname. For example : "
-msgstr ""
+msgstr "Configurati-va propriul nume de gazda openerp. De exemplu : "
 
 #. module: caldav
 #: field:basic.calendar,create_date:0
@@ -343,7 +391,7 @@ msgstr "Data crearii"
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Attributes Mapping"
-msgstr "Atribute Aplicatie"
+msgstr "Atribute Mapare"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_document_directory
@@ -391,7 +439,7 @@ msgstr ""
 #: code:addons/caldav/wizard/calendar_event_import.py:63
 #, python-format
 msgid "Invalid format of the ics, file can not be imported"
-msgstr "Format invalid al ics, fisierul nu poate fi importat"
+msgstr "Format nevalid al ics, fisierul nu poate fi importat"
 
 #. module: caldav
 #: selection:user.preference,service:0
@@ -401,7 +449,7 @@ msgstr "CalDAV"
 #. module: caldav
 #: field:basic.calendar.fields,field_id:0
 msgid "OpenObject Field"
-msgstr "Campul Deschide Obiect"
+msgstr "Campul OpenObject"
 
 #. module: caldav
 #: field:basic.calendar.alias,res_id:0
@@ -431,13 +479,12 @@ msgstr "Colectii Calendar"
 #: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
-msgstr ""
-"Aceeasi denumire a fisierului nu poate fi aplicata la doua inregistrari!"
+msgstr "Acelasi nume de fisier nu poate fi aplicat la doua inregistrari!"
 
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr "Directorul nu poate fi parinte lui insusi"
+msgstr "Directorul nu poate fi parinte lui insusi!"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -455,7 +502,7 @@ msgstr "Colectie"
 #. module: caldav
 #: field:basic.calendar,write_date:0
 msgid "Write Date"
-msgstr "Data scrierii"
+msgstr "Scrieti data"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:32
@@ -483,6 +530,30 @@ msgid ""
 "created\n"
 "     "
 msgstr ""
+"\n"
+"  * Serverul Webdav care asigura accesul la distanta la calendar\n"
+"  * Sincronizarea calendarului folosind WebDAV\n"
+"  * Personalizeaza evenimentul calendar si atributul de efectuat cu orice "
+"model OpenERP\n"
+"  * Asigura functionalitatea Import/Export iCal\n"
+" \n"
+"    Pentru a accesa Calendare folosind clientii CalDAV, directionati-i la "
+"adresa:\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c\n"
+"\n"
+"    Pentru a accesa OpenERP Calendar folosind WebCal la un site la distanta "
+"folositi un URL precum:\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics\n"
+"\n"
+"    Unde,\n"
+"        HOSTNAME (nume gazda): Gazda unde ruleaza serverul OpenERP (cu "
+"webdav)\n"
+"        PORT : Portul unde ruleaza serverul OpenERP (Implicit : 8069)\n"
+"        NUME_BAZA_DE_DATE: Numele bazei de date unde este creat OpenERP "
+"Calendar\n"
+"     "
 
 #. module: caldav
 #: sql_constraint:document.directory:0
@@ -503,7 +574,7 @@ msgstr "Furnizati URL adecvat !"
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_timezone
 msgid "basic.calendar.timezone"
-msgstr "basic.calendar.timezone (fus orar)"
+msgstr "fus_orar.calendar.baza"
 
 #. module: caldav
 #: field:basic.calendar.fields,expr:0
@@ -513,17 +584,17 @@ msgstr "Expresie"
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attendee
 msgid "basic.calendar.attendee"
-msgstr "basic.calendar.attendee (participant)"
+msgstr "participant.calendar.baza"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_alias
 msgid "basic.calendar.alias"
-msgstr "basic.calendar.alias"
+msgstr "alias.calendar.baza"
 
 #. module: caldav
 #: view:calendar.event.import:0
 #: field:calendar.event.import,file_path:0
-msgid "Select ICS file"
+msgid "Select ICS File"
 msgstr "Selectati fisierul ICS"
 
 #. module: caldav
@@ -534,7 +605,7 @@ msgstr "Program/Dispozitive"
 #. module: caldav
 #: field:basic.calendar.lines,mapping_ids:0
 msgid "Fields Mapping"
-msgstr "Aplicatie campuri"
+msgstr "Mapare Campuri"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:141
@@ -568,21 +639,50 @@ msgid ""
 "\n"
 "7. Then Finish, your meetings should appear now in your calendar view\n"
 msgstr ""
+"\n"
+"Conditie prealabila\n"
+" ----------\n"
+" Daca folositi thunderbird, mai intai trebuie sa instalati modulul "
+"lightning\n"
+" http://www.mozilla.org/projects/calendar/lightning/\n"
+" \n"
+"configurare\n"
+" -------------\n"
+" \n"
+"1. Mergeti la Vizualizare Calendar\n"
+" \n"
+"2. Fisier -> Calendar Nou\n"
+" \n"
+"3. Alegeti \"In Retea\"\n"
+" \n"
+"4. pentru format alegeti CalDav\n"
+"   iar ca locatie url-ul de mai sus: (adica : "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+" \n"
+"5. Alegeti un nume si o culoare pentru Calendar, si va sfatuim sa debifati "
+"\"alarma\"\n"
+"\n"
+"6. Apoi introduceti-va numele de autentificare si parola (pentru a scrie "
+"parola trebuie doar sa bifati casuta \"Foloseste Administrator parola pentru "
+"a tine minte aceasta parola\"\n"
+"\n"
+"7. Apoi Finalizeaza, intalnirile dumneavoastra ar trebui sa apara acum in "
+"vizualizarea calendar\n"
 
 #. module: caldav
 #: view:caldav.browse:0
-msgid "Browse caldav"
+msgid "Browse Caldav"
 msgstr "Rasfoieste caldav"
 
 #. module: caldav
 #: field:user.preference,host_name:0
 msgid "Host Name"
-msgstr ""
+msgstr "Nume gazda"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar
 msgid "basic.calendar"
-msgstr "basic.calendar"
+msgstr "calendar.baza"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -597,7 +697,7 @@ msgstr "Altele"
 #. module: caldav
 #: view:basic.calendar:0
 msgid "My Calendar(s)"
-msgstr ""
+msgstr "Calendarul (Calendarele) mele"
 
 #. module: caldav
 #: help:basic.calendar,has_webcal:0
@@ -616,7 +716,7 @@ msgstr "Functie"
 #. module: caldav
 #: view:user.preference:0
 msgid "database.my.openerp.com  or companyserver.com"
-msgstr ""
+msgstr "baza_mea_de_date.openerp.com sau serverulcompaniei.com"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -629,12 +729,12 @@ msgstr "Descriere"
 #. module: caldav
 #: help:basic.calendar.alias,cal_line_id:0
 msgid "The calendar/line this mapping applies to"
-msgstr "Calendarul/linia la care se aplica aceasta aplicatie"
+msgstr "Calendarul/linia la care se aplica aceasta mapare"
 
 #. module: caldav
 #: field:basic.calendar.fields,mapping:0
 msgid "Mapping"
-msgstr "Aplicatie"
+msgstr "Mapare"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_import.py:86
@@ -645,7 +745,7 @@ msgstr "Importul a avut succes"
 #. module: caldav
 #: view:calendar.event.import:0
 msgid "_Import"
-msgstr "_Import"
+msgstr "_Importa"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_import
@@ -670,7 +770,7 @@ msgstr "Abonati-va la Calendarul la distanta"
 #. module: caldav
 #: help:basic.calendar,calendar_color:0
 msgid "For supporting clients, the color of the calendar entries"
-msgstr "Pentru suportul clientilor, culoarea inregistrarilor in calendar"
+msgstr "Pentru sustinerea clientilor, culoarea inregistrarilor in calendar"
 
 #. module: caldav
 #: field:basic.calendar,name:0
@@ -688,7 +788,7 @@ msgstr "Alarma"
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_alarm
 msgid "basic.calendar.alarm"
-msgstr "basic.calendar.alarm (alarma)"
+msgstr "alarma.calendar.baza"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:1293
@@ -771,6 +871,69 @@ msgid ""
 "      now trusts it.\n"
 "    "
 msgstr ""
+"\n"
+"    Pentu configurarea specifica SSL vedeti documentatia de mai jos\n"
+" \n"
+"Acum, pentru a configura calendarele, trebuie sa:\n"
+" \n"
+"1. Faceti click pe \"Setari\" si mergeti la pagina \"Mail, Contacte, "
+"Calendare\".\n"
+" 2. Mergeti la \"Adauga un cont...\"\n"
+" 3. Faceti click pe \"Altele\"\n"
+" 4. Din grupul \"Calendare\", selectati \"Adauga Contul CalDAV\"\n"
+" \n"
+"5. Introduceti numele gazdei\n"
+"    (adica : if the url is http://openerp.com:8069/webdav/db_1/calendars/ , "
+"openerp.com is the host)\n"
+" \n"
+"6. Completati Numele de utilizator si parola cu numele dumneavoastra de "
+"autentificare si parola openerp\n"
+" \n"
+"7. Ca descriere, puteti lasa numele serverului sau\n"
+"    ceva de genul \"OpenERP calendare\".\n"
+" \n"
+"9. Daca nu folositi un server SSL, veti primi o eroare, dar nu va faceti "
+"griji si apasati \"Continua\"\n"
+" \n"
+"10. Apoi faceti click pe \"Setari Avansate\" pentru a specifica\n"
+"     porturile si caile corecte.\n"
+" \n"
+"11. Specificati portul pentru serverul OpenERP: 8071 pentru SSL, 8069 fara "
+"el.\n"
+" \n"
+"12. Setati \"Contul URL\" in calea corecta a lui OpenERP webdav:\n"
+"     url-ul dat de wizard (adica: "
+"http://my.server.ip:8069/webdav/dbname/calendars/ )\n"
+" \n"
+"11. Faceti click pe Efectuat. Speram ca telefonul se va conecta la serverul "
+"OpenERP\n"
+"     si va verifica daca poate folosi contul.\n"
+" \n"
+"12. Mergeti la meniul principal din iPhone si introduceti aplicatia "
+"Calendar.\n"
+"     Calendarele dumneavoastra OpenERP vor fi vizibile in interiorul "
+"selectarii\n"
+"     butonului \"Calendare\".\n"
+"     Atentie la faptul ca atunci cand creati o inregistrare in calendar, va "
+"trebui sa specificati\n"
+"     in care calendar ar trebui salvata.\n"
+" \n"
+"Daca aveti nevoie de SSL (si atestatul d-voastra nu e unul verificat, ca de "
+"obicei),\n"
+"atunci va trebui sa lasati ca iPhone sa aiba incredere in el. Urmati acesti\n"
+"pasi:\n"
+"\n"
+"    s1. Deschideti Safari si introduceti locatia https a serverului "
+"OpenERP:\n"
+"      https://my.server.ip:8071/\n"
+"      (presupunand ca aveti serverul la \"my.server.ip\", iar portul HTTPS\n"
+"      este cel predefinit 8071)\n"
+"    s2. Safari va incerca sa se conecteze si va emite o avertizare "
+"referitoare la atestatul\n"
+"      folosit. erificati atestatul si faceti click pe \"Accepta\" astfel ca "
+"iPhone\n"
+"      poate avea acum incredere in el.\n"
+"    "
 
 #. module: caldav
 #: selection:user.preference,device:0
@@ -780,7 +943,7 @@ msgstr "Sunbird/Thunderbird"
 #. module: caldav
 #: field:basic.calendar,calendar_order:0
 msgid "Order"
-msgstr "Ordine"
+msgstr "Comanda"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
@@ -796,7 +959,7 @@ msgstr "Culoare"
 #. module: caldav
 #: view:basic.calendar:0
 msgid "MY"
-msgstr "MY"
+msgstr "Al meu"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_fields
@@ -822,12 +985,15 @@ msgstr "Directorul trebuie sa aiba un parinte sau o arhiva"
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_todo
 msgid "basic.calendar.todo"
-msgstr "basic.calendar.todo"
+msgstr "de _efectuat.calendar.baza"
 
 #. module: caldav
 #: help:basic.calendar,calendar_order:0
 msgid "For supporting clients, the order of this folder among the calendars"
-msgstr "Pentru suportul clientilor, ordinea acestui folder intre calendare"
+msgstr "Pentru sustinerea clientilor, ordinea acestui folder intre calendare"
+
+#~ msgid "Provide path for Remote Calendar"
+#~ msgstr "Furnizeaza pista pentru Remote Calendar"
 
 #, python-format
 #~ msgid ""
@@ -1205,6 +1371,12 @@ msgstr "Pentru suportul clientilor, ordinea acestui folder intre calendare"
 #~ "iPhone-ul\n"
 #~ "\t\t  acum are incredere in el.   \n"
 #~ "    "
+
+#~ msgid "Select ICS file"
+#~ msgstr "Selectati fisierul ICS"
+
+#~ msgid "Browse caldav"
+#~ msgstr "Rasfoieste caldav"
 
 #~ msgid "Share Calendar using CalDAV"
 #~ msgstr "Partajati Calendarul folosind CalDAV"

@@ -6,39 +6,32 @@
         <record id="view_report_crm_partner_assign_filter" model="ir.ui.view">
             <field name="name">crm.partner.report.assign.select</field>
             <field name="model">crm.partner.report.assign</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Partner assigned Analysis">
-                    <group col="20" colspan="8">
-                        <field name="section_id"/>
-                        <field name="user_id"/>
-                        <field name="grade_id"/>
-                        <field name="activation"/>
-                   </group>
-                   <newline/>
-                   <group  expand="1" string="Group By...">
-                       <filter string="Salesman" name="user" icon="terp-personal"
+                    <field name="section_id"/>
+                    <field name="user_id"/>
+                    <field name="grade_id"/>
+                    <field name="activation"/>
+                    <group  expand="1" string="Group By...">
+                        <filter string="Salesperson" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
-                       <filter string="Country" icon="terp-go-home" name="group_country" context="{'group_by':'country_id'}" />
-                        <separator orientation="vertical" />
+                        <filter string="Country" icon="terp-go-home" name="group_country" context="{'group_by':'country_id'}" />
                         <filter string="Section" icon="terp-personal+"
-                            domain="[]"
-                            context="{'group_by':'section_id'}" />
+                            domain="[]" context="{'group_by':'section_id'}" />
                         <filter string="Activation" name="group_activation" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'activation'}" />
                         <filter string="Grade" name="group_grade" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'grade_id'}" />
                         <filter string="Partner" name="" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'partner_id'}" />
-                        <separator orientation="vertical" />
                         <filter string="Date Invoice" name="group_period_id" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'period_id'}" />
                         <filter string="Date Partnership" name="group_date_partnership" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'date_partnership'}" />
                         <filter string="Date Review" name="group_date_review" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'date_review'}" />
-                  </group>
-               </search>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -47,7 +40,6 @@
        <record id="view_report_crm_partner_assign_tree" model="ir.ui.view">
             <field name="name">crm.partner.assign.report.tree</field>
             <field name="model">crm.partner.report.assign</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree string="Opportunities Assignment Analysis">
                 <field name="partner_id" invisible="1"/>

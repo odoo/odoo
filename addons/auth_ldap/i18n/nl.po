@@ -1,0 +1,186 @@
+# Dutch translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-09 07:06+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
+"Language-Team: Dutch <nl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:37+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
+
+#. module: users_ldap
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Fout ! U kunt geen recursieve bedrijven maken."
+
+#. module: users_ldap
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_tls:0
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication "
+"attempts will fail."
+msgstr ""
+"Vraag beveiligde TLS / SSL-codering bij het verbinden met de LDAP-server. "
+"Deze optie vereist een server met ingeschakeld STARTTLS, anders zullen alle "
+"authenticatie pogingen mislukken."
+
+#. module: users_ldap
+#: view:res.company:0
+#: view:res.company.ldap:0
+msgid "LDAP Configuration"
+msgstr "LDAP instellingen"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_binddn:0
+msgid "LDAP binddn"
+msgstr "LDAP bind DN"
+
+#. module: users_ldap
+#: help:res.company.ldap,create_user:0
+msgid "Create the user if not in database"
+msgstr "Onbekende gebruikers aanmaken in de database"
+
+#. module: users_ldap
+#: help:res.company.ldap,user:0
+msgid "Model used for user creation"
+msgstr "Model voor nieuw aan te maken gebruikers"
+
+#. module: users_ldap
+#: field:res.company.ldap,company:0
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_server:0
+msgid "LDAP Server address"
+msgstr "LDAP Server adres"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_server_port:0
+msgid "LDAP Server port"
+msgstr "Poortnummer LDAP-server"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+"De gebruikersaccount op de LDAP-server die wordt gebruikt om de map te "
+"verkennen. Laat leeg om verbinding anoniem."
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
+msgstr "LDAP basis-DN"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "User Information"
+msgstr "Gebruikersinformatie"
+
+#. module: users_ldap
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "De naam van het bedrijf moet uniek zijn!"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Process Parameter"
+msgstr "Proces parameter"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company_ldap
+msgid "res.company.ldap"
+msgstr "res.company.ldap"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
+msgstr "TLS gebruiken"
+
+#. module: users_ldap
+#: field:res.company.ldap,sequence:0
+msgid "Sequence"
+msgstr "Volgnummer"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Login Information"
+msgstr "Aanmeldingsinformatie"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Server Information"
+msgstr "Serverinformatie"
+
+#. module: users_ldap
+#: model:ir.actions.act_window,name:users_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "Stel uw LDAP server in"
+
+#. module: users_ldap
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam !"
+
+#. module: users_ldap
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "LDAP parameters"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr ""
+"Het wachtwoord van de gebruikersaccount op de LDAP-server die wordt gebruikt "
+"om de map te verkennen."
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "Wachtwoord LDAP-server"
+
+#. module: users_ldap
+#: field:res.company.ldap,user:0
+msgid "Model User"
+msgstr "Modelgebruiker"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_filter:0
+msgid "LDAP filter"
+msgstr "LDAP-filter"
+
+#. module: users_ldap
+#: field:res.company.ldap,create_user:0
+msgid "Create user"
+msgstr "Gebruiker maken"
+
+#~ msgid "Authenticate users with ldap server"
+#~ msgstr "Gebruikers authentificeren via LDAP server"

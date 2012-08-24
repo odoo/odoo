@@ -28,6 +28,8 @@ from pytz import timezone
 from datetime import datetime
 import time
 from osv import *
+from tools.translate import _
+
 try:
     import gdata
     import gdata.contacts.service
@@ -233,10 +235,10 @@ class google_import(import_framework):
 
 
     def get_event_category(self, val, name):
-        fields = ['name', 'object_id']
-        nameid = 'event_category_'+name
-        data = [name, 'crm.meeting']
-        return self.import_object(fields, data, 'crm.case.categ', "crm_case_categ", nameid, [('name', 'ilike', name)])
+        nameid = 'event_category_' + name
+        fields = ['name']
+        data = [name]
+        return self.import_object(fields, data, 'crm.meeting.type', "crm_meeting_type", nameid, [('name', 'ilike', name)])
 
     def get_rec(self, val):
         if val.get("recurrency"):
@@ -284,8 +286,8 @@ class google_import(import_framework):
                 data['id'] = entry.id.text
                 name = tools.ustr(entry.title.text)
                 if name == "None":
-                    name = entry.email[0].address
-                data['name'] = name
+                    name = entry.email and entry.email[0].address or ''
+                data['name'] = name or _('Unknown')
                 emails = ','.join(email.address for email in entry.email)
                 data['email'] = emails
                 if table == 'Contact':
@@ -314,13 +316,13 @@ class google_import(import_framework):
     def get_contact_mapping(self):
         return {
             'model': 'res.partner',
-            'dependencies': [self.TABLE_ADDRESS],
+            #'dependencies': [self.TABLE_ADDRESS],
             'map': {
                 'id':'id',
                 'name': value('company', fallback='name'),
                 'customer': 'customer',
                 'supplier': 'supplier',
-                'address/id': ref(self.TABLE_ADDRESS, 'id'),
+                'child_ids/id': ref(self.TABLE_ADDRESS, 'id'),
                 }
             }
 
@@ -337,11 +339,11 @@ class google_import(import_framework):
 
     def get_address_mapping(self):
         return {
-            'model': 'res.partner.address',
+            'model': 'res.partner',
             'dependencies': [],
             'map': {
                 'id':'id',
-                'partner_id/.id': self.get_partner_id,
+                'parent_id/.id': self.get_partner_id,
                 'name': 'name',
                 'city': 'city',
                 'phone': 'phone',

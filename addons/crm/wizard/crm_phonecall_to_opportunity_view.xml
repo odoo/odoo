@@ -7,20 +7,19 @@
         <record model="ir.ui.view" id="phonecall2opportunity_view">
             <field name="name">crm.phonecall2opportunity.form</field>
             <field name="model">crm.phonecall2opportunity</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Convert To Opportunity ">
-                		<field name="name"/>
-						<field name="partner_id" />
-						<newline/>
-						<field name="planned_revenue"/>
-						<field name="probability"/>
-					<separator string=" " colspan="4"/>
-                    <group colspan="4" col="3" >
-                    	<label string=" " />
-                        <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
-                        <button name="make_opportunity" type="object" string="_Convert" icon="gtk-convert" />
+                <form string="Convert To Opportunity " version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="partner_id" />
+                        <field name="planned_revenue"/>
+                        <field name="probability"/>
                     </group>
+                    <footer>
+                        <button name="make_opportunity" type="object" string="_Convert" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

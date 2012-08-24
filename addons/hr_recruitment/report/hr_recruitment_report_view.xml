@@ -4,28 +4,28 @@
     <record id="view_hr_recruitment_report_tree" model="ir.ui.view">
         <field name="name">hr.recruitment.report.tree</field>
         <field name="model">hr.recruitment.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Recruitment Analysis">
                 <field name="date" invisible="1"/>
                 <field name="user_id" invisible="1"/>
-                <field name="job_id" invisible="1"/>
+                <field name="job_id"/>
                 <field name="stage_id" invisible="1" />
                 <field name="department_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 <field name="state" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
-                <field name="nbr" sum="# Cases"/>
+                <field name="nbr" sum="# of Applications"/>
                 <field name="available" sum="Available"/>
                 <field name="salary_exp" sum="Expected Salary"/>
+                <field name="salary_exp_avg" sum="Avg Expected Salary" />
                 <field name="salary_prop" sum="Proposed Salary" />
                 <field name="salary_prop_avg" sum="Avg Proposed Salary" />
-                <field name="delay_open" avg='Avg Delay to Open'/>
                 <field name="delay_close" avg='Avg Delay to Close'/>
+                <field name="priority"/>
             </tree>
         </field>
     </record>
@@ -33,7 +33,6 @@
     <record id="view_hr_recruitment_report_graph" model="ir.ui.view">
          <field name="name">hr.recruitment.report.graph</field>
          <field name="model">hr.recruitment.report</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Recruitment Analysis" type="bar">
                  <field name="job_id"/>
@@ -45,79 +44,39 @@
     <record id="view_hr_recruitment_report_search" model="ir.ui.view">
         <field name="name">hr.recruitment.report.search</field>
         <field name="model">hr.recruitment.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Recruitment Analysis">
-                <group>
-                    <filter icon="terp-go-year" string="Year" name="year"
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
-                        help="Recruitment performed in current year"/>
-                    <separator orientation="vertical"/>	
-                    <filter icon="terp-go-month" string="Month"
-                        name="month"
-                        domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Recruitment performed in current month"/>
-                    <filter icon="terp-go-month"
-                        string="    Month-1    "
-                        domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Recruitment during last month"/>
-                    <separator orientation="vertical"/>
-                    <filter string="New"
-                        icon="terp-document-new"
-                        domain="[('state','=','draft')]"
-                        help = "Draft recruitment"/>
-                    <filter string="In progress"
-                        icon="terp-camera_test"
-                        domain="[('state', '=' ,'open')]"
-                        help = "In progress recruitment"/>
-                       <filter string="Pending"
-                           icon="terp-gtk-media-pause"
-                           domain="[('state','=','pending')]"
-                           help = "Pending recruitment"/>
-                    <filter string="Hired"
-                           icon="terp-camera_test"
-                           domain="[('state','=','done')]"
-                           help = "Hired employees"/>
-                      <separator orientation="vertical"/>
-                      <field name="job_id"/>
-                    <field name="department_id" widget="selection"/>
-                    <field name="user_id" string="Responsible">
-                        <filter icon="terp-personal"
-                            string="My Recruitment"
-                            help="My Recruitment"
-                            domain="[('user_id','=',uid)]"/>
-                    </field>
-                </group>
-                <newline/>
+                <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft recruitment"/>
+                <filter string="In progress" icon="terp-camera_test" domain="[('state', '=' ,'open')]" help = "In progress recruitment"/>
+                <filter string="Pending" icon="terp-gtk-media-pause" domain="[('state','=','pending')]" help = "Pending recruitment"/>
+                <filter string="Hired" icon="terp-camera_test" domain="[('state','=','done')]" help = "Hired employees"/>
+                <separator/>
+                <filter icon="terp-personal" string="My Recruitment" help="My Recruitment" domain="[('user_id','=',uid)]"/>
+                <field name="job_id"/>
+                <field name="department_id"/>
+                <field name="user_id" string="Responsible"/>
                 <group expand="0" string="Extended Filters...">
                     <!--field name="job_id"/-->
                     <field name="priority"/>
-                    <field name="stage_id" widget="selection"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="stage_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date" string="Creation Date"/>
                     <field name="date_closed"/>
                 </group>
-                <newline/>
                 <group expand="1" string="Group By ...">
                    <filter string="Responsible" name='User' icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                    <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                    <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}" />
-                   <separator orientation="vertical"/>
-                    <filter string="Jobs" name="job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                   <filter string="Jobs" name="job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                    <filter string="Department" name="department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                   <separator orientation="vertical"/>
                    <filter string="Degree" name="degree" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'type_id'}"/>
-                   <separator orientation="vertical"/>
                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}" />
-                   <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                   <separator orientation="vertical"/>
+                   <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                    <filter string="Day" name = "day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}" help="Creation Date"/>
                    <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Creation Date"/>
                    <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}" help="Creation Date"/>
                 </group>
-
-
-                </search>
+            </search>
         </field>
     </record>
 
@@ -129,8 +88,7 @@
         <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_department':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
-    <menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10" groups="base.group_hr_manager,base.group_hr_user"/>
-    <menuitem action="action_hr_recruitment_report_all" id="menu_hr_recruitment_report_all" parent="hr.menu_hr_reporting" sequence="1"/>
+    <menuitem action="action_hr_recruitment_report_all" id="menu_hr_recruitment_report_all" parent="hr.menu_hr_reporting" sequence="0"/>
 
 </data>
 </openerp>

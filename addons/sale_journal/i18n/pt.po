@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:33+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:15+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Ordem de referência deve ser única por empresa!"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -29,7 +29,7 @@ msgstr "Nota"
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr ""
+msgstr "Tipo faturação"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
@@ -37,11 +37,13 @@ msgid ""
 "This invoicing type will be used, by default, for invoicing the current "
 "partner."
 msgstr ""
+"Este tipo de faturação será usado, por omissão, para o faturamento do "
+"parceiro atual."
 
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Erro! Não pode criar membros recursivos."
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -54,6 +56,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Se o campo ativo é definido como Falso, ele permitirá que oculte o tipo de "
+"fatura sem o remover."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -63,14 +67,14 @@ msgstr "Notas"
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
-msgstr "Método de facturação"
+msgstr "Método de faturação"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr "Tipos de Factura"
+msgstr "Tipos de Fatura"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -89,11 +93,15 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Tipos de fatura são usados ​​para os parceiros, as ordens das vendas e "
+"ordens das entregas. Pode criar um diário de faturação específico para o seu "
+"grupo de faturação de acordo com as necessidades do cliente: diariamente, "
+"cada quarta-feira, mensal, etc."
 
 #. module: sale_journal
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "A referência deve ser única por empresa!"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -101,32 +109,32 @@ msgstr ""
 #: field:sale_journal.invoice.type,name:0
 #: field:stock.picking,invoice_type_id:0
 msgid "Invoice Type"
-msgstr "Tipo de Factura"
+msgstr "Tipo de Fatura"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
 msgid "Active"
-msgstr "Activo"
+msgstr "Ativo"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr "Terceiro"
+msgstr "Parceiro"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Ordem de Vendas"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr "Lista de recolha"
+msgstr "Lista Picking"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr "Facturação"
+msgstr "Faturação"
 
 #~ msgid "Packing"
 #~ msgstr "Embalagem"
@@ -387,4 +395,58 @@ msgstr "Facturação"
 #~ msgstr "Erro! Não pode criar membros associados recursivamente."
 
 #~ msgid "The type of journal used for sales and picking."
-#~ msgstr "O tipo de diário usado nas vendas e remessas"
+#~ msgstr "O tipo de diário utilizado para vendas e picking."
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "A ordem da referência deve ser única!"
+
+#~ msgid ""
+#~ "\n"
+#~ "    The sales journal modules allows you to categorise your\n"
+#~ "    sales and deliveries (picking lists) between different journals.\n"
+#~ "    This module is very helpful for bigger companies that\n"
+#~ "    works by departments.\n"
+#~ "\n"
+#~ "    You can use journal for different purposes, some examples:\n"
+#~ "    * isolate sales of different departments\n"
+#~ "    * journals for deliveries by truck or by UPS\n"
+#~ "\n"
+#~ "    Journals have a responsible and evolves between different status:\n"
+#~ "    * draft, open, cancel, done.\n"
+#~ "\n"
+#~ "    Batch operations can be processed on the different journals to\n"
+#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
+#~ "\n"
+#~ "    It also supports batch invoicing methods that can be configured by\n"
+#~ "    partners and sales orders, examples:\n"
+#~ "    * daily invoicing,\n"
+#~ "    * monthly invoicing, ...\n"
+#~ "\n"
+#~ "    Some statistics by journals are provided.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Os módulos de vendas diárias permite que categorize as \n"
+#~ "     vendas e entregas (listas picking) entre diferentes diários. \n"
+#~ "     Este módulo é muito útil para empresas maiores, que \n"
+#~ "     trabalhem com departamentos.\n"
+#~ "\n"
+#~ "    Pode usar o diário para diferentes fins, alguns exemplos: \n"
+#~ "     * Isolar as vendas de diferentes departamentos \n"
+#~ "     * Diários para entregas por camião ou por UPS\n"
+#~ "\n"
+#~ "    Os diários tem um responsável e evolui entre diferentes status: \n"
+#~ "     * rascunho, abrir, cancelar, concluir.\n"
+#~ "\n"
+#~ "    Operações em lote podem ser processados ​​em diferentes  diários para \n"
+#~ "     confirmar todas as vendas de uma vez, para validar ou facturar a "
+#~ "embalagem, ...\n"
+#~ "\n"
+#~ "    O diário também suporta métodos de facturação por lote que pode ser "
+#~ "configurado por \n"
+#~ "     parceiros e por ordens de venda, exemplos: \n"
+#~ "     * Facturação diária, \n"
+#~ "     * Facturação mensal, ... \n"
+#~ "\n"
+#~ "     Algumas estatísticas são fornecidas diariamente.\n"
+#~ "    "

@@ -1,29 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
     <record id="view_auto_config_form" model="ir.ui.view">
         <field name="name">Auto Configure Directories</field>
         <field name="model">document.configuration</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="base.res_config_view_base"/>
         <field name="arch" type="xml">
           <data>
             <form position="attributes">
                 <attribute name="string">Knowledge Application Configuration</attribute>
             </form>
-            <separator string="title" position="attributes">
-            <attribute name="string">Configure Directories</attribute>
-            </separator>
-            <xpath expr="//label[@string='description']" position="attributes">
-            <attribute name="string">OpenERP's Document Management System supports mapping virtual folders with documents. The virtual folder of a document can be used to manage the files attached to the document, or to print and download any report. This tool will create directories automatically according to modules installed.</attribute>
-            </xpath>
-            <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                    <attribute name="rowspan">12</attribute>
-                    <attribute name="string"/>
-            </xpath>
             <group string="res_config_contents" position="replace">
-                  <label align="0.0" string="When executing this wizard, it will configure your directories automatically according to modules installed."/>
+                <group string="Configure Directories">
+                    <label string="OpenERP's Document Management System supports mapping virtual folders with documents. The virtual folder of a document can be used to manage the files attached to the document, or to print and download any report. This tool will create directories automatically according to modules installed."/>
+                    <label align="0.0" string="When executing this wizard, it will configure your directories automatically according to modules installed."/>
+                </group>
             </group>
-            <xpath expr="//button[@name='action_skip']" position="replace"/>
           </data>
         </field>
     </record>
@@ -37,15 +29,9 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
-    
-    <record id="category_knowledge_mgmt_config" model="ir.actions.todo.category">
-        <field name="name">Knowledge Management</field>
-        <field name="sequence">5</field>
-    </record>    
 
     <record model="ir.actions.todo" id="config_auto_directory">
         <field name="action_id" ref="action_config_auto_directory"/>
-        <field name="category_id" ref="category_knowledge_mgmt_config"/>
         <field name="type">automatic</field>
     </record>
   </data>
