@@ -3461,7 +3461,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }
     },
     do_activate_record: function(index, id) {
-        var self = this;
+        var self = this, 
+            attr_readonly = (_.has(this.fields_view.arch.attrs, 'edit'))?JSON.parse(this.fields_view.arch.attrs.edit):true;
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
@@ -3477,7 +3478,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                 return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
             },
             form_view_options: {'not_interactible_on_create':true},
-            readonly: self.o2m.get("effective_readonly")
+            readonly: attr_readonly ? self.o2m.get("effective_readonly") : true,
         });
     },
     do_button_action: function (name, id, callback) {
@@ -3565,7 +3566,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
 });
 instance.web.form.One2ManyList = instance.web.ListView.List.extend({
     pad_table_to: function (count) {
-        this._super(count > 0 ? count - 1 : 0);
+        count = count > 0 ? count - 1 : 0
+        if (! this.view._is_action_enabled('create')){
+            count = this.records.length
+        }
+        this._super(count);
 
         // magical invocation of wtf does that do
         if (this.view.o2m.get('effective_readonly')) {
