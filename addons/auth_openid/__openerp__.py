@@ -24,23 +24,18 @@
     'name': 'OpenID Authentification',
     'version': '2.0',
     'category': 'Tools',
-    'description': """Allow users to login through OpenID.""",
+    'description': """
+Allow users to login through OpenID.
+====================================
+""",
     'author': 'OpenERP s.a.',
     'maintainer': 'OpenERP s.a.',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'web'],
-    'data': [
-        'res_users.xml',
-    ],
-    'js': [
-        'static/src/js/auth_openid.js',
-    ],
-    'css': [
-        'static/src/css/openid.css',
-    ],
-    'qweb': [
-        'static/src/xml/auth_openid.xml',
-    ],
+    'data': ['res_users.xml'],
+    'js': ['static/src/js/auth_openid.js'],
+    'css': ['static/src/css/openid.css'],
+    'qweb': ['static/src/xml/auth_openid.xml'],
     'external_dependencies': {
         'python' : ['openid'],
     },

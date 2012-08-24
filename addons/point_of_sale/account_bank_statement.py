@@ -34,8 +34,8 @@ class account_journal(osv.osv):
         'self_checkout_payment_method' : fields.boolean('Self Checkout Payment Method'),
     }
     _defaults = {
-        'opening_control' : True,
-        'closing_control' : True,
+        'opening_control' : False,
+        'closing_control' : False,
         'self_checkout_payment_method' : False,
     }
 
