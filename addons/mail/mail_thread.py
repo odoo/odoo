@@ -319,9 +319,11 @@ class mail_thread(osv.Model):
         subscr_ids = subscr_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', thread_ids)], context=context)
         notif_user_ids = []
         # check with subtype
+        is_subtype = False
         for subscription in subscr_obj.browse(cr, uid, subscr_ids, context=context):
             if subtype_id:
                 if subtype_id in [subtype.id for subtype in subscription.subtype_ids]:
+                    is_subtype = True
                     notif_user_ids.append(subscription.user_id.id)
             else:
                 notif_user_ids.append(subscription.user_id.id)
@@ -330,7 +332,8 @@ class mail_thread(osv.Model):
         if hasattr(self, 'get_needaction_user_ids') and self._columns.get('user_id'):
             user_ids_dict = self.get_needaction_user_ids(cr, uid, thread_ids, context=context)
             for id, user_ids in user_ids_dict.iteritems():
-                notif_user_ids += user_ids
+                if is_subtype:
+                    notif_user_ids += user_ids
         
         # add users notified of the parent messages (because: if parent message contains @login, login must receive the replies)
         if new_msg_vals.get('parent_id'):
