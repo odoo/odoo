@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -337,7 +337,7 @@ def load_information_from_description_file(module):
                 'license': 'AGPL-3',
                 'name': False,
                 'post_load': None,
-                'version': '0.0.0',
+                'version': '1.0',
                 'web': False,
                 'website': '',
                 'sequence': 100,
@@ -357,6 +357,7 @@ def load_information_from_description_file(module):
                 # 'active' has been renamed 'auto_install'
                 info['auto_install'] = info['active']
 
+            info['version'] = adapt_version(info['version'])
             return info
 
     #TODO: refactor the logger in this file to follow the logging guidelines
@@ -454,14 +455,21 @@ def get_modules():
 
 def get_modules_with_version():
     modules = get_modules()
-    res = {}
+    res = dict.fromkeys(modules, adapt_version('1.0'))
     for module in modules:
         try:
             info = load_information_from_description_file(module)
-            res[module] = "%s.%s" % (release.major_version, info['version'])
-        except Exception, e:
+            res[module] = info['version']
+        except Exception:
             continue
     return res
+
+def adapt_version(version):
+    serie = release.major_version
+    if version == serie or not version.startswith(serie + '.'):
+        version = '%s.%s' % (serie, version)
+    return version
+
 
 def get_test_modules(module, submodule, explode):
     """

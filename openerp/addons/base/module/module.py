@@ -116,7 +116,6 @@ class module(osv.osv):
         info = {}
         try:
             info = modules.load_information_from_description_file(name)
-            info['version'] = release.major_version + '.' + info['version']
         except Exception:
             _logger.debug('Error when trying to fetch informations for '
                           'module %s', name, exc_info=True)
@@ -132,9 +131,10 @@ class module(osv.osv):
         return res
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
-        res = dict.fromkeys(ids, '')
+        default_version = modules.adapt_version('1.0')
+        res = dict.fromkeys(ids, default_version)
         for m in self.browse(cr, uid, ids):
-            res[m.id] = self.get_module_info(m.name).get('version', '')
+            res[m.id] = self.get_module_info(m.name).get('version', default_version)
         return res
 
     def _get_views(self, cr, uid, ids, field_name=None, arg=None, context=None):
@@ -546,8 +546,9 @@ class module(osv.osv):
 
     # update the list of available packages
     def update_list(self, cr, uid, context=None):
-        res = [0, 0] # [update, add]
+        res = [0, 0]    # [update, add]
 
+        default_version = modules.adapt_version('1.0')
         known_mods = self.browse(cr, uid, self.search(cr, uid, []))
         known_mods_names = dict([(m.name, m) for m in known_mods])
 
@@ -566,7 +567,7 @@ class module(osv.osv):
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     updated_values['state'] = 'uninstalled'
-                if parse_version(terp.get('version', '')) > parse_version(mod.latest_version or ''):
+                if parse_version(terp.get('version', default_version)) > parse_version(mod.latest_version or default_version):
                     res[0] += 1
                 if updated_values:
                     self.write(cr, uid, mod.id, updated_values)
@@ -587,14 +588,15 @@ class module(osv.osv):
 
     def download(self, cr, uid, ids, download=True, context=None):
         res = []
+        default_version = modules.adapt_version('1.0')
         for mod in self.browse(cr, uid, ids, context=context):
             if not mod.url:
                 continue
             match = re.search('-([a-zA-Z0-9\._-]+)(\.zip)', mod.url, re.I)
-            version = '0'
+            version = default_version
             if match:
                 version = match.group(1)
-            if parse_version(mod.installed_version or '0') >= parse_version(version):
+            if parse_version(mod.installed_version) >= parse_version(version):
                 continue
             res.append(mod.url)
             if not download:
