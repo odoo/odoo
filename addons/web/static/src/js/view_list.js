@@ -145,7 +145,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @returns {$.Deferred} loading promise
      */
     start: function() {
-        this.$element.addClass('oe_list');
+        this.$el.addClass('oe_list');
         return this.reload_view(null, null, true);
     },
     /**
@@ -248,20 +248,20 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.setup_columns(this.fields_view.fields, grouped);
 
-        this.$element.html(QWeb.render(this._template, this));
-        this.$element.addClass(this.fields_view.arch.attrs['class']);
+        this.$el.html(QWeb.render(this._template, this));
+        this.$el.addClass(this.fields_view.arch.attrs['class']);
         // Head hook
         // Selecting records
-        this.$element.find('.oe_list_record_selector').click(function(){
-            self.$element.find('.oe_list_record_selector input').prop('checked',
-                self.$element.find('.oe_list_record_selector').prop('checked')  || false);
+        this.$el.find('.oe_list_record_selector').click(function(){
+            self.$el.find('.oe_list_record_selector input').prop('checked',
+                self.$el.find('.oe_list_record_selector').prop('checked')  || false);
             var selection = self.groups.get_selection();
             $(self.groups).trigger(
                 'selected', [selection.ids, selection.records]);
         });
 
         // Sorting columns
-        this.$element.find('thead').delegate('th.oe_sortable[data-id]', 'click', function (e) {
+        this.$el.find('thead').delegate('th.oe_sortable[data-id]', 'click', function (e) {
             e.stopPropagation();
             var $this = $(this);
             self.dataset.sort($this.data('id'));
@@ -281,7 +281,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             if (this.options.$buttons) {
                 this.$buttons.appendTo(this.options.$buttons);
             } else {
-                this.$element.find('.oe_list_buttons').replaceWith(this.$buttons);
+                this.$el.find('.oe_list_buttons').replaceWith(this.$buttons);
             }
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
@@ -298,7 +298,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             if (this.options.$buttons) {
                 this.$pager.appendTo(this.options.$pager);
             } else {
-                this.$element.find('.oe_list_pager').replaceWith(this.$pager);
+                this.$el.find('.oe_list_pager').replaceWith(this.$pager);
             }
 
             this.$pager
@@ -357,7 +357,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 { label: _t('Delete'), callback: this.do_delete_selected }
             ]);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
-            this.sidebar.$element.hide();
+            this.sidebar.$el.hide();
         }
     },
     /**
@@ -450,7 +450,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     do_hide: function () {
         if (this.sidebar) {
-            this.sidebar.$element.hide();
+            this.sidebar.$el.hide();
         }
         if (this.$buttons) {
             this.$buttons.hide();
@@ -490,10 +490,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     reload_content: function () {
         var self = this;
-        self.$element.find('.oe_list_record_selector').prop('checked', false);
+        self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
-        this.$element.find('.oe_list_content').append(
+        this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
                 if (self.dataset.index == null) {
                     var has_one = false;
@@ -595,7 +595,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (!ids.length) {
             this.dataset.index = 0;
             if (this.sidebar) {
-                this.sidebar.$element.hide();
+                this.sidebar.$el.hide();
             }
             this.compute_aggregates();
             return;
@@ -603,7 +603,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
         if (this.sidebar) {
-            this.sidebar.$element.show();
+            this.sidebar.$el.show();
         }
 
         this.compute_aggregates(_(records).map(function (record) {
@@ -763,7 +763,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     display_aggregates: function (aggregation) {
         var self = this;
-        var $footer_cells = this.$element.find('.oe_list_footer');
+        var $footer_cells = this.$el.find('.oe_list_footer');
         _(this.aggregate_columns).each(function (column) {
             if (!column['function']) {
                 return;
@@ -789,7 +789,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     pad_columns: function (count, options) {
         options = options || {};
         // padding for action/pager header
-        var $first_header = this.$element.find('thead tr:first th');
+        var $first_header = this.$el.find('thead tr:first th');
         var colspan = $first_header.attr('colspan');
         if (colspan) {
             if (!this.previous_colspan) {
@@ -798,7 +798,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             $first_header.attr('colspan', parseInt(colspan, 10) + count);
         }
         // Padding for column titles, footer and data rows
-        var $rows = this.$element
+        var $rows = this.$el
                 .find('.oe_list_header_columns, tr:not(thead tr)')
                 .not(options['except']);
         var newcols = new Array(count+1).join('<td class="oe_list_padding"></td>');
@@ -812,23 +812,23 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * Removes all padding columns of the table
      */
     unpad_columns: function () {
-        this.$element.find('.oe_list_padding').remove();
+        this.$el.find('.oe_list_padding').remove();
         if (this.previous_colspan) {
-            this.$element
+            this.$el
                     .find('thead tr:first th')
                     .attr('colspan', this.previous_colspan);
             this.previous_colspan = null;
         }
     },
     no_result: function () {
-        this.$element.find('.oe_view_nocontent').remove();
+        this.$el.find('.oe_view_nocontent').remove();
         if (this.groups.group_by
             || !this.options.action
             || !this.options.action.help) {
             return;
         }
-        this.$element.find('table:first').hide();
-        this.$element.prepend(
+        this.$el.find('table:first').hide();
+        this.$el.prepend(
             $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
     }
@@ -1478,27 +1478,27 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     },
     render: function (post_render) {
         var self = this;
-        var $element = $('<tbody>');
-        this.elements = [$element[0]];
+        var $el = $('<tbody>');
+        this.elements = [$el[0]];
 
         this.datagroup.list(
             _(this.view.visible_columns).chain()
                 .filter(function (column) { return column.tag === 'field' })
                 .pluck('name').value(),
             function (groups) {
-                $element[0].appendChild(
+                $el[0].appendChild(
                     self.render_groups(groups));
                 if (post_render) { post_render(); }
             }, function (dataset) {
                 self.render_dataset(dataset).then(function (list) {
                     self.children[null] = list;
                     self.elements =
-                        [list.$current.replaceAll($element)[0]];
+                        [list.$current.replaceAll($el)[0]];
                     self.setup_resequence_rows(list, dataset);
                     if (post_render) { post_render(); }
                 });
             });
-        return $element;
+        return $el;
     },
     /**
      * Returns the ids of all selected records for this group, and the records

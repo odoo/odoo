@@ -642,7 +642,7 @@ instance.web.Throbber = instance.web.Widget.extend({
           top: 'auto', // Top position relative to parent in px
           left: 'auto' // Left position relative to parent in px
         };
-        this.spin = new Spinner(opts).spin(this.$element[0]);
+        this.spin = new Spinner(opts).spin(this.$el[0]);
         this.start_time = new Date().getTime();
         this.act_message();
     },
