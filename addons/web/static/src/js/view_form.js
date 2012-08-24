@@ -3566,11 +3566,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
 });
 instance.web.form.One2ManyList = instance.web.ListView.List.extend({
     pad_table_to: function (count) {
-        count = count > 0 ? count - 1 : 0
-        if (! this.view._is_action_enabled('create')){
-            count = this.records.length
-        }
-        this._super(count);
+        this._super(this.view._is_action_enabled('create') ? (count > 0 ? count - 1 : 0) : this.records.length);
 
         // magical invocation of wtf does that do
         if (this.view.o2m.get('effective_readonly')) {
