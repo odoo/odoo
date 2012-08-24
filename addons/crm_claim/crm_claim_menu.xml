@@ -1,26 +1,25 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem
-            icon="terp-project" id="base.menu_main_pm"
-            name="Project" sequence="10"
+
+        <!-- Top menu item -->
+        <menuitem name="Project"
+            id="base.menu_main_pm"
             groups="base.group_sale_salesman"
-            web_icon="images/project.png"
-            web_icon_hover="images/project-hover.png"/>
+            sequence="90"/>
 
         <menuitem id="base.menu_aftersale" name="After-Sale Services"
             groups="base.group_sale_salesman"
             parent="base.menu_main_pm" sequence="2" />
 
         <!-- Claims Menu -->
-
         <record model="ir.actions.act_window" id="crm_case_categ_claim0">
             <field name="name">Claims</field>
             <field name="res_model">crm.claim</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,calendar,form</field>
             <field name="view_id" ref="crm_case_claims_tree_view"/>
-            <field name="context">{'search_default_section_id': section_id,"search_default_user_id":uid, "stage_type":'claim'}</field>
+            <field name="context">{"search_default_user_id":uid, "stage_type":'claim'}</field>
             <field name="search_view_id" ref="crm_claim.view_crm_case_claims_filter"/>
             <field name="help">Record and track your customers' claims. Claims may be linked to a sales order or a lot. You can send emails with attachments and keep the full history for a claim (emails sent, intervention type and so on). Claims may automatically be linked to an email address using the mail gateway module.</field>
         </record>
@@ -49,6 +48,11 @@
 
         <menuitem name="Claims" id="menu_crm_case_claims"
             parent="base.menu_aftersale" action="crm_case_categ_claim0" sequence="1"/>
+
+        <!-- Claim Stages -->
+        <menuitem id="base.menu_project_config_project" name="Stages" parent="base.menu_definitions" sequence="1"/>
+        <menuitem id="menu_claim_stage_view" name="Claim Stages" action="crm_claim_stage_act" parent="base.menu_project_config_project" sequence="20"/>
+        <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
 
     </data>
 </openerp>

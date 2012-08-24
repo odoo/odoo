@@ -26,6 +26,27 @@ import decimal_precision as dp
 class product_product(osv.osv):
     _inherit = "product.product"
 
+    def _stock_move_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict([(id, {'reception_count': 0, 'delivery_count': 0}) for id in ids])
+        move_pool=self.pool.get('stock.move')
+        moves = move_pool.read_group(cr, uid, [
+            ('product_id', 'in', ids),
+            ('picking_id.type', '=', 'in'),
+            ('state','in',('draft','confirmed','assigned','pending'))
+        ], ['product_id'], ['product_id'])
+        for move in moves:
+            product_id = move['product_id'][0]
+            res[product_id]['reception_count'] = move['product_id_count']
+        moves = move_pool.read_group(cr, uid, [
+            ('product_id', 'in', ids),
+            ('picking_id.type', '=', 'out'),
+            ('state','in',('draft','confirmed','assigned','pending'))
+        ], ['product_id'], ['product_id'])
+        for move in moves:
+            product_id = move['product_id'][0]
+            res[product_id]['reception_count'] = move['product_id_count']
+        return res
+
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
         @param product_id: product id
@@ -72,7 +93,7 @@ class product_product(osv.osv):
         product_obj=self.browse(cr, uid, ids, context=context)[0]
         account_valuation = product_obj.categ_id.property_stock_valuation_account_id
         account_valuation_id = account_valuation and account_valuation.id or False
-        if not account_valuation_id: raise osv.except_osv(_('Error!'), _('Valuation Account is not specified for Product Category: %s') % (product_obj.categ_id.name))
+        if not account_valuation_id: raise osv.except_osv(_('Error!'), _('Specify valuation Account for Product Category: %s.') % (product_obj.categ_id.name))
         move_ids = []
         loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
@@ -86,10 +107,10 @@ class product_product(osv.osv):
                 product = self.browse(cr, uid, rec_id, context=c)
                 qty = product.qty_available
                 diff = product.standard_price - new_price
-                if not diff: raise osv.except_osv(_('Error!'), _("Could not find any difference between standard price and new price!"))
+                if not diff: raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
                 if qty:
                     company_id = location.company_id and location.company_id.id or False
-                    if not company_id: raise osv.except_osv(_('Error!'), _('Company is not specified in Location'))
+                    if not company_id: raise osv.except_osv(_('Error!'), _('Please specify company in Location.'))
                     #
                     # Accounting Entries
                     #
@@ -97,8 +118,8 @@ class product_product(osv.osv):
                         journal_id = product.categ_id.property_stock_journal and product.categ_id.property_stock_journal.id or False
                     if not journal_id:
                         raise osv.except_osv(_('Error!'),
-                            _('There is no journal defined '\
-                                'on the product category: "%s" (id: %d)') % \
+                            _('Please define journal '\
+                              'on the product category: "%s" (id: %d).') % \
                                 (product.categ_id.name,
                                     product.categ_id.id,))
                     move_id = move_obj.create(cr, uid, {
@@ -118,8 +139,8 @@ class product_product(osv.osv):
                                     property_stock_account_input_categ.id
                         if not stock_input_acc:
                             raise osv.except_osv(_('Error!'),
-                                    _('There is no stock input account defined ' \
-                                            'for this product: "%s" (id: %d)') % \
+                                    _('Please define stock input account ' \
+                                            'for this product: "%s" (id: %d).') % \
                                             (product.name,
                                                 product.id,))
                         amount_diff = qty * diff
@@ -144,8 +165,8 @@ class product_product(osv.osv):
                                     property_stock_account_output_categ.id
                         if not stock_output_acc:
                             raise osv.except_osv(_('Error!'),
-                                    _('There is no stock output account defined ' \
-                                            'for this product: "%s" (id: %d)') % \
+                                    _('Please define stock output account ' \
+                                            'for this product: "%s" (id: %d).') % \
                                             (product.name,
                                                 product.id,))
                         amount_diff = qty * -diff
@@ -222,13 +243,16 @@ class product_product(osv.osv):
             child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
         
-        # this will be a dictionary of the UoM resources we need for conversion purposes, by UoM id
-        uoms_o = {}
         # this will be a dictionary of the product UoM by product id
         product2uom = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            product2uom[product.id] = product.uom_id.id
-            uoms_o[product.uom_id.id] = product.uom_id
+        uom_ids = []
+        for product in self.read(cr, uid, ids, ['uom_id'], context=context):
+            product2uom[product['id']] = product['uom_id'][0]
+            uom_ids.append(product['uom_id'][0])
+        # this will be a dictionary of the UoM resources we need for conversion purposes, by UoM id
+        uoms_o = {}
+        for uom in self.pool.get('product.uom').browse(cr, uid, uom_ids, context=context):
+            uoms_o[uom.id] = uom
 
         results = []
         results2 = []
@@ -331,8 +355,10 @@ class product_product(osv.osv):
         return res
 
     _columns = {
+        'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
+        'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
         'qty_available': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
             help="Current quantity of products.\n"
                  "In a context with a single Stock Location, this includes "
@@ -346,7 +372,7 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods stored in any Stock Location "
                  "typed as 'internal'."),
         'virtual_available': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity Available',
             help="Forecast quantity (computed as Quantity On Hand "
                  "- Outgoing + Incoming)\n"
@@ -361,7 +387,7 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods stored in any Stock Location "
                  "typed as 'internal'."),
         'incoming_qty': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Incoming',
             help="Quantity of products that are planned to arrive.\n"
                  "In a context with a single Stock Location, this includes "
@@ -375,7 +401,7 @@ class product_product(osv.osv):
                  "Otherwise, this includes goods arriving to any Stock "
                  "Location typed as 'internal'."),
         'outgoing_qty': fields.function(_product_available, multi='qty_available',
-            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Outgoing',
             help="Quantity of products that are planned to leave.\n"
                  "In a context with a single Stock Location, this includes "
@@ -388,9 +414,9 @@ class product_product(osv.osv):
                  "Shop, or any of its children.\n"
                  "Otherwise, this includes goods leaving from any Stock "
                  "Location typed as 'internal'."),
-        'track_production': fields.boolean('Track Manufacturing Lots', help="Forces to specify a Production Lot for all moves containing this product and generated by a Manufacturing Order"),
-        'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to specify a Production Lot for all moves containing this product and coming from a Supplier Location"),
-        'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Production Lot for all moves containing this product and going to a Customer Location"),
+        'track_production': fields.boolean('Track Manufacturing Lots', help="Forces to specify a Serial Number for all moves containing this product and generated by a Manufacturing Order"),
+        'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to specify a Serial Number for all moves containing this product and coming from a Supplier Location"),
+        'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
         'valuation':fields.selection([('manual_periodic', 'Periodical (manual)'),

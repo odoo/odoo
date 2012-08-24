@@ -26,21 +26,7 @@ class crm_claim_settings(osv.osv_memory):
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'fetchmail_claim': fields.boolean("Create Claims from an E-mail Account",
-            fetchmail_model='crm.claim', fetchmail_name='Incoming claims',
+        'fetchmail_claim': fields.boolean("create claims from incoming mails",
+            fetchmail_model='crm.claim', fetchmail_name='Incoming Claims',
             help="""Allows you to configure your incoming mail server, and create claims from incoming emails."""),
-        'claim_server' : fields.char('Server', size=256),
-        'claim_port' : fields.integer('Port'),
-        'claim_type': fields.selection([
-                ('pop', 'POP Server'),
-                ('imap', 'IMAP Server'),
-                ('local', 'Local Server'),
-            ], 'Type'),
-        'claim_is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
-        'claim_user' : fields.char('Username', size=256),
-        'claim_password' : fields.char('Password', size=1024),
-    }
-
-    _defaults = {
-        'claim_type': 'pop',
     }

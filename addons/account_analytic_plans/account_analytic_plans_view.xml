@@ -7,7 +7,6 @@
     <record model="ir.ui.view" id="view_account_journal_form_inherit">
         <field name="name">account.journal.form.inherit</field>
         <field name="model">account.journal</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
             <field name="centralisation" position="before">
@@ -19,19 +18,18 @@
     <record id="view_move_form_inherit" model="ir.ui.view">
        <field name="name">account.move.form.inherit</field>
        <field name="model">account.move</field>
-       <field name="type">form</field>
        <field name="inherit_id" ref="account.view_move_form"/>
        <field name="arch" type="xml">
-           <xpath expr="/form/notebook/page/field[@name='line_id']/tree/field[@name='analytic_account_id']" position="replace">
+           <xpath expr="/form/sheet/notebook/page/field[@name='line_id']/tree/field[@name='analytic_account_id']" position="replace">
                <field name="analytics_id" context="{'journal_id':journal_id}" groups="analytic.group_analytic_accounting"/>
            </xpath>
-           <xpath expr="/form/notebook/page/field[@name='line_id']/form/notebook/page/group/field[@name='analytic_account_id']" position="replace">
+           <xpath expr="/form/sheet/notebook/page/field[@name='line_id']/form/notebook/page/group/group/field[@name='analytic_account_id']" position="replace">
                <field name="analytics_id" context="{'journal_id':journal_id}" groups="analytic.group_analytic_accounting"/>
            </xpath>
        </field>
     </record>
 
-    <record id="account.journal_col11" model="account.journal.column">
+    <record id="journal_col11" model="account.journal.column">
         <field eval="&quot;&quot;&quot;Analytic Distribution&quot;&quot;&quot;" name="name"/>
         <field eval="11" name="sequence"/>
         <field name="view_id" ref="account.account_journal_view"/>
@@ -43,7 +41,6 @@
     <record model="ir.ui.view" id="view_move_line_form_inherit">
         <field name="name">account.move.line.form.inherit</field>
         <field name="model">account.move.line</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="account.view_move_line_form"/>
         <field name="arch" type="xml">
             <field name="analytic_account_id" position="replace">
@@ -55,7 +52,6 @@
     <record model="ir.ui.view" id="view_move_line_form_1_inherit">
         <field name="name">account.move.line.form.inherit1</field>
         <field name="model">account.move.line</field>
-        <field name="type">form</field>
         <field name="priority">2</field>
         <field name="inherit_id" ref="account.view_move_line_form2"/>
         <field name="arch" type="xml">
@@ -68,7 +64,6 @@
     <record model="ir.ui.view" id="view_move_line_tree_inherit">
         <field name="name">account.move.line.tree.inherit</field>
         <field name="model">account.move.line</field>
-        <field name="type">tree</field>
         <field name="priority">2</field>
         <field name="inherit_id" ref="account.view_move_line_tree"/>
         <field name="arch" type="xml">
@@ -84,7 +79,6 @@
         <field name="name">account.invoice.line.form.inherit</field>
         <field name="model">account.invoice.line</field>
         <field name="inherit_id" ref="account.view_invoice_line_form"/>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <field name="account_analytic_id" position="replace">
                 <field name="analytics_id" context="{'journal_id':parent.journal_id}" domain="[('plan_id','&lt;&gt;',False)]" groups="analytic.group_analytic_accounting"/>
@@ -95,7 +89,6 @@
     <record model="ir.ui.view" id="invoice_supplier_form_inherit">
         <field name="name">account.invoice.supplier.form.inherit</field>
         <field name="model">account.invoice</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="priority">2</field>
         <field name="arch" type="xml">
@@ -109,22 +102,23 @@
     <record model="ir.ui.view" id="account_analytic_plan_instance_form">
         <field name="name">account.analytic.plan.instance.form</field>
         <field name="model">account.analytic.plan.instance</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Analytic Distribution">
-                <field name="name" select="1"/>
-                <field name="code" select="1"/>
-                <field name="plan_id" required="True"/>
-                <field name="journal_id"/>
-                <field name="account_ids" nolabel="1" colspan="4">
-                  <form string="Analytic Distribution">
-                        <field name="rate"/>
-                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                    </form>
+            <form string="Analytic Distribution" version="7.0">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="plan_id"/>
+                    <field name="journal_id"/>
+                </group>
+                <field name="account_ids">
                     <tree string="Analytic Distribution" editable="bottom">
                         <field name="rate"/>
                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     </tree>
+                    <form string="Analytic Distribution" version="7.0">
+                        <field name="rate"/>
+                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    </form>
                 </field>
             </form>
         </field>
@@ -133,11 +127,10 @@
     <record model="ir.ui.view" id="account_analytic_plan_instance_tree">
         <field name="name">account.analytic.plan.instance.tree</field>
         <field name="model">account.analytic.plan.instance</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Analytic Distribution">
-                <field name="name" select="1"/>
-                <field name="code" select="1"/>
+                <field name="name"/>
+                <field name="code"/>
                 <field name="plan_id"/>
                 <field name="journal_id"/>
             </tree>
@@ -163,12 +156,13 @@
     <record model="ir.ui.view" id="account_analytic_plan_instance_line_form">
         <field name="name">account.analytic.plan.instance.line.form</field>
         <field name="model">account.analytic.plan.instance.line</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Analytic Distribution Line">
-                <field name="plan_id"/>
-                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                <field name="rate"/>
+            <form string="Analytic Distribution Line" version="7.0">
+                <group col="4">
+                    <field name="plan_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="rate"/>
+                </group>
             </form>
         </field>
     </record>
@@ -176,11 +170,10 @@
     <record model="ir.ui.view" id="account_analytic_plan_instance_line_tree">
         <field name="name">account.analytic.plan.instance.line.tree</field>
         <field name="model">account.analytic.plan.instance.line</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Analytic Distribution Lines">
-                <field name="plan_id" select="1"/>
-                <field name="analytic_account_id" select="1" groups="analytic.group_analytic_accounting"/>
+                <field name="plan_id"/>
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                 <field name="rate"/>
             </tree>
         </field>
@@ -189,10 +182,9 @@
     <record model="ir.ui.view" id="account_analytic_plan_search">
         <field name="name">account.analytic.plan.search</field>
         <field name="model">account.analytic.plan</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Analytic Plans">
-                <field name="name"/>
+                <field name="name" string="Analytic Plan"/>
             </search>
         </field>
     </record>
@@ -200,12 +192,13 @@
     <record model="ir.ui.view" id="account_analytic_plan_form">
         <field name="name">account.analytic.plan.form</field>
         <field name="model">account.analytic.plan</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Analytic Plan">
-                <field name="name"/>
-                <field name="default_instance_id"/>
-                <field name="plan_ids" colspan="4" nolabel="1"/>
+            <form string="Analytic Plan" version="7.0">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="default_instance_id"/>
+                </group>
+                <field name="plan_ids"/>
             </form>
         </field>
     </record>
@@ -213,7 +206,6 @@
     <record model="ir.ui.view" id="account_analytic_plan_tree">
         <field name="name">account.analytic.plan.tree</field>
         <field name="model">account.analytic.plan</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Analytic Plans">
                 <field name="name"/>
@@ -244,15 +236,16 @@
     <record model="ir.ui.view" id="account_analytic_plan_line_form">
         <field name="name">account.analytic.plan.line.form</field>
         <field name="model">account.analytic.plan.line</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Analytic Plan Line">
-                <field name="name"/>
-                <field name="sequence"/>
-                <field name="root_analytic_id" groups="analytic.group_analytic_accounting"/>
-                <newline/>
-                <field name="min_required"/>
-                <field name="max_required"/>
+            <form string="Analytic Plan Line" version="7.0">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                    <field name="root_analytic_id" groups="analytic.group_analytic_accounting"/>
+                    <newline/>
+                    <field name="min_required"/>
+                    <field name="max_required"/>
+                </group>
             </form>
         </field>
     </record>
@@ -260,10 +253,9 @@
     <record model="ir.ui.view" id="account_analytic_plan_line_tree">
         <field name="name">account.analytic.plan.line.tree</field>
         <field name="model">account.analytic.plan.line</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Analytic Plan Lines">
-                <field name="name" select="1"/>
+                <field name="name"/>
                 <field name="sequence"/>
                 <field name="root_analytic_id" groups="analytic.group_analytic_accounting"/>
                 <field name="min_required"/>
@@ -276,23 +268,21 @@
 
         <record model="ir.ui.view" id="view_default_inherit_form">
             <field name="name">account.analytic.default.form.plans</field>
-            <field name="type">form</field>
             <field name="model">account.analytic.default</field>
             <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_form"/>
             <field name="arch" type="xml">
                 <field name="analytic_id" required="1" position="replace">
-                    <field name="analytics_id" select="1" required="1"/>
+                    <field name="analytics_id" required="1"/>
                 </field>
             </field>
         </record>
          <record model="ir.ui.view" id="view_default_inherit_tree">
             <field name="name">account.analytic.default.tree.plans</field>
-            <field name="type">tree</field>
             <field name="model">account.analytic.default</field>
             <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_tree"/>
             <field name="arch" type="xml">
                 <field name="analytic_id" required="1" position="replace">
-                    <field name="analytics_id" select="1" required="1"/>
+                    <field name="analytics_id" required="1"/>
                 </field>
             </field>
         </record>
@@ -300,13 +290,12 @@
         <record id="view_bank_statement_inherit_form" model="ir.ui.view">
             <field name="name">account.bank.statement.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/tree/field[@name='analytic_account_id']" position="replace">
+                <xpath expr="/form/sheet/notebook/page/field[@name='line_ids']/tree/field[@name='analytic_account_id']" position="replace">
                     <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
                 </xpath>
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/form/field[@name='analytic_account_id']" position="replace">
+                <xpath expr="/form/sheet/notebook/page/field[@name='line_ids']/form/group/field[@name='analytic_account_id']" position="replace">
                     <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
                 </xpath>
             </field>

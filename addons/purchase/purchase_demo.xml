@@ -6,10 +6,10 @@
             <field eval="[(4, ref('group_purchase_user'))]" name="groups_id"/>
         </record>
 
-        <workflow action="purchase_confirm" model="purchase.order" ref="order_purchase2"/>
-        <workflow action="purchase_confirm" model="purchase.order" ref="order_purchase6"/>
+        <workflow action="purchase_confirm" model="purchase.order" ref="purchase_order_2"/>
+        <workflow action="purchase_confirm" model="purchase.order" ref="purchase_order_6"/>
 
-        <record id="stock.res_company_tinyshop0" model="res.company">
+        <record id="stock.res_company_1" model="res.company">
             <field eval="1.0" name="po_lead"/>
             <field eval="80.0" name="schedule_range"/>
         </record>

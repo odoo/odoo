@@ -28,14 +28,13 @@
 This is the base module to manage the accounting chart for Luxembourg.
 ======================================================================
 
-    * the KLUWER Chart of Accounts,
+    * the KLUWER Chart of Accounts
     * the Tax Code Chart for Luxembourg
     * the main taxes used in Luxembourg""",
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['account', 'base_vat', 'base_iban'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'account.tax.code.template.csv',
         'l10n_lu_data.xml',
         'l10n_lu_wizard.xml',
@@ -43,7 +42,7 @@ This is the base module to manage the accounting chart for Luxembourg.
         'wizard/print_vat_view.xml'
     ],
     'test': ['test/l10n_lu_report.yml'],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate': '0078164766621',

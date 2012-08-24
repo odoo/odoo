@@ -10,19 +10,21 @@
         <record id="view_stock_period_form" model="ir.ui.view">
             <field name="name">stock.period.form</field>
             <field name="model">stock.period</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock Periods">
-                    <field name="name" colspan="2"/>
-                    <newline/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
-                    <separator string="State" colspan="4"/>
-                    <group col="4" colspan="4">
-                        <field name="state" select="1" readonly="1"/>
-                        <button name="button_open" string="Open" icon="gtk-ok" states="draft" type="object"/>
-                        <button name="button_close" string="Close" icon="gtk-stop" states="open" type="object"/>
-                    </group>
+                <form string="Stock Period" version="7.0">
+                    <header>
+                        <button name="button_open" string="Open" states="draft" type="object"/>
+                        <button name="button_close" string="Close" states="open" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
+                    </header>
+                    <sheet string="Stock Periods">
+                        <group col="4">
+                            <field name="name"/>
+                            <newline/>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -30,13 +32,12 @@
         <record id="view_stock_period_tree" model="ir.ui.view">
             <field name="name">stock.period.tree</field>
             <field name="model">stock.period</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Stock and Sales Period" editable="bottom" colors="gray:state == 'close';black:state in ('draft','open')">
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <field name="state" select="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -44,15 +45,13 @@
         <record id="view_stock_period_search" model="ir.ui.view">
             <field name="name">stock.period.search</field>
             <field name="model">stock.period</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Stock Periods">
-                    <filter string="Current" domain="[('state','in',['draft','open'])]" icon="terp-check" help="Current Periods"/>
-                    <filter string="Closed" domain="[('state','=','close')]" icon="gtk-stop" help="Closed Periods"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
+                    <field name="name" string="Stock Periods"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
+                    <filter string="Current" domain="[('state','in',['draft','open'])]" icon="terp-check" help="Current Periods"/>
+                    <filter string="Closed" domain="[('state','=','close')]" icon="gtk-stop" help="Closed Periods"/>
                 </search>
             </field>
         </record>
@@ -76,12 +75,16 @@
         <record id="view_stock_sale_forecast_form" model="ir.ui.view">
             <field name="name">stock.sale.forecast.form</field>
             <field name="model">stock.sale.forecast</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock and Sales Forecast">
-                    <group colspan = "4" col = "4">
+                <form string="Stock and Sale Forecast" version="7.0">
+                <header>
+                    <button name="action_validate" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet string="Stock and Sales Forecast">
+                    <group colspan = "4" col = "4" class="oe_header">
                         <group colspan = "2" col="2" >
-                            <field name="company_id" select="1"
+                            <field name="company_id"
                                         groups="base.group_multi_company"
                                         widget="selection"
                                         on_change="onchange_company(company_id)"/>
@@ -99,10 +102,6 @@
                             <field name="user_id"/>
                             <field name="product_amt" on_change="product_amt_change(product_amt, product_uom, product_id)" />
                             <field name="product_qty"  />
-                            <field name="state"/>
-                            <label string = ""/>
-                            <button name="action_validate" icon="gtk-apply" string="Approve" states="draft" type="object" colspan = "1"/>
-
                         </group>
                     </group>
                     <separator colspan ="4" string="Sales History"/>
@@ -147,6 +146,7 @@
                         <button name="calculate_sales_history" icon="gtk-execute"
                                 string="Calculate Sales History" type="object" colspan = "1" states="draft" />
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -154,7 +154,6 @@
         <record id="view_stock_sale_forecast_tree" model="ir.ui.view">
              <field name="name">stock.sale.forecast.tree</field>
             <field name="model">stock.sale.forecast</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales Forecasts" colors="gray:state=='validated';black:state=='draft'">
                     <field name="period_id"/>
@@ -171,7 +170,6 @@
        <record id="view_stock_sale_forecast_graph" model="ir.ui.view">
              <field name="name">stock.sale.forecast.graph</field>
             <field name="model">stock.sale.forecast</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Stock and Sales Forecast" type = "bar">
                     <field name="period_id"/>
@@ -189,7 +187,6 @@
         <record id="view_stock_sale_forecast_filter" model="ir.ui.view">
             <field name="name">stock.sale.forecast.list.select</field>
             <field name="model">stock.sale.forecast</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search  Sales Forecast">
                     <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" />
@@ -198,13 +195,11 @@
                     <field name="period_id" />
                     <field name="product_id"/>
                     <field name="create_uid"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
-                       <separator orientation="vertical"/>
-                       <filter string='Default UoM' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
+                       <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
                     </group>
               </search>
             </field>
@@ -232,14 +227,12 @@
         <record id="view_stock_planning_form" model="ir.ui.view">
             <field name="name">stock.planning.form</field>
             <field name="model">stock.planning</field>
-            <field name="type">form</field>
             <field name="priority">50</field>
             <field name="arch" type="xml">
-                <form string="Stock Planning">
-                    <group colspan="4" col="7">
-                        <group colspan ="3" col="2">
-                            <separator colspan ="2" string = "General Info"/>
-                            <field name="company_id" select = "1" widget= "selection"
+                <form string="Stock Planning" version="7.0">
+                    <group>
+                        <group string="General Info">
+                            <field name="company_id" widget="selection"
                                          on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                             <field name="period_id" />
@@ -249,45 +242,48 @@
                             <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
                                          on_change = "onchange_uom(product_uom, product_id, active_uom, planned_outgoing, to_procure)"/>
-                            <field name="active_uom" invisible = "True" />
-                            <separator colspan ="2" string = "Forecasts"/>
+                            <field name="active_uom" invisible = "True"/>
+                            <separator string="Current Period Situation" colspan="2"/>
+                            <field name="stock_start"/>
+                            <field name="already_out"/>
+                            <field name="already_in"/>
+                            <separator string="Minimum Stock Rule Indicators" colspan="2"/>
+                            <field name="minimum_op"/>
+                            <field name="maximum_op"/>
+                            <separator string="Forecasts" colspan="2"/>
                             <field name="warehouse_forecast"/>
                             <field name="company_forecast"/>
                             <field name="confirmed_forecasts_only"/>
                         </group>
-                        <group colspan ="2" col="2">
-                            <separator colspan ="2" string = "Current Period Situation"/>
-                            <field name="stock_start"/>
-                            <field name="already_out"/>
-                            <field name="already_in"/>
-                            <separator colspan ="2" string = "Planning and Situation for Calculated Period"/>
+ 
+                        <group>
+                            <button name="calculate_planning" string="Compute Planning" type="object" icon="gtk-execute"/>
+                            <separator string="Planning and Situation for Calculated Period" colspan="2"/>
                             <field name="planned_outgoing"/>
                             <field name="outgoing"/>
                             <field name="outgoing_left"/>
                             <field name="to_procure"/>
                             <field name="incoming"/>
-                            <field name="incoming_left"/>
-                            <button name="calculate_planning" string="Calculate Planning" type="object" icon="gtk-execute" colspan="2"/>
+                            <label for="incoming_left"/>
+                            <div>
+                                <field name="incoming_left" class="oe_inline"/>
+                                <button name="procure_incomming_left" icon="gtk-convert" string="Make Procurement" type="object" class="oe_inline"/>
+                                <button name="internal_supply" string="Make Picking" help="Supply from Another Warehouse" icon="gtk-convert" type="object" class="oe_inline"/>
+                            </div>
                             <field name="stock_only"/>
-                        </group>
-                        <group colspan ="2" col="2">
-                            <separator colspan ="2" string = "Minimum Stock Rule Indicators"/>
-                            <field name="minimum_op"/>
-                            <field name="maximum_op"/>
-                            <separator colspan ="2" string = "Calculated Period Simulation"/>
+                            <separator string="Calculated Period Simulation" colspan="2"/>
                             <field name="outgoing_before"/>
                             <field name="incoming_before"/>
                             <field name="stock_simulation"/>
-                            <button name="procure_incomming_left" icon="gtk-convert" string="Procure Incoming Left" type="object" colspan="2"/>
                             <field name="procure_to_stock"/>
-                            <separator colspan ="2" string = "Internal Supply"/>
-                            <button name="internal_supply" string="Supply from Another Warehouse" icon="gtk-convert"  type="object" colspan="2"/>
+                            <separator string="Internal Supply" colspan="2"/>
                             <field name="supply_warehouse_id" domain = "[('company_id','=',company_id)] "/>
                             <field name="stock_supply_location"/>
                         </group>
                     </group>
-                    <separator colspan ="4" string = "Procurement History"/>
-                    <field name = "history" colspan = "2" nolabel = "1"/>
+                    <group string="Procurement History" colspan="4">
+                        <field name="history" nolabel="1" colspan="4"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -295,20 +291,17 @@
        <record id="view_stock_planning_filter" model="ir.ui.view">
             <field name="name">stock.planning.list.select</field>
             <field name="model">stock.planning</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Stock Planning">
                     <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" />
-                    <field name="company_id" widget="selection"/>
-                    <field name="warehouse_id" widget="selection"/>
-                    <field name="period_id" widget="selection"/>
+                    <field name="company_id"/>
+                    <field name="warehouse_id"/>
+                    <field name="period_id"/>
                     <field name="product_id"/>
-                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
-                       <separator orientation="vertical"/>
                     </group>
               </search>
             </field>
@@ -318,7 +311,6 @@
         <record id="view_stock_planning_tree" model="ir.ui.view">
              <field name="name">stock.planning.tree</field>
             <field name="model">stock.planning</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Master Procurement Schedule" colors ="blue:line_time=='Past';black:line_time=='Future'">
                     <field name="period_id"/>

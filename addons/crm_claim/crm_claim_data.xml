@@ -42,27 +42,39 @@
         Case Stage
         -->
         
-        <record model="crm.case.stage" id="stage_claim1">
-            <field name="name">Accepted as Claim</field>
+        <record model="crm.claim.stage" id="stage_claim1">
+            <field name="name">Draft claim</field>
+            <field name="state">draft</field>
             <field name="sequence">26</field>
+            <field name="case_default" eval="True"/>
         </record>
-        <record model="crm.case.stage" id="stage_claim5">
+        <record model="crm.claim.stage" id="stage_claim5">
             <field name="name">Actions Defined</field>
+            <field name="state">open</field>
             <field name="sequence">27</field>
+            <field name="case_default" eval="True"/>
         </record>
-        <record model="crm.case.stage" id="stage_claim2">
+        <record model="crm.claim.stage" id="stage_claim2">
             <field name="name">Actions Done</field>
+            <field name="state">done</field>
             <field name="sequence">28</field>
+            <field name="case_default" eval="True"/>
         </record>
-        <record model="crm.case.stage" id="stage_claim3">
-            <field name="name">Won't fix</field>
+        <record model="crm.claim.stage" id="stage_claim3">
+            <field name="name">Refused</field>
+            <field name="state">done</field>
             <field name="sequence">29</field>
+            <field name="case_default" eval="True"/>
+            <field name="case_refused" eval="True"/>
+            <field name="fold" eval="True"/>
+        </record>
+        <record model="crm.claim.stage" id="stage_claim3">
+            <field name="name">Cancelled</field>
+            <field name="state">cancel</field>
+            <field name="sequence">30</field>
+            <field name="case_default" eval="True"/>
+            <field name="fold" eval="True"/>
         </record>
 
-        <record model="crm.case.section" id="crm.section_sales_department">
-            <field name="name">Sales Department</field>
-            <field name="code">Sales</field>
-            <field name="stage_ids" eval="[(4, ref('stage_claim1')), (4, ref('stage_claim2')), (4, ref('stage_claim3')), (4, ref('stage_claim5'))]"/>
-        </record>
     </data>
 </openerp>

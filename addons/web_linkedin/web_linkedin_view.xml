@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_linkedin_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.linkedin.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="replace">
+                    <field name="name" default_focus="1" nolabel="1" widget="linkedin" />
+                </field>
+            </field>
+       </record>
+        
+        <record id="view_linkedin_config_settings" model="ir.ui.view">
+            <field name="name">linkedin_settings</field>
+            <field name="model">web_linkedin.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Linkedin" version="7.0" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <div class="oe_semantic_html">
+                        <p>
+                            To use the LinkedIn module with this database, an API Key is required. Please follow this procedure:
+                        </p>
+                        <ul>
+                            <li>Go to this URL: 
+                                <a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a>.
+                            </li>
+                            <li>Log into LinkedIn.</li>
+                            <li>Add a new application and fill the form:
+                                <ul>
+                                    <li>JavaScript API Domain: <field name="server_domain" readonly="1" style="width:0"/></li>
+                                    <li>The programming tool is Javascript</li>
+                                </ul>
+                            </li>
+                            <li>Copy the API key down here:</li>
+                        </ul>
+                    </div>
+                    <group>
+                        <field name="api_key"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_linkedin_config_settings" model="ir.actions.act_window">
+            <field name="name">Configure Linkedin</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">web_linkedin.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_linkedin_config_settings" name="Linkedin" parent="base.menu_config"
+            sequence="10" action="action_linkedin_config_settings"/>
+
+        
+   </data>
+</openerp>
