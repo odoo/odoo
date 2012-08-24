@@ -72,6 +72,7 @@ class mail_notification(osv.Model):
         """ Send by email the notification depending on the user preferences """
         context = context or {}
         partner_obj = self.pool.get('res.partner')
+        mail_mail_obj = self.pool.get('mail.mail')
         notification_obj = self.pool.get('mail.notification')
         msg_obj = self.pool.get('mail.message')
         msg = msg_obj.browse(cr, uid, msg_id, context=context)
@@ -89,20 +90,20 @@ class mail_notification(osv.Model):
             if partner.notification_email_pref=='none' or not partner.email:
                 continue
             # Partners want to receive only emails and comments
-            if partner.notification_email_pref=='comment' and msg.type in ('email','comment'):
+            if partner.notification_email_pref=='comment' and msg.type not in ('email','comment'):
                 continue
 
             towrite['state'] = 'outgoing'
             if partner.email not in towrite['email_to']:
                 towrite['email_to'].append(partner.email)
 
-        if towrite.get('state', False) and not context.get('noemail', False):
-            if towrite.get('subject', False):
+        if towrite.get('state') and not context.get('noemail'):
+            if towrite.get('subject'):
                 towrite['subject'] = msg.name_get()[0][1]
             towrite['message_id'] = msg.id
             towrite['email_to'] = ', '.join(towrite['email_to'])
-            mail_message_obj = self.pool.get('mail.mail')
-            newid = mail_message_obj.create(cr, uid, towrite, context=context)
-            mail_message_obj.send(cr, uid, [newid], context=context)
+            
+            email_notif_id = mail_mail_obj.create(cr, uid, towrite, context=context)
+            mail_mail_obj.send(cr, uid, [email_notif_id], context=context)
 
         return True
