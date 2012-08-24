@@ -31,7 +31,7 @@
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form_chatter"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='dest_partner_ids']" position="after">
+                    <xpath expr="//field[@name='partner_ids']" position="after">
                         <field name="use_template" colspan="2" nolabel="1" invisible="1"
                             on_change="onchange_use_template(use_template, context)"/>
                         <field name="template_id" colspan="2" nolabel="1"
