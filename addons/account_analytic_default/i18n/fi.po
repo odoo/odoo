@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:36+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:17+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -24,6 +24,10 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"Valitse analyyttisissa oletusasetuksissa määriteltyä analyyttista tiliä "
+"käyttävä kumppani (jos esim. uutta asiakaslaskua tai myyntitilausta "
+"luotaessa valitaan kyseinen kumppani, tämä valitaan analyyttiseksi tiliksi "
+"automaattisesti)"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -60,7 +64,7 @@ msgstr "Keräilylista"
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Conditions"
-msgstr "Tilat"
+msgstr "Ehdot"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,company_id:0
@@ -69,6 +73,10 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
+"Valitse analyyttisissa oletusasetuksissa määriteltyä analyyttista tiliä "
+"käyttävä yhtiö (jos esim. uutta asiakaslaskua tai myyntitilausta luotaessa "
+"valitaan kyseinen yhtiö, tämä valitaan analyyttiseksi tiliksi "
+"automaattisesti)"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
@@ -113,23 +121,27 @@ msgstr "Lopetuspäivämäärä"
 msgid ""
 "select a user which will use analytical account specified in analytic default"
 msgstr ""
+"Valitse analyyttisissa oletusasetuksissa määriteltyä analyyttista tiliä "
+"käyttävä käyttäjä"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 msgid "Analytic Defaults"
-msgstr "Analyyttiset oletukset"
+msgstr "Analyyttiset oletusasetukset"
 
 #. module: account_analytic_default
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Viitteen on oltava ainutkertainen ja yrityskohtainen!"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Analytical defaults whose end date is greater than today or None"
 msgstr ""
+"Analyyttisissa oletusasetuksissa päättymispäivä on tätä päivää myöhäisempi "
+"tai sitä ei ole"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -138,6 +150,10 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"Valitse analyyttisissa oletusasetuksissa määriteltyä analyyttista tiliä "
+"käyttävä tuote (jos esim. uutta asiakaslaskua tai myyntitilausta luotaessa "
+"valitaan kyseinen tuote, tämä valitaan analyyttiseksi tiliksi "
+"automaattisesti)"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -169,13 +185,14 @@ msgstr "Kumppani"
 #. module: account_analytic_default
 #: field:account.analytic.default,date_start:0
 msgid "Start Date"
-msgstr "Aloituspäiväys"
+msgstr "Aloituspäivä"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
+"Määrittää jaksojärjestyksen analyyttisen jakelun luettelon näyttämiseksi"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line

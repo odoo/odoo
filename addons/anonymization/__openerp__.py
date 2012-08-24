@@ -30,7 +30,7 @@ This module allows you to anonymize a database.
 ===============================================
 
 This module allows you to keep your data confidential for a given database.
-This process is useful if you want to use the migration process and protect
+This process is useful, if you want to use the migration process and protect
 your own or your customer’s confidential data. The principle is that you run
 an anonymization tool which will hide your confidential data(they are replaced
 by ‘XXX’ characters). Then you can send the anonymized database to the migration
@@ -40,11 +40,7 @@ anonymization process to recover your previous data.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [
-        'anonymization_demo.xml',
-    ],
+    'demo': ['anonymization_demo.xml'],
     'data': [
         'ir.model.fields.anonymization.csv',
         'security/ir.model.access.csv',

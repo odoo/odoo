@@ -289,6 +289,10 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, *args, **kwargs):
         state = self.pool.get('ir.model.fields.anonymization')._get_global_state(cr, uid, context=context)
+        
+        if context is None:
+            context = {}
+        
         step = context.get('step', 'new_window')
 
         res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id, view_type, context, *args, **kwargs)
@@ -421,7 +425,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 elif field_type == 'integer':
                     anonymized_value = 0
                 elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']: # cannot anonymize these kind of fields
-                    msg = "Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference"
+                    msg = "Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference."
                     self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
                 if anonymized_value is None:
@@ -449,9 +453,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         # add a result message in the wizard:
         msgs = ["Anonymization successful.",
                "",
-               "Don't forget to save the resulting file to a safe place because you will not be able to revert the anonymization without this file.",
+               "Donot forget to save the resulting file to a safe place because you will not be able to revert the anonymization without this file.",
                "",
-               "This file is also stored in the %s directory. The absolute file path is: %s",
+               "This file is also stored in the %s directory. The absolute file path is: %s.",
               ]
         msg = '\n'.join(msgs) % (dirpath, abs_filepath)
 
@@ -511,7 +515,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         wizards = self.browse(cr, uid, ids, context=context)
         for wizard in wizards:
             if not wizard.file_import:
-                msg = "The anonymization export file was not supplied. It is not possible to reverse the anonymization process without this file."
+                msg = "It is not possible to reverse the anonymization process without supplying anonymization export file."
                 self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
             # reverse the anonymization:
