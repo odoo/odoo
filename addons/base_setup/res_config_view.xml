@@ -5,7 +5,6 @@
         <record id="view_general_configuration" model="ir.ui.view">
             <field name="name">General Settings</field>
             <field name="model">base.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="General Settings" version="7.0" class="oe_form_configuration">
                     <header>
@@ -29,20 +28,34 @@
                         </div>
                     </group>
                     <group>
-                        <label for="id" string="Share Data"/>
-                        <div>
+                        <label for="id" string="Email"/>
+                        <div name="email">
                             <div>
-                                <field name="module_share" class="oe_inline"/>
-                                <label for="module_share"/>
+                                <button type="action"
+                                    name="%(base.action_ir_mail_server_list)d"
+                                    string="Configure outgoing email servers" class="oe_link"/>
                             </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Portal access"/>
+                        <div>
                             <div>
                                 <field name="module_portal" class="oe_inline"/>
                                 <label for="module_portal"/>
                             </div>
                             <div>
-                                <button type="action"
-                                    name="%(base.action_ir_mail_server_list)d"
-                                    string="Configure outgoing email servers" class="oe_link"/>
+                                <field name="module_auth_anonymous" class="oe_inline"/>
+                                <label for="module_auth_anonymous"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Authentication"/>
+                        <div>
+                            <div>
+                                <field name="module_auth_oauth" class="oe_inline"/>
+                                <label for="module_auth_oauth"/>
                             </div>
                         </div>
                     </group>
@@ -63,7 +76,6 @@
         <record id="view_sale_config_settings" model="ir.ui.view">
             <field name="name">sale settings</field>
             <field name="model">sale.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Sales" version="7.0" class="oe_form_configuration">
                     <header>
@@ -99,9 +111,10 @@
                         <separator string="Emails Integration" attrs="{'invisible': [('module_crm','=',False)]}"/>
                         <p attrs="{'invisible': [('module_crm','=',False)]}">
                             OpenERP allows to automatically create leads (or others documents)
-                            from incoming emails. You can synchronize emails with OpenERP
-                            by connecting the mail gateway to your mail server or by manually
-                            pressing buttons in our mail clients.
+                            from incoming emails. You can automatically synchronize emails with OpenERP
+                            using regular POP/IMAP accounts, using a direct email integration script for your
+                            email server, or by manually pushing emails to OpenERP using specific
+                            plugins for your preferred email application.
                         </p>
                         <group name="On Mail Client" attrs="{'invisible': [('module_crm','=',False)]}">
                             <label for="id" string="On Mail Client"/>

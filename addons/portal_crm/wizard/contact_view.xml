@@ -6,7 +6,6 @@
         <record id="wizard_contact_form_view" model="ir.ui.view">
             <field name="name">Wizard form view</field>
             <field name="model">portal_crm.crm_contact_us</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Contact wizard view" version="7.0">
                     <div class="oe_portal_crm_contact">
@@ -80,7 +79,6 @@
         <record id="wizard_contact_form_view_thanks" model="ir.ui.view">
             <field name="name">Wizard thanks message</field>
             <field name="model">portal_crm.crm_contact_us</field>
-            <field name="type">form</field>
             <!-- give it a low priority to ensure this won't be the default view -->
             <field name="priority">99</field>
             <field name="arch" type="xml">

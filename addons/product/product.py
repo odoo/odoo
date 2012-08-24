@@ -28,18 +28,10 @@ import re
 import tools
 from tools.translate import _
 
-def is_pair(x):
-    return not x%2
-
-def check_ean(eancode):
-    if not eancode:
-        return True
+def ean_checksum(eancode):
+    """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
     if len(eancode) <> 13:
-        return False
-    try:
-        int(eancode)
-    except:
-        return False
+        return -1
     oddsum=0
     evensum=0
     total=0
@@ -48,17 +40,38 @@ def check_ean(eancode):
     finalean=reversevalue[1:]
 
     for i in range(len(finalean)):
-        if is_pair(i):
+        if i % 2 == 0:
             oddsum += int(finalean[i])
         else:
             evensum += int(finalean[i])
     total=(oddsum * 3) + evensum
 
     check = int(10 - math.ceil(total % 10.0)) %10
+    return check
 
-    if check != int(eancode[-1]):
+def check_ean(eancode):
+    """returns True if eancode is a valid ean13 string, or null"""
+    if not eancode:
+        return True
+    if len(eancode) <> 13:
         return False
-    return True
+    try:
+        int(eancode)
+    except:
+        return False
+    return ean_checksum(eancode) == int(eancode[-1])
+
+def sanitize_ean13(ean13):
+    """Creates and returns a valid ean13 from an invalid one"""
+    if not ean13:
+        return "0000000000000"
+    ean13 = re.sub("[A-Za-z]","0",ean13);
+    ean13 = re.sub("[^0-9]","",ean13);
+    ean13 = ean13[:13]
+    if len(ean13) < 13:
+        ean13 = ean13 + '0' * (13-len(ean13))
+    return ean13[:-1] + str(ean_checksum(ean13))
+
 #----------------------------------------------------------
 # UOM
 #----------------------------------------------------------
@@ -195,8 +208,10 @@ product_ul()
 class product_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
+        if isinstance(ids, (list, tuple)) and not len(ids):
             return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
@@ -272,8 +287,8 @@ class product_template(osv.osv):
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
-        'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Sale Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Purchase Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price.", groups="base.group_user"),
+        'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
+        'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Product Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price.", groups="base.group_user"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
@@ -315,7 +330,7 @@ class product_template(osv.osv):
         md = self.pool.get('ir.model.data')
         res = False
         try:
-            res = md.get_object_reference(cr, uid, 'product', 'cat0')[1]
+            res = md.get_object_reference(cr, uid, 'product', 'product_category_all')[1]
         except ValueError:
             res = False
         return res
@@ -484,7 +499,7 @@ class product_product(osv.osv):
             main_supplier = self._get_main_product_supplier(cr, uid, product, context=context)
             result[product.id] = {
                 'seller_info_id': main_supplier and main_supplier.id or False,
-                'seller_delay': main_supplier and main_supplier.delay or 1,
+                'seller_delay': main_supplier.delay if main_supplier else 1,
                 'seller_qty': main_supplier and main_supplier.qty or 0.0,
                 'seller_id': main_supplier and main_supplier.name.id or False
             }
@@ -518,8 +533,8 @@ class product_product(osv.osv):
         'virtual_available': fields.function(_product_virtual_available, type='float', string='Quantity Available'),
         'incoming_qty': fields.function(_product_incoming_qty, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_outgoing_qty, type='float', string='Outgoing'),
-        'price': fields.function(_product_price, type='float', string='Pricelist', digits_compute=dp.get_precision('Sale Price')),
-        'lst_price' : fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Sale Price')),
+        'price': fields.function(_product_price, type='float', string='Pricelist', digits_compute=dp.get_precision('Product Price')),
+        'lst_price' : fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Reference', size=64, select=True),
@@ -528,8 +543,8 @@ class product_product(osv.osv):
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
         'ean13': fields.char('EAN13', size=13, help="The numbers encoded in EAN-13 bar codes are product identification numbers."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
-        'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
-        'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
+        'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),
+        'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
         'color': fields.integer('Color Index'),
@@ -594,6 +609,7 @@ class product_product(osv.osv):
             res = check_ean(product['ean13'])
         return res
 
+
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
     def on_order(self, cr, uid, ids, orderline, quantity):
@@ -602,6 +618,8 @@ class product_product(osv.osv):
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if not len(ids):
             return []
         def _name_get(d):
@@ -876,7 +894,7 @@ class pricelist_partnerinfo(osv.osv):
         'name': fields.char('Description', size=64),
         'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
         'min_quantity': fields.float('Quantity', required=True, help="The minimal quantity to trigger this rule, expressed in the supplier Unit of Measure if any or in the default Unit of Measure of the product otherrwise."),
-        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Purchase Price'), help="This price will be considered as a price for the supplier Unit of Measure if any or the default Unit of Measure of the product otherwise"),
+        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), help="This price will be considered as a price for the supplier Unit of Measure if any or the default Unit of Measure of the product otherwise"),
     }
     _order = 'min_quantity asc'
 pricelist_partnerinfo()

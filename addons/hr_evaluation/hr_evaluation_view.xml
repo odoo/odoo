@@ -5,7 +5,6 @@
       <record id="view_hr_evaluation_plan_search" model="ir.ui.view">
             <field name="name">hr_evaluation.plan.search</field>
             <field name="model">hr_evaluation.plan</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Appraisal Plan">
                    <field name="name" string="Appraisal Plans"/>
@@ -20,7 +19,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_plan_form">
             <field name="name">hr_evaluation.plan.form</field>
             <field name="model">hr_evaluation.plan</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Appraisal Plan" version="7.0">
                     <group col="4">
@@ -45,7 +43,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_plan_tree">
             <field name="name">hr_evaluation.plan.form</field>
             <field name="model">hr_evaluation.plan</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Appraisal Plan">
                     <field name="name"/>
@@ -70,7 +67,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_form">
             <field name="name">hr_evaluation.plan.phase.form</field>
             <field name="model">hr_evaluation.plan.phase</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Appraisal Plan Phases" version="7.0">
                  <notebook>
@@ -116,7 +112,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_tree">
             <field name="name">hr_evaluation.plan.phase.form</field>
             <field name="model">hr_evaluation.plan.phase</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Appraisal Plan Phases" editable="bottom" >
                     <field name="sequence"/>
@@ -147,7 +142,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_form">
             <field name="name">hr_evaluation.evaluation.form</field>
             <field name="model">hr_evaluation.evaluation</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Appraisal" version="7.0">
                 <header>
@@ -211,7 +205,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_tree">
             <field name="name">hr_evaluation.evaluation.tree</field>
             <field name="model">hr_evaluation.evaluation</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')" string="Appraisal">
                     <field name="employee_id"/>
@@ -227,7 +220,6 @@
        <record id="hr_evaluation.evaluation_search" model="ir.ui.view">
             <field name="name">hr_evaluation.evaluation_search</field>
             <field name="model">hr_evaluation.evaluation</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
                     <field name="date"/>
@@ -272,23 +264,26 @@
         <record model="ir.ui.view" id="view_hr_evaluation_interview_form">
             <field name="name">hr_evaluation.interview.form</field>
             <field name="model">hr.evaluation.interview</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Interview Appraisal" version="7.0">
                     <header>
-                        <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" class="oe_highlight"/>
-                        <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" class="oe_highlight"/>
                         <button string="Cancel" name="survey_req_cancel" states="draft,waiting_answer" type="object" icon="gtk-cancel"/>
-                        <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
                         <button name="action_print_survey" string="Print Survey" type="object" states="draft" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
-                        <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" states="waiting_answer" class="oe_highlight"/>
+                        <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" class="oe_highlight"/>
+                        <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                        <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to"/>
                         <field name="state" widget="statusbar" statusbar_visible="waiting_answer,done"/>
                     </header>
                     <sheet>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" states="waiting_answer"/>
+                        </div>
                         <group>
-                            <group>
+                            <group col="3" colspan="1">
                                 <field name="survey_id"/>
+                                <button name="action_print_survey" string="Print Survey" type="object" states="draft" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
                                 <field name="user_to_review_id"/>
+                                <label string=""/>
                                 <field name="user_id" string="Interviewer"/>
                             </group>
                             <group>
@@ -305,7 +300,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_interview_tree">
             <field name="name">hr_evaluation.interview.tree</field>
             <field name="model">hr.evaluation.interview</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Interview Appraisal">
                     <field name="date_deadline" string="Deadline Date"/>
@@ -326,7 +320,6 @@
        <record id="view_hr_evaluation_interview_search" model="ir.ui.view">
             <field name="name">view_hr_evaluation_interview_search</field>
             <field name="model">hr.evaluation.interview</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
                     <field name="date_deadline"/>
@@ -345,7 +338,6 @@
         <record id="view_evaluation_calendar" model="ir.ui.view">
             <field name="name">Interview Requests</field>
             <field name="model">hr.evaluation.interview</field>
-            <field name="type">calendar</field>
             <field name="arch" type="xml">
                 <calendar string="Interview Request" color="user_to_review_id" date_start="date_deadline">
                     <field name="request_id"/>

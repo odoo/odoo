@@ -15,7 +15,6 @@
         <record model="ir.ui.view" id="view_pos_pos_form">
             <field name="name">pos.order</field>
             <field name="model">pos.order</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Point of Sale Orders" version="7.0">
                     <header>
@@ -56,10 +55,14 @@
                                     </group>
                                 </form>
                             </field>
-                            <group class="oe_subtotal_footer">
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="order_total">
                                 <field name="amount_tax"/>
-                                <field name="amount_total"/>
-                                <button name="button_dummy" string="Update" class="oe_link" states="draft"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="amount_total" />
+                                    <button name="button_dummy"
+                                        states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>
                             </group>
                         </page>
                         <page string="Payments">
@@ -125,7 +128,6 @@
         <record model="ir.ui.view" id="view_pos_order_tree">
             <field name="name">Sales</field>
             <field name="model">pos.order</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS Orders" colors="blue:state == 'draft';gray:state in ('done','cancel');black:state not in('done','cancel')">
                     <field name="name"/>
@@ -142,7 +144,6 @@
         <record id="view_pos_order_filter" model="ir.ui.view">
             <field name="name">pos.order.list.select</field>
             <field name="model">pos.order</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <field name="name" string="Sales Order"/>
@@ -198,7 +199,6 @@
         <record model="ir.ui.view" id="view_pos_order_line">
             <field name="name">Sale lines</field>
             <field name="model">pos.order.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS Order lines">
                     <field name="product_id" readonly="1"/>
@@ -215,7 +215,6 @@
         <record model="ir.ui.view" id="view_pos_order_line_form">
             <field name="name">Sale line</field>
             <field name="model">pos.order.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS Order line" version="7.0">
                     <group col="4">
@@ -264,7 +263,6 @@
         <record model="ir.ui.view" id="view_pos_trans_user_form">
             <field name="name">report.trans.pos.user.form</field>
             <field name="model">report.transaction.pos</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS " version="7.0">
                     <group col="4">
@@ -284,7 +282,6 @@
         <record model="ir.ui.view" id="view_trans_pos_user_tree">
             <field name="name">Sales by user</field>
             <field name="model">report.transaction.pos</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
                     <field name="date_create" widget="date" />
@@ -303,7 +300,6 @@
         <record model="ir.ui.view" id="view_report_transaction_pos_calendar">
             <field name="name">report.transaction.pos.calendar</field>
             <field name="model">report.transaction.pos</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_create" string="POS Report">
@@ -316,7 +312,6 @@
          <record model="ir.ui.view" id="view_report_transaction_pos_graph">
             <field name="name">report.transaction.pos.graph</field>
             <field name="model">report.transaction.pos</field>
-            <field name="type">graph</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <graph  type="bar" string="POS Report">
@@ -357,7 +352,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_user_pos_form">
             <field name="name">report.sales.by.user.pos.form</field>
             <field name="model">report.sales.by.user.pos</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS " version="7.0">
                     <group col="4">
@@ -374,7 +368,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_user_pos_tree">
             <field name="name">report.sales.by.user.pos.tree</field>
             <field name="model">report.sales.by.user.pos</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
                     <field name="date_order" widget="date"/>
@@ -388,7 +381,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_user_pos_calendar">
             <field name="name">report.sales.by.user.pos.calendar</field>
             <field name="model">report.sales.by.user.pos</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_order" string="POS Report">
@@ -401,7 +393,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_user_pos_graph">
             <field name="name">report.sales.by.user.pos.graph</field>
             <field name="model">report.sales.by.user.pos</field>
-            <field name="type">graph</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <graph  type="bar" string="Sales by User">
@@ -425,7 +416,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_form">
             <field name="name">report.sales.by.user.pos.month.form</field>
             <field name="model">report.sales.by.user.pos.month</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS " version="7.0">
                     <group col="4">
@@ -442,7 +432,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_tree">
             <field name="name">report.sales.by.user.pos.month.tree</field>
             <field name="model">report.sales.by.user.pos.month</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
                     <field name="date_order" widget="date"/>
@@ -456,7 +445,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_calendar">
             <field name="name">report.sales.by.user.pos.month.calendar</field>
             <field name="model">report.sales.by.user.pos.month</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_order" string="POS Report">
@@ -469,7 +457,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_graph">
             <field name="name">report.sales.by.user.pos.month.graph</field>
             <field name="model">report.sales.by.user.pos.month</field>
-            <field name="type">graph</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <graph  type="bar" string="Sales by User">
@@ -493,7 +480,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_form">
             <field name="name">report.sales.by.margin.pos.form</field>
             <field name="model">report.sales.by.margin.pos</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS " version="7.0">
                     <group col="4">
@@ -512,7 +498,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_tree">
             <field name="name">report.sales.by.margin.pos.tree</field>
             <field name="model">report.sales.by.margin.pos</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
                     <field name="user_id"/>
@@ -528,7 +513,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_calendar">
             <field name="name">report.sales.by.margin.pos.calendar</field>
             <field name="model">report.sales.by.margin.pos</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_order" string="Sales by User Margin">
@@ -541,7 +525,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_graph">
             <field name="name">report.sales.by.margin.pos.graph</field>
             <field name="model">report.sales.by.margin.pos</field>
-            <field name="type">graph</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <graph  type="bar" string="Sales by User Margin" orientation="horizontal">
@@ -562,7 +545,6 @@
          <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_form">
             <field name="name">report.sales.by.margin.pos.month.form</field>
             <field name="model">report.sales.by.margin.pos.month</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS " version="7.0">
                     <group col="4">
@@ -581,7 +563,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_tree">
             <field name="name">report.sales.by.margin.pos.month.tree</field>
             <field name="model">report.sales.by.margin.pos.month</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
                     <field name="user_id"/>
@@ -597,7 +578,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_calendar">
             <field name="name">report.sales.by.margin.pos.month.calendar</field>
             <field name="model">report.sales.by.margin.pos.month</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_order" string="Sales by User Margin">
@@ -610,7 +590,6 @@
         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_graph">
             <field name="name">report.sales.by.margin.pos.month.graph</field>
             <field name="model">report.sales.by.margin.pos.month</field>
-            <field name="type">graph</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <graph  type="bar" string="Sales by User Margin" orientation="horizontal">
@@ -631,7 +610,6 @@
         <record id="product_normal_form_pos_view" model="ir.ui.view">
             <field name="name">product.normal.pos.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                   <group name="status" position="after">
@@ -647,7 +625,6 @@
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="misc" position="after">
@@ -657,6 +634,9 @@
                         <field name="expense_pdt"/>
                     </group>
                 </group>
+                <field name="ean13" position="after">
+                    <button name="edit_ean" type="object" string="Edit" />
+                </field>
             </field>
         </record>
 
@@ -664,7 +644,6 @@
         <record id="pos_category_form_view" model="ir.ui.view">
             <field name="name">pos.category.form</field>
             <field name="model">pos.category</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product PoS Categories" version="7.0">
                     <sheet>
@@ -683,7 +662,6 @@
         <record id="pos_category_tree_view" model="ir.ui.view">
             <field name="name">pos.category.tree</field>
             <field name="model">pos.category</field>
-            <field name="type">tree</field>
             <field name="field_parent" eval="False"/>
             <field name="arch" type="xml">
                 <tree string="Product PoS Categories">
@@ -745,7 +723,6 @@
         <record model="ir.ui.view" id="view_pos_order_tree_all_sales_lines">
             <field name="name">POS Sales Lines</field>
             <field name="model">pos.order.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS Orders lines">
                     <field name="order_id" />
@@ -789,7 +766,6 @@
         <record model="ir.ui.view" id="view_pos_config_form">
             <field name="name">pos.config.form.view</field>
             <field name="model">pos.config</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Point of Sale Configuration" version="7.0">
                     <header>
@@ -804,10 +780,10 @@
                     <sheet>
                         <group>
                         <field name="name"/>
-                        <field name="shop_id" widget="selection" />
+                        <field name="shop_id" widget="selection" groups="stock.group_locations" />
                         <field name="journal_id" widget="selection" />
-                        <field name="sequence_id" readonly="1"/>
-                        <field name="group_by" />
+                        <field name="sequence_id" readonly="1" groups="base.group_no_one" />
+                        <field name="group_by" groups="account.group_account_user"  />
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
                         <field name="journal_ids" colspan="4" nolabel="1">
@@ -822,14 +798,11 @@
                         <group string="Material Interfaces" >
                             <group>
                                 <field name="iface_self_checkout" />
-                                <field name="iface_websql" />
-                                <field name="iface_led" />
                                 <field name="iface_cashdrawer" />
                                 <field name="iface_payment_terminal" />
                             </group>
                             <group>
                                 <field name="iface_electronic_scale" />
-                                <field name="iface_barscan" />
                                 <field name="iface_vkeyboard" />
                                 <field name="iface_print_via_proxy" />
                             </group>
@@ -843,7 +816,6 @@
         <record model="ir.ui.view" id="view_pos_config_tree">
             <field name="name">pos.config.tree.view</field>
             <field name="model">pos.config</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Point of Sale Configuration" colors="grey:state == 'inactive'">
                     <field name="name" />
@@ -856,7 +828,6 @@
         <record model="ir.ui.view" id="view_pos_config_search">
             <field name="name">pos.config.search.view</field>
             <field name="model">pos.config</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Point of Sale Config">
                     <field name="name" />
@@ -902,18 +873,21 @@
         <record model="ir.ui.view" id="view_pos_session_form">
             <field name="name">pos.session.form.view</field>
             <field name="model">pos.session</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Point of Sale Session" version="7.0">
                     <header>
                         <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" class="oe_highlight"/>
-                        <button name="cashbox_control" type="workflow" string="End of Session" states="opened"
-                            class="oe_highlight"/>
+                        <button name="cashbox_control" type="workflow" string="End of Session"
+                            attrs="{'invisible' : [('has_closing_control', '=', False),('state', '=', 'opened')]}" 
+                            class="oe_highlight" />
+                        <button name="close" type="workflow" string="Validate Closing &amp; Post Entries"
+                            attrs="{'invisible' : [('has_closing_control', '=', True),('state', '=', 'opened')]}"
+                            class="oe_highlight" />
                         <button name="close" type="workflow" string="Validate Closing &amp; Post Entries" states="closing_control"
-                            class="oe_highlight"/>
-                        <button name="open_frontend_cb" type="object" string="Start Selling" states="opened"/>
+                            class="oe_highlight" />
+                        <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"/>
                         <div class="oe_right">
-                            <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1"/>
+                            <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1" />
                         </div>
                     </header>
                     <sheet>
@@ -922,19 +896,19 @@
                             <button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened,closing_control"/>
                         </div>
                         <h1 class="oe_title">
-                            Point of Sale Session:
+                            Session:
                             <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
                         </h1>
-                        <field name="has_opening_control" invisible="1" />
-                        <field name="has_closing_control" invisible="1" />
                         <group>
+                            <field name="has_opening_control" invisible="1" />
+                            <field name="has_closing_control" invisible="1" />
                             <group>
                                 <field name="user_id"/>
                                 <field name="config_id" attrs="{'invisible' : [('config_id', '&lt;&gt;', False)]}"/>
                             </group>
                             <group>
                                 <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
-                                <field name="stop_at" attrs="{'invisible' : [('state', '&lt;&gt;', 'closed')]}"/>
+                                <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                             </group>
                             <newline/>
 
@@ -1002,7 +976,6 @@
         <record model="ir.ui.view" id="view_pos_session_tree">
             <field name="name">pos.session.tree.view</field>
             <field name="model">pos.session</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Point of Sale Session">
                     <field name="config_id" />
@@ -1018,7 +991,6 @@
         <record model="ir.ui.view" id="view_pos_session_search">
             <field name="name">pos.session.search.view</field>
             <field name="model">pos.session</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Point of Sale Session">
                     <field name="name" />
@@ -1068,7 +1040,6 @@
         <record id="view_pos_order_filter" model="ir.ui.view">
             <field name="name">pos.order.list.select</field>
             <field name="model">pos.order</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <field name="name"/>
@@ -1093,6 +1064,21 @@
         <menuitem action="action_pos_session_opening"
             parent="menu_point_of_sale"
             id="menu_pos_session_opening" sequence="0"/>
+
+        <record model="ir.ui.view" id="pos_ean13_generator">
+            <field name="name">pos.ean_wizard</field>
+            <field name="model">pos.ean_wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Ean13 Generator" version="7.0">  
+                    <field name="ean13_pattern"/>
+                    <footer>
+                        <button name="sanitize_ean13" type="object" string="Apply"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
 
     </data>
 </openerp>

@@ -45,7 +45,6 @@
     <record id="view_crm_meeting_type_tree" model="ir.ui.view">
         <field name="name">Meeting Types Tree</field>
         <field name="model">crm.meeting.type</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Meeting Types" editable="bottom">
                 <field name="name"/>
@@ -68,11 +67,10 @@
     <record model="ir.ui.view" id="view_crm_meeting_form">
         <field name="name">CRM - Meetings Form</field>
         <field name="model">crm.meeting</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
                 <header>
-                    <field name="state"/>
+                    <field name="state" invisible="True"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -117,7 +115,7 @@
                                     <label for="allday" string="All Day?"/>)
                                 </div>
                                     <field name="recurrency"
-                                        attrs="{'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}"/>
+                                        attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>
                             </group>
                             <group>
                                 <field name="alarm_id" widget="selection" />
@@ -173,7 +171,6 @@
                         <button string="Invite People"
                             name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
                             icon="terp-partner" type="action"
-                            attrs="{'readonly': [('state', '=', 'done')]}"
                             context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
                         <field name="attendee_ids" widget="one2many" mode="tree">
                             <tree string="Invitation details" editable="top">
@@ -235,6 +232,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
             </form>
         </field>
@@ -245,14 +243,12 @@
     <record model="ir.ui.view" id="view_crm_meeting_tree">
         <field name="name">CRM - Meetings Tree</field>
         <field name="model">crm.meeting</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Meetings" fonts="bold:needaction_pending==True"
-                colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+            <tree string="Meetings" fonts="bold:needaction_pending==True">
                 <field name="name" string="Subject" />
                 <field name="user_id"/>
                 <field name="date"/>
-                <field name="state"/>
+                <field name="state" invisible="True"/>
                 <field name="duration" />
                 <field name="needaction_pending" invisible="1"/>
             </tree>
@@ -264,7 +260,6 @@
     <record model="ir.ui.view" id="view_crm_meeting_calendar">
         <field name="name">CRM - Meetings Calendar</field>
         <field name="model">crm.meeting</field>
-        <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Meetings" date_start="date" color="user_id" date_stop="date_deadline" date_delay="duration">
@@ -279,7 +274,6 @@
     <record id="view_crm_meeting_gantt" model="ir.ui.view">
         <field name="name">CRM - Meetings Gantt</field>
         <field name="model">crm.meeting</field>
-        <field name="type">gantt</field>
         <field name="arch" type="xml">
             <gantt date_delay="duration" date_start="date" string="Meetings"/>
         </field>
@@ -290,7 +284,6 @@
     <record id="view_crm_meeting_search" model="ir.ui.view">
         <field name="name">CRM - Meetings Search</field>
         <field name="model">crm.meeting</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Meetings">
                 <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>

@@ -22,16 +22,16 @@
 {
     'name': 'Pad on tasks',
     'version': '1.0',
-    "category": "Project Management",
+    'category': 'Project Management',
     'description': """
 This module adds a PAD in all project kanban views.
+===================================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['project', 'pad'],
-    'init_xml': [],
-    'update_xml': ['project_task.xml'],
-    'demo_xml': [],
+    'data': ['project_task.xml'],
+    'demo': [],
     'installable': True,
     'auto_install': True,
 }
