@@ -1168,7 +1168,7 @@ class mail_thread(osv.Model):
         """ When creating a new message, set as unread if uid is not the
             object responsible. """
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.message_state and self._columns.get('user_id') and (not obj.user_id or obj.user_id.id != uid):
+            if obj.message_state and ('user_id' in obj._columns.keys()) and (not obj.user_id or obj.user_id.id != uid) :
                 self.message_mark_as_unread(cr, uid, [obj.id], context=context)
 
     def message_check_and_set_unread(self, cr, uid, ids, context=None):

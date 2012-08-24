@@ -294,6 +294,7 @@ class crm_lead(base_stage, osv.osv):
 
     def on_change_partner(self, cr, uid, ids, partner_id, context=None):
         result = {}
+        values = {}
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             values = {
