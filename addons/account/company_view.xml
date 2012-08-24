@@ -5,7 +5,6 @@
             <field name="name">res.company.form.inherit</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Overdue Payments" position="inside">
@@ -20,12 +19,12 @@
             <field name="name">res.company.form.inherit</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="currency_id" position="after">
-                      <field name="property_reserve_and_surplus_account" colspan="2"/>
-                      <field name="paypal_account" />
-                </field>
+                <xpath expr="//group[@name='account_grp']" position="inside">
+                    <field name="property_reserve_and_surplus_account"/>
+                    <field name="tax_calculation_rounding_method"/>
+                    <field name="paypal_account"  placeholder="e.g. sales@openerp.com"/>
+                </xpath>
             </field>
         </record>
 

@@ -1,0 +1,227 @@
+# Dutch (Belgium) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-07-27 13:19+0000\n"
+"Last-Translator: Els Van Vossel (Agaplan) <Unknown>\n"
+"Language-Team: Dutch (Belgium) <nl_BE@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:37+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+#: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
+msgid "Account Sequence Application Configuration"
+msgstr "Instellen boekingsnummers"
+
+#. module: account_sequence
+#: constraint:account.move:0
+msgid ""
+"You can not create more than one move per period on centralized journal"
+msgstr ""
+"U kunt niet meer dan een beweging maken per periode in een "
+"centralisatiedagboek."
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "De rekening en de periode moeten van dezelfde firma zijn."
+
+#. module: account_sequence
+#: help:account.move,internal_sequence_number:0
+#: help:account.move.line,internal_sequence_number:0
+msgid "Internal Sequence Number"
+msgstr "Intern volgnummer"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_next:0
+msgid "Next number of this sequence"
+msgstr "Volgend nummer in deze reeks"
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_next:0
+msgid "Next Number"
+msgstr "Volgend nummer"
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_increment:0
+msgid "Increment Number"
+msgstr "Verhogen met"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr "Het volgende nummer in de reeks wordt verhoogd met dit getal."
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "Configure Your Account Sequence Application"
+msgstr "Uw boekingsnummers instellen"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "Configure"
+msgstr "Instellingen"
+
+#. module: account_sequence
+#: help:account.sequence.installer,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr "Suffix voor het volgnummer"
+
+#. module: account_sequence
+#: field:account.sequence.installer,company_id:0
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: account_sequence
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr ""
+"Dit volgnummer wordt gebruikt voor de interne nummering van boekingen in dit "
+"journaal."
+
+#. module: account_sequence
+#: field:account.sequence.installer,padding:0
+msgid "Number padding"
+msgstr "Nummergrootte"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move_line
+msgid "Journal Items"
+msgstr "Boekingslijnen"
+
+#. module: account_sequence
+#: field:account.move,internal_sequence_number:0
+#: field:account.move.line,internal_sequence_number:0
+msgid "Internal Number"
+msgstr "Intern nummer"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
+"U kunt geen boekingslijnen maken voor een rekening van het type Weergave."
+
+#. module: account_sequence
+#: help:account.sequence.installer,padding:0
+msgid ""
+"OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
+"get the required padding size."
+msgstr ""
+"OpenERP voegt automatisch links van het 'Volgend nummer' enkele "
+"voorloopnullen toe om de juiste grootte te krijgen."
+
+#. module: account_sequence
+#: field:account.sequence.installer,name:0
+msgid "Name"
+msgstr "Naam"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr "U kunt niet boeken op een afgesloten rekening."
+
+#. module: account_sequence
+#: constraint:account.journal:0
+msgid ""
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
+msgstr ""
+"Configuratiefout: de gekozen munt moet door de standaardrekeningen worden "
+"gedeeld."
+
+#. module: account_sequence
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr "Verkeerde credit– of debetwaarde in de boeking."
+
+#. module: account_sequence
+#: field:account.journal,internal_sequence_id:0
+msgid "Internal Sequence"
+msgstr "Intern volgnummer"
+
+#. module: account_sequence
+#: help:account.sequence.installer,prefix:0
+msgid "Prefix value of the record for the sequence"
+msgstr "Prefix voor het volgnummer"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
+msgstr "Boeking"
+
+#. module: account_sequence
+#: field:account.sequence.installer,suffix:0
+msgid "Suffix"
+msgstr "Suffix"
+
+#. module: account_sequence
+#: field:account.sequence.installer,config_logo:0
+msgid "Image"
+msgstr "Afbeelding"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "title"
+msgstr "Titel"
+
+#. module: account_sequence
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr "De naam van het journaal moet uniek zijn per firma."
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+"De gekozen rekening van uw boeking vereist een secundaire munt. U moet de "
+"secundaire munt van de rekening verwijderen of een multivalutaweergave "
+"kiezen voor het journaal."
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+"De datum van uw boeking ligt niet in de gedefinieerde periode. Verander de "
+"datum of schakel de optie op het journaal uit."
+
+#. module: account_sequence
+#: field:account.sequence.installer,prefix:0
+msgid "Prefix"
+msgstr "Prefix"
+
+#. module: account_sequence
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr "De code van het journaal moet uniek zijn per firma."
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_sequence_installer
+msgid "account.sequence.installer"
+msgstr "account.sequence.installer"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_journal
+msgid "Journal"
+msgstr "Journaal"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "You can enhance the Account Sequence Application by installing ."
+msgstr "Verbeter de boekingsnummering en installeer"

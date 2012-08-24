@@ -1,8 +1,8 @@
 /* Shortcuts*/
-.oe_systray_shortcuts {
-    margin: 3px;
+.oe_systray_shortcuts .oe_star_off {
+    color: #eee;
 }
-.oe-shortcut-toggle {
+.oe_shortcuts_toggle {
     height: 20px;
     margin-top: 3px;
     padding: 0;
@@ -12,10 +12,10 @@
     background: url(/web/static/src/img/add-shortcut.png) no-repeat center center;
     float: left;
 }
-.oe-shortcut-remove{
+.oe_shortcuts_remove{
     background: url(/web/static/src/img/remove-shortcut.png) no-repeat center center;
 }
-.oe-shortcuts {
+.oe_shortcuts {
     position: absolute;
     margin: 0;
     padding: 6px 15px;
@@ -25,7 +25,7 @@
     height: 17px;
     line-height: 1.2;
 }
-.oe-shortcuts ul {
+.oe_shortcuts ul {
     display: block;
     overflow: hidden;
     list-style: none;
@@ -33,7 +33,7 @@
     padding: 0;
     margin: 0;
 }
-.oe-shortcuts li {
+.oe_shortcuts li {
     cursor: pointer;
     display: -moz-inline-stack;
     display: inline-block;
@@ -47,10 +47,10 @@
     vertical-align: top;
 }
 
-.oe-shortcuts li:hover {
+.oe_shortcuts li:hover {
     background-color: #666;
 }
-.oe-shortcuts li:first-child {
+.oe_shortcuts li:first-child {
     border-left: none;
     padding-left: 0;
 }

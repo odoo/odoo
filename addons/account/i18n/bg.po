@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:47+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:03+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -185,11 +185,6 @@ msgstr "Счетоводен източник"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Всички аналитични записи"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Фактури създадени през последните 15 дни"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -697,18 +692,6 @@ msgstr "Период на дневник"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Приходни сметки"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1703,11 +1686,6 @@ msgstr "Разделени журнални последователности"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Отговорник"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Продажби по вид сметка"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2772,13 +2750,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Продажби по сметка"
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr "Този помощник ще създаде повтарящи се счетоводни записи"
@@ -3170,8 +3141,8 @@ msgstr "Диаграми с шаблони на сметки"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "Генериране графика на сметките от шаблон за графики"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
@@ -6323,11 +6294,6 @@ msgid "Supplier Refund"
 msgstr "Обезщетение на доставчик"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "Табло"
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Редове на запис"
@@ -6884,11 +6850,6 @@ msgstr ""
 "Напр. Мой модел от %(date)s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Приходни сметки"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr ""
@@ -7102,7 +7063,7 @@ msgstr "Шаблон на родителска сметка"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -11192,6 +11153,9 @@ msgstr ""
 #~ msgid "The statement balance is incorrect !\n"
 #~ msgstr "Баланса на отчета не е правилен !\n"
 
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "Генериране графика на сметките от шаблон за графики"
+
 #, python-format
 #~ msgid ""
 #~ "You can not do this modification on a confirmed entry ! Please note that you "
@@ -11307,6 +11271,10 @@ msgstr ""
 #~ msgstr ""
 #~ "Различна база на данък !\n"
 #~ "Натиснета на Изчисляване за обновяване на базата на данъка"
+
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Приходни сметки"
 
 #, python-format
 #~ msgid ""
@@ -11430,6 +11398,9 @@ msgstr ""
 #~ msgid "Compute Code for Taxes included prices"
 #~ msgstr "Изчисляващ код за данъци, включени в цените"
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Фактури създадени през последните 15 дни"
+
 #, python-format
 #~ msgid ""
 #~ "No period defined for this date: %s !\n"
@@ -11485,6 +11456,9 @@ msgstr ""
 #~ msgid "Your Reference"
 #~ msgstr "Ваша референция"
 
+#~ msgid "Sales by Account Type"
+#~ msgstr "Продажби по вид сметка"
+
 #, python-format
 #~ msgid "The account is not defined to be reconciled !"
 #~ msgstr "Сметката не е посочена за равняване!"
@@ -11511,6 +11485,9 @@ msgstr ""
 
 #~ msgid "Error ! You can not create recursive categories."
 #~ msgstr "Грешка! Не може да създавате рекурсивни категории"
+
+#~ msgid "Sales by Account"
+#~ msgstr "Продажби по сметка"
 
 #~ msgid "Total :"
 #~ msgstr "Общо :"
@@ -11567,12 +11544,18 @@ msgstr ""
 #~ msgid "Refund Type"
 #~ msgstr "Вид обезщетение"
 
+#~ msgid "Dashboard"
+#~ msgstr "Табло"
+
 #~ msgid "  valuation: percent"
 #~ msgstr "  оценка: процент"
 
 #, python-format
 #~ msgid "Currnt currency is not confirured properly !"
 #~ msgstr "Текущата валута не е настроена правилно!"
+
+#~ msgid "Income Accounts"
+#~ msgstr "Приходни сметки"
 
 #~ msgid "Display accounts"
 #~ msgstr "Показване на сметки"

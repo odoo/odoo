@@ -109,7 +109,6 @@ class crossovered_analytic(report_sxw.rml_parse):
             res['ref_qty'] = info[0]['qty']
             res['ref_amt'] = info[0]['amt']
             self.base_amount = info[0]['amt']
-        
         result.append(res)
         return result
 

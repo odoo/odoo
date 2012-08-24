@@ -40,8 +40,8 @@ class hr_recruitment_report(osv.osv):
 
     _columns = {
         'user_id': fields.many2one('res.users', 'User', readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
+        'nbr': fields.integer('# of Applications', readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -59,12 +59,11 @@ class hr_recruitment_report(osv.osv):
         'department_id': fields.many2one('hr.department','Department',readonly=True),
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
         'salary_prop' : fields.float("Salary Proposed", digits_compute=dp.get_precision('Account')),
-        'salary_prop_avg' : fields.float("Avg Salary Proposed", group_operator="avg", digits_compute=dp.get_precision('Account')),
+        'salary_prop_avg' : fields.float("Avg. Proposed Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),
         'salary_exp' : fields.float("Salary Expected", digits_compute=dp.get_precision('Account')),
+        'salary_exp_avg' : fields.float("Avg. Expected Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),        
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
         'available': fields.float("Availability"),
-        'delay_open': fields.float('Avg. Delay to Open', digits=(16,2), readonly=True, group_operator="avg",
-                                       help="Number of Days to close the project issue"),
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
     }
@@ -93,7 +92,7 @@ class hr_recruitment_report(osv.osv):
                      sum(salary_proposed) as salary_prop,
                      (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,
-                     extract('epoch' from (s.date_open-s.create_date))/(3600*24) as  delay_open,
+                     (sum(salary_expected)/count(*)) as salary_exp_avg,
                      extract('epoch' from (s.date_closed-s.create_date))/(3600*24) as  delay_close,
                      count(*) as nbr
                  from hr_applicant s

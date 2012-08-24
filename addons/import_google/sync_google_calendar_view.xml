@@ -1,32 +1,15 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="crm_case_form_view_meet_inherit">
-	        <field name="name">CRM - Meetings Form (Inherited)</field>
-	        <field name="model">crm.meeting</field>
-	        <field name="type">form</field>
-	        <field name="inherit_id" ref="crm.crm_case_form_view_meet"/>
-	        <field name="arch" type="xml">
-		        <field name="categ_id" position="replace">
-		           <field name="categ_id" widget="selection"
-	                      string="Meeting Type"
-	                      domain="[('object_id.model', '=', 'crm.meeting'),('user_id','in',[uid, False])]" />
-		        </field>
-		    </field>
-        </record>
-        
-        <record model="ir.ui.view" id="crm_case_tree_view_meet_inherit">
-	        <field name="name">CRM - Meetings Tree (Inherited)</field>
-	        <field name="model">crm.meeting</field>
-	        <field name="type">tree</field>
-	        <field name="inherit_id" ref="crm.crm_case_tree_view_meet"/>
-	        <field name="arch" type="xml">
-	           <field name="categ_id" position="replace">
-                   <field name="categ_id" widget="selection"
-                          string="Meeting Type"
-                          domain="[('object_id.model', '=', 'crm.meeting'),('user_id','in',[uid, False])]" />
+        <record model="ir.ui.view" id="view_crm_meeting_form">
+            <field name="name">CRM - Meetings Form (Inherited)</field>
+            <field name="model">crm.meeting</field>
+            <field name="inherit_id" ref="base_calendar.view_crm_meeting_form"/>
+            <field name="arch" type="xml">
+                <field name="categ_ids" position="attributes">
+                    <attribute name="domain">[('user_id', 'in', [uid, False])]</attribute>
                 </field>
-	        </field>
-	    </record>
+            </field>
+        </record>
     </data>
 </openerp>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--
+            Override the original action to set another help field and/or
+            another context field, more suited for portal members
+        -->
+        <record model="ir.actions.act_window" id="action_event_view">
+            <field name="name">Events</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">event.event</field>
+            <field name="view_mode">kanban,calendar,tree,form,graph</field>
+            <field name="context">{"search_default_upcoming":1}</field>
+            <field name="search_view_id" ref="event.view_event_search"/>
+            <field name="help">No public events.</field>
+        </record>
+
+        <menuitem name="Events" id="portal_company_events" parent="portal.portal_company"
+            action="action_event_view" sequence="40"/>
+
+    </data>
+</openerp>

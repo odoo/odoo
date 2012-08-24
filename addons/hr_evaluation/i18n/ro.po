@@ -14,29 +14,29 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:07+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:56+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
 msgid "Send an anonymous summary to the manager"
-msgstr "Trimite un rezumat anonim managerului"
+msgstr "Trimiteti un rezumat anonim managerului"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Start Appraisal"
-msgstr ""
+msgstr "Incepeti Evaluarea"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
-msgstr "Grupează după..."
+msgstr "Grupati dupa..."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal that overpassed the deadline"
-msgstr ""
+msgstr "Evaluari care au depasit termenul limita"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -63,7 +63,7 @@ msgstr "Intarziere la incepere"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal that are in waiting appreciation state"
-msgstr ""
+msgstr "Evaluari care se afla in starea de asteptare a aprecierii"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:244
@@ -76,13 +76,13 @@ msgstr "Avertisment !"
 #: view:hr_evaluation.plan:0 field:hr_evaluation.plan,company_id:0
 #: field:hr_evaluation.plan.phase,company_id:0
 msgid "Company"
-msgstr "Companie"
+msgstr "Compania"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,evaluation_id:0
 #: field:hr_evaluation.plan.phase,survey_id:0
 msgid "Appraisal Form"
-msgstr "Formular de apreciere"
+msgstr "Formular de evaluare"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr.evaluation.report,day:0
@@ -92,7 +92,7 @@ msgstr "Zi"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:0 field:hr_evaluation.plan,phase_ids:0
 msgid "Appraisal Phases"
-msgstr ""
+msgstr "Etapele Evaluarii"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_first:0
@@ -111,7 +111,7 @@ msgstr "Note"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(eval_name)s:Appraisal Name"
-msgstr ""
+msgstr "(nume_eval)s: Numele Evaluarii"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
@@ -122,27 +122,33 @@ msgid ""
 "manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
 "final evaluation by the manager."
 msgstr ""
+"Fiecarui angajat i se poate atribui un Plan de Evaluare. Un asemenea plan "
+"defineste frecventa si modul in care gestionati evaluarea periodica a "
+"personalului dumneavoastra. Veti putea sa definiti pasii si sa atasati "
+"interviuri fiecarui pas. OpenERP gestioneaza toate tipurile de evaluari: de "
+"jos in sus, de sus in jos, auto-evaluare si evaluarea finala de catre "
+"director."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Mail Body"
-msgstr "Corp email"
+msgstr "Cuprins e-mail"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,wait:0
 msgid "Wait Previous Phases"
-msgstr "Asteapta Etapele Anterioare"
+msgstr "Asteptati Etapele Anterioare"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
 msgid "Employee Appraisal"
-msgstr ""
+msgstr "Evaluarea Angajatului"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Cancelled"
-msgstr "Anulat(ă)"
+msgstr "Anulat(a)"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -161,12 +167,12 @@ msgstr "Apreciere"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Send to Managers"
-msgstr "Trimite managerilor"
+msgstr "Trimiteti directorilor"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date_close:0
 msgid "Ending Date"
-msgstr "Data de sfârşit"
+msgstr "Data de sfarsit"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,note_action:0
@@ -220,17 +226,17 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal that are in Plan In Progress state"
-msgstr ""
+msgstr "Evaluari care sunt in Plan in starea In desfasurare"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Resetare ca Ciorna"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,deadline:0
 msgid "Deadline"
-msgstr "Data scadenta"
+msgstr "Termen limita"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -240,12 +246,12 @@ msgstr " Luna "
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In progress Evaluations"
-msgstr ""
+msgstr "Evaluari in desfasurare"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_survey_request
 msgid "survey.request"
-msgstr "survey.request (cerere.sondaj)"
+msgstr "cerere.sondaj"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -281,12 +287,12 @@ msgstr "Angajat"
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
 msgid "New"
-msgstr ""
+msgstr "Nou(a)"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_body:0
 msgid "Email"
-msgstr "Email"
+msgstr "E-Mail"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -305,22 +311,22 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Evaluation done in last month"
-msgstr ""
+msgstr "Evaluari efectuate in ultima luna"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_mail_compose_message
-msgid "E-mail composition wizard"
+msgid "Email composition wizard"
 msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Data crearii"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_answer_manager:0
 msgid "Send all answers to the manager"
-msgstr "Trimite toate raspunsurile managerului"
+msgstr "Trimiteti toate raspunsurile managerului"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -336,7 +342,7 @@ msgstr "Note publice"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Send Reminder Email"
-msgstr ""
+msgstr "Trimiteti Memento prin e-mail"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr_evaluation.evaluation,rating:0
@@ -346,17 +352,17 @@ msgstr "Apreciere"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Print Interview"
-msgstr "Tipareste interviul"
+msgstr "Tipariti Interviul"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Pending"
-msgstr ""
+msgstr "In asteptare"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,closed:0
 msgid "closed"
-msgstr "închis"
+msgstr "inchis"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -377,7 +383,7 @@ msgstr "Iulie"
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
 msgid "Review Appraisal Plans"
-msgstr ""
+msgstr "Revedeti Planurile de Evaluare"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -397,17 +403,17 @@ msgstr "Plan de actiune"
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
 msgid "Periodic Appraisal"
-msgstr ""
+msgstr "Evaluare Periodica"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal to close within the next 7 days"
-msgstr ""
+msgstr "Evaluarile vor fi inchise in urmatoarele 7 zile"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Ending Summary"
-msgstr "Rezumat sfarsit"
+msgstr "Sfarsit Rezumat"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -422,16 +428,19 @@ msgid ""
 "employee's Appraisal Plan. Each user receives automatic emails and requests "
 "to evaluate their colleagues periodically."
 msgstr ""
+"Cererile pentru Interviu sunt generate automat de OpenERP in functie de "
+"Planul de Evaluare al angajatului. Fiecare utilizator primeste automat e-"
+"mail-uri si cereri pentru a-si evalua colegii periodic."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "In progress"
-msgstr "În desfășurare"
+msgstr "In desfasurare"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Interview Request"
-msgstr "Cereri de interviu"
+msgstr "Cereri pentru Interviu"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_answer_employee:0
@@ -452,7 +461,7 @@ msgstr "Decembrie"
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Evaluation done in current year"
-msgstr ""
+msgstr "Evaluari efectuate in anul curent"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr.evaluation.report,month:0
@@ -462,7 +471,7 @@ msgstr "Luna"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Group by..."
-msgstr "Grupează după..."
+msgstr "Grupati dupa..."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -472,7 +481,7 @@ msgstr "Setari email"
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
 msgid "Appraisal Reminders"
-msgstr ""
+msgstr "Memento-uri Evaluari"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
@@ -491,17 +500,17 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Legend"
-msgstr "Legendă"
+msgstr "Legenda"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_first:0
 msgid "First Appraisal in (months)"
-msgstr ""
+msgstr "Prima Evaluare in (luni)"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
 msgid "Draft"
-msgstr "Ciornă"
+msgstr "Ciorna"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -519,12 +528,12 @@ msgstr "7 Zile"
 #: field:hr_evaluation.plan,name:0 field:hr_evaluation.plan.phase,plan_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
 msgid "Appraisal Plan"
-msgstr ""
+msgstr "Plan de Evaluare"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Print Survey"
-msgstr ""
+msgstr "Tipariti Sondajul"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -545,7 +554,7 @@ msgstr "Semnificativ sub asteptari"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid " (employee_name)s: Partner name"
-msgstr " (employee_name)s: Nume partener"
+msgstr " (nume_angajat)s: Nume partener"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr.evaluation.report,plan_id:0
@@ -556,7 +565,7 @@ msgstr "Plan"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,active:0
 msgid "Active"
-msgstr "Activ"
+msgstr "Activ(a)"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -566,7 +575,7 @@ msgstr "Noiembrie"
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Extended Filters..."
-msgstr "Filtre extinse..."
+msgstr "Filtre Extinse..."
 
 #. module: hr_evaluation
 #: constraint:hr.employee:0
@@ -576,7 +585,7 @@ msgstr "Eroare ! Nu puteti crea Ierarhii recursive ale Angajatilor."
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
 msgid "Appraisal Plan Phase"
-msgstr ""
+msgstr "Etapa Plan de Evaluare"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -586,12 +595,12 @@ msgstr "Ianuarie"
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
 msgid "Appraisal Interviews"
-msgstr ""
+msgstr "Interviuri de evaluare"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Date"
-msgstr "Dată"
+msgstr "Data"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -606,12 +615,12 @@ msgstr "Aceasta este aprecierea care rezuma evaluarea"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,action:0
 msgid "Action"
-msgstr "Acţiune"
+msgstr "Actiune"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
 msgid "Final Validation"
-msgstr "Validare finală"
+msgstr "Validare finala"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
@@ -623,17 +632,17 @@ msgstr "In asteptarea aprecierii"
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
 #: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
 msgid "Appraisal Analysis"
-msgstr ""
+msgstr "Analiza Evaluarilor"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date:0
 msgid "Appraisal Deadline"
-msgstr ""
+msgstr "Termen limita Evaluari"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,rating:0
 msgid "Overall Rating"
-msgstr "Rating(Evaluare) global(ă)"
+msgstr "Rating global"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,email_subject:0
@@ -653,7 +662,7 @@ msgstr "Statistica evaluari"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Deadline Date"
-msgstr "Data scadentei"
+msgstr "Data termenului limita"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/wizard/mail_compose_message.py:45
@@ -665,11 +674,16 @@ msgid ""
 "\n"
 " Thanks,"
 msgstr ""
+"Buna ziua %s, \n"
+"\n"
+" Va rugam sa afisati raspunsul dumneavoastra pentru '%s' sondaj interviu. \n"
+"\n"
+"Va multumim,"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Top-Down Appraisal Requests"
-msgstr "Cereri aprecieri de sus in jos"
+msgstr "Cereri de evaluare de sus in jos"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_evaluation_plans_installer
@@ -679,6 +693,10 @@ msgid ""
 "OpenERP can automatically generate interview requests to managers and/or "
 "subordinates."
 msgstr ""
+"Puteti defini planurile de evaluare (de ex. primele interviuri dupa 6 luni, "
+"chiar in fiecare an). Apoi, fiecare angajat poate fi legat de un plan de "
+"evaluare astfel incat OpenERP sa poata genera automat cereri pentru interviu "
+"directorilor si/sau subordonatilor."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -688,12 +706,12 @@ msgstr "General"
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_answer_employee:0
 msgid "Send all answers to the employee"
-msgstr "Trimite toate raspunsurile catre angajati"
+msgstr "Trimiteti toate raspunsurile angajatilor"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal Data"
-msgstr ""
+msgstr "Data Evaluarii"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
@@ -705,28 +723,28 @@ msgstr "Efectuat"
 #: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
 msgid "Appraisal Plans"
-msgstr ""
+msgstr "Planuri de evaluare"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
 msgid "Appraisal Interview"
-msgstr ""
+msgstr "Interviu evaluare"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Cancel"
-msgstr "Anulează"
+msgstr "Anulati"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/wizard/mail_compose_message.py:49
 #, python-format
 msgid "Reminder to fill up Survey"
-msgstr ""
+msgstr "Memento pentru completarea Sondajului"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
-msgstr "În desfasurare"
+msgstr "In curs de desfasurare"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -736,17 +754,17 @@ msgstr "De efectuat"
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Final Validation Evaluations"
-msgstr ""
+msgstr "Validare finala Evaluari"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_feature:0
 msgid "Send mail for this phase"
-msgstr "Trimite mail pentru aceasta etapă"
+msgstr "Trimiteti e-mail pentru aceasta etapa"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Late"
-msgstr "Târziu"
+msgstr "Tarziu"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -759,6 +777,8 @@ msgid ""
 "The date of the next appraisal is computed by the appraisal plan's dates "
 "(first appraisal + periodicity)."
 msgstr ""
+"Data urmatoarei evaluari este calculata de datele planului de evaluare "
+"(prima evaluare + periodicitate)."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
@@ -777,17 +797,17 @@ msgstr ""
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_next:0
 msgid "Periodicity of Appraisal (months)"
-msgstr ""
+msgstr "Periodicitatea Evaluarii (luni)"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Self Appraisal Requests"
-msgstr "Cereri de auto evaluare"
+msgstr "Cereri de Auto evaluare"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,survey_request_ids:0
 msgid "Appraisal Forms"
-msgstr "Formulare de apreciere (evaluare)"
+msgstr "Formulare de evaluare"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -807,12 +827,12 @@ msgstr "Interviul final"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,name:0
 msgid "Phase"
-msgstr "Etapă"
+msgstr "Etapa"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Bottom-Up Appraisal Requests"
-msgstr "Cereri de apreciere (evaluare) de jos in sus"
+msgstr "Cereri de evaluare de jos in sus"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:244
@@ -832,28 +852,28 @@ msgstr "Februarie"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Interview Appraisal"
-msgstr ""
+msgstr "Interviu Evaluare"
 
 #. module: hr_evaluation
 #: field:survey.request,is_evaluation:0
 msgid "Is Appraisal?"
-msgstr ""
+msgstr "Este Evaluare?"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:317
 #, python-format
 msgid "You cannot start evaluation without Appraisal."
-msgstr ""
+msgstr "Nu puteti incepe evaluarea fara Apreciere."
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Evaluation done in current month"
-msgstr ""
+msgstr "Evaluari efectuate in luna curenta"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
 msgid "Employee to Interview"
-msgstr "Angajat de intervievat"
+msgstr "Angajatul care va fi intervievat"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -863,27 +883,27 @@ msgstr "Aprilie"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Appraisal Plan Phases"
-msgstr ""
+msgstr "Etapele Planului de Apreciere"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Validate Appraisal"
-msgstr ""
+msgstr "Validati Aprecierea"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Search Appraisal"
-msgstr ""
+msgstr "Cautati Aprecierea"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
 msgid "Sequence"
-msgstr "Secvență"
+msgstr "Secventa"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(user_signature)s: User name"
-msgstr "(user_signature)s: Nume utilizator"
+msgstr "(semnatura_utilizator)s: Nume utilizator"
 
 #. module: hr_evaluation
 #: view:board.board:0
@@ -891,12 +911,12 @@ msgstr "(user_signature)s: Nume utilizator"
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
 msgid "Interview Requests"
-msgstr "Cereri interviu"
+msgstr "Cereri pentru interviu"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,create_date:0
 msgid "Create Date"
-msgstr "Creează data"
+msgstr "Data Crearii"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr.evaluation.report,year:0
@@ -906,12 +926,12 @@ msgstr "An"
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,note_summary:0
 msgid "Appraisal Summary"
-msgstr ""
+msgstr "Rezumat Apreciere"
 
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
-msgstr ""
+msgstr "Data Urmatoarei Aprecieri"
 
 #~ msgid "My Evaluation Remaining"
 #~ msgstr "Evaluarea mea ramasa"
@@ -1090,3 +1110,6 @@ msgstr ""
 
 #~ msgid "Evaluation"
 #~ msgstr "Evaluare"
+
+#~ msgid "E-mail composition wizard"
+#~ msgstr "Asistent compunere e-mail"

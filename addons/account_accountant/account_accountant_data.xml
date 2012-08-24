@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Rename root menu "Accounting" -->
+        <!-- Top menu item -->
+        <menuitem name="Accounting"
+            id="account.menu_finance"/>
+    </data>
 
-<!--
-        It's easier for new users to not activate this (ex: they misconfigure
-        header and footer.)
-
-        <record model="ir.actions.report.xml" id="account.account_invoices">
-            <field name="attachment_use">1</field>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_account_menu" model="ir.actions.client">
+            <field name="name">Open Accounting Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_finance')}"/>
         </record>
--->
+        <record id="todo_open_account_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_account_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
 
+        <!-- Notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Accounting and Finance has been installed.</value>
+            <value>With OpenERP's accounting, you can get an instant access to all your financial data, setup your analytic accounting, forecast your taxes, control your budgets, easily create and send invoices, record bank statements, etc.
+
+The accounting features are fully integrated with others OpenERP applications to automate all your processes: creation of customer invoices, control of supplier invoices, point-of-sale integration, automated follow-ups, etc.</value>
+        </function>
     </data>
 </openerp>
