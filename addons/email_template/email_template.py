@@ -315,7 +315,6 @@ class email_template(osv.osv):
                   'message_id': False,
                   'state': 'outgoing',
                   'content_subtype': 'plain',
-                  'partner_ids': [],
         }
         if not template_id:
             return values
@@ -329,13 +328,6 @@ class email_template(osv.osv):
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \
                                                  or False
-
-        # if email_to: find or create a partner
-        if values['email_to']:
-            partner_id = self.pool.get('mail.thread').message_partner_by_email(cr, uid, values['email_to'], context=context)['partner_id']
-            if not partner_id:
-                partner_id = self.pool.get('res.partner').name_create(cr, uid, values['email_to'], context=context)
-            values['partner_ids'] = [partner_id]
 
         if values['body_html']:
             values.update(content_subtype='html')
