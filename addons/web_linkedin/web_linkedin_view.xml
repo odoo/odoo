@@ -23,24 +23,22 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <div>
-                        <p>
-                            To use the LinkedIn module with this database, an API Key is required. Please follow this procedure:
-                        </p>
-                        <ul>
-                            <li>Go to this URL: 
-                                <a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a>.
-                            </li>
-                            <li>Log into LinkedIn.</li>
-                            <li>Add a new application and fill the form:
-                                <ul>
-                                    <li>JavaScript API Domain: the domain of the url used to log into this database (example: http://localhost:8069)</li>
-                                    <li>The programming tool is Javascript</li>
-                                </ul>
-                            </li>
-                            <li>Copy the API key down here:</li>
-                        </ul>
-                    </div>
+                    <p>
+                        To use the LinkedIn module with this database, an API Key is required. Please follow this procedure:
+                    </p>
+                    <ul>
+                        <li>Go to this URL: 
+                            <a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a>.
+                        </li>
+                        <li>Log into LinkedIn.</li>
+                        <li>Add a new application and fill the form:
+                            <ul>
+                                <li>JavaScript API Domain: <field name="server_domain" readonly="1" style="width:0"/></li>
+                                <li>The programming tool is Javascript</li>
+                            </ul>
+                        </li>
+                        <li>Copy the API key down here:</li>
+                    </ul>
                     <group>
                         <field name="api_key"/>
                     </group>
