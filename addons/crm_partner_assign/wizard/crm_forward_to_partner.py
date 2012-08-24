@@ -25,7 +25,7 @@ import time
 import tools
 
 from osv import osv, fields
-from tools.translate import _, 
+from tools.translate import _
 
 class crm_lead_forward_to_partner(osv.osv_memory):
     """Forwards lead history"""
