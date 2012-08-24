@@ -44,7 +44,7 @@ class account_config_settings(osv.osv_memory):
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
             string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the OpenERP portal."),
         'company_footer': fields.related('company_id', 'rml_footer', type='text', readonly=True,
-            string='Bank accounts on reports will display as followed', help="Bank accounts as printed in the footer of each customer  document. This is for information purpose only, you should configure these bank accounts through the above button \"Configure Bank Accounts\"."),
+            string='Bank accounts on reports will displayed as followed', help="Bank accounts as printed in the footer of each customer's document. This is for information purpose only, you should configure these bank accounts through the above button \"Configure Bank Accounts\"."),
 
         'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Template', domain="[('visible','=', True)]"),
