@@ -437,7 +437,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = inputs.LAI.amount</field>
+            <field name="amount_python_compute">result = - (inputs.LAI.amount)</field>
             <field name="register_id" ref="hr_leave_availed_register"/>
             <field name="sequence" eval="180"/>
         </record>
@@ -503,43 +503,43 @@ Now difference of income tax between payment year and actual year would be allow
 
         <record id="hr_rule_input_arrears" model="hr.rule.input">
             <field name="code">ARS</field>
-            <field name="name">Arrears Input</field>
+            <field name="name">Arrears</field>
             <field name="input_id" ref="hr_salary_rule_arrears"/>
         </record>
 
         <record id="hr_rule_input_le" model="hr.rule.input">
             <field name="code">LE</field>
-            <field name="name">Leave Encashment Input</field>
+            <field name="name">Leave Encashment</field>
             <field name="input_id" ref="hr_salary_rule_le"/>
         </record>
 
         <record id="hr_rule_input_journals" model="hr.rule.input">
             <field name="code">PJ</field>
-            <field name="name">Periodical Journals Input</field>
+            <field name="name">Periodical Journals</field>
             <field name="input_id" ref="hr_salary_rule_journals"/>
         </record>
 
         <record id="hr_rule_input_telephone" model="hr.rule.input">
             <field name="code">TR</field>
-            <field name="name">Telephone Reimbursement Input</field>
+            <field name="name">Telephone Reimbursement</field>
             <field name="input_id" ref="hr_salary_rule_telephone"/>
         </record>
 
         <record id="hr_rule_input_car" model="hr.rule.input">
             <field name="code">CEI</field>
-            <field name="name">Car Expenses Input</field>
+            <field name="name">Car Expenses</field>
             <field name="input_id" ref="hr_payroll_rule_car"/>
         </record>
 
         <record id="hr_rule_input_internet" model="hr.rule.input">
             <field name="code">IE</field>
-            <field name="name">Internet Expence Input</field>
+            <field name="name">Internet Expence</field>
             <field name="input_id" ref="hr_salary_rule_internet"/>
         </record>
 
         <record id="hr_rule_input_leave_avail" model="hr.rule.input">
             <field name="code">LAI</field>
-            <field name="name">Leave Availed Input</field>
+            <field name="name">Leave Availed</field>
             <field name="input_id" ref="hr_payslip_rule_dla"/>
         </record>
     </data>
