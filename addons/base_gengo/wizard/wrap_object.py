@@ -19,10 +19,9 @@
 #
 ##############################################################################
 
-from osv import orm, osv
-from tools.translate import _
+from osv import orm
+import tools
 from mygengo import MyGengo
-import re
 
 LIMIT = 20
 
@@ -57,12 +56,13 @@ LANG_CODE_MAPPING = {
     'sv_SE': 'sv',
     'ko_KR': 'ko',
     'pt_PT': 'pt',
-    'en': 'en',
+    'en_US': 'en',
     'ja_JP': 'ja',
     'es_ES': 'es',
     'zh_CN': 'zh',
     'de_DE': 'de',
     'fr_FR': 'fr',
+    'fr_BE': 'fr',
     'ru_RU': 'ru',
     'it_IT': 'it',
     'pt_BR': 'pt-br'
@@ -105,44 +105,63 @@ class JobsMeta(orm.AbstractModel):
 
     _name = "jobs.meta"
 
-    def gengo_authentication(self, cr, uid, ids, context=None):
+    def gengo_authentication(self, cr, uid, context=None):
         ''' To Send Request and Get Response from Gengo User needs Public and Private
          key for that user need to signup to gengo and get public and private
          key which is provided by gengo to authentic user '''
 
-        gengo_parameter_pool = self.pool.get('res.users').browse(cr, uid, uid, context)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
+            return (False, "Invalid gengo configuration.\nEither pulic key or private key is missing.")
         try:
             gengo = MyGengo(
-                public_key=gengo_parameter_pool.company_id.gengo_public_key.encode('ascii'),
-                private_key=gengo_parameter_pool.company_id.gengo_private_key.encode('ascii'),
+                public_key=user.company_id.gengo_public_key.encode('ascii'),
+                private_key=user.company_id.gengo_private_key.encode('ascii'),
                 sandbox=True,
-            )   
-            return gengo
+            )
+            gengo.getAccountStats()
+            return (True, gengo)
         except Exception, e:
-            raise osv.except_osv(_('Warning !'), _(e))
+            return (False, "Gengo Connection Error\n"+e.message)
 
-    def pack_jobs_request(self, cr, uid, term_ids, trg_lang, context):
+    def pack_jobs_request(self, cr, uid, term_ids, context):
         jobs = {}
         auto_approve = 0
         gengo_parameter_pool = self.pool.get('res.users').browse(cr, uid, uid, context)
         translation_pool = self.pool.get('ir.translation')
         if gengo_parameter_pool.company_id.gengo_auto_approve:
             auto_approve = 1
-        g_lang = LANG_CODE_MAPPING.get(trg_lang)
-        if g_lang:
-            for terms in translation_pool.browse(cr, uid, term_ids, context):
-                #NOTE: Discard none string and only special char string 
-                if re.search(r"[a-z A-Z]", terms.src) and terms.src:
-                    job = {'type': 'text',
-                            'slug': 'single::English to' + LANG_MAPPING.get(g_lang),
-                            'tier': gengo_parameter_pool.company_id.gengo_tier,
-                            'body_src': terms.src,
-                            'lc_src': 'en',
-                            'lc_tgt': g_lang,
-                            'auto_approve': auto_approve,
-                            'comment': gengo_parameter_pool.company_id.gengo_comment,
-                            }
-                    jobs.update({terms.id: job})
+        for term in translation_pool.browse(cr, uid, term_ids, context):
+            if term.src and term.src != "":
+                job = {'type': 'text',
+                        'slug': 'single::English to' + LANG_CODE_MAPPING[term.lang],
+                        'tier': tools.ustr(gengo_parameter_pool.company_id.gengo_tier),
+                        'body_src': term.src,
+                        'lc_src': 'en',
+                        'lc_tgt': LANG_CODE_MAPPING[term.lang],
+                        'auto_approve': auto_approve,
+                        'comment': gengo_parameter_pool.company_id.gengo_comment,
+                }
+                jobs.update({term.id: job})
         return {'jobs': jobs}
 
+    def check_lang_support(self, cr, uid, langs, context=None):
+        new_langs = []
+        flag, gengo = self.gengo_authentication(cr, uid, context)
+        if not flag:
+            return []
+        else:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            tier = user.company_id.gengo_tier
+            if tier == "machine":
+                tier = "nonprofit"
+
+            lang_pair = gengo.getServiceLanguagePairs(lc_src='en')
+            if lang_pair['opstat'] == 'ok':
+                for g_lang in lang_pair['response']:
+                    for l in langs:
+                        if LANG_CODE_MAPPING[l] == g_lang['lc_tgt'] and g_lang['tier'] == tier:
+                            new_langs.append(l)
+            return list(set(new_langs))
+JobsMeta()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
