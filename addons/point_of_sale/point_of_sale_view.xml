@@ -900,9 +900,8 @@
                             <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
                         </h1>
                         <group>
-                            <field name="has_opening_control" invisible="0" widget="integer" />
-                            <field name="has_closing_control" invisible="0" widget="integer" />
-                            <!-- <field name="state" widget="char"/> -->
+                            <field name="has_opening_control" invisible="1" />
+                            <field name="has_closing_control" invisible="1" />
                             <group>
                                 <field name="user_id"/>
                                 <field name="config_id" attrs="{'invisible' : [('config_id', '&lt;&gt;', False)]}"/>
