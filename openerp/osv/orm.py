@@ -3723,7 +3723,7 @@ class BaseModel(object):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        result_store = self._store_get_values(cr, uid, ids, None, context)
+        result_store = self._store_get_values(cr, uid, ids, self._all_columns.keys(), context)
 
         self._check_concurrency(cr, ids, context)
 
@@ -4285,9 +4285,9 @@ class BaseModel(object):
         model_name_, func_field_to_compute_, id_mapping_fnct_, trigger_fields_, priority_ = range(5)
 
         # only keep functions that should be triggered for the ``fields``
-        # being written to (or all if fields is empty)
+        # being written to.
         to_compute = [f for f in stored_functions \
-                if ((not f[trigger_fields_]) or (not fields) or set(fields).intersection(f[trigger_fields_]))]
+                if ((not f[trigger_fields_]) or set(fields).intersection(f[trigger_fields_]))]
 
         mapping = {}
         for function in to_compute:
