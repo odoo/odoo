@@ -128,7 +128,6 @@ class stock_partial_picking(osv.osv_memory):
         stock_picking = self.pool.get('stock.picking')
         stock_move = self.pool.get('stock.move')
         uom_obj = self.pool.get('product.uom')
-        precision_obj = self.pool.get('decimal.precision')
         partial = self.browse(cr, uid, ids[0], context=context)
         partial_data = {
             'delivery_date' : partial.date
@@ -146,7 +145,7 @@ class stock_partial_picking(osv.osv_memory):
             qty_in_line_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, line_uom.id)
 
             if line_uom.factor and line_uom.factor <> 0:
-                if float_compare(qty_in_line_uom, wizard_line.quantity, precision_digits=precision_obj.precision_get(cr, uid, 'Product UoM')) != 0:
+                if float_compare(qty_in_line_uom, wizard_line.quantity, precision_rounding=line_uom.rounding) != 0:
                     raise osv.except_osv(_('Warning'), _('The uom rounding does not allow you to ship "%s %s", only roundings of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
             if move_id:
                 #Check rounding Quantity.ex.
@@ -157,7 +156,7 @@ class stock_partial_picking(osv.osv_memory):
                 #Compute the quantity for respective wizard_line in the initial uom
                 qty_in_initial_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, initial_uom.id)
                 without_rounding_qty = (wizard_line.quantity / line_uom.factor) * initial_uom.factor
-                if float_compare(qty_in_initial_uom, without_rounding_qty, precision_digits=precision_obj.precision_get(cr, uid, 'Product UoM')) != 0:
+                if float_compare(qty_in_initial_uom, without_rounding_qty, precision_rounding=initial_uom.rounding) != 0:
                     raise osv.except_osv(_('Warning'), _('The rounding of the initial uom does not allow you to ship "%s %s", as it would let a quantity of "%s %s" to ship and only roundings of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, wizard_line.move_id.product_qty - without_rounding_qty, initial_uom.name, initial_uom.rounding, initial_uom.name))
             else:
                 seq_obj_name =  'stock.picking.' + picking_type
