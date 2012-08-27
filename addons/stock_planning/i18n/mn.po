@@ -8,21 +8,21 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-01-13 07:33+0000\n"
-"Last-Translator: badralb <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:48+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:01+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:32+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
 #, python-format
 msgid ""
 "No forecasts for selected period or no products in selected category !"
-msgstr "Сонгосон ангилалд хамрагдах бараа бүтээгдэхүүн алга !"
+msgstr "Сонгосон ангилалд хамрагдах бараа алга !"
 
 #. module: stock_planning
 #: help:stock.planning,stock_only:0
@@ -168,6 +168,9 @@ msgid ""
 "are independent of financial periods. If you need periods other than day-, "
 "week- or month-based, you may also add then manually."
 msgstr ""
+"Энэ харилцах цонх нь нөөцийн төлөвлөлтийн мөчлөг тодорхойлоход тусалдаг. "
+"Эдгээр мөчлөг нь санхүүгийн мөчлөгтэй хамааралгүй. Хэрэв өдөр, долооног, сар "
+"гэснээс өөр мөчлөг хэрэглэмээр байвал гараараа нэмж болно."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -193,6 +196,7 @@ msgstr "Борлуулалт төлөвлөгдсөн бараа"
 #: help:stock.planning,maximum_op:0
 msgid "Maximum quantity set in Minimum Stock Rules for this Warehouse"
 msgstr ""
+"Энэ агуулахын хувьд хамгийн бага нөөцийн дүрэм дахь хамгийн их тоо хэмжээ"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -205,6 +209,8 @@ msgid ""
 "Check to make procurement to stock location of selected warehouse. If not "
 "selected procurement will be made into input location of warehouse."
 msgstr ""
+"Сонгосон агуулахын татан авалт үүсгэх барааны байрлалыг сонго. Хэрэв "
+"сонгогдоогүй байвал татан авалт нь агуулахын орох байрлалд хийгдэнэ."
 
 #. module: stock_planning
 #: help:stock.planning,already_in:0
@@ -407,6 +413,22 @@ msgid ""
 "  \n"
 " Stock Simulation: %s    Minimum stock: %s"
 msgstr ""
+" МТТ-р үүсгэгдсэн татан авалтын зориулагдсан хэрэглэгч: %s   Creation Date: "
+"%s                                         \n"
+" Мөчлөг: %s                                         \n"
+" Төлөв:                                         \n"
+" Урьдчилсан таамагийн агуулах: %s                                         \n"
+" Анхны нөөц: %s                                         \n"
+" Гарахаар төлөвлөгдсөн: %s    Planned In: %s                                 "
+"        \n"
+" Гарсан: %s    Already In: %s                                         \n"
+" Гарахаар батлагдсан: %s    Confirmed In: %s                                 "
+"        \n"
+" Хугацаанаас өмнө гарахаар төлөвлөгдсөн: %s    Хугацаанаас өмнө гарахаар "
+"батлагдсан: %s                                         \n"
+" Гарахаар таамаглагдсан: %s    Ирж байгаа: %s                                "
+"         \n"
+" Нөөцийн симуляци: %s    Хамгийн бага нөөц: %s"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:626
@@ -453,7 +475,7 @@ msgstr "Тухайн мөчлөг эхлэх үеийн тухайн агуул�
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Procurement history"
-msgstr ""
+msgstr "Татан авалтын түүх"
 
 #. module: stock_planning
 #: help:stock.planning,product_uom:0
@@ -461,6 +483,9 @@ msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units from default category or from second category (UoS category)."
 msgstr ""
+"Нөөцийн тооцооллын тоо хэмжээг харуулахад хэрэглэгдэх хэмжих нэгж. Анхны "
+"ангилалаас хэмжих нэгжийг хэрэглэж болно эсвэл хоёрдогч ангилалаас (барааны "
+"борлуулалтын нэгж) хэрэглэж болно."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -474,6 +499,9 @@ msgid ""
 "account periods. You can use wizard for creating periods and review them "
 "here."
 msgstr ""
+"Нөөцийн мөчлөгүүд нь нөөцийн төлөвлөлтөд хэрэглэгддэг. Нөөцийн мөчлөгүүд нь "
+"санхүүгийн мөчлөгтэй хамааралгүй. Энэ харилцах цонхоор мөчлөгүүдийг үүсгэж "
+"шалгаж болно."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -503,7 +531,7 @@ msgstr "Компаны борлуулалтын төлөвлөгөө"
 #. module: stock_planning
 #: help:stock.planning,minimum_op:0
 msgid "Minimum quantity set in Minimum Stock Rules for this Warehouse"
-msgstr ""
+msgstr "Энэ агуулахын Хамгийн бага нөөцийн дүрэмийн хамгийн бага тоо хэмжээ"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -537,7 +565,7 @@ msgstr "Та төлөвлөж буй агуулахаас өөр хангамж�
 #: code:addons/stock_planning/stock_planning.py:146
 #, python-format
 msgid "Cannot delete a validated sales forecast!"
-msgstr ""
+msgstr "Шалгагдсан борлуулалтын урьдчилсан таамагийг устгах боломжгүй!"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
@@ -552,7 +580,7 @@ msgstr "Хэмжих нэгж"
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
 msgid "This Company Period1"
-msgstr ""
+msgstr "Энэ компанийн Мөчлөг1"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
@@ -597,7 +625,7 @@ msgstr "Төлөвлөсөн зарлага"
 #. module: stock_planning
 #: field:stock.sale.forecast,product_qty:0
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Урьдчилсан таамагийн тоо хэмжээ"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -628,6 +656,9 @@ msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units form default category or from second category (UoS category)."
 msgstr ""
+"Нөөцийн тооцооллын тоо хэмжээг харуулахад хэрэглэгддэг хэмжих нэгж. Анхны "
+"ангилалын нэгжийг ашиглаж болно эсвэл хоёрдогч ангилалын (борлуулалтын "
+"хэмжих нэгж) хэмжих нэгжийг хэрэглэж болно."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -649,7 +680,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Current Periods"
-msgstr ""
+msgstr "Идэвхтэй Мөчлөгүүд"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -660,7 +691,7 @@ msgstr "Дотоод түгээлт"
 #: code:addons/stock_planning/stock_planning.py:724
 #, python-format
 msgid "%s Pick List %s (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s Бэлтгэх жагсаалт %s (%s,  %s) %s %s \n"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
@@ -701,6 +732,9 @@ msgid ""
 "warehouse, so you don't have to create them one by one. The wizard doesn't "
 "duplicate lines if they already exist for this selection."
 msgstr ""
+"Энэ харилцах цонх нь сонгосон агуулах болон мөчлөгийн МТТ төлөвлөлтийн "
+"мөрүүдийг үүсгэхэд тусладаг. Ингэснээр эдгээрийг нэг нэгээр нь үүсгэх "
+"хэрэггүй. Энэ харилцах цонх нь хэрэв мөр байж байвал давхардуулж үүсгэдэггүй."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
@@ -731,7 +765,7 @@ msgstr "Компани Мөчлөг1"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
-msgid "Sales history"
+msgid "Sales History"
 msgstr "Борлуулалтын түүх"
 
 #. module: stock_planning
@@ -742,7 +776,7 @@ msgstr "Хангамжын агуулах"
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
 msgid "Forecast Product quantity."
-msgstr ""
+msgstr "Барааны тоо хэмжээний урьдчилсан таамаг."
 
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
@@ -769,7 +803,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:702
 #, python-format
 msgid "MPS(%s) %s"
-msgstr ""
+msgstr "MPS(%s) %s"
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
@@ -791,6 +825,10 @@ msgid ""
 "manual procurement with this forecast when some periods are exceptional for "
 "usual minimum stock rules."
 msgstr ""
+"Борлуулалтын урьдчилсан таамагийн тоо хэмжээ нь нөөц төлөвлөгчийг гараар "
+"эсвэл автоматаар татан авалт хийх үзүүлэлт болдог. Зарим мөчлөгийн хувьд "
+"хамгийн бага нөөцийн дүрмийн сондгойрол үүссэн тохиолдолд гар татан авалтыг "
+"ашиглаж болно."
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_view_stock_planning_form
@@ -806,6 +844,15 @@ msgid ""
 "can trigger the procurement of what is missing to reach your desired "
 "quantities"
 msgstr ""
+"Мастер Татан авалтын Тов (МТТ) нь агуулахын нөхөн дүүргэлтийн үндсэн "
+"жолоодогч нь байдаг, түүнчлэн үйлдвэрлэлийн товлолтын гүйцэлдүүлэгч байдаг "
+"(хамгийн бага нөөцийн дүрэм гэх мэт)\n"
+"МТТ-н мөр бүр нь өгөгдсөн агуулах дээр өгөгдсөн нөөцийн орох гарах тоо "
+"хэмжээний тоймыг өгдөг. Үүнийг өгөхдөө одоогийн болон ирээдүйн үлдэгдэл, "
+"нөөцийн төлөвлөгдсөн хөдөлгөөн зэрэгийг тооцдог. Урьдчилсан таамагийн тоо "
+"хэмжээг гараараа өөрчилөх боломжтой бөгөөд өөрийн сонирхолд нийцсэн нөөцийн "
+"тоо хэмжээг оруулсан дараагаараа шаардлагатай хэмжээнд хүрэхэд шаардлагатай "
+"татан авалтуудыг үүсгэх боломжтой."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:685
@@ -824,6 +871,21 @@ msgid ""
 " Expected Out: %s   Incoming Left: %s                                     \n"
 " Stock Simulation: %s   Minimum stock: %s "
 msgstr ""
+"МТТ-с бэлтгэлт үүсгэсэн хэрэглэгч: %s   Үүсгэсэн огноо: %s                   "
+"                  \n"
+"Мөчлөг: %s   Төлөв:                                     \n"
+" Урьдчилсан таамагийн агуулах: %s                                     \n"
+" Анхны Нөөц: %s                                     \n"
+" Гарахаар төлөвлөгдсөн: %s  Орохоор төлөвлөгдсөн: %s                         "
+"            \n"
+" Гарчихсан: %s  Орчихсон: %s                                     \n"
+" Гарахаар батлагдсан: %s   Орохоор батлагдсан: %s                            "
+"         \n"
+" Энэ хугацаанаас өмнө гарахаар төлөвлөгдсөн: %s   Энэ хугацаанаас өмнө "
+"гарахаар батлагдсан: %s                                     \n"
+" Гарахаар таамаглагдсан: %s   Ороогүй үйлдэгдэл: %s                          "
+"           \n"
+" Нөөцийн симуляци: %s   Хамгийн бага нөөц: %s "
 
 #. module: stock_planning
 #: field:stock.planning,period_id:0
@@ -857,7 +919,7 @@ msgstr "Өмнөх төлөвлөгөөг хуулбарлах"
 #. module: stock_planning
 #: help:stock.sale.forecast,product_id:0
 msgid "Shows which product this forecast concerns."
-msgstr "Борлуулахаар төлөвлөж буй бараа бүтээгдэхүүн."
+msgstr "Энэ урьдчилсан таамагийн барааг харуулна."
 
 #. module: stock_planning
 #: selection:stock.planning,state:0
@@ -872,7 +934,7 @@ msgstr "Мөчлөгүүд"
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
 msgid "Create Stock Periods"
-msgstr ""
+msgstr "Нөөцийн Мөчлөгүүдийг Үүсгэх"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -941,6 +1003,10 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warehouse' with Supply Warehouse."
 msgstr ""
+"Нийлүүлэлтийн агуулахын хадгалах байрлалаас нийлүүлэхийн тулд тэмдэглэнэ. "
+"Хэрэв тэмдэглэгдээгүй байвал нийлүүлэлт нь нийлүүлэлтийн агуулахын гарах "
+"байрлалаас нийлүүлэгдэнэ. Нийлүүлэх агуулахтай 'Өөр агуулахаас нийлүүлэх' "
+"тохиолдолд хэрэглэгддэг."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
@@ -973,6 +1039,8 @@ msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warehouse'."
 msgstr ""
+"Нийлүүлэх бэлтгэл нь 'Өөр агуулахаас нийлүүлэх'-р үүсгэгдэхэд агуулах нь эх "
+"агуулах болж хэрэглэгдэнэ."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
@@ -992,7 +1060,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:661
 #, python-format
 msgid "%s Procurement (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s Татан авалт (%s,  %s) %s %s \n"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
@@ -1028,7 +1096,7 @@ msgstr "Зарлагад гаргасан"
 #. module: stock_planning
 #: help:stock.planning,product_id:0
 msgid "Product which this planning is created for."
-msgstr "Татан авалт төлөвлөж буй бараа бүтээгдэхүүн."
+msgstr "Энэ төлөвлөгөөний бараа."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1053,7 +1121,7 @@ msgstr "Мөчлөг үүсгэх хугацааны эхлэл"
 #: view:stock.period:0
 #: view:stock.period.createlines:0
 msgid "Stock Periods"
-msgstr ""
+msgstr "Нөөцийн мөчлөгүүд"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1096,7 +1164,7 @@ msgstr "Хэмжих нэгж"
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed Periods"
-msgstr ""
+msgstr "Хаагдсан Мөчлөгүүд"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1146,7 +1214,7 @@ msgstr "Нөөцийн мөчлөг. Төлөвлөгөөт захиалгууд
 #: code:addons/stock_planning/stock_planning.py:631
 #, python-format
 msgid "MPS planning for %s"
-msgstr ""
+msgstr "МТТ төлөвлөлт хийгдэх %s"
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
@@ -1185,7 +1253,7 @@ msgstr "Төлөвлөгөө үүсгэсэн болон батласан этг
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_team_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Борлуулалтын баг"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_left:0
@@ -1205,6 +1273,9 @@ msgid ""
 "difference between Planned Out and Confirmed Out. For current period Already "
 "Out is also calculated"
 msgstr ""
+"Сонгосон мөчлөг дахь гарахаар батлагдснаас бусад гарахаар таамаглагдаж "
+"байгаа тоо хэмжээ. Гарахаар төлөвлөгдсөн болон гараар батлагдсаны ялгавар. "
+"Идэвхтэй мөчлөг дахь гарчихсан тоо хэмжээ мөн тооцогдоно."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1218,6 +1289,10 @@ msgid ""
 "you only have to fill in the forecast quantities. The wizard doesn't "
 "duplicate the line when another one exist for the same selection."
 msgstr ""
+"Энэ харилцах цонх нь урьдчилсан таамагийн олон мөрийг нэгэн зэрэг үүсгэдэг. "
+"Эдгээрийг үүсгэсэн дараагаараа зөвхөн урьдчилсан таамагийн тоо хэмжээг л "
+"оруулах ажил үлдэнэ. Энэ харилцах цонх нь байгаа мөрийг давхардуулж "
+"үүсгэдэггүй."
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
@@ -1824,6 +1899,9 @@ msgstr ""
 #, python-format
 #~ msgid "    Confirmed In: "
 #~ msgstr "    Орлогод авсан: "
+
+#~ msgid "Sales history"
+#~ msgstr "Борлуулалтын түүх"
 
 #~ msgid "Forecasted quantity."
 #~ msgstr "Борлуулахаар төлөвлөж буй тоо хэмжээ."

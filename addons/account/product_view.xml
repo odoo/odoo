@@ -4,24 +4,20 @@
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Accounting">
-                    <group name="properties">
-                        <separator string="Sales Properties" colspan="2"/>
-                        <separator string="Purchase Properties" colspan="2"/>
-                        <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                        <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
-					</group>
-					<newline/>
-					<group colspan="2">
-                        <separator string="Sale Taxes" colspan="2"/>
-                        <separator string="Purchase Taxes" colspan="2"/>
-                        <field name="taxes_id" nolabel="1" colspan="2" attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                        <field name="supplier_taxes_id" nolabel="1" colspan="2" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
-                    </group>
+                    <page string="Accounting" groups="base.group_user">
+                        <group name="properties">
+                            <group>
+                                <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}"/>
+                                <field name="taxes_id" colspan="2" attrs="{'readonly':[('sale_ok','=',0)]}" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
+                                <field name="supplier_taxes_id" colspan="2" attrs="{'readonly':[('purchase_ok','=',0)]}" widget="many2many_tags"/>
+                            </group>
+                        </group>
                     </page>
                 </notebook>
             </field>
@@ -30,7 +26,6 @@
         <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.product.form.inherit</field>
             <field name="model">product.template</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
@@ -51,16 +46,14 @@
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.property.form.inherit</field>
             <field name="model">product.category</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
-                <form position="inside">
-                    <group col="2" colspan="2">
-                        <separator string="Accounting Properties" colspan="2"/>
+                <data>
+                    <xpath expr="/form/sheet//group[@name='account_property']" position="inside">
                         <field name="property_account_income_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_account_expense_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                    </group>
-                </form>
+                    </xpath>
+                </data>
             </field>
         </record>
 

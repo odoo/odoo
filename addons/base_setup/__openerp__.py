@@ -24,7 +24,6 @@
     'name': 'Initial Setup Tools',
     'version': '1.0',
     'category': 'Hidden',
-    'complexity': "easy",
     'description': """
 This module helps to configure the system at the installation of a new database.
 ================================================================================
@@ -34,13 +33,19 @@ Shows you a list of applications features to install from.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'base_setup_views.xml' ],
-    'demo_xml': [],
+    'depends': ['base', 'web_kanban'],
+    'data': [
+        'security/ir.model.access.csv',
+        'base_setup_views.xml',
+        'res_config_view.xml',
+        'res_partner_view.xml',
+    ],
+    'demo': [],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'certificate': '0086711085869',
     'images': ['images/base_setup1.jpeg','images/base_setup2.jpeg','images/base_setup3.jpeg','images/base_setup4.jpeg',],
+    'js': ['static/src/js/base_setup.js'],
+    'css': ['static/src/css/base_setup.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

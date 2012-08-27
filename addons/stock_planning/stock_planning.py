@@ -29,7 +29,7 @@ from tools.translate import _
 import logging
 import decimal_precision as dp
 
-_logger = logging.getLogger('mps') 
+_logger = logging.getLogger(__name__)
 
 
 def rounding(fl, round_value):
@@ -47,16 +47,16 @@ class stock_period(osv.osv):
         'name': fields.char('Period Name', size=64, required=True),
         'date_start': fields.datetime('Start Date', required=True),
         'date_stop': fields.datetime('End Date', required=True),
-        'state': fields.selection([('draft','Draft'), ('open','Open'),('close','Close')], 'State'),
+        'state': fields.selection([('draft','Draft'), ('open','Open'),('close','Close')], 'Status'),
     }
     _defaults = {
         'state': 'draft'
     }
-    
+
     def button_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'open'})
         return True
-    
+
     def button_close(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'close'})
         return True
@@ -81,18 +81,18 @@ class stock_sale_forecast(osv.osv):
                                         help = 'Shows which period this forecast concerns.'),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, required=True, states={'draft':[('readonly',False)]}, \
                                         help = 'Shows which product this forecast concerns.'),
-        'product_qty': fields.float('Forecast Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, readonly=True, \
+        'product_qty': fields.float('Forecast Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, readonly=True, \
                                         states={'draft':[('readonly',False)]}, help= 'Forecast Product quantity.'),
         'product_amt': fields.float('Product Amount', readonly=True, states={'draft':[('readonly',False)]}, \
                                         help='Forecast value which will be converted to Product Quantity according to prices.'),
-        'product_uom_categ': fields.many2one('product.uom.categ', 'Product UoM Category'),  # Invisible field for product_uom domain
-        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
+        'product_uom_categ': fields.many2one('product.uom.categ', 'Product Unit of Measure Category'),  # Invisible field for product_uom domain
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
                         help = "Unit of Measure used to show the quantities of stock calculation." \
                         "You can use units form default category or from second category (UoS category)."),
         'product_uos_categ' : fields.many2one('product.uom.categ', 'Product UoS Category'), # Invisible field for product_uos domain
 # Field used in onchange_uom to check what uom was before change and recalculate quantities according to old uom (active_uom) and new uom.
-        'active_uom': fields.many2one('product.uom',  string = "Active UoM"),
-        'state': fields.selection([('draft','Draft'),('validated','Validated')],'State',readonly=True),
+        'active_uom': fields.many2one('product.uom',  string = "Active Unit of Measure"),
+        'state': fields.selection([('draft','Draft'),('validated','Validated')],'Status',readonly=True),
         'analyzed_period1_id': fields.many2one('stock.period', 'Period1', readonly=True, states={'draft':[('readonly',False)]},),
         'analyzed_period2_id': fields.many2one('stock.period', 'Period2', readonly=True, states={'draft':[('readonly',False)]},),
         'analyzed_period3_id': fields.many2one('stock.period', 'Period3', readonly=True, states={'draft':[('readonly',False)]},),
@@ -143,7 +143,7 @@ class stock_sale_forecast(osv.osv):
             if t['state'] in ('draft'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a validated sales forecast!'))
+                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a validated sales forecast.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -172,7 +172,7 @@ class stock_sale_forecast(osv.osv):
         res = {'value': ret}
         return res
 
-    def onchange_uom(self, cr, uid, ids, product_uom=False, product_qty=0.0, 
+    def onchange_uom(self, cr, uid, ids, product_uom=False, product_qty=0.0,
                      active_uom=False, product_id=False):
         ret = {}
         if product_uom and product_id:
@@ -430,7 +430,7 @@ class stock_planning(osv.osv):
             result['warehouse_id'] = False
         return {'value': result}
 
-    def onchange_uom(self, cr, uid, ids, product_uom=False, product_id=False, active_uom=False, 
+    def onchange_uom(self, cr, uid, ids, product_uom=False, product_id=False, active_uom=False,
                      planned_outgoing=0.0, to_procure=0.0):
         ret = {}
         if not product_uom:
@@ -447,17 +447,17 @@ class stock_planning(osv.osv):
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required = True),
         'history': fields.text('Procurement History', readonly=True, help = "History of procurement or internal supply of this planning line."),
-        'state' : fields.selection([('draft','Draft'),('done','Done')],'State',readonly=True),
+        'state' : fields.selection([('draft','Draft'),('done','Done')],'Status',readonly=True),
         'period_id': fields.many2one('stock.period' , 'Period', required=True, \
                 help = 'Period for this planning. Requisition will be created for beginning of the period.', select=True),
         'warehouse_id': fields.many2one('stock.warehouse','Warehouse', required=True),
         'product_id': fields.many2one('product.product' , 'Product', required=True, help = 'Product which this planning is created for.'),
-        'product_uom_categ' : fields.many2one('product.uom.categ', 'Product UoM Category'), # Invisible field for product_uom domain
-        'product_uom': fields.many2one('product.uom', 'UoM', required=True, help = "Unit of Measure used to show the quantities of stock calculation." \
+        'product_uom_categ' : fields.many2one('product.uom.categ', 'Product Unit of Measure Category'), # Invisible field for product_uom domain
+        'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, help = "Unit of Measure used to show the quantities of stock calculation." \
                         "You can use units from default category or from second category (UoS category)."),
-        'product_uos_categ': fields.many2one('product.uom.categ', 'Product UoM Category'), # Invisible field for product_uos domain
+        'product_uos_categ': fields.many2one('product.uom.categ', 'Product Unit of Measure Category'), # Invisible field for product_uos domain
 # Field used in onchange_uom to check what uom was before change to recalculate quantities according to old uom (active_uom) and new uom.
-        'active_uom': fields.many2one('product.uom',  string = "Active UoM"), #  It works only in Forecast
+        'active_uom': fields.many2one('product.uom',  string = "Active Unit of Measure"), #  It works only in Forecast
         'planned_outgoing': fields.float('Planned Out', required=True,  \
                 help = 'Enter planned outgoing quantity from selected Warehouse during the selected Period of selected Product. '\
                         'To plan this value look at Confirmed Out or Sales Forecasts. This value should be equal or greater than Confirmed Out.'),
@@ -623,7 +623,7 @@ class stock_planning(osv.osv):
     def procure_incomming_left(self, cr, uid, ids, context, *args):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.incoming_left <= 0:
-                raise osv.except_osv(_('Error !'), _('Incoming Left must be greater than 0 !'))
+                raise osv.except_osv(_('Error!'), _('Incoming Left must be greater than 0.'))
             uom_qty, uom, uos_qty, uos = self._qty_to_standard(cr, uid, obj, context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             proc_id = self.pool.get('procurement.order').create(cr, uid, {
@@ -667,11 +667,11 @@ class stock_planning(osv.osv):
     def internal_supply(self, cr, uid, ids, context, *args):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.incoming_left <= 0:
-                raise osv.except_osv(_('Error !'), _('Incoming Left must be greater than 0 !'))
+                raise osv.except_osv(_('Error!'), _('Incoming Left must be greater than 0.'))
             if not obj.supply_warehouse_id:
-                raise osv.except_osv(_('Error !'), _('You must specify a Source Warehouse !'))
+                raise osv.except_osv(_('Error!'), _('You must specify a Source Warehouse.'))
             if obj.supply_warehouse_id.id == obj.warehouse_id.id:
-                raise osv.except_osv(_('Error !'), _('You must specify a Source Warehouse different than calculated (destination) Warehouse !'))
+                raise osv.except_osv(_('Error!'), _('You must specify a Source Warehouse different than calculated (destination) Warehouse.'))
             uom_qty, uom, uos_qty, uos = self._qty_to_standard(cr, uid, obj, context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             picking_id = self.pool.get('stock.picking').create(cr, uid, {

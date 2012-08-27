@@ -39,8 +39,8 @@ class survey_send_invitation(osv.osv_memory):
     _columns = {
         'partner_ids': fields.many2many('res.partner','survey_res_partner','partner_id',\
                                 'survey_id', "Answer", required=1),
-        'send_mail': fields.boolean('Send mail for new user'),
-        'send_mail_existing': fields.boolean('Send reminder for existing user'),
+        'send_mail': fields.boolean('Send Mail for New User'),
+        'send_mail_existing': fields.boolean('Send Reminder for Existing User'),
         'mail_subject': fields.char('Subject', size=256),
         'mail_subject_existing': fields.char('Subject', size=256),
         'mail_from': fields.char('From', size=256, required=1),
@@ -71,7 +71,7 @@ class survey_send_invitation(osv.osv_memory):
             if sur.state != 'open':
                 msg +=  sur.title + "\n"
         if msg:
-            raise osv.except_osv(_('Warning !'), _('%sSurvey is not in open state') % msg)
+            raise osv.except_osv(_('Warning!'), _('%sSurvey is not in open state') % msg)
         data['mail'] = '''Hello %(name)s, \n\n We are inviting you for following survey. \
                     \n  ''' + name + '''\n Your login ID: %(login)s, Your password: %(passwd)s
                     \n link :- http://'''+ str(socket.gethostname()) + ''':8080 \n\n Thanks,'''
@@ -191,7 +191,7 @@ class survey_send_invitation(osv.osv_memory):
         if skipped:
             note += "%d contacts where ignored (an email address is missing).\n\n" % (skipped)
         if error:
-            note += 'E-Mail not send successfully:\n====================\n%s\n' % (error)
+            note += 'Email not send successfully:\n====================\n%s\n' % (error)
         context.update({'note' : note})
         return {
             'view_type': 'form',

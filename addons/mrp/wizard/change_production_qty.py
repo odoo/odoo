@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,9 +26,9 @@ import decimal_precision as dp
 class change_production_qty(osv.osv_memory):
     _name = 'change.production.qty'
     _description = 'Change Quantity of Products'
-    
+
     _columns = {
-        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -36,17 +36,17 @@ class change_production_qty(osv.osv_memory):
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values 
-        @param context: A standard dictionary 
-        @return: A dictionary which of fields with values. 
-        """        
+        @param fields: List of fields for which we want default values
+        @param context: A standard dictionary
+        @return: A dictionary which of fields with values.
+        """
         if context is None:
             context = {}
-        res = super(change_production_qty, self).default_get(cr, uid, fields, context=context)        
+        res = super(change_production_qty, self).default_get(cr, uid, fields, context=context)
         prod_obj = self.pool.get('mrp.production')
         prod = prod_obj.browse(cr, uid, context.get('active_id'), context=context)
         if 'product_qty' in fields:
-            res.update({'product_qty': prod.product_qty})  
+            res.update({'product_qty': prod.product_qty})
         return res
 
     def _update_product_to_produce(self, cr, uid, prod, qty, context=None):
@@ -55,17 +55,17 @@ class change_production_qty(osv.osv_memory):
             move_lines_obj.write(cr, uid, [m.id], {'product_qty': qty})
 
     def change_prod_qty(self, cr, uid, ids, context=None):
-        """ 
+        """
         Changes the Quantity of Product.
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected 
-        @param context: A standard dictionary 
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
         @return:
         """
         record_id = context and context.get('active_id',False)
-        assert record_id, _('Active Id is not found')
+        assert record_id, _('Active Id not found')
         prod_obj = self.pool.get('mrp.production')
         bom_obj = self.pool.get('mrp.bom')
         for wiz_qty in self.browse(cr, uid, ids, context=context):
@@ -80,12 +80,12 @@ class change_production_qty(osv.osv_memory):
                 if not bom_point:
                     bom_id = bom_obj._bom_find(cr, uid, prod.product_id.id, prod.product_uom.id)
                     if not bom_id:
-                        raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
+                        raise osv.except_osv(_('Error!'), _("Cannot find bill of material for this product."))
                     prod_obj.write(cr, uid, [prod.id], {'bom_id': bom_id})
                     bom_point = bom_obj.browse(cr, uid, [bom_id])[0]
 
                 if not bom_id:
-                    raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
+                    raise osv.except_osv(_('Error!'), _("Cannot find bill of material for this product."))
 
                 factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
                 res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, [])
