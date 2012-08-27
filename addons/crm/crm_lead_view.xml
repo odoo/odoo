@@ -324,7 +324,7 @@
                                         <b><field name="name"/></b>
                                         <t t-if="record.planned_revenue.raw_value">
                                             - <b><t t-esc="Math.round(record.planned_revenue.value)"/>
-                                            <field name="company_currency"/></b>
+                                            <field name="company_currency" groups="base.group_multi_currency"/></b>
                                         </t>
                                     </div>
                                     <div>
@@ -435,7 +435,7 @@
                             <label for="planned_revenue" class="oe_edit_only"/>
                             <h2>
                                 <field name="planned_revenue" class="oe_inline"/>
-                                <field name="company_currency" class="oe_inline"/> at
+                                <field name="company_currency" class="oe_inline" groups="base.group_multi_currency"/> at
                                 <field name="probability" class="oe_inline" widget="integer"/>%% success rate
                             </h2>
                         </div>
