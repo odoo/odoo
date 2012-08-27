@@ -36,7 +36,6 @@ class ir_model_relation(Model):
         to_drop_table = []
         ids.sort()
         ids.reverse()
-        to_unlink = []
         for data in self.browse(cr, uid, ids, context):
             model = data.model
             model_obj = self.pool.get(model)
@@ -53,9 +52,7 @@ class ir_model_relation(Model):
             if cr.fetchone() and not name in to_drop_table:
                 to_drop_table.append(name)
 
-            to_unlink.append(data.id)
-
-        self.unlink(cr, uid, to_unlink, context)
+        self.unlink(cr, uid, ids, context)
 
         # drop m2m relation tables
         for table in to_drop_table:
