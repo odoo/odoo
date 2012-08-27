@@ -234,6 +234,39 @@ class test_mail(common.TransactionCase):
         self.assertTrue(all(id in follower_ids for id in [user_admin.partner_id.id]),
             'Admin the only Pigs group followers')
 
+    def test_03_message_read(self):
+        """ Tests designed for message_read. """
+        def _flatten(read_dict):
+            res = []
+            for val in read_dict:
+                current = {'_id': val['id']}
+                if val.get('child_ids'):
+                    current['child_ids'] = _flatten(val.get('child_ids'))
+                res.append(current)
+            return res
+
+        # TDE NOTE: this test is not finished, as the message_read method is not fully specified.
+        # It wil be updated as soon as we have fixed specs !
+        cr, uid  = self.cr, self.uid
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+
+        # Add a few messages to pigs group
+        msgid1 = group_pigs.message_post(body='My Body', subject='1', parent_id=False)
+        msgid2 = group_pigs.message_post(body='My Body', subject='1-1', parent_id=msgid1)
+        msgid3 = group_pigs.message_post(body='My Body', subject='1-2', parent_id=msgid1)
+        msgid4 = group_pigs.message_post(body='My Body', subject='2', parent_id=False)
+        msgid5 = group_pigs.message_post(body='My Body', subject='1-1-1', parent_id=msgid2)
+        msgid6 = group_pigs.message_post(body='My Body', subject='2-1', parent_id=msgid4)
+        msgid7 = group_pigs.message_post(body='My Body', subject='1-3', parent_id=msgid1)
+        msgid8 = group_pigs.message_post(body='My Body', subject='1-3-1', parent_id=msgid7)
+
+        # First try: read flat
+        first_try_ids = [msgid8, msgid7, msgid6, msgid5, msgid4, msgid3, msgid2, msgid1]
+        res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=0)
+        
+        # Second try: read with thread_level 1
+        res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1)
+
     def test_10_mail_composer(self):
         """ Tests designed for the mail.compose.message wizard. """
         cr, uid = self.cr, self.uid
@@ -296,14 +329,12 @@ class test_mail(common.TransactionCase):
         self.assertTrue(all(email in mail_emails for email in expected_emails) and len(mail_emails) == 2,
             'Send email emails are %s; should be %s' % (mail_emails, expected_emails))
 
-        # Create a reply to the last comment, with default partners
+        # Create a reply to the last comment
         compose_id = mail_compose.create(cr, uid,
             {}, {'mail.compose.message.mode': 'reply', 'default_model': 'mail.thread', 'default_res_id': self.group_pigs_id,
                 'active_id': first_com.id})
         compose = mail_compose.browse(cr, uid, compose_id)
         self.assertTrue(compose.model == 'mail.group' and compose.res_id == self.group_pigs_id,
             'Wizard message has model: %s and res_id:%s; should be mail.group and %s' % (compose.model, compose.res_id, self.group_pigs_id))
-        self.assertTrue(compose.parent_id.id == first_com.id and len(compose.partner_ids) == 5,
-            'Wizard parent_id is %d; should be %d; or wrong partner_ids (TO BE CONTINUED)' % (compose.parent_id.id, first_com.id))
-
-        
+        self.assertTrue(compose.parent_id.id == first_com.id,
+            'Wizard parent_id is %d; should be %d' % (compose.parent_id.id, first_com.id))
