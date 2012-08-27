@@ -20,15 +20,17 @@
 ##############################################################################
 
 from osv import osv
+try:
+    from mygengo import MyGeng
+except ImportError:
+    raise osv.except_osv(_('Gengo ImportError'), _('Please install mygengo lib from http://pypi.python.org/pypi/mygengo'))
+
 import logging
 import tools
 from tools.translate import _
 
 _logger = logging.getLogger(__name__)
-try:
-    from mygengo import MyGengo
-except ImportError:
-    raise osv.except_osv(_('Gengo ImportError'),_('Please install mygengo lib from http://pypi.python.org/pypi/mygengo'))
+
 
 LIMIT = 20
 
