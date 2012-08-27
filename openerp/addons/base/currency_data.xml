@@ -1102,15 +1102,15 @@
             <field name="rate">0.786</field>
         </record>
         
-        <record id="GTQ" model="res.currency">
-            <field name="name">GTQ</field>
+        <record id="QTQ" model="res.currency">
+            <field name="name">QTQ</field>
             <field name="symbol">Q</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
         </record>
-        <record id="rateGTQ" model="res.currency.rate">
-            <field name="currency_id" ref="GTQ" />
+        <record id="rateQTQ" model="res.currency.rate">
+            <field name="currency_id" ref="QTQ" />
             <field eval="time.strftime('%Y-01-01')" name="name"/>
             <field name="rate">9.8827</field>
         </record>
