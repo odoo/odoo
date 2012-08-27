@@ -124,11 +124,12 @@ class plugin_handler(osv.osv_memory):
             @return : the partner_id sended or created, this allow the plugin to open the right partner page
         """
         partner_obj = self.pool.get('res.partner')
-        dictcreate = dict(data) 
-        if partner_id == 0:
-            partner_id =  partner_obj.create(cr, uid, {'name':dictcreate.get('name')})
-        dictcreate['partner_id'] = partner_id
-        self.pool.get('res.partner').create(cr, uid, dictcreate)
+        dictcreate = dict(data)
+        if partner_id:
+            is_company = partner_obj.browse(cr, uid, partner_id, context=context).is_company
+            if is_company:
+                dictcreate['parent_id'] = partner_id
+        partner_id = partner_obj.create(cr, uid, dictcreate)
         url = self._make_url(cr, uid, partner_id, 'res.partner')
         return ('res.partner', partner_id, url)
 
