@@ -20,6 +20,5 @@
 ##############################################################################
 
 import gengo_update_translation
-import abstract_wrapper
 import gengo_update_message
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
