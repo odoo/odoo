@@ -141,6 +141,13 @@
   background-image: -o-linear-gradient(top, #eeeeee, #dedede);
   background-image: linear-gradient(to bottom, #eeeeee, #dedede);
 }
+.openerp ul, .openerp li, .openerp ol {
+  margin: 0;
+  padding: 0;
+}
+.openerp li {
+  list-style-type: none;
+}
 .openerp input, .openerp textarea, .openerp select {
   padding: 2px 4px;
   border: 1px solid #cccccc;
@@ -154,13 +161,6 @@
 }
 .openerp h4 {
   margin: 4px 0;
-}
-.openerp .oe_semantic_html_override ul, .openerp .oe_semantic_html_override li, .openerp .oe_semantic_html_override ol {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_semantic_html_override ul li, .openerp .oe_semantic_html_override li li, .openerp .oe_semantic_html_override ol li {
-  list-style-type: none;
 }
 .openerp a.button:link, .openerp a.button:visited, .openerp button, .openerp input[type='submit'], .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button {
   display: inline-block;
@@ -626,18 +626,6 @@
   padding: 0 16px;
   list-style: none;
   zoom: 1;
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_notebook li {
-  list-style-type: none;
-}
-.openerp .oe_notebook ul, .openerp .oe_notebook li, .openerp .oe_notebook ol {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_notebook ul li, .openerp .oe_notebook li li, .openerp .oe_notebook ol li {
-  list-style-type: none;
 }
 .openerp .oe_notebook.ui-corner-all {
   -moz-border-radius: 0;
@@ -942,13 +930,6 @@
   -webkit-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
 }
-.openerp .oe_login .oe_login_pane ul, .openerp .oe_login .oe_login_pane li, .openerp .oe_login .oe_login_pane ol {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_login .oe_login_pane ul li, .openerp .oe_login .oe_login_pane li li, .openerp .oe_login .oe_login_pane ol li {
-  list-style-type: none;
-}
 .openerp .oe_login .oe_login_pane h2 {
   margin-top: 0;
   font-size: 18px;
@@ -1028,13 +1009,6 @@
   background-image: -o-linear-gradient(top, #646060, #262626);
   background-image: linear-gradient(to bottom, #646060, #262626);
 }
-.openerp .oe_topbar ul, .openerp .oe_topbar li, .openerp .oe_topbar ol {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_topbar ul li, .openerp .oe_topbar li li, .openerp .oe_topbar ol li {
-  list-style-type: none;
-}
 .openerp .oe_topbar .oe_topbar_item {
   display: block;
   padding: 5px 10px 7px;
@@ -1106,13 +1080,6 @@
   border-right: 1px solid #afafb6;
   text-shadow: 0 1px 1px white;
   padding-bottom: 16px;
-}
-.openerp .oe_leftbar ul, .openerp .oe_leftbar li, .openerp .oe_leftbar ol {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_leftbar ul li, .openerp .oe_leftbar li li, .openerp .oe_leftbar ol li {
-  list-style-type: none;
 }
 .openerp a.oe_logo {
   width: 220px;
@@ -1315,13 +1282,6 @@
 .openerp .oe_view_manager table.oe_view_manager_header {
   width: 100%;
   table-layout: fixed;
-}
-.openerp .oe_view_manager table.oe_view_manager_header ul, .openerp .oe_view_manager table.oe_view_manager_header li, .openerp .oe_view_manager table.oe_view_manager_header ol {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_view_manager table.oe_view_manager_header ul li, .openerp .oe_view_manager table.oe_view_manager_header li li, .openerp .oe_view_manager table.oe_view_manager_header ol li {
-  list-style-type: none;
 }
 .openerp .oe_view_manager table.oe_view_manager_header .oe_header_row {
   clear: both;
@@ -1992,7 +1952,7 @@
 .openerp .oe_form div.oe_form_configuration div.oe_horizontal_separator {
   margin: 12px 0 8px 0;
 }
-.openerp .oe_form div.oe_form_configuration p, .openerp .oe_form div.oe_form_configuration ul, .openerp .oe_form div.oe_form_configuration ol {
+.openerp .oe_form div.oe_form_configuration p {
   color: #aaaaaa;
   max-width: 650px;
 }
@@ -2440,20 +2400,6 @@
   line-height: 14px;
   float: right;
   padding-left: 2px;
-}
-.openerp .oe_form_field_status {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_form_field_status ul, .openerp .oe_form_field_status li, .openerp .oe_form_field_status ol {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_form_field_status ul li, .openerp .oe_form_field_status li li, .openerp .oe_form_field_status ol li {
-  list-style-type: none;
-}
-.openerp .oe_form_field_status li {
-  list-style-type: none;
 }
 .openerp .oe_form .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page {
   display: none;

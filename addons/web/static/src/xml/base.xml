@@ -1083,7 +1083,7 @@
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps')" t-att-style="widget.node.attrs.style"/>
+    <ul t-att-class="widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps'" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
     <t t-foreach="widget.selection" t-as="i">
