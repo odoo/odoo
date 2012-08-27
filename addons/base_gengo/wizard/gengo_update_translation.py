@@ -22,6 +22,8 @@
 from osv import osv
 import logging
 import tools
+from tools.translate import _
+
 _logger = logging.getLogger(__name__)
 try:
     from mygengo import MyGengo
