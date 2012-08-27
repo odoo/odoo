@@ -12,7 +12,7 @@
                         <field name="auth_signup_uninvited" class="oe_inline"/>
                         <label for="auth_signup_uninvited"/>
                     </div>
-                    <div>
+                    <div attrs="{'invisible':[('auth_signup_uninvited','=',False)]}">
                         <label for="auth_signup_template_user_id"/>
                         <field name="auth_signup_template_user_id" class="oe_inline"/>
                     </div>
