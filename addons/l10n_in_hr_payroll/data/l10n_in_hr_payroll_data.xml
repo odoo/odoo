@@ -71,7 +71,7 @@
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * contract.house_rent_allowance_metro_nonmetro / 100) or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100)</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="name">House Rent Allowance for metro and nonmetro city</field>
+            <field name="name">House Rent Allowance</field>
             <field name="register_id" ref="hr_houserent_allowance_register"/>
             <field name="sequence" eval="51"/>
         </record>
