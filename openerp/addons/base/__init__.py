@@ -22,7 +22,6 @@
 import ir
 import module
 import res
-import publisher_warranty
 import report
 import test
 
