@@ -59,10 +59,11 @@ class mail_alias(osv.Model):
 
     def _get_alias_domain(self, cr, uid, ids, name, args, context=None):
         ir_config_parameter = self.pool.get("ir.config_parameter")
-        domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)   
+        domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
         return dict.fromkeys(ids, domain or "")
 
     _columns = {
+        'alias_force_id': fields.integer('Alias Force Id'),
         'alias_name': fields.char('Alias', required=True,
                             help="The name of the email alias, e.g. 'jobs' "
                                  "if you want to catch emails for <jobs@example.my.openerp.com>",),
