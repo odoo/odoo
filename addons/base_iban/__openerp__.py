@@ -21,10 +21,10 @@
 {
     'name': 'IBAN Bank Accounts',
     'version': '1.0',
-    "category": 'Hidden/Dependency',
+    'category': 'Hidden/Dependency',
     'description': """
 This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for it's validity.
-=====================================================================================================================
+======================================================================================================================
 
 The ability to extract the correctly represented local accounts from IBAN accounts 
 with a single statement.
@@ -32,8 +32,7 @@ with a single statement.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': ['base_iban_data.xml'],
-    'update_xml': ['base_iban_view.xml'],
+    'data': ['base_iban_data.xml' , 'base_iban_view.xml'],
     'installable': True,
     'auto_install': False,
     'certificate': '0050014379549',

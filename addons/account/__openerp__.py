@@ -19,11 +19,11 @@
 #
 ##############################################################################
 {
-    "name" : "eInvoicing",
-    "version" : "1.1",
-    "author" : "OpenERP SA",
-    "category": 'Accounting & Finance',
-    "description": """
+    'name' : 'eInvoicing',
+    'version' : '1.1',
+    'author' : 'OpenERP SA',
+    'category' : 'Accounting & Finance',
+    'description' : """
 Accounting and Financial Management.
 ====================================
 
@@ -44,14 +44,13 @@ Creates a dashboard for accountants that includes:
     * Company Analysis
     * Graph of Treasury
 
-The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) for a particular
-financial year and for preparation of vouchers there is a module named account_voucher.
+The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) 
+for a particular financial year and for preparation of vouchers there is a module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'init_xml': [],
-    "depends" : ["base_setup", "product", "analytic", "process", "board", "edi"],
-    'update_xml': [
+    'depends' : ['base_setup', 'product', 'analytic', 'process', 'board', 'edi'],
+    'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
@@ -123,10 +122,10 @@ financial year and for preparation of vouchers there is a module named account_v
         'ir_sequence_view.xml',
         'company_view.xml',
         'board_account_view.xml',
-        "edi/invoice_action_data.xml",
-        "account_bank_view.xml",
-        "res_config_view.xml",
-        "account_pre_install.yml"
+        'edi/invoice_action_data.xml',
+        'account_bank_view.xml',
+        'res_config_view.xml',
+        'account_pre_install.yml'
     ],
     'js': [
         'static/src/js/account_move_reconciliation.js',

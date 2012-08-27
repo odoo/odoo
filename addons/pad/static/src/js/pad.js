@@ -5,8 +5,8 @@ instance.web.form.FieldPad = instance.web.form.AbstractField.extend(instance.web
     initialize_content: function() {
         var self = this;
         this.$textarea = undefined;
-        this.$element.find('div.oe_etherpad_head').click(function(ev) {
-            self.$element.toggleClass('oe_etherpad_fullscreen').toggleClass('oe_etherpad_normal');
+        this.$el.find('div.oe_etherpad_head').click(function(ev) {
+            self.$el.toggleClass('oe_etherpad_fullscreen').toggleClass('oe_etherpad_normal');
         });
     },
     set_value: function(value_) {
@@ -21,12 +21,12 @@ instance.web.form.FieldPad = instance.web.form.AbstractField.extend(instance.web
             if (!this.get("effective_readonly")) {
                 var pad_username = this.session.username;
                 var code = '<iframe width="100%" height="100%" frameborder="0" src="'+url+'?showChat=false&userName='+pad_username+'"></iframe>';
-                this.$element.find('div.oe_etherpad_default').html(code);
+                this.$el.find('div.oe_etherpad_default').html(code);
             } else {
                 $.get(url+'/export/html').success(function(data) {
-                    self.$element.html('<div class="etherpad_readonly">'+data+'</div>');
+                    self.$el.html('<div class="etherpad_readonly">'+data+'</div>');
                 }).error(function() {
-                    self.$element.text('Unable to load pad');
+                    self.$el.text('Unable to load pad');
                 });
             }
         }
