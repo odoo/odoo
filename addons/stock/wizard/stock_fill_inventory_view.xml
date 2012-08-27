@@ -4,30 +4,31 @@
            <record id="view_stock_fill_inventory" model="ir.ui.view">
             <field name="name">Import Inventory</field>
             <field name="model">stock.fill.inventory</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Import Inventory">
-                     <separator string="Import current product inventory from the following location" colspan="4" />
-                    <field name="location_id"/>
-                    <newline/>
-                    <field name="recursive"/>
-                    <newline/>
-                    <field name="set_stock_zero"/>
-                    <separator string="" colspan="4" />
-                    <button special="cancel" string="_Cancel" icon='gtk-cancel'/>
-                    <button name="fill_inventory" string="Fill Inventory" type="object" icon="gtk-ok"/>
-             </form>
+              <form string="Import Inventory" version="7.0">
+                  <separator string="Import current product inventory from the following location"/>
+                  <group>
+                      <field name="location_id"/>
+                      <field name="recursive"/>
+                      <field name="set_stock_zero"/>
+                  </group>
+                  <footer>
+                      <button name="fill_inventory" string="Fill Inventory" type="object" class="oe_highlight"/>
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel" />
+                  </footer>
+              </form>
             </field>
         </record>
 
-         <act_window name="Import Inventory"            
+         <act_window name="Import Inventory"
             res_model="stock.fill.inventory"
             src_model="stock.inventory"
             view_mode="form"
             target="new"
-            context="{'search_default_in_location':1}" 
-            key2="client_action_multi"    
-            id="action_view_stock_fill_inventory"/>    
+            context="{'search_default_in_location':1}"
+            key2="client_action_multi"
+            id="action_view_stock_fill_inventory"/>
 
     </data>
 </openerp>

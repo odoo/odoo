@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-import mail_compose_message
-import crm_add_note
-
 import crm_lead_to_partner
 import crm_lead_to_opportunity
 import crm_phonecall_to_phonecall

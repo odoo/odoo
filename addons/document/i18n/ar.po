@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-13 13:18+0000\n"
+"PO-Revision-Date: 2012-05-10 18:26+0000\n"
 "Last-Translator: walid sayed <mashyuser@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:45+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:55+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
 msgid "Parent Directory"
-msgstr "الوثائق"
+msgstr "الدليل الأب"
 
 #. module: document
 #: code:addons/document/document_directory.py:276
@@ -30,22 +30,22 @@ msgstr "الدليل يحتوي علي رموز خاصة"
 #. module: document
 #: field:document.directory,resource_field:0
 msgid "Name field"
-msgstr "اسم الحقل"
+msgstr "إسم حقل"
 
 #. module: document
 #: view:board.board:0
 msgid "Document board"
-msgstr "لوحة الوثائق"
+msgstr "لوحة المستندات"
 
 #. module: document
 #: model:ir.model,name:document.model_process_node
 msgid "Process Node"
-msgstr "سلسة الإجراءات"
+msgstr "طرف المعالجات"
 
 #. module: document
 #: view:document.directory:0
 msgid "Search Document Directory"
-msgstr "البحث عن دليل الوثيقة"
+msgstr "البحث عن دليل المستند"
 
 #. module: document
 #: help:document.directory,resource_field:0
@@ -59,7 +59,7 @@ msgstr ""
 #: view:document.directory:0
 #: view:document.storage:0
 msgid "Group By..."
-msgstr "تجميع حسب..."
+msgstr "تجميع حسب ..."
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
@@ -126,6 +126,9 @@ msgid ""
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
 "to the current record, in dynamic folders"
 msgstr ""
+"استخدم تعبير بايثوت لتقييم ذلك الحق.\n"
+"يمكن استخدام ‘dir_id‘, ‘نموذج_res‘ كمرجع للتسجيل الجاري , في المجلدات "
+"الدينامية"
 
 #. module: document
 #: view:report.document.user:0
@@ -147,7 +150,7 @@ msgstr "اسم الدليل يجب أن يكون فريدا"
 #. module: document
 #: view:ir.attachment:0
 msgid "Filter on my documents"
-msgstr ""
+msgstr "ترشيح حسب الوثائق"
 
 #. module: document
 #: field:ir.attachment,index_content:0
@@ -166,7 +169,7 @@ msgstr ""
 #. module: document
 #: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
 msgid "Knowledge Management"
-msgstr ""
+msgstr "إدارة المعارف"
 
 #. module: document
 #: view:document.directory:0
@@ -378,6 +381,8 @@ msgid ""
 "When executing this wizard, it will configure your directories automatically "
 "according to modules installed."
 msgstr ""
+"عند تنفيذ هذا الإجراء التلقائي ، سوف يتم تهيئة الأدلة الخاصة بك تلقائياً "
+"بناءاً على البرامج التي تم تثبيتها."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -604,6 +609,9 @@ msgid ""
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
+"إذا وضعت مشروع هنا، و يظهر هذا الدليل القالب اسفل كل هذه المشاريع. و\"ترفق\" "
+"الدلائل من هذا القبيل إلى نموذج او تسجيل معين، تماما مثل المرفقات. لا تضع "
+"الدليل الأصل إذا قمت بتحديد النموذج الاساسي."
 
 #. module: document
 #: view:document.directory:0
@@ -639,7 +647,7 @@ msgstr "علاقة مع"
 
 #. module: document
 #: view:ir.attachment:0
-msgid "Attached To"
+msgid "Attached to"
 msgstr "مرفق ل"
 
 #. module: document
@@ -660,7 +668,7 @@ msgstr "للقراءة فقط"
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 msgid "Document Directory"
-msgstr ""
+msgstr "مسار الوثائق"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -686,6 +694,8 @@ msgid ""
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
 msgstr ""
+"نظام إدارة الوثائق في أوبن إي أر بي دعم الربط بين الدلائل التخيلية و "
+"المستندات."
 
 #. module: document
 #: view:board.board:0
@@ -779,7 +789,7 @@ msgstr "الشهر"
 #. module: document
 #: view:report.document.user:0
 msgid "This Months Files"
-msgstr ""
+msgstr "ملفات الشهر"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_reporting
@@ -842,7 +852,7 @@ msgstr "ملفات الشريك"
 #. module: document
 #: view:ir.attachment:0
 msgid "Indexed Content - experimental"
-msgstr ""
+msgstr "المحتويات المفهرسة - تجريبية"
 
 #. module: document
 #: view:report.document.user:0
@@ -857,7 +867,7 @@ msgstr "ملاحظات"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr ""
+msgstr "إعدادات المسارات"
 
 #. module: document
 #: help:document.directory,type:0
@@ -868,6 +878,10 @@ msgid ""
 "resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
 msgstr ""
+"يمكن لكل دليل اما ان يكون له علامة مثبتة او تتصل بمصدر اخر ، كما هو الحال مع "
+"أنظمة التشغيل، هو الدليل الثكلاسيكي التي يمكن أن تحتوي على مجموعة من "
+"الملفات. الدلائل المرتبطة بموارد الانظمة تملك تلقائيا دون الدلائل لكل واحد "
+"من أنواع الموارد المحددة في الدليل الأصل."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -887,6 +901,7 @@ msgid ""
 "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
 "what is typed here."
 msgstr ""
+"اسم الحقل. لاحظ أنه سيتم إرفاق مسبقا البادئة \"dctx_\" على ما كتبته هنا."
 
 #. module: document
 #: field:document.directory,name:0
@@ -950,7 +965,7 @@ msgstr "نوع التنسيق الملف"
 #. module: document
 #: view:report.document.user:0
 msgid "All Months Files"
-msgstr ""
+msgstr "ملفات كل الشهور"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -1067,6 +1082,9 @@ msgstr "نوع الوثيقة"
 
 #~ msgid "Integrated Document Management System"
 #~ msgstr "نظام ادارة الوثائق المتكامل"
+
+#~ msgid "Attached To"
+#~ msgstr "مرفق ل"
 
 #~ msgid "Product"
 #~ msgstr "المنتج"

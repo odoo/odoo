@@ -23,10 +23,9 @@
     'name': 'Payroll Accounting',
     'version': '1.0',
     'category': 'Human Resources',
-    'complexity': "expert",
     'description': """
-Generic Payroll system Integrated with Accountings.
-===================================================
+Generic Payroll system Integrated with Accounting.
+==================================================
 
     * Expense Encoding
     * Payment Encoding
@@ -40,17 +39,9 @@ Generic Payroll system Integrated with Accountings.
         'account',
         'hr_expense'
     ],
-    'init_xml': [
-    ],
-    'update_xml': [
-        "hr_payroll_account_view.xml",
-    ],
-    'demo_xml': [
-        'hr_payroll_account_demo.xml'
-    ],
-    'test': [
-         'test/hr_payroll_account.yml',
-     ],
+    'data': ['hr_payroll_account_view.xml'],
+    'demo': ['hr_payroll_account_demo.xml'],
+    'test': ['test/hr_payroll_account.yml'],
     'installable': True,
     'auto_install': False,
     'certificate' : '00923971112835220957',

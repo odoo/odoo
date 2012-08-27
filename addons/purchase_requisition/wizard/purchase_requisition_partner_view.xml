@@ -1,32 +1,31 @@
 <openerp>
       <data>
 
-    	<record id="view_purchase_requisition_partner" model="ir.ui.view">
+        <record id="view_purchase_requisition_partner" model="ir.ui.view">
             <field name="name">Purchase Requisition</field>
             <field name="model">purchase.requisition.partner</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-              	<form string="Purchase Requisition">
-              	 <group colspan="2" col="2">
-              	     <field name="partner_id"/>
-              		  <separator string="" colspan="4" />
-		            		<button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
-		            		<button icon="gtk-ok" name="create_order" string="Create Quotation" type="object"/>
-		              </group>
-			  	</form>
+                <form string="Purchase Requisition" version="7.0">
+                    <group>
+                        <field name="partner_id"/>
+                    </group>
+                    <footer>
+                        <button name="create_order" string="Create Quotation" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
             </field>
-		</record>
+        </record>
 
-		<record id="action_purchase_requisition_partner" model="ir.actions.act_window">
-	           <field name="name">Purchase Requisition</field>
-	           <field name="type">ir.actions.act_window</field>
-	           <field name="res_model">purchase.requisition.partner</field>
-	           <field name="view_type">form</field>
-	           <field name="view_mode">form</field>
-		       <field name="context">{'record_id' : active_id}</field>
-	           <field name="target">new</field>
-    	</record>        
+        <record id="action_purchase_requisition_partner" model="ir.actions.act_window">
+               <field name="name">Purchase Requisition</field>
+               <field name="type">ir.actions.act_window</field>
+               <field name="res_model">purchase.requisition.partner</field>
+               <field name="view_type">form</field>
+               <field name="view_mode">form</field>
+               <field name="context">{'record_id' : active_id}</field>
+               <field name="target">new</field>
+        </record>
 </data>
 </openerp>
-
-       

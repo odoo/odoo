@@ -28,7 +28,7 @@ class purchase_requisition_partner(osv.osv_memory):
     _name = "purchase.requisition.partner"
     _description = "Purchase Requisition Partner"
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner', required=True,domain=[('supplier', '=', True)]),
+        'partner_id': fields.many2one('res.partner', 'Supplier', required=True,domain=[('supplier', '=', True)]),
     }
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -38,7 +38,7 @@ class purchase_requisition_partner(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         tender = self.pool.get('purchase.requisition').browse(cr, uid, record_id, context=context)
         if not tender.line_ids:
-            raise osv.except_osv(_('Error!'), _('No Product in Tender'))
+            raise osv.except_osv(_('Error!'), _('No Product in Tender.'))
         return res
 
     def create_order(self, cr, uid, ids, context=None):

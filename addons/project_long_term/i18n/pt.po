@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:05+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:35+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
@@ -26,12 +26,12 @@ msgstr "Fases"
 #: view:project.phase:0
 #: field:project.phase,next_phase_ids:0
 msgid "Next Phases"
-msgstr ""
+msgstr "Próximas fases"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project's Tasks"
-msgstr "Tarefas do projeto"
+msgstr "Tarefas do Projeto"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -42,42 +42,42 @@ msgstr "Agrupar por..."
 #. module: project_long_term
 #: field:project.phase,user_ids:0
 msgid "Assigned Users"
-msgstr ""
+msgstr "Utilizadores atribuídos"
 
 #. module: project_long_term
 #: field:project.phase,progress:0
 msgid "Progress"
-msgstr ""
+msgstr "Progresso"
 
 #. module: project_long_term
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr "Erro! A data de início do projeto deve ser anterior à do seu fim"
+msgstr "Erro ! A data de início do projeto deve ser anterior à do seu fim"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "In Progress Phases"
-msgstr ""
+msgstr "Fases em progresso"
 
 #. module: project_long_term
 #: view:project.phase:0
-msgid "Displaying settings"
+msgid "Displaying Settings"
 msgstr ""
 
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
 msgid "Schedule"
-msgstr ""
+msgstr "Agenda"
 
 #. module: project_long_term
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr "Erro! Não se pode criar tarefas recursivamente"
+msgstr "Erro ! Não se pode criar tarefas recursivas"
 
 #. module: project_long_term
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "Erro! Não pode atribuir uma escaltion ao mesmo projeto!"
 
 #. module: project_long_term
 #: code:addons/project_long_term/project_long_term.py:126
@@ -88,7 +88,7 @@ msgstr "Dia"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_user_allocation
 msgid "Phase User Allocation"
-msgstr ""
+msgstr "Fase de alocação de utilizador"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
@@ -105,11 +105,17 @@ msgid ""
 "users, convert your phases into a series of tasks when you start working on "
 "the project."
 msgstr ""
+"Um projeto pode ser dividido em diferentes fases. Para cada fase, pode "
+"definir a sua alocação do utilizador, descrevem tarefas diferentes e "
+"vincular a sua fase com as fases anteriores e seguintes, adicionar "
+"restrições de data para o agendamento automático. Use o planeamento de longo "
+"prazo, a fim de planificar os seus utilizadores disponíveis, converter as "
+"suas fases numa série de tarefas quando começar a trabalhar no projeto."
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute a Single Project"
-msgstr ""
+msgstr "Calcule um projeto único"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -120,7 +126,7 @@ msgstr "Fases anteriores"
 #. module: project_long_term
 #: help:project.phase,product_uom:0
 msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-msgstr ""
+msgstr "UdM (unidade de medida) é a unidade de medida de Duração"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
@@ -128,13 +134,14 @@ msgstr ""
 #: view:project.phase:0
 #: view:project.user.allocation:0
 msgid "Planning of Users"
-msgstr ""
+msgstr "Planeamento de utilizadores"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
 msgstr ""
+" É calculado pelo programador de acordo com a data de início e a duração."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
@@ -157,28 +164,28 @@ msgstr "Erro!"
 #. module: project_long_term
 #: selection:project.phase,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_end:0
 msgid "Ending Date"
-msgstr "Data de fim"
+msgstr "Data Final"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
 msgid "Deadline"
-msgstr "Prazo limite"
+msgstr "Prazo Limite"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute All My Projects"
-msgstr ""
+msgstr "Calcule todos os meus projetos"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Cancelar"
 
 #. module: project_long_term
 #: code:addons/project_long_term/project_long_term.py:141
@@ -189,7 +196,7 @@ msgstr " (cópia)"
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Project User Allocation"
-msgstr ""
+msgstr "Alocação do utilizador do projeto"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -201,28 +208,28 @@ msgstr "Estado"
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
 msgid "C_ompute"
-msgstr ""
+msgstr "Computar"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #. module: project_long_term
 #: help:project.phase,progress:0
 msgid "Computed based on related tasks"
-msgstr ""
+msgstr "Calculada com base em tarefas relacionadas"
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
 msgid "Duration UoM"
-msgstr ""
+msgstr "Duração UdM"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_start:0
 msgid "Minimum Start Date"
-msgstr ""
+msgstr "Data mínima de Início"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
@@ -233,12 +240,12 @@ msgstr "Recursos"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "My Projects"
-msgstr ""
+msgstr "Meus Projetos"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_start:0
 msgid "Starting Date"
-msgstr "Data de início"
+msgstr "Data de Início"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
@@ -248,13 +255,13 @@ msgstr "Tarefas relacionadas"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "New Phases"
-msgstr ""
+msgstr "Novas fases"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Please specify a project to schedule."
-msgstr ""
+msgstr "Por favor, especifique um projeto para agendar."
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
@@ -286,13 +293,13 @@ msgstr "A data de início da fase tem de ser anterior à do seu fim."
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Month"
-msgstr ""
+msgstr "Mês de Início"
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
 #: field:project.user.allocation,date_start:0
 msgid "Start Date"
-msgstr "Data de início"
+msgstr "Data Inicial"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -304,6 +311,8 @@ msgstr "forçar o fim da fase para antes desta data"
 msgid ""
 "The ressources on the project can be computed automatically by the scheduler"
 msgstr ""
+"Dos recursos existentes no projeto pode ser calculado automaticamente pela "
+"agenda"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -313,13 +322,13 @@ msgstr "Rascunho"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Pending Phases"
-msgstr ""
+msgstr "Fases pendentes"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Pendente"
 
 #. module: project_long_term
 #: view:project.user.allocation:0
@@ -330,17 +339,17 @@ msgstr "Utilizador"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
-msgstr ""
+msgstr "Cálculo das tarefas do projeto"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Constraints"
-msgstr ""
+msgstr "Restrições"
 
 #. module: project_long_term
 #: help:project.phase,sequence:0
 msgid "Gives the sequence order when displaying a list of phases."
-msgstr ""
+msgstr "Dá a ordem da sequência ao exibir uma lista de fases."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase
@@ -367,29 +376,29 @@ msgstr "Cancelar"
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "In Progress"
-msgstr "Em curso"
+msgstr "Em Progresso"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Remaining Hours"
-msgstr "Horas restantes"
+msgstr "Horas Restantes"
 
 #. module: project_long_term
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
+msgstr "Erro !Data final da tarefa dever ser posterior à data inicial"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
 msgid "Working Time"
-msgstr ""
+msgstr "Tempo de Trabalho"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
 #: model:ir.ui.menu,name:project_long_term.menu_compute_phase
 #: view:project.compute.phases:0
 msgid "Schedule Phases"
-msgstr ""
+msgstr "Fases Agenda"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -399,12 +408,12 @@ msgstr "Iniciar fase"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Total Hours"
-msgstr "Total de horas"
+msgstr "Total de Horas"
 
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Users"
-msgstr ""
+msgstr "Utilizadores"
 
 #. module: project_long_term
 #: view:project.user.allocation:0
@@ -420,12 +429,16 @@ msgid ""
 "          \n"
 " If the phase is over, the states is set to 'Done'."
 msgstr ""
+"Se a fase é criada o estado é 'Rascunho'.\n"
+"  Se a fase é iniciada, o Estado torna-se 'Em progresso'.\n"
+"  Se a revisão é necessária a fase está em estado 'Pendente'.\n"
+"  Se a fase é terminada, o estado é definido como 'Concluído'."
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
 #: field:project.user.allocation,date_end:0
 msgid "End Date"
-msgstr "Data de fim"
+msgstr "Data Final"
 
 #. module: project_long_term
 #: field:project.phase,name:0
@@ -435,7 +448,7 @@ msgstr "Nome"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Tasks Details"
-msgstr ""
+msgstr "Detalhes das Tarefas"
 
 #. module: project_long_term
 #: field:project.phase,duration:0
@@ -445,7 +458,7 @@ msgstr "Duração"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project Users"
-msgstr ""
+msgstr "Os utilizadores do projeto"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
@@ -463,16 +476,19 @@ msgid ""
 "view.\n"
 "               "
 msgstr ""
+"Para agendar as fases de todas ou de um projeto especifico. Em seguida, abra "
+"uma vista de Gantt.\n"
+"               "
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
 msgid "Project Compute Phases"
-msgstr ""
+msgstr "Calcula fases do projeto"
 
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Loops in phases not allowed"
-msgstr ""
+msgstr "Não são permitidos ciclos fechados nas fases"
 
 #. module: project_long_term
 #: field:project.phase,sequence:0
@@ -494,18 +510,18 @@ msgstr "Agendar tarefas"
 #. module: project_long_term
 #: help:project.phase,duration:0
 msgid "By default in days"
-msgstr ""
+msgstr "Por omissão em dias"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,user_force_ids:0
 msgid "Force Assigned Users"
-msgstr ""
+msgstr "Forçar atribuição de utilizadores"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
 msgid "Scheduling"
-msgstr ""
+msgstr "Agendamento"
 
 #~ msgid "Planning"
 #~ msgstr "Planeamento"
@@ -542,3 +558,12 @@ msgstr ""
 
 #~ msgid "Project Resources"
 #~ msgstr "Recursos do projeto"
+
+#~ msgid "Displaying settings"
+#~ msgstr "A visualizar configurações"
+
+#~ msgid "_Ok"
+#~ msgstr "_Ok"
+
+#~ msgid "Resource Detail"
+#~ msgstr "Detalhes do Recurso"

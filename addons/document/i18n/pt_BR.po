@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-26 22:47+0000\n"
-"Last-Translator: Emerson <Unknown>\n"
+"PO-Revision-Date: 2012-07-28 18:51+0000\n"
+"Last-Translator: Fábio Martinelli <webmaster@guaru.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-27 04:52+0000\n"
-"X-Generator: Launchpad (build 14868)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:55+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -385,6 +385,8 @@ msgid ""
 "When executing this wizard, it will configure your directories automatically "
 "according to modules installed."
 msgstr ""
+"Quando executar este assistente, ele irá configurar seus diretórios "
+"automaticamente de acordo com os módulos instalados."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -558,6 +560,8 @@ msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
 msgstr ""
+"Junto com o Modelo Parente, este ID anexa esta pasta para um registro "
+"específico ou um Modelo Parente"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -613,6 +617,10 @@ msgid ""
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
+"Se você colocar um objeto aqui, este modelo de diretório aparecerá abaixo "
+"desses objetos. Alguns diretórios são \"Anexados\" a um modelo ou registro "
+"específico,  como anexos. Não coloque um diretório parente se você "
+"selecionar um modelo parente."
 
 #. module: document
 #: view:document.directory:0
@@ -648,7 +656,7 @@ msgstr "Relacionado ao"
 
 #. module: document
 #: view:ir.attachment:0
-msgid "Attached To"
+msgid "Attached to"
 msgstr "Anexado a"
 
 #. module: document
@@ -695,6 +703,11 @@ msgid ""
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
 msgstr ""
+"O sistema de controle de documentos do OpenErp suporta mapear pastas "
+"virtuais com documentos. A pasta virtual de um documento pode ser usada para "
+"gerenciar os arquivos anexados ao documento, os para exibir ou fazer "
+"download de qualquer relatório. Esta ferramenta irá criar diretórios "
+"automaticamente de acordo com os módulos instalados."
 
 #. module: document
 #: view:board.board:0
@@ -744,12 +757,12 @@ msgstr "Armazenamento externo de arquivo"
 #: model:ir.actions.act_window,name:document.action_view_wall
 #: view:report.document.wall:0
 msgid "Wall of Shame"
-msgstr ""
+msgstr "Mural da Vergonha"
 
 #. module: document
 #: help:document.storage,path:0
 msgid "For file storage, the root path of the storage"
-msgstr ""
+msgstr "Para armazenamento de arquivos, o caminho raiz do armazenamento"
 
 #. module: document
 #: model:ir.model,name:document.model_report_files_partner
@@ -764,7 +777,7 @@ msgstr "Campo"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "Diretório Dinâmico"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
@@ -814,7 +827,7 @@ msgstr "Todos Arquivos do Usuário"
 #. module: document
 #: model:ir.model,name:document.model_report_document_wall
 msgid "Users that did not inserted documents since one month"
-msgstr ""
+msgstr "Usuários não inseriram documentos a mais de um mês"
 
 #. module: document
 #: model:ir.actions.act_window,help:document.action_document_file_form
@@ -822,11 +835,13 @@ msgid ""
 "The Documents repository gives you access to all attachments, such as mails, "
 "project documents, invoices etc."
 msgstr ""
+"O repositório de documentos lhe dá acesso a todos os anexos, como emails, "
+"documentos de projetos, faturas, etc"
 
 #. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
+msgstr "Para cada entrada aqui, arquivos virtuais irão aparecer nesta pasta"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
@@ -851,7 +866,7 @@ msgstr "Arquivos Por Parceiro"
 #. module: document
 #: view:ir.attachment:0
 msgid "Indexed Content - experimental"
-msgstr ""
+msgstr "Conteúdo Indexado - experimental"
 
 #. module: document
 #: view:report.document.user:0
@@ -877,6 +892,11 @@ msgid ""
 "resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
 msgstr ""
+"Cada diretório pode ter o tipo Estático ou ser anexado a um outro recurso. "
+"Um diretório estático, como em sistemas operacionais, é o formato clássico "
+"que contém um conjunto de arquivos. Os diretórios anexados em recursos de "
+"sistema automaticamente possuem sub-diretórios para cada tipo de recurso "
+"definido no diretório pai"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -896,6 +916,8 @@ msgid ""
 "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
 "what is typed here."
 msgstr ""
+"Nome do campo. Note que o prefixo \"dctx_\" será preposto ao que for "
+"digitado aqui."
 
 #. module: document
 #: field:document.directory,name:0
@@ -951,6 +973,8 @@ msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
 msgstr ""
+"Estes grupos, no entanto, NÃO se aplicam a diretórios filhos, que precisam "
+"definir seus próprios grupos."
 
 #. module: document
 #: field:document.directory.content.type,mimetype:0
@@ -960,7 +984,7 @@ msgstr "Mime Type"
 #. module: document
 #: view:report.document.user:0
 msgid "All Months Files"
-msgstr ""
+msgstr "Arquivos de todos os meses"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -982,7 +1006,7 @@ msgstr "Armazenamento interno de arquivo"
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory must have a parent or a storage"
-msgstr ""
+msgstr "O diretório precisa ter um pai ou um armazenamento"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -1021,6 +1045,9 @@ msgstr "Tipo de Documento"
 
 #~ msgid "Preview"
 #~ msgstr "Pré-visualizar"
+
+#~ msgid "Attached To"
+#~ msgstr "Anexado a"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

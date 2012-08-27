@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
+    <data>
         <!-- Email Template Preview -->
         <record model="ir.ui.view" id="email_template_preview_form">
             <field name="name">email_template.preview.form</field>
             <field name="model">email_template.preview</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Email Preview">
                     <field name="model_id" invisible="1"/>
@@ -28,11 +27,6 @@
                         </notebook>
                     </group>
                     <field name="report_name" colspan="4" readonly="1"/>
-                    <separator colspan="4"/>
-                    <group col="4" colspan="4">
-                        <label string=""/>
-                        <button icon="gtk-ok" special="cancel" string="Close" colspan="1"/>
-                    </group>
                 </form>
             </field>
         </record>
@@ -49,5 +43,5 @@
             <field name="context">{'template_id':active_id}</field>
         </record>
 
-	</data>
+    </data>
 </openerp>

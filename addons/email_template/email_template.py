@@ -29,11 +29,12 @@ from osv import fields
 import tools
 from tools.translate import _
 from urllib import quote as quote
+_logger = logging.getLogger(__name__)
 
 try:
     from mako.template import Template as MakoTemplate
 except ImportError:
-    logging.getLogger('init').warning("email_template: mako templates not available, templating features will not work!")
+    _logger.warning("email_template: mako templates not available, templating features will not work!")
 
 class email_template(osv.osv):
     "Templates for sending email"
@@ -75,7 +76,7 @@ class email_template(osv.osv):
                 result = u''
             return result
         except Exception:
-            logging.exception("failed to render mako template value %r", template)
+            _logger.exception("failed to render mako template value %r", template)
             return u""
 
     def get_email_template(self, cr, uid, template_id=False, record_id=None, context=None):
@@ -100,6 +101,11 @@ class email_template(osv.osv):
             mod_name = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
         return {'value':{'model': mod_name}}
 
+    def name_get(self, cr, uid, ids, context=None):
+        """ Override name_get of mail.message: return directly the template
+            name, and not the generated name from mail.message.common."""
+        return [(record.id, record.name) for record in self.browse(cr, uid, ids, context=context)]
+
     _columns = {
         'name': fields.char('Name', size=250),
         'model_id': fields.many2one('ir.model', 'Related document model'),
@@ -119,7 +125,7 @@ class email_template(osv.osv):
         'ref_ir_act_window':fields.many2one('ir.actions.act_window', 'Sidebar action', readonly=True,
                                             help="Sidebar action to make this template available on records "
                                                  "of the related document model"),
-        'ref_ir_value':fields.many2one('ir.values', 'Sidebar button', readonly=True,
+        'ref_ir_value':fields.many2one('ir.values', 'Sidebar Button', readonly=True,
                                        help="Sidebar button to open the sidebar action"),
         'track_campaign_item': fields.boolean('Resource Tracking',
                                               help="Enable this is you wish to include a special tracking marker "
@@ -128,7 +134,7 @@ class email_template(osv.osv):
                                                    "This is useful for CRM leads for example"),
 
         # Overridden mail.message.common fields for technical reasons:
-        'model': fields.related('model_id','model', type='char', string='Related Document model',
+        'model': fields.related('model_id','model', type='char', string='Related Document Model',
                                 size=128, select=True, store=True, readonly=True),
         # we need a separate m2m table to avoid ID collisions with the original mail.message entries
         'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
@@ -146,8 +152,8 @@ class email_template(osv.osv):
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
-        'body_text': fields.text('Text contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
-        'body_html': fields.text('Rich-text contents', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
+        'body_text': fields.text('Text Contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
+        'body_html': fields.text('Rich-text Contents', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
         'message_id': fields.char('Message-Id', size=256, help="Message-ID SMTP header to use in outgoing messages based on this template. "
                                                                "Please note that this overrides the 'Resource Tracking' option, "
                                                                "so if you simply need to track replies to outgoing emails, enable "
@@ -310,7 +316,8 @@ class email_template(osv.osv):
                   'attachment_ids': False,
                   'message_id': False,
                   'state': 'outgoing',
-                  'subtype': 'plain',
+                  'content_subtype': 'plain',
+                  'partner_ids': [],
         }
         if not template_id:
             return values
@@ -325,8 +332,15 @@ class email_template(osv.osv):
                                                  template.model, res_id, context=context) \
                                                  or False
 
+        # if email_to: find or create a partner
+        if values['email_to']:
+            partner_id = self.pool.get('mail.thread').message_partner_by_email(cr, uid, values['email_to'], context=context)['partner_id']
+            if not partner_id:
+                partner_id = self.pool.get('res.partner').name_create(cr, uid, values['email_to'], context=context)
+            values['partner_ids'] = [partner_id]
+
         if values['body_html']:
-            values.update(subtype='html')
+            values.update(content_subtype='html')
 
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature

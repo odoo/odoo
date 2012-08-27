@@ -1,0 +1,400 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-06-30 02:46+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:23+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
+
+#. module: stock_location
+#: selection:product.pulled.flow,picking_type:0
+#: selection:stock.location.path,picking_type:0
+msgid "Sending Goods"
+msgstr "送付製品"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Pulled Paths"
+msgstr "プル型パス"
+
+#. module: stock_location
+#: selection:product.pulled.flow,type_proc:0
+msgid "Move"
+msgstr "移動"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_stock_location_path
+msgid "Pushed Flows"
+msgstr "プッシュ型フロー"
+
+#. module: stock_location
+#: selection:stock.location.path,auto:0
+msgid "Automatic No Step Added"
+msgstr "自動段階追加なし"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Parameters"
+msgstr "パラメータ"
+
+#. module: stock_location
+#: field:product.pulled.flow,location_src_id:0
+#: field:stock.location.path,location_from_id:0
+msgid "Source Location"
+msgstr "元の場所"
+
+#. module: stock_location
+#: help:product.pulled.flow,cancel_cascade:0
+msgid "Allow you to cancel moves related to the product pull flow"
+msgstr "プル型フロー製品"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_product_pulled_flow
+#: field:product.product,flow_pull_ids:0
+msgid "Pulled Flows"
+msgstr "プル型フロー"
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "この製品に製造ロットを割り当てる必要があります。"
+
+#. module: stock_location
+#: help:product.pulled.flow,location_src_id:0
+msgid "Location used by Destination Location to supply"
+msgstr "供給する宛先の場所により使用される場所"
+
+#. module: stock_location
+#: selection:product.pulled.flow,picking_type:0
+#: selection:stock.location.path,picking_type:0
+msgid "Internal"
+msgstr "内部"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:98
+#, python-format
+msgid ""
+"Pulled procurement coming from original location %s, pull rule %s, via "
+"original Procurement %s (#%d)"
+msgstr "プル型調達は元の場所 %s から来ます。プルのルールは %s です。元の調達 %s（番号 %d）経由です。"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_stock_location
+msgid "Location"
+msgstr "場所"
+
+#. module: stock_location
+#: field:product.pulled.flow,invoice_state:0
+#: field:stock.location.path,invoice_state:0
+msgid "Invoice Status"
+msgstr "請求書の状態"
+
+#. module: stock_location
+#: help:stock.location.path,auto:0
+msgid ""
+"This is used to define paths the product has to follow within the location "
+"tree.\n"
+"The 'Automatic Move' value will create a stock move after the current one "
+"that will be validated automatically. With 'Manual Operation', the stock "
+"move has to be validated by a worker. With 'Automatic No Step Added', the "
+"location is replaced in the original move."
+msgstr ""
+"これは場所ツリーの中に従わねばならない製品のパスを定義するために使用されます。\n"
+"自動移動は、現在のものの検証が自動的に行われた後に在庫移動を作成します。手動操作は、在庫移動は作業者によって確認される必要があります。段階的追加なしの自動"
+"は、場所がオリジナルの移動で置き換えられます。"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Conditions"
+msgstr "条件"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_pack_zone
+msgid "Pack Zone"
+msgstr "梱包地のゾーン"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_b
+msgid "Gate B"
+msgstr "ゲートB"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_a
+msgid "Gate A"
+msgstr "ゲートA"
+
+#. module: stock_location
+#: selection:product.pulled.flow,type_proc:0
+msgid "Buy"
+msgstr "購入"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Pushed flows"
+msgstr "プッシュ型フロー"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_dispatch_zone
+msgid "Dispatch Zone"
+msgstr "割当ゾーン"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Pulled flows"
+msgstr "プル型フロー"
+
+#. module: stock_location
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "会社"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Logistics Flows"
+msgstr "物流フロー"
+
+#. module: stock_location
+#: help:stock.move,cancel_cascade:0
+msgid "If checked, when this move is cancelled, cancel the linked move too"
+msgstr "チェックした場合、この移動がキャンセルされる時に、関連する移動もキャンセルされます。"
+
+#. module: stock_location
+#: selection:product.pulled.flow,type_proc:0
+msgid "Produce"
+msgstr "製造"
+
+#. module: stock_location
+#: selection:product.pulled.flow,procure_method:0
+msgid "Make to Order"
+msgstr "オーダーの作成"
+
+#. module: stock_location
+#: selection:product.pulled.flow,procure_method:0
+msgid "Make to Stock"
+msgstr "在庫の作成"
+
+#. module: stock_location
+#: field:product.pulled.flow,partner_address_id:0
+msgid "Partner Address"
+msgstr "パートナの住所"
+
+#. module: stock_location
+#: selection:product.pulled.flow,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+msgid "To Be Invoiced"
+msgstr "請求対象"
+
+#. module: stock_location
+#: help:stock.location.path,delay:0
+msgid "Number of days to do this transition"
+msgstr "この遷移の実行に要する日数"
+
+#. module: stock_location
+#: help:product.pulled.flow,name:0
+msgid "This field will fill the packing Origin and the name of its moves"
+msgstr "この項目は梱包の起点と移動の名称を満たします。"
+
+#. module: stock_location
+#: field:product.pulled.flow,type_proc:0
+msgid "Type of Procurement"
+msgstr "調達のタイプ"
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company belong packings and moves"
+msgstr "これはどの会社に梱包と移動が属していたかを知るために使用されます。"
+
+#. module: stock_location
+#: field:product.pulled.flow,name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: stock_location
+#: help:product.product,path_ids:0
+msgid ""
+"These rules set the right path of the product in the whole location tree."
+msgstr "これらの規則は全体の場所のツリーの中の製品の正しいパスを設定します。"
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr "タイプビューの場所から、あるいは場所へは製品を動かすことはできません。"
+
+#. module: stock_location
+#: selection:stock.location.path,auto:0
+msgid "Manual Operation"
+msgstr "手動操作"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_product_product
+#: field:product.pulled.flow,product_id:0
+msgid "Product"
+msgstr "製品"
+
+#. module: stock_location
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "調達方法"
+
+#. module: stock_location
+#: field:product.pulled.flow,picking_type:0
+#: field:stock.location.path,picking_type:0
+msgid "Shipping Type"
+msgstr "出荷タイプ"
+
+#. module: stock_location
+#: help:product.pulled.flow,procure_method:0
+msgid ""
+"'Make to Stock': When needed, take from the stock or wait until re-"
+"supplying. 'Make to Order': When needed, purchase or produce for the "
+"procurement request."
+msgstr "在庫する：必要な時に在庫から取り出すか再供給まで待ちます。オーダーする：必要な時に調達要求のために発注するか製造するかします。"
+
+#. module: stock_location
+#: help:product.pulled.flow,location_id:0
+msgid "Is the destination location that needs supplying"
+msgstr "供給を必要とする宛先の場所です。"
+
+#. module: stock_location
+#: field:stock.location.path,product_id:0
+msgid "Products"
+msgstr "製品"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location via procurement %d"
+msgstr "調達 %d によって他の場所から引き出されました。"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.stock_location_qualitytest0
+msgid "Quality Control"
+msgstr "品質管理"
+
+#. module: stock_location
+#: selection:product.pulled.flow,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+msgid "Not Applicable"
+msgstr "適用不可"
+
+#. module: stock_location
+#: field:stock.location.path,delay:0
+msgid "Delay (days)"
+msgstr "遅延（日数）"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:67
+#, python-format
+msgid ""
+"Picking for pulled procurement coming from original location %s, pull rule "
+"%s, via original Procurement %s (#%d)"
+msgstr "オリジナルの場所 %s から来るプル型調達のための集荷、プルのルール %s、オリジナルの調達  %s（番号 %d）"
+
+#. module: stock_location
+#: field:product.product,path_ids:0
+msgid "Pushed Flow"
+msgstr "プッシュ型フロー"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:89
+#, python-format
+msgid ""
+"Move for pulled procurement coming from original location %s, pull rule %s, "
+"via original Procurement %s (#%d)"
+msgstr "オリジナルの場所 %s から来るプル型調達のための移動、プルのルール %s、オリジナルの調達  %s（番号 %d）"
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr "違う製品のロットを割り当てることはできません。"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_procurement_order
+msgid "Procurement"
+msgstr "調達"
+
+#. module: stock_location
+#: field:product.pulled.flow,location_id:0
+#: field:stock.location.path,location_dest_id:0
+msgid "Destination Location"
+msgstr "宛先場所"
+
+#. module: stock_location
+#: field:stock.location.path,auto:0
+#: selection:stock.location.path,auto:0
+msgid "Automatic Move"
+msgstr "自動移動"
+
+#. module: stock_location
+#: selection:product.pulled.flow,picking_type:0
+#: selection:stock.location.path,picking_type:0
+msgid "Getting Goods"
+msgstr "製品の取得"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Action Type"
+msgstr "アクションタイプ"
+
+#. module: stock_location
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "エラー：無効な商品識別番号です。"
+
+#. module: stock_location
+#: help:product.pulled.flow,picking_type:0
+#: help:stock.location.path,picking_type:0
+msgid ""
+"Depending on the company, choose whatever you want to receive or send "
+"products"
+msgstr "会社によります。受信あるいは送信したい製品を選択して下さい。"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_order
+msgid "Order Processing"
+msgstr "オーダー処理"
+
+#. module: stock_location
+#: field:stock.location.path,name:0
+msgid "Operation"
+msgstr "操作"
+
+#. module: stock_location
+#: view:stock.location.path:0
+msgid "Location Paths"
+msgstr "場所のパス"
+
+#. module: stock_location
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "仕訳帳"
+
+#. module: stock_location
+#: field:product.pulled.flow,cancel_cascade:0
+#: field:stock.move,cancel_cascade:0
+msgid "Cancel Cascade"
+msgstr "連続をキャンセル"
+
+#. module: stock_location
+#: selection:product.pulled.flow,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+msgid "Invoiced"
+msgstr "請求済"
