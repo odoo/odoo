@@ -694,6 +694,7 @@
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                                            <field name="prodlot_id" context="{'product_id': product_id}"/>
                                             <field name="location_id"  string="Source Loc." groups="stock.group_locations"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_consume)d"
