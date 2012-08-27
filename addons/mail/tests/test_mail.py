@@ -313,7 +313,7 @@ class test_mail(common.TransactionCase):
         first_com_pids = [partner.id for partner in first_com.partner_ids]
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', first_com.id)])
         self.assertTrue(len(first_com_pids) == 4, 'There are %s partners linked to the newly posted comment; should be 4' % (len(first_com_pids)))
-        self.assertTrue(len(notif_ids) == 4, 'There are %s 3 entries in mail_notification: should be 4' % (len(notif_ids)))
+        self.assertTrue(len(notif_ids) == 4, 'There are %s entries in mail_notification: should be 4' % (len(notif_ids)))
         self.assertTrue(all(id in [user_admin.partner_id.id, partner_bert_id, partner_raoul_id, partner_roger_id] for id in first_com_pids),
             'Admin, Bert Raoul and Roger should be the 4 partners of the newly created message')
 

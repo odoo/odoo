@@ -141,7 +141,7 @@ class mail_message(osv.Model):
             'child_ids': [],
         }
 
-    def message_read_tree_get(self, cr, uid, messages, flat=True, context=None):
+    def message_read_tree_get(self, cr, uid, messages, domain, limit, flat=True, context=None):
         """ Get a tree representation of the browse records.
             :param messages: mail.message browse record list
         """
@@ -163,6 +163,13 @@ class mail_message(osv.Model):
             if msg.id not in tree:
                 roots.append(record)
                 tree[msg.id] = record
+            if len(roots) >= limit:
+                roots.append({
+                    'type': 'expandable',
+                    'domain': [('id','<=', msg.id)]+domain,
+                    'context': context,
+                    'thread_level': thread_level  # should be improve accodting to level of records
+                })
         return roots
 
     def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, limit=None, context=None):
@@ -179,7 +186,9 @@ class mail_message(osv.Model):
             ids = self.search(cr, uid, domain, context=context, limit=limit)
         messages = self.browse(cr, uid, ids, context=context)
         # FP note - TDE note: TODO: flatten - order
-        return self.message_read_tree_get(cr, uid, messages, thread_level>0, context=context)
+        # TDE NOTE: add expandable: TO FIX WHEN SPECIFIED
+        trees = self.message_read_tree_get(cr, uid, messages, domain, limit, thread_level==0, context=context)
+        return trees
 
 
     #------------------------------------------------------

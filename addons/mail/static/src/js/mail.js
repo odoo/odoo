@@ -421,7 +421,7 @@ openerp.mail = function(session) {
             // TODO first use: use IDS, otherwise set false
 
             var read_defer = this.ds_msg.call('message_read',
-                [false, fetch_domain, this.options.thread_level, fetch_context]
+                [false, fetch_domain, this.options.thread_level, undefined, fetch_context]
                 ).then(this.proxy('message_display'));
             return read_defer;
         },
