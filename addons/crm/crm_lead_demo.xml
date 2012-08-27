@@ -560,30 +560,32 @@ Andrew</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
             <field name="type">comment</field>
-            <field name="body"><![CDATA[Internal note0]]></field>
-            <field name="parent_id" ref="message_email0"/>
             <field name="body">Dear Customer,
 Thanks for showing interest in our products.
 We have attached the catalogue,
 We would like to know your interests, Let us know if we can call you for more details.
 
 Thanks</field>
+            <field name="parent_id" ref="message_email0"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
         <record id="message_note0_comment0" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
+            <field name="type">comment</field>
             <field name="body">&lt;div&gt;Thanks for the information,&lt;/div&gt;&lt;div&gt;I will visit the store soon.&lt;/div&gt;</field>
             <field name="parent_id" ref="message_note0"/>
-            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
         <record id="message_note0_comment1" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
+            <field name="type">comment</field>
             <field name="body">&lt;font color="#1f1f1f"&gt;Can you tell me if the store is open at 9:00 PM?&lt;/b&gt;&lt;/font&gt;</field>
             <field name="parent_id" ref="message_note0"/>
-            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
         <record id="message_email1" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
@@ -591,6 +593,7 @@ Thanks</field>
             <field name="res_id" ref="crm_case_15"/>
             <field name="body">Yes, its open till 10:00 PM, you are welcome!</field>
             <field name="type">email</field>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
         <record id="message_email_12" model="mail.message">
             <field name="subject">Inquiry</field>
