@@ -69,121 +69,6 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_form">
-            <field name="name">mail.mail.form</field>
-            <field name="model">mail.mail</field>
-            <field name="arch" type="xml">
-                <form string="Email message" version="7.0">
-                    <sheet>
-                        <label for="subject" class="oe_edit_only"/>
-                        <h2><field name="subject"/></h2>
-						<div>
-                            by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/>
-                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
-                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
-                        </div>
-                        <notebook colspan="4">
-                            <page string="Message Details">
-                                <group>
-                                    <group>
-                                        <field name="email_from"/>
-                                        <field name="email_to"/>
-                                        <field name="email_cc"/>
-                                        <field name="reply_to"/>
-                                    </group>
-                                    <group>
-                                        <field name="partner_ids" widget="many2many_tags"/>
-                                    </group>
-                                </group>
-                                <notebook>
-                                    <page string="Body">
-                                        <field name="body" widget="text"/>
-                                    </page>
-                                    <page string="Body (Rich)">
-                                        <field name="body_html"/>
-                                    </page>
-                                </notebook>
-                            </page>
-                            <page string="Advanced" groups="base.group_no_one">
-                                <group>
-                                    <group>
-                                        <field name="auto_delete"/>
-                                        <field name="type"/>
-                                        <field name="content_subtype"/>
-                                        <field name="state" colspan="2"/>
-                                        <field name="mail_server_id"/>
-                                        <field name="model"/>
-                                        <field name="res_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="message_id"/>
-                                        <field name="references"/>
-                                    </group>
-                                </group>
-                            </page>
-                            <page string="Attachments">
-                                <field name="attachment_ids"/>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_mail_tree">
-            <field name="name">mail.message.tree</field>
-            <field name="model">mail.mail</field>
-            <field name="arch" type="xml">
-                <tree string="Emails" colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
-                    <field name="date"/>
-                    <field name="subject"/>
-                    <field name="author_id" string="User"/>
-                    <field name="message_id" invisible="1"/>
-                    <field name="partner_ids" invisible="1"/>
-                    <field name="model" invisible="1"/>
-                    <field name="res_id" invisible="1"/>
-                    <field name="email_from" invisible="1"/>
-                    <field name="state" invisible="1"/>
-                    <field name="type" invisible="1"/>
-                    <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
-                    <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
-                    <button name="cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_mail_search">
-            <field name="name">mail.mail.search</field>
-            <field name="model">mail.mail</field>
-            <field name="arch" type="xml">
-                <search string="Email Search">
-                    <field name="email_from" filter_domain="['|' '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
-                    <field name="date"/>
-                    <filter icon="terp-camera_test" name="received" string="Received" domain="[('state','=','received')]"/>
-                    <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
-                    <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
-                    <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
-                    <separator/>
-                    <filter icon="terp-camera_test" name="type_email" string="Email" domain="[('type','=','email')]"/>
-                    <filter icon="terp-camera_test" name="type_comment" string="Comment" domain="[('type','=','comment')]"/>
-                    <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('type','=','notification')]"/>
-                    <group expand="0" string="Extended Filters...">
-                        <field name="author_id"/>
-                        <field name="partner_ids"/>
-                        <field name="model"/>
-                        <field name="res_id"/>
-                    </group>
-                    <group expand="0" string="Group By...">
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                        <filter string="Thread" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
-                        <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
         <record id="action_view_mail_message" model="ir.actions.act_window">
             <field name="name">Messages</field>
             <field name="res_model">mail.message</field>
@@ -192,24 +77,12 @@
             <field name="search_view_id" ref="view_message_search"/>
         </record>
 
-        <record id="action_view_mail_mail" model="ir.actions.act_window">
-            <field name="name">Messages</field>
-            <field name="res_model">mail.mail</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_received': 1, 'search_default_type_email': 1}</field>
-            <field name="search_view_id" ref="view_mail_search"/>
-        </record>
-
         <act_window domain="[('partner_id', '=', active_id), ('email_from', '!=', False)]"
             context="{'default_partner_id': active_id}"
             id="act_res_partner_emails" name="Emails"
             res_model="mail.message"
             src_model="res.partner"
             view_id="view_message_tree"/>
-
-        <!-- Add menu entry in Settings/Email -->
-        <menuitem name="Mails" id="menu_mail_mail" parent="base.menu_email" action="action_view_mail_mail" />
         
         <!-- Add menu entry in Settings/Email -->
         <menuitem name="Messages" id="menu_mail_message" parent="base.menu_email" action="action_view_mail_message"/>

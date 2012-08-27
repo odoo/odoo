@@ -64,6 +64,7 @@ The main features of the module are:
         'wizard/mail_compose_message_view.xml',
         'res_config_view.xml',
         'mail_message_view.xml',
+        'mail_mail_view.xml',
         'mail_followers_view.xml',
         'mail_thread_view.xml',
         'mail_group_view.xml',
