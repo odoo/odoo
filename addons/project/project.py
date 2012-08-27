@@ -231,9 +231,6 @@ class project(osv.osv):
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
      }
 
-    def dummy(self, cr, uid, ids, context):
-        return True
-
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('case_default','=',1)], context=context)
         return ids
@@ -502,7 +499,7 @@ def Project():
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
             vals.pop('alias_name', None) # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid, 
+            alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
                           # have a catchall domain setup.
                           {'alias_name': "project+"+short_name(vals['name'])},

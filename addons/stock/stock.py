@@ -2087,11 +2087,12 @@ class stock_move(osv.osv):
                     done.append(move.id)
                     pickings[move.picking_id.id] = 1
                     r = res.pop(0)
-                    cr.execute('update stock_move set location_id=%s, product_qty=%s where id=%s', (r[1], r[0], move.id))
+                    product_uos_qty = self.pool.get('stock.move').onchange_quantity(cr, uid, ids, move.product_id.id, r[0], move.product_id.uom_id.id, move.product_id.uos_id.id)['value']['product_uos_qty']
+                    cr.execute('update stock_move set location_id=%s, product_qty=%s, product_uos_qty=%s where id=%s', (r[1], r[0],product_uos_qty, move.id))
 
                     while res:
                         r = res.pop(0)
-                        move_id = self.copy(cr, uid, move.id, {'product_qty': r[0], 'location_id': r[1]})
+                        move_id = self.copy(cr, uid, move.id, {'product_uos_qty': product_uos_qty, 'product_qty': r[0], 'location_id': r[1]})
                         done.append(move_id)
         if done:
             count += len(done)

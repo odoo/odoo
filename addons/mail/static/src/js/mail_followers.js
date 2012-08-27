@@ -36,17 +36,17 @@ openerp_mail_followers = function(session, mail) {
             // any other method to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
-            this.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
+            this.$el.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
                 .mouseover(function () { $(this).html('Follow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Not following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
-            this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
+            this.$el.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
                 .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
             this.reinit();
         },
 
         _check_visibility: function() {
-            this.$element.toggle(this.view.get("actual_mode") !== "create");
+            this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
 
         destroy: function () {
@@ -54,15 +54,15 @@ openerp_mail_followers = function(session, mail) {
         },
 
         reinit: function() {
-            this.$element.find('button.oe_mail_button_follow').hide();
-            this.$element.find('button.oe_mail_button_unfollow').hide();
+            this.$el.find('button.oe_mail_button_follow').hide();
+            this.$el.find('button.oe_mail_button_unfollow').hide();
         },
 
         set_value: function(value_) {
             this.reinit();
             if (! this.view.datarecord.id ||
                 session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
-                this.$element.find('div.oe_mail_recthread_aside').hide();
+                this.$el.find('div.oe_mail_recthread_aside').hide();
                 return;
             }
             if (this.getParent().fields.message_is_follower === undefined) {
@@ -84,18 +84,18 @@ openerp_mail_followers = function(session, mail) {
          * TODO: replace the is_follower check by fields read */
         display_followers: function (records) {
             var self = this;
-            var node_user_list = this.$element.find('ul.oe_mail_followers_display').empty();
-            this.$element.find('div.oe_mail_recthread_followers h4').html(this.options.title + ' (' + records.length + ')');
+            var node_user_list = this.$el.find('ul.oe_mail_followers_display').empty();
+            this.$el.find('div.oe_mail_recthread_followers h4').html(this.options.title + ' (' + records.length + ')');
             _(records).each(function (record) {
                 record.avatar_url = mail.ChatterUtils.get_image(self.session.prefix, self.session.session_id, 'res.partner', 'image_small', record.id);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(node_user_list);
             });
             if (this.message_is_follower) {
-                this.$element.find('button.oe_mail_button_follow').hide();
-                this.$element.find('button.oe_mail_button_unfollow').show(); }
+                this.$el.find('button.oe_mail_button_follow').hide();
+                this.$el.find('button.oe_mail_button_unfollow').show(); }
             else {
-                this.$element.find('button.oe_mail_button_follow').show();
-                this.$element.find('button.oe_mail_button_unfollow').hide(); }
+                this.$el.find('button.oe_mail_button_follow').show();
+                this.$el.find('button.oe_mail_button_unfollow').hide(); }
         },
 
         do_follow: function () {

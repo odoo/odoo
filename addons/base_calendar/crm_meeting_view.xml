@@ -70,7 +70,7 @@
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
                 <header>
-                    <field name="state"/>
+                    <field name="state" invisible="True"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -115,7 +115,7 @@
                                     <label for="allday" string="All Day?"/>)
                                 </div>
                                     <field name="recurrency"
-                                        attrs="{'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}"/>
+                                        attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>
                             </group>
                             <group>
                                 <field name="alarm_id" widget="selection" />
@@ -245,11 +245,10 @@
         <field name="model">crm.meeting</field>
         <field name="arch" type="xml">
             <tree string="Meetings" fonts="bold:message_unread==True"
-                colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="name" string="Subject" />
                 <field name="user_id"/>
                 <field name="date"/>
-                <field name="state"/>
+                <field name="state" invisible="True"/>
                 <field name="duration" />
                 <field name="message_unread" invisible="1"/>
             </tree>

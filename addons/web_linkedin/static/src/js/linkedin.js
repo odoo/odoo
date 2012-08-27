@@ -78,16 +78,12 @@ openerp.web_linkedin = function(instance) {
             }, _.bind(this.linkedin_disabled, this));
         },
         linkedin_disabled: function() {
-            if (instance.session.uid !== 1) {
-                instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning")), {
-                    title: _t("LinkedIn is not enabled"),
-                    buttons: [
-                        {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
-                    ]
-                });
-            } else {
-                new instance.web_linkedin.KeyWizard(this).open();
-            }
+            instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning")), {
+                title: _t("LinkedIn is not enabled"),
+                buttons: [
+                    {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+                ]
+            });
         },
         selected_entity: function(entity) {
             var self = this;
@@ -237,8 +233,8 @@ openerp.web_linkedin = function(instance) {
                     $row.appendTo($elem);
                 }
                 pc.appendTo($row);
-                pc.$element.css("display", "table-cell");
-                pc.$element.css("width", "20%");
+                pc.$el.css("display", "table-cell");
+                pc.$el.css("width", "20%");
                 pc.on("selected", self, function(data) {
                     self.trigger("selected", data);
                     self.destroy();
@@ -259,7 +255,7 @@ openerp.web_linkedin = function(instance) {
         },
         start: function() {
             var self = this;
-            this.$element.click(function() {
+            this.$el.click(function() {
                 self.trigger("selected", self.data);
             });
             if (this.data.__type === "company") {
@@ -270,25 +266,6 @@ openerp.web_linkedin = function(instance) {
                 self.$("img").attr("src", this.data.pictureUrl);
                 self.$(".oe_linkedin_entity_headline").text(this.data.headline);
             }
-        },
-    });
-    
-    
-    instance.web_linkedin.KeyWizard = instance.web.Dialog.extend({
-        template: "LinkedIn.KeyWizard", 
-        init: function(parent, text) {
-            this._super(parent, {title:_t("LinkedIn API Key")});
-            this.api_domain = window.location.origin;
-        },
-        start: function() {
-            this._super();
-            var self = this;
-            this.$("button").click(function() {
-                var value = self.$("input").val();
-                return new instance.web.Model("ir.config_parameter").call("set_param", ["web.linkedin.apikey", value]).pipe(function() {
-                    self.destroy();
-                });
-            });
         },
     });
 };
