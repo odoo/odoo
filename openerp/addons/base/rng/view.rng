@@ -187,7 +187,10 @@
             <rng:optional><rng:attribute name="create" /></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:ref name="node"/>
-            <rng:ref name="arrow"/>
+            <rng:ref name="arrow"/>            
+            <rng:zeroOrMore>
+                <rng:ref name="label"/>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 

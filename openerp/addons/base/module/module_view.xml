@@ -38,7 +38,7 @@
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
                 <search string="Search modules">
-                    <field name="name" filter_domain="['|', '|', '|', ('description', 'ilike', self), ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
+                    <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
                         'ilike', self)]"/>
                     <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
                     <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
@@ -65,7 +65,7 @@
                   <field name="summary"/>
                   <templates>
                     <t t-name="kanban-box">
-                      <div class="oe_module_vignette oe_kanban_auto_height">
+                      <div class="oe_module_vignette">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
                         <div class="oe_module_desc">
@@ -133,7 +133,7 @@
                     </group>
                     <notebook>
                         <page string="Description">
-                            <field name="description"/>
+                            <field name="description_html"/>
                         </page>
                         <page string="Technical Data" groups="base.group_no_one">
                             <group col="4">

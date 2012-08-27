@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -332,7 +332,7 @@ class res_users(osv.osv):
         return super(res_users, self).copy(cr, uid, id, copydef, context)
 
     def context_get(self, cr, uid, context=None):
-        user = self.browse(cr, uid, uid, context)
+        user = self.browse(cr, 1, uid, context)
         result = {}
         for k in self._all_columns.keys():
             if k.startswith('context_'):
