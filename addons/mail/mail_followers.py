@@ -106,7 +106,7 @@ class mail_notification(osv.Model):
             :param message: browse record on source mail.message
         """
         subject = msg.subject or '%s posted a comment on %s' % (msg.author_id.name, msg.record_name)
-        body = msg.body
+        body = msg.body or ''
         author_signature = msg.author_id.user_ids[0].signature
         if author_signature:
             body += '<div>%s</div>' % (author_signature)
