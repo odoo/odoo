@@ -52,7 +52,7 @@ class project_configuration(osv.osv_memory):
         'module_project_issue_sheet': fields.boolean("invoice working time on issues",
             help="""Provides timesheet support for the issues/bugs management in project.
                 This installs the module project_issue_sheet."""),
-        'group_tasks_work_on_tasks': fields.boolean("compute work activities on tasks",
+        'group_tasks_work_on_tasks': fields.boolean("Log work activities on tasks",
             implied_group='project.group_tasks_work_on_tasks',
             help="Allows you to compute work on tasks."),
         'group_time_work_estimation_tasks': fields.boolean("manage time estimation on tasks",
@@ -71,5 +71,17 @@ class project_configuration(osv.osv_memory):
         config = self.browse(cr, uid, ids[0], context)
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         user.company_id.write({'project_time_mode_id': config.time_unit.id})
+
+    def onchange_time_estimation(self, cr, uid, ids, group_time_work_estimation_tasks):
+        if group_time_work_estimation_tasks:
+            return {'value': {'group_tasks_work_on_tasks': True}}
+        else :
+            return {'value': {'group_tasks_work_on_tasks': False}}
+
+    def onchange_project_timesheet(self, cr, uid, ids, module_project_timesheet):
+        if module_project_timesheet:
+            return {'value': {'group_tasks_work_on_tasks': True}}
+        else :
+            return {'value': {'group_tasks_work_on_tasks': False}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
