@@ -20,8 +20,9 @@
 ##############################################################################
 
 from osv import osv
+from tools.translate import _
 try:
-    from mygengo import MyGeng
+    from mygengo import MyGengo
 except ImportError:
     raise osv.except_osv(_('Gengo ImportError'), _('Please install mygengo lib from http://pypi.python.org/pypi/mygengo'))
 
