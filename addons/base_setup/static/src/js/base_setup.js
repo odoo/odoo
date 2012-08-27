@@ -7,13 +7,13 @@ openerp.base_setup = function(openerp) {
             if (this.dataset.model === 'res.partner') {
                 /* Set names for partner categories */
                 var category_ids = [];
-                this.$element.find('.oe_kanban_partner_categories span').each(function() {
+                this.$el.find('.oe_kanban_partner_categories span').each(function() {
                     category_ids.push($(this).data('category_id'));
                 });
                 var dataset = new openerp.web.DataSetSearch(this, 'res.partner.category', self.session.context);
                 dataset.name_get(_.uniq(category_ids)).then(function(result) {
                     _.each(result, function(value) {
-                        self.$element
+                        self.$el
                             .find('.oe_kanban_partner_categories span[data-category_id=' + value[0] + ']')
                             .html(value[1]);
                     });

@@ -89,7 +89,7 @@ openerp.share = function(session) {
         start: function() {
             start_res = this._super.apply(this, arguments);
             if (has_action_id) {
-                this.$element.find('button.oe_share_invite').show();
+                this.$el.find('button.oe_share_invite').show();
             }
             return start_res;
         }
@@ -100,7 +100,7 @@ openerp.share = function(session) {
             var self = this;
             this.check_if_action_is_defined();
             has_share(function() {
-                self.$element.delegate('button.oe_share_invite', 'click', self.on_click_share_invite);
+                self.$el.delegate('button.oe_share_invite', 'click', self.on_click_share_invite);
             });
             return this._super.apply(this, arguments);
         },
