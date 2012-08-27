@@ -812,7 +812,7 @@ class ir_actions_todo(osv.osv):
         wizard_id = ids and ids[0] or False
         wizard = self.browse(cr, uid, wizard_id, context=context)
         res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, ['name', 'view_type', 'view_mode', 'res_model', 'context', 'views', 'type'], context=context)
-        res.update({'target':'new', 'nodestroy': True})
+        res.update(target='new', nodestroy=True, context={'active_action_todo': wizard.id})
         return res
 
     def action_open(self, cr, uid, ids, context=None):
