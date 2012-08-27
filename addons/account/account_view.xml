@@ -197,14 +197,14 @@
                             <field name="credit" attrs="{'readonly':[('type','=','view')]}"/>
                             <field name="balance"/>
                         </group>
-                        <group>
+                        <group groups="base.group_multi_currency">
                             <field name="tax_ids" domain="[('parent_id','=',False)]" widget="many2many_tags"/>
                             <field name="reconcile"/>
                             <field name="child_consol_ids"
                                 attrs="{'invisible':[('type','!=','consolidation')]}"
                                 widget="many2many_tags"/>
                         </group>
-                        <group>
+                        <group groups="base.group_multi_currency">
                             <field name="currency_id"/>
                             <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>
                         </group>
@@ -248,7 +248,7 @@
                     <field name="balance"/>
                     <field name="type"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="company_currency_id"/>
+                    <field name="company_currency_id" groups="base.group_multi_currency"/>
                 </tree>
             </field>
         </record>
@@ -296,7 +296,7 @@
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
-                    <field name="company_currency_id"/>
+                    <field name="company_currency_id" groups="base.group_multi_currency"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="type"/>
                     <field name="parent_id" invisible="1"/>
@@ -321,7 +321,7 @@
                     <field name="parent_id" invisible="1"/>
                     <field name="user_type" invisible="1"/>
                     <field name="type" invisible="1"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="exchange_rate"/>
                     <field name="foreign_balance"/>
                     <field name="adjusted_balance"/>
@@ -489,7 +489,7 @@
                         <group>
                             <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="currency"/>
+                            <field name="currency" groups="base.group_multi_currency"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -645,7 +645,7 @@
                             <label for="balance_start"/>
                             <div>
                                 <field name="balance_start" class="oe_inline"/>
-                                <field name="currency" class="oe_inline"/>
+                                <field name="currency" class="oe_inline" groups="base.group_multi_currency"/>
                             </div>
                             <field name="balance_end_real"/>
                         </group>
@@ -1066,8 +1066,8 @@
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
-                    <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}"/>
-                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}"/>
+                    <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
+                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
                     <field name="reconcile_partial_id"/>
                     <field name="reconcile_id"/>
                     <field name="state"/>
@@ -1118,7 +1118,7 @@
 	                                    <field name="tax_amount"/>
 	                                    <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
 	                                </group>
-	                                <group attrs="{'readonly':[('state','=','valid')]}" string="Currency">
+	                                <group attrs="{'readonly':[('state','=','valid')]}" string="Currency" groups="base.group_multi_currency">
 	                                    <field name="currency_id"/>
 	                                    <field name="amount_currency"/>
 	                                </group>
@@ -1166,8 +1166,8 @@
                                 <field name="credit"/>
 
                                 <separator colspan="4" string="Optional Information"/>
-                                <field name="currency_id"/>
-                                <field name="amount_currency"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="amount_currency" groups="base.group_multi_currency"/>
                                 <field name="quantity"/>
                                 <field name="move_id" required="False"/>
                                 <newline/>
@@ -1394,7 +1394,7 @@
                                                     <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                                                 </group>
 
-                                                <group string="Currency">
+                                                <group string="Currency" groups="base.group_multi_currency">
                                                     <field name="currency_id"/>
                                                     <field name="amount_currency"/>
                                                 </group>
@@ -1431,8 +1431,8 @@
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
                                     <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
-                                    <field name="amount_currency"/>
-                                    <field name="currency_id"/>
+                                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="tax_code_id"/>
                                     <field name="tax_amount"/>
                                     <field name="state"/>
@@ -2075,7 +2075,7 @@
                                 <field name="type"/>
                                 <field name="user_type"/>
 
-                                <field name="currency_id"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
                                 <field name="reconcile"/>
                                 <field name="chart_template_id"/>
                             </group>
@@ -2400,7 +2400,7 @@
                             <tree editable="bottom">
                                 <field name="acc_name"/>
                                 <field name="account_type"/>
-                                <field name="currency_id" widget="selection"/>
+                                <field name="currency_id" widget="selection" groups="base.group_multi_currency"/>
                             </tree>
                         </field>
                     </div>
@@ -2565,7 +2565,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <field name="date" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
                             <field name="closing_date" readonly="1"/>
                             <field name="period_id" class="oe_inline"/>
-                            <field name="currency" invisible="1"/>
+                            <field name="currency" invisible="1" groups="base.group_multi_currency"/>
                         </group>
                     </group>
                     <notebook>

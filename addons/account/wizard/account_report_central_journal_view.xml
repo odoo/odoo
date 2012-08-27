@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="account_common_report_view" />
             <field name="arch" type="xml">
                 <field name="target_move" position="after">
-                    <field name="amount_currency"/>
+                    <field name="amount_currency" groups="base.group_multi_currency"/>
                     <newline/>
                 </field>
             </field>

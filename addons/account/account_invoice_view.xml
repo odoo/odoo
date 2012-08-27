@@ -127,7 +127,7 @@
                     <field name="user_id"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="residual" sum="Residual Amount"/>
                     <field name="amount_untaxed" sum="Untaxed Amount"/>
                     <field name="amount_total" sum="Total Amount"/>
@@ -184,7 +184,7 @@
                                 name="account_id" groups="account.group_account_user"/>
                             <field name="journal_id" groups="account.group_account_user"
                                 on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
-                            <field name="currency_id"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
                         </group>
                     </group>
                     <notebook>
@@ -264,8 +264,8 @@
                                     <field name="journal_id"/>
                                     <field name="debit"/>
                                     <field name="credit"/>
-                                    <field name="amount_currency"/>
-                                    <field name="currency_id"/>
+                                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
                                 </tree>
                             </field>
                         </page>
@@ -326,9 +326,9 @@
                             <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"
                                 name="account_id" groups="account.group_account_user"/>
 
-                            <label for="currency_id"/>
+                            <label for="currency_id" groups="base.group_multi_currency"/>
                             <div>
-                                <field name="currency_id" class="oe_inline"/>
+                                <field name="currency_id" class="oe_inline" groups="base.group_multi_currency"/>
                                 <!-- note fp: I don't think we need this feature ?
                                 <button name="%(action_account_change_currency)d" type="action"
                                   icon="terp-stock_effects-object-colorize"
@@ -418,8 +418,8 @@
                                     <field name="journal_id" groups="base.group_user"/>
                                     <field name="debit"/>
                                     <field name="credit"/>
-                                    <field name="amount_currency"/>
-                                    <field name="currency_id"/>
+                                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
                                 </tree>
                             </field>
                         </page>
