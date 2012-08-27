@@ -101,6 +101,7 @@ class project_task(osv.osv):
         return True
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if not context: context = {}
         res = super(project_task,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         search_extended = False
         timebox_obj = self.pool.get('project.gtd.timebox')
@@ -115,7 +116,7 @@ class project_task(osv.osv):
                 search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" context="{'user_invisible': True}"/>\n'''
             search_extended +='''<separator orientation="vertical"/>'''
 
-            res['arch'] = res['arch'].replace('<separator name="gtdsep"/>', search_extended)
+            res['arch'] = tools.ustr(res['arch']).replace('<separator name="gtdsep"/>', search_extended)
 
         return res
 

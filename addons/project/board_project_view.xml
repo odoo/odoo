@@ -2,14 +2,12 @@
 <openerp>
     <data>
 
-        <!-- My task -->
         <record id="view_task_tree" model="ir.ui.view">
             <field name="name">project.task.tree</field>
             <field name="model">project.task</field>
-            <field name="type">tree</field>
             <field eval="99" name="priority"/>
             <field name="arch" type="xml">
-                  <tree colors="red:date_deadline&lt;current_date;blue:date_deadline==current_date;black:date_deadline&gt;current_date" string="My Tasks">
+                <tree colors="red:date_deadline&lt;current_date;blue:date_deadline==current_date;black:date_deadline&gt;current_date" string="My Tasks">
                     <field name="name"/>
                     <field name="project_id"/>
                     <field name="date_deadline"/>
@@ -17,77 +15,32 @@
                     <field name="planned_hours" widget="float_time"/>
                     <field name="effective_hours" widget="float_time"/>
                     <field name="progress" widget="progressbar"/>
-                    <field name="state" invisible="context.get('set_visible',False)"/>
-                    <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
-                    <button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
-                    <button name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-sort-descending" help="For changing to delegate state"/>
-                    <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close" help="For changing to done state"/>
+                    <field name="stage_id" invisible="context.get('set_visible',False)"/>
+                    <field name="state" invisible="context.get('set_visible',False)" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
-
-        <record id="view_delegated_task_tree" model="ir.ui.view">
-            <field name="name">project.task.delegated.tree</field>
-            <field name="model">project.task</field>
-            <field name="type">tree</field>
-            <field eval="99" name="priority"/>
-            <field name="arch" type="xml">
-                  <tree colors="red:date_deadline&lt;current_date" string="My Delegated Tasks">
-                    <field name="name"/>
-                    <field name="project_id"/>
-                    <field name="delegated_user_id"/>
-                    <field name="date_deadline"/>
-                    <field name="total_hours" widget="float_time"/>
-                    <field name="progress" widget="progressbar"/>
-                    <field name="state" invisible="context.get('set_visible',False)"/>
-                    <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
-                    <button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
-                    <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="gtk-apply" help="For changing to done state"/>
-                </tree>
-            </field>
-        </record>
-
 
         <record id="my_open_tasks_action" model="ir.actions.act_window">
-            <field name="name">My Open Tasks</field>
+            <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid),('state','=','open')]</field>
-            <field name="view_id" ref="view_task_tree"/>
-        </record>
-
-        <record id="action_view_delegate_task_tree" model="ir.actions.act_window">
-            <field name="name">My Delegated Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('parent_ids.user_id','=',uid),('state', 'in', ('draft','open','pending'))]</field>
-            <field name="view_id" ref="view_delegated_task_tree"/>
-        </record>
-
-        <record id="action_view_task_tree_deadline" model="ir.actions.act_window">
-            <field name="name">My Task's Deadlines</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid),('state','=','open'),('date_deadline','&lt;&gt;',False)]</field>
+            <field name="domain">[('user_id','=',uid),('state','not in',('cancel','done'))]</field>
             <field name="view_id" ref="view_task_tree"/>
         </record>
 
         <record id="board_project_form" model="ir.ui.view">
             <field name="name">board.project.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="My Board" layout="manual">
+                <form string="My Board" version="7.0">
                     <board style="2-1">
                         <column>
-                            <action name="%(my_open_tasks_action)d" string="My Open Tasks" creatable="true"/>
-                            <action name="%(action_view_delegate_task_tree)d" string="My Delegated Tasks"/>
+                            <action name="%(my_open_tasks_action)d" string="My Tasks"/>
                         </column>
                         <column>
-                            <action name="%(project.action_project_vs_remaining_hours_graph)d" string="My Remaining Hours by Project"/>
+                            <action name="%(action_view_task_history_cumulative)d" string="Open Tasks"/>
                         </column>
                     </board>
                 </form>
@@ -95,7 +48,7 @@
         </record>
 
         <record id="open_board_project" model="ir.actions.act_window">
-            <field name="name">Project Dashboard</field>
+            <field name="name">Project</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -103,23 +56,10 @@
             <field name="view_id" ref="board_project_form"/>
         </record>
 
-        <menuitem
-            id="menu_project_dashboard"
-            name="Project"
-            sequence="20"
-            parent="base.menu_reporting_dashboard"
-            />
-
-        <menuitem
-            action="open_board_project"
-            icon="terp-graph"
-            id="menu_board_project"
-            parent="menu_project_dashboard"
-            sequence="1"/>
-
-        <menuitem
-            icon="terp-project" id="base.menu_main_pm"
-            name="Project" sequence="10" action="open_board_project"/>
+        <menuitem id="menu_project_dashboard"
+                  sequence="35"
+                  parent="base.menu_reporting_dashboard"
+                  action="open_board_project"/>
 
     </data>
 </openerp>

@@ -19,42 +19,38 @@
 #
 ##############################################################################
 {
-    "name" : "eInvoicing",
-    "version" : "1.1",
-    "author" : "OpenERP SA",
-    "category": 'Accounting & Finance',
-    'complexity': "easy",
-    "description": """
+    'name' : 'eInvoicing',
+    'version' : '1.1',
+    'author' : 'OpenERP SA',
+    'category' : 'Accounting & Finance',
+    'description' : """
 Accounting and Financial Management.
 ====================================
 
 Financial and accounting module that covers:
 --------------------------------------------
-General accountings
-Cost / Analytic accounting
-Third party accounting
-Taxes management
-Budgets
-Customer and Supplier Invoices
-Bank statements
-Reconciliation process by partner
+    * General Accounting
+    * Cost/Analytic accounting
+    * Third party accounting
+    * Taxes management
+    * Budgets
+    * Customer and Supplier Invoices
+    * Bank statements
+    * Reconciliation process by partner
 
 Creates a dashboard for accountants that includes:
 --------------------------------------------------
-* List of Customer Invoice to Approve
-* Company Analysis
-* Graph of Aged Receivables
-* Graph of Treasury
+    * List of Customer Invoice to Approve
+    * Company Analysis
+    * Graph of Treasury
 
-The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
-grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
-module named account_voucher.
+The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) 
+for a particular financial year and for preparation of vouchers there is a module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'init_xml': [],
-    "depends" : ["base_setup", "product", "analytic", "process", "board", "edi"],
-    'update_xml': [
+    'depends' : ['base_setup', 'product', 'analytic', 'process', 'board', 'edi'],
+    'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
@@ -100,12 +96,14 @@ module named account_voucher.
         'wizard/account_reconcile_partner_process_view.xml',
         'wizard/account_automatic_reconcile_view.xml',
         'wizard/account_financial_report_view.xml',
+        'wizard/pos_box.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_end_fy.xml',
         'account_invoice_view.xml',
         'partner_view.xml',
         'data/account_data.xml',
         'data/data_account_type.xml',
+        'data/configurable_account_chart.xml',
         'account_invoice_workflow.xml',
         'project/project_view.xml',
         'project/project_report.xml',
@@ -123,12 +121,12 @@ module named account_voucher.
         'ir_sequence_view.xml',
         'company_view.xml',
         'board_account_view.xml',
-        "edi/invoice_action_data.xml",
-        "account_bank_view.xml",
-        "res_config_view.xml",
-        "account_pre_install.yml"
+        'edi/invoice_action_data.xml',
+        'account_bank_view.xml',
+        'res_config_view.xml',
+        'account_pre_install.yml'
     ],
-    'demo_xml': [
+    'demo': [
         'demo/account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
@@ -145,8 +143,8 @@ module named account_voucher.
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
         'test/account_fiscalyear_close.yml',
-        'test/account_bank_statement.yml',
-        'test/account_cash_statement.yml',
+        #'test/account_bank_statement.yml',
+        #'test/account_cash_statement.yml',
         'test/test_edi_invoice.yml',
         'test/account_report.yml',
         'test/account_fiscalyear_close_state.yml', #last test, as it will definitively close the demo fiscalyear

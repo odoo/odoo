@@ -24,23 +24,20 @@
         <record id="view_hr_timesheet_invoice_create_final" model="ir.ui.view">
             <field name="name">hr.timesheet.invoice.create.final.form</field>
             <field name="model">hr.timesheet.invoice.create.final</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Invoice contract">
-                <group col="4" colspan="6">
-                    <separator string="Do you want to display work details on the invoice ?" colspan="4"/>
+            <form string="Invoice contract" version="7.0">
+                    <separator string="Do you want to display work details on the invoice?" colspan="4"/>
                     <field name="date"/>
                     <field name="time"/>
                     <field name="name"/>
                     <field name="price"/>
                     <separator string="Force to use a special product" colspan="4"/>
                     <field name="product"/>
-                </group>
-                <separator colspan="4"/>
-                <group col="2" colspan="4">
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="do_create" string="Create Invoice" colspan="1" type="object" icon="terp-gtk-go-back-rtl"/>
-                </group>
+                <footer>
+                    <button name="do_create" string="Create Invoice" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>
