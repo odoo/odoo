@@ -141,54 +141,60 @@ class mail_message(osv.Model):
             'child_ids': [],
         }
 
-    def message_read_tree_get(self, cr, uid, messages, domain, limit, flat=True, context=None):
-        """ Get a tree representation of the browse records.
-            :param messages: mail.message browse record list
+    def _debug_print_tree(self, tree, prefix=''):
+        for elem in tree:
+            print '%s%s' % (prefix, elem['id'])
+            if elem['child_ids']:
+                self._debug_print_tree(elem['child_ids'], prefix+'-')
+
+    def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, limit=None, context=None):
+        """ 
+            If IDS are provided, fetch these records, otherwise use the domain to
+            fetch the matching records. After having fetched the records provided
+            by IDS, it will fetch children (according to thread_level).
+            
+            Return [
+            
+            ]
         """
-        roots = []
+        limit = limit or self._message_read_limit
+        context = context or {}
+        if ids is False:
+            ids = self.search(cr, uid, domain, context=context, limit=limit)
+
+        # FP Todo: flatten to max X level of mail_thread
+        messages = self.browse(cr, uid, ids, context=context)
+
+        result = []
         tree = {} # key: ID, value: record
         for msg in messages:
-            record = self._message_dict_get(cr, uid, msg, context=context)
-            if not flat and msg.parent_id:
-                while msg.parent_id:
-                    if msg.parent_id.id in tree:
-                        record_parent = tree[msg.parent_id.id]
-                    else:
-                        record_parent = self._message_dict_get(cr, uid, msg.parent_id, context=context)
-                        if msg.parent_id.parent_id:
-                            tree[msg.parent_id.id] = record_parent
-                    record_parent['child_ids'].append(record)
-                    record = record_parent
-                    msg = msg.parent_id
-            if msg.id not in tree:
-                roots.append(record)
-                tree[msg.id] = record
-            if len(roots) >= limit:
-                roots.append({
+            if len(result)<(limit-1):
+                record = self._message_dict_get(cr, uid, msg, context=context)
+                if thread_level and msg.parent_id:
+                    while msg.parent_id:
+                        if msg.parent_id.id in tree:
+                            record_parent = tree[msg.parent_id.id]
+                        else:
+                            record_parent = self._message_dict_get(cr, uid, msg.parent_id, context=context)
+                            if msg.parent_id.parent_id and msg.parent_id.id not in tree:
+                                tree[msg.parent_id.id] = record_parent
+                        record_parent['child_ids'].append(record)
+                        record = record_parent
+                        msg = msg.parent_id
+                if msg.id not in tree:
+                    result.append(record)
+                    tree[msg.id] = record
+            else:
+                result.append({
                     'type': 'expandable',
                     'domain': [('id','<=', msg.id)]+domain,
                     'context': context,
                     'thread_level': thread_level  # should be improve accodting to level of records
                 })
-        return roots
-
-    def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, limit=None, context=None):
-        """ Fetch and read messages. If IDs are provided, fetch these records.
-            Otherwise use the domain to fetch the matching records. After having
-            fetched the records provided by IDS, it will fetch children
-            according to thread_level.
-
-            :return result: A tree structure: list of msg_dict, with child_ids
-                being also msg_dict.
-        """
-        limit = limit or self._message_read_limit
-        if ids is False:
-            ids = self.search(cr, uid, domain, context=context, limit=limit)
-        messages = self.browse(cr, uid, ids, context=context)
-        # FP note - TDE note: TODO: flatten - order
-        # TDE NOTE: add expandable: TO FIX WHEN SPECIFIED
-        trees = self.message_read_tree_get(cr, uid, messages, domain, limit, thread_level==0, context=context)
-        return trees
+                break
+        # TDE temp: debug print
+        # self._debug_print_tree(result)
+        return result
 
 
     #------------------------------------------------------

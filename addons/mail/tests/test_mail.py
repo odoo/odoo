@@ -121,7 +121,7 @@ class test_mail(common.TransactionCase):
                           self.mail_thread.message_process,
                           cr, uid, None, mail_spam)
 
-    def test_01_many2many_reference_field(self):
+    def test_10_many2many_reference_field(self):
         """ Tests designed for the many2many_reference field (follower_ids).
             We will test to perform writes using the many2many commands 0, 3, 4,
             5 and 6. """
@@ -205,7 +205,7 @@ class test_mail(common.TransactionCase):
         self.assertTrue(all(id in follower_ids for id in [partner_bert_id, user_admin.partner_id.id]),
             'Bert and Admin should be the followers of dummy mail.group data')
 
-    def test_02_message_followers(self):
+    def test_11_message_followers(self):
         """ Tests designed for the subscriber API. """
         cr, uid = self.cr, self.uid
         user_admin = self.res_users.browse(cr, uid, uid)
@@ -234,41 +234,8 @@ class test_mail(common.TransactionCase):
         self.assertTrue(all(id in follower_ids for id in [user_admin.partner_id.id]),
             'Admin the only Pigs group followers')
 
-    def test_03_message_read(self):
-        """ Tests designed for message_read. """
-        def _flatten(read_dict):
-            res = []
-            for val in read_dict:
-                current = {'_id': val['id']}
-                if val.get('child_ids'):
-                    current['child_ids'] = _flatten(val.get('child_ids'))
-                res.append(current)
-            return res
-
-        # TDE NOTE: this test is not finished, as the message_read method is not fully specified.
-        # It wil be updated as soon as we have fixed specs !
-        cr, uid  = self.cr, self.uid
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-
-        # Add a few messages to pigs group
-        msgid1 = group_pigs.message_post(body='My Body', subject='1', parent_id=False)
-        msgid2 = group_pigs.message_post(body='My Body', subject='1-1', parent_id=msgid1)
-        msgid3 = group_pigs.message_post(body='My Body', subject='1-2', parent_id=msgid1)
-        msgid4 = group_pigs.message_post(body='My Body', subject='2', parent_id=False)
-        msgid5 = group_pigs.message_post(body='My Body', subject='1-1-1', parent_id=msgid2)
-        msgid6 = group_pigs.message_post(body='My Body', subject='2-1', parent_id=msgid4)
-        msgid7 = group_pigs.message_post(body='My Body', subject='1-3', parent_id=msgid1)
-        msgid8 = group_pigs.message_post(body='My Body', subject='1-3-1', parent_id=msgid7)
-
-        # First try: read flat
-        first_try_ids = [msgid8, msgid7, msgid6, msgid5, msgid4, msgid3, msgid2, msgid1]
-        res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=0)
-        
-        # Second try: read with thread_level 1
-        res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1)
-
-    def test_10_mail_composer(self):
-        """ Tests designed for the mail.compose.message wizard. """
+    def test_20_message_post_and_compose(self):
+        """ Tests designed for message_post and the mail.compose.message wizard. """
         cr, uid = self.cr, self.uid
         mail_compose = self.registry('mail.compose.message')
         user_admin = self.res_users.browse(cr, uid, uid)
@@ -338,3 +305,42 @@ class test_mail(common.TransactionCase):
             'Wizard message has model: %s and res_id:%s; should be mail.group and %s' % (compose.model, compose.res_id, self.group_pigs_id))
         self.assertTrue(compose.parent_id.id == first_com.id,
             'Wizard parent_id is %d; should be %d' % (compose.parent_id.id, first_com.id))
+
+    def test_30_message_read(self):
+        """ Tests designed for message_read. """
+        def _simplify_struct(read_dict):
+            res = []
+            for val in read_dict:
+                current = {'_id': val['id']}
+                if val.get('child_ids'):
+                    current['child_ids'] = _flatten(val.get('child_ids'))
+                res.append(current)
+            return res
+
+        # TDE NOTE: this test is not finished, as the message_read method is not fully specified.
+        # It wil be updated as soon as we have fixed specs !
+        cr, uid  = self.cr, self.uid
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+
+        # Add a few messages to pigs group
+        msgid1 = group_pigs.message_post(body='My Body', subject='1', parent_id=False)
+        msgid2 = group_pigs.message_post(body='My Body', subject='1-1', parent_id=msgid1)
+        msgid3 = group_pigs.message_post(body='My Body', subject='1-2', parent_id=msgid1)
+        msgid4 = group_pigs.message_post(body='My Body', subject='2', parent_id=False)
+        msgid5 = group_pigs.message_post(body='My Body', subject='1-1-1', parent_id=msgid2)
+        # msgid6 = group_pigs.message_post(body='My Body', subject='2-1', parent_id=msgid4)
+        # msgid7 = group_pigs.message_post(body='My Body', subject='1-3', parent_id=msgid1)
+        # msgid8 = group_pigs.message_post(body='My Body', subject='1-3-1', parent_id=msgid7)
+
+        # First try: read flat
+        # first_try_ids = [msgid8, msgid7, msgid6, msgid5, msgid4, msgid3, msgid2, msgid1]
+        # res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=0)
+
+        # Second try: read with thread_level 1
+        res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1)
+        # print res
+        self.assertTrue(len(res) == 2, 'Incorrect number of child in message_read')
+        self.assertTrue(len(res[0]['child_ids']) == 2, 'Incorrect number of child in message_read')
+        self.assertTrue(len(res[0]['child_ids'][0]['child_ids']) == 1, 'Incorrect number of child in message_read')
+        # trees = self.mail_message.message_read_tree_flatten_main(cr, uid, res, thread_level=0)
+        # print trees
