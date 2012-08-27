@@ -877,13 +877,17 @@
                 <form string="Point of Sale Session" version="7.0">
                     <header>
                         <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" class="oe_highlight"/>
-                        <button name="cashbox_control" type="workflow" string="End of Session" states="opened"
-                            class="oe_highlight"/>
+                        <button name="cashbox_control" type="workflow" string="End of Session"
+                            attrs="{'invisible' : [('has_closing_control', '=', False),('state', '=', 'opened')]}" 
+                            class="oe_highlight" />
+                        <button name="close" type="workflow" string="Validate Closing &amp; Post Entries"
+                            attrs="{'invisible' : [('has_closing_control', '=', True),('state', '=', 'opened')]}"
+                            class="oe_highlight" />
                         <button name="close" type="workflow" string="Validate Closing &amp; Post Entries" states="closing_control"
-                            class="oe_highlight"/>
+                            class="oe_highlight" />
                         <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"/>
                         <div class="oe_right">
-                            <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1"/>
+                            <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1" />
                         </div>
                     </header>
                     <sheet>
@@ -895,16 +899,16 @@
                             Session:
                             <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
                         </h1>
-                        <field name="has_opening_control" invisible="1" />
-                        <field name="has_closing_control" invisible="1" />
                         <group>
+                            <field name="has_opening_control" invisible="1" />
+                            <field name="has_closing_control" invisible="1" />
                             <group>
                                 <field name="user_id"/>
                                 <field name="config_id" attrs="{'invisible' : [('config_id', '&lt;&gt;', False)]}"/>
                             </group>
                             <group>
                                 <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
-                                <field name="stop_at" attrs="{'invisible' : [('state', '&lt;&gt;', 'closed')]}"/>
+                                <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                             </group>
                             <newline/>
 
