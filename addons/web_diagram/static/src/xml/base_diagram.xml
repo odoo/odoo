@@ -2,7 +2,7 @@
 <t t-name="DiagramView">
     <div class="oe_diagram_header" t-att-id="element_id + '_header'">
         <h3 class="oe_diagram_title"/>
-            <t t-if="this._is_action_enabled('create')">
+            <t t-if="widget._is_action_enabled('create')">
                 <div class="oe_diagram_buttons">
                         <button type="button" id="new_node" class="oe_button oe_diagram_button_new">New Node</button>
                 </div>

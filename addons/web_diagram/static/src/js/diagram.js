@@ -47,7 +47,7 @@ instance.web.DiagramView = instance.web.View.extend({
             return label.tag == "label";
         });
 
-        this.$el.html(QWeb.render("DiagramView", this));
+        this.$el.html(QWeb.render("DiagramView", {'widget': this}));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
 
         _.each(self.labels,function(label){
