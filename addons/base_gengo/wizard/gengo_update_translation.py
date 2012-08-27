@@ -21,6 +21,7 @@
 
 from osv import osv
 from tools.translate import _
+import re
 try:
     from mygengo import MyGengo
 except ImportError:
@@ -29,54 +30,31 @@ except ImportError:
 import logging
 import tools
 import time
-from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-
 LIMIT = 20
 
-LANG_MAPPING = {
-    'ar': 'Arabic',
-    'id': 'Indonesian',
-    'nl': 'Dutch',
-    'fr-ca': 'French (Canada)',
-    'pl': 'Polish',
-    'zh-tw': 'Chinese (Traditional)',
-    'sv': 'Swedish',
-    'ko': 'Korean',
-    'pt': 'Portuguese (Europe)',
-    'en': 'English',
-    'ja': 'Japanese',
-    'es': 'Spanish (Spain)',
-    'zh': 'Chinese (Simplified)',
-    'de': 'German',
-    'fr': 'French',
-    'ru': 'Russian',
-    'it': 'Italian',
-    'pt-br': 'Portuguese (Brazil)',
-}
-
 LANG_CODE_MAPPING = {
-    'ar_SA': 'ar',
-    'id_ID': 'id',
-    'nl_NL': 'nl',
-    'fr_CA': 'fr-ca',
-    'pl': 'pl',
-    'zh_TW': 'zh-tw',
-    'sv_SE': 'sv',
-    'ko_KR': 'ko',
-    'pt_PT': 'pt',
-    'en_US': 'en',
-    'ja_JP': 'ja',
-    'es_ES': 'es',
-    'zh_CN': 'zh',
-    'de_DE': 'de',
-    'fr_FR': 'fr',
-    'fr_BE': 'fr',
-    'ru_RU': 'ru',
-    'it_IT': 'it',
-    'pt_BR': 'pt-br'
+    'ar_SA': ('ar', 'Arabic'),
+    'id_ID': ('id', 'Indonesian'),
+    'nl_NL': ('nl', 'Dutch'),
+    'fr_CA': ('fr-ca', 'French (Canada)'),
+    'pl': ('Polish'),
+    'zh_TW': ('zh-tw', 'Chinese (Traditional)'),
+    'sv_SE': ('sv', 'Swedish'),
+    'ko_KR': ('ko', 'Korean'),
+    'pt_PT': ('pt', 'Portuguese (Europe)'),
+    'en_US': ('en', 'English'),
+    'ja_JP': ('ja', 'Japanese'),
+    'es_ES': ('es', 'Spanish (Spain)'),
+    'zh_CN': ('zh', 'Chinese (Simplified)'),
+    'de_DE': ('de', 'German'),
+    'fr_FR': ('fr', 'French'),
+    'fr_BE': ('fr', 'French'),
+    'ru_RU': ('ru', 'Russian'),
+    'it_IT': ('it', 'Italian'),
+    'pt_BR': ('pt-br', 'Portuguese (Brazil)')
 }
 
 cron_vals = {
@@ -97,12 +75,12 @@ class base_update_translation(osv.osv_memory):
 
     def gengo_authentication(self, cr, uid, context=None):
         ''' To Send Request and Get Response from Gengo User needs Public and Private
-         key for that user need to signup to gengo and get public and private
+         key for that user need to sign up to gengo and get public and private
          key which is provided by gengo to authentic user '''
 
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
-            return (False, "Invalid gengo configuration.\nEither pulic key or private key is missing.")
+            return (False, "Invalid gengo configuration.\n Either public key or private key is missing.")
         try:
             gengo = MyGengo(
                 public_key=user.company_id.gengo_public_key.encode('ascii'),
@@ -112,7 +90,7 @@ class base_update_translation(osv.osv_memory):
             gengo.getAccountStats()
             return (True, gengo)
         except Exception, e:
-            return (False, "Gengo Connection Error\n"+e.message)
+            return (False, "Gengo Connection Error\n" + e.message)
 
     def pack_jobs_request(self, cr, uid, term_ids, context):
         jobs = {}
@@ -122,17 +100,18 @@ class base_update_translation(osv.osv_memory):
         if gengo_parameter_pool.company_id.gengo_auto_approve:
             auto_approve = 1
         for term in translation_pool.browse(cr, uid, term_ids, context):
-            if term.src and term.src != "":
-                job = {'type': 'text',
-                        'slug': 'single::English to' + LANG_CODE_MAPPING[term.lang],
-                        'tier': tools.ustr(gengo_parameter_pool.company_id.gengo_tier),
-                        'body_src': term.src,
-                        'lc_src': 'en',
-                        'lc_tgt': LANG_CODE_MAPPING[term.lang],
-                        'auto_approve': auto_approve,
-                        'comment': gengo_parameter_pool.company_id.gengo_comment,
-                }
-                jobs.update({term.id: job})
+            if term.src:
+                if re.search(r"\w",term.src):
+                    job = {'type': 'text',
+                            'slug': 'single::English to ' + LANG_CODE_MAPPING[term.lang][1],
+                            'tier': tools.ustr(gengo_parameter_pool.company_id.gengo_tier),
+                            'body_src': term.src,
+                            'lc_src': 'en',
+                            'lc_tgt': LANG_CODE_MAPPING[term.lang][0],
+                            'auto_approve': auto_approve,
+                            'comment': gengo_parameter_pool.company_id.gengo_comment,
+                    }
+                    jobs.update({term.id: job})
         return {'jobs': jobs}
 
     def check_lang_support(self, cr, uid, langs, context=None):
@@ -150,9 +129,10 @@ class base_update_translation(osv.osv_memory):
             if lang_pair['opstat'] == 'ok':
                 for g_lang in lang_pair['response']:
                     for l in langs:
-                        if LANG_CODE_MAPPING[l] == g_lang['lc_tgt'] and g_lang['tier'] == tier:
+                        if LANG_CODE_MAPPING[l][0] == g_lang['lc_tgt'] and g_lang['tier'] == tier:
                             new_langs.append(l)
             return list(set(new_langs))
+
     def _update_terms(self, cr, uid, ids, response, tier, context):
         translation_pool = self.pool.get('ir.translation')
         for jobs in response['jobs']:
@@ -167,17 +147,18 @@ class base_update_translation(osv.osv_memory):
 
     def _send_translation_terms(self, cr, uid, ids, term_ids, context):
         """
-        Lazy Polling will be perform when user or cron request for the trnalstion.
+        Lazy Polling will be perform when user or cron request for the translation.
         """
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         flag, gengo = self.gengo_authentication(cr, uid, context)
         if flag:
-
             request = self.pack_jobs_request(cr, uid, term_ids, context)
-            if request:
+            if request['jobs']:
                 result = gengo.postTranslationJobs(jobs=request)
                 if result['opstat'] == 'ok':
                     self._update_terms(cr, uid, ids, result['response'], user.company_id.gengo_tier, context)
+            else:
+                _logger.info('')
         else:
             _logger.error(gengo)
         return True
@@ -197,7 +178,7 @@ class base_update_translation(osv.osv_memory):
             context = {}
         lang_pool = self.pool.get('res.lang')
         super(base_update_translation, self).act_update(cr, uid, ids, context)
-        msg = "1. Translation file loaded succesfully.\n2. Processing Gengo Translation:\n"
+        msg = "1. Translation file loaded successfully.\n2. Processing Gengo Translation:\n"
         flag, gengo = self.gengo_authentication(cr, uid, context)
         if not flag:
             msg += gengo
@@ -207,11 +188,11 @@ class base_update_translation(osv.osv_memory):
                 lang_search = lang_pool.search(cr, uid, [('gengo_sync', '=', True),
                 ('id', '=', lang_id[0])])
                 if lang_search:
-                    msg += 'This language %s is alreay in queue for processing.' % (res.lang)
+                    msg += 'This language %s is already in queue for processing.' % (res.lang)
                 else:
                     msg += "Translation for language %s is queued for processing." % (res.lang)
                     lang_pool.write(cr, uid, lang_id, {'gengo_sync': True})
-                    _logger.info("Your translation request for language '%s' has been send sucessfully.", res.lang)
+                    _logger.info("Your translation request for language '%s' has been send successfully.", res.lang)
 
                 self.do_check_schedular(cr, uid, 'gengo_sync_send_request_scheduler', 'Gengo Sync Translation (Request)', '_sync_request', context)
                 self.do_check_schedular(cr, uid, 'gengo_sync_receive_request_scheduler', 'Gengo Sync Translation (Response)', '_sync_response', context)
