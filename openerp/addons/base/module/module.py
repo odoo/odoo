@@ -99,9 +99,8 @@ class module(osv.osv):
     def _get_desc(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
-            desc = self.get_module_info(module.name).get('description', '')
             overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
-            output = publish_string(source=desc, writer_name='html', settings_overrides=overrides)
+            output = publish_string(source=module.description, writer_name='html', settings_overrides=overrides)
             res[module.id] = output
         return res
 
@@ -193,7 +192,8 @@ class module(osv.osv):
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
         'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
         'summary': fields.char('Summary', size=64, readonly=True, translate=True),
-        'description': fields.function(_get_desc, string='Description', type='html', method=True, readonly=True, store=True),
+        'description': fields.text("Description", readonly=True, translate=True),
+        'description_html': fields.function(_get_desc, string='Description HTML', type='html', method=True, readonly=True),
         'author': fields.char("Author", size=128, readonly=True),
         'maintainer': fields.char('Maintainer', size=128, readonly=True),
         'contributors': fields.text('Contributors', readonly=True),
@@ -233,7 +233,7 @@ class module(osv.osv):
                 ('AGPL-3', 'Affero GPL-3'),
                 ('Other OSI approved licence', 'Other OSI Approved Licence'),
                 ('Other proprietary', 'Other Proprietary')
-            ], string='License', readonly=True),
+        ], string='License', readonly=True),
         'menus_by_module': fields.function(_get_views, string='Menus', type='text', multi="meta", store=True),
         'reports_by_module': fields.function(_get_views, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, string='Views', type='text', multi="meta", store=True),
@@ -382,7 +382,8 @@ class module(osv.osv):
         ir_model_data = self.pool.get('ir.model.data')
         ir_model_constraint = self.pool.get('ir.model.constraint')
         modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
-        constraint_ids = ir_model_constraint.search(cr, uid, [('module', 'in', modules_to_remove)])
+        modules_to_remove_ids = [m.id for m in self.browse(cr, uid, ids, context)]
+        constraint_ids = ir_model_constraint.search(cr, uid, [('module', 'in', modules_to_remove_ids)])
         ir_model_constraint._module_data_uninstall(cr, uid, constraint_ids, context)
         ir_model_data._module_data_uninstall(cr, uid, modules_to_remove, context)
         self.write(cr, uid, ids, {'state': 'uninstalled'})
