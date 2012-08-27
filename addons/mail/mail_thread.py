@@ -459,7 +459,7 @@ class mail_thread(osv.Model):
                 data.update({
                     'email_to': email_to,
                     'email_from': email_from or \
-                        thread._model._columns.get('user_id') and thread.user_id and thread.user_id.user_email,
+                        thread._model._columns.get('user_id') and thread.user_id and thread.user_id.email,
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
                     'references': references,
