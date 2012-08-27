@@ -156,7 +156,7 @@ class res_company(osv.osv):
         if bank_ids:
             bank_ids = self.browse(cr, uid, ids[0], context=context).bank_ids
             bank_account_numbers = [bank_account.acc_number for bank_account in bank_ids if bank_account.footer]
-
+            # append the account(s) in the footer and manage plural form of "account" if necessary
             val.append(_('Bank Account'+('s' if len(bank_account_numbers) > 1 else '')+': ')+', '.join(bank_account_numbers))
 
         footer = ' | '.join(val)
