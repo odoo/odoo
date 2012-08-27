@@ -5,7 +5,6 @@
             <field name="name">Translations</field>
             <field name="model">ir.translation</field>
             <field name="inherit_id" ref="base.view_translation_search"/>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Translations">
                      <filter icon="terp-project" string="In Progress" domain="[('state','=','inprogress')]"></filter>
@@ -19,7 +18,6 @@
             <field name="name">ir.translation.form.inherit</field>
             <field name="inherit_id" ref="base.view_translation_form"/>
             <field name="model">ir.translation</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                  <xpath expr="//form[@string='Translations']/sheet" position="inside">
                     <group string="comments" col="1">
