@@ -34,9 +34,9 @@ class res_company(osv.Model):
                                           ('ultra', 'Ultra')], "Tier types", required=True),
            "gengo_comment": fields.text("comments"),
            "gengo_auto_approve": fields.boolean("Auto Approve Translation ?", help="Jobs are Automatically Approved by Gengo."),
-           "fields_ids": fields.many2many('ir.model.fields', 'fields_company_rel', 'field_id', 'model_id', 'fields'),
     }
 
     _defaults = {
         "gengo_tier": "machine",
+        "gengo_auto_approve": True,
     }
