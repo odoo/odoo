@@ -11,12 +11,12 @@
             <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
             <button type="button" class="oe_mail_button_followers">Show followers</button>
         </div>
+        <ul class="oe_mail_recthread_subtype"></ul>
         <div class="oe_mail_recthread_followers">
             <t t-if="widget.params.title">
                 <h4><t t-raw="widget.params.title"/></h4>
             </t>
             <ul class="oe_mail_followers_display"></ul>
-            <ul class="oe_mail_recthread_subtype"></ul>
         </div>
     </div>
 
@@ -33,7 +33,7 @@
         record_thread.subtype template
         Template used to display subtype of record
     -->
-    <li t-name="mail.record_thread.subtype">
+    <div t-name="mail.record_thread.subtype">
         <table width="50%">
             <tr>
                 <td>
@@ -44,6 +44,6 @@
                 </td>
             </tr>
         </table>
-    </li>
+    </div>
 
 </template>
