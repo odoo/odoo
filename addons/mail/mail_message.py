@@ -21,7 +21,6 @@
 
 import logging
 from email.header import decode_header
-
 from osv import osv, fields
 import tools
 
@@ -45,15 +44,22 @@ class mail_message(osv.Model):
     _inherit = ['ir.needaction_mixin']
     _order = 'id desc'
 
+    _message_read_limit = 10
+    _message_record_name_length = 18
+
+    def _shorten_name(self, name):
+        if len(name) <= (self._message_record_name_length+3):
+            return name
+        else:
+            return name[:18] + '...'
+
     def get_record_name(self, cr, uid, ids, name, arg, context=None):
+        """ Return the related document name, using get_name. """
         result = dict.fromkeys(ids, '')
         for message in self.browse(cr, uid, ids, context=context):
             if not message.model or not message.res_id:
                 continue
-            doc = self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1]
-            if len(doc)>18:
-                doc=doc[:18]+'...'
-            result[message.id] = doc
+            result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
         return result
 
     def name_get(self, cr, uid, ids, context=None):
@@ -62,12 +68,8 @@ class mail_message(osv.Model):
             ids = [ids]
         res = []
         for message in self.browse(cr, uid, ids, context=context):
-            name = ''
-            if message.subject:
-                name = '%s: ' % (message.subject)
-            if message.body:
-                name = name + message.body[0:20]
-            res.append((message.id, name))
+            name = '%s: %s' % (message.subject or '', message.body or '')
+            res.append((message.id, self._shorten_name(name.lstrip(' :'))))
         return res
 
     _columns = {
