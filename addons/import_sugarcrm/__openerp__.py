@@ -24,15 +24,16 @@
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """
-This Module Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees,
-Meetings, Phonecalls, Emails, Project and Project Tasks Data into OpenERP Module.""",
+This Module Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, Project and Project Tasks Data into OpenERP Module.
+=========================================================================================================================================================================
+""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['import_base','crm', 'document'],
     'data': [
-        "wizard/import_message_view.xml",
-        "import_sugarcrm_view.xml",
-        "security/ir.model.access.csv",
+        'wizard/import_message_view.xml',
+        'import_sugarcrm_view.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [],
     'test': [],

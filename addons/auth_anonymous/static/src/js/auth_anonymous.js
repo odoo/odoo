@@ -26,10 +26,10 @@ openerp.auth_anonymous = function(instance) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            this.$element.find('.oe_topbar_anonymous_login').click(function() {
+            this.$el.find('.oe_topbar_anonymous_login').click(function() {
                 var p = self.getParent();
                 var am = p.action_manager;
-                p.$element.find('.oe_leftbar').hide();
+                p.$el.find('.oe_leftbar').hide();
                 am.do_action({
                     type:'ir.actions.client',
                     tag:'login',
