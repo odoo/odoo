@@ -1,138 +1,138 @@
 <?xml version="1.0"?>
 <openerp>
-	<data noupdate="1">
-	
-	 <record model="res.request.link" id="request_link_meeting">
-	        <field name="name">Event</field>
-	        <field name="object">calendar.event</field>
-	    </record>
+    <data noupdate="1">
+    
+     <record model="res.request.link" id="request_link_event">
+            <field name="name">Event</field>
+            <field name="object">calendar.event</field>
+        </record>
 
-		<record model="res.alarm" id="alarm1">
-			<field name="name">1 minute before</field>
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="1" />
-			<field name="trigger_interval">minutes</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+        <record model="res.alarm" id="alarm1">
+            <field name="name">1 minute before</field>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="1" />
+            <field name="trigger_interval">minutes</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm2">
-			<field name="name">5 minutes before</field>
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="5" />
-			<field name="trigger_interval">minutes</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+        <record model="res.alarm" id="alarm2">
+            <field name="name">5 minutes before</field>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="5" />
+            <field name="trigger_interval">minutes</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm3">
-			<field name="name">10 minutes before</field>
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="10" />
-			<field name="trigger_interval">minutes</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+        <record model="res.alarm" id="alarm3">
+            <field name="name">10 minutes before</field>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="10" />
+            <field name="trigger_interval">minutes</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm4">
-			<field name="name">15 minutes before</field>
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="15" />
-			<field name="trigger_interval">minutes</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+        <record model="res.alarm" id="alarm4">
+            <field name="name">15 minutes before</field>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="15" />
+            <field name="trigger_interval">minutes</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm5">
-			<field name="name">30 minutes before</field>
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="30" />
-			<field name="trigger_interval">minutes</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+        <record model="res.alarm" id="alarm5">
+            <field name="name">30 minutes before</field>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="30" />
+            <field name="trigger_interval">minutes</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm6">
-			<field name="name">45 minutes before</field>
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="45" />
-			<field name="trigger_interval">minutes</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+        <record model="res.alarm" id="alarm6">
+            <field name="name">45 minutes before</field>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="45" />
+            <field name="trigger_interval">minutes</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm7">
-			<field name="name">1 hour before</field>
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="1" />
-			<field name="trigger_interval">hours</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+        <record model="res.alarm" id="alarm7">
+            <field name="name">1 hour before</field>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="1" />
+            <field name="trigger_interval">hours</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm8">
-			<field name="name">2 hours before</field>
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="2" />
-			<field name="trigger_interval">hours</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+        <record model="res.alarm" id="alarm8">
+            <field name="name">2 hours before</field>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="2" />
+            <field name="trigger_interval">hours</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm9">
-			<field name="name">3 hours before</field>
+        <record model="res.alarm" id="alarm9">
+            <field name="name">3 hours before</field>
 
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="3" />
-			<field name="trigger_interval">hours</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="3" />
+            <field name="trigger_interval">hours</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm10">
-			<field name="name">4 hours before</field>
+        <record model="res.alarm" id="alarm10">
+            <field name="name">4 hours before</field>
 
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="4" />
-			<field name="trigger_interval">hours</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="4" />
+            <field name="trigger_interval">hours</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm11">
-			<field name="name">5 hours before</field>
+        <record model="res.alarm" id="alarm11">
+            <field name="name">5 hours before</field>
 
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="5" />
-			<field name="trigger_interval">hours</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="5" />
+            <field name="trigger_interval">hours</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
-		<record model="res.alarm" id="alarm12">
-			<field name="name">18 hours before</field>
+        <record model="res.alarm" id="alarm12">
+            <field name="name">18 hours before</field>
 
-			<field name="active" eval="1" />
-			<field name="trigger_duration" eval="18" />
-			<field name="trigger_interval">hours</field>
-			<field name="trigger_occurs">before</field>
-			<field name="trigger_related">start</field>
-		</record>
+            <field name="active" eval="1" />
+            <field name="trigger_duration" eval="18" />
+            <field name="trigger_interval">hours</field>
+            <field name="trigger_occurs">before</field>
+            <field name="trigger_related">start</field>
+        </record>
 
 
-		<!-- Scheduler for Event Alarm-->
-		<record forcecreate="True" id="ir_cron_scheduler_alarm"
-			model="ir.cron">
-			<field name="name">Run Event Reminder</field>
-			<field eval="True" name="active" />
-			<field name="user_id" ref="base.user_root" />
-			<field name="interval_number">1</field>
-			<field name="interval_type">minutes</field>
-			<field name="numbercall">-1</field>
-			<field eval="False" name="doall" />
-			<field eval="'calendar.alarm'" name="model" />
-			<field eval="'do_run_scheduler'" name="function" />
-			<field eval="'(False,)'" name="args" />
-		</record>
-	</data>
+        <!-- Scheduler for Event Alarm-->
+        <record forcecreate="True" id="ir_cron_scheduler_alarm"
+            model="ir.cron">
+            <field name="name">Run Event Reminder</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field eval="'calendar.alarm'" name="model" />
+            <field eval="'do_run_scheduler'" name="function" />
+            <field eval="'(False,)'" name="args" />
+        </record>
+    </data>
 </openerp>

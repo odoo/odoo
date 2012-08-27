@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2011-01-18 12:23+0000\n"
-"Last-Translator: Pekka Pylvänäinen <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:48+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:03+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:57+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation Type"
-msgstr ""
+msgstr "Kutsun tyyppi"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -31,7 +31,7 @@ msgstr "Tapahtuma alkaa"
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Declined Invitations"
-msgstr ""
+msgstr "Hylätyt kutsut"
 
 #. module: base_calendar
 #: help:calendar.event,exdate:0
@@ -63,7 +63,7 @@ msgstr "Kuukausittain"
 #. module: base_calendar
 #: selection:calendar.attendee,cutype:0
 msgid "Unknown"
-msgstr ""
+msgstr "Tuntematon"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -115,7 +115,7 @@ msgstr "Neljäs"
 #: code:addons/base_calendar/base_calendar.py:1006
 #, python-format
 msgid "Count cannot be negative"
-msgstr ""
+msgstr "Laskurin arvo ei voi olla negatiivinen"
 
 #. module: base_calendar
 #: field:calendar.event,day:0
@@ -203,7 +203,7 @@ msgstr "Tapahtuman viite"
 
 #. module: base_calendar
 #: view:calendar.event:0
-msgid "Show time as"
+msgid "Show Time as"
 msgstr "Näytä aika muodossa"
 
 #. module: base_calendar
@@ -238,7 +238,7 @@ msgstr "Huone"
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Accepted Invitations"
-msgstr ""
+msgstr "Hyväksytyt kutsut"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
@@ -268,7 +268,7 @@ msgstr "Toimintosarja"
 #: code:addons/base_calendar/base_calendar.py:1004
 #, python-format
 msgid "Interval cannot be negative"
-msgstr ""
+msgstr "Väli ei voi olla negatiivinen"
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -280,7 +280,7 @@ msgstr "Peruutettu"
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
 #, python-format
 msgid "%s must have an email  address to send mail"
-msgstr ""
+msgstr "%s pitää olla sähköpostiosoite sähköpostin lähettämistä varten"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
@@ -419,6 +419,7 @@ msgstr "Osallistujat"
 #, python-format
 msgid "Group by date not supported, use the calendar view instead"
 msgstr ""
+"Päivämäärän mukaan luokittelua ei tueta, käytä kalenterinäkymää sen sijaan"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -468,7 +469,7 @@ msgstr "Sijainti"
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
 msgid "Public for Employees"
-msgstr ""
+msgstr "Julkinen työntekijöille"
 
 #. module: base_calendar
 #: field:base_calendar.invite.attendee,send_mail:0
@@ -533,7 +534,7 @@ msgstr "Vastaus vaaditaan?"
 #: field:calendar.event,base_calendar_url:0
 #: field:calendar.todo,base_calendar_url:0
 msgid "Caldav URL"
-msgstr ""
+msgstr "Caldav URL"
 
 #. module: base_calendar
 #: field:calendar.event,recurrent_uid:0
@@ -567,7 +568,7 @@ msgstr "Delegoitu"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "To"
-msgstr ""
+msgstr "Vastaanottaja"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -588,7 +589,7 @@ msgstr "Luotu"
 #. module: base_calendar
 #: sql_constraint:ir.model:0
 msgid "Each model must be unique!"
-msgstr ""
+msgstr "Jokaisen mallin pitää olla uniikki"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
@@ -775,7 +776,7 @@ msgstr "Jäsen"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "From"
-msgstr ""
+msgstr "Lähettäjä"
 
 #. module: base_calendar
 #: field:calendar.event,rrule:0
@@ -800,7 +801,7 @@ msgstr "Kutsun lähetti"
 
 #. module: base_calendar
 #: view:calendar.event:0
-msgid "End of recurrency"
+msgid "End of Recurrency"
 msgstr "Toiston loppu"
 
 #. module: base_calendar
@@ -840,6 +841,8 @@ msgid ""
 "Reference to the URIthat points to the directory information corresponding "
 "to the attendee."
 msgstr ""
+"Viite URL osoitteeseen, joka osoittaa hakemistoon jossa on osallistujaa "
+"koskevat tiedot"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -856,7 +859,7 @@ msgstr "Maanantai"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Mallit"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -875,7 +878,7 @@ msgstr "Tapahtuman päivä"
 #: selection:calendar.event,end_type:0
 #: selection:calendar.todo,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "Toistojen määrä"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -919,7 +922,7 @@ msgstr "Tiedot"
 #: field:calendar.event,end_type:0
 #: field:calendar.todo,end_type:0
 msgid "Recurrence termination"
-msgstr ""
+msgstr "Toiston lopettaminen"
 
 #. module: base_calendar
 #: field:calendar.event,mo:0
@@ -930,7 +933,7 @@ msgstr "Ma"
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitations To Review"
-msgstr ""
+msgstr "Tarkistettavat kutsut"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -964,7 +967,7 @@ msgstr "Tammikuu"
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Delegated Invitations"
-msgstr ""
+msgstr "Delegoidut kutsut"
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_interval:0
@@ -996,7 +999,7 @@ msgstr "Aktiivinen"
 #: code:addons/base_calendar/base_calendar.py:389
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "Et voi kopioida kalenterin mukaista osallistujaa"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1250,7 +1253,7 @@ msgstr "Kutsu ihmisisä"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Confirmed Events"
-msgstr ""
+msgstr "Vahvistetut tapahtumat"
 
 #. module: base_calendar
 #: field:calendar.attendee,dir:0
@@ -1544,6 +1547,9 @@ msgstr "Viides"
 #~ msgid "Title"
 #~ msgstr "Otsikko"
 
+#~ msgid "Show time as"
+#~ msgstr "Näytä aika muodossa"
+
 #~ msgid "Secondly"
 #~ msgstr "Sekunneittain"
 
@@ -1581,6 +1587,9 @@ msgstr "Viides"
 #, python-format
 #~ msgid "Count can not be Negative"
 #~ msgstr "Laskuri ei voi olla negatiivinen"
+
+#~ msgid "End of recurrency"
+#~ msgstr "Toiston loppu"
 
 #~ msgid "Count"
 #~ msgstr "Määrä"

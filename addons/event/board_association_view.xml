@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    <!--  Need to merge this action in associations -->
-
+        <!-- Events dashboard -->
         <record model ="ir.ui.view" id="view_report_event_reg_graph">
             <field name="name">Registration Event report</field>
             <field name="model">report.event.registration</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Events Filling Status" type="bar" >
                     <field name="event_id"/>
@@ -26,29 +24,36 @@
             <field name="view_id" ref="view_report_event_reg_graph"/>
         </record>
 
-       <record model="ir.actions.act_window" id="act_event_view">
-           <field name="name">Next Events</field>
-           <field name="type">ir.actions.act_window</field>
-           <field name="res_model">event.event</field>
-           <field name="view_type">form</field>
-           <field name="view_mode">tree,form</field>
-       </record>
+        <record model="ir.actions.act_window" id="act_event_view">
+            <field name="name">Next Events</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">event.event</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','not in',('cancel','done'))]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_event_view_registration">
+            <field name="name">New Registration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">event.registration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','draft')]</field>
+        </record>
 
         <record model="ir.ui.view" id="board_associations_manager_form">
             <field name="name">board.associations.manager.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Association Dashboard" layout="manual">
+                <form string="Association Dashboard" version="7.0">
                     <board style="2-1">
                         <column>
-                            <action string="Next Events"
-                                name="%(act_event_view)d"
-                                domain="[('state','not in',('cancel','done'))]"/>
+                            <action string="Next Events" name="%(act_event_view)d"/>
+                            <action string="New Registrations" name="%(act_event_view_registration)d"/>
                         </column>
                         <column>
-                            <action string="Events Filling Status"
-                                name="%(act_event_reg)d"/>
+                            <action string="Events Filling By Status" name="%(act_event_reg)d"/>
                         </column>
                     </board>
                 </form>
@@ -56,20 +61,17 @@
         </record>
 
         <record model="ir.actions.act_window" id="open_board_associations_manager">
-            <field name="name">Event Dashboard</field>
+            <field name="name">Events</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_associations_manager_form"/>
         </record>
-        <menuitem id="menus_event_dashboard" name="Events"
-            parent="base.menu_reporting_dashboard" sequence="25"/>
-        <menuitem
-            name="Event Dashboard" parent="menus_event_dashboard"
-            action="open_board_associations_manager"
-            sequence="1"
-            id="menu_board_associations_manager"
-            icon="terp-graph"/>
 
+        <menuitem id="menu_board_associations_manager"
+                  parent="base.menu_reporting_dashboard"
+                  action="open_board_associations_manager"
+                  sequence="40"
+                  icon="terp-graph"/>
     </data>
 </openerp>

@@ -3,45 +3,36 @@
         <record id="view_account_configuration_installer" model="ir.ui.view">
             <field name="name">account.installer.form</field>
             <field name="model">account.installer</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
-            <data>
-                <form position="attributes">
+                <form position="attributes" version="7.0">
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
-                <separator string="title" position="attributes">
-                    <attribute name="string">Configure Your Chart of Accounts</attribute>
-                </separator>
-                <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default.</attribute>
-                </xpath>
-                <xpath expr="//button[@string='Install Modules']" position="attributes">
-                    <attribute name="string">Configure</attribute>
-                </xpath>
-                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                    <attribute name="rowspan">23</attribute>
-                    <attribute name="string"/>
-                </xpath>
-                <group colspan="8" position="inside">
-                    <group colspan="4" width="600">
-                            <field name="charts"/>
-                            <group colspan="4" groups="account.group_account_user">
-                                <separator col="4" colspan="4" string="Configure Fiscal Year"/>
-                                <field name="has_default_company" invisible="1" />
-                                <field name="company_id" colspan="4" widget="selection" attrs="{'invisible' : [('has_default_company', '=', True)]}"/><!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                                <field name="date_start" on_change="on_change_start_date(date_start)"/>
-                                <field name="date_stop"/>
-                                <field name="period" colspan="4"/>
-                            </group>
-                        </group>
+                <footer position="replace">
+                    <footer>
+                      <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
+                    </footer>
+                </footer>
+                <separator string="title" position="replace">
+                    <group>
+                        <field name="charts"/>
                     </group>
-                </data>
+                    <group string="Configure your Fiscal Year" groups="account.group_account_user">
+                        <field name="has_default_company" invisible="1" />
+                        <field name="company_id" colspan="4" widget="selection" attrs="{'invisible' : [('has_default_company', '=', True)]}"/><!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
+                        <label for="date_start" string="Date Range"/>
+                        <div>
+                            <field name="date_start" on_change="on_change_start_date(date_start)" class="oe_inline"/> -
+                            <field name="date_stop" class="oe_inline"/>
+                        </div>
+                        <field name="period"/>
+                    </group>
+                </separator>
             </field>
         </record>
 
         <record id="action_account_configuration_installer" model="ir.actions.act_window">
-            <field name="name">Install your Chart of Accounts</field>
+            <field name="name">Configure your Chart of Accounts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.installer</field>
             <field name="view_id" ref="view_account_configuration_installer"/>
@@ -50,14 +41,8 @@
             <field name="target">new</field>
         </record>
 
-        <record id="category_accounting_configuration" model="ir.actions.todo.category">
-            <field name="name">Accounting</field>
-            <field name="sequence">5</field>
-        </record>
-
         <record id="account_configuration_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_account_configuration_installer"/>
-            <field name="category_id" ref="category_accounting_configuration"/>
             <field name="sequence">3</field>
             <field name="type">automatic</field>
         </record>

@@ -56,7 +56,7 @@ class abstracted_fs(object):
         self.cwd = '/'
         self.cwd_node = None
         self.rnfr = None
-        self._log = logging.getLogger('FTP.fs')
+        self._log = logging.getLogger(__name__)
 
     # Ok
     def db_list(self):
@@ -81,7 +81,7 @@ class abstracted_fs(object):
                         self.db_name_list.append(db_name)
                     cr.commit()
                 except Exception:
-                    self._log.warning('Cannot use db "%s"', db_name)
+                    self._log.warning('Cannot use db "%s".', db_name)
             finally:
                 if cr is not None:
                     cr.close()
@@ -143,40 +143,40 @@ class abstracted_fs(object):
             child = node.child(cr, objname)
             if child:
                 if child.type not in ('file','content'):
-                    raise OSError(1, 'Operation not permited.')
+                    raise OSError(1, 'Operation is not permitted.')
 
                 ret = child.open_data(cr, mode)
                 cr.commit()
-                assert ret, "Cannot create descriptor for %r: %r" % (child, ret)
+                assert ret, "Cannot create descriptor for %r: %r." % (child, ret)
                 return ret
         except EnvironmentError:
             raise
         except Exception:
-            self._log.exception('Cannot locate item %s at node %s', objname, repr(node))
+            self._log.exception('Cannot locate item %s at node %s.', objname, repr(node))
             pass
 
         try:
             child = node.create_child(cr, objname, data=None)
             ret = child.open_data(cr, mode)
-            assert ret, "cannot create descriptor for %r" % child
+            assert ret, "Cannot create descriptor for %r." % child
             cr.commit()
             return ret
         except EnvironmentError:
             raise
         except Exception:
-            self._log.exception('Cannot create item %s at node %s', objname, repr(node))
-            raise OSError(1, 'Operation not permited.')
+            self._log.exception('Cannot create item %s at node %s.', objname, repr(node))
+            raise OSError(1, 'Operation is not permitted.')
 
     def open(self, datacr, mode):
         if not (datacr and datacr[1]):
-            raise OSError(1, 'Operation not permited.')
+            raise OSError(1, 'Operation is not permitted.')
         # Reading operation
         cr, node, rem = datacr
         try:
             res = node.open_data(cr, mode)
             cr.commit()
         except TypeError:
-            raise IOError(errno.EINVAL, "No data")
+            raise IOError(errno.EINVAL, "No data.")
         return res
 
     # ok, but need test more
@@ -211,9 +211,9 @@ class abstracted_fs(object):
             self.cwd_node = None
             return None
         if not datacr[1]:
-            raise OSError(1, 'Operation not permitted')
+            raise OSError(1, 'Operation is not permitted.')
         if datacr[1].type not in  ('collection','database'):
-            raise OSError(2, 'Path is not a directory')
+            raise OSError(2, 'Path is not a directory.')
         self.cwd = '/'+datacr[1].context.dbname + '/'
         self.cwd += '/'.join(datacr[1].full_path())
         self.cwd_node = datacr[1]
@@ -223,7 +223,7 @@ class abstracted_fs(object):
         """Create the specified directory."""
         cr, node, rem = datacr or (None, None, None)
         if not node:
-            raise OSError(1, 'Operation not permited.')
+            raise OSError(1, 'Operation is not permitted.')
 
         try:
             basename =_to_unicode(basename)
@@ -231,8 +231,8 @@ class abstracted_fs(object):
             self._log.debug("Created child dir: %r", cdir)
             cr.commit()
         except Exception:
-            self._log.exception('Cannot create dir "%s" at node %s', basename, repr(node))
-            raise OSError(1, 'Operation not permited.')
+            self._log.exception('Cannot create dir "%s" at node %s.', basename, repr(node))
+            raise OSError(1, 'Operation is not permitted.')
 
     def close_cr(self, data):
         if data and data[0]:
@@ -287,10 +287,10 @@ class abstracted_fs(object):
                 p_parts = p_parts[1:]
             # self._log.debug("Path parts: %r ", p_parts)
             if not p_parts:
-                raise IOError(errno.EPERM, 'Cannot perform operation at root dir')
+                raise IOError(errno.EPERM, 'Cannot perform operation at root directory.')
             dbname = p_parts[0]
             if dbname not in self.db_list():
-                raise IOError(errno.ENOENT,'Invalid database path: %s' % dbname)
+                raise IOError(errno.ENOENT,'Invalid database path: %s.' % dbname)
             try:
                 db = pooler.get_db(dbname)
             except Exception:
@@ -303,7 +303,7 @@ class abstracted_fs(object):
                 raise
             if not uid:
                 cr.close()
-                raise OSError(2, 'Authentification Required.')
+                raise OSError(2, 'Authentification required.')
             n = get_node_context(cr, uid, {})
             node = n.get_uri(cr, p_parts[1:])
             return (cr, node, rem_path)
@@ -318,7 +318,7 @@ class abstracted_fs(object):
                 node = self.cwd_node
             if node is False and mode not in ('???'):
                 cr.close()
-                raise IOError(errno.ENOENT, 'Path does not exist')
+                raise IOError(errno.ENOENT, 'Path does not exist.')
             return (cr, node, rem_path)
 
     def get_node_cr_uid(self, node):
@@ -375,7 +375,7 @@ class abstracted_fs(object):
             return self.rmdir(datacr)
         elif datacr[1].type == 'file':
             return self.rmfile(datacr)
-        raise OSError(1, 'Operation not permited.')
+        raise OSError(1, 'Operation is not permitted.')
 
     def rmfile(self, datacr):
         """Remove the specified file."""
@@ -399,8 +399,8 @@ class abstracted_fs(object):
         except EnvironmentError:
             raise
         except Exception:
-            self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, datacr[2], datacr[1])
-            raise OSError(1,'Operation not permited.')
+            self._log.exception('Cannot rename "%s" to "%s" at "%s".', src, datacr[2], datacr[1])
+            raise OSError(1,'Operation is not permitted.')
 
     def stat(self, node):
         raise NotImplementedError()
@@ -429,7 +429,7 @@ class abstracted_fs(object):
     def getsize(self, datacr):
         """Return the size of the specified file in bytes."""
         if not (datacr and datacr[1]):
-            raise IOError(errno.ENOENT, "No such file or directory")
+            raise IOError(errno.ENOENT, "No such file or directory.")
         if datacr[1].type in ('file', 'content'):
             return datacr[1].get_data_len(datacr[0]) or 0L
         return 0L

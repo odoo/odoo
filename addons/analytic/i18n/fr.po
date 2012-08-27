@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:56+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:29+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -88,7 +88,7 @@ msgstr ""
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "Nouveau"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -133,6 +133,12 @@ msgid ""
 "consolidation purposes of several companies charts with different "
 "currencies, for example."
 msgstr ""
+"Si vous définissez une société, la devise choisie doit être la même que "
+"celle de cette société.\n"
+"Vous pouvez supprimer  la société d'appartenance, et donc changer la devise, "
+"seulement sur les comptes analytiques de type «vue». Cela peut être très "
+"utile pour les besoins de consolidation des comptes d' entreprises dont les "
+"monnaies sont différentes, par exemple."
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -178,6 +184,7 @@ msgstr "Hiérarchie des comptes"
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of time to work on the contract."
 msgstr ""
+"Définit la limite supérieure de temps pour travailler sur le contrat."
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -197,7 +204,7 @@ msgstr "Contact"
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Code/Reference"
-msgstr ""
+msgstr "Code/Référence"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -208,7 +215,7 @@ msgstr "Annulé"
 #: code:addons/analytic/analytic.py:138
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Erreur !"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -237,12 +244,12 @@ msgstr "Date de fin"
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Maximum Time"
-msgstr ""
+msgstr "Temps maximum"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Comptabilité analytique"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -258,12 +265,14 @@ msgstr "Compte analytique"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Devise"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
 msgstr ""
+"Vous ne pouvez pas créer des lignes analytiques sur des comptes de type "
+"\"vue\"."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0

@@ -24,7 +24,6 @@
     'name': 'Multi-Company',
     'version': '1.0',
     'category': 'Tools',
-    'complexity': "expert",
     'description': """
 This module is for managing a multicompany environment.
 =======================================================
@@ -38,13 +37,8 @@ This module is the base module for other multi-company modules.
         'sale',
         'project',
     ],
-    'init_xml': [],
-    'update_xml': [
-        'res_company_view.xml'
-    ],
-    'demo_xml': [
-        'multi_company_demo.xml'
-    ],
+    'data': ['res_company_view.xml'],
+    'demo': ['multi_company_demo.xml'],
     'installable': True,
     'auto_install': False,
     'certificate' : '001115526094673097933',

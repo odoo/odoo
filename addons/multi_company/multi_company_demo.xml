@@ -2,9 +2,6 @@
 <openerp>
     <data noupdate="1">
 <!--                      Partner                        -->
-        <record id="base.main_partner" model="res.partner">
-            <field name="name">OpenERP Corp.</field>
-        </record>
         <record id="res_partner_oerp_editor" model="res.partner">
             <field name="name">OpenERP Editor</field>
         </record>
@@ -22,10 +19,6 @@
         </record>
 
 <!--                      Company                        -->
-        <record id="base.main_company" model="res.company">
-            <field name="name">OpenERP Corp.</field>
-            <field name="currency_id" ref="base.EUR"/>
-        </record>
         <record id="res_company_oerp_editor" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_editor"/>
             <field name="parent_id" ref="base.main_company"/>
@@ -65,7 +58,7 @@
             <field name="login">editor_demo</field>
             <field name="company_id" ref="res_company_oerp_editor"/>
             <field name="company_ids" eval="[(4, ref('res_company_oerp_editor'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice'),ref('base.group_extended')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
         </record>
         <record id="res_users_sales_demo_us" model="res.users">
             <field name="password">sales_demo_us</field>
@@ -73,7 +66,7 @@
             <field name="login">sales_demo_us</field>
             <field name="company_id" ref="res_company_oerp_us"/>
             <field name="company_ids" eval="[(4, ref('res_company_oerp_us'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice'),ref('base.group_extended')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
         </record>
         <record id="res_users_sales_demo_be" model="res.users">
             <field name="password">sales_demo_be</field>
@@ -81,7 +74,7 @@
             <field name="login">sales_demo_be</field>
             <field name="company_id" ref="res_company_oerp_be"/>
             <field name="company_ids" eval="[(4, ref('res_company_oerp_be'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice'),ref('base.group_extended')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
         </record>
         <record id="res_users_sales_demo_in" model="res.users">
             <field name="password">sales_demo_in</field>
@@ -89,7 +82,7 @@
             <field name="login">sales_demo_in</field>
             <field name="company_id" ref="res_company_oerp_in"/>
             <field name="company_ids" eval="[(4, ref('res_company_oerp_in'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice'),ref('base.group_extended')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
         </record>
         <record id="res_users_odoo_demo" model="res.users">
             <field name="password">odoo_demo</field>
@@ -97,7 +90,7 @@
             <field name="login">odoo_demo</field>
             <field name="company_id" ref="res_company_odoo"/>
             <field name="company_ids" eval="[(4, ref('res_company_odoo'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice'),ref('base.group_extended')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
         </record>
 
 
@@ -105,64 +98,64 @@
     Resource: product.product
     -->
 
-        <record id="product.product_product_0" model="product.product">
+        <record id="product.product_product_2" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
         <record id="product.product_product_1" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_pc1" model="product.product">
+        <record id="product.product_product_3" model="product.product">
             <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_pc2" model="product.product">
+        <record id="product.product_product_4" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_pc3" model="product.product">
+        <record id="product.product_product_5" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_pc4" model="product.product">
+        <record id="product.product_product_6" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_mb1" model="product.product">
+        <record id="product.product_product_7" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_mb2" model="product.product">
+        <record id="product.product_product_6" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_cpu1" model="product.product">
+        <record id="product.product_product_9" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_cpu3" model="product.product">
+        <record id="product.product_product_10" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_hdd1" model="product.product">
+        <record id="product.product_product_11" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_hdd2" model="product.product">
+        <record id="product.product_product_12" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_hdd3" model="product.product">
+        <record id="product.product_product_13" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_fan" model="product.product">
+        <record id="product.product_product_14" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_fan2" model="product.product">
+        <record id="product.product_product_15" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_cpu_gen" model="product.product">
+        <record id="product.product_product_16" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_ram" model="product.product">
+        <record id="product.product_product_17" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_ram512" model="product.product">
+        <record id="product.product_product_18" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_cpu2" model="product.product">
+        <record id="product.product_product_19" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
-        <record id="product.product_product_tow1" model="product.product">
+        <record id="product.product_product_27" model="product.product">
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
         <record id="product.product_product_20" model="product.product">
@@ -187,7 +180,7 @@
         <field name="company_id" ref="res_company_oerp_editor"/>
         </record>
         <record id="Odoo1" model="product.category">
-            <field name="parent_id" ref="product.cat0"/>
+            <field name="parent_id" ref="product.product_category_all"/>
             <field name="name">Odoo Offers</field>
         </record>
         <record id="product_product_odoo1" model="product.product">
@@ -206,23 +199,23 @@
     Resource: sale.order
     -->
 
-        <record id="sale.order" model="sale.order">
+        <record id="sale.sale_order_1" model="sale.order">
         <field name="company_id" ref="res_company_oerp_be"/>
         </record>
 
-        <record id="sale.order2" model="sale.order">
+        <record id="sale.sale_order_2" model="sale.order">
         <field name="company_id" ref="res_company_oerp_be"/>
         </record>
 
-        <record id="sale.order3" model="sale.order">
+        <record id="sale.sale_order_3" model="sale.order">
         <field name="company_id" ref="res_company_oerp_us"/>
         </record>
 
-        <record id="sale.order4" model="sale.order">
+        <record id="sale.sale_order_4" model="sale.order">
         <field name="company_id" ref="res_company_oerp_us"/>
         </record>
 
-        <record id="sale.order5" model="sale.order">
+        <record id="sale.sale_order_5" model="sale.order">
         <field name="company_id" ref="res_company_oerp_in"/>
         </record>
 
@@ -507,45 +500,45 @@
 
 <!--        Project        -->
 
-        <record id="project.project_project_9" model="project.project">
+        <record id="project.project_project_2" model="project.project">
         <field name="company_id" ref="res_company_oerp_be"/>
         <field name="currency_id" ref="base.EUR"/>
         </record>
-        <record id="project.project_project_21" model="project.project">
+        <record id="project.project_project_3" model="project.project">
         <field name="company_id" ref="res_company_oerp_us"/>
         <field name="currency_id" ref="base.EUR"/>
         </record>
-        <record id="project.project_project_22" model="project.project">
+        <record id="project.project_project_4" model="project.project">
         <field name="company_id" ref="res_company_oerp_be"/>
         <field name="currency_id" ref="base.EUR"/>
         </record>
-        <record id="project.project_project_23" model="project.project">
+        <record id="project.project_project_5" model="project.project">
         <field name="company_id" ref="res_company_oerp_in"/>
         <field name="currency_id" ref="base.EUR"/>
         </record>
 
-        <record id="project.project_task_116" model="project.task">
+        <record id="project.project_task_19" model="project.task">
         <field name="company_id" ref="res_company_oerp_be"/>
         </record>
-        <record id="project.project_task_130" model="project.task">
+        <record id="project.project_task_20" model="project.task">
         <field name="company_id" ref="res_company_oerp_in"/>
         </record>
-        <record id="project.project_task_131" model="project.task">
+        <record id="project.project_task_21" model="project.task">
         <field name="company_id" ref="res_company_oerp_in"/>
         </record>
-        <record id="project.project_task_184" model="project.task">
+        <record id="project.project_task_22" model="project.task">
         <field name="company_id" ref="res_company_oerp_us"/>
         </record>
-        <record id="project.project_task_186" model="project.task">
+        <record id="project.project_task_23" model="project.task">
         <field name="company_id" ref="res_company_oerp_us"/>
         </record>
-        <record id="project.project_task_188" model="project.task">
+        <record id="project.project_task_24" model="project.task">
         <field name="company_id" ref="res_company_oerp_us"/>
         </record>
-        <record id="project.project_task_189" model="project.task">
+        <record id="project.project_task_25" model="project.task">
         <field name="company_id" ref="res_company_oerp_in"/>
         </record>
-        <record id="project.project_task_190" model="project.task">
+        <record id="project.project_task_26" model="project.task">
             <field name="company_id" ref="res_company_oerp_us"/>
         </record>
 
@@ -554,25 +547,25 @@
         Resource: res.partner
         -->
 
-        <record id="base.res_partner_asus" model="res.partner">
+        <record id="base.res_partner_1" model="res.partner">
         <field name="company_id" ref="res_company_oerp_us"/>
         </record>
-        <record id="base.res_partner_agrolait" model="res.partner">
+        <record id="base.res_partner_2" model="res.partner">
                     <field name="company_id" ref="res_company_oerp_be"/>
         </record>
-        <record id="base.res_partner_c2c" model="res.partner">
+        <record id="base.res_partner_12" model="res.partner">
                    <field name="company_id" ref="res_company_oerp_be"/>
         </record>
-        <record id="base.res_partner_sednacom" model="res.partner">
+        <record id="base.res_partner_16" model="res.partner">
                   <field name="company_id" ref="res_company_oerp_be"/>
         </record>
-        <record id="base.res_partner_thymbra" model="res.partner">
+        <record id="base.res_partner_17" model="res.partner">
                    <field name="company_id" ref="res_company_oerp_in"/>
         </record>
-        <record id="base.res_partner_desertic_hispafuentes" model="res.partner">
+        <record id="base.res_partner_12" model="res.partner">
                 <field name="company_id" ref="res_company_oerp_be"/>
         </record>
-        <record id="base.res_partner_tinyatwork" model="res.partner">
+        <record id="base.res_partner_18" model="res.partner">
         <field name="company_id" ref="res_company_oerp_us"/>
         </record>
         <record id="base.res_partner_2" model="res.partner">
@@ -590,10 +583,7 @@
         <record id="base.res_partner_6" model="res.partner">
                    <field name="company_id" ref="res_company_oerp_be"/>
         </record>
-        <record id="base.res_partner_maxtor" model="res.partner">
-                  <field name="company_id" ref="res_company_oerp_us"/>
-        </record>
-        <record id="base.res_partner_seagate" model="res.partner">
+        <record id="base.res_partner_19" model="res.partner">
                   <field name="company_id" ref="res_company_oerp_us"/>
         </record>
         <record id="base.res_partner_8" model="res.partner">
@@ -614,7 +604,7 @@
         <record id="base.res_partner_15" model="res.partner">
                  <field name="company_id" ref="res_company_oerp_be"/>
         </record>
-        <record id="base.res_partner_accent" model="res.partner">
+        <record id="base.res_partner_21" model="res.partner">
                  <field name="company_id" ref="res_company_oerp_be"/>
         </record>
     </data>

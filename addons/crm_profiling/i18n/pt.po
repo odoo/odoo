@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2010-12-15 13:26+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:18+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:43+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:53+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -29,6 +29,11 @@ msgid ""
 "segmentation tool allows you to automatically assign a partner to a category "
 "according to his answers to the different questionnaires."
 msgstr ""
+"Pode criar tópicos específicos relacionados com questionários para orientar "
+"a sua equipa(s) no ciclo de vendas, ajudando-os a fazer as perguntas certas. "
+"A ferramenta de segmentação permite atribuir automaticamente a um parceiro "
+"para uma categoria de acordo com suas respostas aos  diferentes "
+"questionários."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -36,7 +41,7 @@ msgstr ""
 #: model:ir.model,name:crm_profiling.model_crm_profiling_question
 #: field:open.questionnaire.line,question_id:0
 msgid "Question"
-msgstr "Pergunta"
+msgstr "Questão"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,name:crm_profiling.action_open_questionnaire
@@ -52,7 +57,7 @@ msgstr "Perfis Dependentes"
 #. module: crm_profiling
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
-msgstr "Segmentações do terceiro"
+msgstr "Segmentações do Parceiro"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -64,12 +69,12 @@ msgstr "Resposta"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_open_questionnaire_line
 msgid "open.questionnaire.line"
-msgstr ""
+msgstr "open.questionnaire.line"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
 msgid "Partner Segmentation"
-msgstr "Segmentação do terceiro"
+msgstr "Segmentação do parceiro"
 
 #. module: crm_profiling
 #: view:res.partner:0
@@ -97,7 +102,7 @@ msgstr "Respostas"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_open_questionnaire
 msgid "open.questionnaire"
-msgstr ""
+msgstr "open.questionnaire"
 
 #. module: crm_profiling
 #: field:open.questionnaire,questionnaire_id:0
@@ -112,12 +117,12 @@ msgstr "Usar um questionário"
 #. module: crm_profiling
 #: view:open.questionnaire:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Cancelar"
 
 #. module: crm_profiling
 #: field:open.questionnaire,question_ans_ids:0
 msgid "Question / Answers"
-msgstr ""
+msgstr "Questões / Respostas"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -134,6 +139,8 @@ msgid ""
 "part of the                              segmentation rule. If not checked, "
 "the criteria beneath will be ignored"
 msgstr ""
+"Marque esta caixa se quiser usar este guia como parte da regra de "
+"segmentação. Se não for marcada, os critérios abaixo serão ignorados"
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
@@ -148,12 +155,12 @@ msgstr "Use as Regras de Perfil"
 #. module: crm_profiling
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Erro! Não pode criar membros recursivos."
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
 #: field:crm_profiling.question,answers_ids:0
-msgid "Avalaible answers"
+msgid "Avalaible Answers"
 msgstr "Respostas disponíveis"
 
 #. module: crm_profiling
@@ -182,7 +189,7 @@ msgstr "Cancelar"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_res_partner
 msgid "Partner"
-msgstr "Terceiro"
+msgstr "Parceiro"
 
 #. module: crm_profiling
 #: code:addons/crm_profiling/wizard/open_questionnaire.py:77
@@ -199,6 +206,9 @@ msgstr "Questionário"
 #: view:open.questionnaire:0
 msgid "Save Data"
 msgstr "Gravar Dado"
+
+#~ msgid "Avalaible answers"
+#~ msgstr "Respostas disponíveis"
 
 #~ msgid "crm_profiling management"
 #~ msgstr "gestão crm_profiling"
@@ -227,3 +237,39 @@ msgstr "Gravar Dado"
 
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Erro! Não pode criar membros associados recursivamente."
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module allows users to perform segmentation within partners.\n"
+#~ "    It uses the profiles criteria from the earlier segmentation module and "
+#~ "improve it. Thanks to the new concept of questionnaire. You can now regroup "
+#~ "questions into a questionnaire and directly use it on a partner.\n"
+#~ "\n"
+#~ "    It also has been merged with the earlier CRM & SRM segmentation tool "
+#~ "because they were overlapping.\n"
+#~ "\n"
+#~ "    The menu items related are in \"CRM & SRM\\Configuration\\"
+#~ "Segmentations\"\n"
+#~ "\n"
+#~ "\n"
+#~ "    * Note: this module is not compatible with the module segmentation, "
+#~ "since it's the same which has been renamed.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Este módulo permite aos utilizadores executar a segmentação entre os "
+#~ "parceiros.\n"
+#~ "    Ele usa os critérios de perfis do módulo de segmentação mais cedo e "
+#~ "melhorá-lo. Graças ao novo conceito de questionário. Agora pode reagrupar as "
+#~ "questões num questionário e usá-lo diretamente num parceiro.\n"
+#~ "\n"
+#~ "     Ele também foi fundido com a anterior ferramenta de CRM & SRM da "
+#~ "segmentação porque estavam sobrepostos.\n"
+#~ "\n"
+#~ "     Os itens do menu relacionados estão em \"CRM e SRM \\ Configuração \\ "
+#~ "Segmentações\"\n"
+#~ "\n"
+#~ "\n"
+#~ "     * Nota: Este módulo não é compatível com a segmentação do módulo, uma "
+#~ "vez que é o mesmo que foi renomeado.\n"
+#~ "    "

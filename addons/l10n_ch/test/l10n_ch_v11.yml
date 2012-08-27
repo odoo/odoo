@@ -12,7 +12,7 @@
     currency_id: base.EUR
     account_id: account.a_recv
     type : out_invoice
-    partner_id: base.res_partner_agrolait
+    partner_id: base.res_partner_2
     reference_type: bvr
     reference: 12345676
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
@@ -26,10 +26,10 @@
 -
   !record {model: account.invoice.line, id: v11_test_invoice_line, view: False}:
     account_id: account.a_expense
-    name: '[PC1] Basic PC'
+    name: '[PCSC234] PC Assemble SC234'
     price_unit: 888.00
     quantity: 1.0
-    product_id: product.product_product_pc1
+    product_id: product.product_product_3
     uos_id: product.product_uom_unit
     invoice_id: v11_test_invoice
 

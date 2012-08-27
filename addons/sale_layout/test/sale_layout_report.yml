@@ -1,8 +1,0 @@
--
-  In order to test the PDF reports defined on Sale, we will print a Sale Layout report.
-- 
-  !python {model: sale.order}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.sale.order.layout').create(cr, uid, [ref('sale.order')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'sale_layout-sale layout report'+format), 'wb+').write(data)

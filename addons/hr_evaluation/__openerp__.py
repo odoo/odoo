@@ -20,43 +20,42 @@
 ##############################################################################
 
 {
-    "name" : "Employee Appraisals",
-    "version": "0.1",
-    "author": "OpenERP SA",
-    "category": "Human Resources",
-    'complexity': "easy",
-    "website": "http://www.openerp.com",
-    "images": ["images/hr_evaluation_analysis.jpeg","images/hr_evaluation.jpeg"],
-    "depends": ["hr","base_calendar","survey"],
-    "description": """
+    'name' : 'Employee Appraisals',
+    'version': '0.1',
+    'author': 'OpenERP SA',
+    'category': 'Human Resources',
+    'website': 'http://www.openerp.com',
+    'summary': 'Periodical Evaluations, Surveys',
+    'images': ['images/hr_evaluation_analysis.jpeg','images/hr_evaluation.jpeg'],
+    'depends': ['hr','base_calendar','survey'],
+    'description': """
 Ability to create employees evaluation.
 =======================================
 
-An evaluation can be created by employee for subordinates,
-juniors as well as his manager.The evaluation is done under a plan
-in which various surveys can be created and it can be defined which
-level of employee hierarchy fills what and final review and evaluation
-is done by the manager.Every evaluation filled by the employees can be viewed
-in the form of pdf file. Implements a dashboard for My Current Evaluations
+An evaluation can be created by employee for subordinates, juniors as well as
+his manager. The evaluation is done under a plan in which various surveys can be
+created and it can be defined which level of employee hierarchy fills what and
+final review and evaluation is done by the manager. Every evaluation filled by
+the employees can be viewed in the form of pdf file.
          """,
-    "demo": ["hr_evaluation_demo.xml"],
-    "data": [
-        "security/ir.model.access.csv",
-        "security/hr_evaluation_security.xml",
-#        "wizard/hr_evaluation_mail_view.xml",
-        "hr_evaluation_view.xml",
-        "report/hr_evaluation_report_view.xml",
-        "board_hr_evaluation_view.xml",
+    'demo': ['hr_evaluation_demo.xml'],
+    'data': [
+        'security/ir.model.access.csv',
+        'security/hr_evaluation_security.xml',
+#        'wizard/hr_evaluation_mail_view.xml',
+        'hr_evaluation_view.xml',
+        'report/hr_evaluation_report_view.xml',
+        'board_hr_evaluation_view.xml',
         'hr_evaluation_data.xml',
         'hr_evaluation_installer.xml',
     ],
-    "test": [
-        "test/test_hr_evaluation.yml",
-        "test/hr_evalution_demo.yml",
+    'test': [
+        'test/test_hr_evaluation.yml',
+        'test/hr_evalution_demo.yml',
     ],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "00883207679172998429",
+    'auto_install': False,
+    'installable': True,
+    'certificate' : '00883207679172998429',
     'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
