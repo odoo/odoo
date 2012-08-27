@@ -27,7 +27,7 @@
                             <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
                             <field name="update_cost" invisible="1"/>
                             <field name="cost"  invisible="1"/>
-                            <field name="currency"  invisible="1"/>
+                            <field name="currency"  invisible="1" groups="base.group_multi_currency"/>
                         </tree>
                     </field>
                     <footer>
@@ -52,7 +52,7 @@
                     <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
                     <field name="update_cost" invisible="1"/>
                     <field name="cost" invisible="1"/>
-                    <field name="currency" invisible="1"/>
+                    <field name="currency" invisible="1" groups="base.group_multi_currency"/>
                 </tree>
             </field>
         </record>
@@ -71,7 +71,7 @@
                         <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
                         <field name="update_cost" invisible="1"/>
                         <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
-                        <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                        <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}" groups="base.group_multi_currency"/>
                     </group>
                  </form>
             </field>
