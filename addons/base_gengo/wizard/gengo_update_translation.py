@@ -28,6 +28,7 @@ except ImportError:
 
 import logging
 import tools
+import time
 from tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -90,6 +91,9 @@ cron_vals = {
 
 
 class base_update_translation(osv.osv_memory):
+
+    _name = 'base.update.translations'
+    _inherit = "base.update.translations"
 
     def gengo_authentication(self, cr, uid, context=None):
         ''' To Send Request and Get Response from Gengo User needs Public and Private
@@ -227,19 +231,36 @@ class base_update_translation(osv.osv_memory):
              }
 
     def _sync_response(self, cr, uid, ids=False, context=None):
-        """Scheduler will be call to get response from gengo and all term will get
-        by scheduler which terms are in approved state"""
+        """
+        This method  will be call by cron services to get translation from
+        gengo for translation terms which are posted to be translated. It will
+        read translated terms and comments from gengo and will update respective
+        translation in openerp """
         translation_pool = self.pool.get('ir.translation')
         flag, gengo = self.gengo_authentication(cr, uid, context)
         if not flag:
             _logger.warning("%s", gengo)
         else:
             translation_id = translation_pool.search(cr, uid, [('state', '=', 'inprogress'), ('gengo_translation', '=', True)], limit=LIMIT, context=context)
-            for trns in translation_pool.browse(cr, uid, translation_id, context):
-                if trns.job_id:
-                    job_response = gengo.getTranslationJob(id=trns.job_id)
+            for term in translation_pool.browse(cr, uid, translation_id, context):
+                if term.job_id:
+                    vals={}
+                    job_response = gengo.getTranslationJob(id=term.job_id)
+                    if job_response['opstat'] != 'ok':
+                        _logger.warning("Invalid Response Skeeping translation Terms for 'id' %s."%(term.job_id))
+                        continue
                     if job_response['response']['job']['status'] == 'approved':
-                        translation_pool.write(cr, uid, trns.id, {'value': job_response['response']['job']['body_tgt'], 'state': 'translated', 'gengo_control': True})
+                        vals.update({'state': 'translated',
+                            'value': job_response['response']['job']['body_tgt'],
+                            'gengo_control': True})
+                    job_comment = gengo.getTranslationJobComments(id=term.job_id)
+                    if job_comment['opstat']=='ok':
+                        gengo_comments=""
+                        for comment in job_comment['response']['thread']:
+                            gengo_comments+='%s by %s at %s. \n'    %(comment['body'],comment['author'],time.ctime(comment['ctime']))
+                        vals.update({'gengo_comment':gengo_comments})
+                    if vals:
+                        translation_pool.write(cr, uid, term.id,vals)
         return True
 
     def _sync_request(self, cr, uid, ids=False, context=None):
@@ -262,8 +283,4 @@ class base_update_translation(osv.osv_memory):
         except Exception, e:
             _logger.error("%s", e)
 
-    _name = 'base.update.translations'
-    _inherit = "base.update.translations"
-
-base_update_translation()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
