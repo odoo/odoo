@@ -1087,7 +1087,7 @@
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul t-att-class="widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps'" t-att-style="widget.node.attrs.style"/>
+    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps')" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
     <t t-foreach="widget.selection" t-as="i">
@@ -1740,7 +1740,7 @@
         <div class="oe_blockui_spin" style="height: 50px">
         </div>
         <br />
-        <div style="color:white">Loading...</div>
+        <div class="oe_throbber_message" style="color:white"></div>
     </div>
 </t>
 </templates>
