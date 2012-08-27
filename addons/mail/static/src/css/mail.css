@@ -1,4 +1,21 @@
 /* ------------------------------------------------------------ */
+/* Reset because of ugly display of end of August
+/* ------------------------------------------------------------ */
+
+.openerp .oe_mail_wall ul, .openerp .oe_mail_wall li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.openerp .oe_mail_recthread ul, .openerp .oe_mail_recthread li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+/* ------------------------------------------------------------ */
 /* Wall
 /* ------------------------------------------------------------ */
 
@@ -8,19 +25,16 @@
     background: white;
 }
 
-.openerp div.oe_mail_wall_main {
-    float: left;
-    width: 560px;
-    margin: 8px;
-}
-
-.openerp div.oe_mail_wall_aside {
+.openerp div.oe_mail_wall div.oe_mail_wall_aside {
     margin-left: 565px;
     margin: 8px;
 }
 
-.openerp ul.oe_mail_wall_threads {
-    margin-top: 8px;
+.openerp div.oe_mail_wall ul.oe_mail_wall_threads {
+    float: left;
+    width: 560px;
+    margin: 8px;
+    list-style-type: none;
 }
 
 /* Specific display of threads in the wall */
