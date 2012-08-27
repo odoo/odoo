@@ -582,6 +582,8 @@ class account_account(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
+        if isinstance(ids, (int, long)):
+                    ids = [ids]
         reads = self.read(cr, uid, ids, ['name', 'code'], context=context)
         res = []
         for record in reads:
