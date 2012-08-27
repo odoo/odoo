@@ -35,7 +35,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.username = false;
         this.user_context= {};
         this.db = false;
-        this.openerp_entreprise = false;
         this.module_list = instance._modules.slice();
         this.module_loaded = {};
         _(this.module_list).each(function (mod) {
@@ -78,8 +77,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context,
-                openerp_entreprise: result.openerp_entreprise
+                user_context: result.context
             });
         });
     },
@@ -103,8 +101,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context,
-                openerp_entreprise: result.openerp_entreprise
+                user_context: result.context
             });
             if (!_volatile) {
                 self.set_cookie('session_id', self.session_id);
