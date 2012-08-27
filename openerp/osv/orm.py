@@ -3723,7 +3723,7 @@ class BaseModel(object):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        result_store = self._store_get_values(cr, uid, ids, None, context)
+        result_store = self._store_get_values(cr, uid, ids, self._all_columns.keys(), context)
 
         self._check_concurrency(cr, ids, context)
 
