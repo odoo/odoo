@@ -20,9 +20,58 @@
 ##############################################################################
 
 from osv import osv
-import abstract_wrapper as local
 import logging
+import tools
 _logger = logging.getLogger(__name__)
+try:
+    from mygengo import MyGengo
+except ImportError:
+    raise osv.except_osv(_('Gengo ImportError'),_('Please install mygengo lib from http://pypi.python.org/pypi/mygengo'))
+
+LIMIT = 20
+
+LANG_MAPPING = {
+    'ar': 'Arabic',
+    'id': 'Indonesian',
+    'nl': 'Dutch',
+    'fr-ca': 'French (Canada)',
+    'pl': 'Polish',
+    'zh-tw': 'Chinese (Traditional)',
+    'sv': 'Swedish',
+    'ko': 'Korean',
+    'pt': 'Portuguese (Europe)',
+    'en': 'English',
+    'ja': 'Japanese',
+    'es': 'Spanish (Spain)',
+    'zh': 'Chinese (Simplified)',
+    'de': 'German',
+    'fr': 'French',
+    'ru': 'Russian',
+    'it': 'Italian',
+    'pt-br': 'Portuguese (Brazil)',
+}
+
+LANG_CODE_MAPPING = {
+    'ar_SA': 'ar',
+    'id_ID': 'id',
+    'nl_NL': 'nl',
+    'fr_CA': 'fr-ca',
+    'pl': 'pl',
+    'zh_TW': 'zh-tw',
+    'sv_SE': 'sv',
+    'ko_KR': 'ko',
+    'pt_PT': 'pt',
+    'en_US': 'en',
+    'ja_JP': 'ja',
+    'es_ES': 'es',
+    'zh_CN': 'zh',
+    'de_DE': 'de',
+    'fr_FR': 'fr',
+    'fr_BE': 'fr',
+    'ru_RU': 'ru',
+    'it_IT': 'it',
+    'pt_BR': 'pt-br'
+}
 
 cron_vals = {
     'name': 'Gengo Sync',
@@ -37,6 +86,64 @@ cron_vals = {
 
 class base_update_translation(osv.osv_memory):
 
+    def gengo_authentication(self, cr, uid, context=None):
+        ''' To Send Request and Get Response from Gengo User needs Public and Private
+         key for that user need to signup to gengo and get public and private
+         key which is provided by gengo to authentic user '''
+
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
+            return (False, "Invalid gengo configuration.\nEither pulic key or private key is missing.")
+        try:
+            gengo = MyGengo(
+                public_key=user.company_id.gengo_public_key.encode('ascii'),
+                private_key=user.company_id.gengo_private_key.encode('ascii'),
+                sandbox=True,
+            )
+            gengo.getAccountStats()
+            return (True, gengo)
+        except Exception, e:
+            return (False, "Gengo Connection Error\n"+e.message)
+
+    def pack_jobs_request(self, cr, uid, term_ids, context):
+        jobs = {}
+        auto_approve = 0
+        gengo_parameter_pool = self.pool.get('res.users').browse(cr, uid, uid, context)
+        translation_pool = self.pool.get('ir.translation')
+        if gengo_parameter_pool.company_id.gengo_auto_approve:
+            auto_approve = 1
+        for term in translation_pool.browse(cr, uid, term_ids, context):
+            if term.src and term.src != "":
+                job = {'type': 'text',
+                        'slug': 'single::English to' + LANG_CODE_MAPPING[term.lang],
+                        'tier': tools.ustr(gengo_parameter_pool.company_id.gengo_tier),
+                        'body_src': term.src,
+                        'lc_src': 'en',
+                        'lc_tgt': LANG_CODE_MAPPING[term.lang],
+                        'auto_approve': auto_approve,
+                        'comment': gengo_parameter_pool.company_id.gengo_comment,
+                }
+                jobs.update({term.id: job})
+        return {'jobs': jobs}
+
+    def check_lang_support(self, cr, uid, langs, context=None):
+        new_langs = []
+        flag, gengo = self.gengo_authentication(cr, uid, context)
+        if not flag:
+            return []
+        else:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            tier = user.company_id.gengo_tier
+            if tier == "machine":
+                tier = "nonprofit"
+
+            lang_pair = gengo.getServiceLanguagePairs(lc_src='en')
+            if lang_pair['opstat'] == 'ok':
+                for g_lang in lang_pair['response']:
+                    for l in langs:
+                        if LANG_CODE_MAPPING[l] == g_lang['lc_tgt'] and g_lang['tier'] == tier:
+                            new_langs.append(l)
+            return list(set(new_langs))
     def _update_terms(self, cr, uid, ids, response, tier, context):
         translation_pool = self.pool.get('ir.translation')
         for jobs in response['jobs']:
@@ -53,12 +160,11 @@ class base_update_translation(osv.osv_memory):
         """
         Lazy Polling will be perform when user or cron request for the trnalstion.
         """
-        meta = self.pool.get('jobs.meta')
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
-        flag, gengo = meta.gengo_authentication(cr, uid, context)
+        flag, gengo = self.gengo_authentication(cr, uid, context)
         if flag:
 
-            request = meta.pack_jobs_request(cr, uid, term_ids, context)
+            request = self.pack_jobs_request(cr, uid, term_ids, context)
             if request:
                 result = gengo.postTranslationJobs(jobs=request)
                 if result['opstat'] == 'ok':
@@ -83,8 +189,7 @@ class base_update_translation(osv.osv_memory):
         lang_pool = self.pool.get('res.lang')
         super(base_update_translation, self).act_update(cr, uid, ids, context)
         msg = "1. Translation file loaded succesfully.\n2. Processing Gengo Translation:\n"
-        meta = self.pool.get('jobs.meta')
-        flag, gengo = meta.gengo_authentication(cr, uid, context)
+        flag, gengo = self.gengo_authentication(cr, uid, context)
         if not flag:
             msg += gengo
         else:
@@ -119,13 +224,12 @@ class base_update_translation(osv.osv_memory):
     def _sync_response(self, cr, uid, ids=False, context=None):
         """Scheduler will be call to get response from gengo and all term will get
         by scheduler which terms are in approved state"""
-        meta = self.pool.get('jobs.meta')
         translation_pool = self.pool.get('ir.translation')
-        flag, gengo = meta.gengo_authentication(cr, uid, context)
+        flag, gengo = self.gengo_authentication(cr, uid, context)
         if not flag:
             _logger.warning("%s", gengo)
         else:
-            translation_id = translation_pool.search(cr, uid, [('state', '=', 'inprogress'), ('gengo_translation', '=', True)], limit=local.LIMIT, context=context)
+            translation_id = translation_pool.search(cr, uid, [('state', '=', 'inprogress'), ('gengo_translation', '=', True)], limit=LIMIT, context=context)
             for trns in translation_pool.browse(cr, uid, translation_id, context):
                 if trns.job_id:
                     job_response = gengo.getTranslationJob(id=trns.job_id)
@@ -143,8 +247,8 @@ class base_update_translation(osv.osv_memory):
         try:
             lang_ids = language_pool.search(cr, uid, [('gengo_sync', '=', True)])
             langs = [lang.code for lang in language_pool.browse(cr, uid, lang_ids)]
-            langs = self.pool.get('jobs.meta').check_lang_support(cr, uid, langs)
-            term_ids = translation_pool.search(cr, uid, [('state', '=', 'translate'), ('gengo_translation', '=', True), ('lang', 'in', langs)], limit=local.LIMIT)
+            langs = self.check_lang_support(cr, uid, langs)
+            term_ids = translation_pool.search(cr, uid, [('state', '=', 'translate'), ('gengo_translation', '=', True), ('lang', 'in', langs)], limit=LIMIT)
             if term_ids:
                 self._send_translation_terms(cr, uid, ids, term_ids, context)
                 _logger.info("Translation terms %s has been posted to gengo successfully", len(term_ids))

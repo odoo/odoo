@@ -23,7 +23,7 @@ from osv import osv
 from osv import fields
 
 
-class gengo_update_message(osv.osv):
+class gengo_update_message(osv.osv_memory):
     """Update Message"""
 
     _name = "gengo.update.message"
