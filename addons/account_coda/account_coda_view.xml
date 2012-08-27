@@ -16,7 +16,7 @@
                 <filter string="Info" domain="[('state','=','info')]" icon="terp-folder-yellow"/>
                 <field name="bank_id"/>
                 <field name="journal"/>
-                <field name="currency"/>
+                <field name="currency" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <group expand="0" string="Group By...">
                     <filter string="Bank Account" icon="terp-folder-yellow" domain="[]" context="{'group_by':'bank_id'}"/>
@@ -32,7 +32,7 @@
         <tree string="CODA Bank Account Configuration">
           <field name="name"/>
           <field name="bank_id"/>
-          <field name="currency"/>
+          <field name="currency" groups="base.group_multi_currency"/>
           <field name="description1"/>
           <field name="journal"/>
           <field name="state"/>
@@ -48,7 +48,7 @@
                 <field name="name" colspan="4"/>
                 <field name="bank_id" domain="[('partner_id.ref_companies', 'in', [company_id])]"/>
                 <field name="description1"/>
-                <field name="currency"/>
+                <field name="currency" groups="base.group_multi_currency"/>
                 <field name="description2"/>
                 <field name="coda_st_naming"/>
                 <field name="state" on_change="onchange_state(state)"/>
@@ -305,7 +305,7 @@
                       <field name="name"/>
                       <field name="date"/>
                       <field name="coda_bank_account_id"/>
-                      <field name="currency"/>
+                      <field name="currency" groups="base.group_multi_currency"/>
                       <field name="period_id"/>
                       <field name="type"/>
                       <newline/>
