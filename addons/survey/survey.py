@@ -45,10 +45,6 @@ class survey(osv.osv):
     _description = 'Survey'
     _rec_name = 'title'
 
-    def notify_survey_attempt(self, ids=False, args=None):
-        print "How it works !!!"
-        return True
-
     def default_get(self, cr, uid, fields, context=None):
         data = super(survey, self).default_get(cr, uid, fields, context)
         return data

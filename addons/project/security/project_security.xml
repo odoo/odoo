@@ -69,20 +69,5 @@
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
-
-    <record model="ir.rule" id="project_visibility_rule">
-        <field name="name" >Project According to User</field>
-        <field name="model_id" ref="model_project_project"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('user_id','=',False),('user_id','=',user.id)]</field>
-    </record>
-
-    <record model="ir.rule" id="project_manager_all_project_rule">
-        <field name="name">Project Managers all projects</field>
-        <field name="model_id" ref="model_project_project"/>
-        <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
-    </record>
-
 </data>
 </openerp>
