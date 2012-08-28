@@ -43,15 +43,13 @@ openerp_mail_followers = function(session, mail) {
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
             this.fetch_subtype();
-            this.$el.find('div.oe_mail_recthread_subtype').click(function () {
-                self.update_subtype();
-            })
+            this.$el.find('div.oe_mail_recthread_subtype').click(function () {self.update_subtype();})
             this.$el.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
 
             if (! this.params.display_control) {
                 this.$el.find('button.oe_mail_button_followers').hide();
                 this.$el.find('div.oe_mail_recthread_subtype').hide()
-                 }
+            }
             this.$el.find('button.oe_mail_button_follow').click(function () {
                 self.do_follow();
                 self.fetch_subtype();
@@ -66,7 +64,7 @@ openerp_mail_followers = function(session, mail) {
 
         _check_visibility: function() {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
-            if(this.view.get("actual_mode") == "create"){this.fetch_subtype();}
+            if (this.view.get("actual_mode") === "create"){this.fetch_subtype();}
         },
 
         destroy: function () {
@@ -103,7 +101,7 @@ openerp_mail_followers = function(session, mail) {
         display_subscribers: function (records) {
             var self = this;
             this.is_subscriber = false;
-            if(this.view.get("actual_mode") == "edit"){this.update_subtype();}
+            if (this.view.get("actual_mode") !== "create"){self.update_subtype();}
             var user_list = this.$el.find('ul.oe_mail_followers_display').empty();
             this.$el.find('div.oe_mail_recthread_followers h4').html(this.params.title + ' (' + records.length + ')');
             _(records).each(function (record) {
@@ -125,7 +123,7 @@ openerp_mail_followers = function(session, mail) {
             var cheklist = new Array();
             _(this.$el.find('.oe_msg_subtype_check')).each(function(record){
                 if($(record).is(':checked')) {
-                       cheklist.push(parseInt($(record).attr('id')))}
+                    cheklist.push(parseInt($(record).attr('id')))}
             });
             self.ds_model.call('message_subscribe_udpate_subtypes',[[self.view.datarecord.id],self.session.uid,cheklist])
         },
@@ -135,19 +133,17 @@ openerp_mail_followers = function(session, mail) {
             var subtype_list = this.$el.find('div.oe_mail_recthread_subtype').empty();
             var follower_ids = this.follower_model.call('search',[[['res_model','=',this.ds_model.model],['res_id','=',this.view.datarecord.id],['user_id','=',this.session.uid]]])
             follower_ids.then(function (record){
-               var follower_read = self.follower_model.call('read',  [record,['subtype_ids']]);
-               follower_read.then(function (follower_record){
-                   if(follower_record.length != 0){
-                       _(follower_record[0].subtype_ids).each(function (subtype_id){
-                           self.$el.find('.oe_msg_subtype_check[id=' + subtype_id + ']')[0].checked=true
-                       });
-                   }
-               })
+                var follower_read = self.follower_model.call('read',  [record,['subtype_ids']]);
+                follower_read.then(function (follower_record){
+                    if(follower_record.length != 0){
+                        _(follower_record[0].subtype_ids).each(function (subtype_id){
+                            self.$el.find('.oe_msg_subtype_check[id=' + subtype_id + ']')[0].checked=true
+                        });
+                    }
+                })
             });
             _(records).each(function (record) {
-                record.name = record.name.toLowerCase().replace(/\b[a-z]/g, function(letter) {
-                    return letter.toUpperCase();
-                    });
+                record.name = record.name.toLowerCase().replace(/\b[a-z]/g, function(letter) {return letter.toUpperCase();});
                 $(session.web.qweb.render('mail.record_thread.subtype', {'record': record})).appendTo(subtype_list);
             });
         },
@@ -158,11 +154,11 @@ openerp_mail_followers = function(session, mail) {
         
         //fetch subtype from subtype model
         fetch_subtype: function () {
-          var self = this
-          var subtype_object = this.sub_model.call('search', [[['model_ids.model','=',this.view.model]]]);
-          subtype_object.then(function (subtype_ids){
-              self.sub_model.call('read',  [subtype_ids || self.get_value(),['name', 'default']]).then(self.proxy('display_subtype'));
-          });
+            var self = this
+            var subtype_object = this.sub_model.call('search', [[['model_ids.model','=',this.view.model]]]);
+            subtype_object.then(function (subtype_ids){
+                self.sub_model.call('read',  [subtype_ids || self.get_value(),['name', 'default']]).then(self.proxy('display_subtype'));
+            });
         },
 
         do_unfollow: function () {
