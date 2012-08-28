@@ -40,7 +40,7 @@ LANG_CODE_MAPPING = {
     'id_ID': ('id', 'Indonesian'),
     'nl_NL': ('nl', 'Dutch'),
     'fr_CA': ('fr-ca', 'French (Canada)'),
-    'pl': ('Polish'),
+    'pl_PL': ('pl', 'Polish'),
     'zh_TW': ('zh-tw', 'Chinese (Traditional)'),
     'sv_SE': ('sv', 'Swedish'),
     'ko_KR': ('ko', 'Korean'),
@@ -57,7 +57,7 @@ LANG_CODE_MAPPING = {
     'pt_BR': ('pt-br', 'Portuguese (Brazil)')
 }
 
-cron_vals = {
+CRON_VALS = {
     'name': 'Gengo Sync',
     'active': True,
     'interval_number': 30,
@@ -80,7 +80,7 @@ class base_update_translation(osv.osv_memory):
 
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
-            return (False, "Invalid gengo configuration.\n Either public key or private key is missing.")
+            return (False, "  - Invalid gengo configuration, Either Gengo authentication `Public Key` or `Private Key` is missing. Complete Gengo authentication parameter under `Settings > Companies > Gengo Parameters`.")
         try:
             gengo = MyGengo(
                 public_key=user.company_id.gengo_public_key.encode('ascii'),
@@ -90,7 +90,7 @@ class base_update_translation(osv.osv_memory):
             gengo.getAccountStats()
             return (True, gengo)
         except Exception, e:
-            return (False, "Gengo Connection Error\n" + e.message)
+            return (False, "Gengo Connection Error\n%s"%e)
 
     def pack_jobs_request(self, cr, uid, term_ids, context):
         jobs = {}
@@ -101,7 +101,7 @@ class base_update_translation(osv.osv_memory):
             auto_approve = 1
         for term in translation_pool.browse(cr, uid, term_ids, context):
             if term.src:
-                if re.search(r"\w",term.src):
+                if re.search(r"\w", term.src):
                     job = {'type': 'text',
                             'slug': 'single::English to ' + LANG_CODE_MAPPING[term.lang][1],
                             'tier': tools.ustr(gengo_parameter_pool.company_id.gengo_tier),
@@ -109,8 +109,7 @@ class base_update_translation(osv.osv_memory):
                             'lc_src': 'en',
                             'lc_tgt': LANG_CODE_MAPPING[term.lang][0],
                             'auto_approve': auto_approve,
-                            'comment': gengo_parameter_pool.company_id.gengo_comment,
-                    }
+                            'comment': gengo_parameter_pool.company_id.gengo_comment}
                     jobs.update({term.id: job})
         return {'jobs': jobs}
 
@@ -157,8 +156,6 @@ class base_update_translation(osv.osv_memory):
                 result = gengo.postTranslationJobs(jobs=request)
                 if result['opstat'] == 'ok':
                     self._update_terms(cr, uid, ids, result['response'], user.company_id.gengo_tier, context)
-            else:
-                _logger.info('')
         else:
             _logger.error(gengo)
         return True
@@ -170,8 +167,8 @@ class base_update_translation(osv.osv_memory):
             model, res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base_gengo', xml_id)
             cron_pool.write(cr, uid, [res], {'active': True}, context=context)
         except:
-            cron_vals.update({'name': name, "function": fn})
-            return cron_pool.create(cr, uid, cron_vals, context)
+            CRON_VALS.update({'name': name, "function": fn})
+            return cron_pool.create(cr, uid, CRON_VALS, context)
 
     def act_update(self, cr, uid, ids, context=None):
         if context == None:
@@ -185,18 +182,23 @@ class base_update_translation(osv.osv_memory):
         else:
             for res in self.browse(cr, uid, ids, context):
                 lang_id = lang_pool.search(cr, uid, [('code', '=', res.lang)])
-                lang_search = lang_pool.search(cr, uid, [('gengo_sync', '=', True),
-                ('id', '=', lang_id[0])])
-                if lang_search:
-                    msg += 'This language %s is already in queue for processing.' % (res.lang)
-                else:
-                    msg += "Translation for language %s is queued for processing." % (res.lang)
-                    lang_pool.write(cr, uid, lang_id, {'gengo_sync': True})
-                    _logger.info("Your translation request for language '%s' has been send successfully.", res.lang)
+                lang_name = self._get_lang_name(cr, uid, res.lang)
+                try:
+                    if LANG_CODE_MAPPING[res.lang][0]:
+                        lang_search = lang_pool.search(cr, uid, [('gengo_sync', '=', True), ('id', '=', lang_id[0])])
+                    if lang_search:
+                        msg += '\t- This language " %s " is already in queue for processing.' % (lang_name)
+                    else:
+                        msg += '\t- Translation for language " %s " is queued for processing.' % (lang_name)
+                        lang_pool.write(cr, uid, lang_id, {'gengo_sync': True})
+                        _logger.info('Your translation request for language " %s " has been send successfully.', lang_name)
 
-                self.do_check_schedular(cr, uid, 'gengo_sync_send_request_scheduler', 'Gengo Sync Translation (Request)', '_sync_request', context)
-                self.do_check_schedular(cr, uid, 'gengo_sync_receive_request_scheduler', 'Gengo Sync Translation (Response)', '_sync_response', context)
-                self._sync_request(cr, uid, ids, context)
+                    self.do_check_schedular(cr, uid, 'gengo_sync_send_request_scheduler', 'Gengo Sync Translation (Request)', '_sync_request', context)
+                    self.do_check_schedular(cr, uid, 'gengo_sync_receive_request_scheduler', 'Gengo Sync Translation (Response)', '_sync_response', context)
+                    self._sync_request(cr, uid, ids, context)
+                except:
+                    msg +='\t- Language " %s " is not supported by MyGengo.'%(lang_name)
+
         context.update({'message': msg})
         obj_model = self.pool.get('ir.model.data')
         model_data_ids = obj_model.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'update_translation_wizard_view_confirm')])
