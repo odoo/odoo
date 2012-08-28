@@ -395,6 +395,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         cr.close()
     return res
 
+def email_split(text):
+    """ Return a list of the email addresses found in ``text`` """
+    if not text: return []
+    return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
+
 #----------------------------------------------------------
 # SMS
 #----------------------------------------------------------
