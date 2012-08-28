@@ -26,56 +26,63 @@ class stock_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_stock_no_autopicking': fields.boolean("Force Picking before Manufactoring Orders",
-            help="""This module allows an intermediate picking process to provide raw materials to production orders.
-                For example to manage production made by your suppliers (sub-contracting).
-                To achieve this, set the assembled product which is sub-contracted to "No Auto-Picking"
-                and put the location of the supplier in the routing of the assembly operation.
-                This installs the module stock_no_autopicking."""),
-        'module_claim_from_delivery': fields.boolean("Track Claims from Delivery",
+        'module_claim_from_delivery': fields.boolean("allow claim on deliveries",
             help="""Adds a Claim link to the delivery order.
                 This installs the module claim_from_delivery."""),
-        'module_stock_invoice_directly': fields.boolean("Invoice Picking on Delivery",
+        'module_stock_invoice_directly': fields.boolean("create and open the invoice when the user finish a delivery order",
             help="""This allows to automatically launch the invoicing wizard if the delivery is
                 to be invoiced when you send or deliver goods.
                 This installs the module stock_invoice_directly."""),
-        'module_product_expiry': fields.boolean("Expiry Date on Lots",
-            help="""Track different dates on products and production lots.
+        'module_product_expiry': fields.boolean("expiry date on lots",
+            help="""Track different dates on products and serial numbers.
                 The following dates can be tracked:
                     - end of life
                     - best before date
                     - removal date
                     - alert date.
                 This installs the module product_expiry."""),
-        'module_stock_location': fields.boolean("Push/Pull Logistic Rules",
+        'module_stock_location': fields.boolean("create push/pull logistic rules",
             help="""Provide push and pull inventory flows.  Typical uses of this feature are:
                 manage product manufacturing chains, manage default locations per product,
                 define routes within your warehouse according to business needs, etc.
                 This installs the module stock_location."""),
-        'group_uom': fields.boolean("Manage Different UoM for Products",
+        'group_uom': fields.boolean("manage units of measure on products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_uos': fields.boolean("Manage Secondary UoM (for Sale)",
+        'group_uos': fields.boolean("invoice products in a different unit of measure than the sale order",
             implied_group='product.group_uos',
             help="""Allows you to sell units of a product, but invoice based on a different unit of measure.
                 For instance, you can sell pieces of meat that you invoice based on their weight."""),
-        'group_stock_packaging': fields.boolean("Manage Product Packaging",
+        'group_stock_packaging': fields.boolean("allow to define several packaging methods on products",
             implied_group='product.group_stock_packaging',
             help="""Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
-        'group_stock_production_lot': fields.boolean("Serial Numbers on Products",
+        'group_stock_production_lot': fields.boolean("track serial number on products",
             implied_group='stock.group_production_lot',
             help="""This allows you to manage products by using serial numbers.
                 When you select a lot, you can get the upstream or downstream traceability of the products contained in lot."""),
-        'group_stock_tracking_lot': fields.boolean("Serial Numbers on Pallets (Logistic Units)",
+        'group_stock_tracking_lot': fields.boolean("track serial number on logistic units (pallets)",
             implied_group='stock.group_tracking_lot',
             help="""Allows you to get the upstream or downstream traceability of the products contained in lot."""),
-        'group_stock_inventory_valuation': fields.boolean("Accounting Entries per Stock Movement",
+        'group_stock_inventory_valuation': fields.boolean("generate accounting entries per stock movement",
             implied_group='stock.group_inventory_valuation',
-            help="""This allows to split stock inventory lines according to production lots."""),
-        'group_stock_multiple_locations': fields.boolean("Manage Multiple Locations and Warehouses",
+            help="""Allows to configure inventory valuations on products and product categories."""),
+        'group_stock_multiple_locations': fields.boolean("manage multiple locations and warehouses",
             implied_group='stock.group_locations',
             help="""This allows to configure and use multiple stock locations and warehouses,
                 instead of having a single default one."""),
+        'group_product_variant': fields.boolean("support multiple variants per products  ",
+            implied_group='product.group_product_variant',
+            help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),
+        'decimal_precision': fields.integer('Decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
     }
+
+    def get_default_dp(self, cr, uid, fields, context=None):
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
+        return {'decimal_precision': dp.digits}
+
+    def set_default_dp(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
+        dp.write({'digits': config.decimal_precision})
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2009-10-08 08:10+0000\n"
+"PO-Revision-Date: 2012-05-10 17:22+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:42+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:52+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -190,7 +190,8 @@ msgstr "Sieviete"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr ""
 
 #. module: hr
@@ -242,7 +243,7 @@ msgstr "Cita Informācija"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
+msgid "Work Email"
 msgstr "Darba e-pasts"
 
 #. module: hr
@@ -283,8 +284,8 @@ msgstr "Kategorijas"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "Gaidāmie Darbinieki"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -411,12 +412,6 @@ msgid "Working Address"
 msgstr "Darbavietas Adrese"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "Personāla Vadītāja Rīku Panelis"
-
-#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "Apakšnodaļas"
@@ -429,7 +424,7 @@ msgstr "Stāvoklis"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories structure"
+msgid "Categories Structure"
 msgstr "Kategoriju Struktūra"
 
 #. module: hr
@@ -459,7 +454,7 @@ msgstr "Kļūda! Nevar izveidot rekursīvu Darbinieku Hierarhiju."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
-msgid "Subordonate Hierarchy"
+msgid "Subordinate Hierarchy"
 msgstr ""
 
 #. module: hr
@@ -706,11 +701,13 @@ msgstr "Pakļautie"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
+msgid "Number of employees currently occupying this job position."
 msgstr ""
 
-#~ msgid "Work Email"
-#~ msgstr "Darba e-pasts"
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr ""
 
 #~ msgid "Working Time Categories"
 #~ msgstr "Darba Laika Kategorijas"
@@ -780,6 +777,9 @@ msgstr ""
 
 #~ msgid "Monday"
 #~ msgstr "Pirmdiena"
+
+#~ msgid "Categories structure"
+#~ msgstr "Kategoriju Struktūra"
 
 #~ msgid "Employee Contract Process"
 #~ msgstr "Darbinieku Darbalīguma Process"
@@ -875,6 +875,9 @@ msgstr ""
 #~ msgid "No of Employee"
 #~ msgstr "Darbinieka Nr."
 
+#~ msgid "Work E-mail"
+#~ msgstr "Darba e-pasts"
+
 #~ msgid ""
 #~ "You can enhance the base HR Application by installing few HR-related "
 #~ "functionalities."
@@ -902,6 +905,12 @@ msgstr ""
 #~ "employees."
 #~ msgstr ""
 #~ "Ļauj periodiski veikt darbinieku novērtējumu un efektivitātes uzskaiti."
+
+#~ msgid "Expected Employees"
+#~ msgstr "Gaidāmie Darbinieki"
+
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "Personāla Vadītāja Rīku Panelis"
 
 #~ msgid ""
 #~ "\n"

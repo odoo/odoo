@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+    <!-- This ir.actions.todo triggers the screen "Generate your chart of account
+     from a chart template" in the install wizard of the l10n_fr module -->
     <record id="config_call_account_template_fr" model="ir.actions.todo">
         <field name="action_id" ref="account.action_wizard_multi_chart"/>
         <field name="type">automatic</field>
-        <field name="category_id" ref="account.category_accounting_configuration"/>
     </record>
 
     </data>

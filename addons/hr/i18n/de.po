@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-22 23:51+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:53+0000\n"
+"Last-Translator: Ferdinand-camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-24 04:47+0000\n"
-"X-Generator: Launchpad (build 14860)\n"
+"X-Launchpad-Export-Date: 2012-08-09 04:52+0000\n"
+"X-Generator: Launchpad (build 15761)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -198,8 +198,9 @@ msgstr "Weiblich"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
-msgstr "Notwendige Anzahl von Mitarbeiter um diesen Job zu erledigen."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
@@ -250,8 +251,8 @@ msgstr "Weitere Informationen"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "E-Mail Arbeit"
+msgid "Work Email"
+msgstr "Betriebliche Email"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -291,8 +292,8 @@ msgstr "Kategorien"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "Stellenbedarf"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -423,12 +424,6 @@ msgid "Working Address"
 msgstr "Arbeitgeberanschrift"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "Pinnwand Personalleitung"
-
-#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "untergeordnete Abteilungen"
@@ -441,7 +436,7 @@ msgstr "Status"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories structure"
+msgid "Categories Structure"
 msgstr "Kategorien"
 
 #. module: hr
@@ -472,7 +467,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
-msgid "Subordonate Hierarchy"
+msgid "Subordinate Hierarchy"
 msgstr "Untergeordnete Hierarchie"
 
 #. module: hr
@@ -725,8 +720,13 @@ msgstr "Unterstellte Mitarbeiter"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
-msgstr "Anzahl der Mitarbeiter"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr ""
 
 #~ msgid "Working Time Categories"
 #~ msgstr "Arbeitszeiten Kategorien"
@@ -736,9 +736,6 @@ msgstr "Anzahl der Mitarbeiter"
 
 #~ msgid "Contact  of employee"
 #~ msgstr "Kontakt Adresse des Mitarbeiters"
-
-#~ msgid "Work Email"
-#~ msgstr "Betriebliche Email"
 
 #~ msgid "Group name"
 #~ msgstr "Gruppe Bezeichnung"
@@ -784,6 +781,9 @@ msgstr "Anzahl der Mitarbeiter"
 
 #~ msgid "Monday"
 #~ msgstr "Montag"
+
+#~ msgid "Categories structure"
+#~ msgstr "Kategorien"
 
 #~ msgid "Day of week"
 #~ msgstr "Wochentag"
@@ -851,6 +851,9 @@ msgstr "Anzahl der Mitarbeiter"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
+#~ msgid "Work E-mail"
+#~ msgstr "E-Mail Arbeit"
+
 #~ msgid "Simplifies the management of employee's attendances."
 #~ msgstr ""
 #~ "Vereinfacht das Management von Mitarbeiter Anwesenheit , sowie "
@@ -895,6 +898,9 @@ msgstr "Anzahl der Mitarbeiter"
 #~ msgid "Human Resources Application Configuration"
 #~ msgstr "Konfiguration Personalwesen"
 
+#~ msgid "Expected Employees"
+#~ msgstr "Stellenbedarf"
+
 #~ msgid "Image"
 #~ msgstr "Bild"
 
@@ -907,6 +913,9 @@ msgstr "Anzahl der Mitarbeiter"
 
 #~ msgid "It is linked with manager of Department"
 #~ msgstr "Verlinkt mit dem Abteilungsleiter"
+
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "Pinnwand Personalleitung"
 
 #~ msgid "Configuration Progress"
 #~ msgstr "Vorgehen Konfiguration"
@@ -1004,3 +1013,12 @@ msgstr "Anzahl der Mitarbeiter"
 
 #~ msgid "Mobile"
 #~ msgstr "Mobiltelefon"
+
+#~ msgid "Subordonate Hierarchy"
+#~ msgstr "Untergeordnete Hierarchie"
+
+#~ msgid "Required number of employees in total for that job."
+#~ msgstr "Notwendige Anzahl von Mitarbeiter um diesen Job zu erledigen."
+
+#~ msgid "Number of Employees"
+#~ msgstr "Anzahl der Mitarbeiter"

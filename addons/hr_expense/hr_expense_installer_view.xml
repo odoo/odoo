@@ -1,16 +1,28 @@
 <openerp>
   <data>
+      <record id="hr.todo_open_hr_menu" model="ir.actions.todo">
+          <field name="state">done</field>
+      </record>
+  </data>
+  <data noupdate="1">
+      <!-- After installation of the module, open the related menu -->
+      <record id="todo_open_hr_menu" model="ir.actions.todo">
+          <field name="action_id" ref="hr.action_client_hr_menu"/>
+          <field name="type">automatic</field>
+          <field name="sequence">100</field>
+      </record>
+  </data>
+  <data>
         <record id="product_expense_installer_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
             <field name="model">product.product</field>
-            <field name="type">tree</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Products">
                     <field name="name"/>
                     <field name="standard_price"/>
                     <field name="list_price"/>
-                    <field name="uom_id" string="UoM"/>
+                    <field name="uom_id" string="Unit of Measure"/>
                 </tree>
             </field>
         </record> 

@@ -5,130 +5,130 @@
 #
 # Tax Code Template Configuration
 #
-	<record model="account.tax.code.template" id="vat_code_tax">
-		<field name="name">Decont TVA</field>
-	</record>
-	
-	<record model="account.tax.code.template" id="vat_code_tvac_tva">
-		<field name="name">TVA COLECTATA</field>
-		<field name="code">b)</field>
-		<field name="parent_id" ref="vat_code_tax"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tax">
+        <field name="name">Decont TVA</field>
+    </record>
+    
+    <record model="account.tax.code.template" id="vat_code_tvac_tva">
+        <field name="name">TVA COLECTATA</field>
+        <field name="code">b)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_tvac_tva19">
-		<field name="name">TVA 19%</field>
-		<field name="code">TVA colectata 19%</field>
-		<field name="parent_id" ref="vat_code_tvac_tva"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvac_tva09">
-		<field name="name">TVA 9%</field>
-		<field name="code">TVA colectata 9%</field>
-		<field name="parent_id" ref="vat_code_tvac_tva"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvac_tva05">
-		<field name="name">TVA 5%</field>
-		<field name="code">TVA colectata 5%</field>
-		<field name="parent_id" ref="vat_code_tvac_tva"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tvac_tva19">
+        <field name="name">TVA 19%</field>
+        <field name="code">TVA colectata 19%</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvac_tva09">
+        <field name="name">TVA 9%</field>
+        <field name="code">TVA colectata 9%</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvac_tva05">
+        <field name="name">TVA 5%</field>
+        <field name="code">TVA colectata 5%</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_tvac_tvaTI">
-		<field name="name">TVA Taxare inversa</field>
-		<field name="code">TVA</field>
-		<field name="parent_id" ref="vat_code_tvac_tva"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tvac_tvaTI">
+        <field name="name">TVA Taxare inversa</field>
+        <field name="code">TVA</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_tvac_tva00">
-		<field name="name">TVA 0%</field>
-		<field name="code">TVA colectata 0%</field>
-		<field name="parent_id" ref="vat_code_tvac_tva"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tvac_tva00">
+        <field name="name">TVA 0%</field>
+        <field name="code">TVA colectata 0%</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_tvac_baza">
-		<field name="name">BAZA TVA COLECTAT</field>
-		<field name="code">a)</field>
-		<field name="parent_id" ref="vat_code_tax"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvac_baza19">
-		<field name="name">Baza TVA 19%</field>
-		<field name="code">TVA colectata 19%(Baza)</field>
-		<field name="parent_id" ref="vat_code_tvac_baza"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvac_baza09">
-		<field name="name">Baza TVA 9%</field>
-		<field name="code">TVA colectata 9%(Baza)</field>
-		<field name="parent_id" ref="vat_code_tvac_baza"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvac_baza05">
-		<field name="name">Baza TVA 5%</field>
-		<field name="code">TVA colectata 5%(Baza)</field>
-		<field name="parent_id" ref="vat_code_tvac_baza"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tvac_baza">
+        <field name="name">BAZA TVA COLECTAT</field>
+        <field name="code">a)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvac_baza19">
+        <field name="name">Baza TVA 19%</field>
+        <field name="code">TVA colectata 19%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvac_baza09">
+        <field name="name">Baza TVA 9%</field>
+        <field name="code">TVA colectata 9%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvac_baza05">
+        <field name="name">Baza TVA 5%</field>
+        <field name="code">TVA colectata 5%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_tvac_bazaTI">
-		<field name="name">Baza TVA Taxare inversa</field>
-		<field name="code">Baza</field>
-		<field name="parent_id" ref="vat_code_tvac_baza"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaTI">
+        <field name="name">Baza TVA Taxare inversa</field>
+        <field name="code">Baza</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_tvac_baza00">
-		<field name="name">Baza TVA 0%</field>
-		<field name="code">TVA colectata 0%(Baza)</field>
-		<field name="parent_id" ref="vat_code_tvac_baza"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tvac_baza00">
+        <field name="name">Baza TVA 0%</field>
+        <field name="code">TVA colectata 0%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
 
 
-	<record model="account.tax.code.template" id="vat_code_tvad_tva">
-		<field name="name">TVA DEDUCTIBILA</field>
-		<field name="code">d)</field>
-		<field name="parent_id" ref="vat_code_tax"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvad_tva19">
-		<field name="name">TVA 19%</field>
-		<field name="code">TVA deductibila 19%</field>
-		<field name="parent_id" ref="vat_code_tvad_tva"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvad_tva09">
-		<field name="name">TVA 9%</field>
-		<field name="code">TVA deductibila 9%</field>
-		<field name="parent_id" ref="vat_code_tvad_tva"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvad_tva05">
-		<field name="name">TVA 5%</field>
-		<field name="code">TVA deductibila 5%</field>
-		<field name="parent_id" ref="vat_code_tvad_tva"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tvad_tva">
+        <field name="name">TVA DEDUCTIBILA</field>
+        <field name="code">d)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvad_tva19">
+        <field name="name">TVA 19%</field>
+        <field name="code">TVA deductibila 19%</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvad_tva09">
+        <field name="name">TVA 9%</field>
+        <field name="code">TVA deductibila 9%</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvad_tva05">
+        <field name="name">TVA 5%</field>
+        <field name="code">TVA deductibila 5%</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_tvad_tva00">
-		<field name="name">TVA 0%</field>
-		<field name="code">TVA deductibila 0%</field>
-		<field name="parent_id" ref="vat_code_tvad_tva"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvad_baza">
-		<field name="name">BAZA TVA DEDUCTIBIL</field>
-		<field name="code">c)</field>
-		<field name="parent_id" ref="vat_code_tax"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvad_baza19">
-		<field name="name">Baza TVA 19%</field>
-		<field name="code">TVA deductibila 19%(Baza)</field>
-		<field name="parent_id" ref="vat_code_tvad_baza"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvad_baza09">
-		<field name="name">Baza TVA 9%</field>
-		<field name="code">TVA deductibila 9%(Baza)</field>
-		<field name="parent_id" ref="vat_code_tvad_baza"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvad_baza05">
-		<field name="name">Baza TVA 5%</field>
-		<field name="code">TVA deductibila 5%(Baza)</field>
-		<field name="parent_id" ref="vat_code_tvad_baza"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tvad_tva00">
+        <field name="name">TVA 0%</field>
+        <field name="code">TVA deductibila 0%</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvad_baza">
+        <field name="name">BAZA TVA DEDUCTIBIL</field>
+        <field name="code">c)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvad_baza19">
+        <field name="name">Baza TVA 19%</field>
+        <field name="code">TVA deductibila 19%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvad_baza09">
+        <field name="name">Baza TVA 9%</field>
+        <field name="code">TVA deductibila 9%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+    <record model="account.tax.code.template" id="vat_code_tvad_baza05">
+        <field name="name">Baza TVA 5%</field>
+        <field name="code">TVA deductibila 5%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_tvad_baza00">
-		<field name="name">Baza TVA 0%</field>
-		<field name="code">TVA deductibila 0%(Baza)</field>
-		<field name="parent_id" ref="vat_code_tvad_baza"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tvad_baza00">
+        <field name="name">Baza TVA 0%</field>
+        <field name="code">TVA deductibila 0%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
 
 </data>
 </openerp>

@@ -1,34 +1,50 @@
 <?xml version="1.0"?>
 <openerp>
-  <data noupdate="1">
+    <data>
+        <record id="hr.todo_open_hr_menu" model="ir.actions.todo">
+            <field name="state">done</field>
+        </record>
+    </data>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="todo_open_hr_menu" model="ir.actions.todo">
+            <field name="action_id" ref="hr.action_client_hr_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Leaves Management has been installed</value>
+            <value>Manage employee leaves from the top menu "Human Resources". Employees can create leave requests that are validated by their manager and/or HR people.  Once validated, they are visible in the employee's calendar.  HR people can define leave types and allocate off-days for employees.</value>
+        </function>
 
-    <!-- Casual leave -->
-    <record model="hr.holidays.status" id="holiday_status_cl">
-      <field name="name">Legal Leaves</field>
-      <field name="color_name">black</field>
-    </record>
+        <!-- Casual leave -->
+        <record model="hr.holidays.status" id="holiday_status_cl">
+            <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
+            <field name="color_name">black</field>
+        </record>
 
-    <!-- Sick leave -->
-    <record model="hr.holidays.status" id="holiday_status_sl">
-      <field name="name">Sick Leaves</field>
-      <field name="limit">True</field>
-      <field name="color_name">red</field>
-    </record>
+        <!-- Sick leave -->
+        <record model="hr.holidays.status" id="holiday_status_sl">
+            <field name="name">Sick Leaves</field>
+            <field name="limit">True</field>
+            <field name="color_name">red</field>
+        </record>
 
+        <!-- Compensatory Days -->
+        <record model="hr.holidays.status" id="holiday_status_comp">
+            <field name="name">Compensatory Days</field>
+            <field name="limit">True</field>
+            <field name="color_name">lavender</field>
+        </record>
 
-    <!-- Compensatory Days -->
-    <record model="hr.holidays.status" id="holiday_status_comp">
-      <field name="name">Compensatory Days</field>
-      <field name="limit">True</field>
-      <field name="color_name">brown</field>
-    </record>
-
-    <!--Unpaid Leave -->
-    <record model="hr.holidays.status" id="holiday_status_unpaid">
-      <field name="name">Unpaid</field>
-      <field name="limit">True</field>
-      <field name="color_name">brown</field>
-    </record>
-
-  </data>
+        <!--Unpaid Leave -->
+        <record model="hr.holidays.status" id="holiday_status_unpaid">
+            <field name="name">Unpaid</field>
+            <field name="limit">True</field>
+            <field name="color_name">brown</field>
+        </record>
+    </data>
 </openerp>

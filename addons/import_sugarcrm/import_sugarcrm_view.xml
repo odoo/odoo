@@ -6,82 +6,60 @@
     <record model="ir.ui.view" id="view_import_sugarcrm_form">
       <field name="name">import.sugarcrm.form</field>
       <field name="model">import.sugarcrm</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Import Data From SugarCRM">
-          <group col="8" >
-            <group colspan="2" col="2" width="200">
-              <label colspan="2"  string="Import your data from SugarCRM :"/>
-              <label colspan="2"  string="" />
-              <label colspan="2"  string="Use the SugarSoap API URL (read tooltip) and a full access SugarCRM login."/>
-              <label colspan="2"  string="" />
-              <label colspan="2"  string="Choose data you want to import. Click 'Import' to get data manually or 'Schedule Reccurent Imports' to get recurrently and automatically data."/>
-              <label colspan="2"  string="" />
-              <label colspan="2"  string="If you make recurrent or ponctual import, data already  in OpenERP will be updated by SugarCRM data."/>
-              <label colspan="2"  string="" />
-              <label colspan="2"  string="Do not forget the email address to be notified of the success of the import."/>
-              <label colspan="2" />
-              <label colspan="2"  string="Online documentation:"/>
-              <label colspan="2"  string="(Coming Soon)"/>
-              <label colspan="2"  string=""/>
-            </group>
-            <separator string="" orientation="vertical" colspan="1" rowspan="24" />
-            <group colspan="5">
-              <separator string="Login Information" colspan="4"/>
-              <field name="url" colspan="4" widget="url"/>
-              <field name="username" colspan="4"/>
-              <field name="password" password="True" colspan="4"/>
-
-              <group colspan="4">
-                <group colspan="1" col="2">
-                  <separator string="Address Book" colspan="2"/>
-                  <field name="user" />
-                  <field name= "account" />
-                  <field name= "contact" />
-                </group>
-                <group colspan="1" col="2">
-                  <separator string="CRM" colspan="2"/>
-                  <field name="opportunity" />
-                  <field name= "call" />
-                  <field name= "meeting" />
-                  <field name= "claim" />
-                </group>
-                <group colspan="1" col="2">
-                  <separator string="Project" colspan="2"/>
-                  <field name= "project" />
-                  <field name= "project_task" />
-                  <field name= "bug"/>
-                </group>
-                <group colspan="1" col="2">
-                  <separator string="HR" colspan="2"/>
-                  <field name="employee" />
-                  <separator string="Document" colspan="2"/>
-                  <field name="email_history"/>
-                  <field name= "document" />
-                </group>
-              </group>
-
-              <group colspan="4">
-                <separator string="Email Notification When Import is finished" colspan="4"/>
-                <field name="email_from" widget="email" string="Email Address to Notify" colspan="4"/>
-              </group>
-
-              <group colspan="4" groups="base.group_no_one">
-                <separator string="Multi Instance Management" colspan="4"/>
-                <field name="instance_name" colspan="4"/>
-              </group>
-
-              <separator string="" colspan="4" />
-              <group colspan="4" col="6">
-                <label string="" colspan="2"/>
-                <button icon="gtk-cancel" special="cancel" string="_Cancel"/>
-                <button name="import_from_scheduler_all" groups="base.group_extended" string="_Schedule Recurrent Imports"
-                        type="object" icon="gtk-execute" />
+        <form string="Import Data From SugarCRM" version="7.0">
+            <header>
                 <button name="import_all" string="_Import"
-                        type="object" icon="terp-camera_test"/>
+                        type="object" class="oe_highlight"/>
+                <button name="import_from_scheduler_all" string="_Schedule Recurrent Imports"
+                        type="object"/> or
+                <button special="cancel" string="_Cancel" class="oe_link"/>
+            </header>
+            <sheet>
+              <group col="8" >
+                <group colspan="5">
+                  <separator string="Login Information" colspan="4"/>
+                  <field name="url" colspan="2" widget="url"/>
+                  <field name="username" colspan="2"/>
+                  <field name="password" password="True" colspan="2"/>
+
+                  <group colspan="4">
+                    <separator string="Data to Import" colspan="4"/>
+                    <group colspan="1" col="2">
+                      <field name="user" />
+                      <field name= "account" />
+                      <field name= "contact" />
+                    </group>
+                    <group colspan="1" col="2">
+                      <field name="opportunity" />
+                      <field name= "call" />
+                      <field name= "meeting" />
+                      <field name= "claim" />
+                    </group>
+                    <group colspan="1" col="2">
+                      <field name= "project" />
+                      <field name= "project_task" />
+                      <field name= "bug"/>
+                    </group>
+                    <group colspan="1" col="2">
+                      <field name="employee" />
+                      <field name="email_history"/>
+                      <field name= "document" />
+                    </group>
+                  </group>
+
+                  <group colspan="4">
+                    <separator string="Email Notification When Import is Finished" colspan="2"/>
+                    <field name="email_from" widget="email" string="Email Address to Notify" colspan="2"/>
+                  </group>
+
+                  <group colspan="4" groups="base.group_no_one">
+                    <separator string="Multi Instance Management" colspan="4"/>
+                    <field name="instance_name" colspan="2"/>
+                </group>
               </group>
-            </group>
-          </group>
+              </group>
+          </sheet>
         </form>
       </field>
     </record>
