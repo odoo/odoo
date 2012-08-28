@@ -286,6 +286,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 start: function(event, ui) {
                     self.currently_dragging.index = ui.item.index();
                     self.currently_dragging.group = ui.item.parents('.oe_kanban_column:first').data('widget');
+                    ui.item.find('*').on('click.prevent', function(ev) {
+                        return false;
+                    });
                 },
                 stop: function(event, ui) {
                     var record = ui.item.data('widget');
@@ -296,6 +299,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     if (!(old_group.title === new_group.title && old_group.value === new_group.value && old_index == new_index)) {
                         self.on_record_moved(record, old_group, old_index, new_group, new_index);
                     }
+                    setTimeout(function() {
+                        // A bit hacky but could not find a better solution for Firefox (problem not present in chrome)
+                        // http://stackoverflow.com/questions/274843/preventing-javascript-click-event-with-scriptaculous-drag-and-drop
+                        ui.item.find('*').off('click.prevent');
+                    }, 0);
                 },
                 scroll: false
             });
