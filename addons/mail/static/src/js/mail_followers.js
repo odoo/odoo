@@ -101,7 +101,6 @@ openerp_mail_followers = function(session, mail) {
         display_subscribers: function (records) {
             var self = this;
             this.is_subscriber = false;
-            if (this.view.get("actual_mode") === "edit"){self.update_subtype();}
             var user_list = this.$el.find('ul.oe_mail_followers_display').empty();
             this.$el.find('div.oe_mail_recthread_followers h4').html(this.params.title + ' (' + records.length + ')');
             _(records).each(function (record) {
@@ -130,6 +129,7 @@ openerp_mail_followers = function(session, mail) {
         // Display the subtypes of each records.
         display_subtype: function(records) {
             var self = this
+            if (self.view.get("actual_mode") === "edit"){self.update_subtype();}
             var subtype_list = this.$el.find('div.oe_mail_recthread_subtype').empty();
             var follower_ids = this.follower_model.call('search',[[['res_model','=',this.ds_model.model],['res_id','=',this.view.datarecord.id],['user_id','=',this.session.uid]]])
             follower_ids.then(function (record){
