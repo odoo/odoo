@@ -3347,9 +3347,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # write values of default taxes for product as super user
         if obj_wizard.sale_tax and taxes_ref:
-            ir_values_obj.set_default(cr, 1, 'product.product', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company=company_id)
+            ir_values_obj.set_default(cr, 1, 'product.product', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
         if obj_wizard.purchase_tax and taxes_ref:
-            ir_values_obj.set_default(cr, 1, 'product.product', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company=company_id)
+            ir_values_obj.set_default(cr, 1, 'product.product', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
