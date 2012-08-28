@@ -747,7 +747,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                             field_to_set,
                             self.fields[field_to_set].get_value(),
                             all_users,
-                            false,
+                            true,
                             condition || false
                     ]).then(function () { d.close(); });
                 }}
