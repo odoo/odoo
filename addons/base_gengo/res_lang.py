@@ -27,5 +27,5 @@ class res_company(osv.Model):
     _inherit = "res.lang"
 
     _columns = {
-        'gengo_sync': fields.boolean('Active', help='Synchronize Translation Periodically')
+        'gengo_sync': fields.boolean('Gengo Auto Synchronize ?', help='If checked the language will be automatically synchronize translation periodically using gengo translation services.')
     }
