@@ -99,10 +99,10 @@ class base_action_rule(osv.osv):
         if hasattr(obj, 'email_cc') and action.act_email_cc:
             if '@' in (obj.email_cc or ''):
                 emails = obj.email_cc.split(",")
-                if  obj.act_email_cc not in emails:# and '<'+str(action.act_email_cc)+">" not in emails:
-                    write['email_cc'] = obj.email_cc + ',' + obj.act_email_cc
+                if  action.act_email_cc not in emails:# and '<'+str(action.act_email_cc)+">" not in emails:
+                    write['email_cc'] = obj.email_cc+','+action.act_email_cc
             else:
-                write['email_cc'] = obj.act_email_cc
+                write['email_cc'] = action.act_email_cc
 
         # Put state change by rule in communication history
         if hasattr(obj, 'state') and hasattr(obj, 'message_append') and action.act_state:
