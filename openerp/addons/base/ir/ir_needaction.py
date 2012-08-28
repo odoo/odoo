@@ -58,8 +58,6 @@ class ir_needaction_mixin(osv.Model):
     def _needaction_count(self, cr, uid, domain=[], context=None):
         """ Get the number of actions uid has to perform. """
         dom = self._needaction_domain_get(cr, uid, context=context)
-        if dom is False:
+        if not dom:
             return 0
-        result = self.search(cr, uid, (domain or []) +dom, context=context, count=True)
-        return result
-
+        return self.search(cr, uid, (domain or []) +dom, context=context, count=True)
