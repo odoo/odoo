@@ -1118,12 +1118,6 @@ class unquote(str):
     def __repr__(self):
         return self
 
-def email_split(text):
-    """Return a list of the email addresses found in ``text``"""
-    if not text: return []
-    return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
-
-
 class UnquoteEvalContext(defaultdict):
     """Defaultdict-based evaluation context that returns 
        an ``unquote`` string for any missing name used during
