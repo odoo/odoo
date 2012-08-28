@@ -344,3 +344,38 @@ class test_mail(common.TransactionCase):
         self.assertTrue(len(res[0]['child_ids'][0]['child_ids']) == 1, 'Incorrect number of child in message_read')
         # trees = self.mail_message.message_read_tree_flatten_main(cr, uid, res, thread_level=0)
         # print trees
+
+    def test_40_needaction(self):
+        """ Tests for mail.message needaction. """
+        cr, uid  = self.cr, self.uid
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        user_admin = self.res_users.browse(cr, uid, uid)
+
+        # Demo values: check unread notification = needaction on mail.message
+        notif_ids = self.mail_notification.search(cr, uid, [
+            ('partner_id', '=', user_admin.partner_id.id),
+            ('read', '=', False)
+            ])
+        na_count = self.mail_message._needaction_count(cr, uid, domain = [])
+        self.assertTrue(len(notif_ids) == na_count,
+            'Number of unread notifications (%s) does not match the needaction count (%s)' % (len(notif_ids), na_count))
+
+        # Post 4 message on group_pigs
+        msgid1 = group_pigs.message_post(body='My Body')
+        msgid2 = group_pigs.message_post(body='My Body')
+        msgid3 = group_pigs.message_post(body='My Body')
+        msgid4 = group_pigs.message_post(body='My Body')
+
+        # Check there are 4 new needaction on mail.message
+        notif_ids = self.mail_notification.search(cr, uid, [
+            ('partner_id', '=', user_admin.partner_id.id),
+            ('read', '=', False)
+            ])
+        na_count = self.mail_message._needaction_count(cr, uid, domain = [])
+        self.assertTrue(len(notif_ids) == na_count,
+            'Number of unread notifications after posting messages (%s) does not match the needaction count (%s)' % (len(notif_ids), na_count))
+
+        # Check there are 4 needaction on mail.message with particular domain
+        na_count = self.mail_message._needaction_count(cr, uid, domain = [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertTrue(na_count == 4,
+            'Number of posted message (4) does not match the needaction count with domain mail.group - group pigs (%s)' % (na_count))

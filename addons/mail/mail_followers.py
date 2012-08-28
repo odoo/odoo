@@ -24,12 +24,12 @@ from osv import fields
 
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside
-    OpenERP. Partners can choose to follow documents (records) of any kind that
-    inherits from mail.thread. Following documents allow to receive
-    notifications for new messages.
-    A subscription is characterized by:
-        :param: res_model: model of the followed objects
-        :param: res_id: ID of resource (may be 0 for every objects)
+        OpenERP. Partners can choose to follow documents (records) of any kind
+        that inherits from mail.thread. Following documents allow to receive
+        notifications for new messages.
+        A subscription is characterized by:
+            :param: res_model: model of the followed objects
+            :param: res_id: ID of resource (may be 0 for every objects)
     """
     _name = 'mail.followers'
     _rec_name = 'partner_id'
@@ -48,8 +48,7 @@ class mail_followers(osv.Model):
 
 class mail_notification(osv.Model):
     """ Class holding notifications pushed to partners. Followers and partners
-        added in 'contacts to notify' receive notifications. Hiding notifications
-        in the wall consists in setting them as 'read'. """
+        added in 'contacts to notify' receive notifications. """
     _name = 'mail.notification'
     _rec_name = 'partner_id'
     _log_access = False
@@ -64,9 +63,23 @@ class mail_notification(osv.Model):
     _defaults = {
         'read': False,
     }
-    # FP Note: todo: check that we can not create a notification for
-    # a message we can not read.
-    # def create(self, ...)
+
+    def init(self, cr):
+        """ Set a postgresql NOT NULL constraint with default value false for
+            the read column. The reason is that when writing in this table using
+            partner_ids of mail.message model, it bypasses the ORM default
+            values, leading to 'None' values for read field. This broke the
+            needaction mechanism for mail.message. """
+        cr.execute("ALTER TABLE mail_notification ALTER read SET NOT NULL")
+        cr.execute("ALTER TABLE mail_notification ALTER read SET DEFAULT false")
+
+    def create(self, cr, uid, vals, context=None):
+        """ Override of create to check that we can not create a notification
+            for a message the user can not read. """
+        if self.pool.get('mail.message').check_access_rights(cr, uid, 'read'):
+            return super(self, mail_notification).create(cr, uid, vals, context=context)
+        else:
+            return False
 
     def notify(self, cr, uid, partner_ids, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
