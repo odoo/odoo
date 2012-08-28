@@ -94,23 +94,20 @@ class base_update_translation(osv.osv_memory):
 
     def pack_jobs_request(self, cr, uid, term_ids, context):
         jobs = {}
-        auto_approve = 0
         gengo_parameter_pool = self.pool.get('res.users').browse(cr, uid, uid, context)
         translation_pool = self.pool.get('ir.translation')
-        if gengo_parameter_pool.company_id.gengo_auto_approve:
-            auto_approve = 1
+        auto_approve = gengo_parameter_pool.company_id.gengo_auto_approve and 1 or 0
         for term in translation_pool.browse(cr, uid, term_ids, context):
-            if term.src:
-                if re.search(r"\w", term.src):
-                    job = {'type': 'text',
-                            'slug': 'single::English to ' + LANG_CODE_MAPPING[term.lang][1],
-                            'tier': tools.ustr(gengo_parameter_pool.company_id.gengo_tier),
-                            'body_src': term.src,
-                            'lc_src': 'en',
-                            'lc_tgt': LANG_CODE_MAPPING[term.lang][0],
-                            'auto_approve': auto_approve,
-                            'comment': gengo_parameter_pool.company_id.gengo_comment}
-                    jobs.update({term.id: job})
+            if re.search(r"\w", term.src or ""):
+                job = {'type': 'text',
+                        'slug': 'single::English to ' + LANG_CODE_MAPPING[term.lang][1],
+                        'tier': tools.ustr(gengo_parameter_pool.company_id.gengo_tier),
+                        'body_src': term.src,
+                        'lc_src': 'en',
+                        'lc_tgt': LANG_CODE_MAPPING[term.lang][0],
+                        'auto_approve': auto_approve,
+                        'comment': gengo_parameter_pool.company_id.gengo_comment}
+                jobs.update({term.id: job})
         return {'jobs': jobs}
 
     def check_lang_support(self, cr, uid, langs, context=None):
@@ -123,7 +120,6 @@ class base_update_translation(osv.osv_memory):
             tier = user.company_id.gengo_tier
             if tier == "machine":
                 tier = "nonprofit"
-
             lang_pair = gengo.getServiceLanguagePairs(lc_src='en')
             if lang_pair['opstat'] == 'ok':
                 for g_lang in lang_pair['response']:
@@ -134,9 +130,9 @@ class base_update_translation(osv.osv_memory):
 
     def _update_terms(self, cr, uid, ids, response, tier, context):
         translation_pool = self.pool.get('ir.translation')
-        for jobs in response['jobs']:
-            vals = {}
+        for jobs in response['jobs']:        
             for t_id, res in jobs.items():
+                vals = {}
                 if tier == "machine":
                     vals.update({'value': res['body_tgt'], 'state': 'translated'})
                 else:
@@ -187,17 +183,16 @@ class base_update_translation(osv.osv_memory):
                     if LANG_CODE_MAPPING[res.lang][0]:
                         lang_search = lang_pool.search(cr, uid, [('gengo_sync', '=', True), ('id', '=', lang_id[0])])
                     if lang_search:
-                        msg += '\t- This language " %s " is already in queue for processing.' % (lang_name)
+                        msg += '  - This language `%s` is already in queue for translation.' % (lang_name)
                     else:
-                        msg += '\t- Translation for language " %s " is queued for processing.' % (lang_name)
+                        msg += '  - The language `%s` is queued for translation through Gengo translation.' % (lang_name)
                         lang_pool.write(cr, uid, lang_id, {'gengo_sync': True})
-                        _logger.info('Your translation request for language " %s " has been send successfully.', lang_name)
-
+                        _logger.info('Translation request for language `%s` has been queued successfully.', lang_name)
                     self.do_check_schedular(cr, uid, 'gengo_sync_send_request_scheduler', 'Gengo Sync Translation (Request)', '_sync_request', context)
                     self.do_check_schedular(cr, uid, 'gengo_sync_receive_request_scheduler', 'Gengo Sync Translation (Response)', '_sync_response', context)
                     self._sync_request(cr, uid, ids, context)
                 except:
-                    msg +='\t- Language " %s " is not supported by MyGengo.'%(lang_name)
+                    msg +='  - The Language `%s` is not supported by Gengo Traditional Service.'%(lang_name)
 
         context.update({'message': msg})
         obj_model = self.pool.get('ir.model.data')
@@ -230,7 +225,7 @@ class base_update_translation(osv.osv_memory):
                     vals={}
                     job_response = gengo.getTranslationJob(id=term.job_id)
                     if job_response['opstat'] != 'ok':
-                        _logger.warning("Invalid Response Skeeping translation Terms for 'id' %s."%(term.job_id))
+                        _logger.warning("Invalid Response! Skipping translation Terms with `id` %s."%(term.job_id))
                         continue
                     if job_response['response']['job']['status'] == 'approved':
                         vals.update({'state': 'translated',
