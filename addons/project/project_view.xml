@@ -136,7 +136,7 @@
                                     <field name="company_id" groups="base.group_multi_company" widget="selection" required="1"/>
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
-                                    <field name="currency_id" groups="base.group_multi_company" required="1"/>
+                                    <field name="currency_id" groups="base.group_multi_currency" required="1"/>
                                     <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                                 </group>
                             </group>
