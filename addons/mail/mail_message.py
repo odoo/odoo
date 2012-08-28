@@ -64,7 +64,7 @@ class mail_message(osv.Model):
 
     def _get_unread(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
-        res = dict.fromkeys(id, False)
+        res = dict.fromkeys(ids, False)
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
