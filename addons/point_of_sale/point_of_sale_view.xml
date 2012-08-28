@@ -55,10 +55,14 @@
                                     </group>
                                 </form>
                             </field>
-                            <group class="oe_subtotal_footer">
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="order_total">
                                 <field name="amount_tax"/>
-                                <field name="amount_total"/>
-                                <button name="button_dummy" string="Update" class="oe_link" states="draft"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="amount_total" />
+                                    <button name="button_dummy"
+                                        states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>
                             </group>
                         </page>
                         <page string="Payments">
@@ -630,6 +634,9 @@
                         <field name="expense_pdt"/>
                     </group>
                 </group>
+                <field name="ean13" position="after">
+                    <button name="edit_ean" type="object" string="Edit" />
+                </field>
             </field>
         </record>
 
@@ -773,10 +780,10 @@
                     <sheet>
                         <group>
                         <field name="name"/>
-                        <field name="shop_id" widget="selection" />
+                        <field name="shop_id" widget="selection" groups="stock.group_locations" />
                         <field name="journal_id" widget="selection" />
-                        <field name="sequence_id" readonly="1"/>
-                        <field name="group_by" />
+                        <field name="sequence_id" readonly="1" groups="base.group_no_one" />
+                        <field name="group_by" groups="account.group_account_user"  />
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
                         <field name="journal_ids" colspan="4" nolabel="1">
@@ -791,14 +798,11 @@
                         <group string="Material Interfaces" >
                             <group>
                                 <field name="iface_self_checkout" />
-                                <field name="iface_websql" />
-                                <field name="iface_led" />
                                 <field name="iface_cashdrawer" />
                                 <field name="iface_payment_terminal" />
                             </group>
                             <group>
                                 <field name="iface_electronic_scale" />
-                                <field name="iface_barscan" />
                                 <field name="iface_vkeyboard" />
                                 <field name="iface_print_via_proxy" />
                             </group>
@@ -873,13 +877,17 @@
                 <form string="Point of Sale Session" version="7.0">
                     <header>
                         <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" class="oe_highlight"/>
-                        <button name="cashbox_control" type="workflow" string="End of Session" states="opened"
-                            class="oe_highlight"/>
+                        <button name="cashbox_control" type="workflow" string="End of Session"
+                            attrs="{'invisible' : [('has_closing_control', '=', False),('state', '=', 'opened')]}" 
+                            class="oe_highlight" />
+                        <button name="close" type="workflow" string="Validate Closing &amp; Post Entries"
+                            attrs="{'invisible' : [('has_closing_control', '=', True),('state', '=', 'opened')]}"
+                            class="oe_highlight" />
                         <button name="close" type="workflow" string="Validate Closing &amp; Post Entries" states="closing_control"
-                            class="oe_highlight"/>
-                        <button name="open_frontend_cb" type="object" string="Start Selling" states="opened"/>
+                            class="oe_highlight" />
+                        <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"/>
                         <div class="oe_right">
-                            <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1"/>
+                            <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1" />
                         </div>
                     </header>
                     <sheet>
@@ -888,19 +896,19 @@
                             <button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened,closing_control"/>
                         </div>
                         <h1 class="oe_title">
-                            Point of Sale Session:
+                            Session:
                             <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
                         </h1>
-                        <field name="has_opening_control" invisible="1" />
-                        <field name="has_closing_control" invisible="1" />
                         <group>
+                            <field name="has_opening_control" invisible="1" />
+                            <field name="has_closing_control" invisible="1" />
                             <group>
                                 <field name="user_id"/>
                                 <field name="config_id" attrs="{'invisible' : [('config_id', '&lt;&gt;', False)]}"/>
                             </group>
                             <group>
                                 <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
-                                <field name="stop_at" attrs="{'invisible' : [('state', '&lt;&gt;', 'closed')]}"/>
+                                <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                             </group>
                             <newline/>
 
@@ -1056,6 +1064,21 @@
         <menuitem action="action_pos_session_opening"
             parent="menu_point_of_sale"
             id="menu_pos_session_opening" sequence="0"/>
+
+        <record model="ir.ui.view" id="pos_ean13_generator">
+            <field name="name">pos.ean_wizard</field>
+            <field name="model">pos.ean_wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Ean13 Generator" version="7.0">  
+                    <field name="ean13_pattern"/>
+                    <footer>
+                        <button name="sanitize_ean13" type="object" string="Apply"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
 
     </data>
 </openerp>

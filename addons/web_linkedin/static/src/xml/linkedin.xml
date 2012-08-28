@@ -10,7 +10,10 @@
         <div>
             <script type="in/Login">
             </script>
-            <div style='display: table;width:100%'/>
+            <h2 style="margin-top: -10px;">People</h2>
+            <div class="oe_linkedin_pop_p" style='display: table;width:100%'/>
+            <h2>Companies</h2>
+            <div class="oe_linkedin_pop_c" style='display: table;width:100%'/>
         </div>
     </t>
     <t t-name="Linkedin.EntityWidget">
@@ -21,35 +24,13 @@
                 </span>
             </span>
             <h3/>
+            <div class="oe_linkedin_entity_headline" />
         </div>
     </t>
     <t t-name="LinkedIn.DisabledWarning">
         <div>
             LinkedIn access was not enabled on this server.
-            Please ask your administrator to activate it.
-        </div>
-    </t>
-    <t t-name="LinkedIn.KeyWizard">
-        <div>
-            <p>
-                To use the LinkedIn module with this database, an API Key is required. Please follow this procedure:
-            </p>
-            <ul>
-                <li>Go to this URL: 
-                    <a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a>.
-                </li>
-                <li>Log into LinkedIn.</li>
-                <li>Add a new application and fill the form:
-                    <ul>
-                        <li>JavaScript API Domain: <t t-esc="widget.api_domain"/></li>
-                        <li>The programming tool is Javascript</li>
-                    </ul>
-                </li>
-                <li>Copy the API key here:
-                    <input type="text"/>
-                    <button>Apply</button>
-                </li>
-            </ul>
+            Please ask your administrator to configure it in Settings > Configuration > Linkedin.
         </div>
     </t>
 </templates>

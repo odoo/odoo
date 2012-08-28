@@ -35,14 +35,13 @@ FTP client.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'document'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'wizard/ftp_configuration_view.xml',
         'wizard/ftp_browse_view.xml',
         'security/ir.model.access.csv',
         'res_config_view.xml',
     ],
-    'demo_xml': [],
+    'demo': [],
     'test': [
         'test/document_ftp_test2.yml',
         'test/document_ftp_test4.yml',
