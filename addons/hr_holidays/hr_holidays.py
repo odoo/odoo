@@ -151,10 +151,6 @@ class hr_holidays(osv.osv):
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
     ]
     
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(hr_holidays, self).create(cr, uid, vals, context=context)
-        return obj_id
-    
     def _create_resource_leave(self, cr, uid, leaves, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
         obj_res_leave = self.pool.get('resource.calendar.leaves')
@@ -305,6 +301,9 @@ class hr_holidays(osv.osv):
 
     def holidays_confirm(self, cr, uid, ids, context=None):
         self.check_holidays(cr, uid, ids, context=context)
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.employee_id and record.employee_id.parent_id and record.employee_id.parent_id.user_id:
+                self.message_subscribe(cr, uid, [record.id], user_ids=[record.employee_id.parent_id.user_id.id], context=context)
         self.holidays_confirm_notificate(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
@@ -367,7 +366,7 @@ class hr_holidays(osv.osv):
     def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
         """ Add 'user_id' and 'manager' to the monitored fields """
         res = super(hr_holidays, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        return res + ['user_id', 'manager_id', 'manager_id2']
+        return res + ['user_id']
         
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
