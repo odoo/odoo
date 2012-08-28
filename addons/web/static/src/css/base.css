@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -493,8 +493,8 @@
   margin: 4px;
 }
 .openerp .oe_avatar > img {
-  height: 90px;
-  max-width: 100px;
+  max-height: 90px;
+  max-width: 90px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -2724,6 +2724,16 @@
   width: 49%;
   float: right;
   color: #333333;
+}
+.openerp .oe_semantic_html li {
+  list-style-type: disc;
+  display: list-item;
+}
+.openerp .oe_semantic_html ul {
+  padding-left: 1em;
+}
+.openerp .oe_semantic_html p {
+  color: #4c4c4c !important;
 }
 
 .kitten-mode-activated {

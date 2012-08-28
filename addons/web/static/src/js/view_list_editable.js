@@ -45,10 +45,10 @@ openerp.web.list_editable = function (instance) {
                 }
             });
             this.on('edit:after', this, function () {
-                self.$element.add(self.$buttons).addClass('oe_editing');
+                self.$el.add(self.$buttons).addClass('oe_editing');
             });
             this.on('save:after cancel:after', this, function () {
-                self.$element.add(self.$buttons).removeClass('oe_editing');
+                self.$el.add(self.$buttons).removeClass('oe_editing');
             });
         },
         destroy: function () {
@@ -87,8 +87,8 @@ openerp.web.list_editable = function (instance) {
          */
         do_add_record: function () {
             if (this.editable()) {
-                this.$element.find('table:first').show();
-                this.$element.find('.oe_view_nocontent').remove();
+                this.$el.find('table:first').show();
+                this.$el.find('.oe_view_nocontent').remove();
                 this.start_edition();
             } else {
                 this._super();
@@ -99,7 +99,7 @@ openerp.web.list_editable = function (instance) {
             // tree/@editable takes priority on everything else if present.
             var result = this._super(data, grouped);
             if (this.editable()) {
-                this.$element.addClass('oe_list_editable');
+                this.$el.addClass('oe_list_editable');
                 // FIXME: any hook available to ensure this is only done once?
                 this.$buttons
                     .off('click', '.oe_list_save')
@@ -109,7 +109,7 @@ openerp.web.list_editable = function (instance) {
                         e.preventDefault();
                         self.cancel_edition();
                     });
-                this.$element
+                this.$el
                     .off('click', 'tbody td:not(.oe_list_field_cell)')
                     .on('click', 'tbody td:not(.oe_list_field_cell)', function () {
                         if (!self.editor.is_editing()) {
@@ -120,12 +120,12 @@ openerp.web.list_editable = function (instance) {
                 // Editor is not restartable due to formview not being
                 // restartable
                 this.editor = this.make_editor();
-                var editor_ready = this.editor.prependTo(this.$element)
+                var editor_ready = this.editor.prependTo(this.$el)
                     .then(this.proxy('setup_events'));
 
                 return $.when(result, editor_ready);
             } else {
-                this.$element.removeClass('oe_list_editable');
+                this.$el.removeClass('oe_list_editable');
             }
 
             return result;
@@ -203,7 +203,7 @@ openerp.web.list_editable = function (instance) {
                         }
 
                         // FIXME: need better way to get the field back from bubbling (delegated) DOM events somehow
-                        field.$element.attr('data-fieldname', field_name);
+                        field.$el.attr('data-fieldname', field_name);
                         self.fields_for_resize.push({field: field, cell: cell});
                     }, options).pipe(function () {
                         $recordRow.addClass('oe_edition');
@@ -249,8 +249,8 @@ openerp.web.list_editable = function (instance) {
             var position = $cell.position();
 
             // jquery does not understand !important
-            field.$element.attr('style', 'width: '+$cell.outerWidth()+'px !important')
-            field.$element.css({
+            field.$el.attr('style', 'width: '+$cell.outerWidth()+'px !important')
+            field.$el.css({
                 top: position.top,
                 left: position.left,
                 minHeight: $cell.outerHeight()
@@ -391,7 +391,7 @@ openerp.web.list_editable = function (instance) {
         },
         setup_events: function () {
             var self = this;
-            this.editor.$element.on('keyup keydown', function (e) {
+            this.editor.$el.on('keyup keydown', function (e) {
                 if (!self.editor.is_editing()) { return; }
                 var key = _($.ui.keyCode).chain()
                     .map(function (v, k) { return {name: k, code: v}; })
@@ -540,7 +540,7 @@ openerp.web.list_editable = function (instance) {
                 if (--field_index < 0) { return $.when(); }
 
                 field = fields[fields_order[field_index]];
-            } while (!field.$element.is(':visible'));
+            } while (!field.$el.is(':visible'));
 
             // and focus it
             field.focus();
@@ -563,7 +563,7 @@ openerp.web.list_editable = function (instance) {
                 if (++field_index >= fields_order.length) { return $.when(); }
 
                 field = fields[fields_order[field_index]];
-            } while (!field.$element.is(':visible'));
+            } while (!field.$el.is(':visible'));
 
             field.focus();
             return $.when();
@@ -572,11 +572,11 @@ openerp.web.list_editable = function (instance) {
             var form = this.editor.form;
             var last_field = _(form.fields_order).chain()
                 .map(function (name) { return form.fields[name]; })
-                .filter(function (field) { return field.$element.is(':visible'); })
+                .filter(function (field) { return field.$el.is(':visible'); })
                 .last()
                 .value();
             // tabbed from last field in form
-            if (last_field && last_field.$element.has(e.target).length) {
+            if (last_field && last_field.$el.has(e.target).length) {
                 e.preventDefault();
                 return this._next();
             }
@@ -620,7 +620,7 @@ openerp.web.list_editable = function (instance) {
             var _super = this._super();
             this.form.embedded_view = this._validate_view(
                     this.delegate.edition_view(this));
-            var form_ready = this.form.appendTo(this.$element).then(
+            var form_ready = this.form.appendTo(this.$el).then(
                 self.form.proxy('do_hide'));
             return $.when(_super, form_ready);
         },
@@ -678,7 +678,7 @@ openerp.web.list_editable = function (instance) {
                     // Is actually in the form
                     && (field = form.fields[focus_field])
                     // And is visible
-                    && field.$element.is(':visible')) {
+                    && field.$el.is(':visible')) {
                 // focus it
                 field.focus();
                 return;
@@ -687,7 +687,7 @@ openerp.web.list_editable = function (instance) {
             _(form.fields_order).detect(function (name) {
                 // look for first visible field in fields_order, focus it
                 var field = form.fields[name];
-                if (!field.$element.is(':visible')) {
+                if (!field.$el.is(':visible')) {
                     return false;
                 }
                 // Stop as soon as a field got focused

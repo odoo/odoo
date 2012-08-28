@@ -51,29 +51,6 @@
     </table>
 </t>
 <t t-name="CrashManager.error">
-    <t t-if="!session.openerp_entreprise">
-        <span>Your version of OpenERP is unsupported. Support &amp; maintenance services are available here: <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">OpenERP Entreprise</a>.</span>
-    </t>
-    <t t-if="session.openerp_entreprise">
-        <div class="oe_error_send">
-            <div>
-                <div class="oe_centeralign"><b>OpenERP Enterprise Contract.</b></div>
-                <div><br/>Your report will be sent to the OpenERP Enterprise team.<br/></div><br/>
-                <div>
-                    <label>Summary:</label><br/>
-                    <input id="issuename" type="text" class="oe_fielddiv"/>
-                </div><br/><br/>
-                <div>
-                    <label>Description:</label><br/>
-                    <textarea id="explanation" rows="6"></textarea>
-                </div><br/><br/>
-                <div>
-                    <label>What you did:</label><br/>
-                    <textarea id="remark" rows="6" ></textarea>
-                </div>
-            </div>
-        </div><br/>
-    </t>
     <div class="oe_error_detail">
         <pre><t t-esc="error.message"/></pre>
         <hr/>
