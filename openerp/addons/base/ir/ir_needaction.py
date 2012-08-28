@@ -19,37 +19,35 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from osv import osv
 
 class ir_needaction_mixin(osv.Model):
     '''Mixin class for objects using the need action feature.
 
-    Need action feature can be used by objects having to be able to
+    Need action feature can be used by models that have to be able to
     signal that an action is required on a particular record. If in
     the business logic an action must be performed by somebody, for
     instance validation by a manager, this mechanism allows to set a
     list of users asked to perform an action.
 
-    Objects using the 'need_action' feature should override the
-    ``needaction_domain_get`` method. This methods returns a
+    Models using the 'need_action' feature should override the
+    ``_needaction_domain_get`` method. This method returns a
     domain to filter records requiring an action for a specific user.
 
     This class also offers several global services:
-    - ``needaction_get_action_count``: as ``needaction_get_record_ids``
-    but returns only the number of action, not the ids (performs a
-    search with count=True)
+    - ``_needaction_count``: returns the number of actions uid has to perform
     '''
 
     _name = 'ir.needaction_mixin'
     _needaction = True
 
     #------------------------------------------------------
-    # Addon API
+    # Addons API
     #------------------------------------------------------
 
     def _needaction_domain_get(self, cr, uid, context=None):
         """ Returns the domain to filter records that require an action
-            :return: domain or False is no need action
+            :return: domain or False is no action
         """
         return False
 
@@ -58,8 +56,7 @@ class ir_needaction_mixin(osv.Model):
     #------------------------------------------------------
 
     def _needaction_count(self, cr, uid, domain=[], context=None):
-        """Given the current model and a user_id
-           get the number of actions it has to perform"""
+        """ Get the number of actions uid has to perform. """
         dom = self._needaction_domain_get(cr, uid, context=context)
         if dom is False:
             return 0
