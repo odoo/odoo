@@ -77,9 +77,9 @@ class ir_translation_import_cursor(object):
     def push(self, ddict):
         """Feed a translation, as a dictionary, into the cursor
         """
-        state= "translated"
-        if not ddict['value']:
-            state = 'translate'
+        state = ddict['value'] and "to_translate" or "translated" 
+        if not :
+            state = 
         self._cr.execute("INSERT INTO " + self._table_name \
                 + """(name, lang, res_id, src, type,
                         imd_model, imd_module, imd_name, value,state)
@@ -170,7 +170,7 @@ class ir_translation(osv.osv):
         'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),
-        'state':fields.selection([('translate','To Translate'),('inprogress','Translation in Progress'),('translated','Translated')])
+        'state':fields.selection([('to_translate','To Translate'),('inprogress','Translation in Progress'),('translated','Translated')])
     }
     
     _defaults = {
@@ -305,14 +305,14 @@ class ir_translation(osv.osv):
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
-        if vals.get('src'):
-            result= vals.update({'state':'translate'})
-        if vals.get('value'):
-            result= vals.update({'state':'translated'})
         if not context:
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if vals.get('src'):
+            result = vals.update({'state':'to_translate'})
+        if vals.get('value'):
+            result = vals.update({'state':'translated'})
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
             self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
