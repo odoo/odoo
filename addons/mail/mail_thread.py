@@ -26,16 +26,15 @@ import logging
 import pytz
 import re
 import time
+import tools
 import xmlrpclib
+
 from email.utils import parsedate
 from email.message import Message
-
-import tools
 from mail_message import decode
 from osv import osv, fields
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
-
 
 _logger = logging.getLogger(__name__)
 
@@ -622,7 +621,6 @@ class mail_thread(osv.Model):
         for x in ('from','to','cc'): values.pop(x, None) # Avoid warnings 
         return self.pool.get('mail.message').create(cr, uid, values, context=context)
 
-
     #------------------------------------------------------
     # Followers API
     #------------------------------------------------------
@@ -666,25 +664,11 @@ class mail_thread(osv.Model):
         # return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
     #------------------------------------------------------
-    # Notification API
-    #------------------------------------------------------
-
-    def message_remove_pushed_notifications(self, cr, uid, ids, msg_ids, remove_childs=True, context=None):
-        notif_obj = self.pool.get('mail.notification')
-        msg_obj = self.pool.get('mail.message')
-        if remove_childs:
-            notif_msg_ids = msg_obj.search(cr, uid, [('id', 'child_of', msg_ids)], context=context)
-        else:
-            notif_msg_ids = msg_ids
-        to_del_notif_ids = notif_obj.search(cr, uid, ['&', ('user_id', '=', uid), ('message_id', 'in', notif_msg_ids)], context=context)
-        return notif_obj.unlink(cr, uid, to_del_notif_ids, context=context)
-
-    #------------------------------------------------------
-    # Thread_state
+    # Thread state
     #------------------------------------------------------
 
     def message_mark_as_unread(self, cr, uid, ids, context=None):
-        """ Set as read. """
+        """ Set as unread. """
         notobj = self.pool.get('mail.notification')
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         cr.execute('''
