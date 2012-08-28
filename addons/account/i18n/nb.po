@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-08-16 19:17+0000\n"
+"PO-Revision-Date: 2012-08-17 10:52+0000\n"
 "Last-Translator: Kaare Pettersen <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-17 05:11+0000\n"
-"X-Generator: Launchpad (build 15810)\n"
+"X-Launchpad-Export-Date: 2012-08-28 09:22+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -3917,6 +3917,8 @@ msgid ""
 "The fiscalyear, periods or chart of account chosen have to belong to the "
 "same company."
 msgstr ""
+"Regnskapsåret, perioder eller en oversikt over kontoen valgt å tilhøre samme "
+"selskap"
 
 #. module: account
 #: model:ir.actions.todo.category,name:account.category_accounting_configuration
@@ -3943,6 +3945,8 @@ msgid ""
 "Print Report with the currency column if the currency is different then the "
 "company currency"
 msgstr ""
+"Skriv rapport med valutaen kolonne hvis valutaen er forskjellig enn "
+"selskapet valutaen"
 
 #. module: account
 #: help:account.account,unrealized_gain_loss:0
@@ -3950,6 +3954,8 @@ msgid ""
 "Value of Loss or Gain due to changes in exchange rate when doing multi-"
 "currency transactions."
 msgstr ""
+"Verdi av tap eller gevinst som følge av endringer i valutakursen når du gjør "
+"flere valutatransaksjoner."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3969,6 +3975,10 @@ msgid ""
 "debit/credit accounts, of type 'situation' and with a centralized "
 "counterpart."
 msgstr ""
+"Det beste praksis her er å bruke et tidsskrift dedikert til inneholde de "
+"første oppføringene i alle regnskapsår. Merk at du bør definere det med "
+"standard debet / kreditt-kontoer, av typen \"situasjon\" og med en "
+"sentralisert motpart."
 
 #. module: account
 #: view:account.installer:0
@@ -4004,7 +4014,7 @@ msgstr "Valider"
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
 #: model:ir.actions.report.xml,name:account.account_analytic_account_cost_ledger
 msgid "Cost Ledger"
-msgstr ""
+msgstr "Kostnad merker"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -4063,6 +4073,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
+"Dersom det aktive feltet er satt til False, vil det tillate deg å skjule "
+"kontoen uten å fjerne det."
 
 #. module: account
 #: view:account.move.line:0
@@ -4077,7 +4089,7 @@ msgstr "Søk avgiftsmaler"
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_journal_entries_validation
 msgid "Draft Entries"
-msgstr ""
+msgstr "utkastene"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -4098,7 +4110,7 @@ msgstr "Snarvei"
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error! The start date of the fiscal year must be before his end date."
-msgstr ""
+msgstr "Feil! Startdatoen for regnskapsåret må være før han sluttdato."
 
 #. module: account
 #: view:account.account:0
@@ -4157,6 +4169,8 @@ msgid ""
 "You haven't supplied enough argument to compute the initial balance, please "
 "select a period and journal in the context."
 msgstr ""
+"Du har ikke levert nok argument til å beregne utgangsposisjonen balanse, "
+"vennligst velg en periode og tidsskrift i sammenheng."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplieranalyticcost0
@@ -4164,11 +4178,13 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft supplier invoices."
 msgstr ""
+"Analytiske kostnader (timelister, noen kjøpte produkter, ...) kommer fra "
+"analytiske kontoer. Disse genererer utkast leverandørfakturaer."
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Close CashBox"
-msgstr ""
+msgstr "Lukk Cash Box"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -4200,11 +4216,15 @@ msgid ""
 "some non legal fields or you must unconfirm the journal entry first! \n"
 "%s"
 msgstr ""
+"Du kan ikke gjøre denne endringen på en bekreftet oppføring! Du kan bare "
+"endre noen ikke juridiske felt, eller du må bekrefte bilagsregistreringen "
+"først!\n"
+"% s"
 
 #. module: account
 #: field:res.company,paypal_account:0
 msgid "Paypal Account"
-msgstr ""
+msgstr "Paypal-konto"
 
 #. module: account
 #: field:account.invoice.report,uom_name:0
@@ -4220,19 +4240,19 @@ msgstr "Notat"
 #. module: account
 #: selection:account.financial.report,sign:0
 msgid "Reverse balance sign"
-msgstr ""
+msgstr "Omvendt balanse tegn"
 
 #. module: account
 #: view:account.analytic.account:0
 msgid "Overdue Account"
-msgstr ""
+msgstr "forfalt konto"
 
 #. module: account
 #: selection:account.account.type,report_type:0
 #: code:addons/account/account.py:184
 #, python-format
 msgid "Balance Sheet (Liability account)"
-msgstr ""
+msgstr "Balanse (Ansvar konto)"
 
 #. module: account
 #: help:account.invoice,date_invoice:0
@@ -4247,7 +4267,7 @@ msgstr "Avgiftslinjer"
 #. module: account
 #: field:account.tax,base_code_id:0
 msgid "Account Base Code"
-msgstr ""
+msgstr "Konto Base kode"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:93
@@ -4265,6 +4285,7 @@ msgstr "Innstillinger for kundekontering"
 #: help:res.company,paypal_account:0
 msgid "Paypal username (usually email) for receiving online payments."
 msgstr ""
+"Paypal brukernavn (vanligvis e-post) for å motta elektroniske betalinger."
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -4293,7 +4314,7 @@ msgstr "Alle posteringer"
 #: code:addons/account/account_bank_statement.py:367
 #, python-format
 msgid "Statement %s is confirmed, journal items are created."
-msgstr ""
+msgstr "Uttalelse% s er bekreftet, er tidsskriftet elementer opprettet."
 
 #. module: account
 #: field:report.aged.receivable,name:0
@@ -4303,7 +4324,7 @@ msgstr "Måned periode"
 #. module: account
 #: help:account.analytic.balance,empty_acc:0
 msgid "Check if you want to display Accounts with 0 balance too."
-msgstr ""
+msgstr "Sjekk om du vil vise regnskap med 0 balanse også."
 
 #. module: account
 #: view:account.tax:0
@@ -4319,7 +4340,7 @@ msgstr "Standard avgifter"
 #: code:addons/account/wizard/account_fiscalyear_close.py:41
 #, python-format
 msgid "End of Fiscal Year Entry"
-msgstr ""
+msgstr "Slutt av regnskapsåret oppføring."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
@@ -4329,7 +4350,7 @@ msgstr "Periodevis kjøring"
 #. module: account
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "Du kan ikke opprette analytisk linje på visning konto."
 
 #. module: account
 #: help:account.move.line,state:0
@@ -4337,6 +4358,8 @@ msgid ""
 "When new move line is created the state will be 'Draft'.\n"
 "* When all the payments are done it will be in 'Valid' state."
 msgstr ""
+"Når den nye trekk linjen opprettes staten vil være \"kladd\".\n"
+"* Når alle betalingene er gjort vil det være i \"Gyldig\" tilstand."
 
 #. module: account
 #: field:account.journal,view_id:0

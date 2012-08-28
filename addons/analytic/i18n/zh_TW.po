@@ -1,0 +1,283 @@
+# Chinese (Traditional) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-08-27 10:14+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-28 09:32+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
+
+#. module: analytic
+#: field:account.analytic.account,child_ids:0
+msgid "Child Accounts"
+msgstr "子科目"
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account Name"
+msgstr "科目名稱"
+
+#. module: analytic
+#: help:account.analytic.line,unit_amount:0
+msgid "Specifies the amount of quantity to count."
+msgstr "指定金額的數量用來計算"
+
+#. module: analytic
+#: field:account.analytic.account,state:0
+msgid "State"
+msgstr "狀態"
+
+#. module: analytic
+#: field:account.analytic.account,user_id:0
+msgid "Account Manager"
+msgstr "科目管理"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Closed"
+msgstr "已關閉"
+
+#. module: analytic
+#: field:account.analytic.account,debit:0
+msgid "Debit"
+msgstr "借方"
+
+#. module: analytic
+#: help:account.analytic.account,state:0
+msgid ""
+"* When an account is created its in 'Draft' state.                           "
+"       \n"
+"* If any associated partner is there, it can be in 'Open' state.             "
+"                     \n"
+"* If any pending balance is there it can be in 'Pending'.                    "
+"               \n"
+"* And finally when all the transactions are over, it can be in 'Close' "
+"state.                                   \n"
+"* The project can be in either if the states 'Template' and 'Running'.\n"
+" If it is template then we can make projects based on the template projects. "
+"If its in 'Running' state it is a normal project.                            "
+"     \n"
+" If it is to be reviewed then the state is 'Pending'.\n"
+" When the project is completed the state is set to 'Done'."
+msgstr ""
+"*當建立這科目時為'草稿'狀態.\n"
+"*如果有任何相關的業務夥伴它是'待處理'狀態.\n"
+"*如果有任何懸而未決的差額它為'懸而未決'狀態.\n"
+"*當所有交易已結束, 它是'關閉'狀態\n"
+"\n"
+"*該專案狀態可為其中之一, 如果是'模板'狀態我們能按專案模板來建造專案, 如果為'運行中'它是一正常專案\n"
+"如果需要審查則狀態為'懸而未決'\n"
+"當專案結束狀態為'完成'"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr "新增"
+
+#. module: analytic
+#: field:account.analytic.account,type:0
+msgid "Account Type"
+msgstr "科目類型"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Pending"
+msgstr "待處理"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "輔助核算項目明細"
+
+#. module: analytic
+#: field:account.analytic.account,description:0
+#: field:account.analytic.line,name:0
+msgid "Description"
+msgstr "說明"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Normal"
+msgstr "一般"
+
+#. module: analytic
+#: field:account.analytic.account,company_id:0
+#: field:account.analytic.line,company_id:0
+msgid "Company"
+msgstr "公司"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really usefull for "
+"consolidation purposes of several companies charts with different "
+"currencies, for example."
+msgstr ""
+"如果選擇公司，請注意保持成本科目貨幣與公司貨幣一致。\n"
+"針對視圖類型的成本科目，你可以把公司字段留空，並修改幣種。這樣你就可以把多個公司不同貨幣的成本科目合併起來。"
+
+#. module: analytic
+#: field:account.analytic.line,user_id:0
+msgid "User"
+msgstr "使用者"
+
+#. module: analytic
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "上級輔助核算項"
+
+#. module: analytic
+#: field:account.analytic.line,date:0
+msgid "Date"
+msgstr "日期"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "模板"
+
+#. module: analytic
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "數量"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr "計算公式是數量乘以產品成本價。幣別是公司主要幣別。"
+
+#. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr "科目階層"
+
+#. module: analytic
+#: help:account.analytic.account,quantity_max:0
+msgid "Sets the higher limit of time to work on the contract."
+msgstr "設置在這個合約上工作的最高時限。"
+
+#. module: analytic
+#: field:account.analytic.account,credit:0
+msgid "Credit"
+msgstr "貸方"
+
+#. module: analytic
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "金額"
+
+#. module: analytic
+#: field:account.analytic.account,contact_id:0
+msgid "Contact"
+msgstr "聯繫"
+
+#. module: analytic
+#: field:account.analytic.account,code:0
+msgid "Code/Reference"
+msgstr "編碼/統一編號"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Cancelled"
+msgstr "已取消"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "Error !"
+msgstr "錯誤！"
+
+#. module: analytic
+#: field:account.analytic.account,balance:0
+msgid "Balance"
+msgstr "差額"
+
+#. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "錯誤! 你不能建立遞歸的輔助覈算專案"
+
+#. module: analytic
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account."
+msgstr "如果選擇了 視圖 類型，則你不能在這個輔助核算項上建立輔助覈算憑證"
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Date End"
+msgstr "結束日期"
+
+#. module: analytic
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Time"
+msgstr "最長時間"
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr "輔助核算會計"
+
+#. module: analytic
+#: field:account.analytic.account,complete_name:0
+msgid "Full Account Name"
+msgstr "所有科目名稱"
+
+#. module: analytic
+#: field:account.analytic.line,account_id:0
+#: model:ir.model,name:analytic.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "輔助核算項"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr "貨幣"
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr "無法在視圖類型的科目上建立輔助核算項目明細"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "View"
+msgstr "視圖"
+
+#. module: analytic
+#: field:account.analytic.account,partner_id:0
+msgid "Partner"
+msgstr "業務夥伴"
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
+msgstr "開始日期"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Open"
+msgstr "待處理"
+
+#. module: analytic
+#: field:account.analytic.account,line_ids:0
+msgid "Analytic Entries"
+msgstr "輔助核算分錄"
