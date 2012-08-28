@@ -2,6 +2,18 @@
 <openerp>
     <data noupdate="1">
 
+        <!-- Create a portal template user -->
+        <record id="default_template_user" model="res.users">
+            <field name="name">Template Portal User</field>
+            <field name="login">portal-template</field>
+            <!-- No password: this template user doesn't need to log in -->
+            <field name="password"></field>
+            <field name="active" eval="False"/>
+            <!-- Avoid auto-including this user in any default group, just like a typical portal member -->
+            <field name="groups_id" eval="[(5,)]"/>
+            <field name="partner_id" eval="ref('base.res_partner_1')"/>
+        </record>
+
         <record id="portal" model="res.portal">
             <field name="name">Portal</field>
             <field name="group_id" ref="group_portal_member"/>
