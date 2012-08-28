@@ -47,6 +47,7 @@ class mail_compose_message(osv.TransientModel):
     _name = 'mail.compose.message'
     _inherit = 'mail.message'
     _description = 'Email composition wizard'
+    _log_access = True
 
     def default_get(self, cr, uid, fields, context=None):
         """ Handle composition mode. Some details about context keys:
