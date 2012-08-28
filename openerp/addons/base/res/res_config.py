@@ -552,5 +552,22 @@ class res_config_settings(osv.osv_memory):
         if action_ids:
             return act_window.read(cr, uid, action_ids[0], [], context=context)
         return {}
+    
+    def name_get(self, cr, uid, ids, context=None):
+        """ Override name_get method to return an appropriate configuration wizard
+        name, and not the generated name."""
+        
+        if not len(ids):
+            return []
+        # name_get may receive int id instead of an id list
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+            
+        act_window = self.pool.get('ir.actions.act_window')
+        action_ids = act_window.search(cr, uid, [('res_model', '=', self._name)], context=context)
+        name = self._name
+        if action_ids:
+            name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
+        return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
