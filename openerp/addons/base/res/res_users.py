@@ -51,7 +51,7 @@ class groups(osv.osv):
             else:
                 res[g.id] = g.name
         return res
-
+    
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
@@ -61,7 +61,7 @@ class groups(osv.osv):
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
-        'full_name': fields.function(_get_full_name, type='char', string='Group Name'),
+        'full_name': fields.function(_get_full_name, type='char', string='Group Name', store=True),
     }
 
     _sql_constraints = [
@@ -815,7 +815,7 @@ class users_view(osv.osv):
                     'type': 'selection',
                     'string': app and app.name or _('Other'),
                     'selection': [(False, '')] + [(g.id, g.name) for g in gs],
-                    'help': '\n'.join(tips),
+                    'help': g.comment,
                 }
             else:
                 # boolean group fields
