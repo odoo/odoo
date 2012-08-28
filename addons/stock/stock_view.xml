@@ -778,104 +778,7 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <field name="move_lines" context="{'address_in_id': partner_id}">
-                                <tree colors="grey:scrapped == True" string="Stock Moves">
-                                    <field name="product_id"/>
-                                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                    <field name="product_uos" groups="product.group_uos"/>
-                                    <button name="%(stock.move_scrap)d"
-                                        string="Scrap Products" type="action"
-                                        icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned"
-                                        groups="base.group_user"/>
-                                    <field name="scrapped" invisible="1"/>
-                                    <field name="prodlot_id" groups="stock.group_production_lot"/>
-                                    <button
-                                        name="%(stock.track_line)d"
-                                        string="Split in Serial Number"
-                                        groups="stock.group_production_lot"
-                                        type="action" icon="terp-stock_effects-object-colorize"
-                                        states="draft,waiting,confirmed,assigned"/>
-                                    <field groups="stock.group_tracking_lot" name="tracking_id"/>
-                                    <button name="setlast_tracking" string="Put in current pack" type="object"
-                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                        icon="terp-stock_effects-object-colorize"
-                                        groups="stock.group_tracking_lot"
-                                        states="draft,assigned,confirmed"/>
-                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
-                                        groups="product.group_stock_packaging"
-                                        icon="terp-stock_effects-object-colorize"
-                                        states="draft,assigned,confirmed"/>
-                                    <field name="location_dest_id" groups="stock.group_locations"/>
-                                    <field name="state"/>
-                                </tree>
-                                <form string="Stock Moves" version="7.0">
-                                    <header>
-                                        <span groups="base.group_user">
-                                            <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
-                                            <button name="action_confirm" states="draft" string="Confirm" type="object"/>
-                                            <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
-                                        </span>
-                                        <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
-                                    </header>
-                                    <group>
-                                        <group>
-                                            <field name="name" invisible="1"/>
-                                            <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
-                                            <label for="product_qty"/>
-                                            <div>
-                                                <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
-                                                <field name="product_uom" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
-                                                <button name="%(stock.move_scrap)d"
-                                                        string="Scrap" type="action"
-                                                        icon="gtk-convert" context="{'scrap': True}"
-                                                        states="draft,waiting,confirmed,assigned"
-                                                        groups="base.group_user"/>
-                                            </div>
-                                            <label for="product_uos_qty" groups="product.group_uos"/>
-                                            <div groups="product.group_uos">
-                                                <field name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" class="oe_inline"/>
-                                                <field name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
-                                            </div>
-                                            <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
-                                        </group>
-                                        <group>
-                                            <field name="create_date" invisible="1"/>
-                                            <field name="date"/>
-                                            <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-                                        </group>
-
-                                        <group string="Locations" groups="stock.group_locations">
-                                            <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                            <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
-                                        </group>
-
-                                        <group groups="stock.group_tracking_lot" string="Traceability">
-                                            <label for="tracking_id"/>
-                                            <div>
-                                                <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
-                                                <button name="%(split_into)d" string="New Pack" type="action"
-                                                      groups="product.group_stock_packaging"
-                                                      icon="terp-stock_effects-object-colorize"
-                                                      states="draft,assigned,confirmed"/>
-                                            </div>
-
-                                            <label for="prodlot_id"/>
-                                            <div>
-                                                <field name="prodlot_id" groups="stock.group_production_lot"
-                                                    context="{'location_id':location_id, 'product_id':product_id}"
-                                                    domain="[('product_id','=?',product_id)]"
-                                                    on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)" class="oe_inline"/>
-                                                <button name="%(track_line)d"
-                                                    groups="stock.group_tracking_lot"
-                                                    states="draft,waiting,confirmed,assigned"
-                                                    string="Split" type="action" icon="terp-stock_effects-object-colorize"/>
-                                            </div>
-                                        </group>
-                                    </group>
-                                </form>
-                            </field>
+                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
                         </page>
                         <page string="Additional Info">
                             <group>
@@ -1010,104 +913,7 @@
                         <field name="partner_id" on_change="onchange_partner_in(partner_id)"  colspan="4" string="Customer"/>
                     </xpath>
                     <xpath expr="//field[@name='move_lines']" position="replace">
-                        <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'out'}">
-                                <tree colors="grey:scrapped == True" string="Stock Moves">
-                                    <field name="product_id"/>
-                                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                    <field name="product_uos" groups="product.group_uos"/>
-                                    <button name="%(stock.move_scrap)d"
-                                        string="Scrap Products" type="action"
-                                        icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned"
-                                        groups="base.group_user"/>
-                                    <field name="scrapped" invisible="1"/>
-                                    <field name="prodlot_id" groups="stock.group_production_lot"/>
-                                    <button
-                                        name="%(stock.track_line)d"
-                                        string="Split in Serial Number"
-                                        groups="stock.group_production_lot"
-                                        type="action" icon="terp-stock_effects-object-colorize"
-                                        states="draft,waiting,confirmed,assigned"/>
-                                    <field groups="stock.group_tracking_lot" name="tracking_id"/>
-                                    <button name="setlast_tracking" string="Put in current pack" type="object"
-                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                        icon="terp-stock_effects-object-colorize"
-                                        groups="stock.group_tracking_lot"
-                                        states="draft,assigned,confirmed"/>
-                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
-                                        groups="product.group_stock_packaging"
-                                        icon="terp-stock_effects-object-colorize"
-                                        states="draft,assigned,confirmed"/>
-                                    <field name="location_dest_id" groups="stock.group_locations"/>
-                                    <field name="state"/>
-                                </tree>
-                                <form string="Stock Moves" version="7.0">
-                                    <header>
-                                        <span groups="base.group_user">
-                                            <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
-                                            <button name="action_confirm" states="draft" string="Confirm" type="object"/>
-                                            <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
-                                        </span>
-                                        <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
-                                    </header>
-                                    <group>
-                                        <group>
-                                            <field name="name" invisible="1"/>
-                                            <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
-                                            <label for="product_qty"/>
-                                            <div>
-                                                <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
-                                                <field name="product_uom" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
-                                                <button name="%(stock.move_scrap)d"
-                                                        string="Scrap" type="action"
-                                                        icon="gtk-convert" context="{'scrap': True}"
-                                                        states="draft,waiting,confirmed,assigned"
-                                                        groups="base.group_user"/>
-                                            </div>
-                                            <label for="product_uos_qty" groups="product.group_uos"/>
-                                            <div groups="product.group_uos">
-                                                <field name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" class="oe_inline"/>
-                                                <field name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
-                                            </div>
-                                            <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
-                                        </group>
-                                        <group>
-                                            <field name="create_date" invisible="1"/>
-                                            <field name="date"/>
-                                            <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-                                        </group>
-
-                                        <group string="Locations" groups="stock.group_locations">
-                                            <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                            <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
-                                        </group>
-
-                                        <group groups="stock.group_tracking_lot" string="Traceability">
-                                            <label for="tracking_id"/>
-                                            <div>
-                                                <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
-                                                <button name="%(split_into)d" string="New Pack" type="action"
-                                                      groups="product.group_stock_packaging"
-                                                      icon="terp-stock_effects-object-colorize"
-                                                      states="draft,assigned,confirmed"/>
-                                            </div>
-
-                                            <label for="prodlot_id"/>
-                                            <div>
-                                                <field name="prodlot_id" groups="stock.group_production_lot"
-                                                    context="{'location_id':location_id, 'product_id':product_id}"
-                                                    domain="[('product_id','=?',product_id)]"
-                                                    on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)" class="oe_inline"/>
-                                                <button name="%(track_line)d"
-                                                    groups="stock.group_tracking_lot"
-                                                    states="draft,waiting,confirmed,assigned"
-                                                    string="Split" type="action" icon="terp-stock_effects-object-colorize"/>
-                                            </div>
-                                        </group>
-                                    </group>
-                                </form>
-                            </field>
+                        <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'out', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
                     </xpath>
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
@@ -1233,104 +1039,7 @@
                         <field name="partner_id" on_change="onchange_partner_in(partner_id)"  colspan="4" string="Supplier"/>
                     </xpath>
                     <xpath expr="//field[@name='move_lines']" position="replace">
-                        <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in'}">
-                                <tree colors="grey:scrapped == True" string="Stock Moves">
-                                    <field name="product_id"/>
-                                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                    <field name="product_uos" groups="product.group_uos"/>
-                                    <button name="%(stock.move_scrap)d"
-                                        string="Scrap Products" type="action"
-                                        icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned"
-                                        groups="base.group_user"/>
-                                    <field name="scrapped" invisible="1"/>
-                                    <field name="prodlot_id" groups="stock.group_production_lot"/>
-                                    <button
-                                        name="%(stock.track_line)d"
-                                        string="Split in Serial Number"
-                                        groups="stock.group_production_lot"
-                                        type="action" icon="terp-stock_effects-object-colorize"
-                                        states="draft,waiting,confirmed,assigned"/>
-                                    <field groups="stock.group_tracking_lot" name="tracking_id"/>
-                                    <button name="setlast_tracking" string="Put in current pack" type="object"
-                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                        icon="terp-stock_effects-object-colorize"
-                                        groups="stock.group_tracking_lot"
-                                        states="draft,assigned,confirmed"/>
-                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
-                                        groups="product.group_stock_packaging"
-                                        icon="terp-stock_effects-object-colorize"
-                                        states="draft,assigned,confirmed"/>
-                                    <field name="location_dest_id" groups="stock.group_locations"/>
-                                    <field name="state"/>
-                                </tree>
-                                <form string="Stock Moves" version="7.0">
-                                    <header>
-                                        <span groups="base.group_user">
-                                            <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
-                                            <button name="action_confirm" states="draft" string="Confirm" type="object"/>
-                                            <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
-                                        </span>
-                                        <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
-                                    </header>
-                                    <group>
-                                        <group>
-                                            <field name="name" invisible="1"/>
-                                            <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
-                                            <label for="product_qty"/>
-                                            <div>
-                                                <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
-                                                <field name="product_uom" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
-                                                <button name="%(stock.move_scrap)d"
-                                                        string="Scrap" type="action"
-                                                        icon="gtk-convert" context="{'scrap': True}"
-                                                        states="draft,waiting,confirmed,assigned"
-                                                        groups="base.group_user"/>
-                                            </div>
-                                            <label for="product_uos_qty" groups="product.group_uos"/>
-                                            <div groups="product.group_uos">
-                                                <field name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" class="oe_inline"/>
-                                                <field name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
-                                            </div>
-                                            <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
-                                        </group>
-                                        <group>
-                                            <field name="create_date" invisible="1"/>
-                                            <field name="date"/>
-                                            <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-                                        </group>
-
-                                        <group string="Locations" groups="stock.group_locations">
-                                            <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                            <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
-                                        </group>
-
-                                        <group groups="stock.group_tracking_lot" string="Traceability">
-                                            <label for="tracking_id"/>
-                                            <div>
-                                                <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
-                                                <button name="%(split_into)d" string="New Pack" type="action"
-                                                      groups="product.group_stock_packaging"
-                                                      icon="terp-stock_effects-object-colorize"
-                                                      states="draft,assigned,confirmed"/>
-                                            </div>
-
-                                            <label for="prodlot_id"/>
-                                            <div>
-                                                <field name="prodlot_id" groups="stock.group_production_lot"
-                                                    context="{'location_id':location_id, 'product_id':product_id}"
-                                                    domain="[('product_id','=?',product_id)]"
-                                                    on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)" class="oe_inline"/>
-                                                <button name="%(track_line)d"
-                                                    groups="stock.group_tracking_lot"
-                                                    states="draft,waiting,confirmed,assigned"
-                                                    string="Split" type="action" icon="terp-stock_effects-object-colorize"/>
-                                            </div>
-                                        </group>
-                                    </group>
-                                </form>
-                            </field>
+                        <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
                     </xpath>
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
@@ -1450,6 +1159,44 @@
             </field>
         </record>
 
+        <record id="view_move_picking_tree" model="ir.ui.view">
+            <field name="name">stock.move.tree</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <tree colors="grey:scrapped == True" string="Stock Moves">
+                    <field name="product_id"/>
+                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uos" groups="product.group_uos"/>
+                    <button name="%(stock.move_scrap)d"
+                       string="Scrap Products" type="action"
+                       icon="gtk-convert" context="{'scrap': True}"
+                       states="draft,waiting,confirmed,assigned"
+                       groups="base.group_user"/>
+                    <field name="scrapped" invisible="1"/>
+                    <field name="prodlot_id" groups="stock.group_production_lot"/>
+                    <button
+                       name="%(stock.track_line)d"
+                       string="Split in Serial Number"
+                       groups="stock.group_production_lot"
+                       type="action" icon="terp-stock_effects-object-colorize"
+                       states="draft,waiting,confirmed,assigned"/>
+                     <field groups="stock.group_tracking_lot" name="tracking_id"/>
+                     <button name="setlast_tracking" string="Put in current pack" type="object"
+                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                        icon="terp-stock_effects-object-colorize"
+                        groups="stock.group_tracking_lot"
+                        states="draft,assigned,confirmed"/>
+                     <button name="%(split_into)d" string="Put in a new pack" type="action"
+                        groups="product.group_stock_packaging"
+                        icon="terp-stock_effects-object-colorize"
+                        states="draft,assigned,confirmed"/>
+                      <field name="location_dest_id" groups="stock.group_locations"/>
+                      <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">stock.move.form</field>
             <field name="model">stock.move</field>
@@ -1524,6 +1271,80 @@
                         </group>
                     </group>
                 </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_move_picking_form" model="ir.ui.view">
+            <field name="name">stock.move.form</field>
+            <field name="model">stock.move</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+            <form string="Stock Moves" version="7.0">
+                <header>
+                    <span groups="base.group_user">
+                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
+                        <button name="action_confirm" states="draft" string="Confirm" type="object"/>
+                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
+                    </span>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
+                </header>
+                <group>
+                    <group>
+                        <field name="name" invisible="1"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
+                        <label for="product_qty"/>
+                        <div>
+                            <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
+                            <field name="product_uom" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
+                            <button name="%(stock.move_scrap)d"
+                                string="Scrap" type="action"
+                                icon="gtk-convert" context="{'scrap': True}"
+                                states="draft,waiting,confirmed,assigned"
+                                groups="base.group_user"/>
+                        </div>
+                            <label for="product_uos_qty" groups="product.group_uos"/>
+                            <div groups="product.group_uos">
+                                <field name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" class="oe_inline"/>
+                                <field name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
+                            </div>
+                            <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
+                            </group>
+                            <group>
+                                <field name="create_date" invisible="1"/>
+                                <field name="date"/>
+                                <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
+                            </group>
+
+                            <group string="Locations" groups="stock.group_locations">
+                                <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
+                                <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
+                            </group>
+
+                            <group groups="stock.group_tracking_lot" string="Traceability">
+                                <label for="tracking_id"/>
+                                <div>
+                                    <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
+                                      <button name="%(split_into)d" 
+                                            string="New Pack" type="action"
+                                            groups="product.group_stock_packaging"
+                                            icon="terp-stock_effects-object-colorize"
+                                            states="draft,assigned,confirmed"/>
+                                 </div>
+
+                                  <label for="prodlot_id"/>
+                                  <div>
+                                        <field name="prodlot_id" groups="stock.group_production_lot"
+                                            context="{'location_id':location_id, 'product_id':product_id}"
+                                            domain="[('product_id','=?',product_id)]"
+                                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)" class="oe_inline"/>
+                                        <button name="%(track_line)d"
+                                            groups="stock.group_tracking_lot"
+                                            states="draft,waiting,confirmed,assigned"
+                                            string="Split" type="action" icon="terp-stock_effects-object-colorize"/>
+                            </div>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
