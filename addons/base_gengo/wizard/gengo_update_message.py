@@ -30,7 +30,7 @@ class gengo_update_message(osv.osv_memory):
     _description = "Update Message"
     _columns = {
         'name': fields.text('Message', readonly=True),
-        }
+    }
 
     def default_get(self, cr, uid, fields, context=None):
         if context == None:
@@ -39,6 +39,5 @@ class gengo_update_message(osv.osv_memory):
         res.update({'name': context.get('message')})
         return res
 
-gengo_update_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

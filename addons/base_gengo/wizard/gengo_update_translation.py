@@ -252,7 +252,7 @@ class base_update_translation(osv.osv_memory):
             lang_ids = language_pool.search(cr, uid, [('gengo_sync', '=', True)])
             langs = [lang.code for lang in language_pool.browse(cr, uid, lang_ids)]
             langs = self.check_lang_support(cr, uid, langs)
-            term_ids = translation_pool.search(cr, uid, [('state', '=', 'translate'), ('gengo_translation', '=', True), ('lang', 'in', langs)], limit=LIMIT)
+            term_ids = translation_pool.search(cr, uid, [('state', '=', 'to_translate'), ('gengo_translation', '=', True), ('lang', 'in', langs)], limit=LIMIT)
             if term_ids:
                 self._send_translation_terms(cr, uid, ids, term_ids, context)
                 _logger.info("Translation terms %s has been posted to gengo successfully", len(term_ids))
