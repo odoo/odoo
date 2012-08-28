@@ -352,6 +352,7 @@ account_bank_statement()
 
 class coda_bank_statement_line(osv.osv):
     _name = 'coda.bank.statement.line'
+    _inherit = "account.bank.statement.line"
     _order = 'sequence'
     _description = 'CODA Bank Statement Line'
     _columns = {
