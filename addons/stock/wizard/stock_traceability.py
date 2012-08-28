@@ -42,7 +42,7 @@ class action_traceability(osv.osv_memory):
         lot_id = ids
         if context is None:
             context = {}
-        type1 = context.get('type', 'move_history_ids2')
+        type1 = 'type' in context and context['type'] or 'move_history_ids2'
         field = context.get('field', 'tracking_id')
         obj = self.pool.get('stock.move')
         ids = obj.search(cr, uid, [(field, 'in',lot_id)])

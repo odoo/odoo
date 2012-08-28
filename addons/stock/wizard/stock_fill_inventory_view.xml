@@ -8,8 +8,8 @@
               <form string="Import Inventory" version="7.0">
                   <separator string="Import current product inventory from the following location"/>
                   <group>
-                      <field name="location_id"/>
-                      <field name="recursive"/>
+                      <field name="location_id" groups="stock.group_locations"/>
+                      <field name="recursive" groups="stock.group_locations"/>
                       <field name="set_stock_zero"/>
                   </group>
                   <footer>
@@ -21,14 +21,16 @@
             </field>
         </record>
 
-         <act_window name="Import Inventory"
-            res_model="stock.fill.inventory"
-            src_model="stock.inventory"
-            view_mode="form"
-            target="new"
-            context="{'search_default_in_location':1}"
-            key2="client_action_multi"
-            id="action_view_stock_fill_inventory"/>
-
+        <record id="action_view_stock_fill_inventory" model="ir.actions.act_window">
+            <field name="name">Import Inventory</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.fill.inventory</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_stock_fill_inventory"/>
+            <field name="target">new</field>
+            <field name="context">{'search_default_in_location':1}</field>
+        </record>
+            
     </data>
 </openerp>

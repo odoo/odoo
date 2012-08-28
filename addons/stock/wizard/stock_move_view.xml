@@ -48,7 +48,7 @@
                             <field name="product_qty" class="oe_inline"/>
                             <field name="product_uom" class="oe_inline" readonly="1"/>
                         </div>
-                        <field name="location_id" string="Scrap Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection"/>
+                        <field name="location_id" string="Scrap Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection" groups="stock.group_locations"/>
                     </group>
                     <footer>
                         <button name="move_scrap" string="Ok" type="object" class="oe_highlight"  />
