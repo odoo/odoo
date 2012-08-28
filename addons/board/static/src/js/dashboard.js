@@ -18,21 +18,21 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var self = this;
         this._super.apply(this, arguments);
 
-        this.$element.find('.oe_dashboard_column').sortable({
+        this.$el.find('.oe_dashboard_column').sortable({
             connectWith: '.oe_dashboard_column',
             handle: '.oe_header',
             scroll: false
         }).bind('sortstop', self.do_save_dashboard);
 
         // Events
-        this.$element.find('.oe_dashboard_link_reset').click(this.on_reset);
-        this.$element.find('.oe_dashboard_link_change_layout').click(this.on_change_layout);
-        this.$element.find('h2.oe_header span.oe_header_txt').click(function(ev){
+        this.$el.find('.oe_dashboard_link_reset').click(this.on_reset);
+        this.$el.find('.oe_dashboard_link_change_layout').click(this.on_change_layout);
+        this.$el.find('h2.oe_header span.oe_header_txt').click(function(ev){
             if(ev.target === ev.currentTarget)
                 self.on_header_string($(ev.target).parent());
         });
-        this.$element.delegate('.oe_dashboard_column .oe_fold', 'click', this.on_fold_action);
-        this.$element.delegate('.oe_dashboard_column .oe_close', 'click', this.on_close_action);
+        this.$el.delegate('.oe_dashboard_column .oe_fold', 'click', this.on_fold_action);
+        this.$el.delegate('.oe_dashboard_column .oe_close', 'click', this.on_close_action);
 
         // Init actions
         _.each(this.node.children, function(column, column_index) {
@@ -82,7 +82,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     on_change_layout: function() {
         var self = this;
         var qdict = {
-            current_layout : this.$element.find('.oe_dashboard').attr('data-layout')
+            current_layout : this.$el.find('.oe_dashboard').attr('data-layout')
         };
         var $dialog = instance.web.dialog($('<div>'), {
                             modal: true,
@@ -97,7 +97,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         });
     },
     do_change_layout: function(new_layout) {
-        var $dashboard = this.$element.find('.oe_dashboard');
+        var $dashboard = this.$el.find('.oe_dashboard');
         var current_layout = $dashboard.attr('data-layout');
         if (current_layout != new_layout) {
             var clayout = current_layout.split('-').length,
@@ -141,10 +141,10 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var self = this;
         var board = {
                 form_title : this.view.fields_view.arch.attrs.string,
-                style : this.$element.find('.oe_dashboard').attr('data-layout'),
+                style : this.$el.find('.oe_dashboard').attr('data-layout'),
                 columns : []
             };
-        this.$element.find('.oe_dashboard_column').each(function() {
+        this.$el.find('.oe_dashboard_column').each(function() {
             var actions = [];
             $(this).find('.oe_action').each(function() {
                 var action_id = $(this).attr('data-id'),
@@ -166,7 +166,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             view_id: this.view.fields_view.view_id,
             arch: arch
         }, function() {
-            self.$element.find('.oe_dashboard_link_reset').show();
+            self.$el.find('.oe_dashboard_link_reset').show();
         });
     },
     on_load_action: function(result, index, action_attrs) {
@@ -272,11 +272,11 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             });
         }
         var rendered = QWeb.render(this.form_template, this);
-        this.$element.html(rendered);
+        this.$el.html(rendered);
     },
     no_result: function() {
         if (this.view.options.action.help) {
-            this.$element.append(
+            this.$el.append(
                 $('<div class="oe_view_nocontent">')
                     .append($('<div>').html(this.view.options.action.help || " "))
             );
@@ -323,7 +323,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
     _in_drawer: true,
     start: function () {
         var self = this;
-        this.$element
+        this.$el
             .on('click', 'h4', this.proxy('show_option'))
             .on('submit', 'form', function (e) {
                 e.preventDefault();
@@ -360,7 +360,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         var self = this;
         var getParent = this.getParent();
         var view_parent = this.getParent().getParent();
-        if (! view_parent.action || ! this.$element.find("select").val()) {
+        if (! view_parent.action || ! this.$el.find("select").val()) {
             this.do_warn("Can't find dashboard action");
             return;
         }
@@ -370,24 +370,24 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         _.each(data.contexts, context.add, context);
         _.each(data.domains, domain.add, domain);
         this.rpc('/board/add_to_dashboard', {
-            menu_id: this.$element.find("select").val(),
+            menu_id: this.$el.find("select").val(),
             action_id: view_parent.action.id,
             context_to_save: context,
             domain: domain,
             view_mode: view_parent.active_view,
-            name: this.$element.find("input").val()
+            name: this.$el.find("input").val()
         }, function(r) {
             if (r === false) {
                 self.do_warn("Could not add filter to dashboard");
             } else {
-                self.$element.toggleClass('oe_opened');
+                self.$el.toggleClass('oe_opened');
                 self.do_notify("Filter added to dashboard", '');
             }
         });
     },
     show_option:function(){
-        this.$element.toggleClass('oe_opened');
-        if (! this.$element.hasClass('oe_opened'))
+        this.$el.toggleClass('oe_opened');
+        if (! this.$el.hasClass('oe_opened'))
             return;
         this.$("input").val(this.getParent().fields_view.name || "" );
     }

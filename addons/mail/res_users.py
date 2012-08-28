@@ -19,14 +19,9 @@
 #
 ##############################################################################
 
-import logging
-
 from osv import osv, fields
-from openerp.modules.registry import RegistryManager
 from openerp import SUPERUSER_ID
 from tools.translate import _
-
-_logger = logging.getLogger(__name__)
 
 class res_users(osv.Model):
     """ Update of res.users class
@@ -69,35 +64,8 @@ class res_users(osv.Model):
 
     def _auto_init(self, cr, context=None):
         """Installation hook to create aliases for all users and avoid constraint errors."""
-
-        # disable the unique alias_id not null constraint, to avoid spurious warning during 
-        # super.auto_init. We'll reinstall it afterwards.
-        self._columns['alias_id'].required = False
-
-        super(res_users,self)._auto_init(cr, context=context)
-
-        registry = RegistryManager.get(cr.dbname)
-        mail_alias = registry.get('mail.alias')
-        res_users_model = registry.get('res.users')
-        users_no_alias = res_users_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
-        # Use read() not browse(), to avoid prefetching uninitialized inherited fields
-        for user_data in res_users_model.read(cr, SUPERUSER_ID, users_no_alias, ['login']):
-            alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, {'alias_name': user_data['login'],
-                                                                         'alias_force_id': user_data['id']},
-                                                      model_name=self._name)
-            res_users_model.write(cr, SUPERUSER_ID, user_data['id'], {'alias_id': alias_id})
-            _logger.info('Mail alias created for user %s (uid %s)', user_data['login'], user_data['id'])
-
-        # Finally attempt to reinstate the missing constraint
-        try:
-            cr.execute('ALTER TABLE res_users ALTER COLUMN alias_id SET NOT NULL')
-        except Exception:
-            _logger.warning("Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
-                            "If you want to have it, you should update the records and execute manually:\n"\
-                            "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL",
-                            self._table, 'alias_id', self._table, 'alias_id')
-
-        self._columns['alias_id'].required = True
+        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users,self)._auto_init,
+            self._columns['alias_id'], 'login', alias_force_key='id', context=context)
 
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
