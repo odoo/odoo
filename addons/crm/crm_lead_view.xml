@@ -105,14 +105,6 @@
         <!--
             LEADS
         -->
-        <act_window
-                id="act_crm_opportunity_crm_phonecall_new"
-                name="Phone calls"
-                groups="base.group_sale_salesman"
-                res_model="crm.phonecall"
-                view_mode="tree,calendar,form"
-                context="{'default_duration': 1.0 ,'default_opportunity_id': active_id}"
-                view_type="form"/>
 
         <act_window
                 id="act_crm_opportunity_crm_meeting_new"
@@ -143,8 +135,8 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button type="action"
-                            name="%(act_crm_opportunity_crm_phonecall_new)d"
+                        <button type="object"
+                            name="phonecall_view"
                             string="Phone Calls" />
                     </div>
                     <div class="oe_title">

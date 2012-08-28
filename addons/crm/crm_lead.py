@@ -717,6 +717,57 @@ class crm_lead(base_stage, osv.osv):
                 self.write(cr, uid, [lead_id], value, context=context)
         return True
 
+    def phonecall_view(self, cr, uid, ids, call_summary, user_id=False, section_id=False, categ_id=False, context=None):
+        #Open the View for the Phone call for the leads
+        """
+        This opens Phone Call views
+        @return :Dictionary value for Phone Call view
+        """
+        if context is None:
+            context = {}
+        value = {}
+        data_obj = self.pool.get('ir.model.data')
+        if not categ_id:
+            res_id = data_obj._get_id(cr, uid, 'crm', 'categ_phone2')
+            if res_id:
+                categ_id = data_obj.browse(cr, uid, res_id, context=context).res_id
+        for lead in self.browse(cr, uid, ids, context=context):
+            if not section_id:
+                section_id = lead.section_id and lead.section_id.id or False
+            if not user_id:
+                user_id = lead.user_id and lead.user_id.id or False
+            # Get Phone Call views
+            tree_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_phone_tree_view')
+            form_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_phone_form_view')
+            search_view = data_obj.get_object_reference(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
+            context.update({
+                'default_duration': 1.0,
+                'default_opportunity_id': lead.id,
+                'default_user_id': user_id or False,
+                'default_categ_id' : categ_id or False,
+                'default_lead_id': lead.id,
+                'default_name': lead.name,
+                'default_partner_id': lead.partner_id and lead.partner_id.id or False,
+                'default_partner_mobile': lead.mobile or (lead.partner_id and lead.partner_id.mobile or False),
+                'default_section_id': section_id or False,
+                'default_description': lead.description or False,
+                'default_partner_phone': lead.phone or (lead.partner_id and lead.partner_id.phone or False),
+            })
+            value = {
+                'name': _('Phone Call'),
+                'context': context,
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'crm.phonecall',
+                'view_id': False,
+                'context': context,
+                'views': [(form_view and form_view[1] or False, 'form'),(tree_view and tree_view[1] or False, 'tree')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': search_view and search_view[1] or False,
+                'nodestroy': True
+            }
+        return value
+
     def schedule_phonecall(self, cr, uid, ids, schedule_time, call_summary, desc, phone, contact_name, user_id=False, section_id=False, categ_id=False, action='schedule', context=None):
         """
         action :('schedule','Schedule a call'), ('log','Log a call')
