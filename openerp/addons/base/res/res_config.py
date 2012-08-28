@@ -557,7 +557,7 @@ class res_config_settings(osv.osv_memory):
         """ Override name_get method to return an appropriate configuration wizard
         name, and not the generated name."""
         
-        if not len(ids):
+        if not ids:
             return []
         # name_get may receive int id instead of an id list
         if isinstance(ids, (int, long)):
