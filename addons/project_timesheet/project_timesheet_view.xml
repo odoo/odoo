@@ -20,7 +20,7 @@
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_deadline')]" position="before">
                     <div class="oe_kanban_project_fields oe_kanban_project_invoice" t-if="record.partner_id.raw_value">
                         <div>Amount to invoice</div>
-                        <div><field name="amount_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/></div>
+                        <div ><field name="amount_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]" groups="base.group_multi_currency"/></div>
                         <div>Time to Invoice</div>
                         <div><field name="time_to_invoice"/> <field name="company_uom_id"/></div>
                     </div>
