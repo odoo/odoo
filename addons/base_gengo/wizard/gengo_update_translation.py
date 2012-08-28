@@ -127,7 +127,7 @@ class base_update_translation(osv.osv_memory):
                             new_langs.append(l)
             return list(set(new_langs))
 
-    def _update_terms(self, cr, uid, ids, response, tier, context):
+    def _update_terms(self, cr, uid, response, tier, context):
         translation_pool = self.pool.get('ir.translation')
         for jobs in response['jobs']:        
             for t_id, res in jobs.items():
@@ -139,7 +139,7 @@ class base_update_translation(osv.osv_memory):
                 translation_pool.write(cr, uid, [t_id], vals, context)
         return
 
-    def _send_translation_terms(self, cr, uid, ids, term_ids, context):
+    def _send_translation_terms(self, cr, uid,  term_ids, context):
         """
         Lazy Polling will be perform when user or cron request for the translation.
         """
@@ -150,7 +150,7 @@ class base_update_translation(osv.osv_memory):
             if request['jobs']:
                 result = gengo.postTranslationJobs(jobs=request)
                 if result['opstat'] == 'ok':
-                    self._update_terms(cr, uid, ids, result['response'], user.company_id.gengo_tier, context)
+                    self._update_terms(cr, uid, result['response'], user.company_id.gengo_tier, context)
         else:
             _logger.error(gengo)
         return True
@@ -221,6 +221,7 @@ class base_update_translation(osv.osv_memory):
         else:
             translation_id = translation_pool.search(cr, uid, [('state', '=', 'inprogress'), ('gengo_translation', '=', True)], limit=limit, context=context)
             for term in translation_pool.browse(cr, uid, translation_id, context):
+                up_term = up_comment = 0
                 if term.job_id:
                     vals={}
                     job_response = gengo.getTranslationJob(id=term.job_id)
@@ -231,14 +232,17 @@ class base_update_translation(osv.osv_memory):
                         vals.update({'state': 'translated',
                             'value': job_response['response']['job']['body_tgt'],
                             'gengo_control': True})
+                        up_term += 1
                     job_comment = gengo.getTranslationJobComments(id=term.job_id)
                     if job_comment['opstat']=='ok':
                         gengo_comments=""
                         for comment in job_comment['response']['thread']:
-                            gengo_comments+='%s by %s at %s. \n'    %(comment['body'],comment['author'],time.ctime(comment['ctime']))
+                            gengo_comments+='%s Commented on %s by %s. \n'%(comment['body'], time.ctime(comment['ctime']), comment['author'])
                         vals.update({'gengo_comment':gengo_comments})
+                        up_comment +=1
                     if vals:
                         translation_pool.write(cr, uid, term.id,vals)
+                    _logger.info("Successfully Updated `%d` terms and Comments for `%d` terms."%(up_term, up_comment ))
         return True
 
     def _sync_request(self, cr, uid, limit=20, context=None):
@@ -256,7 +260,7 @@ class base_update_translation(osv.osv_memory):
             langs = self.check_lang_support(cr, uid, langs)
             term_ids = translation_pool.search(cr, uid, [('state', '=', 'to_translate'), ('gengo_translation', '=', True), ('lang', 'in', langs)], limit=limit)
             if term_ids:
-                self._send_translation_terms(cr, uid, ids, term_ids, context)
+                self._send_translation_terms(cr, uid, term_ids, context)
                 _logger.info("Translation terms %s has been posted to gengo successfully", len(term_ids))
             else:
                 _logger.info('No Translation terms to process.')

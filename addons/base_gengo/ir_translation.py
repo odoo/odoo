@@ -26,10 +26,10 @@ class ir_translation(osv.Model):
     _name = "ir.translation"
     _inherit = "ir.translation"
     _columns = {
-        'gengo_comment': fields.text("Comments"),
-        'gengo_translation': fields.boolean("Translation", help='This term has to be translated by Gengo automatically'),
-        'gengo_control': fields.boolean('Active'),
-        'job_id': fields.char('Gengo Job Id', size=32),
+        'gengo_comment': fields.text("Comments & Activity"),
+        'gengo_translation': fields.boolean("Gengo Auto Translation ?", help='If checked the term will be translated by Gengo automatically.'),
+        'gengo_control': fields.boolean('Gengo Traslated', help="If Term is translated using Gengo Service, the check box will be checked.", readonly=True),
+        'job_id': fields.char('Gengo JobId', size=32),
     }
 
     _defaults = {
