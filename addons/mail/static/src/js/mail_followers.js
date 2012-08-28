@@ -44,12 +44,7 @@ openerp_mail_followers = function(session, mail) {
             this._check_visibility();
             this.fetch_subtype();
             this.$el.find('div.oe_mail_recthread_subtype').click(function () {
-                var subtypelist = new Array();
-                _($(this).find('.oe_msg_subtype_check')).each(function (record){
-                   if($(record).is(':checked')) {
-                       subtypelist.push(parseInt($(record).attr('id')))}
-                 });
-                 self.ds_model.call('message_subscribe_udpate_subtypes',[[self.view.datarecord.id],self.session.uid,subtypelist])
+                self.update_subtype();
             })
             this.$el.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
 
@@ -108,6 +103,7 @@ openerp_mail_followers = function(session, mail) {
         display_subscribers: function (records) {
             var self = this;
             this.is_subscriber = false;
+            if(this.view.get("actual_mode") == "edit"){this.update_subtype();}
             var user_list = this.$el.find('ul.oe_mail_followers_display').empty();
             this.$el.find('div.oe_mail_recthread_followers h4').html(this.params.title + ' (' + records.length + ')');
             _(records).each(function (record) {
@@ -124,7 +120,15 @@ openerp_mail_followers = function(session, mail) {
                 this.$el.find('button.oe_mail_button_unfollow').hide();
                 this.$el.find('div.oe_mail_recthread_subtype').hide() }
         },
-        
+        update_subtype: function (){
+            var self = this;
+            var cheklist = new Array();
+            _(this.$el.find('.oe_msg_subtype_check')).each(function(record){
+                if($(record).is(':checked')) {
+                       cheklist.push(parseInt($(record).attr('id')))}
+            });
+            self.ds_model.call('message_subscribe_udpate_subtypes',[[self.view.datarecord.id],self.session.uid,cheklist])
+        },
         // Display the subtypes of each records.
         display_subtype: function(records) {
             var self = this
