@@ -10,7 +10,7 @@
                 <field name="use_tasks" position="after">
                     <field name="use_timesheets"/>
                     <field name="timesheet_count"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="partner_id"/>
                 </field>
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
