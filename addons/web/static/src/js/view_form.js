@@ -1007,7 +1007,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                             field_to_set,
                             self.fields[field_to_set].get_value(),
                             all_users,
-                            false,
+                            true,
                             condition || false
                     ]).then(function () { d.close(); });
                 }}
