@@ -381,6 +381,10 @@
             <field name="name">Cash Journal - (test)</field>
             <field name="code">TCSH</field>
             <field name="type">cash</field>
+            <field name="profit_account_id" model="account.account" ref="rsa" />
+            <field name="loss_account_id" model="account.account" ref="rsa" />
+            <field name="internal_account_id" model="account.account" ref="chart0" />
+            <field name="cash_control" eval="True" />
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_cash_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>

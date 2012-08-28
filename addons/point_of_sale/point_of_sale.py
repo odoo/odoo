@@ -74,6 +74,17 @@ class pos_config(osv.osv):
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
     }
 
+    def _check_cash_control(self, cr, uid, ids, context=None):
+        return all(
+            (sum(int(journal.cash_control) for journal in record.journal_ids) <= 1)
+            for record in self.browse(cr, uid, ids, context=context)
+        )
+
+    _constraints = [
+        (_check_cash_control, "You cannot have two cash controls in one Point Of Sale !", ['journal_ids']),
+    ]
+
+
     def name_get(self, cr, uid, ids, context=None):
         result = []
         states = {
@@ -90,11 +101,6 @@ class pos_config(osv.osv):
             result.append((record.id, record.name + ' ('+session.user_id.name+')')) #, '+states[session.state]+')'))
         return result
 
-
-    def _default_payment_journal(self, cr, uid, context=None):
-        res = self.pool.get('account.journal').search(cr, uid, [('type', 'in', ('bank','cash'))], limit=2)
-        return res or []
-
     def _default_sale_journal(self, cr, uid, context=None):
         res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
         return res and res[0] or False
@@ -107,7 +113,6 @@ class pos_config(osv.osv):
         'state' : POS_CONFIG_STATE[0][0],
         'shop_id': _default_shop,
         'journal_id': _default_sale_journal,
-        'journal_ids': _default_payment_journal,
         'group_by' : True,
     }
 
@@ -148,45 +153,20 @@ class pos_session(osv.osv):
         ('closed', 'Closed & Posted'),
     ]
 
-    def _compute_cash_journal_id(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for record in self.browse(cr, uid, ids, context=context):
-            for st in record.statement_ids:
-                if st.journal_id.type == 'cash':
-                    result[record.id] = st.journal_id.id
-                    break
-        return result
-
-    def _compute_cash_register_id(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for record in self.browse(cr, uid, ids, context=context):
-            for st in record.statement_ids:
-                if st.journal_id.type == 'cash':
-                    result[record.id] = st.id
-                    break
-        return result
-
-    def _compute_controls(self, cr, uid, ids, fieldnames, args, context=None):
-        result = {}
+    def _compute_cash_all(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            has_opening_control = False
-            has_closing_control = False
-
-            for journal in record.config_id.journal_ids:
-                if journal.opening_control == True:
-                    has_opening_control = True
-                if journal.closing_control == True:
-                    has_closing_control = True
-
-                if has_opening_control and has_closing_control:
-                    break
-
-            values = {
-                'has_opening_control': has_opening_control,
-                'has_closing_control': has_closing_control,
+            result[record.id] = {
+                'cash_journal_id' : False,
+                'cash_register_id' : False,
+                'cash_control' : False,
             }
-            result[record.id] = values
+            for st in record.statement_ids:
+                if st.journal_id.cash_control == True:
+                    result[record.id]['cash_control'] = True
+                    result[record.id]['cash_journal_id'] = st.journal_id.id
+                    result[record.id]['cash_register_id'] = st.id
 
         return result
 
@@ -212,12 +192,17 @@ class pos_session(osv.osv):
                 required=True, readonly=True,
                 select=1),
 
-        'cash_journal_id' : fields.function(_compute_cash_journal_id, method=True, 
-                type='many2one', relation='account.journal',
-                string='Cash Journal', store=True),
-        'cash_register_id' : fields.function(_compute_cash_register_id, method=True, 
-                type='many2one', relation='account.bank.statement',
-                string='Cash Register', store=True),
+        'cash_control' : fields.function(_compute_cash_all,
+                                         multi='cash',
+                                         type='boolean', string='Has Cash Control'),
+        'cash_journal_id' : fields.function(_compute_cash_all,
+                                            multi='cash',
+                                            type='many2one', relation='account.journal',
+                                            string='Cash Journal', store=True),
+        'cash_register_id' : fields.function(_compute_cash_all,
+                                             multi='cash',
+                                             type='many2one', relation='account.bank.statement',
+                                             string='Cash Register', store=True),
 
         'opening_details_ids' : fields.related('cash_register_id', 'opening_details_ids', 
                 type='one2many', relation='account.cashbox.line',
@@ -261,8 +246,6 @@ class pos_session(osv.osv):
         'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
 
         'statement_ids' : fields.one2many('account.bank.statement', 'pos_session_id', 'Bank Statement', readonly=True),
-        'has_opening_control' : fields.function(_compute_controls, string='Has Opening Control', multi='control', type='boolean'),
-        'has_closing_control' : fields.function(_compute_controls, string='Has Closing Control', multi='control', type='boolean'),
     }
 
     _defaults = {
@@ -372,10 +355,8 @@ class pos_session(osv.osv):
     def wkf_action_closing_control(self, cr, uid, ids, context=None):
         for session in self.browse(cr, uid, ids, context=context):
             for statement in session.statement_ids:
-                if statement.id <> session.cash_register_id.id:
-                    if statement.balance_end<>statement.balance_end_real:
-                        self.pool.get('account.bank.statement').write(cr, uid,
-                            [statement.id], {'balance_end_real': statement.balance_end})
+                if statement != session.cash_register_id and statement.balance_end != statement.balance_end_real:
+                    self.pool.get('account.bank.statement').write(cr, uid, [statement.id], {'balance_end_real': statement.balance_end})
         return self.write(cr, uid, ids, {'state' : 'closing_control', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def wkf_action_close(self, cr, uid, ids, context=None):
@@ -388,7 +369,7 @@ class pos_session(osv.osv):
                     if not self.pool.get('ir.model.access').check_groups(cr, uid, "point_of_sale.group_pos_manager"):
                         raise osv.except_osv( _('Error!'),
                             _("Your ending balance is too different from the theorical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
-                if st.difference:
+                if st.difference and st.journal_id.cash_control == True:
                     if st.difference > 0.0:
                         name= _('Point of Sale Profit')
                         account_id = st.journal_id.profit_account_id.id
@@ -695,7 +676,7 @@ class pos_order(osv.osv):
         }
         if 'payment_date' in data:
             args['date'] = data['payment_date']
-        args['name'] = order.name
+        args['name'] = order.session_id.name
         if data.get('payment_name', False):
             args['name'] = args['name'] + ': ' + data['payment_name']
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
@@ -1084,6 +1065,7 @@ class account_bank_statement_line(osv.osv):
     _columns= {
         'pos_statement_id': fields.many2one('pos.order', ondelete='cascade'),
     }
+
 account_bank_statement_line()
 
 class pos_order_line(osv.osv):
