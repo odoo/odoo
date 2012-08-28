@@ -30,7 +30,7 @@
                         <label for="id" string="Task"/>
                         <div>
                             <div>
-                                <field name="module_project_timesheet" class="oe_inline"/>
+                                <field name="module_project_timesheet" on_change="onchange_time_estimation_project_timesheet(group_time_work_estimation_tasks, module_project_timesheet)" class="oe_inline"/>
                                 <label for="module_project_timesheet"/>
                             </div>
                             <div>
@@ -51,7 +51,7 @@
                         <label for="id" string="Planning"/>
                         <div>
                              <div>
-                                <field name="group_time_work_estimation_tasks" class="oe_inline"/>
+                                <field name="group_time_work_estimation_tasks" on_change="onchange_time_estimation_project_timesheet(group_time_work_estimation_tasks, module_project_timesheet)" class="oe_inline"/>
                                 <label for="group_time_work_estimation_tasks"/>
                             </div>
                             <div>

@@ -99,7 +99,7 @@
                 <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
                     <tr>
                         <td><group><field name="use_phases"/></group></td>
-                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
+                        <td><button name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
                     </tr>
                 </xpath>
             </field>
@@ -369,7 +369,7 @@
             parent="base.menu_project_long_term" sequence="2"/>
 
         <menuitem id="menu_pm_users_project1"
-            name="Resources" parent="base.menu_definitions" sequence="3"/>
+            name="Resources" parent="base.menu_definitions" sequence="3" groups="base.group_no_one"/>
 
         <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_main_pm" sequence="4" groups="project.group_project_user,project.group_project_manager"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_users_project1" sequence="2"/>

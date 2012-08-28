@@ -47,8 +47,9 @@ class project_task_type(osv.osv):
     }
     _defaults = {
         'sequence': 1,
-        'state': 'draft',
+        'state': 'open',
         'fold': False,
+        'case_default': True,
     }
     _order = 'sequence'
 

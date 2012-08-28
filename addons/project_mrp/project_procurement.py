@@ -73,6 +73,7 @@ class procurement_order(osv.osv):
                 'date_deadline': procurement.date_planned,
                 'planned_hours': planned_hours,
                 'remaining_hours': planned_hours,
+                'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or False,
                 'user_id': procurement.product_id.product_manager.id,
                 'notes': procurement.note,
                 'procurement_id': procurement.id,
