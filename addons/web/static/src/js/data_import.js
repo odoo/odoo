@@ -18,7 +18,11 @@ function jsonp(form, attributes, callback) {
     attributes = attributes || {};
     var options = {jsonp: _.uniqueId('import_callback_')};
     window[options.jsonp] = function () {
-        delete window[options.jsonp];
+        try{
+            delete window[options.jsonp];
+        } catch(e){
+            window[options.jsonp] = null;
+        }
         callback.apply(null, arguments);
     };
     if ('data' in attributes) {
