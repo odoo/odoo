@@ -53,7 +53,7 @@ class mail_message(osv.Model):
         else:
             return name[:18] + '...'
 
-    def get_record_name(self, cr, uid, ids, name, arg, context=None):
+    def _get_record_name(self, cr, uid, ids, name, arg, context=None):
         """ Return the related document name, using get_name. """
         result = dict.fromkeys(ids, '')
         for message in self.browse(cr, uid, ids, context=context):
@@ -61,6 +61,36 @@ class mail_message(osv.Model):
                 continue
             result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
         return result
+
+    def _get_unread(self, cr, uid, ids, name, arg, context=None):
+        """ Compute if the message is unread by the current user. """
+        res = dict.fromkeys(id, False)
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        notif_obj = self.pool.get('mail.notification')
+        notif_ids = notif_obj.search(cr, uid, [
+            ('partner_id', 'in', [partner_id]),
+            ('message_id', 'in', ids),
+            ('read', '=', False)
+        ], context=context)
+        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
+            res[notif.message_id.id]['unread'] = True
+        return res
+
+    def _search_unread(self, cr, uid, obj, name, domain, context=None):
+        """ Search for messages unread by the current user. """
+        read_value = not domain[0][2]
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        cr.execute("""  SELECT mail_message.id \
+                        FROM mail_message \
+                        JOIN mail_notification ON ( \
+                            mail_notification.message_id = mail_message.id ) \
+                        WHERE mail_notification.partner_id = %s AND \
+                            mail_notification.read = %s \
+                    """ % (partner_id, read_value) )
+        res = cr.fetchall()
+        message_ids = [r[0] for r in res]
+        return [('id', 'in', message_ids)]
+
 
     def name_get(self, cr, uid, ids, context=None):
         # name_get may receive int id instead of an id list
@@ -89,7 +119,7 @@ class mail_message(osv.Model):
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
-        'record_name': fields.function(get_record_name, type='string',
+        'record_name': fields.function(_get_record_name, type='string',
             string='Message Record Name',
             help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id', 'Notifications'),
@@ -97,15 +127,17 @@ class mail_message(osv.Model):
         'date': fields.datetime('Date'),
         'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
         'body': fields.html('Content'),
+        'unread': fields.function(_get_unread, fnct_search=_search_unread,
+            type='boolean', string='Unread',
+            help='Functional field to search for unread messages linked to uid'),
     }
 
-    def _needaction_domain_get(self, cr, uid, context={}):
+    def _needaction_domain_get(self, cr, uid, context=None):
         if self._needaction:
-            partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-            return [('notification_ids.partner_id','=',partner_id),('notification_ids.read','=',False)]
+            return [('unread', '=', True)]
         return []
 
-    def _get_default_author(self, cr, uid, context={}):
+    def _get_default_author(self, cr, uid, context=None):
         return self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
 
     _defaults = {

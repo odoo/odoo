@@ -220,7 +220,7 @@ class mail_thread(osv.Model):
 
     def _needaction_domain_get(self, cr, uid, context={}):
         if self._needaction:
-            return [('message_unread','=',True)]
+            return [('message_unread', '=', True)]
         return []
 
     #------------------------------------------------------
