@@ -77,7 +77,7 @@ class mail_notification(osv.Model):
         """ Override of create to check that we can not create a notification
             for a message the user can not read. """
         if self.pool.get('mail.message').check_access_rights(cr, uid, 'read'):
-            return super(self, mail_notification).create(cr, uid, vals, context=context)
+            return super(mail_notification, self).create(cr, uid, vals, context=context)
         else:
             return False
 
