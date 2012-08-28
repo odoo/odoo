@@ -304,7 +304,8 @@ class sale_order(osv.osv):
         if shop_id:
             shop = self.pool.get('sale.shop').browse(cr, uid, shop_id)
             v['project_id'] = shop.project_id.id
-            # Que faire si le client a une pricelist a lui ?
+            v['company_id'] = shop.company_id.id
+            # overriden by the customer priceslist if existing
             if shop.pricelist_id.id:
                 v['pricelist_id'] = shop.pricelist_id.id
         return {'value': v}

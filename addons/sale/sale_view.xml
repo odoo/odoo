@@ -120,7 +120,7 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended" options='{"quick_create": false}'/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended" options='{"quick_create": false}'/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
-                            <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                            <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '!=', False)]"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sales Order Lines">

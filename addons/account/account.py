@@ -3333,10 +3333,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # write values of default taxes for product
         if obj_wizard.sale_tax and taxes_ref:
-            ir_values_obj.set(cr, uid, key='default', key2=False, name="taxes_id", company=company_id,
+            ir_values_obj.set(cr, 1, key='default', key2=False, name="taxes_id", company=company_id,
                                 models =[('product.product',False)], value=[taxes_ref[obj_wizard.sale_tax.id]])
         if obj_wizard.purchase_tax and taxes_ref:
-                ir_values_obj.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=company_id,
+            ir_values_obj.set(cr, 1, key='default', key2=False, name="supplier_taxes_id", company=company_id,
                                 models =[('product.product',False)], value=[taxes_ref[obj_wizard.purchase_tax.id]])
 
         # Create Bank journals
