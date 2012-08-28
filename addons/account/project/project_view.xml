@@ -56,7 +56,7 @@
                     <field name="credit"/>
                     <field name="balance"/>
                     <field name="state" invisible="1"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="date" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
@@ -140,7 +140,7 @@
                             <label for="amount_currency"/>
                             <div>
                                 <field name="amount_currency" class="oe_inline"/>
-                                <field name="currency_id" class="oe_inline"/>
+                                <field name="currency_id" class="oe_inline" groups="base.group_multi_currency"/>
                             </div>
                         </group>
                         <group string="Product Information">
@@ -250,7 +250,7 @@
                             <label for="amount_currency"/>
                             <div>
                                 <field name="amount_currency" class="oe_inline"/>
-                                <field name="currency_id" class="oe_inline"/>
+                                <field name="currency_id" class="oe_inline" groups="base.group_multi_currency"/>
                             </div>
                             <field invisible="1" name="general_account_id"/>
                         </group>

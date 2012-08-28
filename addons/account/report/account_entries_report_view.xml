@@ -13,7 +13,7 @@
                 <field name="nbr" sum="# of Entries "/>
                 <field name="quantity" sum="# of Products Qty " invisible="not context.get('quantity_visible', False)"/>
                 <field name="amount_currency" invisible="not context.get('amount_currency_visible', False)"/>
-                <field name="currency_id" invisible="not context.get('currency_id_visible', False)"/>
+                <field name="currency_id" invisible="not context.get('currency_id_visible', False)" groups="base.group_multi_currency"/>
                 <field name="debit"/>
                 <field name="credit"/>
                 <field name="balance"/>

@@ -92,7 +92,7 @@
                     <field name="partner_id"/>
                     <field name="amount_untaxed" sum="Untaxed Amount"/>
                     <field name="amount_total" sum="Total Amount"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="date_invoice"/>
                     <field name="date_due"/>
                     <field name="residual"/>
@@ -121,7 +121,7 @@
                     <field name="account_id"/>
                     <field name="quantity"/>
                     <field name="amount_total"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                 </tree>
             </field>
         </record>
@@ -168,7 +168,7 @@
                     <field name="user_type"/>
                     <field name="quantity"/>
                     <field name="amount_total"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                 </tree>
             </field>
         </record>
