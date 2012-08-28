@@ -78,8 +78,6 @@ class ir_translation_import_cursor(object):
         """Feed a translation, as a dictionary, into the cursor
         """
         state = ddict['value'] and "to_translate" or "translated" 
-        if not :
-            state = 
         self._cr.execute("INSERT INTO " + self._table_name \
                 + """(name, lang, res_id, src, type,
                         imd_model, imd_module, imd_name, value,state)
