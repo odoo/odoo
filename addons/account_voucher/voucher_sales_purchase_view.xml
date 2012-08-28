@@ -80,7 +80,7 @@
                             <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
                             <field name="name"/>
                             <field name="paid" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="currency_id" invisible="1" groups="base.group_multi_currency"/>
                         </group>
                         <field name="type" invisible="True"/>
                     </group>
@@ -229,7 +229,7 @@
                             <field name="date" string="Bill Date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
                             <field name="date_due"/>
                             <field name="paid" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="currency_id" invisible="1" groups="base.group_multi_currency"/>
                             <field name="journal_id"
                                 domain="[('type','in',['purchase','purchase_refund'])]"
                                 widget="selection"
