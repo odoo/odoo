@@ -29,24 +29,13 @@ class base_config_settings(osv.TransientModel):
         'auth_signup_template_user_id': fields.many2one('res.users', 'Template user for new users created through signup'),
     }
 
-    #todo: @al, @chs: what is this method for ?
-    def get_default_signup(self, cr, uid, fields, context=None):
+    def get_default_auth_signup_template_user_id(self, cr, uid, fields, context=None):
         icp = self.pool.get('ir.config_parameter')
         return {
             'auth_signup_template_user_id': icp.get_param(cr, uid, 'auth.signup_template_user_id', 0) or False
         }
 
-    #todo: @al, @chs: what is this method for ?
-    def set_signup(self, cr, uid, ids, context=None):
+    def set_auth_signup_template_user_id(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context=context)
         icp = self.pool.get('ir.config_parameter')
         icp.set_param(cr, uid, 'auth.signup_template_user_id', config.auth_signup_template_user_id.id)
-
-    def _get_default_template_user(self, cr, uid, context=None):
-        data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'portal', 'default_template_user')
-        return data_obj.browse(cr, uid, data_id).res_id
-
-    _defaults = {
-        'auth_signup_template_user_id': _get_default_template_user,
-    }
