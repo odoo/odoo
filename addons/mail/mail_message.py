@@ -50,8 +50,7 @@ class mail_message(osv.Model):
     def _shorten_name(self, name):
         if len(name) <= (self._message_record_name_length+3):
             return name
-        else:
-            return name[:18] + '...'
+        return name[:self._message_record_name_length] + '...'
 
     def _get_record_name(self, cr, uid, ids, name, arg, context=None):
         """ Return the related document name, using get_name. """
@@ -318,6 +317,8 @@ class mail_message(osv.Model):
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
 
     def create(self, cr, uid, values, context=None):
+        if not values.get('message_id') and values.get('res_id') and values.get('model'):
+            values['message_id'] = tools.generate_tracking_message_id('%(model)s-%(res_id)s'% values)
         newid = super(mail_message, self).create(cr, uid, values, context)
         self.check(cr, uid, [newid], mode='create', context=context)
         self.notify(cr, uid, newid, context=context)

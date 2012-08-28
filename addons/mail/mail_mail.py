@@ -180,10 +180,7 @@ class mail_mail(osv.Model):
                     references = message.references,
                     object_id=message.res_id and ('%s-%s' % (message.res_id,message.model)),
                     subtype=message.content_subtype,
-                    subtype_alternative=content_subtype_alternative,
-                    # TDE FIXME: what to do with headers ? currently ycommented to avoid bugs
-                    # headers=message.headers and ast.literal_eval(message.headers))
-                    )
+                    subtype_alternative=content_subtype_alternative)
                 res = ir_mail_server.send_email(cr, uid, msg,
                                                 mail_server_id=message.mail_server_id.id,
                                                 context=context)

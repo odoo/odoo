@@ -553,9 +553,16 @@ class mail_thread(osv.Model):
             date_server_datetime_str = date_server_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             msg_dict['date'] = date_server_datetime_str
 
-        # FP Note: todo - find parent_id
         if 'In-Reply-To' in message:
-            pass
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id','=',decode(message['In-Reply-To']))])
+            if parent_ids:
+                msg_dict['parent_id'] = parent_ids[0]
+
+        if 'References' in message and 'parent_id' not in msg_dict:
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id','in',
+                                                                         [x.strip() for x in decode(message['References']).split()])])
+            if parent_ids:
+                msg_dict['parent_id'] = parent_ids[0]
         
         msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message)
         return msg_dict

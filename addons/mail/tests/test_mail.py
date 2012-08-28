@@ -313,7 +313,7 @@ class test_mail(common.TransactionCase):
             for val in read_dict:
                 current = {'_id': val['id']}
                 if val.get('child_ids'):
-                    current['child_ids'] = _flatten(val.get('child_ids'))
+                    current['child_ids'] = _simplify_struct(val.get('child_ids'))
                 res.append(current)
             return res
 
@@ -395,14 +395,12 @@ class test_mail(common.TransactionCase):
             ('read', '=', False)
             ])
         na_count = self.mail_message._needaction_count(cr, uid, domain = [])
-        self.assertTrue(len(notif_ids) == na_count,
+        self.assertEqual(len(notif_ids), na_count,
             'Number of unread notifications (%s) does not match the needaction count (%s)' % (len(notif_ids), na_count))
 
         # Post 4 message on group_pigs
-        msgid1 = group_pigs.message_post(body='My Body')
-        msgid2 = group_pigs.message_post(body='My Body')
-        msgid3 = group_pigs.message_post(body='My Body')
-        msgid4 = group_pigs.message_post(body='My Body')
+        for dummy in range(4):
+            group_pigs.message_post(body='My Body')
 
         # Check there are 4 new needaction on mail.message
         notif_ids = self.mail_notification.search(cr, uid, [
@@ -410,10 +408,39 @@ class test_mail(common.TransactionCase):
             ('read', '=', False)
             ])
         na_count = self.mail_message._needaction_count(cr, uid, domain = [])
-        self.assertTrue(len(notif_ids) == na_count,
+        self.assertEqual(len(notif_ids), na_count,
             'Number of unread notifications after posting messages (%s) does not match the needaction count (%s)' % (len(notif_ids), na_count))
 
         # Check there are 4 needaction on mail.message with particular domain
         na_count = self.mail_message._needaction_count(cr, uid, domain = [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
-        self.assertTrue(na_count == 4,
+        self.assertEqual(na_count, 4,
             'Number of posted message (4) does not match the needaction count with domain mail.group - group pigs (%s)' % (na_count))
+
+    def test_50_thread_parent_resolution(self):
+        """Verify parent/child relationships are correctly established when processing incoming mails"""
+        cr, uid = self.cr, self.uid
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        msg1 = group_pigs.message_post(body='My Body', subject='1')
+        msg2 = group_pigs.message_post(body='My Body', subject='2')
+        msg1, msg2 = self.mail_message.browse(cr, uid, [msg1,msg2])
+        self.assertTrue(msg1.message_id, "New message should have a proper message_id")
+
+        # Reply to msg1, make sure the reply is properly attached using the various reply identification mechanisms
+        # 1. In-Reply-To header
+        reply_msg = MAIL_TEMPLATE.format(to='Pretty Pigs <group+pigs@example.com>, other@gmail.com', subject='Re: 1',
+                                         extra='In-Reply-To: %s' % msg1.message_id)
+        self.mail_thread.message_process(cr, uid, None, reply_msg)
+        # 2. References header
+        reply_msg2 = MAIL_TEMPLATE.format(to='Pretty Pigs <group+pigs@example.com>, other@gmail.com', subject='Re: Re: 1',
+                                         extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % msg1.message_id)
+        self.mail_thread.message_process(cr, uid, None, reply_msg2)
+        # 3. Subject contains [<ID>] + model passed to message+process -> only attached to group, not to mail
+        reply_msg3 = MAIL_TEMPLATE.format(to='Pretty Pigs <group+pigs@example.com>, other@gmail.com',
+                                          extra='', subject='Re: [%s] 1' % self.group_pigs_id)
+        self.mail_thread.message_process(cr, uid, 'mail.group', reply_msg3)
+        group_pigs.refresh()
+        msg1.refresh()
+        self.assertEqual(5, len(group_pigs.message_ids), 'group should contain 5 messages')
+        self.assertEqual(2, len(msg1.child_ids), 'msg1 should have 2 children now')
+
+
