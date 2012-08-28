@@ -14,58 +14,58 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-10 04:50+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:42+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: edi
 #: sql_constraint:res.currency:0
 msgid "The currency code must be unique per company!"
-msgstr ""
+msgstr "Valutakoden måste vara unik per bolag"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_partner_address
 msgid "Partner Addresses"
-msgstr ""
+msgstr "Företagsadress"
 
 #. module: edi
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Bolagsnamnet måste vara unikt !"
 
 #. module: edi
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Fel ! Du kan inte ansluta medlemmar rekursivt"
 
 #. module: edi
 #: field:edi.document,name:0
 msgid "EDI token"
-msgstr ""
+msgstr "EDI-token"
 
 #. module: edi
 #: help:edi.document,name:0
 msgid "Unique identifier for retrieving an EDI document."
-msgstr ""
+msgstr "Unik identifierare för att hämta ett EDI-dokument"
 
 #. module: edi
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Fel! Du kan inte skapa rekursiva bolagsstrukturer."
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Bolag"
 
 #. module: edi
 #: sql_constraint:edi.document:0
 msgid "EDI Tokens must be unique!"
-msgstr ""
+msgstr "EDI-token måste vara unika!"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_currency
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: edi
 #: code:addons/edi/models/edi.py:153
@@ -75,78 +75,81 @@ msgid ""
 "You can install it by connecting as the administrator and opening the "
 "configuration assistant."
 msgstr ""
+"Dokumentet du försöker importera kräver OpenERP `%s`-applikationen. Du kan "
+"installera den genom att ansluta som administratör och öppna "
+"konfigurationsguiden."
 
 #. module: edi
 #: help:edi.document,document:0
 msgid "EDI document content"
-msgstr ""
+msgstr "EDI-dokumentinnehåll"
 
 #. module: edi
 #: model:ir.model,name:edi.model_edi_document
 msgid "EDI Document"
-msgstr ""
+msgstr "EDI-dokument"
 
 #. module: edi
 #: code:addons/edi/models/edi.py:48
 #, python-format
 msgid "'%s' is an invalid external ID"
-msgstr ""
+msgstr "'%s' är otillräckligt som externt ID"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Företag"
 
 #. module: edi
 #: code:addons/edi/models/edi.py:152
 #, python-format
 msgid "Missing Application"
-msgstr ""
+msgstr "Saknad applikation"
 
 #. module: edi
 #: field:edi.document,document:0
 msgid "Document"
-msgstr ""
+msgstr "Dokument"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:23
 msgid "View/Print"
-msgstr ""
+msgstr "Visa/Skriv ut"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:28
 msgid "Import this document"
-msgstr ""
+msgstr "Importera detta dokument"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:33
 msgid "Import it into an existing OpenERP instance"
-msgstr ""
+msgstr "Importera till en existerande OpenERP-instans"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:36
 msgid "OpenERP instance address:"
-msgstr ""
+msgstr "OpenERP-instansadress:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:39
 msgid "Import"
-msgstr ""
+msgstr "Importera"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:44
 msgid "Import it into a new OpenERP Online instance"
-msgstr ""
+msgstr "Importera till en ny OpenERP molninstans"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:47
 msgid "Create my new OpenERP instance"
-msgstr ""
+msgstr "Skapa min nya OpenERP-instans"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:52
 msgid "Import into another application"
-msgstr ""
+msgstr "Importera till någon annan applikation"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:54
@@ -155,11 +158,13 @@ msgid ""
 "language\n"
 "                            independent"
 msgstr ""
+"OpenERPs Electronic Data Interchange (EDI)-dokument är baserade på generiska "
+"och språkoberoende"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:56
 msgid "JSON"
-msgstr ""
+msgstr "JSON"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:56
@@ -173,167 +178,179 @@ msgid ""
 "this and what the content of OpenERP EDI documents\n"
 "                            is like in the"
 msgstr ""
+"serialisering av dokumentets attribut.\n"
+"                                                                             "
+"                                 Det är oftast mycket snabbt och lätt att "
+"skapa en liten plug-in för önskad\n"
+"                                                                             "
+"                                 program som kommer att kunna importera alla "
+"OpenERP EDI dokument.\n"
+"                                                                             "
+"                                 Du hittar mer information om hur du gör "
+"detta och vad innehållet i OpenERP EDI dokument\n"
+"                                                                             "
+"                                 är som i"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:60
 msgid "OpenERP documentation"
-msgstr ""
+msgstr "OpenERP-dokumentation"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:61
 msgid "To get started immediately,"
-msgstr ""
+msgstr "För att kommaigång direkt,"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:62
 msgid "see is all it takes to use this EDI document in Python"
-msgstr ""
+msgstr "det är att som krävs för att använda detta EDI-dokument i Python"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:70
 msgid "You can download the raw EDI document here:"
-msgstr ""
+msgstr "Du kan ladda ned EDI-dokumentet i raw-format här:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:73
 msgid "Download"
-msgstr ""
+msgstr "Ladda ned"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:87
 msgid "Powered by"
-msgstr ""
+msgstr "Drivs med"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:87
 msgid "OpenERP"
-msgstr ""
+msgstr "OpenERP"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:34
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:37
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:38
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:41
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:39
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:40
 msgid "Your Reference"
-msgstr ""
+msgstr "Er referens"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:50
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:57
 msgid "Product Description"
-msgstr ""
+msgstr "Produktbeskrivning"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:51
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:58
 msgid "Quantity"
-msgstr ""
+msgstr "Kvantitet"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:52
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:59
 msgid "Unit Price"
-msgstr ""
+msgstr "Styckpris"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:53
 msgid "Discount"
-msgstr ""
+msgstr "Rabatt"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:54
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:61
 msgid "Price"
-msgstr ""
+msgstr "Pris"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:72
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:81
 msgid "Net Total:"
-msgstr ""
+msgstr "Nettototal:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:83
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:92
 msgid "Taxes:"
-msgstr ""
+msgstr "Skatter:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:94
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:103
 msgid "Total:"
-msgstr ""
+msgstr "Summa:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:106
 msgid "Tax"
-msgstr ""
+msgstr "Skatt"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:107
 msgid "Base Amount"
-msgstr ""
+msgstr "Basbelopp"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:108
 msgid "Amount"
-msgstr ""
+msgstr "Belopp"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:121
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:113
 msgid "Notes:"
-msgstr ""
+msgstr "Anteckningar:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:129
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:121
 msgid "Pay Online"
-msgstr ""
+msgstr "Betala on-line"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:133
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:125
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:135
 msgid ""
 "You may directly pay this invoice online via Paypal's secure payment gateway:"
-msgstr ""
+msgstr "Du kan betala denna faktura direkt via Paypal's säkra betalväxel:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:145
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:137
 msgid "Bank Wire Transfer"
-msgstr ""
+msgstr "Banköverföring"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:147
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:139
 msgid "Please transfer"
-msgstr ""
+msgstr "Vänligen överför"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:148
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:140
 msgid "to"
-msgstr ""
+msgstr "till"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:149
@@ -343,38 +360,42 @@ msgid ""
 "mention the invoice\n"
 "                     reference"
 msgstr ""
+"(postadress i fakturahuvudet)\n"
+"                                                                             "
+"                      använd ett av följande bankkontona, se till att ange "
+"fakturareferens."
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:151
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:143
 msgid "on the transfer:"
-msgstr ""
+msgstr "på överföringen:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:36
 msgid "Order"
-msgstr ""
+msgstr "Order"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:42
 msgid "Salesman"
-msgstr ""
+msgstr "Säljare"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:43
 msgid "Payment terms"
-msgstr ""
+msgstr "Betalningsvillkor"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:60
 msgid "Discount(%)"
-msgstr ""
+msgstr "Rabatt(%)"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:127
 msgid ""
 "You may directly pay this order online via Paypal's secure payment gateway:"
-msgstr ""
+msgstr "Du kan betala denna order direkt via Paypals säkra betalväxel:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:141
@@ -384,3 +405,6 @@ msgid ""
 "mention the document\n"
 "                     reference"
 msgstr ""
+"(postadress på orderhuvudet)\n"
+"                                                                             "
+" använd någor av följande bankkonton. Se till att nämna dokumentid."

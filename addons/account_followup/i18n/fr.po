@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-13 21:37+0000\n"
-"Last-Translator: t.o <Unknown>\n"
+"PO-Revision-Date: 2012-05-24 17:31+0000\n"
+"Last-Translator: YannUbuntu <yannubuntu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:43+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:07+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -69,6 +69,26 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Cher % (partner_name)s,\n"
+"\n"
+"Nous constatons que, malgré l'envoi d'un rappel, votre compte client "
+"présente toujours à ce jour un solde débiteur.\n"
+"\n"
+"Il est essentiel que le règlement soit réalisé immédiatement faute de quoi "
+"nous devrons envisager de stopper\n"
+"nos relations commerciales jusqu'à apurement de la situation.\n"
+"\n"
+"Merci de prendre les mesures appropriées pour que le règlement intervienne "
+"dans les 8 prochains jours.\n"
+"\n"
+"S'il subsiste un problème avec le paiement de la facture dont nous n'avons "
+"pas été informé, n'hésitez pas à contacter notre service comptabilité  au "
+"(+32) .12.34.56.78 afin que nous puissions le solutionner rapidement.\n"
+"\n"
+"Le détails de paiements dus est imprimé ci-dessous.\n"
+"\n"
+"Nous vous prions d’agréer, Madame, Monsieur, nos respectueuses salutations.\n"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -123,7 +143,7 @@ msgstr "Valeur erronée au crédit ou au débit de l'écriture comptable !"
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "Net Days"
-msgstr "Jour ouvrable"
+msgstr "Jours ouvrables"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
@@ -340,6 +360,8 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
+"Votre description n'est pas correcte, utilisez une légende exacte  ou %% si "
+"vous souhaitez utiliser le caractère pour cent."
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -449,7 +471,7 @@ msgstr "Envoyer un Message de confirmation"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr "Total:"
+msgstr "Total :"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -529,7 +551,7 @@ msgstr "Rapport des Relances"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "Niveaux de relance"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -561,7 +583,7 @@ msgstr "Niveau de relance maximal"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr ""
+msgstr "Définir les relances"
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -576,6 +598,11 @@ msgid ""
 "code to adapt the email content to the good context (good name, good date) "
 "and you can manage the multi language of messages."
 msgstr ""
+"Définissez les niveaux de relance, leur message et leur déclenchement. Pour "
+"chaque étape, spécifiez le message et le nombre de jours avant la relance. "
+"Utilisez la légende pour connaître le code à utiliser pour adapter "
+"dynamiquement le contenu du courriel  (nom, date). Vous pouvez aussi gérer "
+"la langue des messages en fonction des destinataires."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -590,6 +617,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Aucun courriel n'a été envoyé aux partenaires suivants. Leur adresse de "
+"courriel n'est pas renseignée !\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -605,7 +636,7 @@ msgstr "%(date)s: Date Courante"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Inclure les écritures marquées comme litigieuses"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -621,7 +652,7 @@ msgstr "Description"
 #. module: account_followup
 #: constraint:account_followup.followup:0
 msgid "Only One Followup by Company."
-msgstr ""
+msgstr "Une seule relance par société"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -715,11 +746,26 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Cher% (partner_name)s,\n"
+"\n"
+"Malgré plusieurs rappels, votre compte est toujours débiteur.\n"
+"\n"
+"A moins d'un paiement intégral effectué dans les 8 prochains jours, une "
+"action  pour le recouvrement de la dette sera entreprise sans autre avis.\n"
+"\n"
+"Je suis convaincu que cette action se révélera inutile. Le  détails des "
+"sommes dues est imprimé ci-dessous.\n"
+"\n"
+"En cas de question concernant cette situation, n'hésitez pas à contacter "
+"notre service comptabilité au (+32) .12.34.56.78.\n"
+"\n"
+"Cordialement,\n"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Vous ne pouvez pas passer d'écritures sur un compte clôturé."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -744,7 +790,7 @@ msgstr "Réf. Client"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Tester l'impression"
 
 #. module: account_followup
 #: view:account.followup.print.all:0

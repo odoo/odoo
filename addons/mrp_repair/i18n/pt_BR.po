@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2011-01-29 01:55+0000\n"
+"PO-Revision-Date: 2012-05-10 18:03+0000\n"
 "Last-Translator: Adriano Prado <adrianojprado@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:50+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:29+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees Line"
-msgstr ""
+msgstr "Linhas de Preço"
 
 #. module: mrp_repair
 #: help:mrp.repair,state:0
@@ -50,6 +50,11 @@ msgid ""
 "date on the production lot in order to know if whether the repair should be "
 "invoiced to the customer or not."
 msgstr ""
+"Pedidos de conserto permitem que você organize reparos de seus produtos. Em "
+"um pedido de conserto, você pode detalhar os componentes que você remover, "
+"adicionar ou substituir e registrar o tempo que você gastou em diferentes "
+"operações. O pedido usa o tempo da garantia de reparo no lote de produção, a "
+"fim de saber se se a reparação deverá ser cobrada do cliente ou não."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -69,6 +74,10 @@ msgid ""
 "that you can select the locations in the Info tab, if you have the extended "
 "view."
 msgstr ""
+"Marque esta caixa se você deseja gerenciar a entrega do produto assim que "
+"for reparado. Se selecionado, ele irá criar uma separação com o produto "
+"selecionado. Note que você pode selecionar os locais na aba Info, se você "
+"tem a visão extendida."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
@@ -96,13 +105,13 @@ msgstr "Agrupar pelo Endereço de Faturamento do Parceiro"
 #: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
-msgstr ""
+msgstr "Nenhum produto definido no valor!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -169,7 +178,7 @@ msgstr "Atenção !"
 
 #. module: mrp_repair
 #: report:repair.order:0
-msgid "VAT"
+msgid "Tax"
 msgstr ""
 
 #. module: mrp_repair
@@ -205,7 +214,7 @@ msgstr "Cotação / Ordem"
 #: code:addons/mrp_repair/mrp_repair.py:337
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Alerta"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -256,7 +265,7 @@ msgstr "Número do Lote"
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
 msgid "Fees Lines"
-msgstr ""
+msgstr "Linhas de Valor"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,type:0
@@ -266,7 +275,7 @@ msgstr "Tipo"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Fees Line(s)"
-msgstr ""
+msgstr "Linhas de Valor(es)"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -383,6 +392,7 @@ msgstr "Cancelado"
 #, python-format
 msgid "Production lot is required for opration line with product '%s'"
 msgstr ""
+"O Lote de Produção é obrigatório para a linha de operação com o produto '%s'"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -428,7 +438,7 @@ msgstr "Adicionar"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
-msgid "Do you really want to create the invoice(s) ?"
+msgid "Do you really want to create the invoice(s)?"
 msgstr "Deseja Criar uma Fatura ?"
 
 #. module: mrp_repair
@@ -490,13 +500,14 @@ msgstr "Data:"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr ""
+msgstr "Linhas de Valores do Conserto"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:334
 #, python-format
 msgid "You cannot confirm a repair order which has no line."
 msgstr ""
+"Você não pode confirmar um Pedido de Conserto que não possui nenhuma linha."
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -579,6 +590,10 @@ msgid ""
 "operation and fee you will add will be set as 'not to invoiced' by default. "
 "Note that you can change manually afterwards."
 msgstr ""
+"O limite de garantia é calculado como: data de último movimento + garantia "
+"definida no produto selecionado. Se a data atual está abaixo do limite de "
+"garantia, cada operação e taxa que você acrescentar será definido como \"não "
+"faturado\" por padrão. Observe que você pode alterar manualmente mais tarde."
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_id:0
@@ -869,5 +884,11 @@ msgstr "Sem parceiro !"
 #~ "Informações, se você tiver a interface configurada para 'Visão "
 #~ "ampliada(Extended view)'."
 
+#~ msgid "Do you really want to create the invoice(s) ?"
+#~ msgstr "Deseja Criar uma Fatura ?"
+
 #~ msgid "Products Repairs Module - Manage All products Repairs"
 #~ msgstr "Modulo de Reparo de Produtos - Gerencie o Reparo dos Produtos"
+
+#~ msgid "VAT"
+#~ msgstr "Imposto"

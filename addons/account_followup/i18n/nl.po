@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-19 05:42+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:07+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -72,7 +72,7 @@ msgstr ""
 "\n"
 "Beste %(partner_name)s,\n"
 "\n"
-"We zijn teleurgesteld te zien dat, ondanks het versturen van een "
+"Helaas moeten wij constateren dat, ondanks het versturen van een "
 "herinnering, uw rekeningen nog steeds niet zijn voldaan.\n"
 "\n"
 "Het is zeer belangrijk dat u onmiddellijke uw rekeningen voldoet, anders "
@@ -83,10 +83,10 @@ msgstr ""
 "betaling in de komende 8 dagen.\n"
 "\n"
 "Als er een probleem met het betalen van een factuur die we ons niet bewust "
-"van, aarzel dan niet om onze boekhouding te contacteren op (+32) "
-".10.68.94.39. zodat wij de zaak oplossen snel.\n"
+"van, aarzel dan niet om contact op te nemen met onze administratie op [TEL. "
+"NUMMER] zodat wij de zaak snel kunnen oplossen.\n"
 "\n"
-"Details van verschuldigde betalingen is hieronder afgedrukt.\n"
+"Details van de verschuldigde betalingen is hieronder afgedrukt.\n"
 "\n"
 "Met vriendelijke groet,\n"
 
@@ -277,12 +277,12 @@ msgstr "Laatste betalingsherinnering"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Select Partners to Remind"
-msgstr "Selecteren te manen relaties"
+msgstr "Selecteren relaties voor betalingsherinnering"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr "Stuur email-bericht in taal relatie"
+msgstr "Stuur e-mail in de taal van de relatie"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -313,8 +313,8 @@ msgstr ""
 "uitvoeren van deze betaling in de komende 8 dagen.\n"
 "\n"
 "Indien uw betaling is uitgevoerd nadat deze e-mail is verzonden, dan kunt u "
-"dit bericht negeren. Aarzel niet om onze boekhouding te contacteren op (+32) "
-".10.68.94.39.\n"
+"dit bericht negeren. Aarzel niet contact op te nemen met onze administratie "
+"op [TEL. NUMMER]\n"
 "\n"
 "Met vriendelijke groet,\n"
 
@@ -351,7 +351,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Alle e-mails zijn succesvol verzonden naar relaties:\n"
+"Alle e-mails zijn succesvol verzonden naar de volgende relaties:\n"
 "\n"
 "%s"
 
@@ -378,7 +378,7 @@ msgstr ""
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
-msgstr "Mails versturen"
+msgstr "E-mails versturen"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
@@ -438,7 +438,7 @@ msgstr "Email-instellingen"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Print Follow Ups"
-msgstr "Aanmaningen betalingsherinnering"
+msgstr "Betalingsherinneringen afdrukken"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
@@ -470,7 +470,7 @@ msgstr ""
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
 msgid "Send email confirmation"
-msgstr "Stuur bevestigings e-mail"
+msgstr "Per e-mail versturen"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -577,12 +577,12 @@ msgstr "Annuleren"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr "Geschil"
+msgstr "Betwist"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr "Max aanmaanniveau"
+msgstr "Max. betalingsherinnering niveau"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
@@ -602,10 +602,11 @@ msgid ""
 "code to adapt the email content to the good context (good name, good date) "
 "and you can manage the multi language of messages."
 msgstr ""
-"Geef aanmaan niveaus en de bijbehorende berichten en vertraging. Voor elke "
-"stap, specificeer het bericht en het aantal dagen vertraging. Gebruik de "
-"legende van de te gebruik codes om de e-mail inhoud aan te passen (goede "
-"naam, goede datum) en u kunt de meertaligheid van de berichten beheren."
+"Geef betalingsherinnering niveaus en de bijbehorende berichten en "
+"vertraging. Voor elke stap, specificeer het bericht en het aantal dagen "
+"vertraging. Gebruik de legende van de te gebruik codes om de e-mail inhoud "
+"aan te passen (goede naam, goede datum) en u kunt de meertaligheid van de "
+"berichten beheren."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -708,7 +709,7 @@ msgstr "Eerste boeking"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Li."
-msgstr "Li."
+msgstr "Bt."
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -752,8 +753,8 @@ msgstr ""
 "\n"
 "Beste %(partner_name)s,\n"
 "\n"
-"Ondanks een aantal herinneringen, zijn de betalingen nog steeds niet "
-"geregeld.\n"
+"Ondanks een aantal herinneringen, heeft u nog steeds niet voldaan aan uw "
+"betalingsverplichtingen.\n"
 "\n"
 "Indien de volledige betaling in de volgende 8 dagen niet is gedaan, dan "
 "volgen juridische stappen voor de invordering van de schuld, zonder "
@@ -762,8 +763,8 @@ msgstr ""
 "Ik vertrouw erop dat deze actie niet nodig zal hoeven zijn en de details van "
 "verschuldigde betalingen is hieronder afgedrukt.\n"
 "\n"
-"In het geval van vragen over dit onderwerp, aarzel dan niet om onze "
-"boekhouding te contacteren op (+32) .10.68.94.39.\n"
+"In het geval van vragen over dit onderwerp, aarzel dan niet om contact op te "
+"nemen met onze administratie op [TEL. NUMMER]\n"
 "\n"
 "Met vriendelijke groet,\n"
 

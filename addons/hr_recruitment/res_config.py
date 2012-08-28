@@ -26,27 +26,12 @@ class hr_applicant_settings(osv.osv_memory):
     _inherit = ['hr.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'module_document_ftp': fields.boolean('Index & Track Documents',
+        'module_document_ftp': fields.boolean('allow the automatic indexation of resumes',
             help="""Manage your CV's and motivation letter related to all applicants.
-                This installs the module document_ftp."""),
-        'fetchmail_applicants': fields.boolean('Create Applicants from an Email Account',
-            fetchmail_model='hr.applicant', fetchmail_name='Incoming HR Applications',                                            
+                This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"""),
+        'fetchmail_applicants': fields.boolean('create applicants from an incoming email account',
+            fetchmail_model='hr.applicant', fetchmail_name='Incoming HR Applications',   
             help ="""Allow applicants to send their job application to an email address (jobs@mycompany.com),
                 and create automatically application documents in the system."""),
-        'applicants_server': fields.char('Server', size=256),
-        'applicants_port': fields.integer('Port'),
-        'applicants_type': fields.selection([
-                ('pop', 'POP Server'),
-                ('imap', 'IMAP Server'),
-                ('local', 'Local Server'),
-            ], 'Type'),
-        'applicants_is_ssl': fields.boolean('SSL/TLS',
-            help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
-        'applicants_user': fields.char('Username', size=256),
-        'applicants_password': fields.char('Password', size=1024),                
-    }
-
-    _defaults = {
-        'applicants_type': 'pop',
     }
 

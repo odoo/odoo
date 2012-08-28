@@ -10,23 +10,23 @@
         <record id="product_pricelist_version_form_view" model="ir.ui.view">
             <field name="name">product.pricelist.version.form</field>
             <field name="model">product.pricelist.version</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Pricelist Version">
-                    <field name="name" select="1"/>
-                    <field name="active"/>
-                    <field colspan="4" name="pricelist_id" select="1"/>
-                    <field name="date_start" select="1"/>
-                    <field name="date_end" select="1"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field colspan="4" name="items_id" nolabel="1" widget="one2many_list"/>
+                <form string="Pricelist Version" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field colspan="4" name="pricelist_id"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    </group>
+                    <field name="items_id"/>
                 </form>
             </field>
         </record>
         <record id="product_pricelist_version_tree_view" model="ir.ui.view">
             <field name="name">product.pricelist.version.tree</field>
             <field name="model">product.pricelist.version</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Pricelist Version">
                     <field name="name"/>
@@ -43,7 +43,16 @@
             <field name="res_model">product.pricelist.version</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_pricelist_version_tree_view"/>
-            <field name="help">There can be more than one version of a pricelist. Here you can create and manage new versions of a price list. Some examples of versions: 2010, 2011, Summer Promotion, etc.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a pricelist version.
+              </p><p>
+                There can be more than one version of a pricelist, each of
+                these must be valid during a certain period of time. Some
+                examples of versions: Main Prices, 2010, 2011, Summer Sales,
+                etc.
+              </p>
+            </field>
         </record>
         <menuitem
             action="product_pricelist_action" id="menu_product_pricelist_action"
@@ -52,14 +61,13 @@
         <record id="product_pricelist_item_tree_view" model="ir.ui.view">
             <field name="name">product.pricelist.item.tree</field>
             <field name="model">product.pricelist.item</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Products Listprices Items">
                     <field name="sequence"/>
-                    <field colspan="4" name="name" select="1"/>
+                    <field colspan="4" name="name"/>
                     <field name="product_id"/>
-                    <field name="product_tmpl_id" select="1" groups="product.group_product_variant"/>
-                    <field name="categ_id" select="1"/>
+                    <field name="product_tmpl_id" groups="product.group_product_variant"/>
+                    <field name="categ_id"/>
                     <field name="min_quantity"/>
                     <field name="base"/>
                 </tree>
@@ -69,22 +77,23 @@
         <record id="product_pricelist_item_form_view" model="ir.ui.view">
             <field name="name">product.pricelist.item.form</field>
             <field name="model">product.pricelist.item</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Products Listprices Items">
-                    <separator colspan="4" string="Rules Test Match"/>
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
-                    <field name="product_tmpl_id" select="1" groups="product.group_product_variant"/>
-                    <field name="categ_id" select="1"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <newline/>
-                    <field name="min_quantity"/>
-                    <field name="sequence"/>
-                    <separator colspan="4" string="Price Computation"/>
+                <form string="Products Listprices Items" version="7.0">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field colspan="4" name="name"/></h1>
 
-                    <field name="base"/>
-                    <field name="base_pricelist_id" attrs="{'required': [('base','=', -1)], 'readonly': [('base','!=', -1)]}"/>
+                    <group col="4">
+                        <field name="product_id" on_change="product_id_change(product_id)"/>
+                        <field name="product_tmpl_id" groups="product.group_product_variant"/>
+                        <field name="categ_id"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="min_quantity"/>
+                        <field name="sequence"/>
+                    </group>
+                    <group col="4" string="Price Computation">
+                        <field name="base"/>
+                        <field name="base_pricelist_id" attrs="{'required': [('base','=', -1)], 'readonly': [('base','!=', -1)]}"/>
+                    </group>
                     <group col="6" colspan="5">
                         <label string="New Price ="/>
                         <label string="Base Price"/>
@@ -105,13 +114,12 @@
         <record model="ir.ui.view" id="product_pricelist_view_search">
             <field name="name">product.pricelist.search</field>
             <field name="model">product.pricelist</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Products Price Search">
-                    <field name="name" />
+                    <field name="name" string="Products Price"/>
                     <field name="type"/>
-                    <field name="currency_id"/>
                     <field name="active" />
+                    <field name="currency_id"/>
                 </search>
             </field>
         </record>
@@ -120,7 +128,6 @@
         <record id="product_pricelist_view_tree" model="ir.ui.view">
             <field name="name">product.pricelist.tree</field>
             <field name="model">product.pricelist</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Products Price List">
                     <field name="name"/>
@@ -133,21 +140,27 @@
         <record id="product_pricelist_view" model="ir.ui.view">
             <field name="name">product.pricelist.form</field>
             <field name="model">product.pricelist</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Products Price List">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="type" select="1"/>
-                    <field name="currency_id" select="1"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field colspan="4" name="version_id" nolabel="1">
-                        <form string="Pricelist Version">
-                            <field name="name" select="1"/>
-                            <field name="active"/>
-                            <field name="date_start" select="1"/>
-                            <field name="date_end" select="1"/>
-                            <field colspan="4" name="items_id" nolabel="1" widget="one2many_list"/>
+                <form string="Products Price List" version="7.0">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group col="4">
+                        <field name="active"/>
+                        <field name="type"/>
+                        <field name="currency_id"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    </group>
+                    <field name="version_id">
+                        <form string="Pricelist Version" version="7.0">
+                            <group col="4">
+                                <field name="name"/>
+                                <field name="active"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                            </group>
+                            <field name="items_id"/>
                         </form>
                         <tree string="Pricelist Version">
                             <field name="name"/>
@@ -167,7 +180,19 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="product_pricelist_view_search" />
             <field name="context">{"default_type":"sale", "search_default_type":"sale"}</field>
-            <field name="help">A price list contains rules to be evaluated in order to compute the purchase or sales price for all the partners assigned to a price list. Price lists have several versions (2010, 2011, Promotion of February 2010, etc.) and each version has several rules. Example: the customer price of a product category will be based on the supplier price multiplied by 1.80.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a pricelist.
+              </p><p>
+                A price list contains rules to be evaluated in order to compute
+                the sales price of the products.
+              </p><p>
+                Price lists may have several versions (2010, 2011, Promotion of
+                February 2010, etc.) and each version may have several rules.
+                (e.g. the customer price of a product category will be based on
+                the supplier price multiplied by 1.80).
+              </p>
+            </field>
         </record>
         <record id="product_pricelist_action_for_purchase" model="ir.actions.act_window">
             <field name="name">Pricelists</field>
@@ -177,22 +202,36 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="product_pricelist_view_search" />
             <field name="context">{"default_type":"purchase", "search_default_type":"purchase"}</field>
-            <field name="help">A price list contains rules to be evaluated in order to compute the purchase or sales price for all the partners assigned to a price list. Price lists have several versions (2010, 2011, Promotion of February 2010, etc.) and each version has several rules. Example: the customer price of a product category will be based on the supplier price multiplied by 1.80.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a pricelist.
+              </p><p>
+                A price list contains rules to be evaluated in order to compute
+                the purchase price. The default price list has only one rule; use
+                the cost price defined on the product form, so that you do not have to
+                worry about supplier pricelists if you have very simple needs.
+              </p><p>
+                But you can also import complex price lists form your supplier
+                that may depends on the quantities ordered or the current
+                promotions.
+              </p>
+            </field>
         </record>
         <menuitem
             action="product_pricelist_action2" id="menu_product_pricelist_action2"
-            parent="base.menu_base_config" sequence="20"/>
+            parent="base.menu_base_config" sequence="20" groups="product.group_sale_pricelist"/>
 
         <record id="product_price_type_view" model="ir.ui.view">
             <field name="name">product.price.type.form</field>
             <field name="model">product.price.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Products Price Type">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="field"/>
-                    <field name="currency_id" select="1"/>
+                <form string="Products Price Type" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="field"/>
+                        <field name="currency_id"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -208,30 +247,6 @@
         <menuitem
             action="product_price_type_action" id="menu_product_price_type"
             parent="product.menu_product_pricelist_main" sequence="4" groups="base.group_no_one"/>
-
-        <!-- Moved to extra module 'sale_pricelist_type_menu':
-        <record id="product_pricelist_type_view" model="ir.ui.view">
-            <field name="name">product.pricelist.type.form</field>
-            <field name="model">product.pricelist.type</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Pricelist Type">
-                    <field name="name" select="1"/>
-                    <field name="key"/>
-                </form>
-            </field>
-        </record>
-        <record id="product_pricelist_type_action" model="ir.actions.act_window">
-            <field name="name">Pricelists Types</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.pricelist.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-	<menuitem
-	    action="product_pricelist_type_action" id="menu_product_pricelist_type_action2"
-	    parent="product.menu_product_pricelist_main" sequence="2"/>-->
 
     </data>
 </openerp>

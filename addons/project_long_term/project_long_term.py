@@ -110,12 +110,12 @@ class project_phase(osv.osv):
         'previous_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'next_phase_id', 'prv_phase_id', 'Previous Phases', states={'cancelled':[('readonly',True)]}),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of phases."),
         'duration': fields.float('Duration', required=True, help="By default in days", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'product_uom': fields.many2one('product.uom', 'Duration UoM', required=True, help="UoM (Unit of Measure) is the unit of measurement for Duration", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'product_uom': fields.many2one('product.uom', 'Duration Unit of Measure', required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for Duration", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task_ids': fields.one2many('project.task', 'phase_id', "Project Tasks", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'user_force_ids': fields.many2many('res.users', string='Force Assigned Users'),
         'user_ids': fields.one2many('project.user.allocation', 'phase_id', "Assigned Users",states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]},
-            help="The ressources on the project can be computed automatically by the scheduler"),
-        'state': fields.selection([('draft', 'New'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
+            help="The resources on the project can be computed automatically by the scheduler."),
+        'state': fields.selection([('draft', 'New'), ('cancelled', 'Cancelled'),('open', 'In Progress'), ('pending', 'Pending'), ('done', 'Done')], 'Status', readonly=True, required=True,
                                   help='If the phase is created the state \'Draft\'.\n If the phase is started, the state becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' state.\
                                   \n If the phase is over, the states is set to \'Done\'.'),
         'progress': fields.function(_compute_progress, string='Progress', help="Computed based on related tasks"),
@@ -215,9 +215,19 @@ project_user_allocation()
 
 class project(osv.osv):
     _inherit = "project.project"
+
+    def _phase_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        phase_ids = self.pool.get('project.phase').search(cr, uid, [('project_id', 'in', ids)])
+        for phase in self.pool.get('project.phase').browse(cr, uid, phase_ids, context):
+            res[phase.project_id.id] += 1
+        return res
+
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
+        'phase_count': fields.function(_phase_count, type='integer', string="Open Phases"),
     }
+    
     def schedule_phases(self, cr, uid, ids, context=None):
         context = context or {}
         if type(ids) in (long, int,):
@@ -258,6 +268,26 @@ class project(osv.osv):
                 }, context=context)
         return True
 project()
+
+class account_analytic_account(osv.osv):
+    _inherit = 'account.analytic.account'
+    _description = 'Analytic Account'
+    _columns = {
+        'use_phases': fields.boolean('Phases Planing', help="Check this field if project manages phases"),
+    }
+    
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['use_phases'] = template.use_phases
+        return res
+
+    def _trigger_project_creation(self, cr, uid, vals, context=None):
+        res= super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
+        return res or vals.get('use_phases')
+
+account_analytic_account()
 
 class project_task(osv.osv):
     _inherit = "project.task"

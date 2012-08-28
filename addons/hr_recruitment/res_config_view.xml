@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="todo_open_hr_menu" model="ir.actions.todo">
+            <field name="action_id" ref="hr.action_client_hr_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
     <data>
+        <record id="hr.todo_open_hr_menu" model="ir.actions.todo">
+            <field name="state">done</field>
+        </record>
+
         <record id="view_hr_apll_config_settings" model="ir.ui.view">
             <field name="name">hr settings for recruitment</field>
             <field name="model">hr.config.settings</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
             <field name="arch" type="xml">
-                <group name="config_recruitment" position="after">
-                    <separator  string="Recruitment" colspan="4"/>
-                    <field name="module_document_ftp"/>
-                    <newline/>
-                    <field name="fetchmail_applicants"/>
-                    <group colspan="2" attrs="{'invisible': [('fetchmail_applicants','=',False)]}">
-                        <field name="applicants_server" attrs="{'required': [('fetchmail_applicants','=',True)]}"/>
-                        <field name="applicants_type" attrs="{'required': [('fetchmail_applicants','=',True)]}"
-                            on_change="onchange_fetchmail('applicants', applicants_type, applicants_is_ssl)"/>
-                        <field name="applicants_port" attrs="{'required': [('fetchmail_applicants','=',True)]}"/>
-                        <field name="applicants_is_ssl" attrs="{'required': [('fetchmail_applicants','=',True)]}"
-                            on_change="onchange_fetchmail('applicants', applicants_type, applicants_is_ssl)"/>
-                        <field name="applicants_user" attrs="{'required': [('fetchmail_applicants','=',True)]}"/>
-                        <field name="applicants_password" password="True" attrs="{'required': [('fetchmail_applicants','=',True)]}"/>
-                    </group>	
-                </group>
+                <div name="recruitment" position="inside">
+                    <div>
+                        <field name="fetchmail_applicants" class="oe_inline"/>
+                        <label for="fetchmail_applicants"/>
+                        <button name="configure_fetchmail_applicants" type="object" string="Configure" icon="gtk-go-forward"
+                            attrs="{'invisible': [('fetchmail_applicants','=',False)]}" class="oe_link"/>
+                    </div>
+                    <div>
+                        <field name="module_document_ftp" class="oe_inline"/>
+                        <label for="module_document_ftp"/>
+                    </div>
+                </div>
             </field>
         </record>
     </data>

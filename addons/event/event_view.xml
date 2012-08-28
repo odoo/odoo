@@ -2,24 +2,38 @@
 <openerp>
     <data>
 
-        <menuitem  name="Events" id="event_main_menu"/>
-        <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu" />
+        <act_window
+            id="act_event_list_register_event"
+            name="Registration"
+            res_model="event.registration"
+            src_model="event.event"
+            view_mode="calendar,tree,form,graph"
+            context="{'search_default_event_id': active_id, 'default_event_id': active_id}"
+            view_type="form"/>
 
-    <!-- EVENTS  -->
+        <!-- Top menu item -->
+        <menuitem name="Events"
+            id="event_main_menu"
+            groups="base.group_user"
+            sequence="80"/>
+        <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu"/>
 
-    <!-- EVENTS/CONFIGURATION/TYPE OF EVENTS -->
+        <!-- EVENTS  -->
+
+        <!-- EVENTS/CONFIGURATION/TYPE OF EVENTS -->
         <record model="ir.ui.view" id="view_event_type_form">
             <field name="name">Event type</field>
             <field name="model">event.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Event Type">
-                    <field name="name" select="1"/>
-                    <field name="default_reply_to"/>
-                    <field name="default_email_event" domain="[('model_id.model','=','event.registration')]"/>
-                    <field name="default_email_registration" domain="[('model_id.model','=','event.registration')]"/>
-                    <field name="default_registration_min"/>
-                    <field name="default_registration_max"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="default_reply_to"/>
+                        <field name="default_registration_min"/>
+                        <field name="default_email_event" domain="[('model_id.model','=','event.registration')]"/>
+                        <field name="default_registration_max"/>
+                        <field name="default_email_registration" domain="[('model_id.model','=','event.registration')]"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -27,7 +41,6 @@
         <record model="ir.ui.view" id="view_event_type_tree">
             <field name="name">Event type</field>
             <field name="model">event.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Event Type">
                     <field name="name"/>
@@ -43,91 +56,149 @@
         <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="event_main_menu" sequence="30"/>
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_no_one"/>
 
-    <!-- Events Organisation/CONFIGURATION/EVENTS -->
+        <!-- Events Organisation/CONFIGURATION/EVENTS -->
+
+        <!-- Event Read/Unread actions -->
+        <record id="actions_server_event_event_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_event_event"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_event_event_unread" model="ir.values">
+            <field name="name">action_event_event_unread</field>
+            <field name="action_id" ref="actions_server_event_event_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_event_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_event_event" />
+            <field name="model">event.event</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_event_event_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_event_event"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_event_event_read" model="ir.values">
+            <field name="name">action_event_event_read</field>
+            <field name="action_id" ref="actions_server_event_event_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_event_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_event_event" />
+            <field name="model">event.event</field>
+            <field name="key2">client_action_multi</field>
+        </record>
 
         <record model="ir.ui.view" id="view_event_form">
             <field name="name">Events</field>
             <field name="model">event.event</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Events">
-                    <group col="6" colspan="4">
-                        <field name="name"/>
-                        <field name="date_begin"/>
-                        <field name="date_end"/>
-                        <field name="type" on_change="onchange_event_type(type,context)"/>
-                        <field name="user_id"/>
-                        <field name="address_id" />
-                    </group>
-                    <notebook colspan="4">
-                    <page string="Event">
-                        <separator string="Description" colspan="4"/>
-                        <field name="note" colspan="4" nolabel="1"/>
-                        <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
-                            <tree string="Registration" editable="top">
-                                <field name="name" />
-                                <field name="email" />
-                                <field name="phone"/>
-                                <field name="nb_register" />
-                                <field name="state"/>
-                                <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                <button name="button_reg_close" string="Attented the Event" states="open" type="object" icon="gtk-jump-to"/>
-                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                            </tree>
-                            <form string="Registration">
-                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" />
-                                <field name="name"/>
-                                <group colspan="4" col="4">
-                                <field name="email"/>
-                                <field name="phone"/>
+                <form string="Events" version="7.0">
+                    <header>
+                        <span groups="base.user_group">
+                            <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
+                            <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
+                            <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
+                            <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
+                        </span>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_right oe_button_box">
+                            <button name="%(event.act_event_list_register_event)d" type="action" string="Registration" icon="gtk-index" help="Register with this event"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <div>
+                            <h2>From <field name="date_begin" class="oe_inline" /> to <field name="date_end" class="oe_inline"/>
+                            </h2>
+                            <group>
+                                <group>
+                                    <label for="address_id" string="Location Address"/>
+                                    <div>
+                                        <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}"/>
+                                        <field name="street" placeholder="Street..."/>
+                                        <div>
+                                            <field name="zip" class="oe_inline" placeholder="Zip"/>
+                                            <field name="city" class="oe_inline" placeholder="City"/>
+                                        </div>
+                                    </div>
                                 </group>
-                                <group colspan="4" col="4">
-                                    <field name="nb_register"/>
+                                <group>
+                                    <field name="type" on_change="onchange_event_type(type,context)"/>
+                                    <field name="register_min"/>
+                                    <field name="register_max"/>
+                                    <label for="register_current" string="Current Registrations" groups="base.group_user"/>
+                                    <div groups="base.group_user">
+                                       Confirmed: <field name="register_current" class="oe_inline"/>, Unconfirmed: <field name="register_prospect" class="oe_inline"/>
+                                    </div>
                                 </group>
-                                <group colspan="4" col="4">
-                                </group>
-                                    <group col="8" colspan="4">
-                                        <separator string="" colspan="4"/>
-                                        <newline/>
-                                        <field name="state" select="1" colspan="2"/>
-                                        <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                        <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
-                                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                            </group>
+                        </div>
+                        <!-- <div class="oe_right" style="height: 200px"></div> -->
+                        <notebook>
+                            <page string="Event Description">
+                                <field name="note" colspan="4" nolabel="1"/>
+                            </page>
+                            <page string="Internal Data">
+                                <group>
+                                    <group>
+                                        <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
+                                        <field name="speaker_confirmed"/>
                                     </group>
-                            </form>
-                            </field>
-                        <field name="state" select="1" widget="statusbar" statusbar_visible="draft,confirm,done"/>
-                        <group col="4" colspan="2">
-                           <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
-                           <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
-                           <button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
-                           <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
-                        </group>
-                    </page>
-                    <page string="Speakers">
-                        <field name="main_speaker_id" domain="[('speaker','=',True)]"/>
-                        <field name="speaker_confirmed"/>
-                        <separator string="Other Speakers" colspan="4"/>
-                        <field name="speaker_ids" domain="[('speaker','=',True)]" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Extra Info">
-                        <group col="2" colspan="2">
-                            <separator string="Registrations" colspan="2"/>
-                            <field name="register_min"/>
-                            <field name="register_max"/>
-                            <field name="register_prospect"/>
-                            <field name="register_current"/>
-                            <field name="register_attended"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator string="Emails" colspan="2"/>
-                            <field name="reply_to"/>
-                            <field name="email_registration_id" domain="[('model_id.model','=','event.registration')]"/>
-                            <field name="email_confirmation_id" domain="[('model_id.model','=','event.registration')]"/>
-                        </group>
-                    </page>
-                    </notebook>
-            </form>
+                                    <group>
+                                        <field name="register_attended"/>
+                                    </group>
+                                </group>
+                                <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
+                                    <tree string="Registration" editable="top">
+                                        <field name="name" />
+                                        <field name="email" />
+                                        <field name="phone"/>
+                                        <field name="nb_register" />
+                                        <field name="state"/>
+                                        <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                        <button name="button_reg_close" string="Attented the Event" states="open" type="object" icon="gtk-jump-to"/>
+                                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                                    </tree>
+                                    <form string="Registration">
+                                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" />
+                                        <field name="name"/>
+                                        <group colspan="4" col="4">
+                                        <field name="email"/>
+                                        <field name="phone"/>
+                                        </group>
+                                        <group colspan="4" col="4">
+                                            <field name="nb_register"/>
+                                        </group>
+                                        <group colspan="4" col="4">
+                                        </group>
+                                            <group col="8" colspan="4">
+                                                <separator string="" colspan="4"/>
+                                                <newline/>
+                                                <field name="state" colspan="2"/>
+                                                <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                                <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
+                                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                                            </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
+                </form>
             </field>
         </record>
 
@@ -136,9 +207,8 @@
         <record model="ir.ui.view" id="view_event_tree">
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Events" colors="red:(register_min and register_min&gt;register_current) or (register_max and register_max&lt;register_current);grey:state=='cancel'">
+                <tree string="Events" fonts="bold:needaction_pending==True" colors="red:(register_min and register_min&gt;register_current) or (register_max and register_max&lt;register_current);grey:state=='cancel'">
                     <field name="name" string="Name"/>
                     <field name="type"/>
                     <field name="date_begin"/>
@@ -149,20 +219,17 @@
                     <field name="main_speaker_id" groups="base.extended"/>
                     <field name="user_id"/>
                     <field name="state"/>
-                    <button string="Confirm Event" help="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
-                    <button string="Event Done" help="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
-                    <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
-                    <button string="Set To Draft" help="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
+                    <field name="needaction_pending" invisible="1"/>
                 </tree>
             </field>
         </record>
-        
+
+
         <!-- Event Kanban View -->
-	
-	<record model="ir.ui.view" id="view_event_kanban">
+
+        <record model="ir.ui.view" id="view_event_kanban">
             <field name="name">event.event.kanban</field>
             <field name="model">event.event</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="register_max"/>
@@ -203,13 +270,14 @@
                             </p>
                             <t t-if="record.register_avail.raw_value != 0">
                               <t t-if="!record.is_subscribed.raw_value">
-                                  <button type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
+                                  <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1" onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
+                                  <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="oe_mail_button_follow">
                                   <span >Subscribe</span>
                                   </button>
                               </t>
                             </t>
                             <t t-if="record.is_subscribed.raw_value">
-                              <button type="object" name="unsubscribe_to_event" class="unsubscribe_button oe_event_button_unsubscribe">
+                              <button type="object" name="unsubscribe_to_event" class="oe_mail_button_unfollow">
                                 <span>Subscribed</span>
                                 <span class="unsubscribe">Unsubscribe</span>
                               </button>
@@ -222,12 +290,11 @@
             </field>
         </record>
 
-      <!-- Events  Calendar  View -->
+        <!-- Events  Calendar  View -->
 
         <record id="view_event_calendar" model="ir.ui.view">
             <field name="name">event.event.calendar</field>
             <field name="model">event.event</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="type" date_start="date_begin" date_stop="date_end" string="Event Organization">
@@ -242,7 +309,6 @@
         <record model="ir.ui.view" id="view_event_graph">
             <field name="name">Event Graph</field>
             <field name="model">event.event</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Event by Registration" type="bar" orientation="horizontal">
                     <field name="name"/>
@@ -252,40 +318,29 @@
             </field>
         </record>
 
-    <!-- Event Search View -->
+        <!-- Event Search View -->
 
         <record model="ir.ui.view" id="view_event_search">
             <field name="name">Events</field>
             <field name="model">event.event</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Events">
-                    <group>
-                        <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
-                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Upcoming"
-                                name="upcoming"
-                                domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                                help="Upcoming events from today" />
-                        <field name="name"/>
-                        <field name="type" widget="selection"/>
-                        <field name="user_id" widget="selection">
-                        <filter icon="terp-personal"
-                              string="My Events"
-                                help="My Events"
-                              domain="[('user_id','=',uid)]"/>
-                        </field>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Events"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <separator/>
+                    <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
+                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
+                    <separator/>
+                    <filter icon="terp-personal" string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
+                    <separator/>
+                    <filter icon="terp-go-today" string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Upcoming events from today" />
+                    <field name="type"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible"  icon="terp-personal" context="{'group_by': 'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Starting Date" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'date_begin'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                        <filter string="Starting Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>
                 </search>
             </field>
@@ -293,7 +348,7 @@
 
 
         <!-- Events Organisation/CONFIGURATION/EVENTS  -->
-       <record model="ir.actions.act_window" id="action_event_view">
+        <record model="ir.actions.act_window" id="action_event_view">
            <field name="name">Events</field>
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">event.event</field>
@@ -301,19 +356,18 @@
            <field name="view_mode">kanban,calendar,tree,form,graph</field>
            <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
-           <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>
-       </record>
+           <field name="help" type="html">
+             <p class="oe_view_nocontent_create">
+               Click to add a new event.
+             </p><p>
+               OpenERP helps you schedule and efficiently organize your events:
+               track subscriptions and participations, automate the confirmation emails,
+               sell tickets, etc.
+             </p>
+           </field>
+        </record>
 
-      <act_window
-            id="act_event_list_register_event"
-            name="Registration"
-            res_model="event.registration"
-            src_model="event.event"
-            view_mode="calendar,tree,form,graph"
-            context="{'search_default_event_id': [active_id], 'default_event_id': active_id}"
-            view_type="form"/>
-
-      <act_window
+        <act_window
             id="act_register_event_partner"
             name="Subscribe"
             res_model="event.registration"
@@ -322,17 +376,54 @@
             context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
             view_type="form"/>
 
-       <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />
+        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />
 
-    <!-- EVENTS/REGISTRATIONS/EVENTS  -->
+        <!-- EVENTS/REGISTRATIONS/EVENTS  -->
+
+        <!-- Registration Read/Unread actions -->
+        <record id="actions_server_event_registration_unread" model="ir.actions.server">
+            <field name="name">Mark unread</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_event_registration"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_event_registration_unread" model="ir.values">
+            <field name="name">action_event_registration_unread</field>
+            <field name="action_id" ref="actions_server_event_registration_unread"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_registration_unread'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_event_registration" />
+            <field name="model">event.registration</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+
+        <record id="actions_server_event_registration_read" model="ir.actions.server">
+            <field name="name">Mark read</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_event_registration"/>
+            <field name="state">code</field>
+            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        </record>
+        <record id="action_event_registration_read" model="ir.values">
+            <field name="name">action_event_registration_read</field>
+            <field name="action_id" ref="actions_server_event_registration_read"/>
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_event_registration_read'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_event_registration" />
+            <field name="model">event.registration</field>
+            <field name="key2">client_action_multi</field>
+        </record>
 
         <record model="ir.ui.view" id="view_event_registration_tree">
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Registration" >
+                <tree string="Registration" fonts="bold:needaction_pending==True">
                     <field name="create_date"/>
+                    <field name="partner_id"/>
                     <field name="name"/>
                     <field name="email"/>
                     <field name="event_id" />
@@ -340,10 +431,7 @@
                     <field name="user_id"/>
                     <field name="origin"/>
                     <field name="state"/>
-                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                    <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                    <button name="button_reg_close" string="Attended" states="open" type="object" icon="gtk-apply"/>
-                    <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
+                    <field name="needaction_pending" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -351,61 +439,47 @@
         <record model="ir.ui.view" id="view_event_registration_form">
             <field name="name">event.registration.form</field>
             <field name="model">event.registration</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Registration">
-                    <group col="6" colspan="4">
-                        <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
-                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
-                        <field name="nb_register"/>
-                        <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
-                        <field name="origin"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Additional Information">
-                            <group colspan="2" col="2">
-                                <separator string="Contact Information" colspan="2"/>
+                <form string="Event Registration" version="7.0">
+                    <header>
+                        <button name="registration_open" string="Confirm" states="draft" type="object" class="oe_highlight"/>
+                        <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_highlight"/>
+                        <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" />
+                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
+                        <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
+                    </header>
+                    <sheet string="Registration">
+                        <label for="event_id" class="oe_edit_only"/>
+                        <h1>
+                            <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
                                 <field name="name"/>
-                                <field name="email"/>
                                 <field name="phone"/>
+                                <label for="email"/>
+                                <div>
+                                    <field name="email" class="oe_inline"/>
+                                    <button class="oe_inline oe_right" string="Send Email"
+                                        name="%(mail.action_email_compose_message_wizard)d"
+                                        icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
+                                </div>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_no_one">
-                                <separator string="Dates" colspan="2"/>
+                            <group>
+                                <field name="nb_register"/>
+                                <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+                            </group>
+                            <group groups="base.group_no_one">
                                 <field name="create_date"/>
                                 <field name="date_closed"/>
-                                <field name="event_begin_date" />
-                                <field name="event_end_date" />
                             </group>
-
-                            <separator string="" colspan="4"/>
-                            <group col="8" colspan="4">
-                                <field name="state" select="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
-                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                                <button name="button_reg_close" string="Attended" states="open" type="object" icon="gtk-apply"/>
-                                <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
-                            </group>
-                        </page>
-                        <page string="Emails">
-<!--
-                            <field name="message_ids" colspan="4" nolabel="1" mode="tree">
-                                <tree string="History">
-                                    <field name="display_text" string="History Information"/>
-                                    <field name="reply_to" invisible="1"/>
-                                    <button
-                                        string="Reply" attrs="{'invisible': [('reply_to', '=', False)]}"
-                                        name="%(mail.action_email_compose_message_wizard)d"
-                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                        icon="terp-mail-replied" type="action" />
-                                </tree>
-                            </field>
--->
-                            <button string="Send New Email"
-                                name="%(mail.action_email_compose_message_wizard)d"
-                                icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
-                           </page>
-
-                    </notebook>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -414,7 +488,6 @@
         <record id="view_event_registration_calendar" model="ir.ui.view">
             <field name="name">event.registration.calendar</field>
             <field name="model">event.registration</field>
-            <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="event_id" date_start="event_begin_date" date_stop="event_end_date" string="Event Registration">
@@ -427,7 +500,6 @@
         <record model="ir.ui.view" id="view_event_registration_graph">
             <field name="name">Registration Graph</field>
             <field name="model">event.registration</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Registration" type="bar" orientation="horizontal">
                     <field name="event_id"/>
@@ -441,33 +513,23 @@
         <record model="ir.ui.view" id="view_registration_search">
             <field name="name">Registrations</field>
             <field name="model">event.registration</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Event Registration">
-                    <group>
-                        <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
-                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
-                        <separator orientation="vertical"/>
-                        <field name="event_id" widget="selection"/>
-                        <field name="name" string="Participant"
-                            filter_domain="['|','|', ('name','ilike',self), ('partner_id','ilike',self), ('email','ilike',self)]"/>
-                        <field name="user_id">
-                        <filter icon="terp-personal"
-                              string="My Registrations"
-                                help="My Registrations"
-                              domain="[('user_id','=',uid)]"/>
-                        </field>
-                        <field name="origin"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Participant" filter_domain="['|','|','|',('name','ilike',self),('partner_id','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <separator/>
+                    <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
+                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
+                    <separator/>
+                    <filter icon="terp-personal" string="My Registrations" help="My Registrations" domain="[('user_id','=',uid)]"/>
+                    <field name="event_id"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible"  icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Event" icon="terp-crm" domain="[]" context="{'group_by':'event_id'}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                    </group>
-
                 </search>
             </field>
         </record>
@@ -480,14 +542,13 @@
           <field name="view_mode">tree,form,calendar,graph</field>
           <field name="context">{}</field>
           <field name="search_view_id" ref="view_registration_search"/>
-        </record>
+        </record>view_
 
-        <menuitem
-            name="Registrations"
+        <menuitem name="Registrations"
             id="menu_action_registration" parent="base.menu_event_main"
             action="action_registration" groups="event.group_event_manager,event.group_event_user"/>
 
-
         <menuitem name="Reporting" id="base.menu_report_association" parent="event_main_menu" sequence="20"/>
+
     </data>
 </openerp>

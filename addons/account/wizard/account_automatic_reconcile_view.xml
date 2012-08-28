@@ -5,30 +5,26 @@
         <record id="account_automatic_reconcile_view" model="ir.ui.view">
              <field name="name">Account Automatic Reconcile</field>
              <field name="model">account.automatic.reconcile</field>
-             <field name="type">form</field>
              <field name="arch" type="xml">
-                <form string="Reconciliation">
-                    <separator string="Reconciliation" colspan="4"/>
-                    <label colspan="4" nolabel="1" string="For an invoice to be considered as paid, the invoice entries must be reconciled with counterparts, usually payments. With the automatic reconciliation functionality, OpenERP makes its own search for entries to reconcile in a series of accounts. It finds entries for each partner where the amounts correspond."/>
-                    <newline/>
-                    <group>
-                        <field name="account_ids" colspan="4" domain="[('reconcile','=',1)]"/>
+                <form string="Reconciliation" version="7.0">
+                    <separator string="Reconciliation"/>
+                    <label string="For an invoice to be considered as paid, the invoice entries must be reconciled with counterparts, usually payments. With the automatic reconciliation functionality, OpenERP makes its own search for entries to reconcile in a series of accounts. It finds entries for each partner where the amounts correspond."/>
+                    <field name="account_ids" domain="[('reconcile','=',1)]"/>
+                    <group col="4">
                         <field name="power"/>
                         <field name="allow_write_off"/>
                     </group>
-                    <newline/>
-                    <group attrs="{'readonly':[('allow_write_off', '!=', True)]}">
-                        <separator string="Write-Off Move" colspan="4"/>
+                    <group col="4" attrs="{'readonly':[('allow_write_off', '!=', True)]}" string="Write-Off Move">
                         <field name="max_amount"/>
                         <field name="writeoff_acc_id" attrs="{ 'required':[('allow_write_off', '=', True)]}"/>
                         <field name="journal_id" attrs="{ 'required':[('allow_write_off', '=', True)]}"/>
                         <field name="period_id" attrs="{ 'required':[('allow_write_off', '=', True)]}"/>
                     </group>
-                    <separator string ="" colspan="4"/>
-                    <group colspan="2" col="4">
-                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                        <button name="reconcile" string="Reconcile" type="object" icon="terp-stock_effects-object-colorize"/>
-                     </group>
+                    <footer>
+                        <button name="reconcile" string="Reconcile" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
              </field>
          </record>
@@ -54,16 +50,12 @@
         <record id="account_automatic_reconcile_view1" model="ir.ui.view">
              <field name="name">Automatic reconcile unreconcile</field>
              <field name="model">account.automatic.reconcile</field>
-             <field name="type">form</field>
              <field name="arch" type="xml">
-                <form string="Reconciliation result">
-                    <field name="reconciled"/>
-                    <newline/>
-                    <field name="unreconciled"/>
-                    <group colspan="4" col="6">
-                        <separator colspan="6"/>
-                        <button special="cancel" string="Ok" icon="terp-dialog-close" default_focus="1"/>
-                     </group>
+                <form string="Reconciliation Result" version="7.0">
+                    <group>
+                        <field name="reconciled"/>
+                        <field name="unreconciled"/>
+                    </group>
                 </form>
              </field>
          </record>

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2010-12-11 15:49+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-06-20 04:05+0000\n"
+"Last-Translator: Khulan Altangerel <khulancomp@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:05+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:01+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -22,6 +22,8 @@ msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
 msgstr ""
+"Худалдан авагч үнийн саналын хүсэлтийг нийлүүлэгчрүү илгээхээс өмнө батлах "
+"ёстой. Үнийн саналын хүсэлт нь Худалдан Авах Захиалга болж хувирна."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
@@ -43,12 +45,12 @@ msgstr "Хаана"
 #: code:addons/purchase/purchase.py:236
 #, python-format
 msgid "In order to delete a purchase order, it must be cancelled first!"
-msgstr ""
+msgstr "Худалдан авах захиалгыг устгахын тулд эхлээд цуцлах хэрэгтэй!"
 
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Уг баримт бичгийг үүсгэсэн огноо"
 
 #. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
@@ -74,11 +76,19 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Нийлүүлэгчээс худалдан авалтыг батлахын өмнө үнийн саналын хүсэлтийг үүсгэх "
+"боломжтой. Мөн энэ менюг ашиглан логистикийн дүрэм (хамгийн бага үлдэгдэл, "
+"захиалуулах, гм) -р автоматаар үүссэн үнийн саналын хүсэлтүүдийг мөн менеж "
+"хийнэ. Үнийн саналыг хүсэлтийг баталгаажсан дараагаар худалдан авах захиалга "
+"болгон хөрвүүлэх боломжтой. Хэрэв өргөтгөсөн харагдац (хэрэглэгчийн тохиргоо "
+"дахь) -г хэрэглэж байгаа бол нийлүүлэгчийн нэхэмжлэлийг хянах аргыг сонгох "
+"боломжтой. Хүлээн авалт дээр үндэслэх болон гар боловсруулалт аргууд байж "
+"болно."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved purchase order"
-msgstr ""
+msgstr "Баталсан худалдан авах захиалга"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,partner_id:0
@@ -91,16 +101,16 @@ msgstr "Нийлүүлэгч"
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr ""
+msgstr "Үнийн хүснэгт"
 
 #. module: purchase
 #: view:stock.picking:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
-msgid "Do you want to generate the supplier invoices ?"
+msgid "Do you want to generate the supplier invoices?"
 msgstr "Та нийлүүлэгчийн нэхэмжлэл үүсгэхийг хүсч байна уу ?"
 
 #. module: purchase
@@ -110,6 +120,9 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Энэ цэсийг хэрэглэж худалдан авах захиалгыг түүний дугаар, нийлүүлэгч,  "
+"бараа г.м зүйсээр хайж болно. Худалдан авах захиалга бүрийн хүлээн авсан "
+"бараа болон нийлүүлэгчийн нэхэмжлэлийг хянах боломжтой."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:145
@@ -137,7 +150,7 @@ msgstr "Үнийн хүснэгтгүй !"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_wizard
 msgid "purchase.config.wizard"
-msgstr ""
+msgstr "purchase.config.wizard"
 
 #. module: purchase
 #: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
@@ -147,7 +160,7 @@ msgstr "Үнийн санал"
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
 msgid "Based on Receptions"
-msgstr ""
+msgstr "Хүлээн авалтууд дээр суурилсан"
 
 #. module: purchase
 #: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
@@ -175,7 +188,7 @@ msgstr "Ноороглох"
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
-msgstr "Нэхэмжлэлийн онцгой тохиолдол"
+msgstr "Нэхэмжлэлийн сондгойрол"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
@@ -219,7 +232,7 @@ msgstr "Худалдан авалт"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking Processing Wizard"
-msgstr ""
+msgstr "Хэсэгчлэн бэлтгэх боловсруулалтын харилцах цонх"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -239,17 +252,17 @@ msgstr "Өдөр"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on generated draft invoice"
-msgstr ""
+msgstr "Үүссэн ноорог нэхэмжлэл дээр тулгуурласан."
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Order of Day"
-msgstr ""
+msgstr "Өдрийн захиалга"
 
 #. module: purchase
 #: view:board.board:0
 msgid "Monthly Purchases by Category"
-msgstr ""
+msgstr "Сарын худалдан авалт ангиллаар"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -259,7 +272,7 @@ msgstr "Худалдан авалт"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase order which are in draft state"
-msgstr ""
+msgstr "Ноорог төлөвт байгаа худалдан авах захиалга"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -309,7 +322,7 @@ msgstr "Цэвэр дүн :"
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
 msgid "Products"
-msgstr "Бүтээгдэхүүн"
+msgstr "Бараанууд"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
@@ -323,6 +336,9 @@ msgid ""
 "A Pick list generates an invoice. Depending on the Invoicing control of the "
 "sale order, the invoice is based on delivered or on ordered quantities."
 msgstr ""
+"Бэлтгэх жагсаалт нь нэхэмжлэлийг үүсгэдэг. Борлуулалтын захиалгын "
+"нэхэмжлэлийг хянах аргаас шалтгаалан хүргэлтээс болон захиалсан тоо "
+"хэмжээнээс нэхэмжлэл үүсдэг."
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.order.line,state:0
@@ -381,11 +397,13 @@ msgstr "Агуулахын хөдөлгөөн"
 #, python-format
 msgid "You must first cancel all invoices related to this purchase order."
 msgstr ""
+"Та эхлээд уг худалдан авах захиалгатай холбоотой бүх нэхэмжлэлүүдийг цуцлана "
+"уу."
 
 #. module: purchase
 #: field:purchase.report,dest_address_id:0
 msgid "Dest. Address Contact Name"
-msgstr ""
+msgstr "Хүргэх Хаягийн Холбогчийн Нэр"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -396,7 +414,7 @@ msgstr "НӨАТ:"
 #: code:addons/purchase/purchase.py:326
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
-msgstr ""
+msgstr "Худалдан авалтын захиалга '%s' ноорог төлөвтэй болсон."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -424,13 +442,15 @@ msgstr "Баталсан"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Order in last month"
-msgstr ""
+msgstr "Өнгөрсөн сарын захиалга"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:412
 #, python-format
 msgid "You must first cancel all receptions related to this purchase order."
 msgstr ""
+"Та эхлээд энэ худалдан авалтын захиалгатай холбогдох бүх хүлээн авалтыг "
+"цуцлах ёстой."
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
@@ -455,7 +475,7 @@ msgstr "Энэ нь барааг бүрэн хүлээж авсан эсэхий
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in exception state"
-msgstr ""
+msgstr "Сондгой төлөвтэй худалдан авалтын захиалгууд"
 
 #. module: purchase
 #: report:purchase.order:0 field:purchase.report,validator:0
@@ -476,7 +496,7 @@ msgstr "Дундаж үнэ"
 #. module: purchase
 #: view:stock.picking:0
 msgid "Incoming Shipments already processed"
-msgstr ""
+msgstr "Боловсруулагдсан ирж байгаа хүргэлтүүд"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -494,12 +514,12 @@ msgstr "Бататгах"
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4_picking_to_invoice
 #: selection:purchase.order,invoice_method:0
 msgid "Based on receptions"
-msgstr ""
+msgstr "Хүлээн авалт дээр суурилсан"
 
 #. module: purchase
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Алдаа! Тойрог хамааралтай компани үүсгэж болохгүй."
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
@@ -513,6 +533,9 @@ msgid ""
 "of the purchase order, the invoice is based on received or on ordered "
 "quantities."
 msgstr ""
+"Бараа боловсруулах жагсаалтаас нийлүүлэгчийн нэхэмжлэл үүснэ. Худалдан авах "
+"захиалгын нэхэмжлэх аргаас хамаарч нэхэмжлэл нь хүлээн авсан эсвэл захиалсан "
+"тоо ширхэгийн дагуу үүснэ."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -523,11 +546,16 @@ msgid ""
 "supplier invoice, you can generate a draft supplier invoice based on the "
 "lines from this menu."
 msgstr ""
+"Худалдан авалтын захиалгын нэхэмжлэлийг хянах аргыг \"Худалдан авалтын "
+"мөрүүд дээр суурилсан\" гэж сонгосон тохиолдолд нийлүүлэгчээс нэхэмжлэлийг "
+"хүлээж аваагүй худалдан авалтын захиалгын мөр бүрийг хянаж хөтлөж чадна. "
+"Хэрэв нийлүүлэгчийн нэхэмжлэлийг хүлээж авахад бэлэн болсон бол энэ менюгээс "
+"мөрүүд дээр суурилсан нийлүүлэгчийн ноорог нэхэмжлэлийг үүсгэх боломжтой."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase order which are in the exception state"
-msgstr ""
+msgstr "Худалдан авах захиалга сондгой төлөвт байна."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
@@ -535,6 +563,8 @@ msgid ""
 "Reception Analysis allows you to easily check and analyse your company order "
 "receptions and the performance of your supplier's deliveries."
 msgstr ""
+"Хүлээн авалтын Шинжилгээ нь өөрийн компаний хүлээн авалт болон нийлүүлэгчийн "
+"чадавхи зэрэгийг шинжлэх боломжийг олгодог."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -581,12 +611,12 @@ msgstr "Нийт Үнэ"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_import_create_supplier_installer
 msgid "Create or Import Suppliers"
-msgstr ""
+msgstr "Нийлүүлэгчдийг үүсгэх буюу импортлох"
 
 #. module: purchase
 #: view:stock.picking:0
 msgid "Available"
-msgstr ""
+msgstr "Байгаа"
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
@@ -601,7 +631,7 @@ msgstr "Хүргэх хаяг :"
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
 msgid "Invoices generated for a purchase order"
-msgstr ""
+msgstr "Худалдан авалтын захиалгад үүсгэгдсэн нэхэмжлэлүүд"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:285 code:addons/purchase/purchase.py:348
@@ -614,7 +644,7 @@ msgstr "Алдаа !"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
-msgstr ""
+msgstr "Харагдац төрөлтэй байрлалаас/байрлалруу шилжүүлж болохгүй."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:737
@@ -630,7 +660,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:349
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Энэ компанид худалдан авалтын журнал байхгүй байна: \"%s\" (id:%d)"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -639,6 +669,9 @@ msgid ""
 "order is 'On picking'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
 msgstr ""
+"Худалдан авалтын захиалгын нэхэмжлэлийг хянах арга нь \"Бэлтгэхэд\" гэж "
+"сонгогдсон бол нэхэмжлэл автоматаар үүснэ. Мөн нэхэмжлэл нь нягтлангаар "
+"гараар (нэхэмжлэлийн хяналт = Гараар) үүсгэгдэж болно."
 
 #. module: purchase
 #: report:purchase.order:0
@@ -652,22 +685,25 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
 msgstr ""
+"Худалдан авалтын шинжилгээ нь өөрийн компанийн худалдан авалтын түүх болон "
+"биелэлтийг хялбараар шинжилж, шалгах боломжийг олгодог. Энэ менюгээс "
+"нийлүүлэгчдийн тохиролцох хурд, хүргэх хурд зэрэгийг шинжлэх боломжтой."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_configuration_misc
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Бусад"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:769
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "Сонгосон нийлүүлэгч нь энэ барааг зөвхөн %s-р борлуулдаг."
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "Х.Н-н код"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0 view:purchase.report:0
@@ -684,7 +720,7 @@ msgstr "Нэхэмжлэл үүсгэх"
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Хэмжих нэгж"
 
 #. module: purchase
 #: field:purchase.order.line,move_dest_id:0
@@ -727,7 +763,7 @@ msgstr "Хүлээн авах"
 #: code:addons/purchase/purchase.py:285
 #, python-format
 msgid "You cannot confirm a purchase order without any lines."
-msgstr ""
+msgstr "Нэг ч мөргүй худалдан авалтын захиалгыг батлах боломжгүй."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -737,6 +773,11 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
+"Энэ менюг ашиглан нийлүүлэгчээс хүлээн авах нэхэмжлэлийг хянадаг. OpenERP нь "
+"худалдан авалтын захиалга болон хүлээн авалт зэрэгээс таны тохиргооны дагуу "
+"нийлүүлэгчийн ноорог нэхэмжлэлүүдийг урьдчилан үүсгэдэг. Захиалагчаас "
+"нэхэмжлэл хүлээж авмагцаа эдгээр ноорог нэхэмжлэлийг тулгаж шалгаад "
+"шалгагдсан төлөвт оруулна."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -748,12 +789,12 @@ msgstr "Үнийн санал"
 #: code:addons/purchase/edi/purchase_order.py:139
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "EDI Үнийн жагсаалт (%s)"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Зөвшөөрөл хүлээж байгаа"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -763,7 +804,7 @@ msgstr "1 сар"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.ir_actions_server_edi_purchase
 msgid "Auto-email confirmed purchase orders"
-msgstr ""
+msgstr "Автомата имэйлээр батлагдсан худалдан авах захиалгууд"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
@@ -780,7 +821,7 @@ msgstr "Захиалах огноо"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Бараанд lot-г оноох ёстой."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -802,7 +843,7 @@ msgstr "Тоо"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Month-1"
-msgstr ""
+msgstr "Сар-1"
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
@@ -820,7 +861,7 @@ msgstr "Худалдан авалтын захиалга нэгтгэх"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Order in  current month"
-msgstr ""
+msgstr "Энэ сар дахь захиалгууд"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,delay_pass:0
@@ -841,7 +882,7 @@ msgstr "Татан авалт"
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Нэхэмжлэлүүд"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -861,7 +902,7 @@ msgstr "Нийт захиалгын мөр сар тутмын хэрэглэг�
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved purchase orders"
-msgstr ""
+msgstr "Батлагдсан худалдан авах захиалгууд"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,month:0
@@ -871,7 +912,7 @@ msgstr "Сар"
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Захиалга (Код ${object.name or 'б/гүй' })"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -891,7 +932,7 @@ msgstr "Нийт татваргүй хэмжээ"
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
 msgid "User"
-msgstr ""
+msgstr "Хэрэглэгч"
 
 #. module: purchase
 #: field:purchase.order,shipped:0 field:purchase.order,shipped_rate:0
@@ -901,7 +942,7 @@ msgstr "Ирсэн"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "List of ordered products."
-msgstr "Захиалсан бүтээгдэхүүний жагсаалт."
+msgstr "Захиалсан барааны жагсаалт."
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
@@ -912,7 +953,7 @@ msgstr "Энэ худалдан авалтад зориулж үүсгэсэн �
 #. module: purchase
 #: view:stock.picking:0
 msgid "Is a Back Order"
-msgstr ""
+msgstr "Буцаалтын Захиалга уу"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
@@ -959,12 +1000,13 @@ msgstr "Захиалгын төлөв"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Product Categories"
-msgstr ""
+msgstr "Барааны ангилал"
 
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
 msgid "Pre-Generate Draft Invoices based on Purchase Orders"
 msgstr ""
+"Худалдан авах захиалга дээр суурилсан урьдчилан үүсгэсэн ноорог нэхэмжлэлүүд"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
@@ -974,7 +1016,7 @@ msgstr "Нэхэмжлэл үүсгэх"
 #. module: purchase
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Компаний нэр үл давхцах байх ёстой !"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -990,7 +1032,7 @@ msgstr "Календар"
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
 msgid "Based on Purchase Order Lines"
-msgstr ""
+msgstr "Худалдан авах захиалгын мөрүүд дээр суурилсан"
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
@@ -1001,13 +1043,13 @@ msgstr "Татваргүй хэмжээ"
 #: code:addons/purchase/purchase.py:754
 #, python-format
 msgid "Selected UOM does not belong to the same category as the product UOM"
-msgstr ""
+msgstr "Сонгосон Х.Н нь барааны Х.Н-тэй нэг ангилал биш байна."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:907
 #, python-format
 msgid "PO: %s"
-msgstr ""
+msgstr "ХАЗ: %s"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -1016,6 +1058,9 @@ msgid ""
 "the buyer. Depending on the Invoicing control of the purchase order, the "
 "invoice is based on received or on ordered quantities."
 msgstr ""
+"Худалдан авагч худалдан авах захиалгыг батламагц нийлүүлэгчийн нэхэмжлэлийг "
+"үүсгэнэ. Нэхэмжлэлийн хяналтаас хамааран нэхэмжлэл нь хүлээн авсан эсвэл "
+"захиалсан тоо ширхэг дээр үндэслэнэ."
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -1030,7 +1075,7 @@ msgstr "Энэ нь нэхэмжлэл бүрэн төлөгдсөн эсэхи�
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Outgoing products to invoice"
-msgstr ""
+msgstr "Гарч байгаа нэхэмжлэх бараанууд"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1040,7 +1085,7 @@ msgstr "8 сар"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Ижил биш барааны цувралыг олгох гэж байна"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -1064,12 +1109,15 @@ msgid ""
 "order is 'On order'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
 msgstr ""
+"Нэхэмжлэлийн хяналт нь хэрэв 'Захиалахад' гэж сонгосон байгаа бол нэхэмжлэл "
+"автоматаар үүснэ. Мөн нягтлан нэхэмжлэлийг гараараа үүсгэх боломжтой. "
+"(Нэхэмжлэл хяналт = Гараар)."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_email_templates
 #: model:ir.ui.menu,name:purchase.menu_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "Имэйл Үлгэрүүд"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1090,7 +1138,7 @@ msgstr "Нэхэмжлэх арга"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "UoM Categories"
-msgstr ""
+msgstr "Хэмжих нэгжийн ангилал"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1100,12 +1148,12 @@ msgstr "11 сар"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Өргөтгөсөн Шүүлтүүр..."
 
 #. module: purchase
 #: view:purchase.config.wizard:0
 msgid "Invoicing Control on Purchases"
-msgstr ""
+msgstr "Худалдан авалтын захиалгуудын Нэхэмжлэлийн Хяналт"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:48
@@ -1120,11 +1168,14 @@ msgid ""
 "can import your existing partners by CSV spreadsheet from \"Import Data\" "
 "wizard"
 msgstr ""
+"Нийлүүлэгч болон тэдгээрийн холбогчдыг энэ формд гараараа оруулж үүсгэж "
+"болно. Эсвэл бэлэн байгаа нийлүүлэгчдийг CSV хүснэгтээр \"Импортлох\" "
+"менюнээс импорт хийж оруулж болно."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Pick list generated"
-msgstr ""
+msgstr "Бэлтгэх Баримт Үүсгэгдсэн"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1144,12 +1195,12 @@ msgstr "Тооцоолох"
 #. module: purchase
 #: view:stock.picking:0
 msgid "Incoming Shipments Available"
-msgstr ""
+msgstr "Байгаа Ирж буй Хүргэлтүүд"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
 msgid "Address Book"
-msgstr ""
+msgstr "Хаягийн дэвтэр"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
@@ -1165,12 +1216,12 @@ msgstr "Захиалга цуцлах"
 #: code:addons/purchase/purchase.py:411 code:addons/purchase/purchase.py:418
 #, python-format
 msgid "Unable to cancel this purchase order!"
-msgstr ""
+msgstr "Энэ худалдан авах захиалгыг цуцлах боломжгүй !"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
-msgstr ""
+msgstr "Ирж байгаа бараануудыг хянахаар бэлтгэх жагсаалт үүсгэгдэв."
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -1189,7 +1240,7 @@ msgstr "Хянах самбар"
 #. module: purchase
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Код компаний хэмжээнд үл давхцах байх ёстой!"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,price_standard:0
@@ -1199,7 +1250,7 @@ msgstr "Барааны утга"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
 msgid "Partner Categories"
-msgstr ""
+msgstr "Харилцагчийн ангилал"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -1219,6 +1270,13 @@ msgid ""
 "Based on generated invoice: create a draft invoice you can validate later.\n"
 "Based on receptions: let you create an invoice when receptions are validated."
 msgstr ""
+"Худалдан Авах Захиалгын Мөрүүдэд суурилсан: Мөрүүдэд тухайлсан 'Нэхэмжлэх "
+"Хяналт>Х.А.З-н мөрүүдэд суурилсан' нэхэмжлэлийн хяналтыг тохируулж мөрүүдийг "
+"хэсэгчлэн сонгож нэхэмжлэл үүсгэх боломжтой.\n"
+"Үүссэн нэхэмжлэл дээр суурилсан: Ноорог нэхэмжлэл үүсгээд дараа нь шалгах "
+"боломжтой.\n"
+"Хүлээн авалт дээр суурилсан: Хүлээн авалт шалгагдахад нэхэмжлэлийг үүсгэх "
+"боломжийг олгодог."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
@@ -1234,7 +1292,7 @@ msgstr "Үнийн санал"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Бараа ангиллаар"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,delay:0
@@ -1249,7 +1307,7 @@ msgstr "Энэ худалдан авах захиалгыг үүсгэсэн и�
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are not approved yet."
-msgstr ""
+msgstr "Хараахан батлагдаагүй худалдан авах захиалгууд"
 
 #. module: purchase
 #: help:purchase.order,state:0
@@ -1311,7 +1369,7 @@ msgstr "Ерөнхий мэдээлэл"
 
 #. module: purchase
 #: view:purchase.order:0
-msgid "Not invoiced"
+msgid "Not Invoiced"
 msgstr ""
 
 #. module: purchase
@@ -1373,7 +1431,7 @@ msgstr "Худалдан авалтын захиалга"
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Захиалгын код компанийн хэмжээнд үл давхцах байх ёстой!"
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -1414,7 +1472,7 @@ msgstr "Утас :"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Order of Month"
-msgstr ""
+msgstr "Сарын захиалга"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1429,7 +1487,7 @@ msgstr "Худалдан авалтын захиалга хайх"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_config
 msgid "Set the Default Invoicing Control Method"
-msgstr ""
+msgstr "Нэхэмжлэл Хянах Аргын анхны утгыг тохируулна"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
@@ -1450,17 +1508,17 @@ msgstr "Зөвшөөрсөн огноо"
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
-msgstr ""
+msgstr "Нийлүүлэгчийн магадлагааг хүлээж буй"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "Based on draft invoices"
-msgstr ""
+msgstr "Ноорог нэхэмжлэлүүд дээр суурилсан"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery & Invoicing"
-msgstr ""
+msgstr "Хүргэлт болон Нэхэмжлэл"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:772
@@ -1469,6 +1527,8 @@ msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
 "purchase less."
 msgstr ""
+"Сонгосон нийлүүлэгч нь хамгийн бага тоо хэмжээ нь %s %s тохируулагдсан "
+"байна. Үүнээс цөөнөөр худалдан авч болохгүй."
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -1497,7 +1557,7 @@ msgstr "Тайлбар"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Order of Year"
-msgstr ""
+msgstr "Жилийн захиалга"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1507,7 +1567,7 @@ msgstr "Товлосон хүргэх хаяг"
 #. module: purchase
 #: view:stock.picking:0
 msgid "Journal"
-msgstr ""
+msgstr "Журнал"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
@@ -1527,6 +1587,10 @@ msgid ""
 "suppliers. You can track all your interactions with them through the History "
 "tab: emails, orders, meetings, etc."
 msgstr ""
+"Нийлүүлэгчийн түүхийг хөтлөж түүнийгээ харж нийлүүлэгчтэйгээ сайхан "
+"харилцааг үүсгэх хэрэгтэй. Нийлүүлэгчтэй үүсж байгаа бүх л харилцааг Түүх "
+"гэсэн хавтаст хөтлөж болно. Тухайлбал: имэйлүүд, захиалгууд, уулзалтууд гэх "
+"мэт"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1536,7 +1600,7 @@ msgstr "Хүргэлт"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in done state."
-msgstr ""
+msgstr "Хийгдсэн төлөвт биш байгаа худалдан авах захиалгууд"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
@@ -1561,7 +1625,7 @@ msgstr "Хаяг"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Х.Н-н код"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
@@ -1571,7 +1635,7 @@ msgstr "Урьдчилсан захиалга"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders that include lines not invoiced."
-msgstr ""
+msgstr "Нэхэмжлэгдээгүй мөр агуулж байгаа худалдан авах захиалгууд"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1581,7 +1645,7 @@ msgstr "Татваргүй дүн"
 #. module: purchase
 #: view:stock.picking:0
 msgid "Picking to Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх бэлтгэх баримтууд"
 
 #. module: purchase
 #: view:purchase.config.wizard:0
@@ -1589,6 +1653,7 @@ msgid ""
 "This tool will help you to select the method you want to use to control "
 "supplier invoices."
 msgstr ""
+"Энэ багаж нь нийлүүлэгчийн нэхэмжлэлийг хянах аргыг сонгоход тусалдаг."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -1596,6 +1661,9 @@ msgid ""
 "In case there is no supplier for this product, the buyer can fill the form "
 "manually and confirm it. The RFQ becomes a confirmed Purchase Order."
 msgstr ""
+"Хэрэв бараанд нийлүүлэгч байхгүй байвал худалдан авагч нь формыг гараараа "
+"бөглөж батлаж болно. Үнийн саналын хүсэлт нь батлагдсан худалдан авах "
+"захиалга болж хувирна."
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1632,6 +1700,9 @@ msgid ""
 "receptions\", you can track here all the product receptions and create "
 "invoices for those receptions."
 msgstr ""
+"Худалдан авах захиалгын нэхэмжлэлийн хяналтыг \"Хүлээн авалт дээр "
+"суурилсан\" гэж сонгосон бол энд та бүх хүлээн авалтыг хянаж, нэхэмжлэлийг "
+"үүсгэх ажлыг хийнэ."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1663,6 +1734,16 @@ msgid ""
 "\n"
 " "
 msgstr ""
+" Анхаарах зүйлс: \n"
+" \n"
+" Зөвхөн дараах нөхцөл биелж байгаа тохиолдолд нэхэмжлэлүүд нэгтгэгдэнэ: \n"
+" * Худалдан авах захиалга ноорог төлөвтэй байх \n"
+" * Худалдан авах захиалга нь ижил нийлүүлэгчид харъяалагдаж байх\n"
+" * Худалдан авах захиалга нь ижил хадгалах байрлал, үнийн жагсаалттай байх\n"
+" \n"
+"Мөрүүд нэгтгэгдэх зайлшгүй нөхцөл: \n"
+" * Мөрүүд нь тоо хэмжээ,  хэмжих нэгжээс бусад нь ижил байх \n"
+" "
 
 #. module: purchase
 #: field:purchase.report,negociation:0
@@ -1672,7 +1753,7 @@ msgstr "Худалдан авалтын стандарт үнэ"
 #. module: purchase
 #: field:purchase.config.wizard,default_method:0
 msgid "Default Invoicing Control Method"
-msgstr ""
+msgstr "Нэхэмжлэл Хянах Аргын анхны утга"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
@@ -1688,7 +1769,7 @@ msgstr "Нэхэмжлэх арга"
 #. module: purchase
 #: view:stock.picking:0
 msgid "Back Orders"
-msgstr ""
+msgstr "Буцаалтын Захиалгууд"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
@@ -1739,12 +1820,12 @@ msgstr "Нийт"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
 msgid "Pricelist Versions"
-msgstr ""
+msgstr "Үнийн хувилбар"
 
 #. module: purchase
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Алдаа ! Тойрч холбогдсон гишүүдийг үүсгэх боломжгүй."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:359
@@ -1755,7 +1836,7 @@ msgstr "Энэ бараанд зарлагын данс алга:\"%s\" (id:%d)"
 
 #. module: purchase
 #: view:purchase.order.group:0
-msgid "Are you sure you want to merge these orders ?"
+msgid "Are you sure you want to merge these orders?"
 msgstr "Эдгээр захиалгыг нэгтгэх үү ?"
 
 #. module: purchase
@@ -1770,6 +1851,8 @@ msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Худалдан авах формд үнийн жагсаалт эсвэл нийлүүлэгчийг сонгох ёстой !\n"
+"Бараа сонгохоосоо өмнө аль нэгийг нь сонго."
 
 #. module: purchase
 #: model:email.template,body_text:purchase.email_template_edi_purchase
@@ -1827,11 +1910,62 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"Сайн байна уу ${object.partner_address_id.name and ' ' or "
+"''}${object.partner_address_id.name or ''},\n"
+"\n"
+"Худалдан авах захиалгын магадлагаа. Илгээгч: ${object.company_id.name}:\n"
+"       | Захиалгын дугаар: *${object.name}*\n"
+"       | Захиалгын дүн: *${object.amount_total} "
+"${object.pricelist_id.currency_id.name}*\n"
+"       | Захиалгын огноо: ${object.date_order}\n"
+"       % if object.origin:\n"
+"       | Захиалгын сурвалж: ${object.origin}\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       | Таны сурвалж: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       | Танай холбогч хаяг: ${object.validator.name} "
+"${object.validator.user_email and '<%s>'%(object.validator.user_email) or "
+"''}\n"
+"\n"
+"Дараах холбоосоор өөрийн захиалгын магадлагааг харж болно:\n"
+"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+"\n"
+"Хэрвээ ямарваа асуулт байвал бидэнтэй холбогдоно уу.\n"
+"\n"
+"Баярлалаа!\n"
+"\n"
+"\n"
+"--\n"
+"${object.validator.name} ${object.validator.user_email and "
+"'<%s>'%(object.validator.user_email) or ''}\n"
+"${object.company_id.name}\n"
+"% if object.company_id.street:\n"
+"${object.company_id.street or ''}\n"
+"% endif\n"
+"% if object.company_id.street2:\n"
+"${object.company_id.street2}\n"
+"% endif\n"
+"% if object.company_id.city or object.company_id.zip:\n"
+"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+"% endif\n"
+"% if object.company_id.country_id:\n"
+"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+"or ''} ${object.company_id.country_id.name or ''}\n"
+"% endif\n"
+"% if object.company_id.phone:\n"
+"Phone: ${object.company_id.phone}\n"
+"% endif\n"
+"% if object.company_id.website:\n"
+"${object.company_id.website or ''}\n"
+"% endif\n"
+"            "
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in draft state"
-msgstr ""
+msgstr "Ноорог төлөвтэй худалдан авах захиалгууд"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1841,17 +1975,17 @@ msgstr "5 сар"
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
 msgid "Manager"
-msgstr ""
+msgstr "Менежер"
 
 #. module: purchase
 #: view:purchase.config.wizard:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Order in current year"
-msgstr ""
+msgstr "Энэ жилийн захиалга"
 
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
@@ -1868,7 +2002,7 @@ msgstr "Жил"
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr ""
+msgstr "Худалдан авах захиалгын мөрүүд дээр суурилсан"
 
 #. module: purchase
 #: model:ir.actions.todo.category,name:purchase.category_purchase_config
@@ -1976,6 +2110,9 @@ msgstr "Худалдан авалт"
 
 #~ msgid "Approved Purchase"
 #~ msgstr "Зөвшөөрөгдсөн худалдан авалт"
+
+#~ msgid "Are you sure you want to merge these orders ?"
+#~ msgstr "Эдгээр захиалгыг нэгтгэх үү ?"
 
 #~ msgid "From Picking"
 #~ msgstr "Түүврээс"
@@ -2107,6 +2244,9 @@ msgstr "Худалдан авалт"
 #~ "Та худалдан авалтын захиалгын мөргүйгээр худалдан авалтын захиалгыг баталж "
 #~ "чадахгүй."
 
+#~ msgid "Do you want to generate the supplier invoices ?"
+#~ msgstr "Та нийлүүлэгчийн нэхэмжлэл үүсгэхийг хүсч байна уу ?"
+
 #~ msgid "Current purchases"
 #~ msgstr "Өнөөгийн худалдан авалт"
 
@@ -2192,3 +2332,6 @@ msgstr "Худалдан авалт"
 #~ "үүсгэнэ.\n"
 #~ "Гараа: худалдан авалтын захиалгын нэхэмжлэлийг нийлүүлэгчтэй тохиролцон "
 #~ "гараар үүсгэх боломжтой."
+
+#~ msgid "Not invoiced"
+#~ msgstr "Нэхэмжлэгдээгүй"

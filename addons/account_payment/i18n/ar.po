@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:33+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:20+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled date if fixed"
-msgstr "تاريخ مجدول اذا تم تثبيته"
+msgstr "تاريخ مقرر اذا تم تثبيته"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -29,7 +29,7 @@ msgstr "عملة الشريك"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Set to draft"
-msgstr "وضعه كمسودة"
+msgstr "تعيين كمسودة"
 
 #. module: account_payment
 #: help:payment.order,mode:0
@@ -61,6 +61,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"عندما يكون الامر محل الحالة هي ‘سحب‘.\n"
+"عندما ي}كد البنك الحالة المعينة الى ‘تأكيد‘.\n"
+"عندما يكون الامر مدفوع الحالة تكون ‘تم‘."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -86,7 +89,7 @@ msgstr "تاريخ مفضل"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "محاسبة / مدفوعات"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -166,7 +169,7 @@ msgstr "يجب أن يكون اسم خط الدفع فريداً !"
 #. module: account_payment
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "خطأ في إتصال قاعدة البيانات"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -180,6 +183,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"تاريخ قيد اليومية غير معرف الفترة! يجب تغيير التاريخ أو إزالة هذا الشرط من "
+"اليومية."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -357,6 +362,8 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"الحساب المحدد لقيد اليومية يجبرك علي توفير عملة ثانوية. يجب إزالة العملة "
+"الثانوية على الحساب أو تحديد طريقة عرض العملات في اليومية."
 
 #. module: account_payment
 #: report:payment.order:0
@@ -460,7 +467,7 @@ msgstr "عناصر اليومية"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "لا يمكنك إنشاء عناصري يومية علي حساب من نوع ’عرض’."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -533,7 +540,7 @@ msgstr "مرجع الفاتورة"
 #. module: account_payment
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "رقم الفاتورة يجب أن يكون فريداً داخل المشأة !"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -578,7 +585,7 @@ msgstr "إلغاء"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "أصل حساب البنك"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -589,7 +596,7 @@ msgstr "معلومات"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "لشركة يجب أن تكون هي نفسها لحساباتها و فترتها."
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -705,7 +712,7 @@ msgstr "أمر"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "لا يمنك إنشاء عناصر يومية في حساب مغلق."
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -744,3 +751,19 @@ msgstr "حساب المصرف لنظام الدفع"
 
 #~ msgid "Destination Bank account"
 #~ msgstr "حساب وجهة المصرف"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "لا يمكن انشاء خط متحرك على حساب العرض."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module provides :\n"
+#~ "* a more efficient way to manage invoice payment.\n"
+#~ "* a basic mechanism to easily plug various automated payment.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "تعطي هذه الوحدة :\n"
+#~ "* كفاءة اكثر لطريقة ادارة دفع الفاتورة.\n"
+#~ "*آلية اساسية لسد الدفع الالي المتنوع بسهولة.\n"
+#~ "    "

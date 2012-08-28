@@ -7,25 +7,25 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2010-12-09 09:33+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-05-31 15:05+0000\n"
+"Last-Translator: Marcelo Almeida <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:19+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr ""
+msgstr "Receita por hora (real)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr ""
-"Processado com a fórmula: Preço Máximo da Factura - Montante Facturado."
+"Calculado utilizando a fórmula: Valor Máximo da Fatura - Valor da Fatura"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -38,11 +38,13 @@ msgid ""
 "The contracts to be renewed because the deadline is passed or the working "
 "hours are higher than the allocated hours"
 msgstr ""
+"Os contratos a serem renovados, porque o prazo é passado ou as horas de "
+"trabalho são maiores do que as horas atribuídas"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending contracts to renew with your customer"
-msgstr ""
+msgstr "Contratos pendentes de renovação com o seu cliente"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -50,31 +52,33 @@ msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
 msgstr ""
+"Número de tempo (horas ou dias) (de Diário do  tipo 'geral') que podem ser "
+"faturados, se fatura com base na conta analítica"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Analytic Accounts with a past deadline in one month."
-msgstr ""
+msgstr "Contas Analíticas com um prazo limite ultrapassando um mês."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupo por..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End Date"
-msgstr ""
+msgstr "Data final"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "Criar Fatura"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr "Data da última factura"
+msgstr "Data da última fatura"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -87,16 +91,18 @@ msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
 msgstr ""
+"Número de tempo que gastou na conta analítica (da folha de horas). Ele "
+"calcula quantidades em todos os Diários do tipo 'geral'."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts in progress"
-msgstr ""
+msgstr "Contractos em progresso"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
 msgid "Overdue Quantity"
-msgstr ""
+msgstr "Quantidade em atraso"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -108,6 +114,12 @@ msgid ""
 "pending accounts and reopen or close the according to the negotiation with "
 "the customer."
 msgstr ""
+"Vai encontrar aqui os contratos a serem renovados, porque o prazo é passado "
+"ou as horas de trabalho são maiores do que as horas atribuídas. OpenERP "
+"define automaticamente essas contas analíticas para o estado pendente, a fim "
+"de emitir um aviso durante a gravação da folha de horas. Vendedores devem "
+"rever todas as contas pendentes e reabrir ou fechar o acordo com a "
+"negociação com o cliente."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -117,7 +129,7 @@ msgstr "Retorno Teórico"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr ""
+msgstr "Tempo não faturado"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -125,13 +137,13 @@ msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
 msgstr ""
-"Se facturado dos custos, esta é a data do último trabalho ou dos custos que "
-"foram facturados."
+"Se faturado dos custos, esta é a data do último trabalho ou dos custos que "
+"foram faturados."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Renew"
-msgstr ""
+msgstr "Para renovar"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -141,24 +153,26 @@ msgstr "Data do Último Custo/Trabalho"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr ""
+msgstr "Tempo faturado"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid ""
 "A contract in OpenERP is an analytic account having a partner set on it."
 msgstr ""
+"Um contrato em OpenERP é um relato analítico a ter num conjunto parceiro "
+"sobre ele."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Time"
-msgstr ""
+msgstr "Tempo Restante"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "Contratos para renovar"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -168,7 +182,7 @@ msgstr "Margem Teórica"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid " +1 Month"
-msgstr ""
+msgstr " +1 mês"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -177,29 +191,29 @@ msgid ""
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
 msgstr ""
-"Baseado nos custos que teve no projecto, qual é que seria o rendimento se "
-"todos estes custos fossem facturados ao preço normal da venda fornecidos "
-"pela tabela de preço."
+"Baseado nos custos que teve no projeto, qual é que seria o rendimento se "
+"todos estes custos fossem faturados ao preço normal da venda fornecidos pela "
+"tabela de preço."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr ""
+msgstr "Pendente"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr "Montante não Facturado"
+msgstr "Montante não Faturado"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr "Processado ao utilizar a fórmula: Montante Facturado - Custo Total."
+msgstr "Processado ao utilizar a fórmula: Montante Faturado - Custo Total."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Parent"
-msgstr ""
+msgstr "Ascendente"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -221,17 +235,17 @@ msgstr "Resumo de horas por utilizador"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr "Montante Facturado"
+msgstr "Montante Faturado"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr "Data do Último Custo Facturado"
+msgstr "Data do Último Custo Faturado"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contract"
-msgstr ""
+msgstr "Contrato"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -246,7 +260,7 @@ msgstr "Margem Real"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr "Montante da facturação total do cliente para esta conta"
+msgstr "Montante da faturação total do cliente para esta conta"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
@@ -266,7 +280,7 @@ msgstr "Receita Restante"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Time"
-msgstr ""
+msgstr "Cálculo utilizando a fórmula: Tempo máximo - Tempo Total"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -274,6 +288,8 @@ msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
 msgstr ""
+"Número de tempo (horas ou dias) que pode ser faturado mais aqueles que já "
+"tenham sido faturados."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -281,13 +297,13 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
-"Se facturado a partir da conta analítica, o montante restante que pode "
-"facturar ao cliente baseado nos custos totais."
+"Se faturado a partir da conta analítica, o montante restante que pode "
+"faturar ao cliente baseado nos custos totais."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr ""
+msgstr "Calculado através da fórmula: Valor faturado / Tempo Total"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -312,38 +328,38 @@ msgstr "Conta Analítica"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
 msgid "Contracts"
-msgstr ""
+msgstr "Contractos"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Manager"
-msgstr ""
+msgstr "Gestor"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "All Uninvoiced Entries"
-msgstr "Todas os Movimentos não Facturados"
+msgstr "Todos os Movimentos não Faturados"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "If invoice from the costs, this is the date of the latest invoiced."
-msgstr ""
+msgstr "Se for fatura dos custos, esta é a data da última faturada."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "Parceiro associado"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Open"
-msgstr ""
+msgstr "Abrir"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts that are not assigned to an account manager."
-msgstr ""
+msgstr "Contratos que não são atribuídos a um gestor de conta."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -358,17 +374,11 @@ msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
-"Total de custos para esta conta. Que inclui custos reais (das facturas) e "
+"Total de custos para esta conta. Que inclui custos reais (das faturas) e "
 "custos indirectos, como o tempo gasto em folha de horas."
 
 #~ msgid "Invoicing"
 #~ msgstr "Facturação"
-
-#~ msgid ""
-#~ "Number of hours that can be invoiced plus those that already have been "
-#~ "invoiced."
-#~ msgstr ""
-#~ "Número de horas que podem ser facturadas mais as que já foram facturadas."
 
 #~ msgid "Hours summary by user"
 #~ msgstr "Resumo de horas por utilizador"
@@ -506,6 +516,14 @@ msgstr ""
 #~ "por utilizador bem como por mês.\n"
 
 #~ msgid ""
+#~ "Number of hours that can be invoiced plus those that already have been "
+#~ "invoiced."
+#~ msgstr ""
+#~ "Número de horas que podem ser facturadas mais aquelas que já tenham sido "
+#~ "facturadas."
+
+#~ msgid ""
 #~ "Error! The currency has to be the same as the currency of the selected "
 #~ "company"
-#~ msgstr "Erro! A divisa tem que ser a mesma que a da empresa seleccionada"
+#~ msgstr ""
+#~ "Erro! A divisa tem que ser a mesma que a divisa da empresa seleccionada"
