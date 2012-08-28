@@ -23,9 +23,7 @@
 import base64
 import re
 import threading
-
 from tools.safe_eval import safe_eval as eval
-
 import tools
 import openerp.modules
 from osv import fields, osv
@@ -258,18 +256,15 @@ class ir_ui_menu(osv.osv):
         return res
 
     def _get_needaction(self, cr, uid, ids, field_names, args, context=None):
-        if context is None:
-            context = {}
         res = {}
         for menu in self.browse(cr, uid, ids, context=context):
-            res[menu.id] = {}
-            res[menu.id]['needaction_enabled'] = False
-            res[menu.id]['needaction_counter'] = False
-            res[menu.id] = {}
+            res[menu.id] = {
+                'needaction_enabled': False,
+                'needaction_counter': False,
+            }
             if menu.action and menu.action.type in ('ir.actions.act_window','ir.actions.client') and menu.action.res_model:
                 obj = self.pool.get(menu.action.res_model)
                 if obj._needaction:
-                    dom = []
                     if menu.action.type=='ir.actions.act_window':
                         dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
                     else:
