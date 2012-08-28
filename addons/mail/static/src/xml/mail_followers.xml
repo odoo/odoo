@@ -40,7 +40,8 @@
                     <a t-attf-href="#model=mail.message.subtype&amp;id=#{record.id}"><t t-raw="record.name"/></a>
                 </td>
                 <td width="10%">
-                    <input type="checkbox" t-att-id="record.id" t-att-name="record.name" class="oe_msg_subtype_check"/>
+                    <t t-if ="record.default"><input type="checkbox" t-att-id="record.id" t-att-name="record.name"  checked="" class="oe_msg_subtype_check" disabled="disabled"/></t>
+                    <t t-if ="! record.default"><input type="checkbox" t-att-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/></t>
                 </td>
             </tr>
         </table>
