@@ -338,12 +338,25 @@ class test_mail(common.TransactionCase):
 
         # Second try: read with thread_level 1
         res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1)
-        # print res
+        # print '----'
+        # self.mail_message._debug_print_tree(res)
+        # print '----'
+
         self.assertTrue(len(res) == 2, 'Incorrect number of child in message_read')
         self.assertTrue(len(res[0]['child_ids']) == 2, 'Incorrect number of child in message_read')
         self.assertTrue(len(res[0]['child_ids'][0]['child_ids']) == 1, 'Incorrect number of child in message_read')
         # trees = self.mail_message.message_read_tree_flatten_main(cr, uid, res, thread_level=0)
-        # print trees
+        # print '----'
+        # self.mail_message._debug_print_tree(trees)
+        # print '----'
+
+        res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1)
+        # trees = self.mail_message.message_read_tree_flatten_main(cr, uid, res, thread_level=1)
+        # print '----'
+        # self.mail_message._debug_print_tree(trees)
+        # print '----'
+
+        self.assertTrue(len(res) == 3, 'Incorrect number of child in message_read')
 
     def test_40_needaction(self):
         """ Tests for mail.message needaction. """

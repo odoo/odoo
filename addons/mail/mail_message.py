@@ -173,12 +173,6 @@ class mail_message(osv.Model):
             'child_ids': [],
         }
 
-    def _debug_print_tree(self, tree, prefix=''):
-        for elem in tree:
-            print '%s%s' % (prefix, elem['id'])
-            if elem['child_ids']:
-                self._debug_print_tree(elem['child_ids'], prefix+'-')
-
     def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, limit=None, context=None):
         """ 
             If IDS are provided, fetch these records, otherwise use the domain to
@@ -208,9 +202,10 @@ class mail_message(osv.Model):
                             record_parent = tree[msg.parent_id.id]
                         else:
                             record_parent = self._message_dict_get(cr, uid, msg.parent_id, context=context)
-                            if msg.parent_id.parent_id and msg.parent_id.id not in tree:
+                            if msg.parent_id.parent_id:
                                 tree[msg.parent_id.id] = record_parent
-                        record_parent['child_ids'].append(record)
+                        if record['id'] not in [x['id'] for x in record_parent['child_ids']]:
+                            record_parent['child_ids'].append(record)
                         record = record_parent
                         msg = msg.parent_id
                 if msg.id not in tree:
@@ -224,8 +219,6 @@ class mail_message(osv.Model):
                     'thread_level': thread_level  # should be improve accodting to level of records
                 })
                 break
-        # TDE temp: debug print
-        # self._debug_print_tree(result)
         return result
 
 
@@ -338,6 +331,6 @@ class mail_notification(osv.Model):
     def set_message_read(self, cr, uid, msg_id, context=None):
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         notif_ids = self.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', '=', msg_id)], context=context)
-        return self.write(cr, uid, notif_ids, {'read': True})
+        return self.write(cr, uid, notif_ids, {'read': True}, context=context)
 
 
