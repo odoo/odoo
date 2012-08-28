@@ -33,8 +33,6 @@ import time
 
 _logger = logging.getLogger(__name__)
 
-LIMIT = 20
-
 LANG_CODE_MAPPING = {
     'ar_SA': ('ar', 'Arabic'),
     'id_ID': ('id', 'Indonesian'),
@@ -60,11 +58,12 @@ LANG_CODE_MAPPING = {
 CRON_VALS = {
     'name': 'Gengo Sync',
     'active': True,
-    'interval_number': 30,
+    'interval_number': 20,
     'interval_type': 'minutes',
     'numbercall': -1,
     'model': "'base.update.translations'",
-    'function': ""
+    'function': "",
+    'args': "'(20,)'",
 }
 
 
@@ -190,7 +189,7 @@ class base_update_translation(osv.osv_memory):
                         _logger.info('Translation request for language `%s` has been queued successfully.', lang_name)
                     self.do_check_schedular(cr, uid, 'gengo_sync_send_request_scheduler', 'Gengo Sync Translation (Request)', '_sync_request', context)
                     self.do_check_schedular(cr, uid, 'gengo_sync_receive_request_scheduler', 'Gengo Sync Translation (Response)', '_sync_response', context)
-                    self._sync_request(cr, uid, ids, context)
+                    self._sync_request(cr, uid, limit=20)
                 except:
                     msg +='  - The Language `%s` is not supported by Gengo Traditional Service.'%(lang_name)
 
@@ -208,18 +207,19 @@ class base_update_translation(osv.osv_memory):
                  'context': context,
              }
 
-    def _sync_response(self, cr, uid, ids=False, context=None):
+    def _sync_response(self, cr, uid, limit=20, context=None):
         """
         This method  will be call by cron services to get translation from
         gengo for translation terms which are posted to be translated. It will
         read translated terms and comments from gengo and will update respective
-        translation in openerp """
+        translation in openerp.
+        """
         translation_pool = self.pool.get('ir.translation')
         flag, gengo = self.gengo_authentication(cr, uid, context)
         if not flag:
             _logger.warning("%s", gengo)
         else:
-            translation_id = translation_pool.search(cr, uid, [('state', '=', 'inprogress'), ('gengo_translation', '=', True)], limit=LIMIT, context=context)
+            translation_id = translation_pool.search(cr, uid, [('state', '=', 'inprogress'), ('gengo_translation', '=', True)], limit=limit, context=context)
             for term in translation_pool.browse(cr, uid, translation_id, context):
                 if term.job_id:
                     vals={}
@@ -241,9 +241,11 @@ class base_update_translation(osv.osv_memory):
                         translation_pool.write(cr, uid, term.id,vals)
         return True
 
-    def _sync_request(self, cr, uid, ids=False, context=None):
-        """This scheduler will send a job request to the gengo , which terms are
-        in translate state and gengo_translation is true"""
+    def _sync_request(self, cr, uid, limit=20, context=None):
+        """
+        This scheduler will send a job request to the gengo , which terms are
+        in translate state and gengo_translation is true
+        """
         if context is None:
             context = {}
         language_pool = self.pool.get('res.lang')
@@ -252,7 +254,7 @@ class base_update_translation(osv.osv_memory):
             lang_ids = language_pool.search(cr, uid, [('gengo_sync', '=', True)])
             langs = [lang.code for lang in language_pool.browse(cr, uid, lang_ids)]
             langs = self.check_lang_support(cr, uid, langs)
-            term_ids = translation_pool.search(cr, uid, [('state', '=', 'to_translate'), ('gengo_translation', '=', True), ('lang', 'in', langs)], limit=LIMIT)
+            term_ids = translation_pool.search(cr, uid, [('state', '=', 'to_translate'), ('gengo_translation', '=', True), ('lang', 'in', langs)], limit=limit)
             if term_ids:
                 self._send_translation_terms(cr, uid, ids, term_ids, context)
                 _logger.info("Translation terms %s has been posted to gengo successfully", len(term_ids))
