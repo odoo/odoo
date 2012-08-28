@@ -367,8 +367,7 @@ class hr_holidays(osv.osv):
     def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
         """ Add 'user_id' and 'manager' to the monitored fields """
         res = super(hr_holidays, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        # TODO: add manager
-        return res + ['user_id']
+        return res + ['user_id', 'manager_id', 'manager_id2']
         
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
