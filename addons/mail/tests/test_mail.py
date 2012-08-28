@@ -322,41 +322,66 @@ class test_mail(common.TransactionCase):
         cr, uid  = self.cr, self.uid
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
 
+        # Test message_read_tree_flatten that flattens a thread according to a given thread_level
+        import copy
+        tree = [
+            {'id': 1, 'child_ids':[
+                {'id': 3, 'child_ids': [] },
+                {'id': 4, 'child_ids': [
+                    {'id': 5, 'child_ids': []},
+                    {'id': 12, 'child_ids': []},
+                    ] },
+                {'id': 8, 'child_ids': [
+                    {'id': 10, 'child_ids': []},
+                    ] },
+                ] },
+            {'id': 2, 'child_ids': [
+                {'id': 7, 'child_ids': [
+                    {'id': 9, 'child_ids': []},
+                    ] },
+                ] },
+            {'id': 6, 'child_ids': [
+                {'id': 11, 'child_ids': [] },
+                ] },
+            ]
+        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 0)
+        # self.mail_message._debug_print_tree(new_tree)
+        # print '-------------------'
+        self.assertTrue(len(new_tree) == 12, 'Flattening wrongly produced')
+        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 1)
+        # self.mail_message._debug_print_tree(new_tree)
+        # print '-------------------'
+        self.assertTrue(len(new_tree) == 3 and len(new_tree[0]['child_ids']) == 6 and len(new_tree[1]['child_ids']) == 2 and len(new_tree[2]['child_ids']) == 1,
+            'Flattening wrongly produced')
+        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 2)
+        # self.mail_message._debug_print_tree(new_tree)
+        # print '-------------------'
+        self.assertTrue(len(new_tree) == 3 and len(new_tree[0]['child_ids']) == 3 and len(new_tree[0]['child_ids'][1]) == 2,
+            'Flattening wrongly produced')
+
         # Add a few messages to pigs group
         msgid1 = group_pigs.message_post(body='My Body', subject='1', parent_id=False)
         msgid2 = group_pigs.message_post(body='My Body', subject='1-1', parent_id=msgid1)
         msgid3 = group_pigs.message_post(body='My Body', subject='1-2', parent_id=msgid1)
         msgid4 = group_pigs.message_post(body='My Body', subject='2', parent_id=False)
         msgid5 = group_pigs.message_post(body='My Body', subject='1-1-1', parent_id=msgid2)
-        # msgid6 = group_pigs.message_post(body='My Body', subject='2-1', parent_id=msgid4)
-        # msgid7 = group_pigs.message_post(body='My Body', subject='1-3', parent_id=msgid1)
-        # msgid8 = group_pigs.message_post(body='My Body', subject='1-3-1', parent_id=msgid7)
+        msgid6 = group_pigs.message_post(body='My Body', subject='2-1', parent_id=msgid4)
 
         # First try: read flat
-        # first_try_ids = [msgid8, msgid7, msgid6, msgid5, msgid4, msgid3, msgid2, msgid1]
-        # res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=0)
+        first_try_ids = [msgid6, msgid5, msgid4, msgid3, msgid2, msgid1]
+        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=0)
+        self.assertTrue(all(elem['id'] in first_try_ids for elem in tree) and len(tree) == 6,
+            'Incorrect structure and/or number of childs in purely flat message_read')
 
         # Second try: read with thread_level 1
-        res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1)
-        # print '----'
-        # self.mail_message._debug_print_tree(res)
-        # print '----'
+        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1)
+        # self.mail_message._debug_print_tree(tree)
+        self.assertTrue(len(tree) == 2 and len(tree[1]['child_ids']) == 3, 'Incorrect number of child in message_read')
 
-        self.assertTrue(len(res) == 2, 'Incorrect number of child in message_read')
-        self.assertTrue(len(res[0]['child_ids']) == 2, 'Incorrect number of child in message_read')
-        self.assertTrue(len(res[0]['child_ids'][0]['child_ids']) == 1, 'Incorrect number of child in message_read')
-        # trees = self.mail_message.message_read_tree_flatten_main(cr, uid, res, thread_level=0)
-        # print '----'
-        # self.mail_message._debug_print_tree(trees)
-        # print '----'
-
-        res = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1)
-        # trees = self.mail_message.message_read_tree_flatten_main(cr, uid, res, thread_level=1)
-        # print '----'
-        # self.mail_message._debug_print_tree(trees)
-        # print '----'
-
-        self.assertTrue(len(res) == 3, 'Incorrect number of child in message_read')
+        # Third try: read with thread_level 2
+        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=2)
+        # self.mail_message._debug_print_tree(tree)
+        self.assertTrue(len(tree) == 2 and len(tree[1]['child_ids']) == 2 and len(tree[1]['child_ids'][0]['child_ids']) == 1, 'Incorrect number of child in message_read')
 
     def test_40_needaction(self):
         """ Tests for mail.message needaction. """
