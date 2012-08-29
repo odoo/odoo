@@ -125,7 +125,7 @@ class mail_message(osv.Model):
         'subject': fields.char('Subject'),
         'date': fields.datetime('Date'),
         'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
-        'body': fields.html('Content'),
+        'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
         'unread': fields.function(_get_unread, fnct_search=_search_unread,
             type='boolean', string='Unread',
             help='Functional field to search for unread messages linked to uid'),

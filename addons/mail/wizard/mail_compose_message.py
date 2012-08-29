@@ -241,7 +241,7 @@ class mail_compose_message(osv.TransientModel):
                 active_model = context.get('default_model', False)
                 active_model_pool = self.pool.get(active_model)
                 subject = self.render_template(cr, uid, subject, active_model, active_id)
-                body = self.render_template(cr, uid, wizard.body_html, active_model, active_id)
+                body = self.render_template(cr, uid, wizard.body, active_model, active_id)
 
                 # TODO TDE: find partner_ids
                 # if email_to: find or create a partner

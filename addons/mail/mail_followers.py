@@ -84,11 +84,20 @@ class mail_notification(osv.Model):
     def notify(self, cr, uid, partner_ids, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
         context = context or {}
+        # mail_noemail (do not send email) or no partner_ids: do not send, return
+        if context.get('mail_noemail') or not partner_ids:
+            return True
+
         mail_mail_obj = self.pool.get('mail.mail')
         msg_obj = self.pool.get('mail.message')
         msg = msg_obj.browse(cr, uid, msg_id, context=context)
 
-        towrite = self.notify_get_notif_email_dict(cr, uid, msg, context=context)
+        towrite = {
+            'mail_message_id': msg.id,
+            'email_to': [],
+            'user_signature': True,
+            'auto_delete': True,
+        }
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
             # Do not send an email to the writer
@@ -97,34 +106,14 @@ class mail_notification(osv.Model):
             # Partner does not want to receive any emails
             if partner.notification_email_send=='none' or not partner.email:
                 continue
-            # Partners want to receive only emails and comments
+            # Partner want to receive only emails and comments
             if partner.notification_email_send=='comment' and msg.type not in ('email','comment'):
                 continue
 
-            towrite['state'] = 'outgoing'
             if partner.email not in towrite['email_to']:
                 towrite['email_to'].append(partner.email)
+        towrite['email_to'] = ', '.join(towrite['email_to'])
 
-        if towrite.get('state') and not context.get('mail_noemail'):
-            towrite['message_id'] = msg.id
-            towrite['email_to'] = ', '.join(towrite['email_to'])
-            
-            email_notif_id = mail_mail_obj.create(cr, uid, towrite, context=context)
-            mail_mail_obj.send(cr, uid, [email_notif_id], context=context)
-
+        email_notif_id = mail_mail_obj.create(cr, uid, towrite, context=context)
+        mail_mail_obj.send(cr, uid, [email_notif_id], context=context)
         return True
-
-    def notify_get_notif_email_dict(self, cr, uid, msg, context=None):
-        """ Return the content of the email send for notification.
-            :param message: browse record on source mail.message
-        """
-        subject = msg.subject or '%s posted a comment on %s' % (msg.author_id.name, msg.record_name)
-        body = msg.body or ''
-        author_signature = msg.author_id.user_ids[0].signature
-        if author_signature:
-            body += '<div>%s</div>' % (author_signature)
-        return {
-            'email_to': [],
-            'subject': subject,
-            'body': body,
-        }

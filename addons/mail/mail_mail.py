@@ -26,6 +26,7 @@ import tools
 
 from osv import osv
 from osv import fields
+from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -50,29 +51,27 @@ class mail_mail(osv.Model):
         ], 'Status', readonly=True),
         'auto_delete': fields.boolean('Auto Delete',
             help="Permanently delete this email after sending it, to save space"),
+        'user_signature': fields.boolean('Add Signature',
+            help="If checked, the user's signature will be appended to the text version of the message"),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
         'email_to': fields.text('To', help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
-
-        'content_subtype': fields.char('Message content subtype', size=32,
-            oldname="subtype", readonly=1,
-            help="Type of message, usually 'html' or 'plain', used to select "\
-                  "plain-text or rich-text contents accordingly"),
-        'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML version of the message"),
     }
 
-    def _get_default_from(self, cr, uid, context={}):
+    def _get_default_from(self, cr, uid, context=None):
         cur = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if not cur.alias_domain:
-            raise osv.except_osv(_('Invalid Action!'), _('Unable to send email, set an alias domain in your server settings.'))
+            # TDE temp: impossible to install social module, because mail.group tries to send emails ...
+            # raise osv.except_osv(_('Invalid Action!'), _('Unable to send email, set an alias domain in your server settings.'))
+            pass
         return cur.alias_name + '@' + cur.alias_domain
 
     _defaults = {
         'state': 'outgoing',
-        'content_subtype': 'plain',
-        'email_from': _get_default_from
+        'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
+        'user_signature': False,
     }
 
     def mark_outgoing(self, cr, uid, ids, context=None):
@@ -144,50 +143,53 @@ class mail_mail(osv.Model):
            :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
-        self.write(cr, uid, ids, {'state': 'outgoing'}, context=context)
         for message in self.browse(cr, uid, ids, context=context):
             try:
+                body = message.body
+
+                # handle attachments
                 attachments = []
                 for attach in message.attachment_ids:
                     attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
 
-                body = message.body_html if message.content_subtype == 'html' else message.body
-                body_alternative = None
-                content_subtype_alternative = None
-                if message.content_subtype == 'html':
-                    # we have a plain text alternative prepared, pass it to 
-                    # build_message instead of letting it build one
-                    body_alternative = tools.html2plaintext(message.body)
-                    content_subtype_alternative = 'plain'
+                #  add signature if flag set
+                if message.user_signature:
+                    signature = message.author_id and message.author_id.user_ids[0].signature or ''
+                    insertion_point = body.find('</html>')
+                    body = body[:insertion_point] + signature + body[:insertion_point]
 
-                # handle destination_partners
-                partner_ids_email_to = ''
-                for partner in message.partner_ids:
-                    partner_ids_email_to += '%s ' % (partner.email or '')
-                message_email_to = '%s %s' % (partner_ids_email_to, message.email_to or '')
+                # no subject, res_id, model: '<Author> posted on <Resource>'
+                if not message.subject and message.model and message.res_id:
+                    subject = '%s posted on %s' % (message.author_id.name, message.record_name)
+                else:
+                    subject = message.subject
+
+                # use only sanitized html and set its plaintexted version as alternative
+                body_alternative = tools.html2plaintext(body)
+                content_subtype_alternative = 'plain'
 
                 # build an RFC2822 email.message.Message object and send it
                 # without queuing
                 msg = ir_mail_server.build_email(
-                    email_from=message.email_from,
-                    email_to=tools.email_split(message_email_to),
-                    subject=message.subject,
-                    body=body,
-                    body_alternative=body_alternative,
-                    email_cc=tools.email_split(message.email_cc),
-                    reply_to=message.reply_to,
-                    attachments=attachments, message_id=message.message_id,
+                    subject = subject,
+                    body = body,
+                    body_alternative = body_alternative,
+                    email_from = message.email_from,
+                    email_to = tools.email_split(message.email_to),
+                    email_cc = tools.email_split(message.email_cc),
+                    reply_to = message.reply_to,
+                    attachments = attachments,
+                    message_id = message.message_id,
                     references = message.references,
-                    object_id=message.res_id and ('%s-%s' % (message.res_id,message.model)),
-                    subtype=message.content_subtype,
-                    subtype_alternative=content_subtype_alternative)
+                    object_id = message.res_id and ('%s-%s' % (message.res_id,message.model)),
+                    subtype = 'html',
+                    subtype_alternative = content_subtype_alternative)
                 res = ir_mail_server.send_email(cr, uid, msg,
-                                                mail_server_id=message.mail_server_id.id,
-                                                context=context)
+                    mail_server_id=message.mail_server_id.id, context=context)
                 if res:
-                    message.write({'state':'sent', 'message_id': res, 'email_to': message_email_to})
+                    message.write({'state':'sent', 'message_id': res})
                 else:
-                    message.write({'state':'exception', 'email_to': message_email_to})
+                    message.write({'state':'exception'})
                 message.refresh()
                 if message.state == 'sent':
                     self._postprocess_sent_message(cr, uid, message, context=context)
@@ -198,4 +200,3 @@ class mail_mail(osv.Model):
             if auto_commit == True:
                 cr.commit()
         return True
-
