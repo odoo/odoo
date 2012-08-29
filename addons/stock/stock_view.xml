@@ -970,7 +970,7 @@
         
         <record id="view_picking_out_tree" model="ir.ui.view">
             <field name="name">stock.picking.out.tree</field>
-            <field name="model">stock.picking</field>
+            <field name="model">stock.picking.out</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
                     <field name="name"/>
