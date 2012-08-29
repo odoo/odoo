@@ -30,7 +30,7 @@
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
                     <field name="amount_to_pay"/>
-                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                    <field name="amount_currency"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="period_id" invisible="1"/>
                 </tree>
@@ -131,10 +131,10 @@
                                         <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
                                         <separator colspan="4" string="Transaction Information"/>
                                         <field name="date"/>
-                                        <label for="amount_currency" groups="base.group_multi_currency"/>
-                                        <div groups="base.group_multi_currency">
+                                        <label for="amount_currency"/>
+                                        <div>
                                             <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
-                                            <field name="currency" nolabel="1" class="oe_inline"/>
+                                            <field name="currency" nolabel="1" class="oe_inline" groups="base.group_multi_currency"/>
                                         </div>
                                         <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)"/>
                                         <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
@@ -171,7 +171,7 @@
                             <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                             <field name="ml_maturity_date"/>
                             <field name="date"/>
-                            <field name="amount_currency" string="Amount" groups="base.group_multi_currency"/>
+                            <field name="amount_currency" string="Amount"/>
                             <field name="currency" groups="base.group_multi_currency"/>
                             <field name="name"/>
                             <field name="amount" sum="Total in Company Currency" invisible="1"/>
@@ -257,10 +257,10 @@
                                 <field name="move_line_id" on_change="onchange_move_line(move_line_id, False, currency, company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)]"/>
                                 <separator colspan="4" string="Transaction Information"/>
                                 <field name="date"/>
-                                <label for="amount_currency" groups="base.group_multi_currency"/>
-                                <div groups="base.group_multi_currency">
+                                <label for="amount_currency"/>
+                                <div>
                                     <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
-                                    <field name="currency" class="oe_inline"/>
+                                    <field name="currency" class="oe_inline" groups="base.group_multi_currency"/>
                                 </div>
                                 <field name="partner_id" on_change="onchange_partner(partner_id, False)"/>
                                 <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
@@ -302,7 +302,7 @@
                     <field name="partner_id"/>
                     <field name="communication"/>
                     <field name="amount" sum="Amount Total"/>
-                    <field name="amount_currency" sum="Currency Amount Total" groups="base.group_multi_currency"/>
+                    <field name="amount_currency" sum="Currency Amount Total"/>
                     <field name="currency" groups="base.group_multi_currency"/>
                     <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                     <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode)"/>

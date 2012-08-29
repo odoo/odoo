@@ -1066,7 +1066,7 @@
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
-                    <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
+                    <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}"/>
                     <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
                     <field name="reconcile_partial_id"/>
                     <field name="reconcile_id"/>
@@ -1118,8 +1118,8 @@
 	                                    <field name="tax_amount"/>
 	                                    <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
 	                                </group>
-	                                <group attrs="{'readonly':[('state','=','valid')]}" string="Currency" groups="base.group_multi_currency">
-	                                    <field name="currency_id"/>
+	                                <group attrs="{'readonly':[('state','=','valid')]}" string="Currency">
+	                                    <field name="currency_id" groups="base.group_multi_currency"/>
 	                                    <field name="amount_currency"/>
 	                                </group>
 	                                <group string="Reconciliation">
@@ -1167,7 +1167,7 @@
 
                                 <separator colspan="4" string="Optional Information"/>
                                 <field name="currency_id" groups="base.group_multi_currency"/>
-                                <field name="amount_currency" groups="base.group_multi_currency"/>
+                                <field name="amount_currency"/>
                                 <field name="quantity"/>
                                 <field name="move_id" required="False"/>
                                 <newline/>
@@ -1394,8 +1394,8 @@
                                                     <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                                                 </group>
 
-                                                <group string="Currency" groups="base.group_multi_currency">
-                                                    <field name="currency_id"/>
+                                                <group string="Currency">
+                                                    <field name="currency_id" groups="base.group_multi_currency"/>
                                                     <field name="amount_currency"/>
                                                 </group>
 
@@ -1431,7 +1431,7 @@
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
                                     <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
-                                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                                    <field name="amount_currency"/>
                                     <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="tax_code_id"/>
                                     <field name="tax_amount"/>

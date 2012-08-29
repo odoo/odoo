@@ -20,7 +20,7 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <group expand="0" string="Group By...">
                     <filter string="Bank Account" icon="terp-folder-yellow" domain="[]" context="{'group_by':'bank_id'}"/>
-                    <filter string="Currency" icon="terp-dolar" domain="[]" context="{'group_by':'currency'}"/>
+                    <filter string="Currency" icon="terp-dolar" domain="[]" context="{'group_by':'currency'}" groups="base.group_multi_currency"/>
                 </group>
             </search>
         </field>
