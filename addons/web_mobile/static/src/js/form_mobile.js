@@ -4,7 +4,7 @@
 
 openerp.web_mobile.form_mobile = function (instance) {
 
-instance.web_mobile.FormView = instance.web.OldWidget.extend({
+instance.web_mobile.FormView = instance.web_mobile.MobileWidget.extend({
 
     template: 'FormView',
 
@@ -48,12 +48,12 @@ instance.web_mobile.FormView = instance.web.OldWidget.extend({
             }
         }
         self.hidden_fields(get_fields,fields);
-        self.$element.html(self.render({'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : values ,'temp_flag':'1'}));
-        self.$element.find("[data-role=header]").find('h1').html(self.head_title);
-        self.$element.find("[data-role=header]").find('#home').click(function(){
+        self.$el.html(self.render({'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : values ,'temp_flag':'1'}));
+        self.$el.find("[data-role=header]").find('h1').html(self.head_title);
+        self.$el.find("[data-role=header]").find('#home').click(function(){
             $.mobile.changePage("#oe_menu", "slide", false, true);
         });
-        self.$element.find('[data-role=collapsible-set]').find('[data-role=collapsible]').each(function(i){
+        self.$el.find('[data-role=collapsible-set]').find('[data-role=collapsible]').each(function(i){
             for (var k = 0; k < notebooks.children.length; k++) {
                 if (notebooks.children[k].attrs.string == $(this).attr('id')) {
                     get_fields_notebook = self.get_fields(notebooks.children[k].children);
@@ -62,7 +62,7 @@ instance.web_mobile.FormView = instance.web.OldWidget.extend({
                 }
             }
         });
-        self.$element.find('#o2m_m2m').click(function(ev) {
+        self.$el.find('#o2m_m2m').click(function(ev) {
             ev.preventDefault();
             ev.stopPropagation();
             var relational = $(this).attr('for');
@@ -113,7 +113,7 @@ instance.web_mobile.FormView = instance.web.OldWidget.extend({
                 });
             }
         });
-        self.$element.find('#m2o_btn').click(this.open_m2o_form);
+        self.$el.find('#m2o_btn').click(this.open_m2o_form);
         $.mobile.changePage("#"+self.element_id, "slide", false, true);
         self.formatdata('', '', '', '',self.element_id,'slider');
     },

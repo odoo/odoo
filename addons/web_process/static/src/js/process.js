@@ -3,18 +3,19 @@ openerp.web_process = function (instance) {
           _t = instance.web._t;
     instance.web.ViewManager.include({
         start: function() {
-            this._super();
+            var _super = this._super();
             this.process_check();
             this.process_help = this.action ? this.action.help : 'Help: Not Defined';
             this.model = this.dataset.model;
             if(this.action) this.process_model = this.action.res_model;
             else this.process_model = this.model;
+            return _super;
         },
         process_check: function() {
             var self = this,
             grandparent = this.getParent() && this.getParent().getParent(),
             view = this.views[this.views_src[0].view_type],
-            $process_view = this.$element.find('.oe_process');
+            $process_view = this.$el.find('.oe_process');
             if (!(grandparent instanceof instance.web.WebClient) ||
                 !(view.view_type === this.views_src[0].view_type
                     && view.view_id === this.views_src[0].view_id)) {
@@ -123,12 +124,12 @@ openerp.web_process = function (instance) {
             return def.promise();
         },
         render_process_view : function() {
-            this.$element.html(QWeb.render("ProcessView", this));
+            this.$el.html(QWeb.render("ProcessView", this));
             var self = this;
-            this.$element.find('#edit_process').click(function() {
+            this.$el.find('#edit_process').click(function() {
                 self.edit_process_view();
             });
-            var $parent = this.getParent().$element;
+            var $parent = this.getParent().$el;
             $parent.find('#change_process').click(function() {
                 self.process_selection = false,
                 self.process_id = $parent.find('#select_process').val(),
@@ -136,7 +137,7 @@ openerp.web_process = function (instance) {
                 self.initialize_process_view();
             });
 
-            this.$element.find(".process_subflow").click(function() {
+            this.$el.find(".process_subflow").click(function() {
                 self.process_id = this.id;
                 self.initialize_process_view();
             });
@@ -247,7 +248,7 @@ openerp.web_process = function (instance) {
                         context: dataset.context
                         }, function(result) {
                             var action_manager = new instance.web.ActionManager(self);
-                            action_manager.replace(self.$element);
+                            action_manager.replace(self.$el);
                             action_manager.do_action(result.result);
                         });
                 });
@@ -270,7 +271,7 @@ openerp.web_process = function (instance) {
                 ]
             }).open();
 
-            action_manager.appendTo(dialog.$element);
+            action_manager.appendTo(dialog.$el);
             action_manager.do_action({
                 res_model : 'process.process',
                 res_id: self.process_id,

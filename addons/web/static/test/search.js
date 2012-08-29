@@ -1,37 +1,8 @@
 $(document).ready(function () {
-    var xhr = QWeb2.Engine.prototype.get_xhr();
-    xhr.open('GET', '/web/static/src/xml/base.xml', false);
-    xhr.send(null);
-    var doc = xhr.responseXML;
-
-    var noop = function () {};
-    /**
-     * Make connection RPC responses mockable by setting keys on the
-     * Connection#responses object (key is the URL, value is the function to
-     * call with the RPC request payload)
-     *
-     * @param {openerp.web.Connection} connection connection instance to mockify
-     * @param {Object} [responses] url:function mapping to seed the mock connection
-     */
-    var mockifyRPC = function (connection, responses) {
-        connection.responses = responses || {};
-        connection.rpc_function = function (url, payload) {
-            if (!(url.url in this.responses)) {
-                return $.Deferred().reject({}, 'failed', _.str.sprintf("Url %s not found in mock responses", url.url)).promise();
-            }
-            return $.when(this.responses[url.url](payload));
-        };
-    };
-
     var instance;
     module('query', {
         setup: function () {
-            instance = window.openerp.init([]);
-            window.openerp.web.corelib(instance);
-            window.openerp.web.coresetup(instance);
-            window.openerp.web.chrome(instance);
-            window.openerp.web.data(instance);
-            window.openerp.web.search(instance);
+            instance = openerp.testing.instanceFor('search');
         }
     });
     test('Adding a facet to the query creates a facet and a value', function () {
@@ -167,16 +138,11 @@ $(document).ready(function () {
 
     module('defaults', {
         setup: function () {
-            instance = window.openerp.init([]);
-            window.openerp.web.corelib(instance);
-            window.openerp.web.coresetup(instance);
-            window.openerp.web.chrome(instance);
-            window.openerp.web.data(instance);
-            window.openerp.web.search(instance);
+            instance = openerp.testing.instanceFor('search');
 
-            instance.web.qweb.add_template(doc);
+            openerp.testing.loadTemplate(instance);
 
-            mockifyRPC(instance.connection);
+            openerp.testing.mockifyRPC(instance);
         }
     });
 
@@ -198,8 +164,8 @@ $(document).ready(function () {
         instance.dummy = {};
         instance.dummy.DummyWidget = instance.web.search.Field.extend(
             dummy_widget_attributes || {});
-        if (!('/web/searchview/load' in instance.connection.responses)) {
-            instance.connection.responses['/web/searchview/load'] = function () {
+        if (!('/web/searchview/load' in instance.session.responses)) {
+            instance.session.responses['/web/searchview/load'] = function () {
                 return {result: {fields_view: {
                     type: 'search',
                     fields: {
@@ -220,10 +186,10 @@ $(document).ready(function () {
                 }}};
             };
         }
-        instance.connection.responses['/web/searchview/get_filters'] = function () {
+        instance.session.responses['/web/searchview/get_filters'] = function () {
             return {result: []};
         };
-        instance.connection.responses['/web/searchview/fields_get'] = function () {
+        instance.session.responses['/web/searchview/fields_get'] = function () {
             return {result: {fields: {
                 dummy: {type: 'char', string: 'Dummy'}
             }}};
@@ -355,7 +321,7 @@ $(document).ready(function () {
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},
             view);
-        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+        instance.session.responses['/web/dataset/call_kw'] = function (req) {
             equal(req.params.method, 'name_get',
                   "m2o should resolve default id");
             equal(req.params.model, f.attrs.relation,
@@ -391,7 +357,7 @@ $(document).ready(function () {
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},
             view);
-        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+        instance.session.responses['/web/dataset/call_kw'] = function (req) {
            return {result: []};
         };
         f.facet_for_defaults({dummy: id})
@@ -404,18 +370,11 @@ $(document).ready(function () {
 
     module('completions', {
         setup: function () {
-            instance = window.openerp.init([]);
-            window.openerp.web.corelib(instance);
-            window.openerp.web.coresetup(instance);
-            window.openerp.web.chrome(instance);
-            window.openerp.web.data(instance);
-            // date complete
-            window.openerp.web.formats(instance);
-            window.openerp.web.search(instance);
+            instance = openerp.testing.instanceFor('search');
 
-            instance.web.qweb.add_template(doc);
+            openerp.testing.loadTemplate(instance);
 
-            mockifyRPC(instance.connection);
+            openerp.testing.mockifyRPC(instance);
         }
     });
     asyncTest('calling', 4, function () {
@@ -432,10 +391,7 @@ $(document).ready(function () {
             }
         });
         view.appendTo($('#qunit-fixture'))
-            .always(start)
-            .fail(function (error) { ok(false, error.message); })
             .done(function () {
-                stop();
                 view.complete_global_search({term: "dum"}, function (completions) {
                     start();
                     equal(completions.length, 1, "should have a single completion");
@@ -454,7 +410,11 @@ $(document).ready(function () {
         var completion = {
             label: "Dummy",
             facet: {
-                field: {get_domain: noop, get_context: noop, get_groupby: noop},
+                field: {
+                    get_domain: openerp.testing.noop,
+                    get_context: openerp.testing.noop,
+                    get_groupby: openerp.testing.noop
+                },
                 category: 'Dummy',
                 values: [{label: 'dummy', value: 42}]
             }
@@ -476,7 +436,11 @@ $(document).ready(function () {
             });
     });
     asyncTest('facet selection: new value existing facet', 3, function () {
-        var field = {get_domain: noop, get_context: noop, get_groupby: noop};
+        var field = {
+            get_domain: openerp.testing.noop,
+            get_context: openerp.testing.noop,
+            get_groupby: openerp.testing.noop
+        };
         var completion = {
             label: "Dummy",
             facet: {
@@ -609,7 +573,7 @@ $(document).ready(function () {
             });
     });
     asyncTest("M2O", 15, function () {
-        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+        instance.session.responses['/web/dataset/call_kw'] = function (req) {
             equal(req.params.method, "name_search");
             equal(req.params.model, "dummy.model");
             deepEqual(req.params.args, []);
@@ -643,7 +607,7 @@ $(document).ready(function () {
             });
     });
     asyncTest("M2O no match", 5, function () {
-        instance.connection.responses['/web/dataset/call_kw'] = function (req) {
+        instance.session.responses['/web/dataset/call_kw'] = function (req) {
             equal(req.params.method, "name_search");
             equal(req.params.model, "dummy.model");
             deepEqual(req.params.args, []);
@@ -663,16 +627,11 @@ $(document).ready(function () {
 
     module('search-serialization', {
         setup: function () {
-            instance = window.openerp.init([]);
-            window.openerp.web.corelib(instance);
-            window.openerp.web.coresetup(instance);
-            window.openerp.web.chrome(instance);
-            window.openerp.web.data(instance);
-            window.openerp.web.search(instance);
+            instance = openerp.testing.instanceFor('search');
 
-            instance.web.qweb.add_template(doc);
+            openerp.testing.loadTemplate(instance);
 
-            mockifyRPC(instance.connection);
+            openerp.testing.mockifyRPC(instance);
         }
     });
     asyncTest('No facet, no call', 6, function () {
@@ -940,16 +899,11 @@ $(document).ready(function () {
 
     module('removal', {
         setup: function () {
-            instance = window.openerp.init([]);
-            window.openerp.web.corelib(instance);
-            window.openerp.web.coresetup(instance);
-            window.openerp.web.chrome(instance);
-            window.openerp.web.data(instance);
-            window.openerp.web.search(instance);
+            instance = openerp.testing.instanceFor('search');
 
-            instance.web.qweb.add_template(doc);
+            openerp.testing.loadTemplate(instance);
 
-            mockifyRPC(instance.connection);
+            openerp.testing.mockifyRPC(instance);
         }
     });
     asyncTest('clear button', function () {
@@ -975,16 +929,11 @@ $(document).ready(function () {
 
     module('drawer', {
         setup: function () {
-            instance = window.openerp.init([]);
-            window.openerp.web.corelib(instance);
-            window.openerp.web.coresetup(instance);
-            window.openerp.web.chrome(instance);
-            window.openerp.web.data(instance);
-            window.openerp.web.search(instance);
+            instance = openerp.testing.instanceFor('search');
 
-            instance.web.qweb.add_template(doc);
+            openerp.testing.loadTemplate(instance);
 
-            mockifyRPC(instance.connection);
+            openerp.testing.mockifyRPC(instance);
         }
     });
     asyncTest('is-drawn', 2, function () {
@@ -1003,16 +952,11 @@ $(document).ready(function () {
 
     module('filters', {
         setup: function () {
-            instance = window.openerp.init([]);
-            window.openerp.web.corelib(instance);
-            window.openerp.web.coresetup(instance);
-            window.openerp.web.chrome(instance);
-            window.openerp.web.data(instance);
-            window.openerp.web.search(instance);
+            instance = openerp.testing.instanceFor('search');
 
-            instance.web.qweb.add_template(doc);
+            openerp.testing.loadTemplate(instance);
 
-            mockifyRPC(instance.connection, {
+            openerp.testing.mockifyRPC(instance, {
                 '/web/searchview/load': function () {
                     // view with a single group of filters
                     return {result: {fields_view: {
@@ -1117,22 +1061,16 @@ $(document).ready(function () {
 
     module('saved_filters', {
         setup: function () {
-            instance = window.openerp.init([]);
-            window.openerp.web.corelib(instance);
-            window.openerp.web.coresetup(instance);
-            window.openerp.web.chrome(instance);
-            window.openerp.web.data(instance);
-            window.openerp.web.formats(instance);
-            window.openerp.web.search(instance);
+            instance = openerp.testing.instanceFor('search');
 
-            instance.web.qweb.add_template(doc);
+            openerp.testing.loadTemplate(instance);
 
-            mockifyRPC(instance.connection);
+            openerp.testing.mockifyRPC(instance);
         }
     });
     asyncTest('checkboxing', 6, function () {
         var view = makeSearchView();
-        instance.connection.responses['/web/searchview/get_filters'] = function () {
+        instance.session.responses['/web/searchview/get_filters'] = function () {
             return {result: [{
                 name: "filter name",
                 user_id: 42
@@ -1161,7 +1099,7 @@ $(document).ready(function () {
     });
     asyncTest('removal', 1, function () {
         var view = makeSearchView();
-        instance.connection.responses['/web/searchview/get_filters'] = function () {
+        instance.session.responses['/web/searchview/get_filters'] = function () {
             return {result: [{
                 name: "filter name",
                 user_id: 42
@@ -1183,17 +1121,11 @@ $(document).ready(function () {
 
     module('advanced', {
         setup: function () {
-            instance = window.openerp.init([]);
-            window.openerp.web.corelib(instance);
-            window.openerp.web.coresetup(instance);
-            window.openerp.web.chrome(instance);
-            window.openerp.web.data(instance);
-            window.openerp.web.formats(instance);
-            window.openerp.web.search(instance);
+            instance = openerp.testing.instanceFor('search');
 
-            instance.web.qweb.add_template(doc);
+            openerp.testing.loadTemplate(instance);
 
-            mockifyRPC(instance.connection);
+            openerp.testing.mockifyRPC(instance);
         }
     });
     asyncTest('single-advanced', 6, function () {

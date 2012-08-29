@@ -1,18 +1,17 @@
 openerp.test_support = {
-    setup_connection: function (connection) {
+    setup_session: function (session) {
         var origin = location.protocol+"//"+location.host;
-        _.extend(connection, {
+        _.extend(session, {
             origin: origin,
             prefix: origin,
             server: origin, // keep chs happy
             //openerp.web.qweb.default_dict['_s'] = this.origin;
-            rpc_function: connection.rpc_json,
+            rpc_function: session.rpc_json,
             session_id: false,
             uid: false,
             username: false,
             user_context: {},
             db: false,
-            openerp_entreprise: false,
 //            this.module_list = openerp._modules.slice();
 //            this.module_loaded = {};
 //            _(this.module_list).each(function (mod) {
@@ -22,7 +21,7 @@ openerp.test_support = {
             shortcuts: [],
             active_id: null
         });
-        return connection.session_reload();
+        return session.session_reload();
     },
     module: function (title, tested_core, nonliterals) {
         var conf = QUnit.config.openerp = {};
@@ -31,10 +30,10 @@ openerp.test_support = {
                 QUnit.stop();
                 var oe = conf.openerp = window.openerp.init();
                 window.openerp.web[tested_core](oe);
-                var done = openerp.test_support.setup_connection(oe.connection);
+                var done = openerp.test_support.setup_session(oe.session);
                 if (nonliterals) {
                     done = done.pipe(function () {
-                        return oe.connection.rpc('/tests/add_nonliterals', {
+                        return oe.session.rpc('/tests/add_nonliterals', {
                             domains: nonliterals.domains || [],
                             contexts: nonliterals.contexts || []
                         }).then(function (r) {

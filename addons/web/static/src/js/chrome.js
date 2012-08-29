@@ -13,7 +13,7 @@ instance.web.Notification =  instance.web.Widget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.notify({
+        this.$el.notify({
             speed: 500,
             expires: 2500
         });
@@ -24,7 +24,7 @@ instance.web.Notification =  instance.web.Widget.extend({
         if (sticky) {
             opts.expires = false;
         }
-        this.$element.notify('create', {
+        this.$el.notify('create', {
             title: title,
             text: text
         }, opts);
@@ -35,7 +35,7 @@ instance.web.Notification =  instance.web.Widget.extend({
         if (sticky) {
             opts.expires = false;
         }
-        this.$element.notify('create', 'oe_notification_alert', {
+        this.$el.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
         }, opts);
@@ -57,9 +57,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
-        if (content) {
-            this.$element = content instanceof $ ? content : $(content);
-        }
+        this.content_to_set = content;
         this.dialog_options = {
             modal: true,
             destroy_on_close: true,
@@ -68,9 +66,9 @@ instance.web.Dialog = instance.web.Widget.extend({
             max_width: '95%',
             height: 'auto',
             min_height: 0,
-            max_height: this.get_height('100%') - 140,
+            max_height: this.get_height('100%') - 200,
             autoOpen: false,
-            position: [false, 50],
+            position: [false, 40],
             buttons: {},
             beforeClose: function () { self.on_close(); },
             resizeStop: this.on_resized
@@ -82,11 +80,6 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
         if (options) {
             _.extend(this.dialog_options, options);
-        }
-        if (this.dialog_options.autoOpen) {
-            this.open();
-        } else {
-            instance.web.dialog(this.$element, this.get_options());
         }
     },
     get_options: function(options) {
@@ -119,24 +112,41 @@ instance.web.Dialog = instance.web.Widget.extend({
             return parseInt(val, 10);
         }
     },
-    open: function(options) {
-        // TODO fme: bind window on resize
-        if (this.template) {
-            this.$element.html(this.renderElement());
+    renderElement: function() {
+        if (this.content_to_set) {
+            this.setElement(this.content_to_set);
+        } else if (this.template) {
+            this._super();
         }
+    },
+    open: function(options) {
+        if (! this.dialog_inited)
+            this.init_dialog();
         var o = this.get_options(options);
-        instance.web.dialog(this.$element, o).dialog('open');
+        instance.web.dialog(this.$el, o).dialog('open');
         if (o.height === 'auto' && o.max_height) {
-            this.$element.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
+            this.$el.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
         return this;
     },
+    init_dialog: function(options) {
+        this.renderElement();
+        var o = this.get_options(options);
+        instance.web.dialog(this.$el, o);
+        var res = this.start();
+        this.dialog_inited = true;
+        return res;
+    },
     close: function() {
-        this.$element.dialog('close');
+        this.$el.dialog('close');
     },
     on_close: function() {
+        if (this.__tmp_dialog_destroying)
+            return;
         if (this.dialog_options.destroy_on_close) {
+            this.__tmp_dialog_closing = true;
             this.destroy();
+            this.__tmp_dialog_closing = undefined;
         }
     },
     on_resized: function() {
@@ -145,8 +155,13 @@ instance.web.Dialog = instance.web.Widget.extend({
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
+        if (! this.__tmp_dialog_closing) {
+            this.__tmp_dialog_destroying = true;
+            this.close();
+            this.__tmp_dialog_destroying = undefined;
+        }
         if (! this.isDestroyed()) {
-            this.$element.dialog('destroy');
+            this.$el.dialog('destroy');
         }
         this._super();
     }
@@ -178,29 +193,9 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
     on_traceback: function(error) {
         var self = this;
         var buttons = {};
-        if (instance.connection.openerp_entreprise) {
-            buttons[_t("Send OpenERP Enterprise Report")] = function() {
-                var $this = $(this);
-                var issuename = $('#issuename').val();
-                var explanation = $('#explanation').val();
-                var remark = $('#remark').val();
-                // Call the send method from server to send mail with details
-                new instance.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [error.data,explanation,remark,issuename]).then(function(result){
-                    if (result === false) {
-                        alert('There was a communication error.');
-                    } else {
-                        $this.dialog('close');
-                    }
-                });
-            };
-            buttons[_t("Dont send")] = function() {
-                $(this).dialog("close");
-            };
-        } else {
-            buttons[_t("Ok")] = function() {
-                $(this).dialog("close");
-            };
-        }
+        buttons[_t("Ok")] = function() {
+            $(this).dialog("close");
+        };
         var dialog = new instance.web.Dialog(this, {
             title: "OpenERP " + _.str.capitalize(error.type),
             width: '80%',
@@ -209,7 +204,7 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
             min_height: '600px',
             buttons: buttons
         }).open();
-        dialog.$element.html(QWeb.render('CrashManager.error', {session: instance.connection, error: error}));
+        dialog.$el.html(QWeb.render('CrashManager.error', {session: instance.session, error: error}));
     },
     on_javascript_exception: function(exception) {
         this.on_traceback({
@@ -248,25 +243,29 @@ instance.web.Loading = instance.web.Widget.extend({
             // Block UI after 3s
             this.long_running_timer = setTimeout(function () {
                 self.blocked_ui = true;
-                $.blockUI();
+                instance.web.blockUI();
             }, 3000);
         }
 
         this.count += increment;
         if (this.count > 0) {
-            this.$element.text(_.str.sprintf( _t("Loading (%d)"), this.count));
-            this.$element.show();
-            this.getParent().$element.addClass('oe_wait');
+            if (instance.session.debug) {
+                this.$el.text(_.str.sprintf( _t("Loading (%d)"), this.count));
+            } else {
+                this.$el.text(_t("Loading"));
+            }
+            this.$el.show();
+            this.getParent().$el.addClass('oe_wait');
         } else {
             this.count = 0;
             clearTimeout(this.long_running_timer);
             // Don't unblock if blocked by somebody else
             if (self.blocked_ui) {
                 this.blocked_ui = false;
-                $.unblockUI();
+                instance.web.unblockUI();
             }
-            this.$element.fadeOut();
-            this.getParent().$element.removeClass('oe_wait');
+            this.$el.fadeOut();
+            this.getParent().$el.removeClass('oe_wait');
         }
     }
 });
@@ -274,13 +273,14 @@ instance.web.Loading = instance.web.Widget.extend({
 instance.web.DatabaseManager = instance.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
-        this.unblockUIFunction = $.unblockUI;
+        this.unblockUIFunction = instance.web.unblockUI;
         $.validator.addMethod('matches', function (s, _, re) {
             return new RegExp(re).test(s);
         }, _t("Invalid database name"));
     },
     start: function() {
         var self = this;
+        $('.oe_secondary_menus_container,.oe_user_menu_placeholder').empty();
         var fetch_db = this.rpc("/web/database/get_list", {}).pipe(
             function(result) {
                 self.db_list = result.db_list;
@@ -296,17 +296,27 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     },
     do_render: function() {
         var self = this;
-        self.$element.html(QWeb.render("DatabaseManager", { widget : self }));
-        self.$element.find(".oe_database_manager_menu").tabs({
-            show: function(event, ui) {
-                $('*[autofocus]:first', ui.panel).focus();
-            }
+        instance.webclient.toggle_bars(true);
+        self.$el.html(QWeb.render("DatabaseManager", { widget : self }));
+        $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
+        $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
+        $('ul.oe_secondary_submenu > li:first').addClass('oe_active')
+        $('ul.oe_secondary_submenu > li').bind('click', function (event) {
+            var menuitem = $(this);
+            menuitem.addClass('oe_active').siblings().removeClass('oe_active');
+            var form_id =menuitem.find('a').attr('href');
+            $(form_id).show().siblings().hide();
+            event.preventDefault();
         });
-        self.$element.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
-        self.$element.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
-        self.$element.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
-        self.$element.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
-        self.$element.find("form[name=change_pwd_form]").validate({
+        $('#back-to-login').click(self.do_exit);
+        self.$el.find("td").addClass("oe_form_group_cell");
+        self.$el.find("tr td:first-child").addClass("oe_form_group_cell_label");
+        self.$el.find("label").addClass("oe_form_label");
+        self.$el.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
+        self.$el.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
+        self.$el.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
+        self.$el.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
+        self.$el.find("form[name=change_pwd_form]").validate({
             messages: {
                 old_pwd: "Please enter your previous password",
                 new_pwd: "Please enter your new password",
@@ -317,10 +327,9 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
             },
             submitHandler: self.do_change_password
         });
-        self.$element.find("#back_to_login").click(self.do_exit);
     },
     destroy: function () {
-        this.$element.find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login').unbind('click').end().empty();
+        this.$el.find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login').unbind('click').end().empty();
         this._super();
     },
     /**
@@ -341,16 +350,16 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
      * from unblocking the UI
      */
     blockUI: function () {
-        $.blockUI();
-        $.unblockUI = function () {};
+        instance.web.blockUI();
+        instance.web.unblockUI = function () {};
     },
     /**
      * Reinstates $.unblockUI so third parties can play with blockUI, and
      * unblocks the UI
      */
     unblockUI: function () {
-        $.unblockUI = this.unblockUIFunction;
-        $.unblockUI();
+        instance.web.unblockUI = this.unblockUIFunction;
+        instance.web.unblockUI();
     },
     /**
      * Displays an error dialog resulting from the various RPC communications
@@ -374,10 +383,20 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         var fields = $(form).serializeArray();
         self.rpc("/web/database/create", {'fields': fields}, function(result) {
             var form_obj = self.to_object(fields);
-            self.getParent().do_login( form_obj['db_name'], 'admin', form_obj['create_admin_pwd']);
-            self.destroy();
+            var client_action = {
+                type: 'ir.actions.client',
+                tag: 'login',
+                params: {
+                    'db': form_obj['db_name'],
+                    'login': 'admin',
+                    'password': form_obj['create_admin_pwd'],
+                    'login_successful': function() {
+                        self.do_action("reload");
+                    },
+                },
+            };
+            self.do_action(client_action);
         });
-
     },
     do_drop: function(form) {
         var self = this;
@@ -456,23 +475,33 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.display_error(result);
                 return;
             }
+            self.unblockUI();
             self.do_notify("Changed Password", "Password has been changed successfully");
         });
     },
     do_exit: function () {
+        this.$el.remove();
+        instance.webclient.toggle_bars(false);
+        this.do_action('login');
     }
 });
+instance.web.client_actions.add("database_manager", "instance.web.DatabaseManager");
 
 instance.web.Login =  instance.web.Widget.extend({
     template: "Login",
     remember_credentials: true,
-    _db_list: null,
 
-    init: function(parent) {
+    init: function(parent, params) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
+        this.db_list = null;
         this.selected_db = null;
         this.selected_login = null;
+        this.params = params || {};
+
+        if (this.params.login_successful) {
+            this.on('login_successful', this, this.params.login_successful);
+        }
 
         if (this.has_local_storage && this.remember_credentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
@@ -482,65 +511,47 @@ instance.web.Login =  instance.web.Widget.extend({
             }
         }
     },
-    open_db_manager: function(){
-        var self = this;
-        self.$element.find('.oe_login_bottom').hide();
-        self.$element.find('.oe_login_pane').hide();
-        self.databasemanager = new instance.web.DatabaseManager(self);
-        self.databasemanager.appendTo(self.$element);
-        self.databasemanager.do_exit.add_last(function() {
-            self.databasemanager.destroy();
-            self.$element.find('.oe_login_bottom').show();
-            self.$element.find('.oe_login_pane').show();
-            self.load_db_list(true).then(self.on_db_list_loaded);
-        });
-    },
     start: function() {
         var self = this;
-        self.$element.find("form").submit(self.on_submit);
-        self.$element.find('.oe_login_manage_db').click(function() {
-            self.open_db_manager();
+        self.$el.find("form").submit(self.on_submit);
+        self.$el.find('.oe_login_manage_db').click(function() {
+            self.do_action("database_manager");
         });
-        return self.load_db_list().then(self.on_db_list_loaded);
-    },
-    load_db_list: function (force) {
-        var d = $.when(), self = this;
-        if (_.isNull(this._db_list) || force) {
-            d = self.rpc("/web/database/get_list", {}, function(result) {
-                self._db_list = _.clone(result.db_list);
-            }, function(error, event) {
-                if (error.data.fault_code === 'AccessDenied') {
-                    event.preventDefault();
-                }
-            });
+        var d;
+        if (self.params.db) {
+            d = self.do_login(self.params.db, self.params.login, self.params.password);
+        } else {
+            d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
         }
         return d;
     },
-    on_db_list_loaded: function () {
-        var self = this;
-        var list = this._db_list;
-        var dbdiv = this.$element.find('div.oe_login_dbpane');
-        this.$element.find("[name=db]").replaceWith(instance.web.qweb.render('Login.dblist', { db_list: list, selected_db: this.selected_db}));
-        if(list.length === 0) {
-            self.open_db_manager();
-        } else if(list && list.length === 1) {
-            dbdiv.hide();
+    on_db_loaded: function (result) {
+        this.db_list = result.db_list;
+        this.$("[name=db]").replaceWith(QWeb.render('Login.dblist', { db_list: this.db_list, selected_db: this.selected_db}));
+        if(this.db_list.length === 0) {
+            this.do_action("database_manager");
+        } else if(this.db_list.length === 1) {
+            this.$('div.oe_login_dbpane').hide();
         } else {
-            dbdiv.show();
+            this.$('div.oe_login_dbpane').show();
+        }
+    },
+    on_db_failed: function (error, event) {
+        if (error.data.fault_code === 'AccessDenied') {
+            event.preventDefault();
         }
     },
     on_submit: function(ev) {
         if(ev) {
             ev.preventDefault();
         }
-        var $e = this.$element;
-        var db = $e.find("form [name=db]").val();
+        var db = this.$("form [name=db]").val();
         if (!db) {
             this.do_warn("Login", "No database selected !");
             return false;
         }
-        var login = $e.find("form input[name=login]").val();
-        var password = $e.find("form input[name=password]").val();
+        var login = this.$("form input[name=login]").val();
+        var password = this.$("form input[name=password]").val();
 
         this.do_login(db, login, password);
     },
@@ -553,7 +564,7 @@ instance.web.Login =  instance.web.Widget.extend({
      */
     do_login: function (db, login, password) {
         var self = this;
-        this.$element.removeClass('oe_login_invalid');
+        this.$el.removeClass('oe_login_invalid');
         self.$(".oe_login_pane").fadeOut("slow");
         return this.session.session_authenticate(db, login, password).pipe(function() {
             if (self.has_local_storage) {
@@ -569,13 +580,95 @@ instance.web.Login =  instance.web.Widget.extend({
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
-            self.trigger("login");
+            self.trigger('login_successful');
         },function () {
-            self.$(".oe_login_pane").fadeIn("fast");
-            self.$element.addClass("oe_login_invalid");
+            self.$(".oe_login_pane").fadeIn("fast", function() {
+                self.$el.addClass("oe_login_invalid");
+            });
         });
+    },
+});
+instance.web.client_actions.add("login", "instance.web.Login");
+
+/**
+ * Client action to reload the whole interface.
+ * If params has an entry 'menu_id', it opens the given menu entry.
+ */
+instance.web.Reload = instance.web.Widget.extend({
+    init: function(parent, params) {
+        this._super(parent);
+        this.menu_id = (params && params.menu_id) || false;
+    },
+    start: function() {
+        var l = window.location;
+
+        var sobj = $.deparam(l.search.substr(1));
+        sobj.ts = new Date().getTime();
+        var search = '?' + $.param(sobj);
+
+        var hash = l.hash;
+        if (this.menu_id) {
+            hash = "#menu_id=" + this.menu_id;
+        }
+        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+        window.location = url;
     }
 });
+instance.web.client_actions.add("reload", "instance.web.Reload");
+
+/**
+ * Client action to go back in breadcrumb history.
+ * If can't go back in history stack, will go back to home.
+ */
+instance.web.HistoryBack = instance.web.Widget.extend({
+    init: function(parent, params) {
+        if (!parent.history_back()) {
+            window.location = '/' + (window.location.search || '');
+        }
+    }
+});
+instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
+
+/**
+ * Client action to go back home.
+ */
+instance.web.Home = instance.web.Widget.extend({
+    init: function(parent, params) {
+        window.location = '/' + (window.location.search || '');
+    }
+});
+instance.web.client_actions.add("home", "instance.web.Home");
+
+instance.web.ChangePassword =  instance.web.Widget.extend({
+    template: "ChangePassword",
+    start: function() {
+        var self = this;
+        self.$el.validate({
+            submitHandler: function (form) {
+                self.rpc("/web/session/change_password",{
+                    'fields': $(form).serializeArray()
+                }, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
+                        return;
+                    } else {
+                        instance.webclient.on_logout();
+                    }
+                });
+            }
+        });
+    },
+    display_error: function (error) {
+        return instance.web.dialog($('<div>'), {
+            modal: true,
+            title: error.title,
+            buttons: [
+                {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+            ]
+        }).html(error.error);
+    },
+})
+instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
 instance.web.Menu =  instance.web.Widget.extend({
     template: 'Menu',
@@ -587,7 +680,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$secondary_menus = this.getParent().$element.find('.oe_secondary_menus_container');
+        this.$secondary_menus = this.getParent().$el.find('.oe_secondary_menus_container');
         this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         return this.do_reload();
     },
@@ -599,8 +692,13 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.data = data;
         this.renderElement();
         this.limit_entries();
+        // Hide toplevel item if there is only one
+        var $toplevel = this.$("li")
+        if($toplevel.length == 1) {
+            $toplevel.hide();
+        }
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
-        this.$element.on('click', 'a[data-menu]', this.on_menu_click);
+        this.$el.on('click', 'a[data-menu]', this.on_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
         if (self.current_menu) {
@@ -615,8 +713,9 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         if (maximum_visible_links < this.data.data.children.length) {
             var $more = $(QWeb.render('Menu.more')),
-                $index = this.$element.find('li').eq(maximum_visible_links - 1);
+                $index = this.$el.find('li').eq(maximum_visible_links - 1);
             $index.after($more);
+            //$('.oe_topbar').append($more);
             $more.find('.oe_menu_more').append($index.next().nextAll());
         }
     },
@@ -633,19 +732,19 @@ instance.web.Menu =  instance.web.Widget.extend({
      */
     open_menu: function (id) {
         var $clicked_menu, $sub_menu, $main_menu;
-        $clicked_menu = this.$element.add(this.$secondary_menus).find('a[data-menu=' + id + ']');
+        $clicked_menu = this.$el.add(this.$secondary_menus).find('a[data-menu=' + id + ']');
         this.trigger('open_menu', id, $clicked_menu);
 
         if (this.$secondary_menus.has($clicked_menu).length) {
             $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
-            $main_menu = this.$element.find('a[data-menu=' + $sub_menu.data('menu-parent') + ']');
+            $main_menu = this.$el.find('a[data-menu=' + $sub_menu.data('menu-parent') + ']');
         } else {
             $sub_menu = this.$secondary_menus.find('.oe_secondary_menu[data-menu-parent=' + $clicked_menu.attr('data-menu') + ']');
             $main_menu = $clicked_menu;
         }
 
         // Activate current main menu
-        this.$element.find('.oe_active').removeClass('oe_active');
+        this.$el.find('.oe_active').removeClass('oe_active');
         $main_menu.addClass('oe_active');
 
         // Show current sub menu
@@ -672,7 +771,7 @@ instance.web.Menu =  instance.web.Widget.extend({
      * @param {Number} id the action_id to match
      */
     open_action: function (id) {
-        var $menu = this.$element.add(this.$secondary_menus).find('a[data-action-id="' + id + '"]');
+        var $menu = this.$el.add(this.$secondary_menus).find('a[data-action-id="' + id + '"]');
         var menu_id = $menu.data('menu');
         if (menu_id) {
             this.open_menu(menu_id);
@@ -688,14 +787,14 @@ instance.web.Menu =  instance.web.Widget.extend({
         if (!id) { return; }
 
         // find back the menuitem in dom to get the action
-        var $item = this.$element.find('a[data-menu=' + id + ']');
+        var $item = this.$el.find('a[data-menu=' + id + ']');
         if (!$item.length) {
             $item = this.$secondary_menus.find('a[data-menu=' + id + ']');
         }
         var action_id = $item.data('action-id');
         // If first level menu doesnt have action trigger first leaf
         if (!action_id) {
-            if(this.$element.has($item).length) {
+            if(this.$el.has($item).length) {
                 var $sub_menu = this.$secondary_menus.find('.oe_secondary_menu[data-menu-parent=' + id + ']');
                 var $items = $sub_menu.find('a[data-action-id]').filter('[data-action-id!=""]');
                 if($items.length) {
@@ -736,7 +835,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.$element.on('click', '.oe_dropdown_menu li a[data-menu]', function(ev) {
+        this.$el.on('click', '.oe_dropdown_menu li a[data-menu]', function(ev) {
             ev.preventDefault();
             var f = self['on_menu_' + $(this).data('menu')];
             if (f) {
@@ -744,53 +843,22 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             }
         });
     },
-    change_password :function() {
-        var self = this;
-        this.dialog = new instance.web.Dialog(this, {
-            title: _t("Change Password"),
-            width : 'auto'
-        }).open();
-        this.dialog.$element.html(QWeb.render("UserMenu.password", self));
-        this.dialog.$element.find("form[name=change_password_form]").validate({
-            submitHandler: function (form) {
-                self.rpc("/web/session/change_password",{
-                    'fields': $(form).serializeArray()
-                }, function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    } else {
-                        instance.webclient.on_logout();
-                    }
-                });
-            }
-        });
-    },
-    display_error: function (error) {
-        return instance.web.dialog($('<div>'), {
-            modal: true,
-            title: error.title,
-            buttons: [
-                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
-            ]
-        }).html(error.error);
-    },
     do_update: function () {
         var self = this;
         var fct = function() {
-            var $avatar = self.$element.find('.oe_topbar_avatar');
+            var $avatar = self.$el.find('.oe_topbar_avatar');
             $avatar.attr('src', $avatar.data('default-src'));
             if (!self.session.uid)
                 return;
             var func = new instance.web.Model("res.users").get_func("read");
             return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
                 var topbar_name = res.name;
-                if(instance.connection.debug)
-                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.connection.db);
+                if(instance.session.debug)
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
-                self.$element.find('.oe_topbar_name').text(topbar_name);
-                var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=avatar&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
+                self.$el.find('.oe_topbar_name').text(topbar_name);
+                var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=image_small&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
                 $avatar.attr('src', avatar_src);
             });
         };
@@ -802,44 +870,10 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     },
     on_menu_settings: function() {
         var self = this;
-        var action_manager = new instance.web.ActionManager(this);
-        var dataset = new instance.web.DataSet (this,'res.users',this.context);
-        dataset.call ('action_get','',function (result){
-            self.rpc('/web/action/load', {action_id:result}, function(result){
-                action_manager.do_action(_.extend(result['result'], {
-                    target: 'inline',
-                    res_id: self.session.uid,
-                    res_model: 'res.users',
-                    flags: {
-                        action_buttons: false,
-                        search_view: false,
-                        sidebar: false,
-                        views_switcher: false,
-                        pager: false
-                    }
-                }));
-            });
+        self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
+            result.result.res_id = instance.session.uid;
+            self.getParent().action_manager.do_action(result.result);
         });
-        this.dialog = new instance.web.Dialog(this,{
-            title: _t("Preferences"),
-            width: '700px',
-            buttons: [
-                {text: _t("Change password"), click: function(){ self.change_password(); }},
-                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
-                {text: _t("Save"), click: function(){
-                        var inner_widget = action_manager.inner_widget;
-                        inner_widget.views[inner_widget.active_view].controller.do_save()
-                        .then(function() {
-                            self.dialog.destroy();
-                            // needs to refresh interface in case language changed
-                            window.location.reload();
-                        });
-                    }
-                }
-            ]
-        }).open();
-       action_manager.appendTo(this.dialog.$element);
-       action_manager.renderElement(this.dialog);
     },
     on_menu_about: function() {
         var self = this;
@@ -851,56 +885,36 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                         window.location.href, 'debug');
             });
             instance.web.dialog($help, {autoOpen: true,
-                modal: true, width: 960, title: _t("About")});
+                modal: true, width: 507, height: 290, resizable: false, title: _t("About")});
         });
     },
 });
 
-instance.web.WebClient = instance.web.Widget.extend({
-    init: function(parent) {
-        var self = this;
+instance.web.Client = instance.web.Widget.extend({
+    init: function(parent, origin) {
+        instance.client = instance.webclient = this;
         this._super(parent);
-        instance.webclient = this;
-        this.querystring = '?' + jQuery.param.querystring();
-        this._current_state = null;
-    },
-    _get_version_label: function() {
-        if (this.session.openerp_entreprise) {
-            return 'OpenERP';
-        } else {
-            return _t("OpenERP - Unsupported/Community Version");
-        }
-    },
-    set_title: function(title) {
-        title = _.str.clean(title);
-        var sep = _.isEmpty(title) ? '' : ' - ';
-        document.title = title + sep + 'OpenERP';
+        this.origin = origin;
     },
     start: function() {
         var self = this;
-        this.$element.addClass("openerp openerp_webclient_container");
-        if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
-            $("body").addClass("kitten-mode-activated");
-            if ($.blockUI) {
-                $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
-            }
-        }
-        this.session.session_bind().then(function() {
-            self.destroy_content();
-            self.show_common();
-            if (!self.session.session_is_valid()) {
-                self.show_login();
-            } else {
-                self.show_application();
-            }
+        return instance.session.session_bind(this.origin).pipe(function() {
+            var $e = $(QWeb.render(self._template, {}));
+            self.replaceElement($e);
+            self.bind_events();
+            return self.show_common();
         });
-        this.$element.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
+    },
+    bind_events: function() {
+        var self = this;
+        this.$el.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
             $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
         });
-        this.$element.on('click', '.oe_dropdown_toggle', function(ev) {
+        this.$el.on('click', '.oe_dropdown_toggle', function(ev) {
             ev.preventDefault();
             var $toggle = $(this);
-            var $menu = $toggle.find('.oe_dropdown_menu');
+            var $menu = $toggle.siblings('.oe_dropdown_menu');
+            $menu = $menu.size() >= 1 ? $menu : $toggle.find('.oe_dropdown_menu');
             var state = $menu.is('.oe_opened');
             setTimeout(function() {
                 // Do not alter propagation
@@ -910,21 +924,66 @@ instance.web.WebClient = instance.web.Widget.extend({
                     var doc_width = $(document).width();
                     var offset = $menu.offset();
                     var menu_width = $menu.width();
-                    var x = doc_width - offset.left - menu_width - 15;
+                    var x = doc_width - offset.left - menu_width - 2;
                     if (x < 0) {
                         $menu.offset({ left: offset.left + x }).width(menu_width);
                     }
                 }
             }, 0);
         });
-        instance.web.bus.on('click', this, function() {
-            self.$element.find('.oe_dropdown_menu.oe_opened').removeClass('oe_opened');
+        instance.web.bus.on('click', this, function(ev) {
+            $.fn.tipsy.clear();
+            if (!$(ev.target).is('input[type=file]')) {
+                self.$el.find('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
+            }
         });
     },
     show_common: function() {
         var self = this;
         this.crashmanager =  new instance.web.CrashManager();
-        instance.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
+        instance.session.on_rpc_error.add(this.crashmanager.on_rpc_error);
+        self.notification = new instance.web.Notification(this);
+        self.notification.appendTo(self.$el);
+        self.loading = new instance.web.Loading(self);
+        self.loading.appendTo(self.$el);
+        self.action_manager = new instance.web.ActionManager(self);
+        self.action_manager.appendTo(self.$('.oe_application'));
+    },
+    toggle_bars: function(value) {
+        this.$('tr:has(td.oe_topbar),.oe_leftbar').toggle(value);
+    }
+});
+
+instance.web.WebClient = instance.web.Client.extend({
+    _template: 'WebClient',
+    init: function(parent) {
+        this._super(parent);
+        this._current_state = null;
+    },
+    start: function() {
+        var self = this;
+        return $.when(this._super()).pipe(function() {
+            if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
+                $("body").addClass("kitten-mode-activated");
+                if ($.blockUI) {
+                    $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
+                }
+            }
+            if (!self.session.session_is_valid()) {
+                self.show_login();
+            } else {
+                self.show_application();
+            }
+        });
+    },
+    set_title: function(title) {
+        title = _.str.clean(title);
+        var sep = _.isEmpty(title) ? '' : ' - ';
+        document.title = title + sep + 'OpenERP';
+    },
+    show_common: function() {
+        var self = this;
+        this._super();
         window.onerror = function (message, file, line) {
             self.crashmanager.on_traceback({
                 type: _t("Client Error"),
@@ -932,49 +991,50 @@ instance.web.WebClient = instance.web.Widget.extend({
                 data: {debug: file + ':' + line}
             });
         };
-        self.notification = new instance.web.Notification(this);
-        self.notification.appendTo(self.$element);
-        self.loading = new instance.web.Loading(self);
-        self.loading.appendTo(self.$element);
-        self.login = new instance.web.Login(self);
-        self.login.on("login",self,self.show_application);
-        self.$table = $(QWeb.render("WebClient", {}));
-        self.action_manager = new instance.web.ActionManager(self);
-        self.action_manager.appendTo(self.$table.find('.oe_application'));
     },
     show_login: function() {
-        var self = this;
-        self.login.appendTo(self.$element);
+        this.toggle_bars(false);
+        
+        var action = {
+            'type': 'ir.actions.client',
+            'tag': 'login'
+        };
+        var state = $.bbq.getState(true);
+        if (state.action === "login") {
+            action.params = state;
+        }
+
+        this.action_manager.do_action(action);
+        this.action_manager.inner_widget.on('login_successful', this, function() {
+            this.do_push_state(state);
+            this._current_state = null;     // ensure the state will be loaded
+            this.show_application();        // will load the state we just pushed
+        });
     },
     show_application: function() {
         var self = this;
-        self.$element.append(self.$table);
-        self.login.$element.hide();
+        self.toggle_bars(true);
         self.menu = new instance.web.Menu(self);
-        self.menu.replace(this.$element.find('.oe_menu_placeholder'));
+        self.menu.replace(this.$el.find('.oe_menu_placeholder'));
         self.menu.on('menu_click', this, this.on_menu_action);
         self.user_menu = new instance.web.UserMenu(self);
-        self.user_menu.replace(this.$element.find('.oe_user_menu_placeholder'));
+        self.user_menu.replace(this.$el.find('.oe_user_menu_placeholder'));
         self.user_menu.on_menu_logout.add(this.proxy('on_logout'));
         self.user_menu.on_action.add(this.proxy('on_menu_action'));
         self.user_menu.do_update();
         self.bind_hashchange();
-        if (!self.session.openerp_entreprise) {
-            var version_label = self._get_version_label();
-            self.$element.find('.oe_footer_powered').append(_.str.sprintf('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">%s</a></span>', version_label));
-        }
         self.set_title();
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {
             el.destroy();
         });
-        this.$element.children().remove();
+        this.$el.children().remove();
     },
     do_reload: function() {
         var self = this;
         return this.session.session_reload().pipe(function () {
-            instance.connection.load_modules(true).pipe(
+            instance.session.load_modules(true).pipe(
                 self.menu.proxy('do_reload')); });
 
     },
@@ -991,8 +1051,6 @@ instance.web.WebClient = instance.web.Widget.extend({
         this.session.session_logout().then(function () {
             $(window).unbind('hashchange', self.on_hashchange);
             self.do_push_state({});
-            //would be cool to be able to do this, but I think it will make addons do strange things
-            //this.show_login();
             window.location.reload();
         });
     },
@@ -1001,15 +1059,15 @@ instance.web.WebClient = instance.web.Widget.extend({
         $(window).bind('hashchange', this.on_hashchange);
 
         var state = $.bbq.getState(true);
-        if (! _.isEmpty(state)) {
-            $(window).trigger('hashchange');
-        } else {
+        if (_.isEmpty(state) || state.action == "login") {
             self.menu.has_been_loaded.then(function() {
-                var first_menu_id = self.menu.$element.find("a:first").data("menu");
+                var first_menu_id = self.menu.$el.find("a:first").data("menu");
                 if(first_menu_id) {
                     self.menu.menu_click(first_menu_id);
                 }
             });
+        } else {
+            $(window).trigger('hashchange');
         }
     },
     on_hashchange: function(event) {
@@ -1030,6 +1088,7 @@ instance.web.WebClient = instance.web.Widget.extend({
     },
     do_push_state: function(state) {
         this.set_title(state.title);
+        delete state.title;
         var url = '#' + $.param(state);
         this._current_state = _.clone(state);
         $.bbq.pushState(url);
@@ -1056,38 +1115,46 @@ instance.web.WebClient = instance.web.Widget.extend({
         }
     },
     set_content_full_screen: function(fullscreen) {
-        if (fullscreen)
-            $(".oe_webclient", this.$element).addClass("oe_content_full_screen");
-        else
-            $(".oe_webclient", this.$element).removeClass("oe_content_full_screen");
+        if (fullscreen) {
+            $(".oe_webclient", this.$el).addClass("oe_content_full_screen");
+            $("body").css({'overflow-y':'hidden'});
+        } else {
+            $(".oe_webclient", this.$el).removeClass("oe_content_full_screen");
+            $("body").css({'overflow-y':'scroll'});
+        }
     }
 });
 
-instance.web.EmbeddedClient = instance.web.Widget.extend({
-    template: 'EmptyComponent',
-    init: function(parent, action_id, options) {
-        this._super(parent);
-        // TODO take the xmlid of a action instead of its id
+instance.web.EmbeddedClient = instance.web.Client.extend({
+    _template: 'EmbedClient',
+    init: function(parent, origin, dbname, login, key, action_id, options) {
+        this._super(parent, origin);
+
+        this.dbname = dbname;
+        this.login = login;
+        this.key = key;
         this.action_id = action_id;
         this.options = options || {};
-        this.am = new instance.web.ActionManager(this);
     },
     start: function() {
         var self = this;
-        this.am.appendTo(this.$element.addClass('openerp'));
-        return this.rpc("/web/action/load", { action_id: this.action_id }, function(result) {
-            var action = result.result;
-            action.flags = _.extend({
-                //views_switcher : false,
-                search_view : false,
-                action_buttons : false,
-                sidebar : false
-                //pager : false
-            }, self.options, action.flags || {});
+        return $.when(this._super()).pipe(function() {
+            return instance.session.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
+                return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
+                    var action = result.result;
+                    action.flags = _.extend({
+                        //views_switcher : false,
+                        search_view : false,
+                        action_buttons : false,
+                        sidebar : false
+                        //pager : false
+                    }, self.options, action.flags || {});
 
-            self.am.do_action(action);
+                    self.action_manager.do_action(action);
+                });
+            });
         });
-    }
+    },
 });
 
 instance.web.embed = function (origin, dbname, login, key, action, options) {
@@ -1101,13 +1168,8 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
         var sc = document.getElementsByTagName('script');
         currentScript = sc[sc.length-1];
     }
-    instance.connection.session_bind(origin).then(function () {
-        instance.connection.session_authenticate(dbname, login, key, true).then(function () {
-            var client = new instance.web.EmbeddedClient(null, action, options);
-            client.insertAfter(currentScript);
-        });
-    });
-
+    var client = new instance.web.EmbeddedClient(null, origin, dbname, login, key, action, options);
+    client.insertAfter(currentScript);
 };
 
 };

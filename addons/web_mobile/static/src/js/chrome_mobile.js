@@ -11,7 +11,33 @@ instance.web_mobile.mobilewebclient = function(element_id) {
     return client;
 };
 
-instance.web_mobile.MobileWebClient = instance.web.OldWidget.extend({
+/**
+ * @deprecated use :class:`instance.web.Widget`
+ */
+instance.web_mobile.MobileWidget = instance.web.Widget.extend({
+    init: function(parent, element_id) {
+        this._super(parent);
+        this.element_id = element_id;
+        this.element_id = this.element_id || _.uniqueId('widget-');
+
+        var tmp = document.getElementById(this.element_id);
+        this.setElement(tmp || this._make_descriptive());
+    },
+    renderElement: function() {
+        var rendered = this.render();
+        if (rendered) {
+            this.replaceElement($(rendered));
+        }
+        return this;
+    },
+    render: function (additional) {
+        if (this.template)
+            return instance.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        return null;
+    }
+});
+
+instance.web_mobile.MobileWebClient = instance.web_mobile.MobileWidget.extend({
 
     template: "WebClient",
 
@@ -25,13 +51,13 @@ instance.web_mobile.MobileWebClient = instance.web.OldWidget.extend({
         var self = this;
         this.session.bind_session().then(function() {
             instance.web.qweb.add_template("xml/web_mobile.xml");
-            self.$element.html(self.render());
+            self.$el.html(self.render());
             self.login.start();
         });
     }
 });
 
-instance.web_mobile.Login =  instance.web.OldWidget.extend({
+instance.web_mobile.Login =  instance.web_mobile.MobileWidget.extend({
 
     template: "Login",
 
@@ -48,21 +74,20 @@ instance.web_mobile.Login =  instance.web.OldWidget.extend({
         jQuery("#oe_header").children().remove();
         this.rpc("/web/database/get_list", {}, function(result) {
             self.db_list = result.db_list;
-            $('#'+self.element_id).html(self.render(self));
-            self.$element = $('#'+self.element_id);
+            this.setElement($('#'+self.element_id).html(self.render(self)));
             if(self.session.db!=""){
-                self.$element.find("#database").val(self.session.db);
+                self.$el.find("#database").val(self.session.db);
             }
-            self.$element.find("#login_btn").click(self.on_login);
+            self.$el.find("#login_btn").click(self.on_login);
             $.mobile.initializePage();
         });
-        this.$element
+        this.$el
             .removeClass("login_invalid");
     },
     on_login: function(ev) {
         ev.preventDefault();
         var self = this;
-        var $e = this.$element;
+        var $e = this.$el;
         var db = $e.find("div select[name=database]").val();
         var login = $e.find("div input[name=login]").val();
         var password = $e.find("div input[name=password]").val();
@@ -92,13 +117,13 @@ instance.web_mobile.Login =  instance.web.OldWidget.extend({
         });
     },
     on_login_invalid: function() {
-        this.$element
+        this.$el
             .removeClass("login_valid")
             .addClass("login_invalid")
             .show();
     },
     on_login_valid: function() {
-        this.$element
+        this.$el
             .removeClass("login_invalid")
             .addClass("login_valid");
             //.hide();
@@ -119,7 +144,7 @@ instance.web_mobile.Login =  instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Header =  instance.web.OldWidget.extend({
+instance.web_mobile.Header =  instance.web_mobile.MobileWidget.extend({
 
     template: "Header",
 
@@ -127,11 +152,11 @@ instance.web_mobile.Header =  instance.web.OldWidget.extend({
         this._super(session, element_id);
     },
     start: function() {
-        this.$element.html(this.render(this));
+        this.$el.html(this.render(this));
     }
 });
 
-instance.web_mobile.Footer =  instance.web.OldWidget.extend({
+instance.web_mobile.Footer =  instance.web_mobile.MobileWidget.extend({
 
     template: "Footer",
 
@@ -139,11 +164,11 @@ instance.web_mobile.Footer =  instance.web.OldWidget.extend({
         this._super(session, element_id);
     },
     start: function() {
-        this.$element.html(this.render(this));
+        this.$el.html(this.render(this));
     }
 });
 
-instance.web_mobile.Shortcuts =  instance.web.OldWidget.extend({
+instance.web_mobile.Shortcuts =  instance.web_mobile.MobileWidget.extend({
 
     template: "Shortcuts",
 
@@ -153,12 +178,12 @@ instance.web_mobile.Shortcuts =  instance.web.OldWidget.extend({
     start: function() {
         var self = this;
         this.rpc('/web/session/sc_list',{} ,function(res){
-            self.$element.html(self.render({'sc': res}));
-            self.$element.find("[data-role=header]").find('h1').html('Favourite');
-            self.$element.find("[data-role=header]").find('#home').click(function(){
+            self.$el.html(self.render({'sc': res}));
+            self.$el.find("[data-role=header]").find('h1').html('Favourite');
+            self.$el.find("[data-role=header]").find('#home').click(function(){
                 $.mobile.changePage("#oe_menu", "slide", false, true);
             });
-            self.$element.find('#content').find("a").click(self.on_clicked);
+            self.$el.find('#content').find("a").click(self.on_clicked);
             $.mobile.changePage("#oe_shortcuts", "slide", false, true);
         });
     },
@@ -182,7 +207,7 @@ instance.web_mobile.Shortcuts =  instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Menu =  instance.web.OldWidget.extend({
+instance.web_mobile.Menu =  instance.web_mobile.MobileWidget.extend({
 
     template: "Menu",
 
@@ -203,10 +228,10 @@ instance.web_mobile.Menu =  instance.web.OldWidget.extend({
         this.header.start();
         this.footer = new instance.web_mobile.Footer(this, "oe_footer");
         this.footer.start();
-        this.$element.html(this.render(this.data));
-        this.$element.find("[data-role=header]").find('h1').html('Applications');
-        this.$element.find("[data-role=header]").find('#home').hide();
-        this.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
+        this.$el.html(this.render(this.data));
+        this.$el.find("[data-role=header]").find('h1').html('Applications');
+        this.$el.find("[data-role=header]").find('#home').hide();
+        this.$el.find("[data-role=footer]").find('#shrotcuts').click(function(){
             if(!$('#oe_shortcuts').html().length){
                 this.shortcuts = new instance.web_mobile.Shortcuts(self, "oe_shortcuts");
                 this.shortcuts.start();
@@ -214,7 +239,7 @@ instance.web_mobile.Menu =  instance.web.OldWidget.extend({
                 $.mobile.changePage($("#oe_shortcuts"), "slide", false, true);
             }
         });
-        this.$element.find("[data-role=footer]").find('#preference').click(function(){
+        this.$el.find("[data-role=footer]").find('#preference').click(function(){
             if(!$('#oe_options').html().length){
                 this.options = new instance.web_mobile.Options(self, "oe_options");
                 this.options.start();
@@ -222,7 +247,7 @@ instance.web_mobile.Menu =  instance.web.OldWidget.extend({
                 $.mobile.changePage("#oe_options", "slide", false, true);
             }
         });
-        this.$element.add(this.$secondary_menu).find("#content").find('a').click(this.on_menu_click);
+        this.$el.add(this.$secondary_menu).find("#content").find('a').click(this.on_menu_click);
         $.mobile.changePage("#oe_menu", "slide", false, true);
     },
     on_menu_click: function(ev, id) {
@@ -235,7 +260,7 @@ instance.web_mobile.Menu =  instance.web.OldWidget.extend({
                 this.children = this.data.data.children[i];
             }
         }
-        this.$element
+        this.$el
             .removeClass("login_valid")
             .addClass("secondary_menu");
         if(!$('[id^="oe_sec_menu_'+id+'"]').html()){
@@ -248,7 +273,7 @@ instance.web_mobile.Menu =  instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Secondary =  instance.web.OldWidget.extend({
+instance.web_mobile.Secondary =  instance.web_mobile.MobileWidget.extend({
 
     template: "Menu.secondary",
 
@@ -259,10 +284,10 @@ instance.web_mobile.Secondary =  instance.web.OldWidget.extend({
     start: function(ev, id) {
         var self = this;
         var v = { menu : this.data };
-        this.$element.html(this.render(v));
-        this.$element.find("[data-role=header]").find("h1").html(this.data.name);
-        this.$element.add(this.$secondary_menu).find('#content').find("a").click(this.on_menu_click);
-        this.$element.find("[data-role=header]").find('#home').click(function(){
+        this.$el.html(this.render(v));
+        this.$el.find("[data-role=header]").find("h1").html(this.data.name);
+        this.$el.add(this.$secondary_menu).find('#content').find("a").click(this.on_menu_click);
+        this.$el.find("[data-role=header]").find('#home').click(function(){
             $.mobile.changePage("#oe_menu", "slide", false, true);
         });
         $.mobile.changePage("#"+this.element_id, "slide", false, true);
@@ -283,7 +308,7 @@ instance.web_mobile.Secondary =  instance.web.OldWidget.extend({
             }
         }
         if (child_len > 0) {
-            this.$element
+            this.$el
             .addClass("secondary_menu");
             if(!$('[id^="oe_sec_menu_'+id+'"]').html()){
                 $('<div id="oe_sec_menu_'+id+'" data-role="page" data-url="oe_sec_menu_'+id+'"> </div>').appendTo('#moe');
@@ -305,18 +330,18 @@ instance.web_mobile.Secondary =  instance.web.OldWidget.extend({
     }
 });
 
-instance.web_mobile.Options =  instance.web.OldWidget.extend({
+instance.web_mobile.Options =  instance.web_mobile.MobileWidget.extend({
 
     template: "Options",
 
     start: function() {
         var self = this;
-        this.$element.html(this.render(this));
-        this.$element.find("[data-role=header]").find('h1').html('Preference');
-        this.$element.find("[data-role=header]").find('#home').click(function(){
+        this.$el.html(this.render(this));
+        this.$el.find("[data-role=header]").find('h1').html('Preference');
+        this.$el.find("[data-role=header]").find('#home').click(function(){
             $.mobile.changePage("#oe_menu", "slide", false, true);
         });
-        this.$element.find("[data-role=content]").find('a').click(function(){
+        this.$el.find("[data-role=content]").find('a').click(function(){
             $('#oe_login').empty();
             window.location.replace('/mobile');
         });

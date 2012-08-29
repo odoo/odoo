@@ -4,8 +4,10 @@
         <div class="oe_kanban_buttons"/>
         <table class="oe_kanban_groups">
         <tr class="oe_kanban_groups_headers">
+            <td class="oe_kanban_dummy_cell"><div/></td>
         </tr>
         <tr class="oe_kanban_groups_records">
+            <td class="oe_kanban_dummy_cell"><div/></td>
         </tr>
         </table>
     </div>
@@ -13,9 +15,13 @@
 <div t-name="KanbanView.buttons" class="oe_kanban_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <t t-if="widget._is_create_enabled()">
-            <button type="button" class="oe_button oe_kanban_button_new oe_highlight oe_form_button_hi">
+            <button type="button" class="oe_kanban_button_new oe_highlight">
                 <t t-esc="widget.options.create_text || _t('Create')"/>
             </button>
+            <span class="oe_alternative" style="display: none">
+                <span class="oe_fade">or</span>
+                <a href="#" class="oe_bold oe_kanban_add_column">Add a new column</a>
+            </span>
         </t>
     </t>
 </div>
@@ -26,18 +32,20 @@
                 <t t-if="widget.view._is_quick_create_enabled()">
                     <div class="oe_kanban_add oe_e">]</div>
                 </t>
+                    <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                        <span class="oe_e">í</span>
+                        <ul class="oe_dropdown_menu oe_kanban_group_dropdown">
+                            <li><a data-action="toggle_fold" href="#">Fold</a></li>
+                            <t t-if="widget.view.grouped_by_m2o and widget.value">
+                                <li><a data-action="edit" href="#">Edit</a></li>
+                                <li><a data-action="delete" href="#">Delete</a></li>
+                            </t>
+                        </ul>
+                    </div>
                 <div class="oe_fold_column">
                     <div t-attf-class="oe_kanban_group_title #{widget.undefined_title ? 'oe_kanban_group_title_undefined' : ''}">
                         <span><t t-esc="widget.title"/></span>
                         <span class="oe_kanban_group_length">(<t t-esc="widget.group.length"/>)</span>
-                        <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                          <span class="oe_e">í</span>
-                          <ul class="oe_dropdown_menu">
-                            <li><a data-type="fold" href="#" class="">Fold</a></li>
-                            <li><a data-type="edit" href="#" class="">Edit</a></li>
-                            <li><a data-type="delete" href="#" class="">Delete</a></li>
-                          </ul>
-                        </div>
                     </div>
                     <div class="oe_clear"/>
                     <ul class="oe_kanban_aggregates">
@@ -46,7 +54,7 @@
                         </li>
                     </ul>
                 </div>
-                <p t-if="widget.title" class="oe_kanban_group_title_vertical"><t t-esc="widget.title"/></p>
+                <span t-if="widget.title" class="oe_kanban_group_title_vertical"><t t-esc="widget.title"/></span>
             </div>
         </t>
         <t t-if="! widget.view.group_by &amp;&amp; widget.view._is_quick_create_enabled()">
@@ -55,7 +63,7 @@
     </td>
 </t>
 <t t-name="KanbanView.group_records_container">
-    <td t-attf-class="oe_kanban_column #{widget.group ? 'oe_kanban_grouped' : 'oe_kanban_ungrouped'}">
+    <td class="oe_kanban_column">
         <div class="oe_kanban_group_list_header"/>
         <div class="oe_kanban_show_more">
             <button class="oe_button">Show more... (<span class="oe_kanban_remaining"></span> remaining)</button>

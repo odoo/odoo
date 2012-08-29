@@ -28,6 +28,7 @@ import werkzeug.wsgi
 from . import nonliterals
 from . import session
 from . import openerplib
+import urlparse
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']
@@ -329,16 +330,32 @@ def httprequest(f):
     return http_handler
 
 #----------------------------------------------------------
-# OpenERP Web werkzeug Session Managment wraped using with
+# OpenERP Web Controller registration with a metaclass
+#----------------------------------------------------------
+addons_module = {}
+addons_manifest = {}
+controllers_class = []
+controllers_object = {}
+controllers_path = {}
+
+class ControllerType(type):
+    def __init__(cls, name, bases, attrs):
+        super(ControllerType, cls).__init__(name, bases, attrs)
+        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
+
+class Controller(object):
+    __metaclass__ = ControllerType
+
+#----------------------------------------------------------
+# OpenERP Web Session context manager
 #----------------------------------------------------------
 STORES = {}
 
 @contextlib.contextmanager
-def session_context(request, storage_path, session_cookie='sessionid'):
+def session_context(request, storage_path, session_cookie='httpsessionid'):
     session_store, session_lock = STORES.get(storage_path, (None, None))
     if not session_store:
-        session_store = werkzeug.contrib.sessions.FilesystemSessionStore(
-            storage_path)
+        session_store = werkzeug.contrib.sessions.FilesystemSessionStore( storage_path)
         session_lock = threading.Lock()
         STORES[storage_path] = session_store, session_lock
 
@@ -381,7 +398,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                 # note that domains_store and contexts_store are append-only (we
                 # only ever add items to them), so we can just update one with the
                 # other to get the right result, if we want to merge the
-                # ``context`` dict we'll need something smarter    
+                # ``context`` dict we'll need something smarter
                 in_store = session_store.get(sid)
                 for k, v in request.session.iteritems():
                     stored = in_store.get(k)
@@ -401,21 +418,29 @@ def session_context(request, storage_path, session_cookie='sessionid'):
             session_store.save(request.session)
 
 #----------------------------------------------------------
-# OpenERP Web Module/Controller Loading and URL Routing
+# OpenERP Web WSGI Application
 #----------------------------------------------------------
-addons_module = {}
-addons_manifest = {}
-controllers_class = []
-controllers_object = {}
-controllers_path = {}
+class DisableCacheMiddleware(object):
+    def __init__(self, app):
+        self.app = app
+    def __call__(self, environ, start_response):
+        def start_wrapped(status, headers):
+            referer = environ.get('HTTP_REFERER', '')
+            parsed = urlparse.urlparse(referer)
+            debug = parsed.query.count('debug') >= 1
 
-class ControllerType(type):
-    def __init__(cls, name, bases, attrs):
-        super(ControllerType, cls).__init__(name, bases, attrs)
-        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
+            new_headers = []
+            unwanted_keys = ['Last-Modified']
+            if debug:
+                new_headers = [('Cache-Control', 'no-cache')]
+                unwanted_keys += ['Expires', 'Etag', 'Cache-Control']
 
-class Controller(object):
-    __metaclass__ = ControllerType
+            for k, v in headers:
+                if k not in unwanted_keys:
+                    new_headers.append((k, v))
+
+            start_response(status, new_headers)
+        return self.app(environ, start_wrapped)
 
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
@@ -437,23 +462,22 @@ class Root(object):
                       by the server, will be filtered by this pattern
     """
     def __init__(self, options, openerp_addons_namespace=True):
-        self.root = '/web/webclient/home'
         self.config = options
 
         if not hasattr(self.config, 'connector'):
             if self.config.backend == 'local':
-                self.config.connector = LocalConnector()
+                self.config.connector = session.LocalConnector()
             else:
                 self.config.connector = openerplib.get_connector(
                     hostname=self.config.server_host, port=self.config.server_port)
 
-        self.session_cookie = 'sessionid'
+        self.httpsession_cookie = 'httpsessionid'
         self.addons = {}
 
         static_dirs = self._load_addons(openerp_addons_namespace)
         if options.serve_static:
-            self.dispatch = SuperSharedDataMiddleware(
-                self.dispatch, static_dirs, cache=False)
+            app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
+            self.dispatch = DisableCacheMiddleware(app)
 
         if options.session_storage:
             if not os.path.exists(options.session_storage):
@@ -477,20 +501,12 @@ class Root(object):
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
         request.app = self
 
-        if request.path == '/':
-            params = urllib.urlencode(request.args)
-            return werkzeug.utils.redirect(self.root + '?' + params, 301)(
-                environ, start_response)
-        elif request.path == '/mobile':
-            return werkzeug.utils.redirect(
-                '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
-
         handler = self.find_handler(*(request.path.split('/')[1:]))
 
         if not handler:
             response = werkzeug.exceptions.NotFound()
         else:
-            with session_context(request, self.session_storage, self.session_cookie) as session:
+            with session_context(request, self.session_storage, self.httpsession_cookie) as session:
                 result = handler( request, self.config)
 
                 if isinstance(result, basestring):
@@ -500,7 +516,7 @@ class Root(object):
                     response = result
 
                 if hasattr(response, 'set_cookie'):
-                    response.set_cookie(self.session_cookie, session.sid)
+                    response.set_cookie(self.httpsession_cookie, session.sid)
 
         return response(environ, start_response)
 
@@ -549,130 +565,13 @@ class Root(object):
             while ps:
                 c = controllers_path.get(ps)
                 if c:
-                    m = getattr(c, meth)
-                    if getattr(m, 'exposed', False):
+                    m = getattr(c, meth, None)
+                    if m and getattr(m, 'exposed', False):
                         _logger.debug("Dispatching to %s %s %s", ps, c, meth)
                         return m
                 ps, _slash, meth = ps.rpartition('/')
+                if not ps and meth:
+                    ps = '/'
         return None
-    
-class SuperSharedDataMiddleware(werkzeug.wsgi.SharedDataMiddleware):
-    """Redefine SharedDataMiddleware to better handle the cache = False directive.
-    Also desactivate 304 Not Modified headers only when the referer has 'debug' in its
-    arguments.
-    """
-    def __call__(self, environ, start_response):
-        import os
-        import mimetypes
-        import werkzeug.http
-        import urlparse
-        # sanitize the path for non unix systems
-        cleaned_path = environ.get('PATH_INFO', '').strip('/')
-        for sep in os.sep, os.altsep:
-            if sep and sep != '/':
-                cleaned_path = cleaned_path.replace(sep, '/')
-        path = '/'.join([''] + [x for x in cleaned_path.split('/')
-                                if x and x != '..'])
-        file_loader = None
-        for search_path, loader in self.exports.iteritems():
-            if search_path == path:
-                real_filename, file_loader = loader(None)
-                if file_loader is not None:
-                    break
-            if not search_path.endswith('/'):
-                search_path += '/'
-            if path.startswith(search_path):
-                real_filename, file_loader = loader(path[len(search_path):])
-                if file_loader is not None:
-                    break
-        if file_loader is None or not self.is_allowed(real_filename):
-            return self.app(environ, start_response)
 
-        guessed_type = mimetypes.guess_type(real_filename)
-        mime_type = guessed_type[0] or self.fallback_mimetype
-        f, mtime, file_size = file_loader()
-        
-        etag = self.generate_etag(mtime, file_size, real_filename)
-        modified = werkzeug.http.is_resource_modified(environ, etag, last_modified=mtime)
-        
-        headers = [('Date', werkzeug.http.http_date())]
-        if self.cache:
-            timeout = self.cache_timeout
-            headers += [
-                ('Etag', '"%s"' % etag),
-                ('Cache-Control', 'max-age=%d, public' % timeout)
-            ]
-            if modified:
-                headers.append(('Expires', werkzeug.http.http_date(time() + timeout)))
-        else:
-            headers.append(('Cache-Control', 'no-cache'))
-            
-        referer = environ.get('HTTP_REFERER', '')
-        parsed = urlparse.urlparse(referer)
-        debug = not urlparse.parse_qs(parsed.query).has_key('debug')
-        # it's important to put it at the end
-        if not debug and not modified:
-            f.close()
-            start_response('304 Not Modified', headers)
-            return []
-
-        headers.extend((
-            ('Content-Type', mime_type),
-            ('Content-Length', str(file_size)),
-            ('Last-Modified', werkzeug.http.http_date(mtime))
-        ))
-        start_response('200 OK', headers)
-        return werkzeug.wsgi.wrap_file(environ, f)
-
-
-class LibException(Exception):
-    """ Base of all client lib exceptions """
-    def __init__(self,code=None,message=None):
-        self.code = code
-        self.message = message
-
-class ApplicationError(LibException):
-    """ maps to code: 1, server side: Exception or openerp.exceptions.DeferredException"""
-
-class Warning(LibException):
-    """ maps to code: 2, server side: openerp.exceptions.Warning"""
-
-class AccessError(LibException):
-    """ maps to code: 3, server side:  openerp.exceptions.AccessError"""
-
-class AccessDenied(LibException):
-    """ maps to code: 4, server side: openerp.exceptions.AccessDenied"""
-
-
-class LocalConnector(openerplib.Connector):
-    """
-    A type of connector that uses the XMLRPC protocol.
-    """
-    PROTOCOL = 'local'
-
-    def __init__(self):
-        pass
-
-    def send(self, service_name, method, *args):
-        import openerp
-        import traceback
-        import xmlrpclib
-        code_string = "warning -- %s\n\n%s"
-        try:
-            return openerp.netsvc.dispatch_rpc(service_name, method, args)
-        except openerp.osv.osv.except_osv, e:
-        # TODO change the except to raise LibException instead of their emulated xmlrpc fault
-            raise xmlrpclib.Fault(code_string % (e.name, e.value), '')
-        except openerp.exceptions.Warning, e:
-            raise xmlrpclib.Fault(code_string % ("Warning", e), '')
-        except openerp.exceptions.AccessError, e:
-            raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
-        except openerp.exceptions.AccessDenied, e:
-            raise xmlrpclib.Fault('AccessDenied', str(e))
-        except openerp.exceptions.DeferredException, e:
-            formatted_info = "".join(traceback.format_exception(*e.traceback))
-            raise xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
-        except Exception, e:
-            formatted_info = "".join(traceback.format_exception(*(sys.exc_info())))
-            raise xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
-
+# vim:et:ts=4:sw=4:

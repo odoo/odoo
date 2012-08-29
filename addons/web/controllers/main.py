@@ -31,86 +31,52 @@ from .. import common
 openerpweb = common.http
 
 #----------------------------------------------------------
-# OpenERP Web web Controllers
+# OpenERP Web helpers
 #----------------------------------------------------------
 
+def rjsmin(script):
+    """ Minify js with a clever regex.
+    Taken from http://opensource.perlig.de/rjsmin
+    Apache License, Version 2.0 """
+    def subber(match):
+        """ Substitution callback """
+        groups = match.groups()
+        return (
+            groups[0] or
+            groups[1] or
+            groups[2] or
+            groups[3] or
+            (groups[4] and '\n') or
+            (groups[5] and ' ') or
+            (groups[6] and ' ') or
+            (groups[7] and ' ') or
+            ''
+        )
 
-def concat_xml(file_list):
-    """Concatenate xml files
-
-    :param list(str) file_list: list of files to check
-    :returns: (concatenation_result, checksum)
-    :rtype: (str, str)
-    """
-    checksum = hashlib.new('sha1')
-    if not file_list:
-        return '', checksum.hexdigest()
-
-    root = None
-    for fname in file_list:
-        with open(fname, 'rb') as fp:
-            contents = fp.read()
-            checksum.update(contents)
-            fp.seek(0)
-            xml = ElementTree.parse(fp).getroot()
-
-        if root is None:
-            root = ElementTree.Element(xml.tag)
-        #elif root.tag != xml.tag:
-        #    raise ValueError("Root tags missmatch: %r != %r" % (root.tag, xml.tag))
-
-        for child in xml.getchildren():
-            root.append(child)
-    return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
-
-
-def concat_files(file_list, reader=None, intersperse=""):
-    """ Concatenates contents of all provided files
-
-    :param list(str) file_list: list of files to check
-    :param function reader: reading procedure for each file
-    :param str intersperse: string to intersperse between file contents
-    :returns: (concatenation_result, checksum)
-    :rtype: (str, str)
-    """
-    checksum = hashlib.new('sha1')
-    if not file_list:
-        return '', checksum.hexdigest()
-
-    if reader is None:
-        def reader(f):
-            with open(f, 'rb') as fp:
-                return fp.read()
-
-    files_content = []
-    for fname in file_list:
-        contents = reader(fname)
-        checksum.update(contents)
-        files_content.append(contents)
-
-    files_concat = intersperse.join(files_content)
-    return files_concat, checksum.hexdigest()
-
-html_template = """<!DOCTYPE html>
-<html style="height: 100%%">
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>OpenERP</title>
-        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/web/static/src/css/full.css" />
-        %(css)s
-        %(js)s
-        <script type="text/javascript">
-            $(function() {
-                var s = new openerp.init(%(modules)s);
-                %(init)s
-            });
-        </script>
-    </head>
-    <body></body>
-</html>
-"""
+    result = re.sub(
+        r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?'
+        r'\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|'
+        r'\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|(?:(?<=[(,=:\[!&|?{};\r\n]'
+        r')(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/'
+        r'))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*'
+        r'(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*'
+        r'))|(?:(?<=[\000-#%-,./:-@\[-^`{-~-]return)(?:[\000-\011\013\014\01'
+        r'6-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*((?:/(?![\r\n/*])[^/'
+        r'\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]'
+        r'*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*))|(?<=[^\000-!#%&(*,./'
+        r':-@\[\\^`{|~])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/'
+        r'*][^*]*\*+)*/))*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\01'
+        r'4\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#'
+        r'%-\047)*,./:-@\\-^`|-~])|(?<=[^\000-#%-,./:-@\[-^`{-~-])((?:[\000-'
+        r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=[^'
+        r'\000-#%-,./:-@\[-^`{-~-])|(?<=\+)((?:[\000-\011\013\014\016-\040]|'
+        r'(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-\011\0'
+        r'13\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=-)|(?:[\0'
+        r'00-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:'
+        r'(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*'
+        r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
+    ).strip()
+    return result
 
 def sass2scss(src):
     # Validated by diff -u of sass2scss against:
@@ -163,320 +129,17 @@ def sass2scss(src):
         return out
     return write(sass)
 
-class WebClient(openerpweb.Controller):
-    _cp_path = "/web/webclient"
+def db_list(req):
+    dbs = []
+    proxy = req.session.proxy("db")
+    dbs = proxy.list()
+    h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
+    d = h.split('.')[0]
+    r = req.config.dbfilter.replace('%h', h).replace('%d', d)
+    dbs = [i for i in dbs if re.match(r, i)]
+    return dbs
 
-    def server_wide_modules(self, req):
-        addons = [i for i in req.config.server_wide_modules if i in openerpweb.addons_manifest]
-        return addons
-
-    def manifest_glob(self, req, addons, key):
-        if addons is None:
-            addons = self.server_wide_modules(req)
-        else:
-            addons = addons.split(',')
-        r = []
-        for addon in addons:
-            manifest = openerpweb.addons_manifest.get(addon, None)
-            if not manifest:
-                continue
-            # ensure does not ends with /
-            addons_path = os.path.join(manifest['addons_path'], '')[:-1]
-            globlist = manifest.get(key, [])
-            for pattern in globlist:
-                for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    r.append( (path, path[len(addons_path):]))
-        return r
-
-    def manifest_list(self, req, mods, extension):
-        if not req.debug:
-            path = '/web/webclient/' + extension
-            if mods is not None:
-                path += '?mods=' + mods
-            return [path]
-        # old code to force cache reloading
-        #return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
-        return [el[1] for el in self.manifest_glob(req, mods, extension)]
-
-    @openerpweb.jsonrequest
-    def csslist(self, req, mods=None):
-        return self.manifest_list(req, mods, 'css')
-
-    @openerpweb.jsonrequest
-    def jslist(self, req, mods=None):
-        return self.manifest_list(req, mods, 'js')
-
-    @openerpweb.jsonrequest
-    def qweblist(self, req, mods=None):
-        return self.manifest_list(req, mods, 'qweb')
-
-    def get_last_modified(self, files):
-        """ Returns the modification time of the most recently modified
-        file provided
-
-        :param list(str) files: names of files to check
-        :return: most recent modification time amongst the fileset
-        :rtype: datetime.datetime
-        """
-        files = list(files)
-        if files:
-            return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
-                       for f in files)
-        return datetime.datetime(1970, 1, 1)
-
-    def make_conditional(self, req, response, last_modified=None, etag=None):
-        """ Makes the provided response conditional based upon the request,
-        and mandates revalidation from clients
-
-        Uses Werkzeug's own :meth:`ETagResponseMixin.make_conditional`, after
-        setting ``last_modified`` and ``etag`` correctly on the response object
-
-        :param req: OpenERP request
-        :type req: web.common.http.WebRequest
-        :param response: Werkzeug response
-        :type response: werkzeug.wrappers.Response
-        :param datetime.datetime last_modified: last modification date of the response content
-        :param str etag: some sort of checksum of the content (deep etag)
-        :return: the response object provided
-        :rtype: werkzeug.wrappers.Response
-        """
-        response.cache_control.must_revalidate = True
-        response.cache_control.max_age = 0
-        if last_modified:
-            response.last_modified = last_modified
-        if etag:
-            response.set_etag(etag)
-        return response.make_conditional(req.httprequest)
-
-    @openerpweb.httprequest
-    def css(self, req, mods=None):
-        files = list(self.manifest_glob(req, mods, 'css'))
-        last_modified = self.get_last_modified(f[0] for f in files)
-        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
-            return werkzeug.wrappers.Response(status=304)
-
-        file_map = dict(files)
-
-        rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
-        rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
-
-        def reader(f):
-            """read the a css file and absolutify all relative uris"""
-            with open(f, 'rb') as fp:
-                data = fp.read().decode('utf-8')
-
-            path = file_map[f]
-            # convert FS path into web path
-            web_dir = '/'.join(os.path.dirname(path).split(os.path.sep))
-
-            data = re.sub(
-                rx_import,
-                r"""@import \1%s/""" % (web_dir,),
-                data,
-            )
-
-            data = re.sub(
-                rx_url,
-                r"""url(\1%s/""" % (web_dir,),
-                data,
-            )
-            return data.encode('utf-8')
-
-        content, checksum = concat_files((f[0] for f in files), reader)
-
-        return self.make_conditional(
-            req, req.make_response(content, [('Content-Type', 'text/css')]),
-            last_modified, checksum)
-
-    @openerpweb.httprequest
-    def js(self, req, mods=None):
-        files = [f[0] for f in self.manifest_glob(req, mods, 'js')]
-        last_modified = self.get_last_modified(files)
-        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
-            return werkzeug.wrappers.Response(status=304)
-
-        content, checksum = concat_files(files, intersperse=';')
-
-        return self.make_conditional(
-            req, req.make_response(content, [('Content-Type', 'application/javascript')]),
-            last_modified, checksum)
-
-    @openerpweb.httprequest
-    def qweb(self, req, mods=None):
-        files = [f[0] for f in self.manifest_glob(req, mods, 'qweb')]
-        last_modified = self.get_last_modified(files)
-        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
-            return werkzeug.wrappers.Response(status=304)
-
-        content,checksum = concat_xml(files)
-
-        return self.make_conditional(
-            req, req.make_response(content, [('Content-Type', 'text/xml')]),
-            last_modified, checksum)
-
-    @openerpweb.httprequest
-    def home(self, req, s_action=None, **kw):
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>'%i for i in self.manifest_list(req, None, 'js'))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">'%i for i in self.manifest_list(req, None, 'css'))
-
-        r = html_template % {
-            'js': js,
-            'css': css,
-            'modules': simplejson.dumps(self.server_wide_modules(req)),
-            'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
-        }
-        return r
-
-    @openerpweb.httprequest
-    def login(self, req, db, login, key):
-        req.session.authenticate(db, login, key, {})
-        redirect = werkzeug.utils.redirect('/web/webclient/home', 303)
-        cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
-        redirect.set_cookie('instance0|session_id', cookie_val)
-        return redirect
-
-    @openerpweb.jsonrequest
-    def translations(self, req, mods, lang):
-        lang_model = req.session.model('res.lang')
-        ids = lang_model.search([("code", "=", lang)])
-        if ids:
-            lang_obj = lang_model.read(ids[0], ["direction", "date_format", "time_format",
-                                                "grouping", "decimal_point", "thousands_sep"])
-        else:
-            lang_obj = None
-
-        if "_" in lang:
-            separator = "_"
-        else:
-            separator = "@"
-        langs = lang.split(separator)
-        langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
-
-        transs = {}
-        for addon_name in mods:
-            transl = {"messages":[]}
-            transs[addon_name] = transl
-            addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
-            for l in langs:
-                f_name = os.path.join(addons_path, addon_name, "i18n", l + ".po")
-                if not os.path.exists(f_name):
-                    continue
-                try:
-                    with open(f_name) as t_file:
-                        po = babel.messages.pofile.read_po(t_file)
-                except Exception:
-                    continue
-                for x in po:
-                    if x.id and x.string and "openerp-web" in x.auto_comments:
-                        transl["messages"].append({'id': x.id, 'string': x.string})
-        return {"modules": transs,
-                "lang_parameters": lang_obj}
-
-    @openerpweb.jsonrequest
-    def version_info(self, req):
-        return {
-            "version": common.release.version
-        }
-
-class Proxy(openerpweb.Controller):
-    _cp_path = '/web/proxy'
-
-    @openerpweb.jsonrequest
-    def load(self, req, path):
-        """ Proxies an HTTP request through a JSON request.
-
-        It is strongly recommended to not request binary files through this,
-        as the result will be a binary data blob as well.
-
-        :param req: OpenERP request
-        :param path: actual request path
-        :return: file content
-        """
-        from werkzeug.test import Client
-        from werkzeug.wrappers import BaseResponse
-
-        return Client(req.httprequest.app, BaseResponse).get(path).data
-
-class Database(openerpweb.Controller):
-    _cp_path = "/web/database"
-
-    @openerpweb.jsonrequest
-    def get_list(self, req):
-        proxy = req.session.proxy("db")
-        dbs = proxy.list()
-        h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
-        d = h.split('.')[0]
-        r = req.config.dbfilter.replace('%h', h).replace('%d', d)
-        dbs = [i for i in dbs if re.match(r, i)]
-        return {"db_list": dbs}
-
-    @openerpweb.jsonrequest
-    def create(self, req, fields):
-        params = dict(map(operator.itemgetter('name', 'value'), fields))
-        create_attrs = (
-            params['super_admin_pwd'],
-            params['db_name'],
-            bool(params.get('demo_data')),
-            params['db_lang'],
-            params['create_admin_pwd']
-        )
-
-        return req.session.proxy("db").create_database(*create_attrs)
-
-    @openerpweb.jsonrequest
-    def drop(self, req, fields):
-        password, db = operator.itemgetter(
-            'drop_pwd', 'drop_db')(
-                dict(map(operator.itemgetter('name', 'value'), fields)))
-
-        try:
-            return req.session.proxy("db").drop(password, db)
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': 'Drop Database'}
-        return {'error': 'Could not drop database !', 'title': 'Drop Database'}
-
-    @openerpweb.httprequest
-    def backup(self, req, backup_db, backup_pwd, token):
-        try:
-            db_dump = base64.b64decode(
-                req.session.proxy("db").dump(backup_pwd, backup_db))
-            filename = "%(db)s_%(timestamp)s.dump" % {
-                'db': backup_db,
-                'timestamp': datetime.datetime.utcnow().strftime(
-                    "%Y-%m-%d_%H-%M-%SZ")
-            }
-            return req.make_response(db_dump,
-               [('Content-Type', 'application/octet-stream; charset=binary'),
-               ('Content-Disposition', 'attachment; filename="' + filename + '"')],
-               {'fileToken': int(token)}
-            )
-        except xmlrpclib.Fault, e:
-             return simplejson.dumps([[],[{'error': e.faultCode, 'title': 'backup Database'}]])
-
-    @openerpweb.httprequest
-    def restore(self, req, db_file, restore_pwd, new_db):
-        try:
-            data = base64.b64encode(db_file.read())
-            req.session.proxy("db").restore(restore_pwd, new_db, data)
-            return ''
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                raise Exception("AccessDenied")
-
-    @openerpweb.jsonrequest
-    def change_password(self, req, fields):
-        old_password, new_password = operator.itemgetter(
-            'old_pwd', 'new_pwd')(
-                dict(map(operator.itemgetter('name', 'value'), fields)))
-        try:
-            return req.session.proxy("db").change_admin_password(old_password, new_password)
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': 'Change Password'}
-        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
-
-def topological_sort(modules):
+def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
     modules are listed before the module itself
 
@@ -520,201 +183,208 @@ def topological_sort(modules):
         visit(n)
     return L
 
-class Session(openerpweb.Controller):
-    _cp_path = "/web/session"
+def module_installed(req):
+    # Candidates module the current heuristic is the /static dir
+    loadable = openerpweb.addons_manifest.keys()
+    modules = {}
 
-    def session_info(self, req):
-        req.session.ensure_valid()
-        return {
-            "session_id": req.session_id,
-            "uid": req.session._uid,
-            "context": req.session.get_context() if req.session._uid else {},
-            "db": req.session._db,
-            "login": req.session._login,
-            "openerp_entreprise": req.session.openerp_entreprise(),
-        }
+    # Retrieve database installed modules
+    # TODO The following code should move to ir.module.module.list_installed_modules()
+    Modules = req.session.model('ir.module.module')
+    domain = [('state','=','installed'), ('name','in', loadable)]
+    for module in Modules.search_read(domain, ['name', 'dependencies_id']):
+        modules[module['name']] = []
+        deps = module.get('dependencies_id')
+        if deps:
+            deps_read = req.session.model('ir.module.module.dependency').read(deps, ['name'])
+            dependencies = [i['name'] for i in deps_read]
+            modules[module['name']] = dependencies
 
-    @openerpweb.jsonrequest
-    def get_session_info(self, req):
-        return self.session_info(req)
+    sorted_modules = module_topological_sort(modules)
+    return sorted_modules
 
-    @openerpweb.jsonrequest
-    def authenticate(self, req, db, login, password, base_location=None):
-        wsgienv = req.httprequest.environ
-        release = common.release
-        env = dict(
-            base_location=base_location,
-            HTTP_HOST=wsgienv['HTTP_HOST'],
-            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-            user_agent="%s / %s" % (release.name, release.version),
-        )
-        req.session.authenticate(db, login, password, env)
+def module_installed_bypass_session(dbname):
+    loadable = openerpweb.addons_manifest.keys()
+    modules = {}
+    try:
+        import openerp.modules.registry
+        registry = openerp.modules.registry.RegistryManager.get(dbname)
+        with registry.cursor() as cr:
+            m = registry.get('ir.module.module')
+            # TODO The following code should move to ir.module.module.list_installed_modules()
+            domain = [('state','=','installed'), ('name','in', loadable)]
+            ids = m.search(cr, 1, [('state','=','installed'), ('name','in', loadable)])
+            for module in m.read(cr, 1, ids, ['name', 'dependencies_id']):
+                modules[module['name']] = []
+                deps = module.get('dependencies_id')
+                if deps:
+                    deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
+                    dependencies = [i['name'] for i in deps_read]
+                    modules[module['name']] = dependencies
+    except Exception,e:
+        pass
+    sorted_modules = module_topological_sort(modules)
+    return sorted_modules
 
-        return self.session_info(req)
+def module_boot(req):
+    serverside = []
+    dbside = []
+    for i in req.config.server_wide_modules:
+        if i in openerpweb.addons_manifest:
+            serverside.append(i)
+    # if only one db load every module at boot
+    dbs = []
+    try:
+        dbs = db_list(req)
+    except xmlrpclib.Fault:
+        # ignore access denied
+        pass
+    if len(dbs) == 1:
+        dbside = module_installed_bypass_session(dbs[0])
+        dbside = [i for i in dbside if i not in serverside]
+    addons = serverside + dbside
+    return addons
 
-    @openerpweb.jsonrequest
-    def change_password (self,req,fields):
-        old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
-                dict(map(operator.itemgetter('name', 'value'), fields)))
-        if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
-            return {'error':'All passwords have to be filled.','title': 'Change Password'}
-        if new_password != confirm_password:
-            return {'error': 'The new password and its confirmation must be identical.','title': 'Change Password'}
-        try:
-            if req.session.model('res.users').change_password(
-                old_password, new_password):
-                return {'new_password':new_password}
-        except Exception:
-            return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
-        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+def concat_xml(file_list):
+    """Concatenate xml files
 
-    @openerpweb.jsonrequest
-    def sc_list(self, req):
-        return req.session.model('ir.ui.view_sc').get_sc(
-            req.session._uid, "ir.ui.menu", req.session.eval_context(req.context))
+    :param list(str) file_list: list of files to check
+    :returns: (concatenation_result, checksum)
+    :rtype: (str, str)
+    """
+    checksum = hashlib.new('sha1')
+    if not file_list:
+        return '', checksum.hexdigest()
 
-    @openerpweb.jsonrequest
-    def get_lang_list(self, req):
-        try:
-            return {
-                'lang_list': (req.session.proxy("db").list_lang() or []),
-                'error': ""
-            }
-        except Exception, e:
-            return {"error": e, "title": "Languages"}
+    root = None
+    for fname in file_list:
+        with open(fname, 'rb') as fp:
+            contents = fp.read()
+            checksum.update(contents)
+            fp.seek(0)
+            xml = ElementTree.parse(fp).getroot()
 
-    @openerpweb.jsonrequest
-    def modules(self, req):
-        # Compute available candidates module
-        loadable = openerpweb.addons_manifest
-        loaded = set(req.config.server_wide_modules)
-        candidates = [mod for mod in loadable if mod not in loaded]
+        if root is None:
+            root = ElementTree.Element(xml.tag)
+        #elif root.tag != xml.tag:
+        #    raise ValueError("Root tags missmatch: %r != %r" % (root.tag, xml.tag))
 
-        # already installed modules have no dependencies
-        modules = dict.fromkeys(loaded, [])
+        for child in xml.getchildren():
+            root.append(child)
+    return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
 
-        # Compute auto_install modules that might be on the web side only
-        modules.update((name, openerpweb.addons_manifest[name].get('depends', []))
-                      for name in candidates
-                      if openerpweb.addons_manifest[name].get('auto_install'))
+def concat_files(file_list, reader=None, intersperse=""):
+    """ Concatenates contents of all provided files
 
-        # Retrieve database installed modules
-        Modules = req.session.model('ir.module.module')
-        for module in Modules.search_read(
-                        [('state','=','installed'), ('name','in', candidates)],
-                        ['name', 'dependencies_id']):
-            deps = module.get('dependencies_id')
-            if deps:
-                dependencies = map(
-                    operator.itemgetter('name'),
-                    req.session.model('ir.module.module.dependency').read(deps, ['name']))
-                modules[module['name']] = list(
-                    set(modules.get(module['name'], []) + dependencies))
+    :param list(str) file_list: list of files to check
+    :param function reader: reading procedure for each file
+    :param str intersperse: string to intersperse between file contents
+    :returns: (concatenation_result, checksum)
+    :rtype: (str, str)
+    """
+    checksum = hashlib.new('sha1')
+    if not file_list:
+        return '', checksum.hexdigest()
 
-        sorted_modules = topological_sort(modules)
-        return [module for module in sorted_modules if module not in loaded]
+    if reader is None:
+        def reader(f):
+            with open(f, 'rb') as fp:
+                return fp.read()
 
-    @openerpweb.jsonrequest
-    def eval_domain_and_context(self, req, contexts, domains,
-                                group_by_seq=None):
-        """ Evaluates sequences of domains and contexts, composing them into
-        a single context, domain or group_by sequence.
+    files_content = []
+    for fname in file_list:
+        contents = reader(fname)
+        checksum.update(contents)
+        files_content.append(contents)
 
-        :param list contexts: list of contexts to merge together. Contexts are
-                              evaluated in sequence, all previous contexts
-                              are part of their own evaluation context
-                              (starting at the session context).
-        :param list domains: list of domains to merge together. Domains are
-                             evaluated in sequence and appended to one another
-                             (implicit AND), their evaluation domain is the
-                             result of merging all contexts.
-        :param list group_by_seq: list of domains (which may be in a different
-                                  order than the ``contexts`` parameter),
-                                  evaluated in sequence, their ``'group_by'``
-                                  key is extracted if they have one.
-        :returns:
-            a 3-dict of:
+    files_concat = intersperse.join(files_content)
+    return files_concat, checksum.hexdigest()
 
-            context (``dict``)
-                the global context created by merging all of
-                ``contexts``
+def concat_js(file_list):
+    content, checksum = concat_files(file_list, intersperse=';')
+    content = rjsmin(content)
+    return content, checksum 
 
-            domain (``list``)
-                the concatenation of all domains
+def manifest_glob(req, addons, key):
+    if addons is None:
+        addons = module_boot(req)
+    else:
+        addons = addons.split(',')
+    r = []
+    for addon in addons:
+        manifest = openerpweb.addons_manifest.get(addon, None)
+        if not manifest:
+            continue
+        # ensure does not ends with /
+        addons_path = os.path.join(manifest['addons_path'], '')[:-1]
+        globlist = manifest.get(key, [])
+        for pattern in globlist:
+            for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
+                r.append((path, path[len(addons_path):]))
+    return r
 
-            group_by (``list``)
-                a list of fields to group by, potentially empty (in which case
-                no group by should be performed)
-        """
-        context, domain = eval_context_and_domain(req.session,
-                                                  common.nonliterals.CompoundContext(*(contexts or [])),
-                                                  common.nonliterals.CompoundDomain(*(domains or [])))
+def manifest_list(req, mods, extension):
+    if not req.debug:
+        path = '/web/webclient/' + extension
+        if mods is not None:
+            path += '?mods=' + mods
+        return [path]
+    files = manifest_glob(req, mods, extension)
+    i_am_diabetic = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1 or \
+                    req.httprequest.environ.get('HTTP_REFERER', '').count("no_sugar") >= 1
+    if i_am_diabetic:
+        return [wp for _fp, wp in files]
+    else:
+        return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in files]
 
-        group_by_sequence = []
-        for candidate in (group_by_seq or []):
-            ctx = req.session.eval_context(candidate, context)
-            group_by = ctx.get('group_by')
-            if not group_by:
-                continue
-            elif isinstance(group_by, basestring):
-                group_by_sequence.append(group_by)
-            else:
-                group_by_sequence.extend(group_by)
+def get_last_modified(files):
+    """ Returns the modification time of the most recently modified
+    file provided
 
-        return {
-            'context': context,
-            'domain': domain,
-            'group_by': group_by_sequence
-        }
+    :param list(str) files: names of files to check
+    :return: most recent modification time amongst the fileset
+    :rtype: datetime.datetime
+    """
+    files = list(files)
+    if files:
+        return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
+                   for f in files)
+    return datetime.datetime(1970, 1, 1)
 
-    @openerpweb.jsonrequest
-    def save_session_action(self, req, the_action):
-        """
-        This method store an action object in the session object and returns an integer
-        identifying that action. The method get_session_action() can be used to get
-        back the action.
+def make_conditional(req, response, last_modified=None, etag=None):
+    """ Makes the provided response conditional based upon the request,
+    and mandates revalidation from clients
 
-        :param the_action: The action to save in the session.
-        :type the_action: anything
-        :return: A key identifying the saved action.
-        :rtype: integer
-        """
-        saved_actions = req.httpsession.get('saved_actions')
-        if not saved_actions:
-            saved_actions = {"next":0, "actions":{}}
-            req.httpsession['saved_actions'] = saved_actions
-        # we don't allow more than 10 stored actions
-        if len(saved_actions["actions"]) >= 10:
-            del saved_actions["actions"][min(saved_actions["actions"])]
-        key = saved_actions["next"]
-        saved_actions["actions"][key] = the_action
-        saved_actions["next"] = key + 1
-        return key
+    Uses Werkzeug's own :meth:`ETagResponseMixin.make_conditional`, after
+    setting ``last_modified`` and ``etag`` correctly on the response object
 
-    @openerpweb.jsonrequest
-    def get_session_action(self, req, key):
-        """
-        Gets back a previously saved action. This method can return None if the action
-        was saved since too much time (this case should be handled in a smart way).
+    :param req: OpenERP request
+    :type req: web.common.http.WebRequest
+    :param response: Werkzeug response
+    :type response: werkzeug.wrappers.Response
+    :param datetime.datetime last_modified: last modification date of the response content
+    :param str etag: some sort of checksum of the content (deep etag)
+    :return: the response object provided
+    :rtype: werkzeug.wrappers.Response
+    """
+    response.cache_control.must_revalidate = True
+    response.cache_control.max_age = 0
+    if last_modified:
+        response.last_modified = last_modified
+    if etag:
+        response.set_etag(etag)
+    return response.make_conditional(req.httprequest)
 
-        :param key: The key given by save_session_action()
-        :type key: integer
-        :return: The saved action or None.
-        :rtype: anything
-        """
-        saved_actions = req.httpsession.get('saved_actions')
-        if not saved_actions:
-            return None
-        return saved_actions["actions"].get(key)
+def login_and_redirect(req, db, login, key, redirect_url='/'):
+    req.session.authenticate(db, login, key, {})
+    return set_cookie_and_redirect(req, redirect_url)
 
-    @openerpweb.jsonrequest
-    def check(self, req):
-        req.session.assert_valid()
-        return None
-
-    @openerpweb.jsonrequest
-    def destroy(self, req):
-        req.session._suicide = True
+def set_cookie_and_redirect(req, redirect_url):
+    redirect = werkzeug.utils.redirect(redirect_url, 303)
+    redirect.autocorrect_location_header = False
+    cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
+    redirect.set_cookie('instance0|session_id', cookie_val)
+    return redirect
 
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
@@ -829,6 +499,470 @@ def fix_view_modes(action):
     ]
 
     return action
+
+def parse_domain(domain, session):
+    """ Parses an arbitrary string containing a domain, transforms it
+    to either a literal domain or a :class:`common.nonliterals.Domain`
+
+    :param domain: the domain to parse, if the domain is not a string it
+                   is assumed to be a literal domain and is returned as-is
+    :param session: Current OpenERP session
+    :type session: openerpweb.openerpweb.OpenERPSession
+    """
+    if not isinstance(domain, basestring):
+        return domain
+    try:
+        return ast.literal_eval(domain)
+    except ValueError:
+        # not a literal
+        return common.nonliterals.Domain(session, domain)
+
+def parse_context(context, session):
+    """ Parses an arbitrary string containing a context, transforms it
+    to either a literal context or a :class:`common.nonliterals.Context`
+
+    :param context: the context to parse, if the context is not a string it
+           is assumed to be a literal domain and is returned as-is
+    :param session: Current OpenERP session
+    :type session: openerpweb.openerpweb.OpenERPSession
+    """
+    if not isinstance(context, basestring):
+        return context
+    try:
+        return ast.literal_eval(context)
+    except ValueError:
+        return common.nonliterals.Context(session, context)
+
+#----------------------------------------------------------
+# OpenERP Web web Controllers
+#----------------------------------------------------------
+
+html_template = """<!DOCTYPE html>
+<html style="height: 100%%">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>OpenERP</title>
+        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+        <link rel="stylesheet" href="/web/static/src/css/full.css" />
+        %(css)s
+        %(js)s
+        <script type="text/javascript">
+            $(function() {
+                var s = new openerp.init(%(modules)s);
+                %(init)s
+            });
+        </script>
+    </head>
+    <body></body>
+</html>
+"""
+
+class Home(openerpweb.Controller):
+    _cp_path = '/'
+
+    @openerpweb.httprequest
+    def index(self, req, s_action=None, **kw):
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, None, 'js'))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, None, 'css'))
+
+        r = html_template % {
+            'js': js,
+            'css': css,
+            'modules': simplejson.dumps(module_boot(req)),
+            'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
+        }
+        return r
+
+    @openerpweb.httprequest
+    def login(self, req, db, login, key):
+        return login_and_redirect(req, db, login, key)
+
+class WebClient(openerpweb.Controller):
+    _cp_path = "/web/webclient"
+
+    @openerpweb.jsonrequest
+    def csslist(self, req, mods=None):
+        return manifest_list(req, mods, 'css')
+
+    @openerpweb.jsonrequest
+    def jslist(self, req, mods=None):
+        return manifest_list(req, mods, 'js')
+
+    @openerpweb.jsonrequest
+    def qweblist(self, req, mods=None):
+        return manifest_list(req, mods, 'qweb')
+
+    @openerpweb.httprequest
+    def css(self, req, mods=None):
+        files = list(manifest_glob(req, mods, 'css'))
+        last_modified = get_last_modified(f[0] for f in files)
+        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
+            return werkzeug.wrappers.Response(status=304)
+
+        file_map = dict(files)
+
+        rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
+        rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
+
+        def reader(f):
+            """read the a css file and absolutify all relative uris"""
+            with open(f, 'rb') as fp:
+                data = fp.read().decode('utf-8')
+
+            path = file_map[f]
+            # convert FS path into web path
+            web_dir = '/'.join(os.path.dirname(path).split(os.path.sep))
+
+            data = re.sub(
+                rx_import,
+                r"""@import \1%s/""" % (web_dir,),
+                data,
+            )
+
+            data = re.sub(
+                rx_url,
+                r"""url(\1%s/""" % (web_dir,),
+                data,
+            )
+            return data.encode('utf-8')
+
+        content, checksum = concat_files((f[0] for f in files), reader)
+
+        return make_conditional(
+            req, req.make_response(content, [('Content-Type', 'text/css')]),
+            last_modified, checksum)
+
+    @openerpweb.httprequest
+    def js(self, req, mods=None):
+        files = [f[0] for f in manifest_glob(req, mods, 'js')]
+        last_modified = get_last_modified(files)
+        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
+            return werkzeug.wrappers.Response(status=304)
+
+        content, checksum = concat_js(files)
+
+        return make_conditional(
+            req, req.make_response(content, [('Content-Type', 'application/javascript')]),
+            last_modified, checksum)
+
+    @openerpweb.httprequest
+    def qweb(self, req, mods=None):
+        files = [f[0] for f in manifest_glob(req, mods, 'qweb')]
+        last_modified = get_last_modified(files)
+        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
+            return werkzeug.wrappers.Response(status=304)
+
+        content, checksum = concat_xml(files)
+
+        return make_conditional(
+            req, req.make_response(content, [('Content-Type', 'text/xml')]),
+            last_modified, checksum)
+
+    @openerpweb.jsonrequest
+    def translations(self, req, mods, lang):
+        lang_model = req.session.model('res.lang')
+        ids = lang_model.search([("code", "=", lang)])
+        if ids:
+            lang_obj = lang_model.read(ids[0], ["direction", "date_format", "time_format",
+                                                "grouping", "decimal_point", "thousands_sep"])
+        else:
+            lang_obj = None
+
+        if "_" in lang:
+            separator = "_"
+        else:
+            separator = "@"
+        langs = lang.split(separator)
+        langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
+
+        transs = {}
+        for addon_name in mods:
+            transl = {"messages":[]}
+            transs[addon_name] = transl
+            addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
+            for l in langs:
+                f_name = os.path.join(addons_path, addon_name, "i18n", l + ".po")
+                if not os.path.exists(f_name):
+                    continue
+                try:
+                    with open(f_name) as t_file:
+                        po = babel.messages.pofile.read_po(t_file)
+                except Exception:
+                    continue
+                for x in po:
+                    if x.id and x.string and "openerp-web" in x.auto_comments:
+                        transl["messages"].append({'id': x.id, 'string': x.string})
+        return {"modules": transs,
+                "lang_parameters": lang_obj}
+
+    @openerpweb.jsonrequest
+    def version_info(self, req):
+        return {
+            "version": common.release.version
+        }
+
+class Proxy(openerpweb.Controller):
+    _cp_path = '/web/proxy'
+
+    @openerpweb.jsonrequest
+    def load(self, req, path):
+        """ Proxies an HTTP request through a JSON request.
+
+        It is strongly recommended to not request binary files through this,
+        as the result will be a binary data blob as well.
+
+        :param req: OpenERP request
+        :param path: actual request path
+        :return: file content
+        """
+        from werkzeug.test import Client
+        from werkzeug.wrappers import BaseResponse
+
+        return Client(req.httprequest.app, BaseResponse).get(path).data
+
+class Database(openerpweb.Controller):
+    _cp_path = "/web/database"
+
+    @openerpweb.jsonrequest
+    def get_list(self, req):
+        dbs = db_list(req)
+        return {"db_list": dbs}
+
+    @openerpweb.jsonrequest
+    def create(self, req, fields):
+        params = dict(map(operator.itemgetter('name', 'value'), fields))
+        create_attrs = (
+            params['super_admin_pwd'],
+            params['db_name'],
+            bool(params.get('demo_data')),
+            params['db_lang'],
+            params['create_admin_pwd']
+        )
+
+        return req.session.proxy("db").create_database(*create_attrs)
+
+    @openerpweb.jsonrequest
+    def drop(self, req, fields):
+        password, db = operator.itemgetter(
+            'drop_pwd', 'drop_db')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+
+        try:
+            return req.session.proxy("db").drop(password, db)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Drop Database'}
+        return {'error': 'Could not drop database !', 'title': 'Drop Database'}
+
+    @openerpweb.httprequest
+    def backup(self, req, backup_db, backup_pwd, token):
+        try:
+            db_dump = base64.b64decode(
+                req.session.proxy("db").dump(backup_pwd, backup_db))
+            filename = "%(db)s_%(timestamp)s.dump" % {
+                'db': backup_db,
+                'timestamp': datetime.datetime.utcnow().strftime(
+                    "%Y-%m-%d_%H-%M-%SZ")
+            }
+            return req.make_response(db_dump,
+               [('Content-Type', 'application/octet-stream; charset=binary'),
+               ('Content-Disposition', 'attachment; filename="' + filename + '"')],
+               {'fileToken': int(token)}
+            )
+        except xmlrpclib.Fault, e:
+             return simplejson.dumps([[],[{'error': e.faultCode, 'title': 'backup Database'}]])
+
+    @openerpweb.httprequest
+    def restore(self, req, db_file, restore_pwd, new_db):
+        try:
+            data = base64.b64encode(db_file.read())
+            req.session.proxy("db").restore(restore_pwd, new_db, data)
+            return ''
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                raise Exception("AccessDenied")
+
+    @openerpweb.jsonrequest
+    def change_password(self, req, fields):
+        old_password, new_password = operator.itemgetter(
+            'old_pwd', 'new_pwd')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+        try:
+            return req.session.proxy("db").change_admin_password(old_password, new_password)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Change Password'}
+        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+
+class Session(openerpweb.Controller):
+    _cp_path = "/web/session"
+
+    def session_info(self, req):
+        req.session.ensure_valid()
+        return {
+            "session_id": req.session_id,
+            "uid": req.session._uid,
+            "context": req.session.get_context() if req.session._uid else {},
+            "db": req.session._db,
+            "login": req.session._login,
+        }
+
+    @openerpweb.jsonrequest
+    def get_session_info(self, req):
+        return self.session_info(req)
+
+    @openerpweb.jsonrequest
+    def authenticate(self, req, db, login, password, base_location=None):
+        wsgienv = req.httprequest.environ
+        release = common.release
+        env = dict(
+            base_location=base_location,
+            HTTP_HOST=wsgienv['HTTP_HOST'],
+            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+            user_agent="%s / %s" % (release.name, release.version),
+        )
+        req.session.authenticate(db, login, password, env)
+
+        return self.session_info(req)
+
+    @openerpweb.jsonrequest
+    def change_password (self,req,fields):
+        old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+        if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
+            return {'error':'All passwords have to be filled.','title': 'Change Password'}
+        if new_password != confirm_password:
+            return {'error': 'The new password and its confirmation must be identical.','title': 'Change Password'}
+        try:
+            if req.session.model('res.users').change_password(
+                old_password, new_password):
+                return {'new_password':new_password}
+        except Exception:
+            return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
+        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+
+    @openerpweb.jsonrequest
+    def sc_list(self, req):
+        return req.session.model('ir.ui.view_sc').get_sc(
+            req.session._uid, "ir.ui.menu", req.session.eval_context(req.context))
+
+    @openerpweb.jsonrequest
+    def get_lang_list(self, req):
+        try:
+            return {
+                'lang_list': (req.session.proxy("db").list_lang() or []),
+                'error': ""
+            }
+        except Exception, e:
+            return {"error": e, "title": "Languages"}
+
+    @openerpweb.jsonrequest
+    def modules(self, req):
+        # return all installed modules. Web client is smart enough to not load a module twice
+        return module_installed(req)
+
+    @openerpweb.jsonrequest
+    def eval_domain_and_context(self, req, contexts, domains,
+                                group_by_seq=None):
+        """ Evaluates sequences of domains and contexts, composing them into
+        a single context, domain or group_by sequence.
+
+        :param list contexts: list of contexts to merge together. Contexts are
+                              evaluated in sequence, all previous contexts
+                              are part of their own evaluation context
+                              (starting at the session context).
+        :param list domains: list of domains to merge together. Domains are
+                             evaluated in sequence and appended to one another
+                             (implicit AND), their evaluation domain is the
+                             result of merging all contexts.
+        :param list group_by_seq: list of domains (which may be in a different
+                                  order than the ``contexts`` parameter),
+                                  evaluated in sequence, their ``'group_by'``
+                                  key is extracted if they have one.
+        :returns:
+            a 3-dict of:
+
+            context (``dict``)
+                the global context created by merging all of
+                ``contexts``
+
+            domain (``list``)
+                the concatenation of all domains
+
+            group_by (``list``)
+                a list of fields to group by, potentially empty (in which case
+                no group by should be performed)
+        """
+        context, domain = eval_context_and_domain(req.session,
+                                                  common.nonliterals.CompoundContext(*(contexts or [])),
+                                                  common.nonliterals.CompoundDomain(*(domains or [])))
+
+        group_by_sequence = []
+        for candidate in (group_by_seq or []):
+            ctx = req.session.eval_context(candidate, context)
+            group_by = ctx.get('group_by')
+            if not group_by:
+                continue
+            elif isinstance(group_by, basestring):
+                group_by_sequence.append(group_by)
+            else:
+                group_by_sequence.extend(group_by)
+
+        return {
+            'context': context,
+            'domain': domain,
+            'group_by': group_by_sequence
+        }
+
+    @openerpweb.jsonrequest
+    def save_session_action(self, req, the_action):
+        """
+        This method store an action object in the session object and returns an integer
+        identifying that action. The method get_session_action() can be used to get
+        back the action.
+
+        :param the_action: The action to save in the session.
+        :type the_action: anything
+        :return: A key identifying the saved action.
+        :rtype: integer
+        """
+        saved_actions = req.httpsession.get('saved_actions')
+        if not saved_actions:
+            saved_actions = {"next":0, "actions":{}}
+            req.httpsession['saved_actions'] = saved_actions
+        # we don't allow more than 10 stored actions
+        if len(saved_actions["actions"]) >= 10:
+            del saved_actions["actions"][min(saved_actions["actions"])]
+        key = saved_actions["next"]
+        saved_actions["actions"][key] = the_action
+        saved_actions["next"] = key + 1
+        return key
+
+    @openerpweb.jsonrequest
+    def get_session_action(self, req, key):
+        """
+        Gets back a previously saved action. This method can return None if the action
+        was saved since too much time (this case should be handled in a smart way).
+
+        :param key: The key given by save_session_action()
+        :type key: integer
+        :return: The saved action or None.
+        :rtype: anything
+        """
+        saved_actions = req.httpsession.get('saved_actions')
+        if not saved_actions:
+            return None
+        return saved_actions["actions"].get(key)
+
+    @openerpweb.jsonrequest
+    def check(self, req):
+        req.session.assert_valid()
+        return None
+
+    @openerpweb.jsonrequest
+    def destroy(self, req):
+        req.session._suicide = True
 
 class Menu(openerpweb.Controller):
     _cp_path = "/web/menu"
@@ -994,6 +1128,16 @@ class DataSet(openerpweb.Controller):
             elif isinstance(kwargs[k], common.nonliterals.BaseDomain):
                 kwargs[k] = req.session.eval_domain(kwargs[k])
 
+        # Temporary implements future display_name special field for model#read()
+        if method == 'read' and kwargs.get('context') and kwargs['context'].get('future_display_name'):
+            if 'display_name' in args[1]:
+                names = req.session.model(model).name_get(args[0], **kwargs)
+                args[1].remove('display_name')
+                r = getattr(req.session.model(model), method)(*args, **kwargs)
+                for i in range(len(r)):
+                    r[i]['display_name'] = names[i][1] or "%s#%d" % (model, names[i][0])
+                return r
+
         return getattr(req.session.model(model), method)(*args, **kwargs)
 
     @openerpweb.jsonrequest
@@ -1044,6 +1188,15 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
         return req.session.exec_workflow(model, id, signal)
+
+    @openerpweb.jsonrequest
+    def resequence(self, req, model, ids):
+        m = req.session.model(model)
+        if not len(m.fields_get(['sequence'])):
+            return False
+        for i in range(len(ids)):
+            m.write([ids[i]], { 'sequence': i })
+        return True
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/web/group"
@@ -1184,39 +1337,6 @@ class View(openerpweb.Controller):
     def load(self, req, model, view_id, view_type, toolbar=False):
         return self.fields_view_get(req, model, view_id, view_type, toolbar=toolbar)
 
-def parse_domain(domain, session):
-    """ Parses an arbitrary string containing a domain, transforms it
-    to either a literal domain or a :class:`common.nonliterals.Domain`
-
-    :param domain: the domain to parse, if the domain is not a string it
-                   is assumed to be a literal domain and is returned as-is
-    :param session: Current OpenERP session
-    :type session: openerpweb.openerpweb.OpenERPSession
-    """
-    if not isinstance(domain, basestring):
-        return domain
-    try:
-        return ast.literal_eval(domain)
-    except ValueError:
-        # not a literal
-        return common.nonliterals.Domain(session, domain)
-
-def parse_context(context, session):
-    """ Parses an arbitrary string containing a context, transforms it
-    to either a literal context or a :class:`common.nonliterals.Context`
-
-    :param context: the context to parse, if the context is not a string it
-           is assumed to be a literal domain and is returned as-is
-    :param session: Current OpenERP session
-    :type session: openerpweb.openerpweb.OpenERPSession
-    """
-    if not isinstance(context, basestring):
-        return context
-    try:
-        return ast.literal_eval(context)
-    except ValueError:
-        return common.nonliterals.Context(session, context)
-
 class ListView(View):
     _cp_path = "/web/listview"
 
@@ -1290,47 +1410,6 @@ class SearchView(View):
                 del filter['context']
                 del filter['domain']
         return filters
-    
-     
-    @openerpweb.jsonrequest
-    def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
-        to_eval = common.nonliterals.CompoundContext(context_to_save)
-        to_eval.session = req.session
-        ctx = dict((k, v) for k, v in to_eval.evaluate().iteritems()
-                   if not k.startswith('search_default_'))
-        ctx['dashboard_merge_domains_contexts'] = False # TODO: replace this 6.1 workaround by attribute on <action/>
-        domain = common.nonliterals.CompoundDomain(domain)
-        domain.session = req.session
-        domain = domain.evaluate()
-
-        dashboard_action = load_actions_from_ir_values(req, 'action', 'tree_but_open',
-                                             [('ir.ui.menu', menu_id)], False)
-        if dashboard_action:
-            action = dashboard_action[0][2]
-            if action['res_model'] == 'board.board' and action['views'][0][1] == 'form':
-                # Maybe should check the content instead of model board.board ?
-                view_id = action['views'][0][0]
-                board = req.session.model(action['res_model']).fields_view_get(view_id, 'form')
-                if board and 'arch' in board:
-                    xml = ElementTree.fromstring(board['arch'])
-                    column = xml.find('./board/column')
-                    if column is not None:
-                        new_action = ElementTree.Element('action', {
-                                'name' : str(action_id),
-                                'string' : name,
-                                'view_mode' : view_mode,
-                                'context' : str(ctx),
-                                'domain' : str(domain)
-                            })
-                        column.insert(0, new_action)
-                        arch = ElementTree.tostring(xml, 'utf-8')
-                        return req.session.model('ir.ui.view.custom').create({
-                                'user_id': req.session._uid,
-                                'ref_id': view_id,
-                                'arch': arch
-                            }, req.session.eval_context(req.context))
-
-        return False
 
 class Binary(openerpweb.Controller):
     _cp_path = "/web/binary"
@@ -1343,11 +1422,14 @@ class Binary(openerpweb.Controller):
         headers = [('Content-Type', 'image/png')]
         etag = req.httprequest.headers.get('If-None-Match')
         hashed_session = hashlib.md5(req.session_id).hexdigest()
+        id = None if not id else simplejson.loads(id)
+        if type(id) is list:
+            id = id[0] # m2o
         if etag:
             if not id and hashed_session == etag:
                 return werkzeug.wrappers.Response(status=304)
             else:
-                date = Model.read([int(id)], [last_update], context)[0].get(last_update)
+                date = Model.read([id], [last_update], context)[0].get(last_update)
                 if hashlib.md5(date).hexdigest() == etag:
                     return werkzeug.wrappers.Response(status=304)
 
@@ -1357,7 +1439,7 @@ class Binary(openerpweb.Controller):
                 res = Model.default_get([field], context).get(field)
                 image_data = base64.b64decode(res)
             else:
-                res = Model.read([int(id)], [last_update, field], context)[0]
+                res = Model.read([id], [last_update, field], context)[0]
                 retag = hashlib.md5(res.get(last_update)).hexdigest()
                 image_data = base64.b64decode(res.get(field))
         except (TypeError, xmlrpclib.Fault):
@@ -1974,3 +2056,5 @@ class Import(View):
             message, record)
         return '<script>window.top.%s(%s);</script>' % (
             jsonp, simplejson.dumps({'error': {'message':msg}}))
+
+# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

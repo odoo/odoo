@@ -43,11 +43,19 @@ instance.web.DiagramView = instance.web.View.extend({
         this.connectors = this.fields_view.arch.children[1],
         this.node = this.nodes.attrs.object,
         this.connector = this.connectors.attrs.object;
+        this.labels = _.filter(this.fields_view.arch.children, function(label) {
+            return label.tag == "label";
+        });
 
-        this.$element.html(QWeb.render("DiagramView", this));
-        this.$element.addClass(this.fields_view.arch.attrs['class']);
+        this.$el.html(QWeb.render("DiagramView", this));
+        this.$el.addClass(this.fields_view.arch.attrs['class']);
 
-        this.$element.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
+        _.each(self.labels,function(label){
+            html_label = '<p style="padding: 4px;">' + label.attrs.string + "</p>";
+            self.$el.find('.oe_diagram_header').append(html_label);
+        })
+
+        this.$el.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
         });
@@ -55,7 +63,7 @@ instance.web.DiagramView = instance.web.View.extend({
         this.do_update_pager();
 
         // New Node,Edge
-        this.$element.find('#new_node.oe_diagram_button_new').click(function(){self.add_node();});
+        this.$el.find('#new_node.oe_diagram_button_new').click(function(){self.add_node();});
 
         if(this.id) {
             self.get_diagram_info();
@@ -118,7 +126,7 @@ instance.web.DiagramView = instance.web.View.extend({
         var res_nodes  = result['nodes'];
         var res_edges  = result['conn'];
         this.parent_field = result.parent_field;
-        this.$element.find('h3.oe_diagram_title').text(result.name);
+        this.$el.find('h3.oe_diagram_title').text(result.name);
 
         var id_to_node = {};
 
@@ -153,7 +161,7 @@ instance.web.DiagramView = instance.web.View.extend({
         };
 
         // remove previous diagram
-        var canvas = self.$element.find('div.oe_diagram_diagram')
+        var canvas = self.$el.find('div.oe_diagram_diagram')
                              .empty().get(0);
 
         var r  = new Raphael(canvas, '100%','100%');
@@ -324,7 +332,7 @@ instance.web.DiagramView = instance.web.View.extend({
         });
         // We want to destroy the dummy edge after a creation cancel. This destroys it even if we save the changes.
         // This is not a problem since the diagram is completely redrawn on saved changes.
-        pop.$element.bind("dialogbeforeclose",function(){
+        pop.$el.bind("dialogbeforeclose",function(){
             if(dummy_cuteedge){
                 dummy_cuteedge.remove();
             }
@@ -362,7 +370,7 @@ instance.web.DiagramView = instance.web.View.extend({
     },
 
     do_update_pager: function(hide_index) {
-        var $pager = this.$element.find('div.oe_diagram_pager');
+        var $pager = this.$el.find('div.oe_diagram_pager');
         var index = hide_index ? '-' : this.dataset.index + 1;
         if(!this.dataset.count) {
             this.dataset.count = this.dataset.ids.length;

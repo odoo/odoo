@@ -75,9 +75,9 @@ instance.web.DataImport = instance.web.Dialog.extend({
             }
         });
         this.toggle_import_button(false);
-        this.$element.find('#csvfile').change(this.on_autodetect_data);
-        this.$element.find('fieldset').change(this.on_autodetect_data);
-        this.$element.delegate('fieldset legend', 'click', function() {
+        this.$el.find('#csvfile').change(this.on_autodetect_data);
+        this.$el.find('fieldset').change(this.on_autodetect_data);
+        this.$el.delegate('fieldset legend', 'click', function() {
             $(this).parent().toggleClass('oe_closed');
         });
         this.ready.push(new instance.web.DataSet(this, this.model).call(
@@ -156,19 +156,19 @@ instance.web.DataImport = instance.web.Dialog.extend({
         });
     },
     toggle_import_button: function (newstate) {
-    	instance.web.dialog(this.$element, 'widget')
+        instance.web.dialog(this.$el, 'widget')
                 .find('.oe_import_dialog_button')
                 .button('option', 'disabled', !newstate);
     },
     do_import: function() {
-        if(!this.$element.find('#csvfile').val()) { return; }
-        var lines_to_skip = parseInt(this.$element.find('#csv_skip').val(), 10);
-        var with_headers = this.$element.find('#file_has_headers').prop('checked');
+        if(!this.$el.find('#csvfile').val()) { return; }
+        var lines_to_skip = parseInt(this.$el.find('#csv_skip').val(), 10);
+        var with_headers = this.$el.find('#file_has_headers').prop('checked');
         if (!lines_to_skip && with_headers) {
             lines_to_skip = 1;
         }
         var indices = [], fields = [];
-        this.$element.find(".sel_fields").each(function(index, element) {
+        this.$el.find(".sel_fields").each(function(index, element) {
             var val = element.value;
             if (!val) {
                 return;
@@ -177,7 +177,7 @@ instance.web.DataImport = instance.web.Dialog.extend({
             fields.push(val);
         });
 
-        jsonp(this.$element.find('#import_data'), {
+        jsonp(this.$el.find('#import_data'), {
             url: '/web/import/import_data',
             data: {
                 model: this.model,
@@ -190,19 +190,19 @@ instance.web.DataImport = instance.web.Dialog.extend({
         }, this.on_import_results);
     },
     on_autodetect_data: function() {
-        if(!this.$element.find('#csvfile').val()) { return; }
-        jsonp(this.$element.find('#import_data'), {
+        if(!this.$el.find('#csvfile').val()) { return; }
+        jsonp(this.$el.find('#import_data'), {
             url: '/web/import/detect_data'
         }, this.on_import_results);
     },
     on_import_results: function(results) {
-        this.$element.find('#result').empty();
-        var headers, result_node = this.$element.find("#result");
+        this.$el.find('#result').empty();
+        var headers, result_node = this.$el.find("#result");
 
         if (results['error']) {
             result_node.append(QWeb.render('ImportView.error', {
                 'error': results['error']}));
-            this.$element.find('fieldset').removeClass('oe_closed');
+            this.$el.find('fieldset').removeClass('oe_closed');
             return;
         }
         if (results['success']) {
@@ -214,8 +214,8 @@ instance.web.DataImport = instance.web.Dialog.extend({
         }
 
         if (results['records']) {
-            var lines_to_skip = parseInt(this.$element.find('#csv_skip').val(), 10),
-                with_headers = this.$element.find('#file_has_headers').prop('checked');
+            var lines_to_skip = parseInt(this.$el.find('#csv_skip').val(), 10),
+                with_headers = this.$el.find('#file_has_headers').prop('checked');
             headers = with_headers ? results.records[0] : null;
 
             result_node.append(QWeb.render('ImportView.result', {
@@ -224,17 +224,17 @@ instance.web.DataImport = instance.web.Dialog.extend({
                           : with_headers ? results.records.slice(1)
                           : results.records
             }));
-            this.$element.find('fieldset').addClass('oe_closed');
+            this.$el.find('fieldset').addClass('oe_closed');
         }
-        this.$element.find('form').removeClass('oe_import_no_result');
+        this.$el.find('form').removeClass('oe_import_no_result');
 
-        this.$element.delegate('.oe_m2o_drop_down_button', 'click', function () {
+        this.$el.delegate('.oe_m2o_drop_down_button', 'click', function () {
             $(this).prev('input').focus();
         });
 
         var self = this;
         this.ready.then(function () {
-            var $fields = self.$element.find('.sel_fields').bind('blur', function () {
+            var $fields = self.$el.find('.sel_fields').bind('blur', function () {
                 if (this.value && !_(self.all_fields).contains(this.value)) {
                     this.value = '';
                 }
@@ -315,9 +315,9 @@ instance.web.DataImport = instance.web.Dialog.extend({
     find_duplicate_fields: function() {
         // Maps values to DOM nodes, in order to discover duplicates
         var values = {}, duplicates = {};
-        this.$element.find(".sel_fields").each(function(index, element) {
+        this.$el.find(".sel_fields").each(function(index, element) {
             var value = element.value;
-            var $element = $(element).removeClass('duplicate_fld');
+            var $el = $(element).removeClass('duplicate_fld');
             if (!value) { return; }
 
             if (!(value in values)) {
@@ -329,13 +329,13 @@ instance.web.DataImport = instance.web.Dialog.extend({
                 } else {
                     duplicates[value] = [same_valued_field, element];
                 }
-                $element.add(same_valued_field).addClass('duplicate_fld');
+                $el.add(same_valued_field).addClass('duplicate_fld');
             }
         });
         return duplicates;
     },
     on_check_field_values: function () {
-        this.$element.find("#message, #msg").remove();
+        this.$el.find("#message, #msg").remove();
 
         var required_valid = this.check_required();
 
@@ -343,7 +343,7 @@ instance.web.DataImport = instance.web.Dialog.extend({
         if (_.isEmpty(duplicates)) {
             this.toggle_import_button(required_valid);
         } else {
-            var $err = $('<div id="msg" style="color: red;">'+_t("Destination fields should only be selected once, some fields are selected more than once:")+'</div>').insertBefore(this.$element.find('#result'));
+            var $err = $('<div id="msg" style="color: red;">'+_t("Destination fields should only be selected once, some fields are selected more than once:")+'</div>').insertBefore(this.$el.find('#result'));
             var $dupes = $('<dl>').appendTo($err);
             _(duplicates).each(function(elements, value) {
                 $('<dt>').text(value).appendTo($dupes);
@@ -372,7 +372,7 @@ instance.web.DataImport = instance.web.Dialog.extend({
             return f.id;
         };
 
-        var selected_fields = _(this.$element.find('.sel_fields').get()).chain()
+        var selected_fields = _(this.$el.find('.sel_fields').get()).chain()
             .pluck('value')
             .compact()
             .map(resolve_field_id)
@@ -380,13 +380,13 @@ instance.web.DataImport = instance.web.Dialog.extend({
 
         var missing_fields = _.difference(this.required_fields, selected_fields);
         if (missing_fields.length) {
-            this.$element.find("#result").before('<div id="message" style="color:red">' + _t("*Required Fields are not selected :") + missing_fields + '.</div>');
+            this.$el.find("#result").before('<div id="message" style="color:red">' + _t("*Required Fields are not selected :") + missing_fields + '.</div>');
             return false;
         }
         return true;
     },
     destroy: function() {
-        this.$element.remove();
+        this.$el.remove();
         this._super();
     }
 });
