@@ -1050,6 +1050,10 @@ class mail_thread(osv.Model):
         to_subscribe_uids = [uid] if user_ids is None else user_ids
         write_res = self.write(cr, uid, ids, {'message_follower_ids': self.message_subscribe_get_command(cr, uid, to_subscribe_uids, context)}, context=context)
         follower_ids = [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
+        
+        if not subtype_ids:
+            subtype_obj = self.pool.get('mail.message.subtype')
+            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', 'true'),('model_ids.model', '=', self._name)])
         if subtype_ids:
             self.message_subscribe_udpate_subtypes(cr, uid, ids, user_ids, subtype_ids, context=context)
         return follower_ids
