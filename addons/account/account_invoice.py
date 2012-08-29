@@ -1126,7 +1126,7 @@ class account_invoice(osv.osv):
                 line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
         return map(lambda x: (0,0,x), lines)
 
-    def prepair_refund(self, cr, uid, refund_id, invoice, date=None, period_id=None, description=None, journal_id=None, context=None):
+    def _prepare_refund(self, cr, uid, refund_id, invoice, date=None, period_id=None, description=None, journal_id=None, context=None):
         obj_invoice_line = self.pool.get('account.invoice.line')
         obj_invoice_tax = self.pool.get('account.invoice.tax')
         obj_journal = self.pool.get('account.journal')
@@ -1181,7 +1181,12 @@ class account_invoice(osv.osv):
         invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id', 'company_id'], context=context)
         new_ids = []
         for invoice in invoices:
-            invoice = self.prepair_refund(cr, uid, invoice['id'], invoice, date=date, period_id=period_id, description=description, journal_id=journal_id, context=context)
+            invoice = self._prepare_refund(cr, uid, invoice['id'], invoice, 
+                                                date=date,
+                                                period_id=period_id,
+                                                description=description,
+                                                journal_id=journal_id,
+                                                context=context)
             # create the new invoice
             new_ids.append(self.create(cr, uid, invoice, context=context))
 
