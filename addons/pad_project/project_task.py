@@ -9,6 +9,3 @@ class task(osv.osv):
     _columns = {
         'description_pad': fields.char('Description PAD', size=250)
     }
-    _defaults = {
-        'description_pad': lambda self, cr, uid, context: self.pad_generate_url(cr, uid, context),
-    }

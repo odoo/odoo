@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- rename root menu "Accounting" -->
-        <record id="account.menu_finance" model="ir.ui.menu">
-            <field name="name">Accounting</field>
-        </record>
+        <!-- Rename root menu "Accounting" -->
+        <!-- Top menu item -->
+        <menuitem name="Accounting"
+            id="account.menu_finance"/>
     </data>
 
     <data noupdate="1">
@@ -19,10 +19,8 @@
             <field name="type">automatic</field>
             <field name="sequence">100</field>
         </record>
-    </data>
 
-    <data noupdate="1">
-        <!-- notify all employees of module installation -->
+        <!-- Notify all employees of module installation -->
         <function model="mail.group" name="message_append_note">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>

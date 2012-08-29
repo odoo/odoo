@@ -50,6 +50,40 @@
                 </page>
             </field>
         </record>
+        
+        <record id="view_normal_procurement_locations_form" model="ir.ui.view">
+            <field name="name">product.normal.procurement.locations.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Procurement &amp; Locations" groups="base.group_user">
+                                <group>
+                                    <group name="delay" string="Delays">
+                                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
+                                        <field name="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="warranty"/>
+                                    </group>
+                                    <group name="store" string="Storage Localisation">
+                                        <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}"/>
+                                        <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
+                                        <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
+                                    </group>
+                                    <group name="store" groups="stock.group_locations">
+				                        <separator string="Counter-Part Locations Properties" colspan="2"/>
+				                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
+				                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
+				                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+				                    </group>
+                                    <group name="misc" string="Miscellaneous">
+                                        <field name="active"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    </group>
+                                </group>
+                            </page>
+                </notebook>
+            </field>
+        </record>
 
         <record id="view_product_standard_price_form" model="ir.ui.view">
             <field name="name">product.product.standard.price.form.inherit</field>
@@ -81,9 +115,9 @@
                             <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>
                         </group>
                         <group colspan="2" col="2">
-                            <field name="property_stock_account_input" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
+                            <field name="property_stock_account_input" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
                                 domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="property_stock_account_output" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
+                            <field name="property_stock_account_output" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
                                 domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         </group>
                     </group>
@@ -207,22 +241,6 @@
                         </t>
                     </templates>
                 </kanban>
-            </field>
-        </record>
-
-        <record id="view_normal_property_form" model="ir.ui.view">
-            <field name="name">product.normal.stock.property.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <group name="store" position="after">
-                    <group name="store" groups="stock.group_locations">
-                        <separator string="Counter-Part Locations Properties" colspan="2"/>
-                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
-                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
-                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
-                    </group>
-                </group>
             </field>
         </record>
 

@@ -555,5 +555,20 @@
                 </xpath>
             </field>
         </record>
+        
+        <!-- Product Suppliers-->
+        
+        <record id="view_product_supplier_inherit" model="ir.ui.view">
+            <field name="name">product.normal.supplier.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Descriptions']" position="before">
+                    <page string="Suppliers" groups="base.group_user">
+                         <field name="seller_ids" context="{'uom_id': uom_id}"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

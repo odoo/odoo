@@ -10,7 +10,7 @@ openerp.project = function(openerp) {
             var members_ids = [];
 
             // Collect members ids
-            self.$element.find('img[data-member_id]').each(function() {
+            self.$el.find('img[data-member_id]').each(function() {
                 members_ids.push($(this).data('member_id'));
             });
 
@@ -19,7 +19,7 @@ openerp.project = function(openerp) {
             dataset.read_slice(['id', 'name']).then(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM
-                    self.$element.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
+                    self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
                         offset: 10
                     });
                 });
@@ -35,7 +35,7 @@ openerp.project = function(openerp) {
             var categ_ids = [];
 
             // Collect categories ids
-            self.$element.find('span[data-categ_id]').each(function() {
+            self.$el.find('span[data-categ_id]').each(function() {
                 categ_ids.push($(this).data('categ_id'));
             });
 
@@ -44,7 +44,7 @@ openerp.project = function(openerp) {
             dataset.read_slice(['id', 'name']).then(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM and display the element
-                    self.$element.find('span[data-categ_id=' + v.id + ']').text(v.name);
+                    self.$el.find('span[data-categ_id=' + v.id + ']').text(v.name);
                 });
             });
         },
