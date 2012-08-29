@@ -84,6 +84,15 @@ class pos_config(osv.osv):
         (_check_cash_control, "You cannot have two cash controls in one Point Of Sale !", ['journal_ids']),
     ]
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        d = {
+            'sequence_id' : False,
+        }
+        d.update(default)
+        return super(pos_order, self).copy(cr, uid, id, d, context=context)
+
 
     def name_get(self, cr, uid, ids, context=None):
         result = []
@@ -676,7 +685,7 @@ class pos_order(osv.osv):
         }
         if 'payment_date' in data:
             args['date'] = data['payment_date']
-        args['name'] = order.session_id.name
+        args['name'] = order.name
         if data.get('payment_name', False):
             args['name'] = args['name'] + ': ' + data['payment_name']
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
@@ -712,7 +721,7 @@ class pos_order(osv.osv):
             'pos_statement_id' : order_id,
             'journal_id' : journal_id,
             'type' : 'customer',
-            'ref' : order.name,
+            'ref' : order.session_id.name,
         })
 
         statement_line_obj.create(cr, uid, args, context=context)
@@ -1266,8 +1275,30 @@ class product_product(osv.osv):
             help="If you want to sell this product through the point of sale, select the category it belongs to."),
         'to_weight' : fields.boolean('To Weight', help="This category contains products that should be weighted, mainly used for the self-checkout interface"),
     }
+
+    def _default_pos_categ_id(self, cr, uid, context=None):
+        proxy = self.pool.get('ir.model.data')
+
+        try:
+            category_id = proxy.get_object_reference(cr, uid, 'point_of_sale', 'categ_others')[1]
+        except ValueError:
+            values = {
+                'name' : 'Others',
+            }
+            category_id = self.pool.get('pos.category').create(cr, uid, values, context=context)
+            values = {
+                'name' : 'categ_others',
+                'model' : 'pos.category',
+                'module' : 'point_of_sale',
+                'res_id' : category_id,
+            }
+            proxy.create(cr, uid, values, context=context)
+
+        return category_id
+
     _defaults = {
         'to_weight' : False,
+        'pos_categ_id' : _default_pos_categ_id,
     }
 
     def edit_ean(self, cr, uid, ids, context):
