@@ -981,11 +981,21 @@
                </data>
             </field>
         </record>
+		<record id="product_normal_form_supply_view" model="ir.ui.view">
+            <field name="name">product.normal.form.mrp.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//field[@name='procure_method']" position="after">
+            		<field name="supply_method" groups="base.group_user"/>
+            	</xpath>
+            </field>
+        </record>
 
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.mrp.inherit</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
             <field name="arch" type="xml">
                 <page string="Procurement &amp; Locations" position="inside">
                     <separator string="Bill of Materials"/>
