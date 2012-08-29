@@ -278,7 +278,7 @@ class add_product(osv.osv_memory):
             location_id=res and res[0] or None
 
             if order_id.invoice_id:
-                invoice_obj.refund(cr, uid, [order_id.invoice_id.id], time.strftime('%Y-%m-%d'), False, order_id.name)
+                invoice_obj.refund(cr, uid, [order_id.invoice_id.id], time.strftime('%Y-%m-%d'), False, order_id.name, context=context)
             new_picking=picking_obj.create(cr, uid, {
                             'name':'%s (return)' %order_id.name,
                             'move_lines':[], 'state':'draft',
