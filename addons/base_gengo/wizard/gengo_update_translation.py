@@ -104,7 +104,7 @@ class base_update_translation(osv.osv_memory):
         translation_pool = self.pool.get('ir.translation')
         jobs = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        auto_approve = 1 if user.company_id.gengo_auto_approve or 0
+        auto_approve = 1 if user.company_id.gengo_auto_approve else 0
         for term in translation_pool.browse(cr, uid, term_ids, context=context):
             if re.search(r"\w", term.src or ""):
                 jobs[term.id] = {'type': 'text',
