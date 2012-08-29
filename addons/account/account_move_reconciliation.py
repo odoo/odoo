@@ -52,8 +52,10 @@ class account_move_reconciliation(osv.osv):
 
     def _rec_progress(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
-        to_reconcile = self.search(cr, uid, [], context=context)
-        today_reconcile = self.search(cr, uid, [('last_reconciliation_date','=',time.strftime('%Y-%m-%d'))], context=context)
+        to_reconcile_ids = self.search(cr, uid, [], context=context)
+        to_reconcile = to_reconcile_ids and len(to_reconcile_ids) or 0
+        today_reconcile_ids = self.search(cr, uid, [('last_reconciliation_date','=',time.strftime('%Y-%m-%d'))], context=context)
+        today_reconcile = today_reconcile_ids and len(today_reconcile_ids) or 0
         if to_reconcile < 0:
             reconciliation_progress = 100
         else:
@@ -79,7 +81,9 @@ class account_move_reconciliation(osv.osv):
         tools.drop_view_if_exists(cr, 'account_move_reconciliation')
         cr.execute("""
             CREATE or REPLACE VIEW account_move_reconciliation as (
-                SELECT move_line.partner_id AS partner_id, SUM(move_line.debit) AS debit, SUM(move_line.credit) AS credit, MAX(move_line.date) AS latest_date
+                SELECT move_line.partner_id AS id, move_line.partner_id AS partner_id, SUM(move_line.debit) AS debit, SUM(move_line.credit) AS credit, 
+                        MAX(move_line.date) AS latest_date,
+                        MIN(partner.last_reconciliation_date) AS last_reconciliation_date
                 FROM account_move_line move_line
                 LEFT JOIN account_account a ON (a.id = move_line.account_id)
                 RIGHT JOIN res_partner partner ON (move_line.partner_id = partner.id)
