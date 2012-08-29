@@ -9,7 +9,7 @@
                 <field name="purchase_ok" position="after">
                     <field name="event_ok" on_change="onchange_event_ok(event_ok, context)"/>
                 </field>
-                <field name='supply_method' position='after'>
+                <field name='procure_method' position='before'>
                     <field name="event_type_id" attrs="{'readonly': [('event_ok', '=', False)]}"/>
                 </field>
              </field>

@@ -625,7 +625,7 @@
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
             <field name="arch" type="xml">
                 <group name="misc" position="after">
                     <group name="pos" colspan="2" col="2">
