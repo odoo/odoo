@@ -135,8 +135,8 @@ class procurement_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'),
-                        _('Cannot delete Procurement Order(s) which are in %s state!') % \
+                raise osv.except_osv(_('Invalid Action!'),
+                        _('Cannot delete Procurement Order(s) which are in %s state.') % \
                         s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -166,7 +166,7 @@ class procurement_order(osv.osv):
         """
         return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids, context=context))
 
-    #This Function is create to avoid  a server side Error Like 'ERROR:tests.mrp:name 'check_move' is not defined' 
+    #This Function is create to avoid  a server side Error Like 'ERROR:tests.mrp:name 'check_move' is not defined'
     def check_move(self, cr, uid, ids, context=None):
         pass
 
@@ -277,7 +277,7 @@ class procurement_order(osv.osv):
             if not res:
                 return False
         return True
-    
+
     def check_buy(self, cr, uid, ids):
         """ Checks product type.
         @return: True or Product Id.
@@ -319,7 +319,13 @@ class procurement_order(osv.osv):
             if record.move_id and record.move_id.state == 'cancel':
                 return True
         return False
-
+    
+    #Initialize get_phantom_bom_id method as it is raising an error from yml of mrp_jit
+    #when one install first mrp and after that, mrp_jit. get_phantom_bom_id defined in mrp module
+    #which is not dependent for mrp_jit.
+    def get_phantom_bom_id(self, cr, uid, ids, context=None):
+        return False
+    
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms procurement and writes exception message if any.
         @return: True
@@ -327,8 +333,8 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Data Insufficient !'),
-                    _('Please check the quantity in procurement order(s), it should not be 0 or less!'))
+                raise osv.except_osv(_('Insufficient Data!'),
+                    _('Quantity in procurement order(s) must be greater than 0.'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
@@ -359,7 +365,7 @@ class procurement_order(osv.osv):
         message = _('From stock: products assigned.')
         self.write(cr, uid, ids, {'state': 'running',
                 'message': message}, context=context)
-        self.message_append_note(cr, uid, ids, body=message, context=context)                  
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         self.running_send_note(cr, uid, ids, context=context)
         return True
 
@@ -392,7 +398,7 @@ class procurement_order(osv.osv):
                 if message:
                     message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
                     cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                    self.message_append_note(cr, uid, [procurement.id], body=message, context=context)   
+                    self.message_append_note(cr, uid, [procurement.id], body=message, context=context)
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
@@ -550,10 +556,10 @@ class stock_warehouse_orderpoint(osv.osv):
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type','=','product')]),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'product_min_qty': fields.float('Min Quantity', required=True,
+        'product_min_qty': fields.float('Minimum Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity specified for this field, OpenERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
-        'product_max_qty': fields.float('Max Quantity', required=True,
+        'product_max_qty': fields.float('Maximum Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity, OpenERP generates "\
             "a procurement to bring the virtual stock to the Quantity specified as Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
@@ -607,7 +613,7 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -615,7 +621,7 @@ class stock_warehouse_orderpoint(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
         })
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
-    
+
 stock_warehouse_orderpoint()
 
 class product_product(osv.osv):

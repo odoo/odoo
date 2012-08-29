@@ -5,14 +5,10 @@
       <record id="view_hr_evaluation_plan_search" model="ir.ui.view">
             <field name="name">hr_evaluation.plan.search</field>
             <field name="model">hr_evaluation.plan</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Appraisal Plan">
-                   <group>
-                       <field name="name"/>
-                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                   </group>
-                   <newline/>
+                   <field name="name" string="Appraisal Plans"/>
+                   <field name="company_id" groups="base.group_multi_company"/>
                    <group expand="0" string="Group By..." groups="base.group_multi_company">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
@@ -23,20 +19,22 @@
         <record model="ir.ui.view" id="view_hr_evaluation_plan_form">
             <field name="name">hr_evaluation.plan.form</field>
             <field name="model">hr_evaluation.plan</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Appraisal Plan">
-                    <group col="8" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
-                        <field name="month_first"/>
-                        <field name="month_next"/>
-                        <newline/>
-                        <field name="active"/>
+                <form string="Appraisal Plan" version="7.0">
+                    <group col="4">
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="month_first"/>
+                            <field name="month_next"/>
+                        </group>
                     </group>
-                     <notebook colspan="4">
+                     <notebook>
                          <page string="Appraisal Phases">
-                            <field name="phase_ids" nolabel="1" colspan="4"/>
+                            <field name="phase_ids"/>
                          </page>
                      </notebook>
                 </form>
@@ -45,7 +43,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_plan_tree">
             <field name="name">hr_evaluation.plan.form</field>
             <field name="model">hr_evaluation.plan</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Appraisal Plan">
                     <field name="name"/>
@@ -70,51 +67,43 @@
         <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_form">
             <field name="name">hr_evaluation.plan.phase.form</field>
             <field name="model">hr_evaluation.plan.phase</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Appraisal Plan Phases">
+                <form string="Appraisal Plan Phases" version="7.0">
                  <notebook>
                    <page string="General">
+                    <group>
                     <field name="plan_id" invisible="1"/>
-                    <group col="8" colspan="4">
-                        <field name="name"/>
-                        <field name="wait"/>
-                        <field name="sequence"/>
-                    </group>
-                    <group col="4" colspan="4">
-                        <separator string="Action to Perform" colspan="4"/>
-                        <field name="action"/>
-                        <field name="survey_id" domain="[('state','=','open')]"/>
-                    </group>
-                    <group col="4" colspan="4">
-                        <group col="4" colspan="2">
-                            <separator string="Send to Managers" colspan="2"/>
-                            <newline/>
-                            <field name="send_answer_manager"/>
-                            <newline/>
-                            <field name="send_anonymous_manager"/>
+                        <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="wait"/>
+                            <field name="sequence"/>
                         </group>
-                        <group col="4" colspan="2">
-                            <separator string="Send to Employees" colspan="2"/>
-                            <newline/>
+                        <group>
+                            <separator string="Action to Perform" colspan="4"/>
+                            <field name="action"/>
+                            <field name="survey_id" domain="[('state','=','open')]"/>
+                        </group>
+                        <group string="Send to Managers">
+                            <field name="send_answer_manager"/>
+                            <field name="send_anonymous_manager"/>
+                        </group><group string="Send to Employees">
                             <field name="send_answer_employee"/>
-                            <newline/>
                             <field name="send_anonymous_employee"/>
+                        </group>
                         </group>
                     </group>
                     </page>
                     <page string="Mail Settings">
-                        <field name="mail_feature" colspan="4"/>
-                        <newline/>
+                        <field name="mail_feature"/>
                         <separator string="Mail Body"/>
-                        <newline/>
-                        <field name="mail_body" colspan="4" nolabel="1"/>
-                        <newline/>
-                        <separator string="Legend" colspan ="4"/>
-                          <label string=" (employee_name)s: Partner name" colspan="2"/>
-                          <label string="(user_signature)s: User name" colspan="2"/>
-                          <label string="(date)s: Current Date" colspan="2"/>
-                          <label string="(eval_name)s:Appraisal Name" colspan="2"/>
+                        <field name="mail_body"/>
+                        <group string="Legend">
+                            <label string=" (employee_name)s: Partner name"/>
+                            <label string="(user_signature)s: User name"/>
+                            <label string="(date)s: Current Date"/>
+                            <label string="(eval_name)s:Appraisal Name"/>
+                        </group>
                     </page>
                   </notebook>
                 </form>
@@ -123,7 +112,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_tree">
             <field name="name">hr_evaluation.plan.phase.form</field>
             <field name="model">hr_evaluation.plan.phase</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Appraisal Plan Phases" editable="bottom" >
                     <field name="sequence"/>
@@ -140,10 +128,12 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Notes" position="before">
+                <page string="Personal Information" position="after">
                     <page string="Appraisal" groups="base.group_hr_user">
-                        <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
-                        <field name="evaluation_date"/>
+                        <group col="4">
+                            <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
+                            <field name="evaluation_date"/>
+                        </group>
                     </page>
                 </page>
             </field>
@@ -152,61 +142,61 @@
         <record model="ir.ui.view" id="view_hr_evaluation_form">
             <field name="name">hr_evaluation.evaluation.form</field>
             <field name="model">hr_evaluation.evaluation</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
+                <form string="Appraisal" version="7.0">
                 <header>
-                    <button name="button_plan_in_progress" string="Start Appraisal" states="draft" type="object"/>
-                    <button name="button_final_validation" string="Validate Appraisal" states="wait" type="object"/>
-                    <button name="button_done" string="Done" states="progress" type="object"/>
-                    <button name="button_draft" string="Reset to Draft" states="cancel" type="object"/>
+                    <button name="button_plan_in_progress" string="Start Appraisal" states="draft" type="object" class="oe_highlight"/>
+                    <button name="button_final_validation" string="Validate Appraisal" states="wait" type="object" class="oe_highlight"/>
+                    <button name="button_done" string="Done" states="progress" type="object" class="oe_highlight"/>
+                    <button name="button_draft" string="Reset to Draft" states="cancel" type="object" />
                     <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
                 </header>
-                <sheet string="Appraisal" layout="auto">
-                    <group col="4" colspan="3">
-                        <separator string="Appraisal Data" colspan="4"/>
-                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
-                        <field name="plan_id"/>
-                        <field name="date"/>
+                <sheet>
+                    <label for="employee_id" class="oe_edit_only"/>
+                    <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)" class="oe_inline"/>, <field name="date" class="oe_inline"/></h1>
+                    <label for="plan_id" class="oe_edit_only"/>
+                    <h2><field name="plan_id"/></h2>
+                    <group>
+                        <group colspan="4" attrs="{'invisible':['|', ('state','=','draft'), ('state', '=', 'wait')]}">
+                            <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')]}"/>
+                            <field name="date_close" readonly="1"/>
+                        </group>
                     </group>
-                    <group col="2" colspan="1" attrs="{'invisible':['|', ('state','=','draft'), ('state', '=', 'wait')]}">
-                        <separator string="Ending Summary" colspan="2"/>
-                        <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')]}"/>
-                        <field name="date_close" readonly="1"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Appraisal" attrs="{'invisible':[('state','=','draft')]}">
-                            <field name="survey_request_ids" nolabel="1" colspan="4" widget="one2many">
-                                <form string="Interview Appraisal">
-                                    <group col="4" colspan="4">
+                    <group string="Appraisal Forms" attrs="{'invisible':[('state','=','draft')]}">
+                        <field nolabel="1" name="survey_request_ids">
+                            <form string="Interview Appraisal" version="7.0">
+                                <div class="oe_right oe_button_box">
+                                    <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
+                                </div>
+                                <group>
+                                    <group>
                                         <field name="survey_id"/>
-                                        <group col="2" colspan="2">
-                                            <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                                            <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
-                                        </group>
-                                        <field name="date_deadline"/>
-                                        <field name="response" readonly="1"/>
                                         <field name="user_to_review_id"/>
                                         <field name="user_id" string="Interviewer"/>
                                     </group>
-                                    <newline/>
-                                    <separator string="Status" colspan="4"/>
-                                    <group colspan="4" col="6">
-                                         <field name="state"/>
-                                         <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
+                                    <group>              
+                                        <field name="date_deadline"/>
+                                        <field name="response" readonly="1"/>
                                     </group>
-                                </form>
-                            </field>
-                        </page>
-                        <page string="Internal Notes" attrs="{'invisible':[('state','=','draft')]}">
-                            <field name="note_action" colspan="4" nolabel="1"
-                                groups="base.group_hr_manager"/>
-                        </page>
-                        <page string="Public Notes" attrs="{'invisible':[('state','=','draft')]}">
-                            <field name="note_summary" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
+                                </group>
+                                <group col="4" string="Status" invisible="1">
+                                     <field name="state"/>
+                                     <div>
+                                         <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
+                                     </div>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                    <group string="Internal Notes" attrs="{'invisible':[('state','=','draft')]}">
+                        <field nolabel="1" name="note_action"
+                            groups="base.group_hr_manager" placeholder="Appraisal Summary..."/>
+                    </group>
+                    <group string="Public Notes" attrs="{'invisible':[('state','=','draft')]}">
+                        <field nolabel="1" name="note_summary" placeholder="Action Plan..."/>
+                    </group>
               </sheet>
               </form>
             </field>
@@ -215,7 +205,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_tree">
             <field name="name">hr_evaluation.evaluation.tree</field>
             <field name="model">hr_evaluation.evaluation</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')" string="Appraisal">
                     <field name="employee_id"/>
@@ -228,48 +217,21 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_hr_evaluation_graph">
-            <field name="name">hr_evaluation.evaluation.graph</field>
-            <field name="model">hr_evaluation.evaluation</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Appraisal" type="bar">
-                    <field name="employee_id"/>
-                    <field name="progress"  operator="+"/>
-                </graph>
-            </field>
-        </record>
-
        <record id="hr_evaluation.evaluation_search" model="ir.ui.view">
             <field name="name">hr_evaluation.evaluation_search</field>
             <field name="model">hr_evaluation.evaluation</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
-                   <group>
+                    <field name="date"/>
                     <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Appraisal that are in Plan In Progress state"/>
                     <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Appraisal that are in waiting appreciation state"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-go-week" string="7 Days" help="Appraisal to close within the next 7 days"
-                        domain="[('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" />
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                        help="Appraisal that overpassed the deadline" domain="[('date','&lt;=',(datetime.date.today()).strftime('%%Y-%%m-%%d'))]" />
-                    <filter icon="terp-go-month" name="next_month" string=" Month+1" 
-                         domain="[('date','&lt;=', (datetime.date.today() + relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() + relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d')),('state','=','draft')]"
-                         help="Appraisal during next month"/>
-                    <separator orientation="vertical"/>
                     <field name="employee_id" />
-                    <field name="plan_id" widget="selection" />
-                    </group>
-                    <newline/>
+                    <field name="plan_id"/>
                     <group expand='0' string='Group by...'>
-                    <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by' : 'employee_id'}" />
-                    <separator orientation="vertical"/>
-                    <filter string='Plan' icon="terp-stock_align_left_24" domain="[]" context="{'group_by' : 'plan_id'}" />
-                    <filter string='Status' icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
-                    <separator orientation="vertical"/>
-                    <filter string='Date' icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
+                        <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by' : 'employee_id'}" />
+                        <filter string='Plan' icon="terp-stock_align_left_24" domain="[]" context="{'group_by' : 'plan_id'}" />
+                        <filter string='Status' icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
+                        <filter string='Date' icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
                    </group>
                </search>
             </field>
@@ -282,41 +244,55 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
              <field name="context">{"search_default_next_month":1}</field>
-            <field name="help">Each employee may be assigned an Appraisal Plan. Such a plan defines the frequency and the way you manage your periodic personnel evaluation. You will be able to define steps and attach interviews to each step. OpenERP manages all kind of evaluations: bottom-up, top-down, self-evaluation and final evaluation by the manager.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new appraisal.
+              </p><p>
+                Each employee may be assigned an Appraisal Plan. Such a plan
+                defines the frequency and the way you manage your periodic
+                personnel evaluation. You will be able to define steps and
+                attach interviews to each step. OpenERP manages all kind of
+                evaluations: bottom-up, top-down, self-evaluation and final
+                evaluation by the manager.
+              </p>
+            </field>
         </record>
 
-        <menuitem name="Appraisal" parent="menu_eval_hr" id="menu_open_view_hr_evaluation_tree"
+        <menuitem name="Appraisals" parent="menu_eval_hr" id="menu_open_view_hr_evaluation_tree"
             action="open_view_hr_evaluation_tree" groups="base.group_hr_user"/>
 
         <record model="ir.ui.view" id="view_hr_evaluation_interview_form">
             <field name="name">hr_evaluation.interview.form</field>
             <field name="model">hr.evaluation.interview</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Interview Appraisal">
-                    <group col="4" colspan="4">
-                         <field name="user_to_review_id"/>
-                         <field name="user_id" string="Interviewer"/>
-                         <field name="date_deadline"/>
-                          <group col="4" colspan="4">
+                <form string="Interview Appraisal" version="7.0">
+                    <header>
+                        <button string="Cancel" name="survey_req_cancel" states="draft,waiting_answer" type="object" icon="gtk-cancel"/>
+                        <button name="action_print_survey" string="Print Survey" type="object" states="draft" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
+                        <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" class="oe_highlight"/>
+                        <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                        <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to"/>
+                        <field name="state" widget="statusbar" statusbar_visible="waiting_answer,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" states="waiting_answer"/>
+                        </div>
+                        <group>
+                            <group col="3" colspan="1">
                                 <field name="survey_id"/>
-                                <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                                <newline/>
-                                <field name="evaluation_id"/>
-                                <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" states="waiting_answer"/>
-                                <newline/>
+                                <button name="action_print_survey" string="Print Survey" type="object" states="draft" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
+                                <field name="user_to_review_id"/>
+                                <label string=""/>
+                                <field name="user_id" string="Interviewer"/>
+                            </group>
+                            <group>
+                                <field name="date_deadline"/>
                                 <field name="response" readonly="1"/>
-                                <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                                <field name="evaluation_id" string="Appraisal Plan"/>
+                            </group>
                         </group>
-                    </group>
-                    <newline/>
-                    <separator string="Status" colspan="4"/>
-                    <group colspan="4" col="6">
-                         <field name="state" widget="statusbar" statusbar_visible="waiting_answer,done"/>
-                                <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" />
-                                <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
-                                <button string="Cancel" name="survey_req_cancel" states="draft,waiting_answer" type="object" icon="gtk-cancel"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -324,7 +300,6 @@
         <record model="ir.ui.view" id="view_hr_evaluation_interview_tree">
             <field name="name">hr_evaluation.interview.tree</field>
             <field name="model">hr.evaluation.interview</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Interview Appraisal">
                     <field name="date_deadline" string="Deadline Date"/>
@@ -334,7 +309,7 @@
                     <field name="response" readonly="1" invisible="True"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                    <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" colspan="2" states="waiting_answer"/>
+                    <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" states="waiting_answer"/>
                     <field name="state"/>
                     <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" />
                     <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
@@ -345,23 +320,15 @@
        <record id="view_hr_evaluation_interview_search" model="ir.ui.view">
             <field name="name">view_hr_evaluation_interview_search</field>
             <field name="model">hr.evaluation.interview</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
-                   <group>
-                        <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="user_to_review_id"/>
-                        <field name="user_id" string="Interviewer"/>
-                   </group>
-                   <newline/>
+                    <field name="date_deadline"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
+                    <field name="user_to_review_id"/>
+                    <field name="user_id" string="Interviewer"/>
                     <group expand="0" string="Group By...">
                         <filter string="Interviewer" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'survey_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                </search>
@@ -371,7 +338,6 @@
         <record id="view_evaluation_calendar" model="ir.ui.view">
             <field name="name">Interview Requests</field>
             <field name="model">hr.evaluation.interview</field>
-            <field name="type">calendar</field>
             <field name="arch" type="xml">
                 <calendar string="Interview Request" color="user_to_review_id" date_start="date_deadline">
                     <field name="request_id"/>
@@ -387,7 +353,16 @@
             <field name="domain">[('is_evaluation' ,'=', True)]</field>
             <field name="context">{'default_is_evaluation': True, "search_default_todo":1,"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
-            <field name="help">Interview Requests are generated automatically by OpenERP according to an employee's Appraisal Plan. Each user receives automatic emails and requests to evaluate their colleagues periodically.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new interview request related to a personnal evaluation. 
+              </p><p>
+                Interview requests are usually generated automatically by
+                OpenERP according to an employee's appraisal plan. Each user
+                receives automatic emails and requests to evaluate their
+                colleagues periodically.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="hr_evaluation_interview_tree">

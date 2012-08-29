@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields
+from osv import fields, osv
 from tools.translate import _
 
 class base_stage(object):
     """ Base utility mixin class for objects willing to manage their stages.
         Object that inherit from this class should inherit from mailgate.thread
-        to have access to the mail gateway, as well as Chatter. Objects 
+        to have access to the mail gateway, as well as Chatter. Objects
         subclassing this class should define the following colums:
         - ``date_open`` (datetime field)
         - ``date_closed`` (datetime field)
@@ -57,7 +57,7 @@ class base_stage(object):
         if not context or not context.get('portal'):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.user_email
+        return user.email
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
@@ -104,13 +104,13 @@ class base_stage(object):
 
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Find stage, with a given (optional) domain on the search,
-            ordered by the order parameter. If several stages match the 
+            ordered by the order parameter. If several stages match the
             search criterions, the first one will be returned, according
             to the requested search order.
             This method is meant to be overriden by subclasses. That way
             specific behaviors can be achieved for every class inheriting
             from base_stage.
-            
+
             :param cases: browse_record of cases
             :param section_id: section limitating the search, given for
                                a generic search (for example default search).
@@ -202,7 +202,7 @@ class base_stage(object):
                     if case.section_id.parent_id.user_id:
                         data['user_id'] = case.section_id.parent_id.user_id.id
             else:
-                raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
+                raise osv.except_osv(_('Error!'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
             self.write(cr, uid, [case.id], data, context=context)
             case.case_escalate_send_note(case.section_id.parent_id, context=context)
         cases = self.browse(cr, uid, ids, context=context)
@@ -221,7 +221,7 @@ class base_stage(object):
             self.case_set(cr, uid, [case.id], 'open', data, context=context)
             self.case_open_send_note(cr, uid, [case.id], context=context)
         return True
-        
+
     def case_close(self, cr, uid, ids, context=None):
         """ Closes case """
         self.case_set(cr, uid, ids, 'done', {'active': True, 'date_closed': fields.datetime.now()}, context=context)
@@ -250,14 +250,14 @@ class base_stage(object):
         """ Generic method for setting case. This methods wraps the update
             of the record, as well as call to _action and browse_record
             case setting to fill the cache.
-            
+
             :params new_state_name: the new state of the record; this method
                                     will call ``stage_set_with_state_name``
                                     that will find the stage matching the
                                     new state, using the ``stage_find`` method.
             :params new_stage_id: alternatively, you may directly give the
                                   new stage of the record
-            :params state_name: the new value of the state, such as 
+            :params state_name: the new value of the state, such as
                      'draft' or 'close'.
             :params update_values: values that will be added with the state
                      update when writing values to the record.
@@ -301,15 +301,15 @@ class base_stage(object):
         for case in self.browse(cr, uid, ids, context=context):
             if not destination and not case.email_from:
                 return False
-            if not case.user_id.user_email:
+            if not case.user_id.email:
                 return False
             if destination and case.section_id.user_id:
-                case_email = case.section_id.user_id.user_email
+                case_email = case.section_id.user_id.email
             else:
-                case_email = case.user_id.user_email
+                case_email = case.user_id.email
 
             src = case_email
-            dest = case.user_id.user_email or ""
+            dest = case.user_id.email or ""
             body = case.description or ""
             for message in case.message_ids:
                 if message.email_from and message.body_text:
@@ -366,24 +366,24 @@ class base_stage(object):
             l=[]
             if case.email_cc:
                 l.append(case.email_cc)
-            if case.user_id and case.user_id.user_email:
-                l.append(case.user_id.user_email)
+            if case.user_id and case.user_id.email:
+                l.append(case.user_id.email)
             res[case.id] = l
         return res
-    
+
     # ******************************
     # Notifications
     # ******************************
-    
+
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        """ Default prefix for notifications. For example: "%s has been 
+        """ Default prefix for notifications. For example: "%s has been
             <b>closed</b>.". As several models will inherit from base_stage,
             this method returns a void string. Class using base_stage
             will have to override this method to define the prefix they
             want to display.
         """
         return ''
-	
+
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Send a notification when the stage changes. This method has
             to be overriden, because each document will have its particular
@@ -391,7 +391,7 @@ class base_stage(object):
             crm.case.stage).
         """
         return True
-    
+
     def case_open_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
@@ -421,7 +421,7 @@ class base_stage(object):
             msg = _('%s has been <b>renewed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_append_note(cr, uid, [id], body=msg, context=context)
         return True
-    
+
     def case_escalate_send_note(self, cr, uid, ids, new_section=None, context=None):
         for id in ids:
             if new_section:

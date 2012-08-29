@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-06-01 20:39+0000\n"
+"PO-Revision-Date: 2012-07-11 05:37+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-02 05:35+0000\n"
-"X-Generator: Launchpad (build 15342)\n"
+"X-Launchpad-Export-Date: 2012-08-07 04:57+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -25,7 +25,7 @@ msgstr "商品番号"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
 msgid "Sales by day"
-msgstr "日毎の販売"
+msgstr "日毎売上"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
@@ -82,7 +82,7 @@ msgstr "レジスター分析"
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Details of Sales"
-msgstr "販売の詳細"
+msgstr "売上の詳細"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 field:report.cash.register,day:0
@@ -246,7 +246,7 @@ msgstr "Leffe Brune 330ml"
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
 #: report:pos.sales.user:0
 msgid "Sales Report"
-msgstr "販売レポート"
+msgstr "売上レポート"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beverage
@@ -303,7 +303,7 @@ msgstr "ファンタ オレンジ 330ml"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
 msgid "Sales by User Monthly"
-msgstr "月間ユーザ別販売"
+msgstr "月間ユーザ別売上"
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
@@ -598,7 +598,7 @@ msgstr "POSオーダー"
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Sales total(Revenue)"
-msgstr "販売合計（売上）"
+msgstr "売上合計"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
@@ -755,7 +755,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details_summary:0
 msgid "Sales total"
-msgstr "販売合計"
+msgstr "売上合計"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -765,7 +765,7 @@ msgstr "小計の合計"
 #. module: point_of_sale
 #: field:pos.order,lines:0
 msgid "Order Lines"
-msgstr "受注行"
+msgstr "オーダー行"
 
 #. module: point_of_sale
 #: view:report.transaction.pos:0
@@ -785,7 +785,7 @@ msgstr "作成日"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today
 msgid "Today's Sales"
-msgstr "本日の販売"
+msgstr "本日の売上"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_300g_product_template
@@ -807,7 +807,7 @@ msgstr "合計："
 #. module: point_of_sale
 #: view:report.cash.register:0 view:report.pos.order:0
 msgid "My Sales"
-msgstr "私の販売"
+msgstr "私の売上"
 
 #. module: point_of_sale
 #: field:pos.order,pricelist_id:0
@@ -1026,7 +1026,7 @@ msgstr "キャンセル"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
 msgid "Sales (summary)"
-msgstr "販売（合計）"
+msgstr "売上（合計）"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_kriek_37,5cl_product_template
@@ -1200,7 +1200,7 @@ msgstr "キャッシュレジスタを開きますか？"
 #: help:pos.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
-msgstr "商品分類のリストを表示する時に並び順を与えて下さい。"
+msgstr "商品分類のリストを表示する時に並び順を与えます。"
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
@@ -1356,7 +1356,7 @@ msgstr "担当販売員"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_sale_all
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale_all
 msgid "All Sales Orders"
-msgstr "全販売オーダー"
+msgstr "全受注オーダー"
 
 #. module: point_of_sale
 #: help:product.product,income_pdt:0
@@ -1534,7 +1534,7 @@ msgstr "販売レシート印刷"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_today
 msgid "Sales by User Daily margin"
-msgstr "ユーザの1日の利鞘別販売"
+msgstr "ユーザの1日の利鞘別売上"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
@@ -1579,7 +1579,7 @@ msgstr "支払済"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
 msgid "All sales lines"
-msgstr "全販売行"
+msgstr "全売上行"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1739,7 +1739,7 @@ msgstr "1個当り正味利鞘"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
 msgid "Sales by user monthly"
-msgstr "月間ユーザ別販売"
+msgstr "月間ユーザ別売上"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_et_fruit_50cl_product_template
@@ -1828,7 +1828,7 @@ msgstr "オーダー日"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment_report_user
 #: model:ir.model,name:point_of_sale.model_pos_payment_report_user
 msgid "Sales lines by Users"
-msgstr "ユーザ別販売傾向"
+msgstr "ユーザ別売上傾向"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_2l_product_template
@@ -2260,7 +2260,7 @@ msgstr "現金取出"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details
 msgid "Sales Details"
-msgstr "販売詳細"
+msgstr "売上詳細"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_close_statement.py:50
@@ -2352,7 +2352,7 @@ msgstr "アイスブルク モカ 2.5L"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Search Sales Order"
-msgstr "販売オーダーの検索"
+msgstr "受注オーダーの検索"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
@@ -2365,7 +2365,7 @@ msgstr "支払方法はチェックされた支払方法項目を持つ会計仕
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos
 msgid "Sales by user"
-msgstr "ユーザ別販売"
+msgstr "ユーザ別売上"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_hawaii_product_template
@@ -2506,7 +2506,7 @@ msgstr "現金仕訳帳"
 #. module: point_of_sale
 #: report:pos.sales.user.today:0
 msgid "Today's Sales By User"
-msgstr "ユーザ別本日販売"
+msgstr "ユーザ別本日売上"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -2532,7 +2532,7 @@ msgstr "5月"
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Sales lines"
-msgstr "販売行"
+msgstr "売上行"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2627,7 +2627,7 @@ msgstr "エラー：再帰カテゴリーを作成することはできません
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_sales_user_today
 msgid "Sales User Today"
-msgstr "ユーザの本日販売"
+msgstr "ユーザの本日売上"
 
 #. module: point_of_sale
 #: view:report.pos.order:0

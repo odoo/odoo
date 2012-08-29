@@ -40,7 +40,8 @@ class crm_lead(base_stage, osv.osv):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority,date_action,id desc"
-    _inherit = ['ir.needaction_mixin', 'mail.thread','res.partner']
+    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _mail_compose_message = True
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
@@ -193,21 +194,20 @@ class crm_lead(base_stage, osv.osv):
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'email_from': fields.char('Email', size=128, help="E-mail address of the contact", select=1),
+        'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='When sending mails, the default email address is taken from the sales team.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+        'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Categories', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
             domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
-        'opt_in': fields.boolean('Opt-In', oldname='optin', help="If opt-in is checked, this contact has accepted to receive emails."),
         'opt_out': fields.boolean('Opt-Out', oldname='optout', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
@@ -243,8 +243,25 @@ class crm_lead(base_stage, osv.osv):
         'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
         'partner_address_email': fields.related('partner_id', 'email', type='char', string='Partner Contact Email', readonly=True),
         'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
+
+        # Fields for address, due to separation from crm and res.partner
+        'street': fields.char('Street', size=128),
+        'street2': fields.char('Street2', size=128),
+        'zip': fields.char('Zip', change_default=True, size=24),
+        'city': fields.char('City', size=128),
+        'state_id': fields.many2one("res.country.state", 'State', domain="[('country_id','=',country_id)]"),
+        'country_id': fields.many2one('res.country', 'Country'),
+        'phone': fields.char('Phone', size=64),
+        'fax': fields.char('Fax', size=64),
+        'mobile': fields.char('Mobile', size=64),
+        'function': fields.char('Function', size=128),
+        'title': fields.many2one('res.partner.title', 'Title'),
+        'company_id': fields.many2one('res.company', 'Company', select=1),
+        'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode', \
+                            domain="[('section_id','=',section_id)]"),
+        'planned_cost': fields.float('Planned Costs'),
     }
 
     _defaults = {
@@ -259,32 +276,34 @@ class crm_lead(base_stage, osv.osv):
         'color': 0,
     }
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            # salesman must perform an action when in draft mode
-            if obj.state == 'draft' and obj.user_id:
-                result[obj.id] = [obj.user_id.id]
-        return result
-    
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
-    
-    def on_change_opt_in(self, cr, uid, ids, opt_in):
-        return {'value':{'opt_in':opt_in,'opt_out':False}}
 
-    def on_change_opt_out(self, cr, uid, ids, opt_out):
-        return {'value':{'opt_out':opt_out,'opt_in':False}}
-
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value':{}}
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
+
+    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
+        result = {}
+        values = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            values = {
+                'partner_name' : partner.name, 
+                'street' : partner.street,
+                'street2' : partner.street2,
+                'city' : partner.city,
+                'state_id' : partner.state_id and partner.state_id.id or False,
+                'country_id' : partner.country_id and partner.country_id.id or False,
+            }
+        return {'value' : values}
+
 
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.
@@ -461,7 +480,7 @@ class crm_lead(base_stage, osv.osv):
         details = []
         merge_message = _('Merged opportunities')
         subject = [merge_message]
-        fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id', 'categ_id', 'channel_id', 'company_id', 'contact_name',
+        fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id', 'categ_ids', 'channel_id', 'company_id', 'contact_name',
                   'email_from', 'phone', 'fax', 'mobile', 'state_id', 'description', 'probability', 'planned_revenue',
                   'country_id', 'city', 'street', 'street2', 'zip']
         for opportunity in opportunities:
@@ -519,7 +538,7 @@ class crm_lead(base_stage, osv.osv):
         lead_ids = context and context.get('lead_ids', []) or []
 
         if len(ids) <= 1:
-            raise osv.except_osv(_('Warning !'),_('Please select more than one opportunity from the list view.'))
+            raise osv.except_osv(_('Warning!'),_('Please select more than one opportunity from the list view.'))
 
         ctx_opportunities = self.browse(cr, uid, lead_ids, context=context)
         opportunities = self.browse(cr, uid, ids, context=context)
@@ -532,7 +551,7 @@ class crm_lead(base_stage, osv.osv):
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
 
-        fields = ['partner_id', 'title', 'name', 'categ_id', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
+        fields = ['partner_id', 'title', 'name', 'categ_ids', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
             'partner_name', 'phone', 'probability', 'planned_revenue', 'street', 'street2', 'zip', 'create_date', 'date_action_last',
             'date_action_next', 'email_from', 'email_cc', 'partner_name']
 
@@ -674,11 +693,11 @@ class crm_lead(base_stage, osv.osv):
         """
         #TOFIX: mail template should be used here instead of fix subject, body text.
         message = self.pool.get('mail.message')
-        email_to = lead.user_id and lead.user_id.user_email
+        email_to = lead.user_id and lead.user_id.email
         if not email_to:
             return False
 
-        email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
+        email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.email or email_to
         partner = lead.partner_id and lead.partner_id.name or lead.partner_name
         subject = "lead %s converted into opportunity" % lead.name
         body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)
@@ -756,109 +775,30 @@ class crm_lead(base_stage, osv.osv):
                 'type': 'ir.actions.act_window',
         }
 
-
-    def message_new(self, cr, uid, msg, custom_values=None, context=None):
-        """Automatically calls when new email message arrives"""
-        res_id = super(crm_lead, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-        subject = msg.get('subject')  or _("No Subject")
-        body = msg.get('body_text')
-
-        msg_from = msg.get('from')
-        priority = msg.get('priority')
-        vals = {
-            'name': subject,
-            'email_from': msg_from,
-            'email_cc': msg.get('cc'),
-            'description': body,
-            'user_id': False,
-        }
-        if priority:
-            vals['priority'] = priority
-        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
-        self.write(cr, uid, [res_id], vals, context)
-        return res_id
-
-    def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
-        if isinstance(ids, (str, int, long)):
-            ids = [ids]
-        if vals == None:
-            vals = {}
-        super(crm_lead, self).message_update(cr, uid, ids, msg, context=context)
-
-        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-            vals['priority'] = msg.get('priority')
-        maps = {
-            'cost':'planned_cost',
-            'revenue': 'planned_revenue',
-            'probability':'probability'
-        }
-        vls = {}
-        for line in msg['body_text'].split('\n'):
-            line = line.strip()
-            res = tools.misc.command_re.match(line)
-            if res and maps.get(res.group(1).lower()):
-                key = maps.get(res.group(1).lower())
-                vls[key] = res.group(2).lower()
-        vals.update(vls)
-
-        # Unfortunately the API is based on lists
-        # but we want to update the state based on the
-        # previous state, so we have to loop:
-        for case in self.browse(cr, uid, ids, context=context):
-            values = dict(vals)
-            if case.state in CRM_LEAD_PENDING_STATES:
-                #re-open
-                values.update(state=crm.AVAILABLE_STATES[1][0])
-                if not case.date_open:
-                    values['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            res = self.write(cr, uid, [case.id], values, context=context)
-        return res
-
     def action_makeMeeting(self, cr, uid, ids, context=None):
+        """ This opens Meeting's calendar view to schedule meeting on current Opportunity
+            @return : Dictionary value for created Meeting view
         """
-        This opens Meeting's calendar view to schedule meeting on current Opportunity
-        @return : Dictionary value for created Meeting view
-        """
-        if context is None:
-            context = {}
-        value = {}
-        data_obj = self.pool.get('ir.model.data')
-        for opp in self.browse(cr, uid, ids, context=context):
-            # Get meeting views
-            tree_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_meet')
-            form_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_meet')
-            calander_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-            search_view = data_obj.get_object_reference(cr, uid, 'crm', 'view_crm_case_meetings_filter')
-            context.update({
-                'default_opportunity_id': opp.id,
-                'default_partner_id': opp.partner_id and opp.partner_id.id or False,
-                'default_user_id': uid,
-                'default_section_id': opp.section_id and opp.section_id.id or False,
-                'default_email_from': opp.email_from,
-                'default_state': 'open',
-                'default_name': opp.name
-            })
-            value = {
-                'name': _('Meetings'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(calander_view and calander_view[1] or False, 'calendar'), (form_view and form_view[1] or False, 'form'), (tree_view and tree_view[1] or False, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view and search_view[1] or False,
-                'nodestroy': True
-            }
-        return value
-
+        opportunity = self.browse(cr, uid, ids[0], context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res['context'] = {
+            'default_opportunity_id': opportunity.id,
+            'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
+            'default_partner_ids' : opportunity.partner_id and [opportunity.partner_id.id] or False,
+            'default_user_id': uid,
+            'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
+            'default_email_from': opportunity.email_from,
+            'default_state': 'open',
+            'default_name': opportunity.name,
+        }
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context):
             if (not lead.section_id.allow_unlink) and (lead.state != 'draft'):
-                raise osv.except_osv(_('Error'),
-                    _("You cannot delete lead '%s'; it must be in state 'Draft' to be deleted. " \
-                      "You should better cancel it, instead of deleting it.") % lead.name)
+                raise osv.except_osv(_('Error!'),
+                    _("You cannot delete lead '%s' because it is not in 'Draft' state. " \
+                      "You can still cancel it, instead of deleting it.") % lead.name)
         return super(crm_lead, self).unlink(cr, uid, ids, context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -868,29 +808,73 @@ class crm_lead(base_stage, osv.osv):
             if stage.on_change:
                 vals['probability'] = stage.probability
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
-    
+
+    # ----------------------------------------
+    # Mail Gateway
+    # ----------------------------------------
+
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        if custom_values is None: custom_values = {}
+        custom_values.update({
+            'name':  msg.get('subject') or _("No Subject"),
+            'description': msg.get('body_text'),
+            'email_from': msg.get('from'),
+            'email_cc': msg.get('cc'),
+            'user_id': False,
+        })
+        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+            custom_values['priority'] = msg.get('priority')
+        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from', False), context=context))
+        return super(crm_lead, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Overrides mail_thread message_update that is called by the mailgateway
+            through message_process.
+            This method updates the document according to the email.
+        """
+        if isinstance(ids, (str, int, long)):
+            ids = [ids]
+        if update_vals is None: update_vals = {}
+
+        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+            vals['priority'] = msg.get('priority')
+        maps = {
+            'cost':'planned_cost',
+            'revenue': 'planned_revenue',
+            'probability':'probability',
+        }
+        for line in msg.get('body_text', '').split('\n'):
+            line = line.strip()
+            res = tools.misc.command_re.match(line)
+            if res and maps.get(res.group(1).lower()):
+                key = maps.get(res.group(1).lower())
+                vals[key] = res.group(2).lower()
+
+        return super(crm_lead, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+
     # ----------------------------------------
     # OpenChatter methods and notifications
     # ----------------------------------------
 
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context)
-        # add salesman to the subscribers
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id:
-                sub_ids.append(obj.user_id.id)
-        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
-    
+    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
+        """ Add 'user_id' to the monitored fields """
+        res = super(crm_lead, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
+        return res + ['user_id']
+
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
         return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
-        
+
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
             lead = self.browse(cr, uid, [lead], context=context)[0]
         return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
-    
+
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
@@ -910,14 +894,14 @@ class crm_lead(base_stage, osv.osv):
         if action == 'log': prefix = 'Logged'
         else: prefix = 'Scheduled'
         message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
-        return self. message_append_note(cr, uid, ids, body=message, context=context)
+        return self.message_append_note(cr, uid, ids, body=message, context=context)
 
     def _lead_set_partner_send_note(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context=context):
             message = _("%s <b>partner</b> is now set to <em>%s</em>." % (self.case_get_note_msg_prefix(cr, uid, lead, context=context), lead.partner_id.name))
             lead.message_append_note(body=message)
         return True
-    
+
     def convert_opportunity_send_note(self, cr, uid, lead, context=None):
         message = _("Lead has been <b>converted to an opportunity</b>.")
         lead.message_append_note(body=message)

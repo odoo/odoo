@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:14+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr ""
+msgstr "العائد بالوقت (فعلي)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -37,11 +37,13 @@ msgid ""
 "The contracts to be renewed because the deadline is passed or the working "
 "hours are higher than the allocated hours"
 msgstr ""
+"العقود للتجديد لأن الموعد النهائي فات أو أن ساعات العمل أكثر من الوقت "
+"المحجوز لها"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending contracts to renew with your customer"
-msgstr ""
+msgstr "عقود قيد الإنتظار للتجديد مع العميل"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -49,26 +51,28 @@ msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
 msgstr ""
+"عدد الوقت (الساعات / الأيام) (من اليومية نوع ’عام’) للفواتير الصادرة و ذلك "
+"علي أساس الحساب التحليلي."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Analytic Accounts with a past deadline in one month."
-msgstr ""
+msgstr "حسابات تحليلية ذات موعد نهائي لشهر واحد."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
-msgstr ""
+msgstr "تجميع حسب..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End Date"
-msgstr ""
+msgstr "تاريخ الإنتهاء"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "إنشاء فاتورة"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -86,16 +90,18 @@ msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
 msgstr ""
+"عدد الوقت الذي قضيته على حساب تحليلي (من الجدول الزمني). كان يحسب كميات "
+"اليوميات من نوع \"عام\"."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts in progress"
-msgstr ""
+msgstr "عقود قيد التنفيذ"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
 msgid "Overdue Quantity"
-msgstr ""
+msgstr "كمية متأخرة"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -107,6 +113,11 @@ msgid ""
 "pending accounts and reopen or close the according to the negotiation with "
 "the customer."
 msgstr ""
+"سوف تجد هنا العقود قابلة للتجديد لأنتهاء الموعد المحدد أو لأن ساعات العمل "
+"أكبر من الساعات المخصصة. نظام OpenERP  تلقائيا يقوم بتعيين هذه الحسابات "
+"التحليلية قيد الانتظار، من أجل رفع تحذيرا خلال تسجيل الجداول الزمنية. و "
+"ينبغي علي الباعة مراجعة جميع الحسابات المعلقة، وإعادة فتح أو إغلاق وفقا "
+"للتفاوض مع العميل."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -116,7 +127,7 @@ msgstr "الايرادات النظرية"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr ""
+msgstr "وقت غير مدفوع"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -130,7 +141,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Renew"
-msgstr ""
+msgstr "للتجديد"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -140,24 +151,24 @@ msgstr "تاريخ اخر تكلفة/عمل"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr ""
+msgstr "وقت مدفوع"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid ""
 "A contract in OpenERP is an analytic account having a partner set on it."
-msgstr ""
+msgstr "العقد في نظام أوبن إي أر بي هو حساب تحليلي لشريك لك."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Time"
-msgstr ""
+msgstr "الوقت المتبقي"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "عقود للتجديد"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -167,7 +178,7 @@ msgstr "هامش النظرية"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid " +1 Month"
-msgstr ""
+msgstr " شهر +١"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -182,7 +193,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr ""
+msgstr "معلّق"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
@@ -197,7 +208,7 @@ msgstr "الحساب بإستخدام الصيغة: كمية ماتم اضفته
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Parent"
-msgstr ""
+msgstr "الرئيسي"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -228,7 +239,7 @@ msgstr "تاريخ تكلفة اخر ماتم اضافته للفاتورة"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contract"
-msgstr ""
+msgstr "عقد"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -263,7 +274,7 @@ msgstr "الايرادات المتبقية"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Time"
-msgstr ""
+msgstr "تم حسابها بالمعادلة التالية: الوقت الأقصي - إجمالي الوقت"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -271,6 +282,8 @@ msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
 msgstr ""
+"عدد الوقت (ساعات /أيام) التي يمكن إضافتها للفواتير بالاضافة الى تلك التي سبق "
+"أن تم حسابها في الفاتورة."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -284,7 +297,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr ""
+msgstr "تم حسابها بالمعادلة: كمية الفواتير / إجمالي المبلغ"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -309,12 +322,12 @@ msgstr "حساب تحليلي"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
 msgid "Contracts"
-msgstr ""
+msgstr "عقود"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Manager"
-msgstr ""
+msgstr "المدير"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -325,22 +338,22 @@ msgstr "كل المدخلات التي لم يتم عمل لها فاتورة"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "If invoice from the costs, this is the date of the latest invoiced."
-msgstr ""
+msgstr "إذا كانت فاتورة من التكاليف، فهذا التاريخ لآخر فاتورة."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "شريك متحد"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Open"
-msgstr ""
+msgstr "فتح"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts that are not assigned to an account manager."
-msgstr ""
+msgstr "عقود غير معينة لمسؤول حساب"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0

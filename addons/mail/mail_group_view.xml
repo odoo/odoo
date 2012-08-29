@@ -1,15 +1,21 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
-       <!-- Group Kanban View  !-->
+        <record id="action_mail_group_feeds" model="ir.actions.client">
+            <field name="name">Discussion Group</field>
+            <field name="tag">mail.wall</field>
+            <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
+        </record>
+
+        <!-- Group Kanban View  !-->
         <record model="ir.ui.view" id="view_group_kanban">
             <field name="name">mail.group.kanban</field>
             <field name="model">mail.group</field>
-            <field name="type">kanban</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
+                    <field name="message_follower_ids"/>
+                    <field name="message_is_follower"/>
                     <templates>
                         <t t-name="kanban-description">
                             <div class="oe_group_description" t-if="record.description.raw_value">
@@ -17,23 +23,24 @@
                             </div>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="{record.is_subscriber.raw_value} oe_group_vignette">
+                            <div t-attf-class="{record.message_is_follower.raw_value} oe_group_vignette">
                                 <div class="oe_group_image">
-                                    <a type="edit"><img t-att-src="kanban_image('mail.group', 'photo', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
+                                    <a type="edit"><img t-att-src="kanban_image('mail.group', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="edit"><field name="name"/></a></h4>
-                                    <span style="display: none;"><field name="is_subscriber"/></span>
                                     <ul>
-                                        <li><field name="member_count"/> members</li>
-                                        <li t-if="! record.is_subscriber.raw_value"><a name="action_group_join" string="Join" type="object" class="oe_group_join">Not following</a></li>
-                                        <li t-if="record.is_subscriber.raw_value"><a name="action_group_leave" string="Join" type="object" class="oe_group_leave">Following</a></li>
+                                        <!-- <li><field name="message_follower_count"/> member(s)</li> -->
+                                        <li>
+                                            <t t-raw="record.message_follower_ids.raw_value.length"/> member(s)
+                                        </li>
+                                        <li t-if="! record.message_is_follower.raw_value"><a name="action_group_join" string="Join" type="object" class="oe_group_join">Not following</a></li>
+                                        <li t-if="record.message_is_follower.raw_value"><a name="action_group_leave" string="Join" type="object" class="oe_group_leave">Following</a></li>
                                         <li><field name="last_month_msg_nbr"/> messages last month</li>
                                     </ul>
                                 </div>
                             </div>
                             <script>
-                                $('.oe_group_photo').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_group_photo_wide') } });
                                 $('.oe_group_join').mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
                                 $('.oe_group_leave').mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
                             </script>
@@ -47,30 +54,43 @@
         <record  model="ir.ui.view" id="view_group_form">
             <field name="name">mail.group.form</field>
             <field name="model">mail.group</field>
-            <field name="type">form</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <form string="Group">
-                    <group colspan="4" col="8">
-                        <group colspan="6" col="4">
-                            <separator string="General Information" colspan="4"/>
-                            <field name="name" colspan="2"/>
-                            <field name="responsible_id" colspan="2"/>
-                            <newline/>
-                            <field name="description" colspan="4"/>
+                <form string="Group Form" version="7.0">
+                    <sheet class="openerp_mail_group_sheet">
+                        <field name="image_small" widget='image' class="oe_avatar oe_left"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Group Name"/> 
+                            </div> 
+                            <h1><field name="name"/></h1>
+                            <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_id" invisible="1" required="0"/>
+                                    <label for="alias_name" class="oe_edit_only"/>
+                                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                            </div>
+                            <field name="description" placeholder="Topics discussed in this group..."/>
+                        </div>
+                        <div class="oe_clear"/>
+                        <group col="1">
+                            <group class="oe_edit_only">
+                                <field name="public" class="oe_inline"/>
+                                <field name="group_public_id" class="oe_inline"
+                                    attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
+                                    />
+                                <field name="group_ids" widget="many2many_tags" class="oe_inline"/>
+                            </group>
+                            <group class="oe_edit_only">
+                                <field name="responsible_id" class="oe_inline"/>
+                            </group>
                         </group>
-                        <group colspan="1" col="2">
-                            <separator string="Group Image" colspan="2"/>
-                            <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
-                        </group>
-                        <group colspan="1" col="2">
-                            <separator string="Privacy Settings" colspan="2"/>
-                            <field name="public" nolabel="1"/>
-                            <label string="This group is visible by non members" colspan="2"/>
-                        </group>
-                    </group>
-                    <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"
-                            options='{"thread_level": 1}'/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"
+                                options='{"thread_level": 1}'/>
+                        <field name="message_follower_ids" widget="mail_followers"
+                                context="{'lapin': 'nouille'}" image="image_small"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -79,11 +99,10 @@
         <record  model="ir.ui.view" id="view_group_tree">
             <field name="name">mail.group.tree</field>
             <field name="model">mail.group</field>
-            <field name="type">tree</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Groups">
-                    <field name="name"/>
+                    <field name="name" string="Group Name"/>
                     <field name="responsible_id"/>
                 </tree>
             </field>
@@ -93,11 +112,10 @@
         <record  model="ir.ui.view" id="view_group_search">
             <field name="name">mail.group.search</field>
             <field name="model">mail.group</field>
-            <field name="type">search</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <search string="Search groups">
-                    <field name="name"/>
+                <search string="Search Groups">
+                    <field name="name" string="Group"/>
                     <field name="responsible_id"/>
                 </search>
             </field>
@@ -113,6 +131,7 @@
         </record>
 
         <!-- left-side menu: Groups !-->
-        <menuitem id="mail_allgroups" name="All Groups" parent="mail_feeds" sequence="12" action="action_view_groups"/>
+        <menuitem id="mail_group_root" parent="mail_feeds_main" sequence="12" name="My Groups"/>
+        <menuitem id="mail_allgroups" parent="mail_feeds" sequence="12" action="action_view_groups"/>
     </data>
 </openerp>
