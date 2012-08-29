@@ -689,7 +689,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_button_save: function() {
         var self = this;
-        return this.do_save().then(function(result) {            
+        return this.do_save().then(function(result) {
             self.to_view_mode();
         });
     },
@@ -759,10 +759,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * record or saving an existing one depending on whether the record
      * already has an id property.
      *
-     * @param {Function} [success] callback on save success
-     * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new record, should that record be inserted at the start of the dataset (by default, records are added at the end)
+     * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new
+     * record, should that record be inserted at the start of the dataset (by
+     * default, records are added at the end)
      */
-    do_save: function(success, prepend_on_create) {
+    do_save: function(prepend_on_create) {
         var self = this;
         return this.mutating_mutex.exec(function() { return self.is_initialized.pipe(function() {
             try {
@@ -797,21 +798,21 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 self.set({'display_invalid_fields': false});
                 var save_deferral;
                 if (!self.datarecord.id) {
-                    // console.log("FormView(", self, ") : About to create", values);
+                    // Creation save
                     save_deferral = self.dataset.create(values).pipe(function(r) {
-                        return self.on_created(r, undefined, prepend_on_create);
+                        return self.on_created(r, prepend_on_create);
                     }, null);
                 } else if (_.isEmpty(values) && ! self.force_dirty) {
-                    // console.log("FormView(", self, ") : Nothing to save");
+                    // Not dirty, noop save
                     save_deferral = $.Deferred().resolve({}).promise();
                 } else {
                     self.force_dirty = false;
-                    // console.log("FormView(", self, ") : About to save", values);
+                    // Write save
                     save_deferral = self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
                         return self.on_saved(r);
                     }, null);
                 }
-                return save_deferral.then(success);
+                return save_deferral;
             }
             } catch (e) {
                 console.error(e);
@@ -830,14 +831,19 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         warnings.push('</ul>');
         this.do_warn("The following fields are invalid :", warnings.join(''));
     },
-    on_saved: function(r, success) {
+    /**
+     * Reload the form after saving
+     *
+     * @param {Object} r result of the write function.
+     */
+    on_saved: function(r) {
         if (!r.result) {
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
         } else {
             return $.when(this.reload()).pipe(function () {
-                return r; })
-                    .then(success);
+                return r;
+            });
         }
     },
     /**
@@ -850,10 +856,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * * Updates the pager and sidebar displays
      *
      * @param {Object} r
-     * @param {Function} success callback to execute after having updated the dataset
-     * @param {Boolean} [prepend_on_create=false] adds the newly created record at the beginning of the dataset instead of the end
+     * @param {Boolean} [prepend_on_create=false] adds the newly created record
+     * at the beginning of the dataset instead of the end
      */
-    on_created: function(r, success, prepend_on_create) {
+    on_created: function(r, prepend_on_create) {
         if (!r.result) {
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
@@ -872,8 +878,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             //openerp.log("The record has been created with id #" + this.datarecord.id);
             return $.when(this.reload()).pipe(function () {
-                return _.extend(r, {created: true}); })
-                    .then(success);
+                return _.extend(r, {created: true});
+            });
         }
     },
     on_action: function (action) {
