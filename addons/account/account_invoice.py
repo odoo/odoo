@@ -1114,7 +1114,7 @@ class account_invoice(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
 
-    def _refund_cleanup_lines(self, cr, uid, lines):
+    def _refund_cleanup_lines(self, cr, uid, lines, context=None):
         for line in lines:
             del line['id']
             del line['invoice_id']
@@ -1126,60 +1126,64 @@ class account_invoice(osv.osv):
                 line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
         return map(lambda x: (0,0,x), lines)
 
-    def refund(self, cr, uid, ids, date=None, period_id=None, description=None, journal_id=None):
-        invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id', 'company_id'])
+    def prepair_refund(self, cr, uid, refund_id, invoice, date=None, period_id=None, description=None, journal_id=None, context=None):
         obj_invoice_line = self.pool.get('account.invoice.line')
         obj_invoice_tax = self.pool.get('account.invoice.tax')
         obj_journal = self.pool.get('account.journal')
+        del invoice['id']
+
+        type_dict = {
+            'out_invoice': 'out_refund', # Customer Invoice
+            'in_invoice': 'in_refund',   # Supplier Invoice
+            'out_refund': 'out_invoice', # Customer Refund
+            'in_refund': 'in_invoice',   # Supplier Refund
+        }
+
+        invoice_lines = obj_invoice_line.read(cr, uid, invoice['invoice_line'], context=context)
+        invoice_lines = self._refund_cleanup_lines(cr, uid, invoice_lines, context=context)
+
+        tax_lines = obj_invoice_tax.read(cr, uid, invoice['tax_line'], context=context)
+        tax_lines = filter(lambda l: l['manual'], tax_lines)
+        tax_lines = self._refund_cleanup_lines(cr, uid, tax_lines, context=context)
+        if journal_id:
+            refund_journal_ids = [journal_id]
+        elif invoice['type'] == 'in_invoice':
+            refund_journal_ids = obj_journal.search(cr, uid, [('type','=','purchase_refund')], context=context)
+        else:
+            refund_journal_ids = obj_journal.search(cr, uid, [('type','=','sale_refund')], context=context)
+
+        if not date:
+            date = time.strftime('%Y-%m-%d')
+        invoice.update({
+            'type': type_dict[invoice['type']],
+            'date_invoice': date,
+            'state': 'draft',
+            'number': False,
+            'invoice_line': invoice_lines,
+            'tax_line': tax_lines,
+            'journal_id': refund_journal_ids
+        })
+        if period_id:
+            invoice.update({
+                'period_id': period_id,
+            })
+        if description:
+            invoice.update({
+                'name': description,
+            })
+        # take the id part of the tuple returned for many2one fields
+        for field in ('partner_id', 'company_id',
+                'account_id', 'currency_id', 'payment_term', 'journal_id'):
+            invoice[field] = invoice[field] and invoice[field][0]
+        return invoice
+
+    def refund(self, cr, uid, ids, date=None, period_id=None, description=None, journal_id=None, context=None):
+        invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id', 'company_id'], context=context)
         new_ids = []
         for invoice in invoices:
-            del invoice['id']
-
-            type_dict = {
-                'out_invoice': 'out_refund', # Customer Invoice
-                'in_invoice': 'in_refund',   # Supplier Invoice
-                'out_refund': 'out_invoice', # Customer Refund
-                'in_refund': 'in_invoice',   # Supplier Refund
-            }
-
-            invoice_lines = obj_invoice_line.read(cr, uid, invoice['invoice_line'])
-            invoice_lines = self._refund_cleanup_lines(cr, uid, invoice_lines)
-
-            tax_lines = obj_invoice_tax.read(cr, uid, invoice['tax_line'])
-            tax_lines = filter(lambda l: l['manual'], tax_lines)
-            tax_lines = self._refund_cleanup_lines(cr, uid, tax_lines)
-            if journal_id:
-                refund_journal_ids = [journal_id]
-            elif invoice['type'] == 'in_invoice':
-                refund_journal_ids = obj_journal.search(cr, uid, [('type','=','purchase_refund')])
-            else:
-                refund_journal_ids = obj_journal.search(cr, uid, [('type','=','sale_refund')])
-
-            if not date:
-                date = time.strftime('%Y-%m-%d')
-            invoice.update({
-                'type': type_dict[invoice['type']],
-                'date_invoice': date,
-                'state': 'draft',
-                'number': False,
-                'invoice_line': invoice_lines,
-                'tax_line': tax_lines,
-                'journal_id': refund_journal_ids
-            })
-            if period_id:
-                invoice.update({
-                    'period_id': period_id,
-                })
-            if description:
-                invoice.update({
-                    'name': description,
-                })
-            # take the id part of the tuple returned for many2one fields
-            for field in ('partner_id', 'company_id',
-                    'account_id', 'currency_id', 'payment_term', 'journal_id'):
-                invoice[field] = invoice[field] and invoice[field][0]
+            invoice = self.prepair_refund(cr, uid, invoice['id'], invoice, date=date, period_id=period_id, description=description, journal_id=journal_id, context=context)
             # create the new invoice
-            new_ids.append(self.create(cr, uid, invoice))
+            new_ids.append(self.create(cr, uid, invoice, context=context))
 
         return new_ids
 
