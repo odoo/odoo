@@ -64,6 +64,7 @@
             <field name="amount_percentage_base">contract.wage</field>
             <field name="amount_percentage" eval="50"/>
             <field name="sequence" eval="13"/>
+            <field name="note">Dearness allowance (D.A.) is part of a person's salary. It is calculated as a percent of the basic salary. This amount is then added to the basic salary along with house rent allowance to get the total salary. Or you can say that The Dearness Allowance is a part of the total compensation a person receives for having performed his or her job.</field>
         </record>
 
         <record id="hr_salary_rule_houserentallowancemetro_nonmetro" model="hr.salary.rule">
@@ -74,6 +75,7 @@
             <field name="name">House Rent Allowance</field>
             <field name="register_id" ref="hr_houserent_allowance_register"/>
             <field name="sequence" eval="51"/>
+            <field name="note">HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses.</field>
         </record>
 
         <record id="hr_salary_trans_allownce" model="hr.salary.rule">
@@ -83,6 +85,7 @@
             <field name="amount_select">fix</field>
             <field eval="800.0" name="amount_fix"/>
             <field name="sequence" eval="14"/>
+            <field name="note">A conveyance allowance refers to an amount of money reimbursed to someone for the operation of a vehicle or the riding of a vehicle. The allowance is typically a designated amount or percentage of total transportation expenses that is referenced in a country's tax laws or code. Organizations and private or public businesses may also offer a conveyance allowance in addition to reimbursing employees or members for transportation expenses. In this instance, the conveyance allowance may identify an unusual transport occurrence that may not be covered by a designated travel expense report such as travel to a specific job site that requires a daily bus or taxi ride.</field>
         </record>
 
         <record id="hr_salary_rule_special" model="hr.salary.rule">
@@ -127,6 +130,7 @@
             <field name="sequence" eval="21"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.10) or (contract.wage * 0.10)</field>
+            <field name="note">This allowance is paid to Employees who are posted in big cities. The purpose is to compensate the high cost of living in cities like Mumbai, Delhi, etc. However it is Fully Taxable.</field>
         </record>
 
         <record id="hr_payroll_rule_metrocity" model="hr.salary.rule">
@@ -347,6 +351,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="amount_python_compute">result = -200 if contract.wage &gt;= 12000 else -150 if ((contract.wage &gt;= 9000) and (contract.wage &lt;= 11999)) else -80 if ((contract.wage &gt;= 6000) and (contract.wage &lt;= 8999)) else -20 if  ((contract.wage &gt;= 3000) and (contract.wage &lt;= 5999)) else -0</field>
             <field name="register_id" ref="hr_professional_tax_deduction_register"/>
             <field eval="145" name="sequence"/>
+            <field name="note">Workers living in states that impose the professional tax must submit a payment each half-year for the right to practice a profession or trade. It applies equally to employees who work for the national or state government, and those employed by private corporations. The professional tax uses a six-month accounting system, which divides the year into two periods, beginning on April 1 and October 1.</field>
         </record>
 
         <record id="hr_payslip_rule_epf" model="hr.salary.rule">
