@@ -436,7 +436,18 @@ class product_pricelist_item(osv.osv):
         return {}
 product_pricelist_item()
 
+class res_company(osv.osv):
+    _inherit = 'res.company'
 
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(res_company, self).write(cr, uid, ids, vals, context)
+        product_pricelist_obj = self.pool.get('product.pricelist')
+        currency = product_pricelist_obj._get_currency(cr, uid, context)
+        pricelist = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'list0')
+        product_pricelist_obj.write(cr, uid, pricelist.id, {'currency_id': currency}, context=context)
+        return res
+    
+res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
