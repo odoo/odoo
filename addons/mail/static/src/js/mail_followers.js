@@ -64,7 +64,7 @@ openerp_mail_followers = function(session, mail) {
 
         _check_visibility: function() {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
-            if (this.view.get("actual_mode") === "create"){this.fetch_subtype();}
+            if (this.view.get("actual_mode") !== "create"){this.fetch_subtype();}
         },
 
         destroy: function () {
@@ -101,6 +101,7 @@ openerp_mail_followers = function(session, mail) {
         display_subscribers: function (records) {
             var self = this;
             this.is_subscriber = false;
+            //if (self.view.get("actual_mode") === "edit"){self.fetch_subtype();}
             var user_list = this.$el.find('ul.oe_mail_followers_display').empty();
             this.$el.find('div.oe_mail_recthread_followers h4').html(this.params.title + ' (' + records.length + ')');
             _(records).each(function (record) {
