@@ -393,6 +393,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field eval="-1500.0" name="amount_fix"/>
             <field name="register_id" ref="hr_company_transport_register"/>
             <field name="sequence" eval="165"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="note">Company provided transport amount is based on company.</field>
         </record>
 
@@ -426,6 +427,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field eval="-6.0" name="amount_fix"/>
             <field name="sequence" eval="171"/>
             <field name="register_id" ref="hr_labour_Welfare_fund_register"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="note">The LWF is applicable to all the members of the organisation except the Management staff (Staffs having authority to sign on the cheque/official documents on behalf of the organisation). for e.x. Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 Total Rs 9.00 and deposited to the LWF office.It is half yearly contribution (June and December).</field>
         </record>
 
@@ -437,6 +439,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field eval="-1000.0" name="amount_fix"/>
             <field name="register_id" ref="hr_group_term_insurance_register"/>
             <field name="sequence" eval="175"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="note">Group term insurance provides a solid foundation to a comprehensive employee benifit program,backed up by government asistance in the form of valuable tax incentives to both employees and employers.</field>
         </record>
 
@@ -460,6 +463,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.medical_insurance)</field>
             <field eval="-50.0" name="amount_fix"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="register_id" ref="hr_medical_insurance_register"/>
             <field name="sequence" eval="185"/>
         </record>
@@ -470,6 +474,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="-200.0" name="amount_fix"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="register_id" ref="hr_other_deduction_register"/>
             <field name="sequence" eval="187"/>
         </record>
@@ -482,6 +487,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) or - (contract.wage * 0.10)</field>
             <field name="sequence" eval="190"/>
             <field name="register_id" ref="hr_nps_contribution_register"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name= "note">Any amount contributed by your employer to your NPS account is treated as part of your salary and is included in your income but you can claim deduction under Section 80C for this too.thus, effectively making it exempt from tax within the limit of 10% of your basic salary. This is very useful and tax efficient for you particularly if you fall in the maximum tax.</field>
         </record>
 
@@ -493,6 +499,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) or - (contract.wage * 0.12)</field>
             <field name="sequence" eval="195"/>
             <field name="register_id" ref="hr_register_provident_fund"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="note">Both the employees and employer contribute to the fund at the rate of 12% of the basic wages, dearness allowance and retaining allowance, if any, payable to employees per month.</field>
         </record>
 
