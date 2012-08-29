@@ -63,6 +63,9 @@ class view(osv.osv):
         'name': fields.char('View Name',size=64,  required=True),
         'model': fields.char('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
+        'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel',
+            'view_id', 'group_id', 'Groups', help="If you have groups, the visibility of this view will be based on these groups. "\
+                "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
         'type': fields.function(_type_field, type='selection', selection=[
             ('tree','Tree'),
             ('form','Form'),
