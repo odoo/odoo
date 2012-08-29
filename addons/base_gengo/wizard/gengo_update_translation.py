@@ -65,7 +65,7 @@ CRON_VALS = {
     'numbercall': -1,
     'model': "'base.update.translations'",
     'function': "",
-    'args': "'(%s,)'" %s GENGO_DEFAULT_LIMIT,
+    'args': "'(%s,)'" % (str(GENGO_DEFAULT_LIMIT)),
 }
 
 
@@ -244,7 +244,7 @@ class base_update_translation(osv.osv_memory):
                         continue
                     if job_response['response']['job']['status'] == 'approved':
                         vals.update({'state': 'translated',
-                            'value': job_response['response']['job']['body_tgt'])
+                            'value': job_response['response']['job']['body_tgt']})
                         up_term += 1
                     job_comment = gengo.getTranslationJobComments(id=term.job_id)
                     if job_comment['opstat']=='ok':
