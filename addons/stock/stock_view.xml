@@ -1162,6 +1162,7 @@
         <record id="view_move_picking_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
             <field name="model">stock.move</field>
+            <field eval="4" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="grey:scrapped == True" string="Stock Moves">
                     <field name="product_id"/>
