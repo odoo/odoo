@@ -33,18 +33,18 @@ class account_move_reconciliation(osv.osv):
         tools.drop_view_if_exists(cr, 'account_move_reconciliation')
         cr.execute("""
             CREATE or REPLACE VIEW account_move_reconciliation as (
-                SELECT move_line.partner_id AS id, move_line.partner_id AS partner_id, SUM(move_line.debit) AS debit, SUM(move_line.credit) AS credit, 
+                SELECT move_line.partner_id AS id, a.type AS type, move_line.partner_id AS partner_id, SUM(move_line.debit) AS debit, SUM(move_line.credit) AS credit, 
                     MAX(move_line.date) AS latest_date,
                     MIN(partner.last_reconciliation_date) AS last_reconciliation_date,
                     MAX(move_line.followup_date) as followup_date
                 FROM account_move_line move_line
                 LEFT JOIN account_account a ON (a.id = move_line.account_id)
-                RIGHT JOIN res_partner partner ON (move_line.partner_id = partner.id)
+                LEFT JOIN res_partner partner ON (move_line.partner_id = partner.id)
                 WHERE a.reconcile IS TRUE
                     AND move_line.reconcile_id IS NULL
                     AND (partner.last_reconciliation_date IS NULL OR move_line.date > partner.last_reconciliation_date)
                     AND move_line.state <> 'draft'
-                GROUP BY move_line.partner_id
+                GROUP BY move_line.partner_id, a.type
            )
         """)
 account_move_reconciliation()

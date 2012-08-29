@@ -6,16 +6,15 @@ instance.web.views.add('form_clone', 'instance.account.extend_form_view');
 instance.account.extend_viewmanager = instance.web.ViewManagerAction.include({
     start : function(){
         this._super()
-        if(this.action.context && this.action.context.extended_form_view_id)
-            this.setup_exended_form_view(this)
+        if(this.action.context && this.action.context.extended_view_id && this.action.context.extended_model)
+            this.setup_exended_form_view(this.action.context.extended_model, this.action.context.extended_view_id);
     }, 
-    setup_exended_form_view: function(parent){
+    setup_exended_form_view: function(view_model, view_id){
         var self = this,
             from_view,
             obj_from_view;
-        view_id = this.action.context.extended_form_view_id
         from_view = this.registry.get_object('form_clone');
-        this.dataset_form = new instance.web.DataSetSearch(this, 'account.move.reconciliation', this.action.context, this.action.domain);
+        this.dataset_form = new instance.web.DataSetSearch(this, view_model, this.action.context, this.action.domain);
         this.dataset_loaded  = this.dataset_form.read_slice()
         obj_from_view = new from_view(self, this.dataset_form, view_id, options={});
         obj_from_view.template = 'ExtendedFormView' 
@@ -97,8 +96,10 @@ instance.account.extend_form_view = instance.web.FormView.extend({
         viewmanager.action.domain = this.original_domain
         $.when(this._super(action)).then(function() {
             var id = self.get_fields_values().partner_id;
+            viewmanager.action.context.next_partner_only = true;
+            viewmanager.action.context.partner_id = [id];
             // apply domain on list
-            viewmanager.action.domain = (viewmanager.action.domain || []).concat([["partner_id", "=", id]])
+            //viewmanager.action.domain = (viewmanager.action.domain || []).concat([["partner_id", "=", id]])
             viewmanager.searchview.do_search();
         })
     },

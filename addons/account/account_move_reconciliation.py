@@ -43,10 +43,8 @@ class account_move_reconciliation(osv.osv):
         if context is None:
             context = {}
         account_type = context.get('account_type', False)
-        if account_type == "receivable":
-            args += [('customer','=', True)]
-        if account_type == "payable":
-            args += [('supplier','=', True)]
+        if account_type:
+            args += [('type','=', account_type)]
         return super(account_move_reconciliation, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
@@ -72,6 +70,7 @@ class account_move_reconciliation(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Partner'),
         'last_reconciliation_date':fields.related('partner_id', 'last_reconciliation_date' ,type='datetime', relation='res.partner', string='Last Reconciliation'),
         'latest_date' :fields.date('Latest Entry'),
+        'type': fields.char('Type', size=156),
         'supplier': fields.related('partner_id', 'supplier' ,type='boolean', string='Supplier'),
         'customer': fields.related('partner_id', 'customer' ,type='boolean', string='Customer'),
         'reconciliation_progress': fields.function(_rec_progress, string='Progress (%)',  type='float'),
@@ -81,17 +80,17 @@ class account_move_reconciliation(osv.osv):
         tools.drop_view_if_exists(cr, 'account_move_reconciliation')
         cr.execute("""
             CREATE or REPLACE VIEW account_move_reconciliation as (
-                SELECT move_line.partner_id AS id, move_line.partner_id AS partner_id, SUM(move_line.debit) AS debit, SUM(move_line.credit) AS credit, 
+                SELECT move_line.partner_id AS id, a.type AS type, move_line.partner_id AS partner_id, SUM(move_line.debit) AS debit, SUM(move_line.credit) AS credit, 
                         MAX(move_line.date) AS latest_date,
                         MIN(partner.last_reconciliation_date) AS last_reconciliation_date
                 FROM account_move_line move_line
                 LEFT JOIN account_account a ON (a.id = move_line.account_id)
-                RIGHT JOIN res_partner partner ON (move_line.partner_id = partner.id)
+                LEFT JOIN res_partner partner ON (move_line.partner_id = partner.id)
                 WHERE a.reconcile IS TRUE
                     AND move_line.reconcile_id IS NULL
                     AND (partner.last_reconciliation_date IS NULL OR move_line.date > partner.last_reconciliation_date)
                     AND move_line.state <> 'draft'
-                GROUP BY move_line.partner_id
+                GROUP BY move_line.partner_id, a.type
              )
         """)
 account_move_reconciliation()
