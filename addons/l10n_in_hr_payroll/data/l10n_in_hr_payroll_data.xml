@@ -64,6 +64,7 @@
             <field name="amount_percentage_base">contract.wage</field>
             <field name="amount_percentage" eval="50"/>
             <field name="sequence" eval="13"/>
+            <field name="note">Dearness allowance (D.A.) is part of a person's salary. It is calculated as a percent of the basic salary. This amount is then added to the basic salary along with house rent allowance to get the total salary. Or you can say that The Dearness Allowance is a part of the total compensation a person receives for having performed his or her job.</field>
         </record>
 
         <record id="hr_salary_rule_houserentallowancemetro_nonmetro" model="hr.salary.rule">
@@ -74,6 +75,7 @@
             <field name="name">House Rent Allowance</field>
             <field name="register_id" ref="hr_houserent_allowance_register"/>
             <field name="sequence" eval="51"/>
+            <field name="note">HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses.</field>
         </record>
 
         <record id="hr_salary_trans_allownce" model="hr.salary.rule">
@@ -83,6 +85,7 @@
             <field name="amount_select">fix</field>
             <field eval="800.0" name="amount_fix"/>
             <field name="sequence" eval="14"/>
+            <field name="note">A conveyance allowance refers to an amount of money reimbursed to someone for the operation of a vehicle or the riding of a vehicle. The allowance is typically a designated amount or percentage of total transportation expenses that is referenced in a country's tax laws or code. Organizations and private or public businesses may also offer a conveyance allowance in addition to reimbursing employees or members for transportation expenses. In this instance, the conveyance allowance may identify an unusual transport occurrence that may not be covered by a designated travel expense report such as travel to a specific job site that requires a daily bus or taxi ride.</field>
         </record>
 
         <record id="hr_salary_rule_special" model="hr.salary.rule">
@@ -127,6 +130,7 @@
             <field name="sequence" eval="21"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.10) or (contract.wage * 0.10)</field>
+            <field name="note">This allowance is paid to Employees who are posted in big cities. The purpose is to compensate the high cost of living in cities like Mumbai, Delhi, etc. However it is Fully Taxable.</field>
         </record>
 
         <record id="hr_payroll_rule_metrocity" model="hr.salary.rule">
@@ -208,13 +212,22 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="note">This would be fully taxable based on Bonus.</field>
         </record>
 
+        <record id="hr_salary_rule_medical_allow" model="hr.salary.rule">
+            <field name="code">MEDA</field>
+            <field name="name">Medical Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">fix</field>
+            <field eval="1250.0" name="amount_fix"/>
+            <field name="sequence" eval="43"/>
+            <field name="note">This component is on-taxable up to 15000 per year (or Rs 1250 per month) on producing medical bills.</field>
+        </record>
 
         <record id="hr_salary_rule_medical" model="hr.salary.rule">
             <field name="code">MEDA</field>
             <field name="name">Medical Reimbursement</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="1250.0" name="amount_fix"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.MR.amount</field>
             <field name="sequence" eval="32"/>
             <field name="note">This component is on-taxable up to 15000 per year (or Rs 1250 per month) on producing medical bills.</field>
         </record>
@@ -225,7 +238,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="quantity">worked_days.WORK100.number_of_days</field>
             <field name="code">FC</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="name">Food Coupons Allowance</field>
+            <field name="name">Food Allowance</field>
             <field name="register_id" ref="hr_food_coupen_register"/>
             <field name="sequence" eval="33"/>
          </record>
@@ -338,6 +351,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="amount_python_compute">result = -200 if contract.wage &gt;= 12000 else -150 if ((contract.wage &gt;= 9000) and (contract.wage &lt;= 11999)) else -80 if ((contract.wage &gt;= 6000) and (contract.wage &lt;= 8999)) else -20 if  ((contract.wage &gt;= 3000) and (contract.wage &lt;= 5999)) else -0</field>
             <field name="register_id" ref="hr_professional_tax_deduction_register"/>
             <field eval="145" name="sequence"/>
+            <field name="note">Workers living in states that impose the professional tax must submit a payment each half-year for the right to practice a profession or trade. It applies equally to employees who work for the national or state government, and those employed by private corporations. The professional tax uses a six-month accounting system, which divides the year into two periods, beginning on April 1 and October 1.</field>
         </record>
 
         <record id="hr_payslip_rule_epf" model="hr.salary.rule">
@@ -384,6 +398,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field eval="-1500.0" name="amount_fix"/>
             <field name="register_id" ref="hr_company_transport_register"/>
             <field name="sequence" eval="165"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="note">Company provided transport amount is based on company.</field>
         </record>
 
@@ -417,6 +432,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field eval="-6.0" name="amount_fix"/>
             <field name="sequence" eval="171"/>
             <field name="register_id" ref="hr_labour_Welfare_fund_register"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="note">The LWF is applicable to all the members of the organisation except the Management staff (Staffs having authority to sign on the cheque/official documents on behalf of the organisation). for e.x. Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 Total Rs 9.00 and deposited to the LWF office.It is half yearly contribution (June and December).</field>
         </record>
 
@@ -451,6 +467,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = - (contract.medical_insurance)</field>
             <field eval="-50.0" name="amount_fix"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="register_id" ref="hr_medical_insurance_register"/>
             <field name="sequence" eval="185"/>
         </record>
@@ -461,6 +478,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">fix</field>
             <field eval="-200.0" name="amount_fix"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="register_id" ref="hr_other_deduction_register"/>
             <field name="sequence" eval="187"/>
         </record>
@@ -473,6 +491,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) or - (contract.wage * 0.10)</field>
             <field name="sequence" eval="190"/>
             <field name="register_id" ref="hr_nps_contribution_register"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name= "note">Any amount contributed by your employer to your NPS account is treated as part of your salary and is included in your income but you can claim deduction under Section 80C for this too.thus, effectively making it exempt from tax within the limit of 10% of your basic salary. This is very useful and tax efficient for you particularly if you fall in the maximum tax.</field>
         </record>
 
@@ -484,6 +503,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) or - (contract.wage * 0.12)</field>
             <field name="sequence" eval="195"/>
             <field name="register_id" ref="hr_register_provident_fund"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="note">Both the employees and employer contribute to the fund at the rate of 12% of the basic wages, dearness allowance and retaining allowance, if any, payable to employees per month.</field>
         </record>
 
@@ -541,6 +561,11 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="code">LAI</field>
             <field name="name">Leave Availed</field>
             <field name="input_id" ref="hr_payslip_rule_dla"/>
+        </record>
+        <record id="hr_rule_input_medical" model="hr.rule.input">
+            <field name="code">MR</field>
+            <field name="name">Medical Reimbursement</field>
+            <field name="input_id" ref="hr_salary_rule_medical"/>
         </record>
     </data>
 </openerp>
