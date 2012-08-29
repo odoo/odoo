@@ -911,7 +911,7 @@
                             </group>
                             <newline/>
 
-                            <group string="Opening Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
+                            <group string="Opening Cash Control" attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '=', 'closed')]}">
                                 <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', 'not in', ('opening_control',))]}">
                                     <tree string="Opening Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
@@ -920,7 +920,7 @@
                                     </tree>
                                 </field>
                             </group>
-                            <group string="Closing Cash Control" attrs="{'invisible': [('state', '!=', 'closing_control')]}">
+                            <group string="Closing Cash Control" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '!=', 'closing_control')]}">
                                 <field name="details_ids" nolabel="1" colspan="2">
                                     <tree string="Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
@@ -930,7 +930,7 @@
                                 </field>
                             </group>
 
-                            <div>
+                            <div attrs="{'invisible': [('state', '=', 'closed')]}">
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
                                     <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
@@ -947,7 +947,7 @@
                             </div>
 
 
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', 'in', ('opening_control', 'closed'))]}">
                                 <field name="cash_register_balance_end_real" class="oe_subtotal_footer_separator"/>
                                 <field name="cash_register_difference"  class="oe_subtotal_footer_separator"/>
                             </group>
