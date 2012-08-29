@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from osv import fields, osv
 
-DEFAULT_PAD_TEMPLATE = 'http://beta.etherpad.org/p/%(db)s-%(model)s-%(salt)s'
+DEFAULT_PAD_TEMPLATE = 'http://pad.openerp.com/p/%(db)s-%(model)s-%(salt)s'
+DEFAULT_PAD_TEMPLATE = ''
 
 class company_pad(osv.osv):
     _inherit = 'res.company'
