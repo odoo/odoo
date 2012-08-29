@@ -70,7 +70,7 @@
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
                 <header>
-                    <field name="state" invisible="True"/>
+                    <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -111,8 +111,10 @@
                                     <field name="date_deadline" 
                                         string="End Date" attrs="{'invisible': [('allday','=',True)]}"
                                         on_change="onchange_dates(date,False,date_deadline)"/>
-                                    (<field name="allday" on_change="onchange_dates(date,False,False,allday)" class="oe_inline"/>
-                                    <label for="allday" string="All Day?"/>)
+                                    <div class="oe_edit_only">
+                                        (<field name="allday" on_change="onchange_dates(date,False,False,allday)" class="oe_inline"/>
+                                        <label for="allday" string="All Day?"/>)
+                                    </div>
                                 </div>
                                     <field name="recurrency"
                                         attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>

@@ -90,9 +90,10 @@ class crm_case_stage(osv.osv):
     _defaults = {
         'sequence': lambda *args: 1,
         'probability': lambda *args: 0.0,
-        'state': 'draft',
+        'state': 'open',
         'fold': False,
         'type': 'both',
+        'case_default': True,
     }
 
 class crm_case_section(osv.osv):

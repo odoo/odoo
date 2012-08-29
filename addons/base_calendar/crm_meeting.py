@@ -53,7 +53,7 @@ class crm_meeting(base_state, osv.Model):
         'partner_ids': fields.many2many('res.partner', 'crm_meeting_partner_rel', 'meeting_id','partner_id',
             string='Attendees', states={'done': [('readonly', True)]}),
         'state': fields.selection(
-                    [('draft', 'Unconfirmed'), ('open', 'Confirmed'), ('cancel', 'Cancelled'), ('done', 'Done')],
+                    [('draft', 'Unconfirmed'), ('open', 'Confirmed')],
                     string='Status', size=16, readonly=True),
         # Meeting fields
         'name': fields.char('Meeting Subject', size=128, required=True, states={'done': [('readonly', True)]}),

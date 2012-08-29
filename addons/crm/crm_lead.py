@@ -267,7 +267,7 @@ class crm_lead(base_stage, osv.osv):
     _defaults = {
         'active': 1,
         'type': 'lead',
-        'user_id': lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
+        'user_id': lambda self, cr, uid, context: uid,
         'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
