@@ -6,10 +6,10 @@
             <field name="model">account.move.reconciliation</field>
             <field name="inherit_id" ref="account.view_account_move_reconciliation_form_view"/>
             <field name="arch" type="xml">
-            	 <xpath expr="//div[@name='div4']" position="inside">
+            	 <xpath expr="//div[@name='grp_followup']" position="inside">
                     <label for="followup_date"/>
                     <field name="followup_date"/>
-                    <!-- <field name="followup_id"/> -->
+                    <field name="followup_id"/>
                  </xpath>
             </field>
         </record>

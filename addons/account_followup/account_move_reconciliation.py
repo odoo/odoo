@@ -23,17 +23,28 @@ import tools
 
 class account_move_reconciliation(osv.osv):
     _inherit = 'account.move.reconciliation'
+
+    def _get_followup(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        move_obj = self.pool.get("account.move.line")
+        for rec in self.browse(cr, uid, ids, context=context):
+            move_line_ids = move_obj.search(cr, uid, [('partner_id','=',rec.partner_id.id),('followup_date','=',rec.followup_date)], context=context)
+            move_line = move_line_ids and move_obj.browse(cr, uid, move_line_ids[0], context=context) or False
+            result[rec.id] = move_line and move_line.followup_line_id or False
+        return result
+
     _columns = {
                 'followup_date': fields.date('Latest Follow-up'),
-                #'followup_id':fields.many2one('account_followup.followup.line',
-                #                    'Max Follow Up Level' )
+                'followup_id':fields.function(_get_followup, type='many2one', relation='account_followup.followup.line', string='Max Follow Up Level')
     }
     
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_move_reconciliation')
         cr.execute("""
             CREATE or REPLACE VIEW account_move_reconciliation as (
-                SELECT move_line.partner_id AS id, a.type AS type, move_line.partner_id AS partner_id, SUM(move_line.debit) AS debit, SUM(move_line.credit) AS credit, 
+                SELECT move_line.partner_id AS id, a.type AS type, move_line.partner_id AS partner_id, 
+                    SUM(move_line.debit) AS debit, 
+                    SUM(move_line.credit) AS credit, 
                     MAX(move_line.date) AS latest_date,
                     MIN(partner.last_reconciliation_date) AS last_reconciliation_date,
                     MAX(move_line.followup_date) as followup_date
