@@ -10,29 +10,20 @@ instance.account.extend_viewmanager = instance.web.ViewManagerAction.include({
             this.setup_exended_form_view(this.action.context.extended_model, this.action.context.extended_view_id);
     }, 
     setup_exended_form_view: function(view_model, view_id){
-        var self = this,
-            from_view,
-            obj_from_view;
+        var self = this;
         from_view = this.registry.get_object('form_clone');
         this.dataset_form = new instance.web.DataSetSearch(this, view_model, this.action.context, this.action.domain);
-        this.dataset_loaded  = this.dataset_form.read_slice()
-        obj_from_view = new from_view(self, this.dataset_form, view_id, options={});
-        obj_from_view.template = 'ExtendedFormView' 
-        view_promise = obj_from_view.appendTo(this.$el.find('.oe_extended_form_view'))
-        $.when(view_promise, this.dataset_loaded).then(function() {
-            self.action.context.active_ids = self.dataset_form.ids;
-            if (!_.isEmpty(self.dataset_form.ids)) {
-                obj_from_view.on_pager_action('first')
-            }
-        })
+        this.dataset_loaded  = this.dataset_form.read_slice();
+        obj_from_view = new from_view(self, self.dataset_form, view_id, options={});
+        obj_from_view.template = 'ExtendedFormView';
+        view_form = obj_from_view.appendTo(self.$el.find('.oe_extended_form_view'));
+        $.when(view_form, this.dataset_loaded).then(function() {
+                obj_from_view.post_action();
+        });
     } 
     
 })
 instance.account.extend_form_view = instance.web.FormView.extend({
-    init :function(){
-        this._super.apply(this,arguments);
-        this.original_domain = this.getParent().action.domain;
-    },
     on_loaded: function(data) {
          this._super.apply(this,arguments);
          var self = this
@@ -65,23 +56,32 @@ instance.account.extend_form_view = instance.web.FormView.extend({
                 result.result.flags = result.result.flags || {};
                 result.result.flags.new_window = true;
                 self.do_action(result.result, function () {
-                    // reload view
-                    list_view.reload();
-                    self.reload();
+                    self.post_action();
             });
+        });
+    },
+
+    post_action: function(){
+        // hide if not records otherwise go next record
+        var self = this;
+        var viewmanager = this.getParent();
+        this.dataset.read_slice().done(function(){
+            if (_.isEmpty(self.dataset.ids)){
+                self.$el.hide();
+                viewmanager.action.context.next_partner_only = false;
+                viewmanager.searchview.do_search();
+            }
+            else{
+                self.on_pager_action('next');
+            }
         });
     },
     
     do_nothing_to_reconcile:function(){
-        var self = this
-        if (!_.isEmpty(this.dataset.ids)){
+        var self = this;
         this.dataset.call(event.target.name, [[self.datarecord.id], self.dataset.context]).then(function() {
-            self.dataset.read_slice().done(function(){
-                if (!_.isEmpty(self.dataset.ids)) 
-                    self.on_pager_action('first');
-            });
-        })
-        }
+            self.post_action();
+        });
     },
     
     do_update_pager: function(hide_index) {
@@ -93,13 +93,10 @@ instance.account.extend_form_view = instance.web.FormView.extend({
     on_pager_action: function(action) {
         var self = this
         var viewmanager = self.getParent();
-        viewmanager.action.domain = this.original_domain
         $.when(this._super(action)).then(function() {
             var id = self.get_fields_values().partner_id;
             viewmanager.action.context.next_partner_only = true;
             viewmanager.action.context.partner_id = [id];
-            // apply domain on list
-            //viewmanager.action.domain = (viewmanager.action.domain || []).concat([["partner_id", "=", id]])
             viewmanager.searchview.do_search();
         })
     },
