@@ -44,9 +44,9 @@ class hr_contract(osv.osv):
         'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll'), help="Amount for Tax Deduction at Source"),
         'driver_salay': fields.boolean('Driver Salary', help="Check this box if you provide allowance for driver"),
         'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance"),
-        'voluntary_provident_fund': fields.float('Voluntary Provident Fund (%)', digits_compute=dp.get_precision('Payroll'), help="VPF computed as percentage(%)"),
-        'house_rent_allowance_metro_nonmetro': fields.float('House Rent Allowance (%)', digits_compute=dp.get_precision('Payroll'), help="HRA computed as percentage(%)"),
-        'supplementary_allowance': fields.float('Supplementary Allowance', digits_compute=dp.get_precision('Payroll')),
+        'voluntary_provident_fund': fields.float('Voluntary Provident Fund (%)', digits_compute=dp.get_precision('Payroll'), help="VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government.And VPF computed as percentage(%)"),
+        'house_rent_allowance_metro_nonmetro': fields.float('House Rent Allowance (%)', digits_compute=dp.get_precision('Payroll'), help="HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses.And HRA computed as percentage(%)"),
+        'supplementary_allowance': fields.float('Supplementary Allowance', digits_compute=dp.get_precision('Payroll'), help="Supplementary Allowance provides a basic weekly allowance to eligible people who have little or no income"),
     }
 
 hr_contract()

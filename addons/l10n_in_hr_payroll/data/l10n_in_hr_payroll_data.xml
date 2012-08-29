@@ -208,13 +208,22 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="note">This would be fully taxable based on Bonus.</field>
         </record>
 
+        <record id="hr_salary_rule_medical_allow" model="hr.salary.rule">
+            <field name="code">MEDA</field>
+            <field name="name">Medical Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">fix</field>
+            <field eval="1250.0" name="amount_fix"/>
+            <field name="sequence" eval="43"/>
+            <field name="note">This component is on-taxable up to 15000 per year (or Rs 1250 per month) on producing medical bills.</field>
+        </record>
 
         <record id="hr_salary_rule_medical" model="hr.salary.rule">
             <field name="code">MEDA</field>
             <field name="name">Medical Reimbursement</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="amount_select">fix</field>
-            <field eval="1250.0" name="amount_fix"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.MR.amount</field>
             <field name="sequence" eval="32"/>
             <field name="note">This component is on-taxable up to 15000 per year (or Rs 1250 per month) on producing medical bills.</field>
         </record>
@@ -225,7 +234,7 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="quantity">worked_days.WORK100.number_of_days</field>
             <field name="code">FC</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="name">Food Coupons Allowance</field>
+            <field name="name">Food Allowance</field>
             <field name="register_id" ref="hr_food_coupen_register"/>
             <field name="sequence" eval="33"/>
          </record>
@@ -541,6 +550,11 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="code">LAI</field>
             <field name="name">Leave Availed</field>
             <field name="input_id" ref="hr_payslip_rule_dla"/>
+        </record>
+        <record id="hr_rule_input_medical" model="hr.rule.input">
+            <field name="code">MR</field>
+            <field name="name">Medical Reimbursement</field>
+            <field name="input_id" ref="hr_salary_rule_medical"/>
         </record>
     </data>
 </openerp>
