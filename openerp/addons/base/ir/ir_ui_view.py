@@ -169,20 +169,25 @@ class view(osv.osv):
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
+        user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
         if self.pool._init:
             # Module init currently in progress, only consider views from modules whose code was already loaded 
-            query = """SELECT v.arch, v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+            query = """SELECT v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
                        WHERE v.inherit_id=%s AND v.model=%s AND md.module in %s  
                        ORDER BY priority"""
             query_params = (view_id, model, tuple(self.pool._init_modules))
         else:
             # Modules fully loaded, consider all views
-            query = """SELECT v.arch, v.id FROM ir_ui_view v
+            query = """SELECT v.id FROM ir_ui_view v
                        WHERE v.inherit_id=%s AND v.model=%s  
                        ORDER BY priority"""
             query_params = (view_id, model)
         cr.execute(query, query_params)
-        return cr.fetchall()
+        view_ids = [v[0] for v in cr.fetchall()]
+        # filter views based on user groups
+        return [(view.arch, view.id)
+                for view in self.browse(cr, 1, view_ids, context)
+                if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
     def write(self, cr, uid, ids, vals, context=None):
         if not isinstance(ids, (list, tuple)):
