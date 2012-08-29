@@ -183,7 +183,7 @@
                     <button name="action_cancel" states="except_picking,except_invoice" string="Cancel" type="object" />
                     <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
                     <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
-                    <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight"/>
+                    <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
                     <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight"/>
                     <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
                     <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
