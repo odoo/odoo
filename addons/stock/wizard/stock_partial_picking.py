@@ -38,7 +38,6 @@ class stock_partial_picking_line(osv.TransientModel):
             res[tracklot.id] = tracking
         return res
 
-
     _name = "stock.partial.picking.line"
     _rec_name = 'product_id'
     _columns = {
@@ -55,6 +54,21 @@ class stock_partial_picking_line(osv.TransientModel):
         'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
         'tracking': fields.function(_tracking, string='Tracking', type='boolean'), 
     }
+
+    def onchange_method_product_id(self, cr, uid, ids, product_id, uom_id, context=None):
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            return {'value': {'product_uom': product.uom_id.id}}
+        else:
+            return False
+        
+    def _get_product_uom(self, cr, uid, context=None):
+        product_uom = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'product_uom_unit')
+        return product_uom.id
+
+    _defaults = {
+        'product_uom': _get_product_uom,
+    }    
 
 class stock_partial_picking(osv.osv_memory):
     _name = "stock.partial.picking"
