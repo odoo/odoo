@@ -25,20 +25,24 @@ class account_move_reconciliation(osv.osv):
     _inherit = 'account.move.reconciliation'
     _columns = {
                 'followup_date': fields.date('Latest Follow-up'),
-                'max_followup_id':fields.many2one('account_followup.followup.line',
-                                    'Max Follow Up Level' )
+                #'followup_id':fields.many2one('account_followup.followup.line',
+                #                    'Max Follow Up Level' )
     }
     
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_move_reconciliation')
         cr.execute("""
             CREATE or REPLACE VIEW account_move_reconciliation as (
-                SELECT  move_line.partner_id as id, move_line.partner_id, 
-                MAX(move_line.followup_date) as followup_date,
-                MAX(move_line.followup_line_id) as max_followup_id,
-                MAX(move_line.date) as latest_date
-                FROM account_move_line as move_line where move_line.state <> 'draft'
-                GROUP by move_line.partner_id
-                )
+                SELECT move_line.partner_id AS partner_id, SUM(move_line.debit) AS debit, SUM(move_line.credit) AS credit, MAX(move_line.date) AS latest_date,
+                    MAX(move_line.followup_date) as followup_date
+                FROM account_move_line move_line
+                LEFT JOIN account_account a ON (a.id = move_line.account_id)
+                RIGHT JOIN res_partner partner ON (move_line.partner_id = partner.id)
+                WHERE a.reconcile IS TRUE
+                    AND move_line.reconcile_id IS NULL
+                    AND (partner.last_reconciliation_date IS NULL OR move_line.date > partner.last_reconciliation_date)
+                    AND move_line.state <> 'draft'
+                GROUP BY move_line.partner_id
+           )
         """)
 account_move_reconciliation()

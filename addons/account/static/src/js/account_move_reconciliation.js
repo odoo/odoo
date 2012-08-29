@@ -19,7 +19,7 @@ instance.account.extend_viewmanager = instance.web.ViewManagerAction.include({
         this.dataset_loaded  = this.dataset_form.read_slice()
         obj_from_view = new from_view(self, this.dataset_form, view_id, options={});
         obj_from_view.template = 'ExtendedFormView' 
-        view_promise = obj_from_view.appendTo(this.$element.find('.oe_extended_form_view'))
+        view_promise = obj_from_view.appendTo(this.$el.find('.oe_extended_form_view'))
         $.when(view_promise, this.dataset_loaded).then(function() {
             self.action.context.active_ids = self.dataset_form.ids;
             if (!_.isEmpty(self.dataset_form.ids)) {
@@ -37,9 +37,9 @@ instance.account.extend_form_view = instance.web.FormView.extend({
     on_loaded: function(data) {
          this._super.apply(this,arguments);
          var self = this
-         this.$element.find(".oe_reconcile").on('click', this.do_reconcilation)
-         this.$element.find(".oe_nothing_to_reconcile").on('click', this.do_nothing_to_reconcile)
-         this.$element.on('click','a[data-pager-action]',function() {
+         this.$el.find(".oe_reconcile").on('click', this.do_reconcilation)
+         this.$el.find(".oe_nothing_to_reconcile").on('click', this.do_nothing_to_reconcile)
+         this.$el.on('click','a[data-pager-action]',function() {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
         });
@@ -87,7 +87,7 @@ instance.account.extend_form_view = instance.web.FormView.extend({
     
     do_update_pager: function(hide_index) {
         var index = hide_index ? '-' : this.dataset.index + 1;
-        this.$element.find('span.oe_pager_index_extend').html(index).end()
+        this.$el.find('span.oe_pager_index_extend').html(index).end()
                    .find('span.oe_pager_count_extend').html(this.dataset.ids.length);
     },
     

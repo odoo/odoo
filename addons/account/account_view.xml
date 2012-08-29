@@ -1538,38 +1538,6 @@
             <field name="act_window_id" ref="action_move_line_search"/>
         </record>
 
-        <record id="action_account_receivable_manual_reconcile" model="ir.actions.act_window">
-            <field name="name">Entries To Reconcile</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field eval="False" name="auto_search"/>
-            <field name="context" eval="{'account_type':'receivable','view_mode':True,'extended_form_view_id': ref('view_account_move_reconciliation_form_view'), 'search_default_unreconciled': 1}"></field>
-        </record>
-        
-        <record id="action_account_payable_manual_reconcile" model="ir.actions.act_window">
-            <field name="name">Entries To Reconcile</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field eval="False" name="auto_search"/>
-            <field name="context" eval="{'account_type':'payable','view_mode':True,'extended_form_view_id': ref('view_account_move_reconciliation_form_view'), 'search_default_unreconciled': 1}"></field>
-        </record>
-
-        <menuitem
-             name="Manual Reconciliation" icon="STOCK_EXECUTE"
-             id="menu_manual_reconcile"
-             parent="account.periodical_processing_reconciliation"/>
-
-        <menuitem id="receivable_manual_reconcile" name="Reconcile Customer Entries"
-         action="action_account_receivable_manual_reconcile"
-         parent="account.menu_manual_reconcile"/>
-
-        <menuitem id="payable_manual_reconcile" name="Reconcile Supplier Entries"
-         action="action_account_payable_manual_reconcile"
-         parent="account.menu_manual_reconcile"/>
-
-
         <act_window
             id="act_account_acount_move_line_open"
             name="Entries"

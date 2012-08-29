@@ -34,48 +34,26 @@ account_move_line();
 
 class account_move_reconciliation(osv.osv):
     _name = "account.move.reconciliation"
-    _description = "All partner info related account move line"
+    _description = "partner info related account move line"
     _auto = False
+    _order = 'last_reconciliation_date'
 
-    def _get_to_reconcile(self, cr, uid, context=None):
-        query= ''
-        if context and context.get('account_type', False) == 'payable':
-            query = 'AND p.supplier = True'
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        if context is None:
+            context = {}
+        account_type = context.get('account_type', False)
+        if account_type == "receivable":
+            args += [('customer','=', True)]
+        if account_type == "payable":
+            args += [('supplier','=', True)]
+        return super(account_move_reconciliation, self).search(cr, uid, args, offset, limit,
+                order, context=context, count=count)
 
-        cr.execute("""
-                  SELECT p_id FROM (SELECT l.partner_id as p_id, SUM(l.debit) AS debit, SUM(l.credit) AS credit
-                                    FROM account_move_line AS l LEFT JOIN account_account a ON (l.account_id = a.id)
-                                                                LEFT JOIN res_partner p ON (p.id = l.partner_id)
-                                    WHERE a.reconcile = 't'
-                                    AND l.reconcile_id IS NULL
-                                    AND  (%s >  to_char(p.last_reconciliation_date, 'YYYY-MM-DD') OR  p.last_reconciliation_date IS NULL )
-                                    AND  l.state <> 'draft' """ +query + """
-                                    GROUP BY l.partner_id) AS tmp
-                              WHERE debit >= 0
-                              AND credit >= 0
-                """,(time.strftime('%Y-%m-%d'),)
-        )
-        return len(map(lambda x: x[0], cr.fetchall())) - 1
-
-    def _get_today_reconciled(self, cr, uid, context=None):
-        query= ''
-        if context and context.get('account_type', False) == 'payable':
-            query = 'AND p.supplier = True'
-
-        cr.execute(
-                """SELECT l.partner_id 
-                FROM account_move_line AS l LEFT JOIN res_partner p ON (p.id = l.partner_id)
-                WHERE l.reconcile_id IS NULL
-                AND %s =  to_char(p.last_reconciliation_date, 'YYYY-MM-DD')
-                AND l.state <> 'draft' """ +query + """
-                GROUP BY l.partner_id """,(time.strftime('%Y-%m-%d'),)
-        )
-        return len(map(lambda x: x[0], cr.fetchall())) + 1
-    
     def _rec_progress(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
-        to_reconcile = self._get_to_reconcile(cr, uid, context)
-        today_reconcile = self._get_today_reconciled(cr, uid, context)
+        to_reconcile = self.search(cr, uid, [], context=context)
+        today_reconcile = self.search(cr, uid, [('last_reconciliation_date','=',time.strftime('%Y-%m-%d'))], context=context)
         if to_reconcile < 0:
             reconciliation_progress = 100
         else:
@@ -83,34 +61,8 @@ class account_move_reconciliation(osv.osv):
         for id in ids:
             res[id] = reconciliation_progress
         return res
-#    
-    def get_partners(self, cr, uid, context=None):
-        query= ''
-        if context and context.get('account_type', False) == 'payable':
-            query = 'AND p.supplier = True'
-        cr.execute(
-             """
-             SELECT p.id
-             FROM res_partner p
-             RIGHT JOIN (
-                SELECT l.partner_id AS partner_id, SUM(l.debit) AS debit, SUM(l.credit) AS credit
-                FROM account_move_line l
-                LEFT JOIN account_account a ON (a.id = l.account_id)
-                    LEFT JOIN res_partner p ON (l.partner_id = p.id)
-                    WHERE a.reconcile IS TRUE
-                    AND l.reconcile_id IS NULL
-                    AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
-                    AND l.state <> 'draft' """ +query + """
-                    GROUP BY l.partner_id
-                ) AS s ON (p.id = s.partner_id)
-                ORDER BY p.last_reconciliation_date""")
-        return cr.fetchall()
-    
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        ids = super(account_move_reconciliation, self).search(cr, uid, args, offset, limit, order, context, count)
-        res = self.get_partners(cr, uid, context=context)
-        return map(lambda x: x[0], res)
-    
+  
+        
     def skip_partner(self, cr, uid, ids, context):
         self.pool.get('res.partner').write(cr, uid, ids ,{'last_reconciliation_date':time.strftime("%Y-%m-%d")}, context)
             
@@ -118,6 +70,8 @@ class account_move_reconciliation(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Partner'),
         'last_reconciliation_date':fields.related('partner_id', 'last_reconciliation_date' ,type='datetime', relation='res.partner', string='Last Reconciliation'),
         'latest_date' :fields.date('Latest Entry'),
+        'supplier': fields.related('partner_id', 'supplier' ,type='boolean', string='Supplier'),
+        'customer': fields.related('partner_id', 'customer' ,type='boolean', string='Customer'),
         'reconciliation_progress': fields.function(_rec_progress, string='Progress (%)',  type='float'),
     }
     
@@ -125,11 +79,16 @@ class account_move_reconciliation(osv.osv):
         tools.drop_view_if_exists(cr, 'account_move_reconciliation')
         cr.execute("""
             CREATE or REPLACE VIEW account_move_reconciliation as (
-                SELECT  move_line.partner_id as id, move_line.partner_id, 
-                MAX(move_line.date) as latest_date
-                FROM account_move_line as move_line where move_line.state <> 'draft'
-                GROUP by move_line.partner_id
-                )
+                SELECT move_line.partner_id AS partner_id, SUM(move_line.debit) AS debit, SUM(move_line.credit) AS credit, MAX(move_line.date) AS latest_date
+                FROM account_move_line move_line
+                LEFT JOIN account_account a ON (a.id = move_line.account_id)
+                RIGHT JOIN res_partner partner ON (move_line.partner_id = partner.id)
+                WHERE a.reconcile IS TRUE
+                    AND move_line.reconcile_id IS NULL
+                    AND (partner.last_reconciliation_date IS NULL OR move_line.date > partner.last_reconciliation_date)
+                    AND move_line.state <> 'draft'
+                GROUP BY move_line.partner_id
+             )
         """)
 account_move_reconciliation()
 
