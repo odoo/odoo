@@ -7,8 +7,7 @@
             <field name="inherit_id" ref="base.view_translation_search"/>
             <field name="arch" type="xml">
                 <search string="Translations">
-                     <filter icon="terp-project" string="In Progress" domain="[('state','=','inprogress')]"></filter>
-                     <filter string="To Control" domain="[('state','=','translated')]"></filter>
+                     <filter string="To Approve In Gengo" domain="[('state','=','inprogress'),('gengo_translation','=',True)]"></filter>
                 </search>
             </field>
         </record>
@@ -20,12 +19,10 @@
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
                  <xpath expr="//form[@string='Translations']/sheet" position="inside">
-                    <group string="Gengo Comments &amp; Activity" col="1">
-                        <field name="gengo_comment" nolabel="1" placeholder="Gengo Comments &amp; Activity..."/>
-                    </group>
-                    <group col="4">
+                    <group string="Gengo Translation Service" col="4" colspan="4">
                         <field name="gengo_translation" />
-                        <field name="gengo_control" />
+                        <label string="Note: If the translation state is 'In Progress', it means that the translation has to be approved to be uploaded in this system. You are suppose to do that directly by using your Gengo Account"/>
+                        <field name="gengo_comment" nolabel="1" placeholder="Gengo Comments &amp; Activity..." colspan="4"/>
                     </group>
                 </xpath>
             </field>

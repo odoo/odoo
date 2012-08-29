@@ -65,7 +65,7 @@ CRON_VALS = {
     'numbercall': -1,
     'model': "'base.update.translations'",
     'function': "",
-    'args': "'(20,)'",#not sure
+    'args': "'(%s,)'" %s GENGO_DEFAULT_LIMIT,
 }
 
 
@@ -175,6 +175,7 @@ class base_update_translation(osv.osv_memory):
             model, res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base_gengo', xml_id)
             cron_pool.write(cr, uid, [res], {'active': True}, context=context)
         except:
+            #the cron job was not found, probably deleted previously, so we create it again using default values
             CRON_VALS.update({'name': name, "function": fn})
             return cron_pool.create(cr, uid, CRON_VALS, context)
 
@@ -243,8 +244,7 @@ class base_update_translation(osv.osv_memory):
                         continue
                     if job_response['response']['job']['status'] == 'approved':
                         vals.update({'state': 'translated',
-                            'value': job_response['response']['job']['body_tgt'],
-                            'gengo_control': True})
+                            'value': job_response['response']['job']['body_tgt'])
                         up_term += 1
                     job_comment = gengo.getTranslationJobComments(id=term.job_id)
                     if job_comment['opstat']=='ok':
