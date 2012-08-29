@@ -1051,7 +1051,7 @@ class mail_thread(osv.Model):
         write_res = self.write(cr, uid, ids, {'message_follower_ids': self.message_subscribe_get_command(cr, uid, to_subscribe_uids, context)}, context=context)
         follower_ids = [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
         if subtype_ids:
-            self.pool.get('mail.followers').write(cr, uid, follower_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+            self.message_subscribe_udpate_subtypes(cr, uid, ids, user_ids, subtype_ids, context=context)
         return follower_ids
 
     def message_subscribe_get_command(self, cr, uid, follower_ids, context=None):

@@ -278,9 +278,11 @@ class crm_lead(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
+        subtype_obj = self.pool.get('mail.message.subtype');
+        subtype_ids = subtype_obj.search(cr, uid, [('default', '=', 'true'),('model_ids.model', '=', 'crm.lead')])
         record = self.browse(cr, uid, obj_id, context)
         if record.user_id:
-            self.message_subscribe(cr, uid, [obj_id], [record.user_id.id], context = context)
+            self.message_subscribe(cr, uid, [obj_id], [record.user_id.id], subtype_ids,context = context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
