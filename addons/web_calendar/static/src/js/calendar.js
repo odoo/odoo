@@ -313,7 +313,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     do_create_event_with_formdialog: function(event_id, event_obj) {
         var self = this;
         $.when(! self.form_dialog.dialog_inited ? self.form_dialog.init_dialog() : true).then(function() {
-            debugger;
             if (!event_obj) {
                 event_obj = scheduler.getEvent(event_id);
             }
