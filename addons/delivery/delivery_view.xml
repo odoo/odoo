@@ -306,7 +306,7 @@
 
         <record id="view_delivery_order_inherit_stock" model="ir.ui.view">
             <field name="name">stock.picking.out.form</field>
-            <field name="model">stock.picking</field>
+            <field name="model">stock.picking.out</field>
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/header//button[@string='Create Invoice/Refund']" position="after">
