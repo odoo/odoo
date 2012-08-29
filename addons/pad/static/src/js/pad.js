@@ -5,8 +5,8 @@ instance.web.form.FieldPad = instance.web.form.AbstractField.extend({
     start: function() {
         this._super();
         var self = this;
-        this.$element.find('div.oe_pad_head').click(function(ev) {
-            self.$element.toggleClass('oe_pad_fullscreen');
+        this.$el.find('div.oe_pad_head').click(function(ev) {
+            self.$el.toggleClass('oe_pad_fullscreen');
         });
         this.on("change:effective_readonly", this, function() {
             this.render_value();

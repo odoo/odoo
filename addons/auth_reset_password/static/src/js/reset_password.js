@@ -2,7 +2,7 @@ openerp.auth_reset_password = function(instance) {
     var _t = instance.web._t;
     instance.web.Login.include({
         start: function() {
-            var $e = this.$element;
+            var $e = this.$el;
             $e.find('a.oe_login_switch').click(function() {
                 $e.find('ul.oe_login_switch').toggle();
                 var $m = $e.find('form input[name=is_reset_pw]');
@@ -15,7 +15,7 @@ openerp.auth_reset_password = function(instance) {
                 ev.preventDefault();
             }
 
-            var $e = this.$element;
+            var $e = this.$el;
             var db = $e.find("form [name=db]").val();
             if (!db) {
                 this.do_warn(_t("Login"), _t("No database selected !"));
