@@ -83,6 +83,49 @@
             <field name="case_default" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
+        
+        <!-- SUBTYPE -->
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="name">new</field>
+            <field name="model_ids" eval="[(4,ref('project.model_project_project')),(4,ref('project.model_project_task'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_open" model="mail.message.subtype">
+            <field name="name">open</field>
+            <field name="model_ids" eval="[(4,ref('project.model_project_project'))]"/>
+        </record>
+        <record id="mail.mail_subtype_pending" model="mail.message.subtype">
+            <field name="name">pending</field>
+            <field name="model_ids" eval="[(4,ref('project.model_project_project'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_close" model="mail.message.subtype">
+            <field name="name">close</field>
+            <field name="model_ids" eval="[(4,ref('project.model_project_project'))]"/>
+        </record>
+        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
+            <field name="name">cancel</field>
+            <field name="model_ids" eval="[(4,ref('project.model_project_project'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_stage_change" model="mail.message.subtype">
+            <field name="name">stage change</field>
+            <field name="model_ids" eval="[(4,ref('project.model_project_task'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_draft" model="mail.message.subtype">
+            <field name="name">draft</field>
+            <field name="model_ids" eval="[(4,ref('project.model_project_task'))]"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('project.model_project_project')),(4,ref('project.model_project_task'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('project.model_project_project')),(4,ref('project.model_project_task'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('project.model_project_project')),(4,ref('project.model_project_task'))]"/>
+        </record>
 
         <!-- notify all employees of module installation -->
         <function model="mail.group" name="message_append_note">

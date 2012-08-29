@@ -12,5 +12,16 @@
             <field eval="'process_email_queue'" name="function"/>
             <field eval="'()'" name="args"/>
         </record>
+        
+        <record id="mail_subtype_other" model="mail.message.subtype">
+            <field name="name">other</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail_subtype_email" model="mail.message.subtype">
+            <field name="name">email</field>
+        </record>
+        <record id="mail_subtype_comment" model="mail.message.subtype">
+            <field name="name">comment</field>
+        </record>
     </data>
 </openerp>
