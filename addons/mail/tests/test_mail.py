@@ -255,9 +255,9 @@ class test_mail(common.TransactionCase):
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         partner_bert_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Raoul Grosbedon, without email, to test email verification; should receive emails for every message
-        partner_raoul_id = self.res_partner.create(cr, uid, {'name': 'Raoul Grosbedon', 'notification_email_pref': 'all'})
+        partner_raoul_id = self.res_partner.create(cr, uid, {'name': 'Raoul Grosbedon', 'notification_email_send': 'all'})
         # 3 - Roger Poilvache, with email, should never receive emails
-        partner_roger_id = self.res_partner.create(cr, uid, {'name': 'Roger Poilvache', 'email': 'r@r', 'notification_email_pref': 'none'})
+        partner_roger_id = self.res_partner.create(cr, uid, {'name': 'Roger Poilvache', 'email': 'r@r', 'notification_email_send': 'none'})
 
         # Create a new comment on group_pigs
         compose_id = mail_compose.create(cr, uid,

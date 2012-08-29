@@ -27,7 +27,7 @@ class res_partner_mail(osv.Model):
     _inherit = ['res.partner', 'mail.thread']
 
     _columns = {
-        'notification_email_pref': fields.selection([
+        'notification_email_send': fields.selection([
             ('all', 'All feeds'),
             ('comment', 'Comments and emails'),
             ('none', 'Never')
@@ -37,7 +37,7 @@ class res_partner_mail(osv.Model):
     }
 
     _defaults = {
-        'notification_email_pref': lambda *args: 'comment'
+        'notification_email_send': lambda *args: 'comment'
     }
 
 

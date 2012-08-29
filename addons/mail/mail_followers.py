@@ -95,10 +95,10 @@ class mail_notification(osv.Model):
             if partner.user_id.id == uid:
                 continue
             # Partner does not want to receive any emails
-            if partner.notification_email_pref=='none' or not partner.email:
+            if partner.notification_email_send=='none' or not partner.email:
                 continue
             # Partners want to receive only emails and comments
-            if partner.notification_email_pref=='comment' and msg.type not in ('email','comment'):
+            if partner.notification_email_send=='comment' and msg.type not in ('email','comment'):
                 continue
 
             towrite['state'] = 'outgoing'
