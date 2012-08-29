@@ -21,14 +21,13 @@
 
 
 {
-    "name" : "Products & Pricelists",
-    "version" : "1.1",
-    "author" : "OpenERP SA",
+    'name': 'Products & Pricelists',
+    'version': '1.1',
+    'author': 'OpenERP SA',
     'category': 'Sales Management',
-    "depends" : ["base", "process", "decimal_precision", "mail"],
-    "init_xml" : [],
-    "demo_xml" : ["product_demo.xml", "product_image_demo.xml"],
-    "description": """
+    'depends': ['base', 'process', 'decimal_precision', 'mail'],
+    'demo': ['product_demo.xml', 'product_image_demo.xml'],
+    'description': """
 This is the base module for managing products and pricelists in OpenERP.
 ========================================================================
 
@@ -36,6 +35,7 @@ Products support variants, different pricing methods, suppliers information,
 make to stock/order, different unit of measures, packaging and properties.
 
 Pricelists support:
+-------------------
     * Multiple-level of discount (by product, category, quantities)
     * Compute price based on different criteria:
         * Other pricelist
@@ -47,7 +47,7 @@ Pricelists preferences by product and/or partners.
 
 Print product labels with barcode.
     """,
-    'update_xml': [
+    'data': [
         'security/product_security.xml',
         'security/ir.model.access.csv',
         'wizard/product_price_view.xml',
