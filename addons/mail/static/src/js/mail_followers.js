@@ -125,7 +125,7 @@ openerp_mail_followers = function(session, mail) {
                 if($(record).is(':checked')) {
                     cheklist.push(parseInt($(record).attr('id')))}
             });
-            self.ds_model.call('message_subscribe_udpate_subtypes',[[self.view.datarecord.id],self.session.uid,cheklist])
+            self.ds_model.call('message_subscribe_udpate_subtypes',[[self.view.datarecord.id],[self.session.uid],cheklist])
         },
         // Display the subtypes of each records.
         display_subtype: function(records) {
