@@ -272,6 +272,7 @@ class project(osv.osv):
         default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
+        default['code'] = False
         default['line_ids'] = []
         default['tasks'] = []
         proj = self.browse(cr, uid, id, context=context)
