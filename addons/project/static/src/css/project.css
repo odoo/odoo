@@ -1,23 +1,41 @@
+.oe_kanban_card {
+  margin: 2px;
+}
+
 .oe_kanban_project {
-    width: 300px;
+    width: 250px;
+    min-height: 160px;
 }
 .oe_kanban_project_list {
-    margin: 8px 0 8px 0;
+    margin: 4px 0;
 }
-/*.oe_kanban_project_list a:not(:first-child):before {
-    content: ' - ';
-}*/
-.oe_kanban_project_fields div {
-    display: inline-block;
-    width: 49%;
-    box-sizing: border-box;
-    padding: 2px 0 2px 0;
+
+.openerp .oe_kanban_content h4 {
+    margin: 0 0 8px;
 }
+
+.oe_kanban_content > table {
+    width: 100%;
+}
+
+.oe_kanban_content > table > th {
+    padding: 0;
+    border-right: 1px solid #DDD;
+    vertical-align: top;
+    font-weight: normal;
+}
+
+.oe_kanban_content > table > td {
+    padding: 2px 0 2px 8px;
+    color: #888;
+}
+
 .oe_kanban_project_fields div:nth-child(odd) {
     border-right: 1px solid #dddddd;
     vertical-align: top;
     padding-right: 8px;
 }
+
 .oe_kanban_project_fields div:nth-child(even) {
     padding-left: 8px;
     color: #888888;
@@ -27,6 +45,7 @@
     padding-top: 1em;
     margin-top: 8px;
 }
+
 .oe_kanban_project_avatars img {
     width: 30px;
     height: 30px;
