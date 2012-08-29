@@ -64,22 +64,12 @@ class mail_notification(osv.Model):
         'read': False,
     }
 
-    def init(self, cr):
-        """ Set a postgresql NOT NULL constraint with default value false for
-            the read column. The reason is that when writing in this table using
-            partner_ids of mail.message model, it bypasses the ORM default
-            values, leading to 'None' values for read field. This broke the
-            needaction mechanism for mail.message. """
-        cr.execute("ALTER TABLE mail_notification ALTER read SET NOT NULL")
-        cr.execute("ALTER TABLE mail_notification ALTER read SET DEFAULT false")
-
     def create(self, cr, uid, vals, context=None):
         """ Override of create to check that we can not create a notification
             for a message the user can not read. """
         if self.pool.get('mail.message').check_access_rights(cr, uid, 'read'):
             return super(mail_notification, self).create(cr, uid, vals, context=context)
-        else:
-            return False
+        return False
 
     def notify(self, cr, uid, partner_ids, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
